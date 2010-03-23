@@ -1,0 +1,56 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.redhat.rhevm.api</groupId>
+  <artifactId>parent</artifactId>
+  <packaging>pom</packaging>
+  <version>0.1-SNAPSHOT</version>
+
+  <name>RHEV-M API Parent POM</name>
+  <url>http://www.redhat.com/virtualization/rhev/</url>
+
+  <modules>
+    <module>api</module>
+    <module>dummy</module>
+  </modules>
+
+  <properties>
+    <javax.ejb.api.version>3.0</javax.ejb.api.version>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>javax.ejb</groupId>
+        <artifactId>ejb-api</artifactId>
+        <version>${javax.ejb.api.version}</version>
+        <scope>provided</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <configuration>
+            <source>1.6</source>
+            <target>1.6</target>
+          </configuration>
+        </plugin>
+
+        <plugin>
+          <artifactId>maven-ejb-plugin</artifactId>
+          <configuration>
+            <ejbVersion>3.0</ejbVersion>
+          </configuration>
+        </plugin>
+
+      </plugins>
+    </pluginManagement>
+  </build>
+
+</project>

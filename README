@@ -1,0 +1,68 @@
+= RHEV-M API Definition =
+
+This is the very early stages of a project to define an official Web
+Service API for RHEV-M.
+
+There are three parts to the project:
+
+  1) The API definition - Java interfaces defining the API methods and
+     base classes defining the API's object model. These are annotated
+     with JAX-WS and JAXB annotations.
+
+  2) A dummy implementation - an EJB implementing the API using dummy
+     data. This allows one to experiment with the API without needing
+     a RHEV-M installation.
+
+  3) A PowerShell wrapper implementation - an EJB implementing the API
+     by wrapping the RHEV-M 2.2 PowerShell API.
+
+It is planned that a future version of RHEV-M will implement the API
+without wrapping the existing PowerShell API.
+
+== Disclaimers ==
+
+The API definition is in its early stages. It may yet change radically
+and/or never become the official API.
+
+The PowerShell wrapper is for experimentation only and not a supported
+Red Hat solution.
+
+== Testing ==
+
+You first need to install JBoss. JBoss EAP 5.0 or JBoss AS 5.1.0.GA
+should work.
+
+ $> wget https://sourceforge.net/projects/jboss/files/JBoss/JBoss-5.1.0.GA/jboss-5.1.0.GA.zip/download
+ $> unzip jboss-5.1.0.GA.zip
+ $> mv jboss-5.1.0.GA /usr/local/jboss-5.1.0.GA
+ $> chown -R markmc:markmc /usr/local/jboss-5.1.0.GA
+
+Install openjdk and make sure it's configured as the default java
+version:
+
+ $> yum install -y java-1.6.0-openjdk-devel
+ $> alternatives --display javac
+
+Install CXF:
+
+  $> svn co http://anonsvn.jboss.org/repos/jbossws/stack/cxf/tags/jbossws-cxf-3.1.2.SP2
+  $> cd jbossws-cxf-3.1.2.SP2
+  $> sed -e 's|<jboss510.home>.*</jboss510.home>|<jboss510.home>/usr/local/jboss-5.1.0.GA</jboss510.home>|' profiles.xml.example > profiles.xml
+  $> ant deploy-jboss510
+
+Build:
+
+ $> mvn install
+
+Deploy:
+
+ $> cp ~/.m2/repository/com/redhat/rhevm/api/rhevm-api-dummy/0.1-SNAPSHOT/rhevm-api-dummy-0.1-SNAPSHOT-jar-with-dependencies.jar /usr/local/jboss-5.1.0.GA/server/default/deploy/rhevm-api.jar
+
+Run:
+
+ $> /usr/local/jboss-5.1.0.GA/bin/run.sh
+
+Test:
+
+ $> yum install -y python-suds
+ $> ./python/test.py
