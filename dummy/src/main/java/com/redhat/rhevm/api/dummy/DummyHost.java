@@ -18,27 +18,17 @@
  */
 package com.redhat.rhevm.api.dummy;
 
-import com.redhat.rhevm.api.VM;
+import com.redhat.rhevm.api.Host;
 
-public class DummyVM extends VM
+public class DummyHost extends Host
 {
 	private static int counter = 0;
 
-	public DummyVM() {
+	public DummyHost() {
 		id = Integer.toString(++counter);
-		setHost(DummyHosts.lookup(Integer.toString(counter % 2)));
 	}
 
-	public DummyVMStatus getStatus() {
-		return status;
-	}
-	public void setStatus(DummyVMStatus status) {
-		this.status = status;
-	}
-	private DummyVMStatus status;
-
-	public void update(VM vm) {
+	public void update(Host host) {
 		// update writable fields only
-		this.name = vm.getName();
 	}
 }

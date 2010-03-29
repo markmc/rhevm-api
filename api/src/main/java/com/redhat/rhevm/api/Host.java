@@ -23,9 +23,9 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 
-@XmlType(name = "VM")
+@XmlType(name = "Host")
 @XmlAccessorType(XmlAccessType.NONE)
-public class VM
+public class Host
 {
 	@XmlElement(name = "id", nillable = true)
 	public String getId() {
@@ -45,30 +45,21 @@ public class VM
 	}
 	protected String name;
 
-	@XmlElement(name = "host", nillable = true)
-	public Host getHost() {
-		return host;
+	@XmlElement(name = "address", nillable = true)
+	public String getAddress() {
+		return address;
 	}
-	public void setHost(Host host) {
-		this.host = host;
+	public void setAddress(String address) {
+		this.address = address;
 	}
-	private Host host;
+	protected String address;
 
-	@XmlElement(name = "templateId", nillable = true)
-	public String getTemplateId() {
-		return templateId;
+	@XmlElement(name = "rootPassword", nillable = true)
+	public String getRootPassword() {
+		return rootPassword;
 	}
-	public void setTemplateId(String templateId) {
-		this.templateId = templateId;
+	public void setRootPassword(String rootPassword) {
+		this.rootPassword = rootPassword;
 	}
-	private String templateId;
-
-	@XmlElement(name = "clusterId", nillable = true)
-	public String getClusterId() {
-		return clusterId;
-	}
-	public void setClusterId(String clusterId) {
-		this.clusterId = clusterId;
-	}
-	private String clusterId;
+	protected String rootPassword;
 }
