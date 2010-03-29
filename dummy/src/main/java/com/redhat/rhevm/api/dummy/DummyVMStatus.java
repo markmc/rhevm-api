@@ -22,5 +22,4 @@ public enum DummyVMStatus
 {
 	UP,
 	DOWN,
-	PAUSED
 }

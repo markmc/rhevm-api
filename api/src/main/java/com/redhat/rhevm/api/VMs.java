@@ -28,16 +28,34 @@ public interface VMs
 	@WebMethod public List<VM> list();
 	@WebMethod public List<VM> search(String criteria);
 
+	/**
+	 * Creates a new VM and adds it to the database. The VM is created
+	 * based on the properties of @vm.
+	 * <p>
+	 * The VM#name, VM#templateId and VM#clusterId properties are required.
+	 *
+	 * @param vm  the VM definition from which to create the new VM
+	 * @return    the new newly created VM
+	 */
 	@WebMethod public VM add(VM vm);
+
+	/**
+	 * Modifies an existing VM's properties in the database.
+	 * <p>
+	 * Only the VM#name property can be modified.
+	 *
+	 * @param vm  the VM definition with the modified properties
+	 * @return    the updated VM
+	 */
 	@WebMethod public VM update(VM vm);
 
 	@WebMethod public void remove(String id);
 
-	@WebMethod public void run(String id);
+	@WebMethod public void start(String id);
 	@WebMethod public void stop(String id);
-	@WebMethod public void pause(String id);
 	@WebMethod public void shutdown(String id);
 
+	@WebMethod public void suspend(String id);
 	@WebMethod public void restore(String id);
 	@WebMethod public void migrate(String id);
 

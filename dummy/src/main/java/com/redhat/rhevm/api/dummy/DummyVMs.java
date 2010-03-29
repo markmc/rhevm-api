@@ -82,7 +82,7 @@ public class DummyVMs implements VMs
 	}
 
 	@Override
-	public void run(String id) {
+	public void start(String id) {
 		vms.get(id).setStatus(DummyVMStatus.UP);
 	}
 
@@ -92,13 +92,12 @@ public class DummyVMs implements VMs
 	}
 
 	@Override
-	public void pause(String id) {
-		vms.get(id).setStatus(DummyVMStatus.PAUSED);
+	public void shutdown(String id) {
+		vms.get(id).setStatus(DummyVMStatus.DOWN);
 	}
 
 	@Override
-	public void shutdown(String id) {
-		vms.get(id).setStatus(DummyVMStatus.DOWN);
+	public void suspend(String id) {
 	}
 
 	@Override
