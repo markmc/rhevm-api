@@ -45,9 +45,21 @@ public class VM
 	}
 	protected String name;
 
-	// FIXME: gotta by a better way to do this
-	public void update(VM vm) {
-		// update writable fields only
-		this.name = vm.getName();
+	@XmlElement(name = "templateId", nillable = true)
+	public String getTemplateId() {
+		return templateId;
 	}
+	public void setTemplateId(String templateId) {
+		this.templateId = templateId;
+	}
+	private String templateId;
+
+	@XmlElement(name = "clusterId", nillable = true)
+	public String getClusterId() {
+		return clusterId;
+	}
+	public void setClusterId(String clusterId) {
+		this.clusterId = clusterId;
+	}
+	private String clusterId;
 }

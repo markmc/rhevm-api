@@ -35,4 +35,9 @@ public class DummyVM extends VM
 		this.status = status;
 	}
 	private DummyVMStatus status;
+
+	public void update(VM vm) {
+		// update writable fields only
+		this.name = vm.getName();
+	}
 }
