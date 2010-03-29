@@ -12,12 +12,23 @@
 
   <modules>
     <module>api</module>
+    <module>powershell</module>
     <module>dummy</module>
   </modules>
 
   <properties>
     <javax.ejb.api.version>3.0</javax.ejb.api.version>
+    <commons-logging.version>1.1</commons-logging.version>
   </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>${commons-logging.version}</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
 
   <dependencyManagement>
     <dependencies>
