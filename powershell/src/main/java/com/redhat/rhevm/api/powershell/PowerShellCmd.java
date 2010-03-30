@@ -44,19 +44,19 @@ public class PowerShellCmd
 		stdoutThread.start();
 		stderrThread.start();
 
-		try {
-			p.waitFor();
-		} catch	(java.lang.InterruptedException ex) {
-			// FIXME: error handling
-			throw new PowerShellException("FIXME", ex);
-		}
-
-		try {
-			stdoutThread.join();
-			stderrThread.join();
-		} catch (java.lang.InterruptedException ex) {
-			// FIXME: error handling
-			throw new PowerShellException("FIXME", ex);
+		while (true) {
+			try {
+				p.waitFor();
+				stdoutThread.join();
+				stderrThread.join();
+				break;
+			} catch	(java.lang.InterruptedException ex) {
+				/* with waitFor(), this is needed to clear
+				 * the interrupted status flag:
+				 *   http://bugs.sun.com/view_bug.do?bug_id=6420270
+				 */
+				Thread.interrupted();
+			}
 		}
 
 		stdout = stdoutThread.getOutput();
