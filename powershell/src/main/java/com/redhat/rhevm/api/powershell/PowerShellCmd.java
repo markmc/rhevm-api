@@ -18,19 +18,7 @@ public class PowerShellCmd
 
 	private String stdout, stderr;
 
-	public int run() {
-		log.debug("Running '" + script + "'");
-
-		ProcessBuilder pb = new ProcessBuilder("powershell", "-command", "-");
-
-		Process p;
-
-		try {
-			p = pb.start();
-		} catch	(java.io.IOException ex) {
-			throw new PowerShellException("Launching powershell failed", ex);
-		}
-
+	public int runAndWait(Process p) {
 		try {
 			p.getOutputStream().write(script.getBytes());
 			p.getOutputStream().close();
@@ -63,6 +51,26 @@ public class PowerShellCmd
 		stderr = stderrThread.getOutput();
 
 		return p.exitValue();
+	}
+
+	public int run() {
+		log.debug("Running '" + script + "'");
+
+		ProcessBuilder pb = new ProcessBuilder("powershell", "-command", "-");
+
+		Process p;
+
+		try {
+			p = pb.start();
+		} catch	(java.io.IOException ex) {
+			throw new PowerShellException("Launching powershell failed", ex);
+		}
+
+		try {
+			return runAndWait(p);
+		} finally {
+			p.destroy();
+		}
 	}
 
 	public String getStdOut() {
