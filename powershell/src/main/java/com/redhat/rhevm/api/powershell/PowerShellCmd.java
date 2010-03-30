@@ -95,9 +95,17 @@ public class PowerShellCmd
 
 		@Override
 		public void run() {
-			Scanner sc = new Scanner(is);
-			while (sc.hasNext()) {
-				outputBuffer.append(sc.nextLine() + "\n");
+			try {
+				Scanner sc = new Scanner(is);
+				while (sc.hasNext()) {
+					outputBuffer.append(sc.nextLine() + "\n");
+				}
+			} finally {
+				try {
+					this.is.close();
+				} catch (java.io.IOException ex) {
+					log.error("Exception while closing input stream", ex);
+				}
 			}
 		}
 	}
