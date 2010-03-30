@@ -44,10 +44,8 @@ public class PowerShellCmd
 		stdoutThread.start();
 		stderrThread.start();
 
-		int exitstatus;
-
 		try {
-			exitstatus = p.waitFor();
+			p.waitFor();
 		} catch	(java.lang.InterruptedException ex) {
 			// FIXME: error handling
 			throw new PowerShellException("FIXME", ex);
@@ -64,7 +62,7 @@ public class PowerShellCmd
 		stdout = stdoutThread.getOutput();
 		stderr = stderrThread.getOutput();
 
-		return exitstatus;
+		return p.exitValue();
 	}
 
 	public String getStdOut() {
