@@ -82,16 +82,16 @@ public class PowerShellCmd
 			this.is = is;
 		}
 
-		private String output = new String();
+		private StringBuilder outputBuffer = new StringBuilder();
 		public String getOutput() {
-			return output;
+			return outputBuffer.toString();
 		}
 
 		@Override
 		public void run() {
 			Scanner sc = new Scanner(is);
 			while (sc.hasNext()) {
-				output += sc.nextLine() + "\n";
+				outputBuffer.append(sc.nextLine() + "\n");
 			}
 		}
 	}
