@@ -18,16 +18,33 @@
  */
 package com.redhat.rhevm.api;
 
-import javax.xml.bind.annotation.XmlType;
+import java.net.URI;
+
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlType(name = "Host")
+/* FIXME: could probably drop @XmlAccessorType */
+
+@XmlRootElement(name = "host")
 @XmlAccessorType(XmlAccessType.NONE)
 public class Host
 {
-	@XmlElement(name = "id", nillable = true)
+	/* FIXME: can we make this attritbute be auto-generated
+	 *        somehow?
+	 */
+	@XmlAttribute(name = "href")
+	public URI getHref() {
+		return href;
+	}
+	public void setHref(URI href) {
+		this.href = href;
+	}
+	protected URI href;
+
+	@XmlElement(name = "id")
 	public String getId() {
 		return id;
 	}
@@ -36,7 +53,7 @@ public class Host
 	}
 	protected String id;
 
-	@XmlElement(name = "name", nillable = true)
+	@XmlElement(name = "name")
 	public String getName() {
 		return name;
 	}
@@ -45,7 +62,7 @@ public class Host
 	}
 	protected String name;
 
-	@XmlElement(name = "address", nillable = true)
+	@XmlElement(name = "address")
 	public String getAddress() {
 		return address;
 	}
@@ -54,7 +71,7 @@ public class Host
 	}
 	protected String address;
 
-	@XmlElement(name = "rootPassword", nillable = true)
+	@XmlElement(name = "rootPassword")
 	public String getRootPassword() {
 		return rootPassword;
 	}

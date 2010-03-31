@@ -18,15 +18,51 @@
  */
 package com.redhat.rhevm.api;
 
-import javax.jws.WebMethod;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Produces;
+import javax.ws.rs.PUT;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+
+/* FIXME: doesn't seem to do anything ? Also, we could do without
+ *        the explicit dependency on RESTeasy
+ */
+import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
+
 import java.util.List;
 
+/* FIXME: we want to produce e.g. YAML and JSON too */
+
+@Path("/vms")
+@Produces("application/xml")
+@Formatted
 public interface VMs
 {
-	@WebMethod public VM get(String id);
+	/* FIXME: can we make uriInfo a field instead of a parameter to
+	 *        each method? Adding @Context to the implementation
+	 *        class doesn't seem to work.
+	 */
 
-	@WebMethod public List<VM> list();
-	@WebMethod public List<VM> search(String criteria);
+	@GET
+	@Path("{id}")
+	public VM get(@Context UriInfo uriInfo, @PathParam("id") String id);
+
+	/* FIXME: do we want to define our own collection type for
+	 *        the return value here rather than <collection> ?
+	 */
+	@GET
+	public List<VM> list(@Context UriInfo uriInfo);
+
+	/* FIXME: need to move this to e.g. a top-level /search
+	 * @GET
+	 * public List<VM> search(String criteria);
+	 */
 
 	/**
 	 * Creates a new VM and adds it to the database. The VM is created
@@ -37,7 +73,9 @@ public interface VMs
 	 * @param vm  the VM definition from which to create the new VM
 	 * @return    the new newly created VM
 	 */
-	@WebMethod public VM add(VM vm);
+	@POST
+	@Consumes("application/xml")
+	public Response add(@Context UriInfo uriInfo, VM vm);
 
 	/**
 	 * Modifies an existing VM's properties in the database.
@@ -47,21 +85,56 @@ public interface VMs
 	 * @param vm  the VM definition with the modified properties
 	 * @return    the updated VM
 	 */
-	@WebMethod public VM update(VM vm);
+	@PUT
+	@Path("{id}")
+	@Consumes("application/xml")
+	public VM update(@PathParam("id") String id, VM vm);
 
-	@WebMethod public void remove(String id);
+	@DELETE
+	@Path("{id}")
+	public void remove(@PathParam("id") String id);
 
-	@WebMethod public void start(String id);
-	@WebMethod public void stop(String id);
-	@WebMethod public void shutdown(String id);
+	/* FIXME:
+	 * we need to list the available action URLs in the VM entity
+	 */
 
-	@WebMethod public void suspend(String id);
-	@WebMethod public void restore(String id);
-	@WebMethod public void migrate(String id);
+	@POST
+	@Path("{id}/start")
+	public void start(@PathParam("id") String id);
 
-	@WebMethod public void move(String id);
-	@WebMethod public void detach(String id);
+	@POST
+	@Path("{id}/stop")
+	public void stop(@PathParam("id") String id);
 
-	@WebMethod public void changeCD(String id);
-	@WebMethod public void ejectCD(String id);
+	@POST
+	@Path("{id}/shutdown")
+	public void shutdown(@PathParam("id") String id);
+
+	@POST
+	@Path("{id}/suspend")
+	public void suspend(@PathParam("id") String id);
+
+	@POST
+	@Path("{id}/restore")
+	public void restore(@PathParam("id") String id);
+
+	@POST
+	@Path("{id}/migrate")
+	public void migrate(@PathParam("id") String id);
+
+	@POST
+	@Path("{id}/move")
+	public void move(@PathParam("id") String id);
+
+	@POST
+	@Path("{id}/detach")
+	public void detach(@PathParam("id") String id);
+
+	@POST
+	@Path("{id}/changeCD")
+	public void changeCD(@PathParam("id") String id);
+
+	@POST
+	@Path("{id}/ejectCD")
+	public void ejectCD(@PathParam("id") String id);
 }

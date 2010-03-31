@@ -18,15 +18,49 @@
  */
 package com.redhat.rhevm.api;
 
-import javax.jws.WebMethod;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Produces;
+import javax.ws.rs.PUT;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+
+/* FIXME: doesn't seem to do anything ? Also, we could do without
+ *        the explicit dependency on RESTeasy
+ */
+import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
+
 import java.util.List;
 
+@Path("/hosts")
+@Produces("application/xml")
+@Formatted
 public interface Hosts
 {
-	@WebMethod public Host get(String id);
+	/* FIXME: can we make uriInfo a field instead of a parameter to
+	 *        each method? Adding @Context to the implementation
+	 *        class doesn't seem to work.
+	 */
 
-	@WebMethod public List<Host> list();
-	@WebMethod public List<Host> search(String criteria);
+	@GET
+	@Path("{id}")
+	public Host get(@Context UriInfo uriInfo, @PathParam("id") String id);
+
+	/* FIXME: do we want to define our own collection type for
+	 *        the return value here rather than <collection> ?
+	 */
+	@GET
+	public List<Host> list(@Context UriInfo uriInfo);
+
+	/* FIXME: need to move this to e.g. a top-level /search
+	 * @GET
+	 * public List<Host> search(String criteria);
+	 */
 
 	/**
 	 * Creates a new host and adds it to the database. The host is
@@ -39,7 +73,9 @@ public interface Hosts
 	 *              host
 	 * @return      the new newly created Host
 	 */
-	@WebMethod public Host add(Host host);
+	@POST
+	@Consumes("application/xml")
+	public Response add(@Context UriInfo uriInfo, Host host);
 
 	/**
 	 * Modifies an existing host's properties in the database.
@@ -49,13 +85,26 @@ public interface Hosts
 	 * @param host  the host definition with the modified properties
 	 * @return      the updated Host
 	 */
-	@WebMethod public Host update(Host host);
+	@PUT
+	@Path("{id}")
+	@Consumes("application/xml")
+	public Host update(@PathParam("id") String id, Host host);
 
-	@WebMethod public void remove(String id);
+	@DELETE
+	@Path("{id}")
+	public void remove(@PathParam("id") String id);
 
-	@WebMethod public void approve(String id);
-	@WebMethod public void fence(String id);
-	@WebMethod public void resume(String id);
+	@POST
+	@Path("{id}")
+	public void approve(@PathParam("id") String id);
 
-	@WebMethod public void connectStorage(String id, String storageDevice);
+	@POST
+	@Path("{id}")
+	public void fence(@PathParam("id") String id);
+
+	@POST
+	@Path("{id}")
+	public void resume(@PathParam("id") String id);
+
+	//@WebMethod public void connectStorage(String id, String storageDevice);
 }

@@ -23,15 +23,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.ejb.Stateless;
-import javax.jws.WebService;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.VM;
 import com.redhat.rhevm.api.VMs;
 
 @Stateless
-@WebService
 public class DummyVMs implements VMs
 {
+	/* FIXME: would like to do:
+	 * private @Context UriInfo uriInfo;
+	 */
+
+	/* FIXME: synchronize access to this */
 	private static HashMap<String, DummyVM> vms = new HashMap<String, DummyVM>();
 
 	static {
@@ -41,37 +46,45 @@ public class DummyVMs implements VMs
 		}
 	}
 
-	@Override
-	public VM get(String id) {
-		return vms.get(id);
+	/* FIXME: kill uriInfo param, make href auto-generated? */
+	public static DummyVM lookup(UriInfo uriInfo, String id) {
+		DummyVM vm = vms.get(id);
+		if (uriInfo != null)
+			vm.setHref(uriInfo.getBaseUriBuilder().clone().path("vms").path(id).build());
+		return vm;
 	}
 
 	@Override
-	public List<VM> list() {
+	public VM get(UriInfo uriInfo, String id) {
+		return lookup(uriInfo, id);
+	}
+
+	@Override
+	public List<VM> list(UriInfo uriInfo) {
 		List<VM> ret = new ArrayList<VM>();
 
-		for (DummyVM vm : vms.values())
-			ret.add(vm);
+		for (DummyVM vm : vms.values()) {
+			/* FIXME: the extra lookup is just to add href */
+			ret.add(lookup(uriInfo, vm.getId()));
+		}
 
 		return ret;
 	}
 
 	@Override
-	public List<VM> search(String criteria) {
-		return new ArrayList<VM>();
+	public Response add(UriInfo uriInfo, VM vm) {
+		DummyVM newVM = new DummyVM(vm);
+
+		vms.put(newVM.getId(), newVM);
+		/* FIXME: the extra lookup is just to add href */
+		newVM = lookup(uriInfo, newVM.getId());
+
+		return Response.created(newVM.getHref()).build();
 	}
 
 	@Override
-	public VM add(VM vm) {
-		DummyVM ret = new DummyVM();
-		ret.update(vm);
-		vms.put(ret.getId(), ret);
-		return ret;
-	}
-
-	@Override
-	public VM update(VM vm) {
-		DummyVM ret = vms.get(vm.getId());
+	public VM update(String id, VM vm) {
+		DummyVM ret = vms.get(id);
 		ret.update(vm);
 		return ret;
 	}

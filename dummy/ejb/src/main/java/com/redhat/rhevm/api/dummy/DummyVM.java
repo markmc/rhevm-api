@@ -18,15 +18,24 @@
  */
 package com.redhat.rhevm.api.dummy;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.redhat.rhevm.api.VM;
 
+// FIXME: this shouldn't be needed
+@XmlRootElement(name = "vm")
 public class DummyVM extends VM
 {
 	private static int counter = 0;
 
 	public DummyVM() {
 		id = Integer.toString(++counter);
-		setHost(DummyHosts.lookup(Integer.toString(counter % 2)));
+		setHost(DummyHosts.lookup(null, Integer.toString(counter % 2)));
+	}
+
+	public DummyVM(VM vm) {
+		this();
+		update(vm);
 	}
 
 	public DummyVMStatus getStatus() {

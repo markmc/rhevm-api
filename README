@@ -43,20 +43,13 @@ version:
  $> yum install -y java-1.6.0-openjdk-devel
  $> alternatives --display javac
 
-Install CXF:
-
-  $> svn co http://anonsvn.jboss.org/repos/jbossws/stack/cxf/tags/jbossws-cxf-3.1.2.SP2
-  $> cd jbossws-cxf-3.1.2.SP2
-  $> sed -e 's|<jboss510.home>.*</jboss510.home>|<jboss510.home>/usr/local/jboss-5.1.0.GA</jboss510.home>|' profiles.xml.example > profiles.xml
-  $> ant deploy-jboss510
-
 Build:
 
  $> mvn install
 
 Deploy:
 
- $> cp ~/.m2/repository/com/redhat/rhevm/api/rhevm-api-dummy/0.1-SNAPSHOT/rhevm-api-dummy-0.1-SNAPSHOT-jar-with-dependencies.jar /usr/local/jboss-5.1.0.GA/server/default/deploy/rhevm-api.jar
+ $> cp ~/.m2/repository/com/redhat/rhevm/api/rhevm-api-dummy-ear/0.1-SNAPSHOT/rhevm-api-dummy-ear-0.1-SNAPSHOT.ear /usr/local/jboss-5.1.0.GA/server/default/deploy/rhevm-api-dummy.ear
 
 Run:
 
@@ -64,5 +57,4 @@ Run:
 
 Test:
 
- $> yum install -y python-suds
  $> ./python/test.py

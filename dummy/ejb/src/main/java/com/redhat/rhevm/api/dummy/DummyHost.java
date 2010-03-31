@@ -18,8 +18,12 @@
  */
 package com.redhat.rhevm.api.dummy;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.redhat.rhevm.api.Host;
 
+// FIXME: why is this needed?
+@XmlRootElement(name = "host")
 public class DummyHost extends Host
 {
 	private static int counter = 0;
@@ -28,7 +32,13 @@ public class DummyHost extends Host
 		id = Integer.toString(++counter);
 	}
 
+	public DummyHost(Host host) {
+		this();
+		update(host);
+	}
+
 	public void update(Host host) {
 		// update writable fields only
+		this.name = host.getName();
 	}
 }

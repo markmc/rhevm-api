@@ -12,14 +12,22 @@
 
   <modules>
     <module>api</module>
-    <module>powershell</module>
+<!--    <module>powershell</module> -->
     <module>dummy</module>
   </modules>
 
   <properties>
     <javax.ejb.api.version>3.0</javax.ejb.api.version>
     <commons-logging.version>1.1</commons-logging.version>
+    <resteasy.version>2.0-beta-2</resteasy.version>
   </properties>
+
+  <repositories>
+    <repository>
+      <id>jboss</id> <!-- For RESTeasy -->
+      <url>http://repository.jboss.org/maven2</url>
+    </repository>
+  </repositories>
 
   <dependencies>
     <dependency>
@@ -32,12 +40,32 @@
 
   <dependencyManagement>
     <dependencies>
+
       <dependency>
         <groupId>javax.ejb</groupId>
         <artifactId>ejb-api</artifactId>
         <version>${javax.ejb.api.version}</version>
         <scope>provided</scope>
       </dependency>
+
+      <dependency>
+        <groupId>org.jboss.resteasy</groupId>
+        <artifactId>jaxrs-api</artifactId>
+        <version>${resteasy.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.jboss.resteasy</groupId>
+        <artifactId>resteasy-jaxrs</artifactId>
+        <version>${resteasy.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.jboss.resteasy</groupId>
+        <artifactId>resteasy-jaxb-provider</artifactId>
+        <version>${resteasy.version}</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 

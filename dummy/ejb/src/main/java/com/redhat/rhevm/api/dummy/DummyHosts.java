@@ -23,15 +23,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.ejb.Stateless;
-import javax.jws.WebService;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.Host;
 import com.redhat.rhevm.api.Hosts;
 
 @Stateless
-@WebService
 public class DummyHosts implements Hosts
 {
+	/* FIXME: would like to do:
+	 * private @Context UriInfo uriInfo;
+	 */
+
+	/* FIXME: synchronize access to this */
 	private static HashMap<String, DummyHost> hosts = new HashMap<String, DummyHost>();
 
 	static {
@@ -41,41 +46,45 @@ public class DummyHosts implements Hosts
 		}
 	}
 
-	public static DummyHost lookup(String id) {
-		return hosts.get(id);
+	/* FIXME: kill uriInfo param, make href auto-generated? */
+	public static DummyHost lookup(UriInfo uriInfo, String id) {
+		DummyHost host = hosts.get(id);
+		if (uriInfo != null)
+			host.setHref(uriInfo.getBaseUriBuilder().clone().path("hosts").path(id).build());
+		return host;
 	}
 
 	@Override
-	public Host get(String id) {
-		return lookup(id);
+	public Host get(UriInfo uriInfo, String id) {
+		return lookup(uriInfo, id);
 	}
 
 	@Override
-	public List<Host> list() {
+	public List<Host> list(UriInfo uriInfo) {
 		List<Host> ret = new ArrayList<Host>();
 
-		for (DummyHost host : hosts.values())
-			ret.add(host);
+		for (DummyHost host : hosts.values()) {
+			/* FIXME: the extra lookup is just to add href */
+			ret.add(lookup(uriInfo, host.getId()));
+		}
 
 		return ret;
 	}
 
 	@Override
-	public List<Host> search(String criteria) {
-		return new ArrayList<Host>();
+	public Response add(UriInfo uriInfo, Host host) {
+		DummyHost newHost = new DummyHost(host);
+
+		hosts.put(newHost.getId(), newHost);
+		/* FIXME: the extra lookup is just to add href */
+		newHost = lookup(uriInfo, newHost.getId());
+
+		return Response.created(newHost.getHref()).build();
 	}
 
 	@Override
-	public Host add(Host host) {
-		DummyHost ret = new DummyHost();
-		ret.update(host);
-		hosts.put(ret.getId(), ret);
-		return ret;
-	}
-
-	@Override
-	public Host update(Host host) {
-		DummyHost ret = hosts.get(host.getId());
+	public Host update(String id, Host host) {
+		DummyHost ret = hosts.get(id);
 		ret.update(host);
 		return ret;
 	}
@@ -97,7 +106,9 @@ public class DummyHosts implements Hosts
 	public void resume(String id) {
 	}
 
+/*
 	@Override
 	public void connectStorage(String id, String storageDevice) {
 	}
+*/
 }

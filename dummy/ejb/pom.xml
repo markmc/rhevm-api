@@ -5,17 +5,23 @@
 
   <parent>
     <groupId>com.redhat.rhevm.api</groupId>
-    <artifactId>parent</artifactId>
+    <artifactId>dummy-parent</artifactId>
     <version>0.1-SNAPSHOT</version>
   </parent>
 
-  <artifactId>rhevm-api</artifactId>
-  <packaging>jar</packaging>
+  <artifactId>rhevm-api-dummy-ejb</artifactId>
+  <packaging>ejb</packaging>
 
-  <name>RHEV-M API Definition</name>
-  <url>http://www.redhat.com/virtualization/rhev/</url>
+  <name>RHEV-M API Dummy Implementation EJB</name>
+  <url>http://fedorahosted.org/rhevm-api/</url>
 
   <dependencies>
+
+    <dependency>
+      <groupId>com.redhat.rhevm.api</groupId>
+      <artifactId>rhevm-api</artifactId>
+      <version>0.1-SNAPSHOT</version>
+    </dependency>
 
     <dependency>
       <groupId>javax.ejb</groupId>
@@ -24,7 +30,7 @@
 
     <dependency>
       <groupId>org.jboss.resteasy</groupId>
-      <artifactId>jaxrs-api</artifactId>
+      <artifactId>resteasy-jaxrs</artifactId>
     </dependency>
 
     <dependency>

@@ -18,16 +18,33 @@
  */
 package com.redhat.rhevm.api;
 
-import javax.xml.bind.annotation.XmlType;
+import java.net.URI;
+
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlType(name = "VM")
+/* FIXME: could probably drop @XmlAccessorType */
+
+@XmlRootElement(name = "vm")
 @XmlAccessorType(XmlAccessType.NONE)
 public class VM
 {
-	@XmlElement(name = "id", nillable = true)
+	/* FIXME: can we make this attritbute be auto-generated
+	 *        somehow?
+	 */
+	@XmlAttribute(name = "href")
+	public URI getHref() {
+		return href;
+	}
+	public void setHref(URI href) {
+		this.href = href;
+	}
+	protected URI href;
+
+	@XmlElement(name = "id")
 	public String getId() {
 		return id;
 	}
@@ -36,7 +53,7 @@ public class VM
 	}
 	protected String id;
 
-	@XmlElement(name = "name", nillable = true)
+	@XmlElement(name = "name")
 	public String getName() {
 		return name;
 	}
@@ -45,7 +62,7 @@ public class VM
 	}
 	protected String name;
 
-	@XmlElement(name = "host", nillable = true)
+	@XmlElement(name = "host")
 	public Host getHost() {
 		return host;
 	}
@@ -54,7 +71,7 @@ public class VM
 	}
 	private Host host;
 
-	@XmlElement(name = "templateId", nillable = true)
+	@XmlElement(name = "templateId")
 	public String getTemplateId() {
 		return templateId;
 	}
@@ -63,7 +80,7 @@ public class VM
 	}
 	private String templateId;
 
-	@XmlElement(name = "clusterId", nillable = true)
+	@XmlElement(name = "clusterId")
 	public String getClusterId() {
 		return clusterId;
 	}
