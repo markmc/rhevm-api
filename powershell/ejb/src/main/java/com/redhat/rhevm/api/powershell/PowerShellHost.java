@@ -21,24 +21,27 @@ package com.redhat.rhevm.api.powershell;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.redhat.rhevm.api.VM;
+import javax.xml.bind.annotation.XmlRootElement;
 
-public class PowerShellVM extends VM
+import com.redhat.rhevm.api.Host;
+
+// FIXME: why is this needed?
+@XmlRootElement(name = "host")
+public class PowerShellHost extends Host
 {
-	public PowerShellVM() {
+	public PowerShellHost() {
 	}
 
-	public static ArrayList<VM> parse(String output) {
-		ArrayList<HashMap<String,String>> vmsProps = PowerShellUtils.parseProps(output);
-		ArrayList<VM> ret = new ArrayList<VM>();
+	public static ArrayList<Host> parse(String output) {
+		ArrayList<HashMap<String,String>> hostsProps = PowerShellUtils.parseProps(output);
+		ArrayList<Host> ret = new ArrayList<Host>();
 
-		for (HashMap<String,String> props : vmsProps) {
-			PowerShellVM vm = new PowerShellVM();
+		for (HashMap<String,String> props : hostsProps) {
+			PowerShellHost host = new PowerShellHost();
 
-			vm.setId(props.get("vmid"));
-			vm.setName(props.get("name"));
+			host.setId(props.get("hostid"));
 
-			ret.add(vm);
+			ret.add(host);
 		}
 
 		return ret;

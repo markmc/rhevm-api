@@ -22,15 +22,19 @@ import java.util.List;
 import java.util.ArrayList;
 
 import javax.ejb.Stateless;
-import javax.jws.WebService;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.VM;
 import com.redhat.rhevm.api.VMs;
 
 @Stateless
-@WebService
 public class PowerShellVMs implements VMs
 {
+	/* FIXME: would like to do:
+         * private @Context UriInfo uriInfo;
+         */
+
 	private void runCommand(String command) {
 		PowerShellUtils.runCommand(command);
 	}
@@ -45,23 +49,36 @@ public class PowerShellVMs implements VMs
 		return !vms.isEmpty() ? vms.get(0) : null;
 	}
 
-	@Override
-	public VM get(String id) {
-		return runAndParseSingle("get-vm " + id);
+	private VM addHref(VM vm, UriInfo uriInfo) {
+		vm.setHref(uriInfo.getBaseUriBuilder().clone().path("vms").path(vm.getId()).build());
+		return vm;
+	}
+
+	private List<VM> addHrefs(List<VM> vms, UriInfo uriInfo) {
+		for (VM vm : vms)
+			addHref(vm, uriInfo);
+		return vms;
 	}
 
 	@Override
-	public List<VM> list() {
-		return runAndParse("select-vm");
+	public VM get(UriInfo uriInfo, String id) {
+		return addHref(runAndParseSingle("get-vm " + id), uriInfo);
 	}
 
+	@Override
+	public List<VM> list(UriInfo uriInfo) {
+		return addHrefs(runAndParse("select-vm"), uriInfo);
+	}
+
+/* FIXME: move this
 	@Override
 	public List<VM> search(String criteria) {
 		return runAndParse("select-vm " + criteria);
 	}
+*/
 
 	@Override
-	public VM add(VM vm) {
+	public Response add(UriInfo uriInfo, VM vm) {
 		StringBuilder buf = new StringBuilder();
 
 		if (vm.getTemplateId() != null) {
@@ -82,11 +99,13 @@ public class PowerShellVMs implements VMs
 			buf.append(" -hostclusterid " + vm.getClusterId());
 		}
 
-		return runAndParseSingle(buf.toString());
+		vm = addHref(runAndParseSingle(buf.toString()), uriInfo);
+
+		return Response.created(vm.getHref()).build();
 	}
 
 	@Override
-	public VM update(VM vm) {
+	public VM update(UriInfo uriInfo, String id, VM vm) {
 		StringBuilder buf = new StringBuilder();
 
 		buf.append("$v = get-vm " + vm.getId() + "\n");
@@ -98,7 +117,7 @@ public class PowerShellVMs implements VMs
 		buf.append("\n");
 		buf.append("update-vm -vmobject $v");
 
-		return runAndParseSingle(buf.toString());
+		return addHref(runAndParseSingle(buf.toString()), uriInfo);
 	}
 
 	@Override

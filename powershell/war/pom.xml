@@ -4,20 +4,14 @@
 
   <parent>
     <groupId>com.redhat.rhevm.api</groupId>
-    <artifactId>parent</artifactId>
+    <artifactId>powershell-parent</artifactId>
     <version>0.1-SNAPSHOT</version>
   </parent>
 
-  <artifactId>powershell-parent</artifactId>
-  <packaging>pom</packaging>
+  <artifactId>rhevm-api-powershell-war</artifactId>
+  <packaging>war</packaging>
 
-  <name>RHEV-M API Powershell Wrapper Implementation Parent POM</name>
+  <name>RHEV-M API Powershell Wrapper Implementation WAR</name>
   <url>http://fedorahosted.org/rhevm-api/</url>
-
-  <modules>
-    <module>ejb</module>
-    <module>war</module>
-    <module>ear</module>
-  </modules>
 
 </project>

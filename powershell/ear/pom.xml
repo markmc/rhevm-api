@@ -1,0 +1,65 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.redhat.rhevm.api</groupId>
+    <artifactId>powershell-parent</artifactId>
+    <version>0.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>rhevm-api-powershell-ear</artifactId>
+  <packaging>ear</packaging>
+
+  <name>RHEV-M API Powershell Wrapper Implementation EAR</name>
+  <url>http://fedorahosted.org/rhevm-api/</url>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>com.redhat.rhevm.api</groupId>
+      <artifactId>rhevm-api</artifactId>
+      <version>0.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.redhat.rhevm.api</groupId>
+      <artifactId>rhevm-api-powershell-ejb</artifactId>
+      <version>0.1-SNAPSHOT</version>
+      <type>ejb</type>
+    </dependency>
+
+    <dependency>
+      <groupId>com.redhat.rhevm.api</groupId>
+      <artifactId>rhevm-api-powershell-war</artifactId>
+      <version>0.1-SNAPSHOT</version>
+      <type>war</type>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <plugins>
+
+      <plugin>
+        <artifactId>maven-ear-plugin</artifactId>
+        <configuration>
+          <defaultJavaBundleDir>lib/</defaultJavaBundleDir>
+          <finalName>rhevm-api-powershell</finalName>
+        </configuration>
+        <executions>
+          <execution>
+            <id>yomama</id>
+            <phase>package</phase>
+            <goals>
+              <goal>generate-application-xml</goal>
+              <goal>ear</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+  </build>
+
+</project>

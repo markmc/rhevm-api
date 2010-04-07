@@ -22,15 +22,19 @@ import java.util.List;
 import java.util.ArrayList;
 
 import javax.ejb.Stateless;
-import javax.jws.WebService;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.Host;
 import com.redhat.rhevm.api.Hosts;
 
 @Stateless
-@WebService
 public class PowerShellHosts implements Hosts
 {
+	/* FIXME: would like to do:
+         * private @Context UriInfo uriInfo;
+         */
+
 	// needed because there are two get-host commands
 	private static final String CMD_PREFIX = "rhevmpssnapin\\";
 
@@ -48,25 +52,38 @@ public class PowerShellHosts implements Hosts
 		return !hosts.isEmpty() ? hosts.get(0) : null;
 	}
 
+	private Host addHref(Host host, UriInfo uriInfo) {
+		host.setHref(uriInfo.getBaseUriBuilder().clone().path("hosts").path(host.getId()).build());
+		return host;
+	}
+
+	private List<Host> addHrefs(List<Host> hosts, UriInfo uriInfo) {
+		for (Host host : hosts)
+			addHref(host, uriInfo);
+		return hosts;
+	}
+
 	@Override
-	public Host get(String id) {
+	public Host get(UriInfo uriInfo, String id) {
 		List<Host> hosts = runAndParse(CMD_PREFIX + "get-host " + id);
 
-		return hosts.isEmpty() ? null : hosts.get(0);
+		return hosts.isEmpty() ? null : addHref(hosts.get(0), uriInfo);
 	}
 
 	@Override
-	public List<Host> list() {
-		return runAndParse("select-host");
+	public List<Host> list(UriInfo uriInfo) {
+		return addHrefs(runAndParse("select-host"), uriInfo);
 	}
 
+/* FIXME: move this
 	@Override
 	public List<Host> search(String criteria) {
 		return runAndParse("select-host " + criteria);
 	}
+*/
 
 	@Override
-	public Host add(Host host) {
+	public Response add(UriInfo uriInfo, Host host) {
 		StringBuilder buf = new StringBuilder();
 
 		buf.append("add-host");
@@ -83,14 +100,16 @@ public class PowerShellHosts implements Hosts
 			buf.append(" -rootpassword " + host.getRootPassword());
 		}
 
-		return runAndParseSingle(buf.toString());
+		host = addHref(runAndParseSingle(buf.toString()), uriInfo);
+
+		return Response.created(host.getHref()).build();
 	}
 
 	@Override
-	public Host update(Host host) {
+	public Host update(UriInfo uriInfo, String id, Host host) {
 		StringBuilder buf = new StringBuilder();
 
-		buf.append("$h = get-host " + host.getId() + "\n");
+		buf.append("$h = get-host " + id + "\n");
 
 		if (host.getName() != null) {
 			buf.append("$h.name = \"" + host.getName() + "\"");
@@ -99,7 +118,7 @@ public class PowerShellHosts implements Hosts
 		buf.append("\n");
 		buf.append("update-host -hostobject $v");
 
-		return runAndParseSingle(buf.toString());
+		return addHref(runAndParseSingle(buf.toString()), uriInfo);
 	}
 
 	@Override
@@ -120,7 +139,9 @@ public class PowerShellHosts implements Hosts
 	public void resume(String id) {
 	}
 
+/*
 	@Override
 	public void connectStorage(String id, String storageDevice) {
 	}
+*/
 }
