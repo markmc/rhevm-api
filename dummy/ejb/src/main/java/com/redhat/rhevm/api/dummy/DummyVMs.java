@@ -83,8 +83,8 @@ public class DummyVMs implements VMs
 	}
 
 	@Override
-	public VM update(String id, VM vm) {
-		DummyVM ret = vms.get(id);
+	public VM update(UriInfo uriInfo, String id, VM vm) {
+		DummyVM ret = lookup(uriInfo, id);
 		ret.update(vm);
 		return ret;
 	}

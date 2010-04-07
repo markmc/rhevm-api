@@ -83,8 +83,8 @@ public class DummyHosts implements Hosts
 	}
 
 	@Override
-	public Host update(String id, Host host) {
-		DummyHost ret = hosts.get(id);
+	public Host update(UriInfo uriInfo, String id, Host host) {
+		DummyHost ret = lookup(uriInfo, id);
 		ret.update(host);
 		return ret;
 	}

@@ -88,7 +88,7 @@ public interface VMs
 	@PUT
 	@Path("{id}")
 	@Consumes("application/xml")
-	public VM update(@PathParam("id") String id, VM vm);
+	public VM update(@Context UriInfo uriInfo, @PathParam("id") String id, VM vm);
 
 	@DELETE
 	@Path("{id}")

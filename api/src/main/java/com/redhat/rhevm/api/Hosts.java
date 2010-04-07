@@ -88,7 +88,7 @@ public interface Hosts
 	@PUT
 	@Path("{id}")
 	@Consumes("application/xml")
-	public Host update(@PathParam("id") String id, Host host);
+	public Host update(@Context UriInfo uriInfo, @PathParam("id") String id, Host host);
 
 	@DELETE
 	@Path("{id}")
