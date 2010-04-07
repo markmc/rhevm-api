@@ -62,14 +62,14 @@ public class VM
 	}
 	protected String name;
 
-	@XmlElement(name = "host")
-	public Host getHost() {
-		return host;
+	@XmlElement(name = "hostId")
+	public String getHostId() {
+		return hostId;
 	}
-	public void setHost(Host host) {
-		this.host = host;
+	public void setHostId(String hostId) {
+		this.hostId = hostId;
 	}
-	private Host host;
+	private String hostId;
 
 	@XmlElement(name = "templateId")
 	public String getTemplateId() {

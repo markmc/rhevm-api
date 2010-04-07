@@ -47,10 +47,9 @@ public class DummyHosts implements Hosts
 	}
 
 	/* FIXME: kill uriInfo param, make href auto-generated? */
-	public static DummyHost lookup(UriInfo uriInfo, String id) {
+	private DummyHost lookup(UriInfo uriInfo, String id) {
 		DummyHost host = hosts.get(id);
-		if (uriInfo != null)
-			host.setHref(uriInfo.getBaseUriBuilder().clone().path("hosts").path(id).build());
+		host.setHref(uriInfo.getBaseUriBuilder().clone().path("hosts").path(id).build());
 		return host;
 	}
 

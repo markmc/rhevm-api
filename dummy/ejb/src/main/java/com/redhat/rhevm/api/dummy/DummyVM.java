@@ -30,7 +30,7 @@ public class DummyVM extends VM
 
 	public DummyVM() {
 		id = Integer.toString(++counter);
-		setHost(DummyHosts.lookup(null, Integer.toString(counter % 2)));
+		setHostId(Integer.toString(counter % 2));
 	}
 
 	public DummyVM(VM vm) {
