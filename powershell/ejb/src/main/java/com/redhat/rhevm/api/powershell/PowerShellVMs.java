@@ -101,7 +101,7 @@ public class PowerShellVMs implements VMs
 
 		vm = addHref(runAndParseSingle(buf.toString()), uriInfo);
 
-		return Response.created(vm.getHref()).build();
+		return Response.created(vm.getHref()).entity(vm).build();
 	}
 
 	@Override

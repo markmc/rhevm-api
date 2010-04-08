@@ -75,6 +75,7 @@ public interface VMs
 	 */
 	@POST
 	@Consumes("application/xml")
+	@Produces("application/xml")
 	public Response add(@Context UriInfo uriInfo, VM vm);
 
 	/**

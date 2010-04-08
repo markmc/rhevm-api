@@ -79,7 +79,7 @@ public class DummyVMs implements VMs
 		/* FIXME: the extra lookup is just to add href */
 		newVM = lookup(uriInfo, newVM.getId());
 
-		return Response.created(newVM.getHref()).build();
+		return Response.created(newVM.getHref()).entity(newVM).build();
 	}
 
 	@Override

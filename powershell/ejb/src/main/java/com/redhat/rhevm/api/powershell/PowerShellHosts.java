@@ -102,7 +102,7 @@ public class PowerShellHosts implements Hosts
 
 		host = addHref(runAndParseSingle(buf.toString()), uriInfo);
 
-		return Response.created(host.getHref()).build();
+		return Response.created(host.getHref()).entity(host).build();
 	}
 
 	@Override

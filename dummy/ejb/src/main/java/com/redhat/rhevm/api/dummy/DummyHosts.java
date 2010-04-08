@@ -78,7 +78,7 @@ public class DummyHosts implements Hosts
 		/* FIXME: the extra lookup is just to add href */
 		newHost = lookup(uriInfo, newHost.getId());
 
-		return Response.created(newHost.getHref()).build();
+		return Response.created(newHost.getHref()).entity(newHost).build();
 	}
 
 	@Override

@@ -98,23 +98,21 @@ for vm in parseCollection(GET(links['vms']), 'vm'):
 def POST(url, body = None):
     cnx = httplib.HTTPConnection(opts['host'], opts['port'])
     try:
-        #if body is None:
-        #    cnx.request('POST', url)
-        #else:
         cnx.request('POST', url, body, {'Content-type': 'application/xml'})
         resp = cnx.getresponse()
-        if resp.getheader('location') is None:
+        body = resp.read()
+        if not body:
             return resp.status
         else:
-            return resp.getheader('location')
+            return body
     finally:
         cnx.close()
 
-foo_vm = POST(links['vms'], '<vm><name>foo</name></vm>')
-bar_host = POST(links['hosts'], '<host><name>bar</name></host>')
+foo_vm = parse(POST(links['vms'], '<vm><name>foo</name></vm>'), 'vm')
+bar_host = parse(POST(links['hosts'], '<host><name>bar</name></host>'), 'host')
 
-print POST(foo_vm + "/start")
-print GET(foo_vm)
+print POST(foo_vm['href'] + "/start")
+print GET(foo_vm['href'])
 
 def PUT(url, body):
     cnx = httplib.HTTPConnection(opts['host'], opts['port'])
@@ -124,8 +122,8 @@ def PUT(url, body):
     finally:
         cnx.close()
 
-print PUT(foo_vm, '<vm><name>bar</name></vm>')
-print PUT(bar_host, '<host><name>foo</name></host>')
+print PUT(foo_vm['href'], '<vm><name>bar</name></vm>')
+print PUT(bar_host['href'], '<host><name>foo</name></host>')
 
 def DELETE(url):
     cnx = httplib.HTTPConnection(opts['host'], opts['port'])
@@ -135,5 +133,5 @@ def DELETE(url):
     finally:
         cnx.close()
 
-print DELETE(foo_vm)
-print DELETE(bar_host)
+print DELETE(foo_vm['href'])
+print DELETE(bar_host['href'])
