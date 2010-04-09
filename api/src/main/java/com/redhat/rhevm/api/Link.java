@@ -3,6 +3,7 @@
  */
 package com.redhat.rhevm.api;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,10 +21,10 @@ public class Link
 	{
 	}
 
-	public Link(String rel, String href, String type)
+	public Link(String rel, URI href, String type)
 	{
 		this.rel  = rel;
-		this.href = href;
+		this.href = href.toString();
 		this.type = type;
 	}
 

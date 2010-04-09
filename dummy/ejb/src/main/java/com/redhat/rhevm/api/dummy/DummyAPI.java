@@ -18,6 +18,8 @@
  */
 package com.redhat.rhevm.api.dummy;
 
+import java.net.URI;
+
 import javax.ejb.Stateless;
 
 import javax.ws.rs.core.Response;
@@ -39,8 +41,8 @@ public class DummyAPI implements API
 	{
 		UriBuilder absolute = uriInfo.getBaseUriBuilder();
 
-		String hostsUrl = absolute.clone().path("hosts").build().toString();
-		String vmsUrl   = absolute.clone().path("vms").build().toString();
+		URI hostsUrl = absolute.clone().path("hosts").build();
+		URI vmsUrl   = absolute.clone().path("vms").build();
 
 		Response.ResponseBuilder builder = Response.ok();
 
