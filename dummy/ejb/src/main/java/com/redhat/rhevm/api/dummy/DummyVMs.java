@@ -18,14 +18,17 @@
  */
 package com.redhat.rhevm.api.dummy;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.Actions;
 import com.redhat.rhevm.api.VM;
 import com.redhat.rhevm.api.VMs;
 
@@ -47,10 +50,16 @@ public class DummyVMs implements VMs
 	}
 
 	/* FIXME: kill uriInfo param, make href auto-generated? */
-	public static DummyVM lookup(UriInfo uriInfo, String id) {
+	public DummyVM lookup(UriInfo uriInfo, String id) {
 		DummyVM vm = vms.get(id);
+
+		UriBuilder uriBuilder = uriInfo.getBaseUriBuilder().clone().path("vms").path(id);
+
 		if (uriInfo != null)
-			vm.setHref(uriInfo.getBaseUriBuilder().clone().path("vms").path(id).build());
+			vm.setHref(uriBuilder.build());
+
+		vm.setActions(new Actions(uriBuilder, VMs.class));
+
 		return vm;
 	}
 

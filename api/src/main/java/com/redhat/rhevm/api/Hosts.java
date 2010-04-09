@@ -95,14 +95,17 @@ public interface Hosts
 	public void remove(@PathParam("id") String id);
 
 	@POST
+	@Action
 	@Path("{id}")
 	public void approve(@PathParam("id") String id);
 
 	@POST
+	@Action
 	@Path("{id}")
 	public void fence(@PathParam("id") String id);
 
 	@POST
+	@Action
 	@Path("{id}")
 	public void resume(@PathParam("id") String id);
 

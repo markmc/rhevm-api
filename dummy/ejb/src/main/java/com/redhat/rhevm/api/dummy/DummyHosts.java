@@ -24,8 +24,10 @@ import java.util.HashMap;
 
 import javax.ejb.Stateless;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.Actions;
 import com.redhat.rhevm.api.Host;
 import com.redhat.rhevm.api.Hosts;
 
@@ -49,7 +51,14 @@ public class DummyHosts implements Hosts
 	/* FIXME: kill uriInfo param, make href auto-generated? */
 	private DummyHost lookup(UriInfo uriInfo, String id) {
 		DummyHost host = hosts.get(id);
-		host.setHref(uriInfo.getBaseUriBuilder().clone().path("hosts").path(id).build());
+
+		UriBuilder uriBuilder = uriInfo.getBaseUriBuilder().clone().path("hosts").path(id);
+
+		if (uriInfo != null)
+			host.setHref(uriBuilder.build());
+
+		host.setActions(new Actions(uriBuilder, Hosts.class));
+
 		return host;
 	}
 

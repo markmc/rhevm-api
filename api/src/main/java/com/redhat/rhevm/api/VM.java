@@ -62,6 +62,15 @@ public class VM
 	}
 	protected String name;
 
+	@XmlElement(name = "actions")
+	public Actions getActions() {
+		return actions;
+	}
+	public void setActions(Actions actions) {
+		this.actions = actions;
+	}
+	protected Actions actions;
+
 	@XmlElement(name = "hostId")
 	public String getHostId() {
 		return hostId;

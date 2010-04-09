@@ -62,6 +62,15 @@ public class Host
 	}
 	protected String name;
 
+	@XmlElement(name = "actions")
+	public Actions getActions() {
+		return actions;
+	}
+	public void setActions(Actions actions) {
+		this.actions = actions;
+	}
+	protected Actions actions;
+
 	@XmlElement(name = "address")
 	public String getAddress() {
 		return address;

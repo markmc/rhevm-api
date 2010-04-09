@@ -100,42 +100,52 @@ public interface VMs
 	 */
 
 	@POST
+	@Action
 	@Path("{id}/start")
 	public void start(@PathParam("id") String id);
 
 	@POST
+	@Action
 	@Path("{id}/stop")
 	public void stop(@PathParam("id") String id);
 
 	@POST
+	@Action
 	@Path("{id}/shutdown")
 	public void shutdown(@PathParam("id") String id);
 
 	@POST
+	@Action
 	@Path("{id}/suspend")
 	public void suspend(@PathParam("id") String id);
 
 	@POST
+	@Action
 	@Path("{id}/restore")
 	public void restore(@PathParam("id") String id);
 
 	@POST
+	@Action
 	@Path("{id}/migrate")
 	public void migrate(@PathParam("id") String id);
 
 	@POST
+	@Action
 	@Path("{id}/move")
 	public void move(@PathParam("id") String id);
 
 	@POST
+	@Action
 	@Path("{id}/detach")
 	public void detach(@PathParam("id") String id);
 
 	@POST
+	@Action
 	@Path("{id}/changeCD")
 	public void changeCD(@PathParam("id") String id);
 
 	@POST
+	@Action
 	@Path("{id}/ejectCD")
 	public void ejectCD(@PathParam("id") String id);
 }
