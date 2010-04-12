@@ -37,10 +37,10 @@ import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 import java.util.List;
 
-/* FIXME: we want to produce e.g. YAML and JSON too */
+/* FIXME: we want to produce JSON too */
 
 @Path("/vms")
-@Produces("application/xml")
+@Produces({"application/xml", "application/x-yaml"})
 @Formatted
 public interface VMs
 {
@@ -74,8 +74,8 @@ public interface VMs
 	 * @return    the new newly created VM
 	 */
 	@POST
-	@Consumes("application/xml")
-	@Produces("application/xml")
+	@Consumes({"application/xml", "application/x-yaml"})
+	@Produces({"application/xml", "application/x-yaml"})
 	public Response add(@Context UriInfo uriInfo, VM vm);
 
 	/**
@@ -88,7 +88,7 @@ public interface VMs
 	 */
 	@PUT
 	@Path("{id}")
-	@Consumes("application/xml")
+	@Consumes({"application/xml", "application/x-yaml"})
 	public VM update(@Context UriInfo uriInfo, @PathParam("id") String id, VM vm);
 
 	@DELETE

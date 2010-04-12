@@ -1,0 +1,5 @@
+transfers:
+  vm: com.redhat.rhevm.api.dummy.DummyVM
+  host: com.redhat.rhevm.api.dummy.DummyHost
+  actions: com.redhat.rhevm.api.Actions
+  link: com.redhat.rhevm.api.Link
