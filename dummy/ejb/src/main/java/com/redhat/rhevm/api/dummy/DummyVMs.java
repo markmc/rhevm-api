@@ -56,7 +56,7 @@ public class DummyVMs implements VMs
 	}
 
 	private DummyVM addLinks(DummyVM vm, UriBuilder uriBuilder) {
-		vm.setLink(new Link("self", uriBuilder.build(), MediaType.APPLICATION_XML));
+		vm.setLink(new Link("self", uriBuilder.build()));
 		vm.setActions(new Actions(uriBuilder, VMs.class));
 		return vm;
 	}

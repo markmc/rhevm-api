@@ -55,7 +55,7 @@ public class DummyHosts implements Hosts
 	}
 
 	private DummyHost addLinks(DummyHost host, UriBuilder uriBuilder) {
-		host.setLink(new Link("self", uriBuilder.build(), MediaType.APPLICATION_XML));
+		host.setLink(new Link("self", uriBuilder.build()));
 		host.setActions(new Actions(uriBuilder, Hosts.class));
 		return host;
 	}

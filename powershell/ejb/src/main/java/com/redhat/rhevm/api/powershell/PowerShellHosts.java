@@ -61,7 +61,7 @@ public class PowerShellHosts implements Hosts
 	}
 
 	private Host addLink(Host host, URI uri) {
-		host.setLink(new Link("self", uri, MediaType.APPLICATION_XML));
+		host.setLink(new Link("self", uri));
 		return host;
 	}
 

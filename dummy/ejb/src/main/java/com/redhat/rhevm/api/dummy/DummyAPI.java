@@ -48,8 +48,8 @@ public class DummyAPI implements API
 		Response.ResponseBuilder builder = Response.ok();
 
 		/* FIXME: consider whether we really want to use the Link: HTTP header */
-		builder.header("Link", new Link("hosts", hostsUrl, MediaType.APPLICATION_XML));
-		builder.header("Link", new Link("vms",   vmsUrl,   MediaType.APPLICATION_XML));
+		builder.header("Link", new Link("hosts", hostsUrl));
+		builder.header("Link", new Link("vms", vmsUrl));
 
 		return builder.build();
 	}

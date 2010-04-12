@@ -21,11 +21,10 @@ public class Link
 	{
 	}
 
-	public Link(String rel, URI href, String type)
+	public Link(String rel, URI href)
 	{
 		this.rel  = rel;
 		this.href = href.toString();
-		this.type = type;
 	}
 
 	@XmlAttribute(name = "rel")
@@ -53,18 +52,6 @@ public class Link
 	}
 	private String href;
 
-	@XmlAttribute(name = "type")
-	public String getType()
-	{
-			return type;
-	}
-	public void setType(String type)
-	{
-		this.type = type;
-	}
-	private String type;
-
-
 	/**
 	 * To write as link header
 	 *
@@ -74,7 +61,6 @@ public class Link
 	{
 		StringBuilder builder = new StringBuilder("<");
 		builder.append(href).append(">; rel=").append(rel);
-		if (type != null) builder.append("; type=").append(type);
 		return builder.toString();
 	}
 
@@ -103,10 +89,6 @@ public class Link
 		if (map.containsKey("rel"))
 		{
 			link.rel = map.get("rel");
-		}
-		if (map.containsKey("type"))
-		{
-			link.type = map.get("type");
 		}
 		return link;
 	}
