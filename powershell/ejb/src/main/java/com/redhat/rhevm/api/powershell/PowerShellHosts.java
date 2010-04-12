@@ -30,6 +30,7 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.Host;
 import com.redhat.rhevm.api.Hosts;
 import com.redhat.rhevm.api.Link;
+import com.redhat.rhevm.api.MediaType;
 
 @Stateless
 public class PowerShellHosts implements Hosts
@@ -60,7 +61,7 @@ public class PowerShellHosts implements Hosts
 	}
 
 	private Host addLink(Host host, URI uri) {
-		host.setLink(new Link("self", uri, "application/xml"));
+		host.setLink(new Link("self", uri, MediaType.APPLICATION_XML));
 		return host;
 	}
 

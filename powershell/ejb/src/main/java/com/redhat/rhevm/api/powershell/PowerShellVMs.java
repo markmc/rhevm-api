@@ -28,6 +28,7 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.Link;
+import com.redhat.rhevm.api.MediaType;
 import com.redhat.rhevm.api.VM;
 import com.redhat.rhevm.api.VMs;
 
@@ -57,7 +58,7 @@ public class PowerShellVMs implements VMs
 	}
 
 	private VM addLink(VM vm, URI uri) {
-		vm.setLink(new Link("self", uri, "application/xml"));
+		vm.setLink(new Link("self", uri, MediaType.APPLICATION_XML));
 		return vm;
 	}
 

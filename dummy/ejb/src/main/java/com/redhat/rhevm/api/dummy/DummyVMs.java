@@ -30,6 +30,7 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.Actions;
 import com.redhat.rhevm.api.Link;
+import com.redhat.rhevm.api.MediaType;
 import com.redhat.rhevm.api.VM;
 import com.redhat.rhevm.api.VMs;
 
@@ -55,7 +56,7 @@ public class DummyVMs implements VMs
 	}
 
 	private DummyVM addLinks(DummyVM vm, UriBuilder uriBuilder) {
-		vm.setLink(new Link("self", uriBuilder.build(), "application/xml"));
+		vm.setLink(new Link("self", uriBuilder.build(), MediaType.APPLICATION_XML));
 		vm.setActions(new Actions(uriBuilder, VMs.class));
 		return vm;
 	}

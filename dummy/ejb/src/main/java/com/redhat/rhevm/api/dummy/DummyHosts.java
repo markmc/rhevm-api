@@ -31,6 +31,7 @@ import com.redhat.rhevm.api.Actions;
 import com.redhat.rhevm.api.Link;
 import com.redhat.rhevm.api.Host;
 import com.redhat.rhevm.api.Hosts;
+import com.redhat.rhevm.api.MediaType;
 
 @Stateless
 public class DummyHosts implements Hosts
@@ -54,7 +55,7 @@ public class DummyHosts implements Hosts
 	}
 
 	private DummyHost addLinks(DummyHost host, UriBuilder uriBuilder) {
-		host.setLink(new Link("self", uriBuilder.build(), "application/xml"));
+		host.setLink(new Link("self", uriBuilder.build(), MediaType.APPLICATION_XML));
 		host.setActions(new Actions(uriBuilder, Hosts.class));
 		return host;
 	}

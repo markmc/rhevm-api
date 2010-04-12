@@ -44,7 +44,7 @@ public class Actions
 			if (method.getAnnotation(Action.class) != null) {
 				URI uri = uriBuilder.clone().path(method.getName()).build();
 
-				links.add(new Link(method.getName(), uri, "application/xml"));
+				links.add(new Link(method.getName(), uri, MediaType.APPLICATION_XML));
 			}
 		}
 	}

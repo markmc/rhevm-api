@@ -28,6 +28,7 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.API;
 import com.redhat.rhevm.api.Link;
+import com.redhat.rhevm.api.MediaType;
 
 /* FIXME: it'd be nice to move this whole thing into the
  *        top-level api package
@@ -47,8 +48,8 @@ public class PowerShellAPI implements API
 		Response.ResponseBuilder builder = Response.ok();
 
 		/* FIXME: consider whether we really want to use the Link: HTTP header */
-		builder.header("Link", new Link("hosts", hostsUrl, "application/xml"));
-		builder.header("Link", new Link("vms",   vmsUrl,   "application/xml"));
+		builder.header("Link", new Link("hosts", hostsUrl, MediaType.APPLICATION_XML));
+		builder.header("Link", new Link("vms",   vmsUrl,   MediaType.APPLICATION_XML));
 
 		return builder.build();
 	}
