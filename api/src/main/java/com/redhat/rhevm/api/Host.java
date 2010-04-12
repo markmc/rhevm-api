@@ -18,12 +18,10 @@
  */
 package com.redhat.rhevm.api;
 
-import java.net.URI;
-
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /* FIXME: could probably drop @XmlAccessorType */
@@ -35,14 +33,14 @@ public class Host
 	/* FIXME: can we make this attritbute be auto-generated
 	 *        somehow?
 	 */
-	@XmlAttribute(name = "href")
-	public URI getHref() {
-		return href;
+	@XmlElementRef
+	public Link getLink() {
+		return link;
 	}
-	public void setHref(URI href) {
-		this.href = href;
+	public void setLink(Link link) {
+		this.link = link;
 	}
-	protected URI href;
+	protected Link link;
 
 	@XmlElement(name = "id")
 	public String getId() {

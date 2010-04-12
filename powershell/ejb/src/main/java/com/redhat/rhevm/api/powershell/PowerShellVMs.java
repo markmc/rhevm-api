@@ -18,13 +18,16 @@
  */
 package com.redhat.rhevm.api.powershell;
 
+import java.net.URI;
 import java.util.List;
 import java.util.ArrayList;
 
 import javax.ejb.Stateless;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.Link;
 import com.redhat.rhevm.api.VM;
 import com.redhat.rhevm.api.VMs;
 
@@ -49,25 +52,37 @@ public class PowerShellVMs implements VMs
 		return !vms.isEmpty() ? vms.get(0) : null;
 	}
 
-	private VM addHref(VM vm, UriInfo uriInfo) {
-		vm.setHref(uriInfo.getBaseUriBuilder().clone().path("vms").path(vm.getId()).build());
+	private UriBuilder getUriBuilder(UriInfo uriInfo) {
+		return uriInfo.getBaseUriBuilder().clone().path("vms");
+	}
+
+	private VM addLink(VM vm, URI uri) {
+		vm.setLink(new Link("self", uri, "application/xml"));
 		return vm;
 	}
 
-	private List<VM> addHrefs(List<VM> vms, UriInfo uriInfo) {
+	private VM addLink(VM vm, UriBuilder uriBuilder) {
+		return addLink(vm, uriBuilder.clone().path(vm.getId()).build());
+	}
+
+	private VM addLink(VM vm, UriInfo uriInfo) {
+		return addLink(vm, getUriBuilder(uriInfo));
+	}
+
+	private List<VM> addLinks(List<VM> vms, UriInfo uriInfo) {
 		for (VM vm : vms)
-			addHref(vm, uriInfo);
+			addLink(vm, uriInfo);
 		return vms;
 	}
 
 	@Override
 	public VM get(UriInfo uriInfo, String id) {
-		return addHref(runAndParseSingle("get-vm " + id), uriInfo);
+		return addLink(runAndParseSingle("get-vm " + id), uriInfo);
 	}
 
 	@Override
 	public List<VM> list(UriInfo uriInfo) {
-		return addHrefs(runAndParse("select-vm"), uriInfo);
+		return addLinks(runAndParse("select-vm"), uriInfo);
 	}
 
 /* FIXME: move this
@@ -99,9 +114,11 @@ public class PowerShellVMs implements VMs
 			buf.append(" -hostclusterid " + vm.getClusterId());
 		}
 
-		vm = addHref(runAndParseSingle(buf.toString()), uriInfo);
+		vm = runAndParseSingle(buf.toString());
 
-		return Response.created(vm.getHref()).entity(vm).build();
+		URI uri = getUriBuilder(uriInfo).clone().path(vm.getId()).build();
+
+		return Response.created(uri).entity(addLink(vm, uri)).build();
 	}
 
 	@Override
@@ -117,7 +134,7 @@ public class PowerShellVMs implements VMs
 		buf.append("\n");
 		buf.append("update-vm -vmobject $v");
 
-		return addHref(runAndParseSingle(buf.toString()), uriInfo);
+		return addLink(runAndParseSingle(buf.toString()), uriInfo);
 	}
 
 	@Override

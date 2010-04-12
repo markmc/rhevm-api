@@ -18,15 +18,18 @@
  */
 package com.redhat.rhevm.api.powershell;
 
+import java.net.URI;
 import java.util.List;
 import java.util.ArrayList;
 
 import javax.ejb.Stateless;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.Host;
 import com.redhat.rhevm.api.Hosts;
+import com.redhat.rhevm.api.Link;
 
 @Stateless
 public class PowerShellHosts implements Hosts
@@ -52,14 +55,26 @@ public class PowerShellHosts implements Hosts
 		return !hosts.isEmpty() ? hosts.get(0) : null;
 	}
 
-	private Host addHref(Host host, UriInfo uriInfo) {
-		host.setHref(uriInfo.getBaseUriBuilder().clone().path("hosts").path(host.getId()).build());
+	private UriBuilder getUriBuilder(UriInfo uriInfo) {
+		return uriInfo.getBaseUriBuilder().clone().path("hosts");
+	}
+
+	private Host addLink(Host host, URI uri) {
+		host.setLink(new Link("self", uri, "application/xml"));
 		return host;
 	}
 
-	private List<Host> addHrefs(List<Host> hosts, UriInfo uriInfo) {
+	private Host addLink(Host host, UriBuilder uriBuilder) {
+		return addLink(host, uriBuilder.clone().path(host.getId()).build());
+	}
+
+	private Host addLink(Host host, UriInfo uriInfo) {
+		return addLink(host, getUriBuilder(uriInfo));
+	}
+
+	private List<Host> addLinks(List<Host> hosts, UriInfo uriInfo) {
 		for (Host host : hosts)
-			addHref(host, uriInfo);
+			addLink(host, uriInfo);
 		return hosts;
 	}
 
@@ -67,12 +82,12 @@ public class PowerShellHosts implements Hosts
 	public Host get(UriInfo uriInfo, String id) {
 		List<Host> hosts = runAndParse(CMD_PREFIX + "get-host " + id);
 
-		return hosts.isEmpty() ? null : addHref(hosts.get(0), uriInfo);
+		return hosts.isEmpty() ? null : addLink(hosts.get(0), uriInfo);
 	}
 
 	@Override
 	public List<Host> list(UriInfo uriInfo) {
-		return addHrefs(runAndParse("select-host"), uriInfo);
+		return addLinks(runAndParse("select-host"), uriInfo);
 	}
 
 /* FIXME: move this
@@ -100,9 +115,11 @@ public class PowerShellHosts implements Hosts
 			buf.append(" -rootpassword " + host.getRootPassword());
 		}
 
-		host = addHref(runAndParseSingle(buf.toString()), uriInfo);
+		host = runAndParseSingle(buf.toString());
 
-		return Response.created(host.getHref()).entity(host).build();
+		URI uri = getUriBuilder(uriInfo).clone().path(host.getId()).build();
+
+		return Response.created(uri).entity(addLink(host, uri)).build();
 	}
 
 	@Override
@@ -118,7 +135,7 @@ public class PowerShellHosts implements Hosts
 		buf.append("\n");
 		buf.append("update-host -hostobject $v");
 
-		return addHref(runAndParseSingle(buf.toString()), uriInfo);
+		return addLink(runAndParseSingle(buf.toString()), uriInfo);
 	}
 
 	@Override

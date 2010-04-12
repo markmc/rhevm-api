@@ -29,6 +29,7 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.Actions;
+import com.redhat.rhevm.api.Link;
 import com.redhat.rhevm.api.VM;
 import com.redhat.rhevm.api.VMs;
 
@@ -49,18 +50,19 @@ public class DummyVMs implements VMs
 		}
 	}
 
+	private UriBuilder getUriBuilder(UriInfo uriInfo, String id) {
+		return uriInfo.getBaseUriBuilder().clone().path("vms").path(id);
+	}
+
+	private DummyVM addLinks(DummyVM vm, UriBuilder uriBuilder) {
+		vm.setLink(new Link("self", uriBuilder.build(), "application/xml"));
+		vm.setActions(new Actions(uriBuilder, VMs.class));
+		return vm;
+	}
+
 	/* FIXME: kill uriInfo param, make href auto-generated? */
 	public DummyVM lookup(UriInfo uriInfo, String id) {
-		DummyVM vm = vms.get(id);
-
-		UriBuilder uriBuilder = uriInfo.getBaseUriBuilder().clone().path("vms").path(id);
-
-		if (uriInfo != null)
-			vm.setHref(uriBuilder.build());
-
-		vm.setActions(new Actions(uriBuilder, VMs.class));
-
-		return vm;
+		return addLinks(vms.get(id), getUriBuilder(uriInfo, id));
 	}
 
 	@Override
@@ -85,10 +87,12 @@ public class DummyVMs implements VMs
 		DummyVM newVM = new DummyVM(vm);
 
 		vms.put(newVM.getId(), newVM);
-		/* FIXME: the extra lookup is just to add href */
-		newVM = lookup(uriInfo, newVM.getId());
 
-		return Response.created(newVM.getHref()).entity(newVM).build();
+		UriBuilder uriBuilder = getUriBuilder(uriInfo, newVM.getId());
+
+		addLinks(newVM, uriBuilder);
+
+		return Response.created(uriBuilder.build()).entity(newVM).build();
 	}
 
 	@Override

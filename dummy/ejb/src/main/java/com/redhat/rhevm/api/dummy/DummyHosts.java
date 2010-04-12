@@ -28,6 +28,7 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.Actions;
+import com.redhat.rhevm.api.Link;
 import com.redhat.rhevm.api.Host;
 import com.redhat.rhevm.api.Hosts;
 
@@ -48,18 +49,19 @@ public class DummyHosts implements Hosts
 		}
 	}
 
+	private UriBuilder getUriBuilder(UriInfo uriInfo, String id) {
+		return uriInfo.getBaseUriBuilder().clone().path("hosts").path(id);
+	}
+
+	private DummyHost addLinks(DummyHost host, UriBuilder uriBuilder) {
+		host.setLink(new Link("self", uriBuilder.build(), "application/xml"));
+		host.setActions(new Actions(uriBuilder, Hosts.class));
+		return host;
+	}
+
 	/* FIXME: kill uriInfo param, make href auto-generated? */
 	private DummyHost lookup(UriInfo uriInfo, String id) {
-		DummyHost host = hosts.get(id);
-
-		UriBuilder uriBuilder = uriInfo.getBaseUriBuilder().clone().path("hosts").path(id);
-
-		if (uriInfo != null)
-			host.setHref(uriBuilder.build());
-
-		host.setActions(new Actions(uriBuilder, Hosts.class));
-
-		return host;
+		return addLinks(hosts.get(id), getUriBuilder(uriInfo, id));
 	}
 
 	@Override
@@ -84,10 +86,12 @@ public class DummyHosts implements Hosts
 		DummyHost newHost = new DummyHost(host);
 
 		hosts.put(newHost.getId(), newHost);
-		/* FIXME: the extra lookup is just to add href */
-		newHost = lookup(uriInfo, newHost.getId());
 
-		return Response.created(newHost.getHref()).entity(newHost).build();
+		UriBuilder uriBuilder = getUriBuilder(uriInfo, newHost.getId());
+
+		addLinks(newHost, uriBuilder);
+
+		return Response.created(uriBuilder.build()).entity(newHost).build();
 	}
 
 	@Override

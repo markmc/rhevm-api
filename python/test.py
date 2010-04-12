@@ -66,7 +66,10 @@ def parseNode(node):
     for n in node.childNodes:
         if n.nodeType != n.ELEMENT_NODE:
             continue
-        ret[n.nodeName] = getText(n.childNodes)
+        if n.nodeName == 'link':
+            ret[n.attributes['rel'].nodeValue] = n.attributes['href'].nodeValue
+        else:
+            ret[n.nodeName] = getText(n.childNodes)
     return ret
 
 def parse(doc, entity):
@@ -90,10 +93,10 @@ def GET(url):
         cnx.close()
 
 for host in parseCollection(GET(links['hosts']), 'host'):
-    print parse(GET(host['href']), 'host')
+    print parse(GET(host['self']), 'host')
 
 for vm in parseCollection(GET(links['vms']), 'vm'):
-    print parse(GET(vm['href']), 'vm')
+    print parse(GET(vm['self']), 'vm')
 
 def POST(url, body = None):
     cnx = httplib.HTTPConnection(opts['host'], opts['port'])
@@ -111,8 +114,8 @@ def POST(url, body = None):
 foo_vm = parse(POST(links['vms'], '<vm><name>foo</name></vm>'), 'vm')
 bar_host = parse(POST(links['hosts'], '<host><name>bar</name></host>'), 'host')
 
-print POST(foo_vm['href'] + "/start")
-print GET(foo_vm['href'])
+print POST(foo_vm['self'] + "/start")
+print GET(foo_vm['self'])
 
 def PUT(url, body):
     cnx = httplib.HTTPConnection(opts['host'], opts['port'])
@@ -122,8 +125,8 @@ def PUT(url, body):
     finally:
         cnx.close()
 
-print PUT(foo_vm['href'], '<vm><name>bar</name></vm>')
-print PUT(bar_host['href'], '<host><name>foo</name></host>')
+print PUT(foo_vm['self'], '<vm><name>bar</name></vm>')
+print PUT(bar_host['self'], '<host><name>foo</name></host>')
 
 def DELETE(url):
     cnx = httplib.HTTPConnection(opts['host'], opts['port'])
@@ -133,5 +136,5 @@ def DELETE(url):
     finally:
         cnx.close()
 
-print DELETE(foo_vm['href'])
-print DELETE(bar_host['href'])
+print DELETE(foo_vm['self'])
+print DELETE(bar_host['self'])
