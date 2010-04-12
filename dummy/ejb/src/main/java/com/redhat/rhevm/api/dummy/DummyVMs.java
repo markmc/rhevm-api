@@ -55,20 +55,22 @@ public class DummyVMs implements VMs
 		return uriInfo.getBaseUriBuilder().clone().path("vms").path(id);
 	}
 
-	private DummyVM addLinks(DummyVM vm, UriBuilder uriBuilder) {
+	private VM addLinks(VM vm, UriBuilder uriBuilder) {
 		vm.setLink(new Link("self", uriBuilder.build()));
 		vm.setActions(new Actions(uriBuilder, VMs.class));
-		return vm;
+		return new VM(vm);
+	}
+
+	private VM addLinks(VM vm, UriInfo uriInfo) {
+		return addLinks(vm, getUriBuilder(uriInfo, vm.getId()));
 	}
 
 	/* FIXME: kill uriInfo param, make href auto-generated? */
-	public DummyVM lookup(UriInfo uriInfo, String id) {
-		return addLinks(vms.get(id), getUriBuilder(uriInfo, id));
-	}
-
 	@Override
 	public VM get(UriInfo uriInfo, String id) {
-		return lookup(uriInfo, id);
+		DummyVM vm = vms.get(id);
+
+		return addLinks(vm, uriInfo);
 	}
 
 	@Override
@@ -76,8 +78,7 @@ public class DummyVMs implements VMs
 		List<VM> ret = new ArrayList<VM>();
 
 		for (DummyVM vm : vms.values()) {
-			/* FIXME: the extra lookup is just to add href */
-			ret.add(lookup(uriInfo, vm.getId()));
+			ret.add(addLinks(vm, uriInfo));
 		}
 
 		return ret;
@@ -91,16 +92,16 @@ public class DummyVMs implements VMs
 
 		UriBuilder uriBuilder = getUriBuilder(uriInfo, newVM.getId());
 
-		addLinks(newVM, uriBuilder);
+		vm = addLinks(newVM, uriBuilder);
 
-		return Response.created(uriBuilder.build()).entity(newVM).build();
+		return Response.created(uriBuilder.build()).entity(vm).build();
 	}
 
 	@Override
 	public VM update(UriInfo uriInfo, String id, VM vm) {
-		DummyVM ret = lookup(uriInfo, id);
+		DummyVM ret = vms.get(id);
 		ret.update(vm);
-		return ret;
+		return addLinks(ret, uriInfo);
 	}
 
 	@Override

@@ -59,7 +59,7 @@ public class PowerShellVMs implements VMs
 
 	private VM addLink(VM vm, URI uri) {
 		vm.setLink(new Link("self", uri));
-		return vm;
+		return new VM(vm);
 	}
 
 	private VM addLink(VM vm, UriBuilder uriBuilder) {

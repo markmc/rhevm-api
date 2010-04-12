@@ -18,12 +18,8 @@
  */
 package com.redhat.rhevm.api.dummy;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
 import com.redhat.rhevm.api.Host;
 
-// FIXME: why is this needed?
-@XmlRootElement(name = "host")
 public class DummyHost extends Host
 {
 	private static int counter = 0;

@@ -62,7 +62,7 @@ public class PowerShellHosts implements Hosts
 
 	private Host addLink(Host host, URI uri) {
 		host.setLink(new Link("self", uri));
-		return host;
+		return new Host(host);
 	}
 
 	private Host addLink(Host host, UriBuilder uriBuilder) {

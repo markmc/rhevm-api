@@ -54,20 +54,22 @@ public class DummyHosts implements Hosts
 		return uriInfo.getBaseUriBuilder().clone().path("hosts").path(id);
 	}
 
-	private DummyHost addLinks(DummyHost host, UriBuilder uriBuilder) {
+	private Host addLinks(Host host, UriBuilder uriBuilder) {
 		host.setLink(new Link("self", uriBuilder.build()));
 		host.setActions(new Actions(uriBuilder, Hosts.class));
-		return host;
+		return new Host(host);
+	}
+
+	private Host addLinks(Host host, UriInfo uriInfo) {
+		return addLinks(host, getUriBuilder(uriInfo, host.getId()));
 	}
 
 	/* FIXME: kill uriInfo param, make href auto-generated? */
-	private DummyHost lookup(UriInfo uriInfo, String id) {
-		return addLinks(hosts.get(id), getUriBuilder(uriInfo, id));
-	}
-
 	@Override
 	public Host get(UriInfo uriInfo, String id) {
-		return lookup(uriInfo, id);
+		DummyHost host = hosts.get(id);
+
+		return addLinks(host, uriInfo);
 	}
 
 	@Override
@@ -75,8 +77,7 @@ public class DummyHosts implements Hosts
 		List<Host> ret = new ArrayList<Host>();
 
 		for (DummyHost host : hosts.values()) {
-			/* FIXME: the extra lookup is just to add href */
-			ret.add(lookup(uriInfo, host.getId()));
+			ret.add(addLinks(host, uriInfo));
 		}
 
 		return ret;
@@ -90,16 +91,16 @@ public class DummyHosts implements Hosts
 
 		UriBuilder uriBuilder = getUriBuilder(uriInfo, newHost.getId());
 
-		addLinks(newHost, uriBuilder);
+		host = addLinks(newHost, uriBuilder);
 
-		return Response.created(uriBuilder.build()).entity(newHost).build();
+		return Response.created(uriBuilder.build()).entity(host).build();
 	}
 
 	@Override
 	public Host update(UriInfo uriInfo, String id, Host host) {
-		DummyHost ret = lookup(uriInfo, id);
+		DummyHost ret = hosts.get(id);
 		ret.update(host);
-		return ret;
+		return addLinks(ret, uriInfo);
 	}
 
 	@Override

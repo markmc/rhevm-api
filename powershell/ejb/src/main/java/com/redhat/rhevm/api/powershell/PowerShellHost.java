@@ -21,12 +21,8 @@ package com.redhat.rhevm.api.powershell;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
 import com.redhat.rhevm.api.Host;
 
-// FIXME: why is this needed?
-@XmlRootElement(name = "host")
 public class PowerShellHost extends Host
 {
 	public PowerShellHost() {

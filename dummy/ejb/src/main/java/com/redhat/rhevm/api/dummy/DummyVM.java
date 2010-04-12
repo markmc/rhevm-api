@@ -18,12 +18,8 @@
  */
 package com.redhat.rhevm.api.dummy;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
 import com.redhat.rhevm.api.VM;
 
-// FIXME: this shouldn't be needed
-@XmlRootElement(name = "vm")
 public class DummyVM extends VM
 {
 	private static int counter = 0;

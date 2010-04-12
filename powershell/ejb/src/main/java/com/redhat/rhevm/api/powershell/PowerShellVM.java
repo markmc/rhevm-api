@@ -21,12 +21,8 @@ package com.redhat.rhevm.api.powershell;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
 import com.redhat.rhevm.api.VM;
 
-// FIXME: why is this needed?
-@XmlRootElement(name = "vm")
 public class PowerShellVM extends VM
 {
 	public PowerShellVM() {

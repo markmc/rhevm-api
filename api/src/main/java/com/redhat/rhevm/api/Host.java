@@ -30,6 +30,23 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.NONE)
 public class Host
 {
+	/* FIXME:
+	 * This is a giant hack so that JAX-B marshalls the
+	 * superclass rather than the subclass - e.g. we want the type
+	 * to be 'Host' not 'DummyHost' when it is passed to jyaml
+	 */
+	public Host(Host host) {
+		link         = host.link;
+		id           = host.id;
+		name         = host.name;
+		actions      = host.actions;
+		address      = host.address;
+		rootPassword = host.rootPassword;
+	}
+
+	public Host() {
+	}
+
 	/* FIXME: can we make this attritbute be auto-generated
 	 *        somehow?
 	 */

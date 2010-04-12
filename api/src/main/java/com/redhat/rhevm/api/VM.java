@@ -30,6 +30,24 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.NONE)
 public class VM
 {
+	/* FIXME:
+	 * This is a giant hack so that JAX-B marshalls the
+	 * superclass rather than the subclass - e.g. we want the type
+	 * to be 'VM' not 'DummyVM' when it is passed to jyaml
+	 */
+	public VM(VM vm) {
+		this.link       = vm.link;
+		this.id         = vm.id;
+		this.name       = vm.name;
+		this.actions    = vm.actions;
+		this.hostId     = vm.hostId;
+		this.templateId = vm.templateId;
+		this.clusterId  = vm.clusterId;
+	}
+
+	public VM() {
+	}
+
 	/* FIXME: can we make this attritbute be auto-generated
 	 *        somehow?
 	 */
