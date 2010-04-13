@@ -26,10 +26,12 @@ opts['uri'] = 'http://%(host)s:%(port)s/rhevm-api-%(impl)s-war/' % opts
 
 import http
 import xmlfmt
+import yamlfmt
+import jsonfmt
 
 links = http.HEAD_for_links(opts)
 
-for fmt in [xmlfmt, ]:
+for fmt in [xmlfmt, yamlfmt, jsonfmt]:
     print "=== ", fmt.MEDIA_TYPE, " ==="
 
     for host in fmt.parseHostCollection(http.GET(opts, links['hosts'], fmt.MEDIA_TYPE)):
