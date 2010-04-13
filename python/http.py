@@ -42,18 +42,24 @@ def HEAD_for_links(opts):
     finally:
         cnx.close()
 
-def GET(opts, uri):
+def GET(opts, uri, type = None):
     cnx = httplib.HTTPConnection(opts['host'], opts['port'])
     try:
-        cnx.request('GET', uri)
+        headers = {}
+        if not type is None:
+            headers['Accept'] = type
+        cnx.request('GET', uri, headers = headers)
         return cnx.getresponse().read()
     finally:
         cnx.close()
 
-def POST(opts, uri, body = None):
+def POST(opts, uri, body = None, type = None):
     cnx = httplib.HTTPConnection(opts['host'], opts['port'])
     try:
-        cnx.request('POST', uri, body, {'Content-type': 'application/xml'})
+        headers = {}
+        if not type is None:
+            headers['Content-type'] = type
+        cnx.request('POST', uri, body, headers = headers)
         resp = cnx.getresponse()
         body = resp.read()
         if not body:
@@ -63,10 +69,13 @@ def POST(opts, uri, body = None):
     finally:
         cnx.close()
 
-def PUT(opts, uri, body):
+def PUT(opts, uri, body, type = None):
     cnx = httplib.HTTPConnection(opts['host'], opts['port'])
     try:
-        cnx.request('PUT', uri, body, {'Content-type': 'application/xml'})
+        headers = {}
+        if not type is None:
+            headers['Content-type'] = type
+        cnx.request('PUT', uri, body, headers = headers)
         return cnx.getresponse().read()
     finally:
         cnx.close()

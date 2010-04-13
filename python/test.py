@@ -35,14 +35,14 @@ for host in xmlfmt.parseHostCollection(http.GET(opts, links['hosts'])):
 for vm in xmlfmt.parseVmCollection(http.GET(opts, links['vms'])):
     print xmlfmt.parseVM(http.GET(opts, vm.self))
 
-foo_vm = xmlfmt.parseVM(http.POST(opts, links['vms'], '<vm><name>foo</name></vm>'))
-bar_host = xmlfmt.parseHost(http.POST(opts, links['hosts'], '<host><name>bar</name></host>'))
+foo_vm = xmlfmt.parseVM(http.POST(opts, links['vms'], '<vm><name>foo</name></vm>'), 'application/xml')
+bar_host = xmlfmt.parseHost(http.POST(opts, links['hosts'], '<host><name>bar</name></host>', 'application/xml'))
 
-print http.POST(opts, foo_vm.self + "/start")
+print http.POST(opts, foo_vm.self + "/start", type = 'application/xml')
 print http.GET(opts, foo_vm.self)
 
-print http.PUT(opts, foo_vm.self, '<vm><name>bar</name></vm>')
-print http.PUT(opts, bar_host.self, '<host><name>foo</name></host>')
+print http.PUT(opts, foo_vm.self, '<vm><name>bar</name></vm>', 'application/xml')
+print http.PUT(opts, bar_host.self, '<host><name>foo</name></host>', 'application/xml')
 
 print http.DELETE(opts, foo_vm.self)
 print http.DELETE(opts, bar_host.self)
