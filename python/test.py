@@ -29,20 +29,30 @@ import xmlfmt
 
 links = http.HEAD_for_links(opts)
 
-for host in xmlfmt.parseHostCollection(http.GET(opts, links['hosts'])):
-    print xmlfmt.parseHost(http.GET(opts, host.self))
+for fmt in [xmlfmt, ]:
+    print "=== ", fmt.MEDIA_TYPE, " ==="
 
-for vm in xmlfmt.parseVmCollection(http.GET(opts, links['vms'])):
-    print xmlfmt.parseVM(http.GET(opts, vm.self))
+    for host in fmt.parseHostCollection(http.GET(opts, links['hosts'], fmt.MEDIA_TYPE)):
+        print fmt.parseHost(http.GET(opts, host.link.href, fmt.MEDIA_TYPE))
 
-foo_vm = xmlfmt.parseVM(http.POST(opts, links['vms'], '<vm><name>foo</name></vm>'), 'application/xml')
-bar_host = xmlfmt.parseHost(http.POST(opts, links['hosts'], '<host><name>bar</name></host>', 'application/xml'))
+    for vm in fmt.parseVmCollection(http.GET(opts, links['vms'], fmt.MEDIA_TYPE)):
+        print fmt.parseVM(http.GET(opts, vm.link.href, fmt.MEDIA_TYPE))
 
-print http.POST(opts, foo_vm.self + "/start", type = 'application/xml')
-print http.GET(opts, foo_vm.self)
+    foo_vm = fmt.VM()
+    foo_vm.name = 'foo'
+    foo_vm = fmt.parseVM(http.POST(opts, links['vms'], foo_vm.dump(), fmt.MEDIA_TYPE))
 
-print http.PUT(opts, foo_vm.self, '<vm><name>bar</name></vm>', 'application/xml')
-print http.PUT(opts, bar_host.self, '<host><name>foo</name></host>', 'application/xml')
+    bar_host = fmt.Host()
+    bar_host.name = 'bar'
+    bar_host = fmt.parseHost(http.POST(opts, links['hosts'], bar_host.dump(), fmt.MEDIA_TYPE))
 
-print http.DELETE(opts, foo_vm.self)
-print http.DELETE(opts, bar_host.self)
+    print http.POST(opts, foo_vm.link.href + "/start", type = fmt.MEDIA_TYPE)
+    print http.GET(opts, foo_vm.link.href, type = fmt.MEDIA_TYPE)
+
+    foo_vm.name = 'bar'
+    print http.PUT(opts, foo_vm.link.href, foo_vm.dump(), fmt.MEDIA_TYPE)
+    bar_host.name = 'foo'
+    print http.PUT(opts, bar_host.link.href, bar_host.dump(), fmt.MEDIA_TYPE)
+
+    print http.DELETE(opts, foo_vm.link.href)
+    print http.DELETE(opts, bar_host.link.href)

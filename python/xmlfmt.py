@@ -20,6 +20,8 @@
 import xml.dom
 import xml.dom.minidom
 
+MEDIA_TYPE = 'application/xml'
+
 def getText(nodelist):
     rc = ""
     for node in nodelist:
@@ -41,12 +43,23 @@ def parseNode(node):
             ret[n.nodeName] = getText(n.childNodes)
     return ret
 
+class Link:
+    def __init__(self, rel, href):
+        self.rel = rel
+        self.href = href
+
 class Base:
-    def __init__(self, node):
+    def __init__(self, node = None):
+        if node is None:
+            return
+
         dict = parseNode(node)
         for key in self.KEYS:
             if key in dict:
                 setattr(self, key, dict[key])
+
+        if hasattr(self, 'self'):
+            self.link = Link('self', getattr(self, 'self'))
 
     def __str__(self):
         dict = {}
@@ -59,9 +72,31 @@ class VM(Base):
     ROOT_ELEMENT = 'vm'
     KEYS = ['id', 'name', 'self']
 
+    def dump(self):
+        s = '<vm>'
+        if hasattr(self, 'name'):
+            s += '<name>' + getattr(self, 'name') + '</name>'
+        if hasattr(self, 'id'):
+            s += '<id>' + getattr(self, 'id') + '</id>'
+        if hasattr(self, 'self'):
+            s += '<link rel=\'self\' href=\'' + getattr(self, 'self') + '\' />'
+        s += '</vm>'
+        return s
+
 class Host(Base):
     ROOT_ELEMENT = 'host'
     KEYS = ['id', 'name', 'self']
+
+    def dump(self):
+        s = '<host>'
+        if hasattr(self, 'name'):
+            s += '<name>' + getattr(self, 'name') + '</name>'
+        if hasattr(self, 'id'):
+            s += '<id>' + getattr(self, 'id') + '</id>'
+        if hasattr(self, 'self'):
+            s += '<link rel=\'self\' href=\'' + getattr(self, 'self') + '\' />'
+        s += '</host>'
+        return s
 
 def parseVM(doc):
     return VM(xml.dom.minidom.parseString(doc).getElementsByTagName(VM.ROOT_ELEMENT)[0])

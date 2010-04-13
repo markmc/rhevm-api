@@ -59,6 +59,7 @@ def POST(opts, uri, body = None, type = None):
         headers = {}
         if not type is None:
             headers['Content-type'] = type
+            headers['Accept'] = type
         cnx.request('POST', uri, body, headers = headers)
         resp = cnx.getresponse()
         body = resp.read()
@@ -75,6 +76,7 @@ def PUT(opts, uri, body, type = None):
         headers = {}
         if not type is None:
             headers['Content-type'] = type
+            headers['Accept'] = type
         cnx.request('PUT', uri, body, headers = headers)
         return cnx.getresponse().read()
     finally:
