@@ -30,7 +30,6 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.Host;
 import com.redhat.rhevm.api.Hosts;
 import com.redhat.rhevm.api.Link;
-import com.redhat.rhevm.api.MediaType;
 
 @Stateless
 public class PowerShellHosts implements Hosts

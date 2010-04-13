@@ -28,7 +28,6 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.API;
 import com.redhat.rhevm.api.Link;
-import com.redhat.rhevm.api.MediaType;
 
 /* FIXME: it'd be nice to move this whole thing into the
  *        top-level api package

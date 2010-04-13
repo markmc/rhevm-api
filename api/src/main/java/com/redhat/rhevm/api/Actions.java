@@ -39,7 +39,7 @@ public class Actions
 	public Actions() {
 	}
 
-	public Actions(UriBuilder uriBuilder, Class service) {
+	public Actions(UriBuilder uriBuilder, Class<?> service) {
 		for (Method method : service.getMethods()) {
 			if (method.getAnnotation(Action.class) != null) {
 				URI uri = uriBuilder.clone().path(method.getName()).build();

@@ -31,7 +31,6 @@ import com.redhat.rhevm.api.Actions;
 import com.redhat.rhevm.api.Link;
 import com.redhat.rhevm.api.Host;
 import com.redhat.rhevm.api.Hosts;
-import com.redhat.rhevm.api.MediaType;
 
 @Stateless
 public class DummyHosts implements Hosts

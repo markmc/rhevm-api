@@ -19,7 +19,6 @@
 package com.redhat.rhevm.api.dummy;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -30,7 +29,6 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.Actions;
 import com.redhat.rhevm.api.Link;
-import com.redhat.rhevm.api.MediaType;
 import com.redhat.rhevm.api.VM;
 import com.redhat.rhevm.api.VMs;
 
