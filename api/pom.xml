@@ -24,12 +24,17 @@
 
     <dependency>
       <groupId>org.jboss.resteasy</groupId>
-      <artifactId>jaxrs-api</artifactId>
+      <artifactId>resteasy-jaxrs</artifactId>
     </dependency>
 
     <dependency>
       <groupId>org.jboss.resteasy</groupId>
       <artifactId>resteasy-jaxb-provider</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-yaml-provider</artifactId>
     </dependency>
 
   </dependencies>
