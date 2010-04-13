@@ -20,121 +20,29 @@
 opts = {
     'host' : 'localhost',
     'port' : 8080,
-    'impl' : "dummy"
+    'impl' : "dummy",
 }
-URL = 'http://%(host)s:%(port)s/rhevm-api-%(impl)s-war/' % opts
+opts['uri'] = 'http://%(host)s:%(port)s/rhevm-api-%(impl)s-war/' % opts
 
-import httplib
+import http
+import xmlfmt
 
-#
-# Dumb attempt to parse e.g. <http://foo/>; rel=bar; type=text/plain
-#
-def parse_link(s, links):
-    url = s[s.find('<')+1:s.find('>')]
-    s = s[s.find(';')+1:]
-    links[s[s.find('rel=')+4:s.find(';')]] = url
-    return links
+links = http.HEAD_for_links(opts)
 
-def query_urls(base_url):
-    cnx = httplib.HTTPConnection(opts['host'], opts['port'])
-    try:
-        cnx.request('HEAD', base_url)
-        links = {}
-        for s in cnx.getresponse().getheader('Link').split(','):
-            parse_link(s, links)
-        return links
-    finally:
-        cnx.close()
+for host in xmlfmt.parseHostCollection(http.GET(opts, links['hosts'])):
+    print xmlfmt.parseHost(http.GET(opts, host.self))
 
-links = query_urls(URL)
+for vm in xmlfmt.parseVmCollection(http.GET(opts, links['vms'])):
+    print xmlfmt.parseVM(http.GET(opts, vm.self))
 
-import xml.dom
-import xml.dom.minidom
+foo_vm = xmlfmt.parseVM(http.POST(opts, links['vms'], '<vm><name>foo</name></vm>'))
+bar_host = xmlfmt.parseHost(http.POST(opts, links['hosts'], '<host><name>bar</name></host>'))
 
-def getText(nodelist):
-    rc = ""
-    for node in nodelist:
-        if node.nodeType == node.TEXT_NODE:
-            rc = rc + node.data
-    return rc
+print http.POST(opts, foo_vm.self + "/start")
+print http.GET(opts, foo_vm.self)
 
-def parseNode(node):
-    ret = {}
-    for n in node.attributes.keys():
-        n = node.attributes[n]
-        ret[n.nodeName] = n.nodeValue
-    for n in node.childNodes:
-        if n.nodeType != n.ELEMENT_NODE:
-            continue
-        if n.nodeName == 'link':
-            ret[n.attributes['rel'].nodeValue] = n.attributes['href'].nodeValue
-        else:
-            ret[n.nodeName] = getText(n.childNodes)
-    return ret
+print http.PUT(opts, foo_vm.self, '<vm><name>bar</name></vm>')
+print http.PUT(opts, bar_host.self, '<host><name>foo</name></host>')
 
-def parse(doc, entity):
-    return parseNode(xml.dom.minidom.parseString(doc).getElementsByTagName(entity)[0])
-
-def parseCollection(doc, entity):
-    ret = []
-    collection = xml.dom.minidom.parseString(doc).getElementsByTagName('collection')[0]
-    for n in collection.childNodes:
-        if n.nodeType != n.ELEMENT_NODE or n.nodeName != entity:
-            continue
-        ret.append(parseNode(n))
-    return ret
-
-def GET(url):
-    cnx = httplib.HTTPConnection(opts['host'], opts['port'])
-    try:
-        cnx.request('GET', url)
-        return cnx.getresponse().read()
-    finally:
-        cnx.close()
-
-for host in parseCollection(GET(links['hosts']), 'host'):
-    print parse(GET(host['self']), 'host')
-
-for vm in parseCollection(GET(links['vms']), 'vm'):
-    print parse(GET(vm['self']), 'vm')
-
-def POST(url, body = None):
-    cnx = httplib.HTTPConnection(opts['host'], opts['port'])
-    try:
-        cnx.request('POST', url, body, {'Content-type': 'application/xml'})
-        resp = cnx.getresponse()
-        body = resp.read()
-        if not body:
-            return resp.status
-        else:
-            return body
-    finally:
-        cnx.close()
-
-foo_vm = parse(POST(links['vms'], '<vm><name>foo</name></vm>'), 'vm')
-bar_host = parse(POST(links['hosts'], '<host><name>bar</name></host>'), 'host')
-
-print POST(foo_vm['self'] + "/start")
-print GET(foo_vm['self'])
-
-def PUT(url, body):
-    cnx = httplib.HTTPConnection(opts['host'], opts['port'])
-    try:
-        cnx.request('PUT', url, body, {'Content-type': 'application/xml'})
-        return cnx.getresponse().read()
-    finally:
-        cnx.close()
-
-print PUT(foo_vm['self'], '<vm><name>bar</name></vm>')
-print PUT(bar_host['self'], '<host><name>foo</name></host>')
-
-def DELETE(url):
-    cnx = httplib.HTTPConnection(opts['host'], opts['port'])
-    try:
-        cnx.request('DELETE', url)
-        return cnx.getresponse().status
-    finally:
-        cnx.close()
-
-print DELETE(foo_vm['self'])
-print DELETE(bar_host['self'])
+print http.DELETE(opts, foo_vm.self)
+print http.DELETE(opts, bar_host.self)
