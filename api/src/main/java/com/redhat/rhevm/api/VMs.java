@@ -40,7 +40,7 @@ import java.util.List;
 /* FIXME: we want to produce JSON too */
 
 @Path("/vms")
-@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML})
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
 @Formatted
 public interface VMs
 {
@@ -74,8 +74,8 @@ public interface VMs
 	 * @return    the new newly created VM
 	 */
 	@POST
-	@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML})
-	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML})
+	@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
+	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
 	public Response add(@Context UriInfo uriInfo, VM vm);
 
 	/**
@@ -88,7 +88,7 @@ public interface VMs
 	 */
 	@PUT
 	@Path("{id}")
-	@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML})
+	@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
 	public VM update(@Context UriInfo uriInfo, @PathParam("id") String id, VM vm);
 
 	@DELETE

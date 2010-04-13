@@ -24,8 +24,12 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.jboss.resteasy.annotations.providers.jaxb.json.BadgerFish;
+
+/* FIXME: switch from BadgerFish to the Mapped convention */
 /* FIXME: could probably drop @XmlAccessorType */
 
+@BadgerFish
 @XmlRootElement(name = "vm")
 @XmlAccessorType(XmlAccessType.NONE)
 public class VM

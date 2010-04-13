@@ -38,7 +38,7 @@ import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 import java.util.List;
 
 @Path("/hosts")
-@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML})
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
 @Formatted
 public interface Hosts
 {
@@ -74,7 +74,7 @@ public interface Hosts
 	 * @return      the new newly created Host
 	 */
 	@POST
-	@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML})
+	@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
 	public Response add(@Context UriInfo uriInfo, Host host);
 
 	/**
@@ -87,7 +87,7 @@ public interface Hosts
 	 */
 	@PUT
 	@Path("{id}")
-	@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML})
+	@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
 	public Host update(@Context UriInfo uriInfo, @PathParam("id") String id, Host host);
 
 	@DELETE
