@@ -18,7 +18,7 @@
 
   <properties>
     <javax.ejb.api.version>3.0</javax.ejb.api.version>
-    <commons-logging.version>1.1</commons-logging.version>
+    <commons-logging.version>1.1.1</commons-logging.version>
     <resteasy.version>2.0-beta-2</resteasy.version>
   </properties>
 
