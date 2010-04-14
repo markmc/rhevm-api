@@ -1,50 +1,44 @@
 package com.redhat.rhevm.api.dummy;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
+import java.util.List;
 import org.junit.Test;
+import javax.ws.rs.core.Response;
+import org.jboss.resteasy.client.ClientResponse;
+import com.redhat.rhevm.api.Link;
+import com.redhat.rhevm.api.VM;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-import org.jboss.resteasy.plugins.server.tjws.TJWSEmbeddedJaxrsServer;
-
-public class DummyVMsTest
+public class DummyVMsTest extends DummyTestBase
 {
-	private TJWSEmbeddedJaxrsServer server = new TJWSEmbeddedJaxrsServer();
-
-	@Before
-	public void setup() throws Exception {
-		server.setPort(8989);
-		server.start();
-		server.getDeployment().getDispatcher().getRegistry().addPerRequestResource(DummyVMs.class);
+	private VMs getService() {
+		return createVMs(getEntryPoint("vms").getHref());
 	}
 
-	@After
-	public void destroy() throws Exception {
-		if (server != null) {
-			server.stop();
-		}
+	private void checkVM(VM vm) {
+		// FIXME: assertNotNull(vm.getName());
+		assertNotNull(vm.getId());
+		assertNotNull(vm.getLink());
+		assertNotNull(vm.getLink().getRel());
+		assertNotNull(vm.getLink().getHref());
+		assertTrue(vm.getLink().getHref().endsWith(vm.getId()));
+		assertNotNull(vm.getActions());
+		assertTrue(vm.getActions().getLinks().size() > 0);
 	}
 
 	@Test
-	public void testGet() throws Exception {
-		URL url = new URL("http://localhost:8989/vms");
-		HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-		connection.setRequestMethod("GET");
+	public void testGetVmsList() throws Exception {
+		VMs service = getService();
+		assertNotNull(service);
 
-		BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+		List<VM> vms = service.list();
+		assertNotNull(vms);
+		assertTrue(vms.size() > 0);
 
-		String line = reader.readLine();
-		while (line != null) {
-			line = reader.readLine();
+		for (VM vm : vms) {
+			checkVM(vm);
+
+			VM t = service.get(vm.getId());
+			checkVM(t);
+			assertEquals(vm.getId(), t.getId());
 		}
-
-		Assert.assertEquals(HttpURLConnection.HTTP_OK, connection.getResponseCode());
-
-		connection.disconnect();
 	}
 }
