@@ -41,7 +41,7 @@ import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Host;
 
 @Path("/hosts")
-@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
+@Produces({MediaType.RHEVM_HOST_XML, MediaType.RHEVM_HOST_YAML, MediaType.RHEVM_HOST_JSON})
 @Formatted
 public interface HostResource
 {
@@ -77,7 +77,7 @@ public interface HostResource
 	 * @return      the new newly created Host
 	 */
 	@POST
-	@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
+	@Consumes({MediaType.RHEVM_HOST_XML, MediaType.RHEVM_HOST_YAML, MediaType.RHEVM_HOST_JSON})
 	public Response add(@Context UriInfo uriInfo, Host host);
 
 	/**
@@ -90,7 +90,7 @@ public interface HostResource
 	 */
 	@PUT
 	@Path("{id}")
-	@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
+	@Consumes({MediaType.RHEVM_HOST_XML, MediaType.RHEVM_HOST_YAML, MediaType.RHEVM_HOST_JSON})
 	public Host update(@Context UriInfo uriInfo, @PathParam("id") String id, Host host);
 
 	@DELETE

@@ -20,7 +20,9 @@
 # yum install -y PyYAML
 import yaml
 
-MEDIA_TYPE = "application/x-yaml"
+NAME = "yaml"
+VM_MEDIA_TYPE = 'application/vnd.rht.rhevm.vm+yaml;version=1';
+HOST_MEDIA_TYPE = 'application/vnd.rht.rhevm.host+yaml;version=1';
 
 class Base(yaml.YAMLObject):
     def dump(self):

@@ -19,7 +19,9 @@
 
 import json
 
-MEDIA_TYPE = "application/json"
+NAME = "json"
+VM_MEDIA_TYPE = 'application/vnd.rht.rhevm.vm+json;version=1';
+HOST_MEDIA_TYPE = 'application/vnd.rht.rhevm.host+json;version=1';
 
 class Link:
     def __init__(self, rel, href):

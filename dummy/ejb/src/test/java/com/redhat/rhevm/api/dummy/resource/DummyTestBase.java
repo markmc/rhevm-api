@@ -64,7 +64,7 @@ public class DummyTestBase extends Assert
 	protected static ApiResource api;
 
 	@Path("/")
-	@Produces(MediaType.APPLICATION_XML)
+	@Produces(MediaType.RHEVM_VM_XML)
 	protected interface VmResource {
 		@GET public List<VM> list();
 		@GET @Path("{id}") public VM get(@PathParam("id") String id);

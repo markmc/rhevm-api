@@ -20,7 +20,63 @@ package com.redhat.rhevm.api.resource;
 
 public class MediaType extends javax.ws.rs.core.MediaType
 {
-	public final static String APPLICATION_X_YAML = "application/x-yaml";
-	public final static javax.ws.rs.core.MediaType APPLICATION_X_YAML_TYPE =
-		new javax.ws.rs.core.MediaType("application", "x-yaml");
+	/**
+	 * "application/vnd.rht.rhevm.vm+xml;version=1"
+	 */
+	public static final String RHEVM_VM_XML =  "application/vnd.rht.rhevm.vm+xml;version=1";
+	/**
+	 * "application/vnd.rht.rhevm.vm+xml;version=1"
+	 */
+	public static final javax.ws.rs.core.MediaType RHEVM_VM_XML_TYPE =
+		new javax.ws.rs.core.MediaType("application", "vnd.rht.rhevm.vm+xml;version=1");
+
+	/**
+	 * "application/vnd.rht.rhevm.vm+json;version=1"
+	 */
+	public static final String RHEVM_VM_JSON = "application/vnd.rht.rhevm.vm+json;version=1";
+	/**
+	 * "application/vnd.rht.rhevm.vm+json;version=1"
+	 */
+	public static final javax.ws.rs.core.MediaType RHEVM_VM_JSON_TYPE =
+		new javax.ws.rs.core.MediaType("application", "vnd.rht.rhevm.vm+json;version=1");
+
+	/**
+	 * "application/vnd.rht.rhevm.vm+yaml;version=1"
+	 */
+	public static final String RHEVM_VM_YAML = "application/vnd.rht.rhevm.vm+yaml;version=1";
+	/**
+	 * "application/vnd.rht.rhevm.vm+yaml;version=1"
+	 */
+	public static final javax.ws.rs.core.MediaType RHEVM_VM_YAML_TYPE =
+		new javax.ws.rs.core.MediaType("application", "vnd.rht.rhevm.vm+yaml;version=1");
+
+	/**
+	 * "application/vnd.rht.rhevm.host+xml;version=1"
+	 */
+	public static final String RHEVM_HOST_XML = "application/vnd.rht.rhevm.host+xml;version=1";
+	/**
+	 * "application/vnd.rht.rhevm.host+xml;version=1"
+	 */
+	public static final javax.ws.rs.core.MediaType RHEVM_HOST_XML_TYPE =
+		new javax.ws.rs.core.MediaType("application", "vnd.rht.rhevm.host+xml;version=1");
+
+	/**
+	 * "application/vnd.rht.rhevm.host+json;version=1"
+	 */
+	public static final String RHEVM_HOST_JSON = "application/vnd.rht.rhevm.host+json;version=1";
+	/**
+	 * "application/vnd.rht.rhevm.host+json;version=1"
+	 */
+	public static final javax.ws.rs.core.MediaType RHEVM_HOST_JSON_TYPE =
+		new javax.ws.rs.core.MediaType("application", "vnd.rht.rhevm.host+json;version=1");
+
+	/**
+	 * "application/vnd.rht.rhevm.host+yaml;version=1"
+	 */
+	public static final String RHEVM_HOST_YAML = "application/vnd.rht.rhevm.host+yaml;version=1";
+	/**
+	 * "application/vnd.rht.rhevm.host+yaml;version=1"
+	 */
+	public static final javax.ws.rs.core.MediaType RHEVM_HOST_YAML_TYPE =
+		new javax.ws.rs.core.MediaType("application", "vnd.rht.rhevm.host+yaml;version=1");
 }

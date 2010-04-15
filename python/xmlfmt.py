@@ -20,7 +20,9 @@
 import xml.dom
 import xml.dom.minidom
 
-MEDIA_TYPE = 'application/xml'
+NAME = "xml"
+VM_MEDIA_TYPE = 'application/vnd.rht.rhevm.vm+xml;version=1';
+HOST_MEDIA_TYPE = 'application/vnd.rht.rhevm.host+xml;version=1';
 
 def getText(nodelist):
     rc = ""

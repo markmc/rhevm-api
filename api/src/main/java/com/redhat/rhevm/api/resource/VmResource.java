@@ -43,7 +43,7 @@ import com.redhat.rhevm.api.model.VM;
 /* FIXME: we want to produce JSON too */
 
 @Path("/vms")
-@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
+@Produces({MediaType.RHEVM_VM_XML, MediaType.RHEVM_VM_YAML, MediaType.RHEVM_VM_JSON})
 @Formatted
 public interface VmResource
 {
@@ -77,8 +77,8 @@ public interface VmResource
 	 * @return    the new newly created VM
 	 */
 	@POST
-	@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
-	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
+	@Consumes({MediaType.RHEVM_VM_XML, MediaType.RHEVM_VM_YAML, MediaType.RHEVM_VM_JSON})
+	@Produces({MediaType.RHEVM_VM_XML, MediaType.RHEVM_VM_YAML, MediaType.RHEVM_VM_JSON})
 	public Response add(@Context UriInfo uriInfo, VM vm);
 
 	/**
@@ -91,7 +91,7 @@ public interface VmResource
 	 */
 	@PUT
 	@Path("{id}")
-	@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
+	@Consumes({MediaType.RHEVM_VM_XML, MediaType.RHEVM_VM_YAML, MediaType.RHEVM_VM_JSON})
 	public VM update(@Context UriInfo uriInfo, @PathParam("id") String id, VM vm);
 
 	@DELETE
