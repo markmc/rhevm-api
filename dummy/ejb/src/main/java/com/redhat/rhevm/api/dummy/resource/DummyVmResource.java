@@ -19,6 +19,7 @@
 package com.redhat.rhevm.api.dummy.resource;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -26,6 +27,11 @@ import javax.ejb.Stateless;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
+
+import org.jboss.resteasy.plugins.providers.atom.Content;
+import org.jboss.resteasy.plugins.providers.atom.Entry;
+import org.jboss.resteasy.plugins.providers.atom.Feed;
+import org.jboss.resteasy.plugins.providers.atom.Person;
 
 import com.redhat.rhevm.api.model.Actions;
 import com.redhat.rhevm.api.model.Link;
@@ -75,14 +81,26 @@ public class DummyVmResource implements VmResource
 	}
 
 	@Override
-	public List<VM> list(UriInfo uriInfo) {
-		List<VM> ret = new ArrayList<VM>();
+	public Feed list(UriInfo uriInfo) {
+		Feed feed = new Feed();
+
+		feed.setTitle("VMs feed");
+		feed.setUpdated(new Date());
+		feed.setId(uriInfo.getBaseUriBuilder().clone().path("vms").build());
+		feed.getAuthors().add(new Person("RHEV-M"));
 
 		for (DummyVM vm : vms.values()) {
-			ret.add(addLinks(vm, uriInfo));
+			Content content = new Content();
+			content.setJAXBObject(addLinks(vm, uriInfo));
+
+			Entry entry = new Entry();
+			entry.setTitle(vm.getName());
+			entry.setContent(content);
+
+			feed.getEntries().add(entry);
 		}
 
-		return ret;
+		return feed;
 	}
 
 	@Override

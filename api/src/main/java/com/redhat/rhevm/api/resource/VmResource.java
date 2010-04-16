@@ -30,6 +30,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import org.jboss.resteasy.plugins.providers.atom.Feed;
+
 /* FIXME: doesn't seem to do anything ? Also, we could do without
  *        the explicit dependency on RESTeasy
  */
@@ -60,7 +62,8 @@ public interface VmResource
 	 *        the return value here rather than <collection> ?
 	 */
 	@GET
-	public List<VM> list(@Context UriInfo uriInfo);
+	@Produces(MediaType.APPLICATION_ATOM_XML)
+	public Feed list(@Context UriInfo uriInfo);
 
 	/* FIXME: need to move this to e.g. a top-level /search
 	 * @GET

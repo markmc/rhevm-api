@@ -22,6 +22,8 @@ import java.util.List;
 import org.junit.Test;
 import javax.ws.rs.core.Response;
 import org.jboss.resteasy.client.ClientResponse;
+import org.jboss.resteasy.plugins.providers.atom.Entry;
+import org.jboss.resteasy.plugins.providers.atom.Feed;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.VM;
 
@@ -47,11 +49,16 @@ public class DummyVmResourceTest extends DummyTestBase
 		VmResource service = getService();
 		assertNotNull(service);
 
-		List<VM> vms = service.list();
-		assertNotNull(vms);
-		assertTrue(vms.size() > 0);
+		Feed feed = service.list();
+		assertNotNull(feed);
+		assertTrue(feed.getEntries().size() > 0);
 
-		for (VM vm : vms) {
+		for (Entry entry : feed.getEntries()) {
+			assertNotNull(entry.getTitle());
+			assertNotNull(entry.getContent());
+
+			VM vm = entry.getContent().getJAXBObject(VM.class);
+
 			checkVM(vm);
 
 			VM t = service.get(vm.getId());

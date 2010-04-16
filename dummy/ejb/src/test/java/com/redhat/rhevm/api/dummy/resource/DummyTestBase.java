@@ -34,6 +34,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import org.jboss.resteasy.client.ClientResponse;
 import org.jboss.resteasy.client.ProxyFactory;
 import org.jboss.resteasy.plugins.providers.RegisterBuiltin;
+import org.jboss.resteasy.plugins.providers.atom.Feed;
 import org.jboss.resteasy.plugins.server.tjws.TJWSEmbeddedJaxrsServer;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
@@ -66,7 +67,7 @@ public class DummyTestBase extends Assert
 	@Path("/")
 	@Produces(MediaType.APPLICATION_XML)
 	protected interface VmResource {
-		@GET public List<VM> list();
+		@GET @Produces(MediaType.APPLICATION_ATOM_XML) public List<VM> list();
 		@GET @Path("{id}") public VM get(@PathParam("id") String id);
 	}
 	protected VmResource createVmResource(String uri) {
