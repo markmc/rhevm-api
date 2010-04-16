@@ -99,7 +99,7 @@ public class Host
 	}
 	protected String address;
 
-	@XmlElement(name = "rootPassword")
+	@XmlElement(name = "root_password")
 	public String getRootPassword() {
 		return rootPassword;
 	}

@@ -91,7 +91,7 @@ public class VM
 	}
 	protected Actions actions;
 
-	@XmlElement(name = "hostId")
+	@XmlElement(name = "host_id")
 	public String getHostId() {
 		return hostId;
 	}
@@ -100,7 +100,7 @@ public class VM
 	}
 	private String hostId;
 
-	@XmlElement(name = "templateId")
+	@XmlElement(name = "template_id")
 	public String getTemplateId() {
 		return templateId;
 	}
@@ -109,7 +109,7 @@ public class VM
 	}
 	private String templateId;
 
-	@XmlElement(name = "clusterId")
+	@XmlElement(name = "cluster_id")
 	public String getClusterId() {
 		return clusterId;
 	}
