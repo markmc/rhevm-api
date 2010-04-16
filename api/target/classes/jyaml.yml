@@ -1,5 +1,7 @@
 transfers:
   vm: com.redhat.rhevm.api.model.VM
+  vms: com.redhat.rhevm.api.model.VMs
   host: com.redhat.rhevm.api.model.Host
+  hosts: com.redhat.rhevm.api.model.Hosts
   actions: com.redhat.rhevm.api.model.Actions
   link: com.redhat.rhevm.api.model.Link

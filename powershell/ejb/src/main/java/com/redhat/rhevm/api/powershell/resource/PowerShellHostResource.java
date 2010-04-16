@@ -28,6 +28,7 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Host;
+import com.redhat.rhevm.api.model.Hosts;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.resource.HostResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellHost;
@@ -74,10 +75,11 @@ public class PowerShellHostResource implements HostResource
 		return addLink(host, getUriBuilder(uriInfo));
 	}
 
-	private List<Host> addLinks(List<Host> hosts, UriInfo uriInfo) {
+	private Hosts addLinks(List<Host> hosts, UriInfo uriInfo) {
+		Hosts ret = new Hosts();
 		for (Host host : hosts)
-			addLink(host, uriInfo);
-		return hosts;
+			ret.getHosts().add(addLink(host, uriInfo));
+		return ret;
 	}
 
 	@Override
@@ -88,13 +90,13 @@ public class PowerShellHostResource implements HostResource
 	}
 
 	@Override
-	public List<Host> list(UriInfo uriInfo) {
+	public Hosts list(UriInfo uriInfo) {
 		return addLinks(runAndParse("select-host"), uriInfo);
 	}
 
 /* FIXME: move this
 	@Override
-	public List<Host> search(String criteria) {
+	public VMs search(String criteria) {
 		return runAndParse("select-host " + criteria);
 	}
 */

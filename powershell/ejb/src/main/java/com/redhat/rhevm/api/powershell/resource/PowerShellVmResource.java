@@ -29,6 +29,7 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
@@ -71,10 +72,11 @@ public class PowerShellVmResource implements VmResource
 		return addLink(vm, getUriBuilder(uriInfo));
 	}
 
-	private List<VM> addLinks(List<VM> vms, UriInfo uriInfo) {
+	private VMs addLinks(List<VM> vms, UriInfo uriInfo) {
+		VMs ret = new VMs();
 		for (VM vm : vms)
-			addLink(vm, uriInfo);
-		return vms;
+			ret.getVMs().add(addLink(vm, uriInfo));
+		return ret;
 	}
 
 	@Override
@@ -83,13 +85,13 @@ public class PowerShellVmResource implements VmResource
 	}
 
 	@Override
-	public List<VM> list(UriInfo uriInfo) {
+	public VMs list(UriInfo uriInfo) {
 		return addLinks(runAndParse("select-vm"), uriInfo);
 	}
 
 /* FIXME: move this
 	@Override
-	public List<VM> search(String criteria) {
+	public VMs search(String criteria) {
 		return runAndParse("select-vm " + criteria);
 	}
 */

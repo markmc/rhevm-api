@@ -83,13 +83,12 @@ def parseHost(doc):
 
 def parseVmCollection(doc):
     ret = []
-    for vm in json.loads(doc):
-        ret.append(VM(vm))
+    for vm in json.loads(doc)['vms']['vm']:
+        ret.append(VM({'vm':vm}))
     return ret
 
 def parseHostCollection(doc):
     ret = []
-    for host in json.loads(doc):
-        ret.append(Host(host))
+    for host in json.loads(doc)['hosts']['host']:
+        ret.append(Host({'host':host}))
     return ret
-

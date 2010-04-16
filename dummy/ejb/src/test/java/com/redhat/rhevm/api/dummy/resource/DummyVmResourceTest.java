@@ -24,6 +24,7 @@ import javax.ws.rs.core.Response;
 import org.jboss.resteasy.client.ClientResponse;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.model.VMs;
 
 public class DummyVmResourceTest extends DummyTestBase
 {
@@ -47,11 +48,11 @@ public class DummyVmResourceTest extends DummyTestBase
 		VmResource service = getService();
 		assertNotNull(service);
 
-		List<VM> vms = service.list();
+		VMs vms = service.list();
 		assertNotNull(vms);
-		assertTrue(vms.size() > 0);
+		assertTrue(vms.getVMs().size() > 0);
 
-		for (VM vm : vms) {
+		for (VM vm : vms.getVMs()) {
 			checkVM(vm);
 
 			VM t = service.get(vm.getId());

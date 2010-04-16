@@ -35,10 +35,9 @@ import javax.ws.rs.core.UriInfo;
  */
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
-import java.util.List;
-
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Host;
+import com.redhat.rhevm.api.model.Hosts;
 
 @Path("/hosts")
 @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
@@ -58,11 +57,11 @@ public interface HostResource
 	 *        the return value here rather than <collection> ?
 	 */
 	@GET
-	public List<Host> list(@Context UriInfo uriInfo);
+	public Hosts list(@Context UriInfo uriInfo);
 
 	/* FIXME: need to move this to e.g. a top-level /search
 	 * @GET
-	 * public List<Host> search(String criteria);
+	 * public Hosts search(String criteria);
 	 */
 
 	/**

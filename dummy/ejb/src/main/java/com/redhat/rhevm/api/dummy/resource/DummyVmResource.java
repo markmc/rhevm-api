@@ -18,9 +18,7 @@
  */
 package com.redhat.rhevm.api.dummy.resource;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.ws.rs.core.Response;
@@ -30,6 +28,7 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.Actions;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.dummy.model.DummyVmStatus;
 import com.redhat.rhevm.api.dummy.model.DummyVM;
@@ -74,11 +73,11 @@ public class DummyVmResource implements VmResource
 	}
 
 	@Override
-	public List<VM> list(UriInfo uriInfo) {
-		List<VM> ret = new ArrayList<VM>();
+	public VMs list(UriInfo uriInfo) {
+		VMs ret = new VMs();
 
 		for (DummyVM vm : vms.values()) {
-			ret.add(addLinks(vm, uriInfo));
+			ret.getVMs().add(addLinks(vm, uriInfo));
 		}
 
 		return ret;

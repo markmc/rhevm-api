@@ -39,6 +39,7 @@ import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.resource.MediaType;
 
 public class DummyTestBase extends Assert
@@ -66,7 +67,7 @@ public class DummyTestBase extends Assert
 	@Path("/")
 	@Produces(MediaType.APPLICATION_XML)
 	protected interface VmResource {
-		@GET public List<VM> list();
+		@GET public VMs list();
 		@GET @Path("{id}") public VM get(@PathParam("id") String id);
 	}
 	protected VmResource createVmResource(String uri) {

@@ -69,6 +69,7 @@ class Base:
         return str(dict)
 
 class VM(Base):
+    COLLECTION_ELEMENT = 'vms'
     ROOT_ELEMENT = 'vm'
     KEYS = ['id', 'name', 'self']
 
@@ -84,6 +85,7 @@ class VM(Base):
         return s
 
 class Host(Base):
+    COLLECTION_ELEMENT = 'hosts'
     ROOT_ELEMENT = 'host'
     KEYS = ['id', 'name', 'self']
 
@@ -105,7 +107,7 @@ def parseHost(doc):
     return Host(xml.dom.minidom.parseString(doc).getElementsByTagName(Host.ROOT_ELEMENT)[0])
 
 def parseCollection(doc, entityType):
-    collection = xml.dom.minidom.parseString(doc).getElementsByTagName('collection')[0]
+    collection = xml.dom.minidom.parseString(doc).getElementsByTagName(entityType.COLLECTION_ELEMENT)[0]
 
     ret = []
     for n in collection.childNodes:

@@ -18,8 +18,6 @@
  */
 package com.redhat.rhevm.api.dummy.resource;
 
-import java.util.List;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.ejb.Stateless;
@@ -30,6 +28,7 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.Actions;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.Host;
+import com.redhat.rhevm.api.model.Hosts;
 import com.redhat.rhevm.api.resource.HostResource;
 import com.redhat.rhevm.api.dummy.model.DummyHost;
 
@@ -73,11 +72,11 @@ public class DummyHostResource implements HostResource
 	}
 
 	@Override
-	public List<Host> list(UriInfo uriInfo) {
-		List<Host> ret = new ArrayList<Host>();
+	public Hosts list(UriInfo uriInfo) {
+		Hosts ret = new Hosts();
 
 		for (DummyHost host : hosts.values()) {
-			ret.add(addLinks(host, uriInfo));
+			ret.getHosts().add(addLinks(host, uriInfo));
 		}
 
 		return ret;
