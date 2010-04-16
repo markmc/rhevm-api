@@ -47,6 +47,7 @@ public class DummyVmResource implements VmResource
 	static {
 		while (vms.size() < 10) {
 			DummyVM vm = new DummyVM();
+			vm.setName("vm" + Integer.toString(vms.size()));
 			vms.put(vm.getId(), vm);
 		}
 	}
