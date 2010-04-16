@@ -16,27 +16,34 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api;
+package com.redhat.rhevm.api.dummy.model;
 
-import javax.ws.rs.HEAD;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import com.redhat.rhevm.api.model.VM;
 
-/* FIXME:
- * different backends shouldn't need to specialize this,
- * we should make this a concrete implementation instead
- * of an interface
- */
-
-@Path("/")
-public interface API
+public class DummyVM extends VM
 {
-	/* FIXME: use @Context on a private field instead of
-	 *        having it passed as a parameter
-	 */
+	private static int counter = 0;
 
-	@HEAD
-	public Response head(@Context UriInfo uriInfo);
+	public DummyVM() {
+		id = Integer.toString(++counter);
+		setHostId(Integer.toString(counter % 2));
+	}
+
+	public DummyVM(VM vm) {
+		this();
+		update(vm);
+	}
+
+	public DummyVmStatus getStatus() {
+		return status;
+	}
+	public void setStatus(DummyVmStatus status) {
+		this.status = status;
+	}
+	private DummyVmStatus status;
+
+	public void update(VM vm) {
+		// update writable fields only
+		this.name = vm.getName();
+	}
 }

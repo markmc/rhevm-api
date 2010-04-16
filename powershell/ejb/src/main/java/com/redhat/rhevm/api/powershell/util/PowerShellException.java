@@ -1,4 +1,4 @@
-package com.redhat.rhevm.api.powershell;
+package com.redhat.rhevm.api.powershell.util;
 
 public class PowerShellException extends RuntimeException
 {

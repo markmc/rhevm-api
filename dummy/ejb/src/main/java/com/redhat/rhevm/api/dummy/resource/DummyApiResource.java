@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api.powershell;
+package com.redhat.rhevm.api.dummy.resource;
 
 import java.net.URI;
 
@@ -26,15 +26,15 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.API;
-import com.redhat.rhevm.api.Link;
+import com.redhat.rhevm.api.model.Link;
+import com.redhat.rhevm.api.resource.ApiResource;
 
 /* FIXME: it'd be nice to move this whole thing into the
  *        top-level api package
  */
 
 @Stateless
-public class PowerShellAPI implements API
+public class DummyApiResource implements ApiResource
 {
 	@Override
 	public Response head(UriInfo uriInfo)

@@ -16,14 +16,27 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api;
+package com.redhat.rhevm.api.resource;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import javax.ws.rs.HEAD;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
-@Target({ElementType.METHOD})
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Action {
+/* FIXME:
+ * different backends shouldn't need to specialize this,
+ * we should make this a concrete implementation instead
+ * of an interface
+ */
+
+@Path("/")
+public interface ApiResource
+{
+	/* FIXME: use @Context on a private field instead of
+	 *        having it passed as a parameter
+	 */
+
+	@HEAD
+	public Response head(@Context UriInfo uriInfo);
 }

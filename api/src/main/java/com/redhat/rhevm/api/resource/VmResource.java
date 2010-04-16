@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api;
+package com.redhat.rhevm.api.resource;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -37,12 +37,15 @@ import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 import java.util.List;
 
+import com.redhat.rhevm.api.model.Action;
+import com.redhat.rhevm.api.model.VM;
+
 /* FIXME: we want to produce JSON too */
 
 @Path("/vms")
 @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
 @Formatted
-public interface VMs
+public interface VmResource
 {
 	/* FIXME: can we make uriInfo a field instead of a parameter to
 	 *        each method? Adding @Context to the implementation

@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api.powershell;
+package com.redhat.rhevm.api.powershell.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;

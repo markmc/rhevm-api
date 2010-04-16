@@ -16,30 +16,25 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api.powershell;
+package com.redhat.rhevm.api.dummy.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import com.redhat.rhevm.api.model.Host;
 
-import com.redhat.rhevm.api.Host;
-
-public class PowerShellHost extends Host
+public class DummyHost extends Host
 {
-	public PowerShellHost() {
+	private static int counter = 0;
+
+	public DummyHost() {
+		id = Integer.toString(++counter);
 	}
 
-	public static ArrayList<Host> parse(String output) {
-		ArrayList<HashMap<String,String>> hostsProps = PowerShellUtils.parseProps(output);
-		ArrayList<Host> ret = new ArrayList<Host>();
+	public DummyHost(Host host) {
+		this();
+		update(host);
+	}
 
-		for (HashMap<String,String> props : hostsProps) {
-			PowerShellHost host = new PowerShellHost();
-
-			host.setId(props.get("hostid"));
-
-			ret.add(host);
-		}
-
-		return ret;
+	public void update(Host host) {
+		// update writable fields only
+		this.name = host.getName();
 	}
 }

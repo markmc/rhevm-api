@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api.dummy;
+package com.redhat.rhevm.api.dummy.resource;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,13 +27,15 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.Actions;
-import com.redhat.rhevm.api.Link;
-import com.redhat.rhevm.api.VM;
-import com.redhat.rhevm.api.VMs;
+import com.redhat.rhevm.api.model.Actions;
+import com.redhat.rhevm.api.model.Link;
+import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.resource.VmResource;
+import com.redhat.rhevm.api.dummy.model.DummyVmStatus;
+import com.redhat.rhevm.api.dummy.model.DummyVM;
 
 @Stateless
-public class DummyVMs implements VMs
+public class DummyVmResource implements VmResource
 {
 	/* FIXME: would like to do:
 	 * private @Context UriInfo uriInfo;
@@ -55,7 +57,7 @@ public class DummyVMs implements VMs
 
 	private VM addLinks(VM vm, UriBuilder uriBuilder) {
 		vm.setLink(new Link("self", uriBuilder.build()));
-		vm.setActions(new Actions(uriBuilder, VMs.class));
+		vm.setActions(new Actions(uriBuilder, VmResource.class));
 		return new VM(vm);
 	}
 
@@ -109,17 +111,17 @@ public class DummyVMs implements VMs
 
 	@Override
 	public void start(String id) {
-		vms.get(id).setStatus(DummyVMStatus.UP);
+		vms.get(id).setStatus(DummyVmStatus.UP);
 	}
 
 	@Override
 	public void stop(String id) {
-		vms.get(id).setStatus(DummyVMStatus.DOWN);
+		vms.get(id).setStatus(DummyVmStatus.DOWN);
 	}
 
 	@Override
 	public void shutdown(String id) {
-		vms.get(id).setStatus(DummyVMStatus.DOWN);
+		vms.get(id).setStatus(DummyVmStatus.DOWN);
 	}
 
 	@Override

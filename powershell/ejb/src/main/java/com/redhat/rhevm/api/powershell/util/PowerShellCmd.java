@@ -1,4 +1,4 @@
-package com.redhat.rhevm.api.powershell;
+package com.redhat.rhevm.api.powershell.util;
 
 import java.io.InputStream;
 import java.util.Scanner;

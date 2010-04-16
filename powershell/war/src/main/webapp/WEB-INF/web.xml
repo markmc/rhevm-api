@@ -7,7 +7,7 @@
 
    <context-param>
       <param-name>resteasy.jndi.resources</param-name>
-      <param-value>rhevm-api-powershell/PowerShellAPI/local,rhevm-api-powershell/PowerShellHosts/local,rhevm-api-powershell/PowerShellVMs/local</param-value>
+      <param-value>rhevm-api-powershell/PowerShellApiResource/local,rhevm-api-powershell/PowerShellHostResource/local,rhevm-api-powershell/PowerShellVmResource/local</param-value>
    </context-param>
 
    <listener>

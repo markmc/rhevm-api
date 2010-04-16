@@ -16,34 +16,32 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api.dummy;
+package com.redhat.rhevm.api.powershell.model;
 
-import com.redhat.rhevm.api.VM;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-public class DummyVM extends VM
+import com.redhat.rhevm.api.model.Host;
+import com.redhat.rhevm.api.powershell.model.PowerShellHost;
+import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+
+public class PowerShellHost extends Host
 {
-	private static int counter = 0;
-
-	public DummyVM() {
-		id = Integer.toString(++counter);
-		setHostId(Integer.toString(counter % 2));
+	public PowerShellHost() {
 	}
 
-	public DummyVM(VM vm) {
-		this();
-		update(vm);
-	}
+	public static ArrayList<Host> parse(String output) {
+		ArrayList<HashMap<String,String>> hostsProps = PowerShellUtils.parseProps(output);
+		ArrayList<Host> ret = new ArrayList<Host>();
 
-	public DummyVMStatus getStatus() {
-		return status;
-	}
-	public void setStatus(DummyVMStatus status) {
-		this.status = status;
-	}
-	private DummyVMStatus status;
+		for (HashMap<String,String> props : hostsProps) {
+			PowerShellHost host = new PowerShellHost();
 
-	public void update(VM vm) {
-		// update writable fields only
-		this.name = vm.getName();
+			host.setId(props.get("hostid"));
+
+			ret.add(host);
+		}
+
+		return ret;
 	}
 }

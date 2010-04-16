@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api;
+package com.redhat.rhevm.api.model;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -30,26 +30,25 @@ import org.jboss.resteasy.annotations.providers.jaxb.json.BadgerFish;
 /* FIXME: could probably drop @XmlAccessorType */
 
 @BadgerFish
-@XmlRootElement(name = "vm")
+@XmlRootElement(name = "host")
 @XmlAccessorType(XmlAccessType.NONE)
-public class VM
+public class Host
 {
 	/* FIXME:
 	 * This is a giant hack so that JAX-B marshalls the
 	 * superclass rather than the subclass - e.g. we want the type
-	 * to be 'VM' not 'DummyVM' when it is passed to jyaml
+	 * to be 'Host' not 'DummyHost' when it is passed to jyaml
 	 */
-	public VM(VM vm) {
-		this.link       = vm.link;
-		this.id         = vm.id;
-		this.name       = vm.name;
-		this.actions    = vm.actions;
-		this.hostId     = vm.hostId;
-		this.templateId = vm.templateId;
-		this.clusterId  = vm.clusterId;
+	public Host(Host host) {
+		link         = host.link;
+		id           = host.id;
+		name         = host.name;
+		actions      = host.actions;
+		address      = host.address;
+		rootPassword = host.rootPassword;
 	}
 
-	public VM() {
+	public Host() {
 	}
 
 	/* FIXME: can we make this attritbute be auto-generated
@@ -91,30 +90,21 @@ public class VM
 	}
 	protected Actions actions;
 
-	@XmlElement(name = "host_id")
-	public String getHostId() {
-		return hostId;
+	@XmlElement(name = "address")
+	public String getAddress() {
+		return address;
 	}
-	public void setHostId(String hostId) {
-		this.hostId = hostId;
+	public void setAddress(String address) {
+		this.address = address;
 	}
-	private String hostId;
+	protected String address;
 
-	@XmlElement(name = "template_id")
-	public String getTemplateId() {
-		return templateId;
+	@XmlElement(name = "root_password")
+	public String getRootPassword() {
+		return rootPassword;
 	}
-	public void setTemplateId(String templateId) {
-		this.templateId = templateId;
+	public void setRootPassword(String rootPassword) {
+		this.rootPassword = rootPassword;
 	}
-	private String templateId;
-
-	@XmlElement(name = "cluster_id")
-	public String getClusterId() {
-		return clusterId;
-	}
-	public void setClusterId(String clusterId) {
-		this.clusterId = clusterId;
-	}
-	private String clusterId;
+	protected String rootPassword;
 }

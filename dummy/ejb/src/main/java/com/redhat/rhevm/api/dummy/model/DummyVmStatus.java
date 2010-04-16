@@ -16,9 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api.dummy;
+package com.redhat.rhevm.api.dummy.model;
 
-public enum DummyVMStatus
+public enum DummyVmStatus
 {
 	UP,
 	DOWN,

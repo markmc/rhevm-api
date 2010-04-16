@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api.powershell;
+package com.redhat.rhevm.api.powershell.resource;
 
 import java.net.URI;
 import java.util.List;
@@ -27,12 +27,14 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.Link;
-import com.redhat.rhevm.api.VM;
-import com.redhat.rhevm.api.VMs;
+import com.redhat.rhevm.api.model.Link;
+import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.resource.VmResource;
+import com.redhat.rhevm.api.powershell.model.PowerShellVM;
+import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 @Stateless
-public class PowerShellVMs implements VMs
+public class PowerShellVmResource implements VmResource
 {
 	/* FIXME: would like to do:
          * private @Context UriInfo uriInfo;

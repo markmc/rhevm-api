@@ -1,4 +1,22 @@
-package com.redhat.rhevm.api.dummy;
+/*
+ * Copyright © 2010 Red Hat, Inc.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+package com.redhat.rhevm.api.dummy.resource;
 
 import java.util.List;
 
@@ -19,9 +37,9 @@ import org.jboss.resteasy.plugins.providers.RegisterBuiltin;
 import org.jboss.resteasy.plugins.server.tjws.TJWSEmbeddedJaxrsServer;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
-import com.redhat.rhevm.api.Link;
-import com.redhat.rhevm.api.MediaType;
-import com.redhat.rhevm.api.VM;
+import com.redhat.rhevm.api.model.Link;
+import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.resource.MediaType;
 
 public class DummyTestBase extends Assert
 {
@@ -40,19 +58,19 @@ public class DummyTestBase extends Assert
 	 */
 
 	@Path("/")
-	protected interface API {
+	protected interface ApiResource {
 		@HEAD public ClientResponse head();
 	}
-	protected static API api;
+	protected static ApiResource api;
 
 	@Path("/")
 	@Produces(MediaType.APPLICATION_XML)
-	protected interface VMs {
+	protected interface VmResource {
 		@GET public List<VM> list();
 		@GET @Path("{id}") public VM get(@PathParam("id") String id);
 	}
-	protected VMs createVMs(String uri) {
-		return ProxyFactory.create(VMs.class, uri);
+	protected VmResource createVmResource(String uri) {
+		return ProxyFactory.create(VmResource.class, uri);
 	}
 
 	protected Link getEntryPoint(String rel) {
@@ -72,12 +90,12 @@ public class DummyTestBase extends Assert
 	public void setup() throws Exception {
 		server.setPort(port);
 		server.start();
-		server.getDeployment().getDispatcher().getRegistry().addPerRequestResource(DummyAPI.class);
-		server.getDeployment().getDispatcher().getRegistry().addPerRequestResource(DummyVMs.class);
+		server.getDeployment().getDispatcher().getRegistry().addPerRequestResource(DummyApiResource.class);
+		server.getDeployment().getDispatcher().getRegistry().addPerRequestResource(DummyVmResource.class);
 
 		RegisterBuiltin.register(ResteasyProviderFactory.getInstance());
 
-		api = ProxyFactory.create(API.class, uri.toString());
+		api = ProxyFactory.create(ApiResource.class, uri.toString());
 	}
 
 	@After

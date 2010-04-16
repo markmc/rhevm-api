@@ -1,7 +1,7 @@
 /*
  * From Bill Burke's "RESTful Java with JAX-RS", license unknown
  */
-package com.redhat.rhevm.api;
+package com.redhat.rhevm.api.model;
 
 import java.net.URI;
 import java.util.HashMap;

@@ -16,11 +16,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api;
+package com.redhat.rhevm.api.model;
 
-public class MediaType extends javax.ws.rs.core.MediaType
-{
-	public final static String APPLICATION_X_YAML = "application/x-yaml";
-	public final static javax.ws.rs.core.MediaType APPLICATION_X_YAML_TYPE =
-		new javax.ws.rs.core.MediaType("application", "x-yaml");
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Target({ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Action {
 }

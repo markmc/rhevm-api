@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api.dummy;
+package com.redhat.rhevm.api.dummy.resource;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -27,13 +27,14 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.Actions;
-import com.redhat.rhevm.api.Link;
-import com.redhat.rhevm.api.Host;
-import com.redhat.rhevm.api.Hosts;
+import com.redhat.rhevm.api.model.Actions;
+import com.redhat.rhevm.api.model.Link;
+import com.redhat.rhevm.api.model.Host;
+import com.redhat.rhevm.api.resource.HostResource;
+import com.redhat.rhevm.api.dummy.model.DummyHost;
 
 @Stateless
-public class DummyHosts implements Hosts
+public class DummyHostResource implements HostResource
 {
 	/* FIXME: would like to do:
 	 * private @Context UriInfo uriInfo;
@@ -55,7 +56,7 @@ public class DummyHosts implements Hosts
 
 	private Host addLinks(Host host, UriBuilder uriBuilder) {
 		host.setLink(new Link("self", uriBuilder.build()));
-		host.setActions(new Actions(uriBuilder, Hosts.class));
+		host.setActions(new Actions(uriBuilder, HostResource.class));
 		return new Host(host);
 	}
 

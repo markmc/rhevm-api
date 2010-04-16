@@ -16,31 +16,11 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api.powershell;
+package com.redhat.rhevm.api.resource;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import com.redhat.rhevm.api.VM;
-
-public class PowerShellVM extends VM
+public class MediaType extends javax.ws.rs.core.MediaType
 {
-	public PowerShellVM() {
-	}
-
-	public static ArrayList<VM> parse(String output) {
-		ArrayList<HashMap<String,String>> vmsProps = PowerShellUtils.parseProps(output);
-		ArrayList<VM> ret = new ArrayList<VM>();
-
-		for (HashMap<String,String> props : vmsProps) {
-			PowerShellVM vm = new PowerShellVM();
-
-			vm.setId(props.get("vmid"));
-			vm.setName(props.get("name"));
-
-			ret.add(vm);
-		}
-
-		return ret;
-	}
+	public final static String APPLICATION_X_YAML = "application/x-yaml";
+	public final static javax.ws.rs.core.MediaType APPLICATION_X_YAML_TYPE =
+		new javax.ws.rs.core.MediaType("application", "x-yaml");
 }
