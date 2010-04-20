@@ -5,9 +5,13 @@
 <web-app>
    <display-name>RHEV-M Dummy API Implementation</display-name>
 
-   <context-param>
+   <!--context-param>
       <param-name>resteasy.jndi.resources</param-name>
       <param-value>rhevm-api-dummy/DummyApiResource/local,rhevm-api-dummy/DummyHostResource/local,rhevm-api-dummy/DummyVmResource/local</param-value>
+   </context-param-->
+   <context-param>
+      <param-name>javax.ws.rs.Application</param-name>
+      <param-value>com.redhat.rhevm.api.dummy.deploy.DummyApplication</param-value>
    </context-param>
 
    <listener>

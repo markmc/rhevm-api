@@ -19,175 +19,107 @@
 package com.redhat.rhevm.api.powershell.resource;
 
 import java.net.URI;
-import java.util.List;
 import java.util.ArrayList;
 
-import javax.ejb.Stateless;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.VM;
-import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
-@Stateless
-public class PowerShellVmResource implements VmResource
-{
-	/* FIXME: would like to do:
-         * private @Context UriInfo uriInfo;
-         */
+import static com.redhat.rhevm.api.powershell.util.PowerShellUtils.runCommand;
 
-	private void runCommand(String command) {
-		PowerShellUtils.runCommand(command);
-	}
+public class PowerShellVmResource implements VmResource {
+    /*
+     * FIXME: would like to do: private @Context UriInfo uriInfo;
+     */
 
-	private ArrayList<VM> runAndParse(String command) {
-		return PowerShellVM.parse(PowerShellUtils.runCommand(command));
-	}
+    private String id;
 
-	private VM runAndParseSingle(String command) {
-		ArrayList<VM> vms = runAndParse(command);
+    PowerShellVmResource(String id) {
+        this.id = id;
+    }
 
-		return !vms.isEmpty() ? vms.get(0) : null;
-	}
+    static ArrayList<VM> runAndParse(String command) {
+        return PowerShellVM.parse(PowerShellUtils.runCommand(command));
+    }
 
-	private UriBuilder getUriBuilder(UriInfo uriInfo) {
-		return uriInfo.getBaseUriBuilder().clone().path("vms");
-	}
+    static VM runAndParseSingle(String command) {
+        ArrayList<VM> vms = runAndParse(command);
 
-	private VM addLink(VM vm, URI uri) {
-		vm.setLink(new Link("self", uri));
-		return new VM(vm);
-	}
+        return !vms.isEmpty() ? vms.get(0) : null;
+    }
 
-	private VM addLink(VM vm, UriBuilder uriBuilder) {
-		return addLink(vm, uriBuilder.clone().path(vm.getId()).build());
-	}
+    static VM addLink(VM vm, URI uri) {
+        vm.setLink(new Link("self", uri));
+        return new VM(vm);
+    }
 
-	private VM addLink(VM vm, UriInfo uriInfo) {
-		return addLink(vm, getUriBuilder(uriInfo));
-	}
+    @Override
+    public VM get(UriInfo uriInfo) {
+        return addLink(runAndParseSingle("get-vm " + id), uriInfo.getRequestUriBuilder().build());
+    }
 
-	private VMs addLinks(List<VM> vms, UriInfo uriInfo) {
-		VMs ret = new VMs();
-		for (VM vm : vms)
-			ret.getVMs().add(addLink(vm, uriInfo));
-		return ret;
-	}
+    @Override
+    public VM update(UriInfo uriInfo, VM vm) {
+        StringBuilder buf = new StringBuilder();
 
-	@Override
-	public VM get(UriInfo uriInfo, String id) {
-		return addLink(runAndParseSingle("get-vm " + id), uriInfo);
-	}
+        buf.append("$v = get-vm " + vm.getId() + "\n");
 
-	@Override
-	public VMs list(UriInfo uriInfo) {
-		return addLinks(runAndParse("select-vm"), uriInfo);
-	}
+        if (vm.getName() != null) {
+            buf.append("$v.name = \"" + vm.getName() + "\"");
+        }
 
-/* FIXME: move this
-	@Override
-	public VMs search(String criteria) {
-		return runAndParse("select-vm " + criteria);
-	}
-*/
+        buf.append("\n");
+        buf.append("update-vm -vmobject $v");
 
-	@Override
-	public Response add(UriInfo uriInfo, VM vm) {
-		StringBuilder buf = new StringBuilder();
+        return addLink(runAndParseSingle(buf.toString()), uriInfo.getRequestUriBuilder().build());
+    }
 
-		if (vm.getTemplateId() != null) {
-			buf.append("$templ = get-template -templateid " + vm.getTemplateId() + "\n");
-		}
+    @Override
+    public void start() {
+        runCommand("start-vm -vmid " + id);
+    }
 
-		buf.append("add-vm");
+    @Override
+    public void stop() {
+        runCommand("stop-vm -vmid " + id);
+    }
 
-		if (vm.getName() != null) {
-			buf.append(" -name " + vm.getName());
-		}
+    @Override
+    public void shutdown() {
+        runCommand("shutdown-vm -vmid " + id);
+    }
 
-		if (vm.getTemplateId() != null) {
-			buf.append(" -templateobject $templ");
-		}
+    @Override
+    public void suspend() {
+        runCommand("suspend-vm -vmid " + id);
+    }
 
-		if (vm.getClusterId() != null) {
-			buf.append(" -hostclusterid " + vm.getClusterId());
-		}
+    @Override
+    public void restore() {
+        runCommand("restore-vm -vmid " + id);
+    }
 
-		vm = runAndParseSingle(buf.toString());
+    @Override
+    public void migrate() {
+    }
 
-		URI uri = getUriBuilder(uriInfo).clone().path(vm.getId()).build();
+    @Override
+    public void move() {
+    }
 
-		return Response.created(uri).entity(addLink(vm, uri)).build();
-	}
+    @Override
+    public void detach() {
+    }
 
-	@Override
-	public VM update(UriInfo uriInfo, String id, VM vm) {
-		StringBuilder buf = new StringBuilder();
+    @Override
+    public void changeCD() {
+    }
 
-		buf.append("$v = get-vm " + vm.getId() + "\n");
-
-		if (vm.getName() != null) {
-			buf.append("$v.name = \"" + vm.getName() + "\"");
-		}
-
-		buf.append("\n");
-		buf.append("update-vm -vmobject $v");
-
-		return addLink(runAndParseSingle(buf.toString()), uriInfo);
-	}
-
-	@Override
-	public void remove(String id) {
-		runCommand("remove-vm -vmid " + id);
-	}
-
-	@Override
-	public void start(String id) {
-		runCommand("start-vm -vmid ");
-	}
-
-	@Override
-	public void stop(String id) {
-		runCommand("stop-vm -vmid ");
-	}
-
-	@Override
-	public void shutdown(String id) {
-		runCommand("shutdown-vm -vmid ");
-	}
-
-	@Override
-	public void suspend(String id) {
-		runCommand("suspend-vm -vmid ");
-	}
-
-	@Override
-	public void restore(String id) {
-		runCommand("restore-vm -vmid ");
-	}
-
-	@Override
-	public void migrate(String id) {
-	}
-
-	@Override
-	public void move(String id) {
-	}
-
-	@Override
-	public void detach(String id) {
-	}
-
-	@Override
-	public void changeCD(String id) {
-	}
-
-	@Override
-	public void ejectCD(String id) {
-	}
+    @Override
+    public void ejectCD() {
+    }
 }

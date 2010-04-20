@@ -18,136 +18,101 @@
  */
 package com.redhat.rhevm.api.dummy.resource;
 
-import java.util.HashMap;
 
-import javax.ejb.Stateless;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Actions;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.VM;
-import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.dummy.model.DummyVmStatus;
 import com.redhat.rhevm.api.dummy.model.DummyVM;
 
-@Stateless
 public class DummyVmResource implements VmResource
 {
 	/* FIXME: would like to do:
 	 * private @Context UriInfo uriInfo;
 	 */
 
-	/* FIXME: synchronize access to this */
-	private static HashMap<String, DummyVM> vms = new HashMap<String, DummyVM>();
+    private DummyVM vm;
+    
+    /**
+     * Package-protected ctor, never needs to be instantiated by JAX-RS framework.
+     * 
+     * @param vm  encapsulated VM
+     */
+    DummyVmResource(DummyVM vm) {
+        this.vm = vm;
+    }
+    
+    /**
+     * Package-level accessor for encapsulated VM
+     * 
+     * @return  encapsulated VM
+     */
+    VM getVM() {
+        return vm;
+    }
 
-	static {
-		while (vms.size() < 10) {
-			DummyVM vm = new DummyVM();
-			vms.put(vm.getId(), vm);
-		}
-	}
-
-	private UriBuilder getUriBuilder(UriInfo uriInfo, String id) {
-		return uriInfo.getBaseUriBuilder().clone().path("vms").path(id);
-	}
-
-	private VM addLinks(VM vm, UriBuilder uriBuilder) {
+	VM addLinks(UriBuilder uriBuilder) {
 		vm.setLink(new Link("self", uriBuilder.build()));
 		vm.setActions(new Actions(uriBuilder, VmResource.class));
 		return new VM(vm);
 	}
-
-	private VM addLinks(VM vm, UriInfo uriInfo) {
-		return addLinks(vm, getUriBuilder(uriInfo, vm.getId()));
-	}
-
+	
 	/* FIXME: kill uriInfo param, make href auto-generated? */
 	@Override
-	public VM get(UriInfo uriInfo, String id) {
-		DummyVM vm = vms.get(id);
-
-		return addLinks(vm, uriInfo);
+	public VM get(UriInfo uriInfo) {
+		return addLinks(uriInfo.getRequestUriBuilder());
 	}
 
 	@Override
-	public VMs list(UriInfo uriInfo) {
-		VMs ret = new VMs();
-
-		for (DummyVM vm : vms.values()) {
-			ret.getVMs().add(addLinks(vm, uriInfo));
-		}
-
-		return ret;
+	public VM update(UriInfo uriInfo, VM vm) {
+		this.vm.update(vm);
+		return addLinks(uriInfo.getRequestUriBuilder());
 	}
 
 	@Override
-	public Response add(UriInfo uriInfo, VM vm) {
-		DummyVM newVM = new DummyVM(vm);
-
-		vms.put(newVM.getId(), newVM);
-
-		UriBuilder uriBuilder = getUriBuilder(uriInfo, newVM.getId());
-
-		vm = addLinks(newVM, uriBuilder);
-
-		return Response.created(uriBuilder.build()).entity(vm).build();
+	public void start() {
+		vm.setStatus(DummyVmStatus.UP);
 	}
 
 	@Override
-	public VM update(UriInfo uriInfo, String id, VM vm) {
-		DummyVM ret = vms.get(id);
-		ret.update(vm);
-		return addLinks(ret, uriInfo);
+	public void stop() {
+		vm.setStatus(DummyVmStatus.DOWN);
 	}
 
 	@Override
-	public void remove(String id) {
-		vms.remove(id);
+	public void shutdown() {
+		vm.setStatus(DummyVmStatus.DOWN);
 	}
 
 	@Override
-	public void start(String id) {
-		vms.get(id).setStatus(DummyVmStatus.UP);
+	public void suspend() {
 	}
 
 	@Override
-	public void stop(String id) {
-		vms.get(id).setStatus(DummyVmStatus.DOWN);
+	public void restore() {
 	}
 
 	@Override
-	public void shutdown(String id) {
-		vms.get(id).setStatus(DummyVmStatus.DOWN);
+	public void migrate() {
 	}
 
 	@Override
-	public void suspend(String id) {
+	public void move() {
 	}
 
 	@Override
-	public void restore(String id) {
+	public void detach() {
 	}
 
 	@Override
-	public void migrate(String id) {
+	public void changeCD() {
 	}
 
 	@Override
-	public void move(String id) {
-	}
-
-	@Override
-	public void detach(String id) {
-	}
-
-	@Override
-	public void changeCD(String id) {
-	}
-
-	@Override
-	public void ejectCD(String id) {
+	public void ejectCD() {
 	}
 }

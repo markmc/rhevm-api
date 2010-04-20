@@ -18,18 +18,17 @@
  */
 package com.redhat.rhevm.api.dummy.resource;
 
-import java.util.List;
+
 import org.junit.Test;
-import javax.ws.rs.core.Response;
-import org.jboss.resteasy.client.ClientResponse;
+
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
 
 public class DummyVmResourceTest extends DummyTestBase
 {
-	private VmResource getService() {
-		return createVmResource(getEntryPoint("vms").getHref());
+	private DummyTestBase.VmsResource getService() {
+		return createVmsResource(getEntryPoint("vms").getHref());
 	}
 
 	private void checkVM(VM vm) {
@@ -38,14 +37,22 @@ public class DummyVmResourceTest extends DummyTestBase
 		assertNotNull(vm.getLink());
 		assertNotNull(vm.getLink().getRel());
 		assertNotNull(vm.getLink().getHref());
-		assertTrue(vm.getLink().getHref().endsWith(vm.getId()));
+		assertTrue(vm.getLink().getHref().endsWith("/vms/" + vm.getId()));
 		assertNotNull(vm.getActions());
 		assertTrue(vm.getActions().getLinks().size() > 0);
+		boolean includesStartLink = false;
+		for (Link actionLink : vm.getActions().getLinks()) {
+		    includesStartLink = actionLink.getHref().endsWith("/vms/" + vm.getId() + "/start");
+		    if (includesStartLink) {
+		        break;
+		    }
+		}
+		assertTrue("expected start link", includesStartLink);
 	}
 
 	@Test
 	public void testGetVmsList() throws Exception {
-		VmResource service = getService();
+	    DummyTestBase.VmsResource service = getService();
 		assertNotNull(service);
 
 		VMs vms = service.list();
@@ -59,5 +66,5 @@ public class DummyVmResourceTest extends DummyTestBase
 			checkVM(t);
 			assertEquals(vm.getId(), t.getId());
 		}
-	}
+	}	
 }

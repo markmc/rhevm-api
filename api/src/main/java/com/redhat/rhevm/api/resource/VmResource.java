@@ -19,16 +19,14 @@
 package com.redhat.rhevm.api.resource;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.PUT;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+
 
 /* FIXME: doesn't seem to do anything ? Also, we could do without
  *        the explicit dependency on RESTeasy
@@ -37,11 +35,8 @@ import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.VM;
-import com.redhat.rhevm.api.model.VMs;
 
-/* FIXME: we want to produce JSON too */
 
-@Path("/vms")
 @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
 @Formatted
 public interface VmResource
@@ -52,33 +47,7 @@ public interface VmResource
 	 */
 
 	@GET
-	@Path("{id}")
-	public VM get(@Context UriInfo uriInfo, @PathParam("id") String id);
-
-	/* FIXME: do we want to define our own collection type for
-	 *        the return value here rather than <collection> ?
-	 */
-	@GET
-	public VMs list(@Context UriInfo uriInfo);
-
-	/* FIXME: need to move this to e.g. a top-level /search
-	 * @GET
-	 * public VMs search(String criteria);
-	 */
-
-	/**
-	 * Creates a new VM and adds it to the database. The VM is created
-	 * based on the properties of @vm.
-	 * <p>
-	 * The VM#name, VM#templateId and VM#clusterId properties are required.
-	 *
-	 * @param vm  the VM definition from which to create the new VM
-	 * @return    the new newly created VM
-	 */
-	@POST
-	@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
-	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
-	public Response add(@Context UriInfo uriInfo, VM vm);
+	public VM get(@Context UriInfo uriInfo);
 
 	/**
 	 * Modifies an existing VM's properties in the database.
@@ -89,65 +58,56 @@ public interface VmResource
 	 * @return    the updated VM
 	 */
 	@PUT
-	@Path("{id}")
 	@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
-	public VM update(@Context UriInfo uriInfo, @PathParam("id") String id, VM vm);
-
-	@DELETE
-	@Path("{id}")
-	public void remove(@PathParam("id") String id);
-
-	/* FIXME:
-	 * we need to list the available action URLs in the VM entity
-	 */
+	public VM update(@Context UriInfo uriInfo, VM vm);
 
 	@POST
 	@Action
-	@Path("{id}/start")
-	public void start(@PathParam("id") String id);
+	@Path("start")
+	public void start();
 
 	@POST
 	@Action
-	@Path("{id}/stop")
-	public void stop(@PathParam("id") String id);
+	@Path("stop")
+	public void stop();
 
 	@POST
 	@Action
-	@Path("{id}/shutdown")
-	public void shutdown(@PathParam("id") String id);
+	@Path("shutdown")
+	public void shutdown();
 
 	@POST
 	@Action
-	@Path("{id}/suspend")
-	public void suspend(@PathParam("id") String id);
+	@Path("suspend")
+	public void suspend();
 
 	@POST
 	@Action
-	@Path("{id}/restore")
-	public void restore(@PathParam("id") String id);
+	@Path("restore")
+	public void restore();
 
 	@POST
 	@Action
-	@Path("{id}/migrate")
-	public void migrate(@PathParam("id") String id);
+	@Path("migrate")
+	public void migrate();
 
 	@POST
 	@Action
-	@Path("{id}/move")
-	public void move(@PathParam("id") String id);
+	@Path("move")
+	public void move();
 
 	@POST
 	@Action
-	@Path("{id}/detach")
-	public void detach(@PathParam("id") String id);
+	@Path("detach")
+	public void detach();
 
 	@POST
 	@Action
-	@Path("{id}/changeCD")
-	public void changeCD(@PathParam("id") String id);
+	@Path("changeCD")
+	public void changeCD();
 
 	@POST
 	@Action
-	@Path("{id}/ejectCD")
-	public void ejectCD(@PathParam("id") String id);
+	@Path("ejectCD")
+	public void ejectCD();
 }

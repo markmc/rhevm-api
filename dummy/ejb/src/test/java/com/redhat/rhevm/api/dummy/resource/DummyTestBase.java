@@ -18,8 +18,6 @@
  */
 package com.redhat.rhevm.api.dummy.resource;
 
-import java.util.List;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -66,12 +64,13 @@ public class DummyTestBase extends Assert
 
 	@Path("/")
 	@Produces(MediaType.APPLICATION_XML)
-	protected interface VmResource {
+	protected interface VmsResource {
 		@GET public VMs list();
 		@GET @Path("{id}") public VM get(@PathParam("id") String id);
 	}
-	protected VmResource createVmResource(String uri) {
-		return ProxyFactory.create(VmResource.class, uri);
+	
+	protected VmsResource createVmsResource(String uri) {
+		return ProxyFactory.create(VmsResource.class, uri);
 	}
 
 	protected Link getEntryPoint(String rel) {
@@ -92,7 +91,7 @@ public class DummyTestBase extends Assert
 		server.setPort(port);
 		server.start();
 		server.getDeployment().getDispatcher().getRegistry().addPerRequestResource(DummyApiResource.class);
-		server.getDeployment().getDispatcher().getRegistry().addPerRequestResource(DummyVmResource.class);
+		server.getDeployment().getDispatcher().getRegistry().addPerRequestResource(DummyVmsResource.class);
 
 		RegisterBuiltin.register(ResteasyProviderFactory.getInstance());
 
