@@ -21,59 +21,38 @@ package com.redhat.rhevm.api.powershell.resource;
 
 import java.net.URI;
 import java.util.List;
-import java.util.ArrayList;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.resource.VmsResource;
-import com.redhat.rhevm.api.powershell.model.PowerShellVM;
-import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+
+import static com.redhat.rhevm.api.powershell.util.PowerShellUtils.runCommand;
 
 public class PowerShellVmsResource implements VmsResource
 {
     /* FIXME: would like to do:
-         * private @Context UriInfo uriInfo;
-         */
-    private void runCommand(String command) {
-        PowerShellUtils.runCommand(command);
-    }
-    private ArrayList<VM> runAndParse(String command) {
-        return PowerShellVM.parse(PowerShellUtils.runCommand(command));
-    }
-    private VM runAndParseSingle(String command) {
-        ArrayList<VM> vms = runAndParse(command);
-
-        return !vms.isEmpty() ? vms.get(0) : null;
-    }
-    private UriBuilder getUriBuilder(UriInfo uriInfo) {
-        return uriInfo.getBaseUriBuilder().clone().path("vms");
-    }
-    private VM addLink(VM vm, URI uri) {
-        vm.setLink(new Link("self", uri));
-        return new VM(vm);
-    }
-    private VM addLink(VM vm, UriBuilder uriBuilder) {
-        return addLink(vm, uriBuilder.clone().path(vm.getId()).build());
-    }
-    private VM addLink(VM vm, UriInfo uriInfo) {
-        return addLink(vm, getUriBuilder(uriInfo));
-    }
+     * private @Context UriInfo uriInfo;
+     */
+    
     private VMs addLinks(List<VM> vms, UriInfo uriInfo) {
         VMs ret = new VMs();
-        for (VM vm : vms)
-            ret.getVMs().add(addLink(vm, uriInfo));
+        for (VM vm : vms) {
+            UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(vm.getId());
+            ret.getVMs().add(PowerShellVmResource.addLink(vm, uriBuilder.build()));
+        }
         return ret;
     }
+    
     @Override
     public VMs list(UriInfo uriInfo) {
-        return addLinks(runAndParse("select-vm"), uriInfo);
+        return addLinks(PowerShellVmResource.runAndParse("select-vm"), uriInfo);
     }
+    
 /* FIXME: move this
     @Override
     public VMs search(String criteria) {
@@ -102,11 +81,11 @@ public class PowerShellVmsResource implements VmsResource
             buf.append(" -hostclusterid " + vm.getClusterId());
         }
 
-        vm = runAndParseSingle(buf.toString());
+        vm = PowerShellVmResource.runAndParseSingle(buf.toString());
 
-        URI uri = getUriBuilder(uriInfo).clone().path(vm.getId()).build();
+        URI uri = uriInfo.getRequestUriBuilder().path(vm.getId()).build();
 
-        return Response.created(uri).entity(addLink(vm, uri)).build();
+        return Response.created(uri).entity(PowerShellVmResource.addLink(vm, uri)).build();
     }
     
     @Override
