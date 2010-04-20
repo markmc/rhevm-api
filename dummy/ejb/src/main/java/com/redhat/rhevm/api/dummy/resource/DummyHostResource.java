@@ -45,6 +45,7 @@ public class DummyHostResource implements HostResource
 	static {
 		while (hosts.size() < 4) {
 			DummyHost host = new DummyHost();
+			host.setName("host" + Integer.toString(hosts.size()));
 			hosts.put(host.getId(), host);
 		}
 	}

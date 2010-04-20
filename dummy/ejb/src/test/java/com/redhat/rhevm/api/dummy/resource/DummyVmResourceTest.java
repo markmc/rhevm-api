@@ -32,7 +32,7 @@ public class DummyVmResourceTest extends DummyTestBase
 	}
 
 	private void checkVM(VM vm) {
-		// FIXME: assertNotNull(vm.getName());
+		assertNotNull(vm.getName());
 		assertNotNull(vm.getId());
 		assertNotNull(vm.getLink());
 		assertNotNull(vm.getLink().getRel());
