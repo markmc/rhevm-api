@@ -53,9 +53,6 @@ public interface HostResource
 	@Path("{id}")
 	public Host get(@Context UriInfo uriInfo, @PathParam("id") String id);
 
-	/* FIXME: do we want to define our own collection type for
-	 *        the return value here rather than <collection> ?
-	 */
 	@GET
 	public Hosts list(@Context UriInfo uriInfo);
 
