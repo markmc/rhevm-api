@@ -40,7 +40,7 @@ public class DummyVmResource implements VmResource {
      *
      * @param vm  encapsulated VM
      */
-    DummyVmResource(DummyVM vm) {
+    public DummyVmResource(DummyVM vm) {
         this.vm = vm;
     }
 
@@ -49,11 +49,11 @@ public class DummyVmResource implements VmResource {
      *
      * @return  encapsulated VM
      */
-    VM getVM() {
+    public VM getVM() {
         return vm;
     }
 
-    VM addLinks(UriBuilder uriBuilder) {
+    public VM addLinks(UriBuilder uriBuilder) {
         vm.setLink(new Link("self", uriBuilder.build()));
         vm.setActions(new Actions(uriBuilder, VmResource.class));
         return new VM(vm);

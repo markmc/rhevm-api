@@ -38,21 +38,21 @@ public class PowerShellVmResource implements VmResource {
 
     private String id;
 
-    PowerShellVmResource(String id) {
+    public PowerShellVmResource(String id) {
         this.id = id;
     }
 
-    static ArrayList<VM> runAndParse(String command) {
+    public static ArrayList<VM> runAndParse(String command) {
         return PowerShellVM.parse(PowerShellUtils.runCommand(command));
     }
 
-    static VM runAndParseSingle(String command) {
+    public static VM runAndParseSingle(String command) {
         ArrayList<VM> vms = runAndParse(command);
 
         return !vms.isEmpty() ? vms.get(0) : null;
     }
 
-    static VM addLink(VM vm, URI uri) {
+    public static VM addLink(VM vm, URI uri) {
         vm.setLink(new Link("self", uri));
         return new VM(vm);
     }
