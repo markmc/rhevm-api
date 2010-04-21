@@ -40,66 +40,65 @@ import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.resource.MediaType;
 
-public class DummyTestBase extends Assert
-{
-	private final String host = "localhost";
-	private final int port = 8989;
-	private final String uri = String.format("http://%s:%d/", host, port);
+public class DummyTestBase extends Assert {
+    private final String host = "localhost";
+    private final int port = 8989;
+    private final String uri = String.format("http://%s:%d/", host, port);
 
-	private TJWSEmbeddedJaxrsServer server = new TJWSEmbeddedJaxrsServer();
+    private TJWSEmbeddedJaxrsServer server = new TJWSEmbeddedJaxrsServer();
 
-	/* FIXME:
-	 * unify the client and server interfaces
-	 *
-	 * one interesting thing, though, is that if the client uses
-	 * an @Path("/vms") annotated interface, it is hardcoding
-	 * knowledge of the URI structure ... and we don't want that
-	 */
+    /* FIXME:
+     * unify the client and server interfaces
+     *
+     * one interesting thing, though, is that if the client uses
+     * an @Path("/vms") annotated interface, it is hardcoding
+     * knowledge of the URI structure ... and we don't want that
+     */
 
-	@Path("/")
-	protected interface ApiResource {
-		@HEAD public ClientResponse head();
-	}
-	protected static ApiResource api;
+    @Path("/")
+    protected interface ApiResource {
+        @HEAD public ClientResponse head();
+    }
+    protected static ApiResource api;
 
-	@Path("/")
-	@Produces(MediaType.APPLICATION_XML)
-	protected interface VmsResource {
-		@GET public VMs list();
-		@GET @Path("{id}") public VM get(@PathParam("id") String id);
-	}
-	
-	protected VmsResource createVmsResource(String uri) {
-		return ProxyFactory.create(VmsResource.class, uri);
-	}
+    @Path("/")
+    @Produces(MediaType.APPLICATION_XML)
+    protected interface VmsResource {
+        @GET public VMs list();
+        @GET @Path("{id}") public VM get(@PathParam("id") String id);
+    }
 
-	protected Link getEntryPoint(String rel) {
-		MultivaluedMap<String, String> headers = api.head().getHeaders();
-		for (String s : headers.get("Link")) {
-			/* FIXME: WTF are the headers concatenated into a single string? */
-			for (String t : s.split(",")) {
-				Link link = Link.valueOf(t);
-				if (rel.equals(link.getRel()))
-					return link;
-			}
-		}
-		throw new RuntimeException("No '" + rel + "' Link header found");
-	}
+    protected VmsResource createVmsResource(String uri) {
+        return ProxyFactory.create(VmsResource.class, uri);
+    }
 
-	@Before
-	public void setup() throws Exception {
-		server.setPort(port);
-		server.start();
-		server.getDeployment().getDispatcher().getRegistry().addPerRequestResource(DummyApiResource.class);
-		server.getDeployment().getDispatcher().getRegistry().addPerRequestResource(DummyVmsResource.class);
+    protected Link getEntryPoint(String rel) {
+        MultivaluedMap<String, String> headers = api.head().getHeaders();
+        for (String s : headers.get("Link")) {
+            /* FIXME: WTF are the headers concatenated into a single string? */
+            for (String t : s.split(",")) {
+                Link link = Link.valueOf(t);
+                if (rel.equals(link.getRel()))
+                    return link;
+            }
+        }
+        throw new RuntimeException("No '" + rel + "' Link header found");
+    }
 
-		RegisterBuiltin.register(ResteasyProviderFactory.getInstance());
+    @Before
+    public void setup() throws Exception {
+        server.setPort(port);
+        server.start();
+        server.getDeployment().getDispatcher().getRegistry().addPerRequestResource(DummyApiResource.class);
+        server.getDeployment().getDispatcher().getRegistry().addPerRequestResource(DummyVmsResource.class);
 
-		api = ProxyFactory.create(ApiResource.class, uri.toString());
-	}
+        RegisterBuiltin.register(ResteasyProviderFactory.getInstance());
 
-	@After
-	public void destroy() throws Exception {
-		server.stop();
-	}
+        api = ProxyFactory.create(ApiResource.class, uri.toString());
+    }
+
+    @After
+    public void destroy() throws Exception {
+        server.stop();
+    }
 }

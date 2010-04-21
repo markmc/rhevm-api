@@ -18,53 +18,51 @@
  */
 package com.redhat.rhevm.api.dummy.resource;
 
-
 import org.junit.Test;
 
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
 
-public class DummyVmResourceTest extends DummyTestBase
-{
-	private DummyTestBase.VmsResource getService() {
-		return createVmsResource(getEntryPoint("vms").getHref());
-	}
+public class DummyVmResourceTest extends DummyTestBase {
+    private DummyTestBase.VmsResource getService() {
+        return createVmsResource(getEntryPoint("vms").getHref());
+    }
 
-	private void checkVM(VM vm) {
-		assertNotNull(vm.getName());
-		assertNotNull(vm.getId());
-		assertNotNull(vm.getLink());
-		assertNotNull(vm.getLink().getRel());
-		assertNotNull(vm.getLink().getHref());
-		assertTrue(vm.getLink().getHref().endsWith("/vms/" + vm.getId()));
-		assertNotNull(vm.getActions());
-		assertTrue(vm.getActions().getLinks().size() > 0);
-		boolean includesStartLink = false;
-		for (Link actionLink : vm.getActions().getLinks()) {
-		    includesStartLink = actionLink.getHref().endsWith("/vms/" + vm.getId() + "/start");
-		    if (includesStartLink) {
-		        break;
-		    }
-		}
-		assertTrue("expected start link", includesStartLink);
-	}
+    private void checkVM(VM vm) {
+        assertNotNull(vm.getName());
+        assertNotNull(vm.getId());
+        assertNotNull(vm.getLink());
+        assertNotNull(vm.getLink().getRel());
+        assertNotNull(vm.getLink().getHref());
+        assertTrue(vm.getLink().getHref().endsWith("/vms/" + vm.getId()));
+        assertNotNull(vm.getActions());
+        assertTrue(vm.getActions().getLinks().size() > 0);
+        boolean includesStartLink = false;
+        for (Link actionLink : vm.getActions().getLinks()) {
+            includesStartLink = actionLink.getHref().endsWith("/vms/" + vm.getId() + "/start");
+            if (includesStartLink) {
+                break;
+            }
+        }
+        assertTrue("expected start link", includesStartLink);
+    }
 
-	@Test
-	public void testGetVmsList() throws Exception {
-	    DummyTestBase.VmsResource service = getService();
-		assertNotNull(service);
+    @Test
+    public void testGetVmsList() throws Exception {
+        DummyTestBase.VmsResource service = getService();
+        assertNotNull(service);
 
-		VMs vms = service.list();
-		assertNotNull(vms);
-		assertTrue(vms.getVMs().size() > 0);
+        VMs vms = service.list();
+        assertNotNull(vms);
+        assertTrue(vms.getVMs().size() > 0);
 
-		for (VM vm : vms.getVMs()) {
-			checkVM(vm);
+        for (VM vm : vms.getVMs()) {
+            checkVM(vm);
 
-			VM t = service.get(vm.getId());
-			checkVM(t);
-			assertEquals(vm.getId(), t.getId());
-		}
-	}	
+            VM t = service.get(vm.getId());
+            checkVM(t);
+            assertEquals(vm.getId(), t.getId());
+        }
+    }
 }

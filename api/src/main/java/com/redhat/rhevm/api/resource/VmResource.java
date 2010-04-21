@@ -27,7 +27,6 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 
-
 /* FIXME: doesn't seem to do anything ? Also, we could do without
  *        the explicit dependency on RESTeasy
  */
@@ -36,78 +35,76 @@ import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.VM;
 
-
 @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
 @Formatted
-public interface VmResource
-{
-	/* FIXME: can we make uriInfo a field instead of a parameter to
-	 *        each method? Adding @Context to the implementation
-	 *        class doesn't seem to work.
-	 */
+public interface VmResource {
+    /* FIXME: can we make uriInfo a field instead of a parameter to
+     *        each method? Adding @Context to the implementation
+     *        class doesn't seem to work.
+     */
 
-	@GET
-	public VM get(@Context UriInfo uriInfo);
+    @GET
+    public VM get(@Context UriInfo uriInfo);
 
-	/**
-	 * Modifies an existing VM's properties in the database.
-	 * <p>
-	 * Only the VM#name property can be modified.
-	 *
-	 * @param vm  the VM definition with the modified properties
-	 * @return    the updated VM
-	 */
-	@PUT
-	@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
-	public VM update(@Context UriInfo uriInfo, VM vm);
+    /**
+     * Modifies an existing VM's properties in the database.
+     * <p>
+     * Only the VM#name property can be modified.
+     *
+     * @param vm  the VM definition with the modified properties
+     * @return    the updated VM
+     */
+    @PUT
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
+    public VM update(@Context UriInfo uriInfo, VM vm);
 
-	@POST
-	@Action
-	@Path("start")
-	public void start();
+    @POST
+    @Action
+    @Path("start")
+    public void start();
 
-	@POST
-	@Action
-	@Path("stop")
-	public void stop();
+    @POST
+    @Action
+    @Path("stop")
+    public void stop();
 
-	@POST
-	@Action
-	@Path("shutdown")
-	public void shutdown();
+    @POST
+    @Action
+    @Path("shutdown")
+    public void shutdown();
 
-	@POST
-	@Action
-	@Path("suspend")
-	public void suspend();
+    @POST
+    @Action
+    @Path("suspend")
+    public void suspend();
 
-	@POST
-	@Action
-	@Path("restore")
-	public void restore();
+    @POST
+    @Action
+    @Path("restore")
+    public void restore();
 
-	@POST
-	@Action
-	@Path("migrate")
-	public void migrate();
+    @POST
+    @Action
+    @Path("migrate")
+    public void migrate();
 
-	@POST
-	@Action
-	@Path("move")
-	public void move();
+    @POST
+    @Action
+    @Path("move")
+    public void move();
 
-	@POST
-	@Action
-	@Path("detach")
-	public void detach();
+    @POST
+    @Action
+    @Path("detach")
+    public void detach();
 
-	@POST
-	@Action
-	@Path("changeCD")
-	public void changeCD();
+    @POST
+    @Action
+    @Path("changeCD")
+    public void changeCD();
 
-	@POST
-	@Action
-	@Path("ejectCD")
-	public void ejectCD();
+    @POST
+    @Action
+    @Path("ejectCD")
+    public void ejectCD();
 }

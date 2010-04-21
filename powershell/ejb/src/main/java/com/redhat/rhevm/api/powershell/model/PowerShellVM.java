@@ -25,24 +25,23 @@ import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
-public class PowerShellVM extends VM
-{
-	public PowerShellVM() {
-	}
+public class PowerShellVM extends VM {
+    public PowerShellVM() {
+    }
 
-	public static ArrayList<VM> parse(String output) {
-		ArrayList<HashMap<String,String>> vmsProps = PowerShellUtils.parseProps(output);
-		ArrayList<VM> ret = new ArrayList<VM>();
+    public static ArrayList<VM> parse(String output) {
+        ArrayList<HashMap<String,String>> vmsProps = PowerShellUtils.parseProps(output);
+        ArrayList<VM> ret = new ArrayList<VM>();
 
-		for (HashMap<String,String> props : vmsProps) {
-			PowerShellVM vm = new PowerShellVM();
+        for (HashMap<String,String> props : vmsProps) {
+            PowerShellVM vm = new PowerShellVM();
 
-			vm.setId(props.get("vmid"));
-			vm.setName(props.get("name"));
+            vm.setId(props.get("vmid"));
+            vm.setName(props.get("name"));
 
-			ret.add(vm);
-		}
+            ret.add(vm);
+        }
 
-		return ret;
-	}
+        return ret;
+    }
 }

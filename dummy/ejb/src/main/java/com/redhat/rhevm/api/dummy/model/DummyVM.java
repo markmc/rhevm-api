@@ -20,30 +20,29 @@ package com.redhat.rhevm.api.dummy.model;
 
 import com.redhat.rhevm.api.model.VM;
 
-public class DummyVM extends VM
-{
-	private static int counter = 0;
+public class DummyVM extends VM {
+    private static int counter = 0;
 
-	public DummyVM() {
-		id = Integer.toString(++counter);
-		setHostId(Integer.toString(counter % 2));
-	}
+    public DummyVM() {
+        id = Integer.toString(++counter);
+        setHostId(Integer.toString(counter % 2));
+    }
 
-	public DummyVM(VM vm) {
-		this();
-		update(vm);
-	}
+    public DummyVM(VM vm) {
+        this();
+        update(vm);
+    }
 
-	public DummyVmStatus getStatus() {
-		return status;
-	}
-	public void setStatus(DummyVmStatus status) {
-		this.status = status;
-	}
-	private DummyVmStatus status;
+    public DummyVmStatus getStatus() {
+        return status;
+    }
+    public void setStatus(DummyVmStatus status) {
+        this.status = status;
+    }
+    private DummyVmStatus status;
 
-	public void update(VM vm) {
-		// update writable fields only
-		this.name = vm.getName();
-	}
+    public void update(VM vm) {
+        // update writable fields only
+        this.name = vm.getName();
+    }
 }

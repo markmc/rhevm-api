@@ -18,7 +18,6 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-
 import java.net.URI;
 import java.util.List;
 
@@ -33,12 +32,11 @@ import com.redhat.rhevm.api.resource.VmsResource;
 
 import static com.redhat.rhevm.api.powershell.util.PowerShellUtils.runCommand;
 
-public class PowerShellVmsResource implements VmsResource
-{
+public class PowerShellVmsResource implements VmsResource {
     /* FIXME: would like to do:
      * private @Context UriInfo uriInfo;
      */
-    
+
     private VMs addLinks(List<VM> vms, UriInfo uriInfo) {
         VMs ret = new VMs();
         for (VM vm : vms) {
@@ -47,18 +45,19 @@ public class PowerShellVmsResource implements VmsResource
         }
         return ret;
     }
-    
+
     @Override
     public VMs list(UriInfo uriInfo) {
         return addLinks(PowerShellVmResource.runAndParse("select-vm"), uriInfo);
     }
-    
+
 /* FIXME: move this
     @Override
     public VMs search(String criteria) {
         return runAndParse("select-vm " + criteria);
     }
 */
+
     @Override
     public Response add(UriInfo uriInfo, VM vm) {
         StringBuilder buf = new StringBuilder();
@@ -87,12 +86,12 @@ public class PowerShellVmsResource implements VmsResource
 
         return Response.created(uri).entity(PowerShellVmResource.addLink(vm, uri)).build();
     }
-    
+
     @Override
     public void remove(String id) {
         runCommand("remove-vm -vmid " + id);
     }
-    
+
     @Override
     public VmResource getVmSubResource(UriInfo uriInfo, String id) {
         return new PowerShellVmResource(id);

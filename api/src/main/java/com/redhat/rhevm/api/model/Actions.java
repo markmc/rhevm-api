@@ -34,27 +34,26 @@ import javax.ws.rs.core.UriBuilder;
 
 @XmlRootElement(name = "action")
 @XmlAccessorType(XmlAccessType.NONE)
-public class Actions
-{
-	public Actions() {
-	}
+public class Actions {
+    public Actions() {
+    }
 
-	public Actions(UriBuilder uriBuilder, Class<?> service) {
-		for (Method method : service.getMethods()) {
-			if (method.getAnnotation(Action.class) != null) {
-				URI uri = uriBuilder.clone().path(method.getName()).build();
+    public Actions(UriBuilder uriBuilder, Class<?> service) {
+        for (Method method : service.getMethods()) {
+            if (method.getAnnotation(Action.class) != null) {
+                URI uri = uriBuilder.clone().path(method.getName()).build();
 
-				links.add(new Link(method.getName(), uri));
-			}
-		}
-	}
+                links.add(new Link(method.getName(), uri));
+            }
+        }
+    }
 
-	@XmlElementRef
-	public Collection<Link> getLinks() {
-		return links;
-	}
-	public void setLinks(Collection<Link> links) {
-		this.links = links;
-	}
-	protected Collection<Link> links = new ArrayList<Link>();
+    @XmlElementRef
+    public Collection<Link> getLinks() {
+        return links;
+    }
+    public void setLinks(Collection<Link> links) {
+        this.links = links;
+    }
+    protected Collection<Link> links = new ArrayList<Link>();
 }

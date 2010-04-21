@@ -28,24 +28,23 @@ import com.redhat.rhevm.api.dummy.resource.DummyHostResource;
 import com.redhat.rhevm.api.dummy.resource.DummyVmsResource;
 
 public class DummyApplication extends Application {
-    
+
     private Set<Object> singletons = new HashSet<Object>();
     private Set<Class<?>> classes = new HashSet<Class<?>>();
-    
+
     public DummyApplication() {
-        singletons.add(new DummyVmsResource());        
+        singletons.add(new DummyVmsResource());
         classes.add(DummyApiResource.class);
         classes.add(DummyHostResource.class);
     }
-    
+
     @Override
     public Set<Class<?>> getClasses() {
         return classes;
     }
-    
+
     @Override
     public Set<Object> getSingletons() {
         return singletons;
     }
-    
 }

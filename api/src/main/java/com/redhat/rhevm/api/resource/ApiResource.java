@@ -31,12 +31,11 @@ import javax.ws.rs.core.UriInfo;
  */
 
 @Path("/")
-public interface ApiResource
-{
-	/* FIXME: use @Context on a private field instead of
-	 *        having it passed as a parameter
-	 */
+public interface ApiResource {
+    /* FIXME: use @Context on a private field instead of
+     *        having it passed as a parameter
+     */
 
-	@HEAD
-	public Response head(@Context UriInfo uriInfo);
+    @HEAD
+    public Response head(@Context UriInfo uriInfo);
 }

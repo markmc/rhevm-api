@@ -20,21 +20,20 @@ package com.redhat.rhevm.api.dummy.model;
 
 import com.redhat.rhevm.api.model.Host;
 
-public class DummyHost extends Host
-{
-	private static int counter = 0;
+public class DummyHost extends Host {
+    private static int counter = 0;
 
-	public DummyHost() {
-		id = Integer.toString(++counter);
-	}
+    public DummyHost() {
+        id = Integer.toString(++counter);
+    }
 
-	public DummyHost(Host host) {
-		this();
-		update(host);
-	}
+    public DummyHost(Host host) {
+        this();
+        update(host);
+    }
 
-	public void update(Host host) {
-		// update writable fields only
-		this.name = host.getName();
-	}
+    public void update(Host host) {
+        // update writable fields only
+        this.name = host.getName();
+    }
 }

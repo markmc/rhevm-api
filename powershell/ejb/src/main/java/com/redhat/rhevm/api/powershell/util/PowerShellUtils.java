@@ -24,51 +24,50 @@ import java.util.HashMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class PowerShellUtils
-{
-	private static final Log log = LogFactory.getLog(PowerShellUtils.class);
+public class PowerShellUtils {
+    private static final Log log = LogFactory.getLog(PowerShellUtils.class);
 
-	public static ArrayList<HashMap<String,String>> parseProps(String str) {
-		ArrayList<HashMap<String,String>> ret = new ArrayList<HashMap<String,String>>();
-		HashMap<String,String> props = null;
+    public static ArrayList<HashMap<String,String>> parseProps(String str) {
+        ArrayList<HashMap<String,String>> ret = new ArrayList<HashMap<String,String>>();
+        HashMap<String,String> props = null;
 
-		for (String s : str.split("\n")) {
-			if (props != null && s.isEmpty()) {
-				ret.add(props);
-				props = null;
-			}
+        for (String s : str.split("\n")) {
+            if (props != null && s.isEmpty()) {
+                ret.add(props);
+                props = null;
+            }
 
-			String[] parts = s.split(":");
-			if (parts.length != 2)
-				continue;
+            String[] parts = s.split(":");
+            if (parts.length != 2)
+                continue;
 
-			if (props == null) {
-				props = new HashMap<String,String>();
-			}
+            if (props == null) {
+                props = new HashMap<String,String>();
+            }
 
-			props.put(parts[0].trim().toLowerCase(), parts[1].trim());
-		}
+            props.put(parts[0].trim().toLowerCase(), parts[1].trim());
+        }
 
-		if (props != null) {
-			ret.add(props);
-		}
+        if (props != null) {
+            ret.add(props);
+        }
 
-		return ret;
-	}
+        return ret;
+    }
 
-	public static String runCommand(String command) {
-		PowerShellCmd cmd = new PowerShellCmd(command);
+    public static String runCommand(String command) {
+        PowerShellCmd cmd = new PowerShellCmd(command);
 
-		int exitstatus = cmd.run();
+        int exitstatus = cmd.run();
 
-		if (!cmd.getStdErr().isEmpty()) {
-			log.warn(cmd.getStdErr());
-		}
+        if (!cmd.getStdErr().isEmpty()) {
+            log.warn(cmd.getStdErr());
+        }
 
-		if (exitstatus != 0) {
-			throw new PowerShellException("Command '" + command + "' exited with status=" + exitstatus);
-		}
+        if (exitstatus != 0) {
+            throw new PowerShellException("Command '" + command + "' exited with status=" + exitstatus);
+        }
 
-		return cmd.getStdOut();
-	}
+        return cmd.getStdOut();
+    }
 }

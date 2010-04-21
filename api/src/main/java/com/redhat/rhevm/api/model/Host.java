@@ -32,79 +32,78 @@ import org.jboss.resteasy.annotations.providers.jaxb.json.BadgerFish;
 @BadgerFish
 @XmlRootElement(name = "host")
 @XmlAccessorType(XmlAccessType.NONE)
-public class Host
-{
-	/* FIXME:
-	 * This is a giant hack so that JAX-B marshalls the
-	 * superclass rather than the subclass - e.g. we want the type
-	 * to be 'Host' not 'DummyHost' when it is passed to jyaml
-	 */
-	public Host(Host host) {
-		link         = host.link;
-		id           = host.id;
-		name         = host.name;
-		actions      = host.actions;
-		address      = host.address;
-		rootPassword = host.rootPassword;
-	}
+public class Host {
+    /* FIXME:
+     * This is a giant hack so that JAX-B marshalls the
+     * superclass rather than the subclass - e.g. we want the type
+     * to be 'Host' not 'DummyHost' when it is passed to jyaml
+     */
+    public Host(Host host) {
+        link         = host.link;
+        id           = host.id;
+        name         = host.name;
+        actions      = host.actions;
+        address      = host.address;
+        rootPassword = host.rootPassword;
+    }
 
-	public Host() {
-	}
+    public Host() {
+    }
 
-	/* FIXME: can we make this attritbute be auto-generated
-	 *        somehow?
-	 */
-	@XmlElementRef
-	public Link getLink() {
-		return link;
-	}
-	public void setLink(Link link) {
-		this.link = link;
-	}
-	protected Link link;
+    /* FIXME: can we make this attritbute be auto-generated
+     *        somehow?
+     */
+    @XmlElementRef
+    public Link getLink() {
+        return link;
+    }
+    public void setLink(Link link) {
+        this.link = link;
+    }
+    protected Link link;
 
-	@XmlElement(name = "id")
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	protected String id;
+    @XmlElement(name = "id")
+    public String getId() {
+        return id;
+    }
+    public void setId(String id) {
+        this.id = id;
+    }
+    protected String id;
 
-	@XmlElement(name = "name")
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	protected String name;
+    @XmlElement(name = "name")
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    protected String name;
 
-	@XmlElement(name = "actions")
-	public Actions getActions() {
-		return actions;
-	}
-	public void setActions(Actions actions) {
-		this.actions = actions;
-	}
-	protected Actions actions;
+    @XmlElement(name = "actions")
+    public Actions getActions() {
+        return actions;
+    }
+    public void setActions(Actions actions) {
+        this.actions = actions;
+    }
+    protected Actions actions;
 
-	@XmlElement(name = "address")
-	public String getAddress() {
-		return address;
-	}
-	public void setAddress(String address) {
-		this.address = address;
-	}
-	protected String address;
+    @XmlElement(name = "address")
+    public String getAddress() {
+        return address;
+    }
+    public void setAddress(String address) {
+        this.address = address;
+    }
+    protected String address;
 
-	@XmlElement(name = "root_password")
-	public String getRootPassword() {
-		return rootPassword;
-	}
-	public void setRootPassword(String rootPassword) {
-		this.rootPassword = rootPassword;
-	}
-	protected String rootPassword;
+    @XmlElement(name = "root_password")
+    public String getRootPassword() {
+        return rootPassword;
+    }
+    public void setRootPassword(String rootPassword) {
+        this.rootPassword = rootPassword;
+    }
+    protected String rootPassword;
 }

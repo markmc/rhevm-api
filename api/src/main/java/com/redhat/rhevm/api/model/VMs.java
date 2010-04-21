@@ -34,14 +34,13 @@ import org.jboss.resteasy.annotations.providers.jaxb.json.BadgerFish;
 @BadgerFish
 @XmlRootElement(name = "vms")
 @XmlAccessorType(XmlAccessType.NONE)
-public class VMs
-{
-	@XmlElementRef
-	public Collection<VM> getVMs() {
-		return vms;
-	}
-	public void setVMs(Collection<VM> vms) {
-		this.vms = vms;
-	}
-	protected Collection<VM> vms = new ArrayList<VM>();
+public class VMs {
+    @XmlElementRef
+    public Collection<VM> getVMs() {
+        return vms;
+    }
+    public void setVMs(Collection<VM> vms) {
+        this.vms = vms;
+    }
+    protected Collection<VM> vms = new ArrayList<VM>();
 }

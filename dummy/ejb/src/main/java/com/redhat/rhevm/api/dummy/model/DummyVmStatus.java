@@ -18,8 +18,7 @@
  */
 package com.redhat.rhevm.api.dummy.model;
 
-public enum DummyVmStatus
-{
-	UP,
-	DOWN,
+public enum DummyVmStatus {
+    UP,
+    DOWN,
 }

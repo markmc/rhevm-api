@@ -34,21 +34,20 @@ import com.redhat.rhevm.api.resource.ApiResource;
  */
 
 @Stateless
-public class DummyApiResource implements ApiResource
-{
-	@Override
-	public Response head(UriInfo uriInfo)
+public class DummyApiResource implements ApiResource {
+    @Override
+    public Response head(UriInfo uriInfo)
 	{
-		UriBuilder absolute = uriInfo.getBaseUriBuilder();
+            UriBuilder absolute = uriInfo.getBaseUriBuilder();
 
-		URI hostsUrl = absolute.clone().path("hosts").build();
-		URI vmsUrl   = absolute.clone().path("vms").build();
+            URI hostsUrl = absolute.clone().path("hosts").build();
+            URI vmsUrl   = absolute.clone().path("vms").build();
 
-		Response.ResponseBuilder builder = Response.ok();
+            Response.ResponseBuilder builder = Response.ok();
 
-		builder.header("Link", new Link("hosts", hostsUrl));
-		builder.header("Link", new Link("vms", vmsUrl));
+            builder.header("Link", new Link("hosts", hostsUrl));
+            builder.header("Link", new Link("vms", vmsUrl));
 
-		return builder.build();
+            return builder.build();
 	}
 }

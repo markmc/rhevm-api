@@ -40,43 +40,42 @@ import com.redhat.rhevm.api.model.VMs;
 @Path("/vms")
 @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
 @Formatted
-public interface VmsResource
-{
-	/* REVISIT: Singleton lifecycle probably requires that UriInfo
-	 * must be modelled as a method parameter, as there would be 
-	 * concurrency issues around injection into a data member
-	 */
+public interface VmsResource {
+    /* REVISIT: Singleton lifecycle probably requires that UriInfo
+     * must be modelled as a method parameter, as there would be
+     * concurrency issues around injection into a data member
+     */
 
-	@GET
-	public VMs list(@Context UriInfo uriInfo);
+    @GET
+    public VMs list(@Context UriInfo uriInfo);
 
-	/* FIXME: need to move this to e.g. a top-level /search
-	 * @GET
-	 * public VMs search(String criteria);
-	 */
+    /* FIXME: need to move this to e.g. a top-level /search
+     * @GET
+     * public VMs search(String criteria);
+     */
 
-	/**
-	 * Creates a new VM and adds it to the database. The VM is created
-	 * based on the properties of @vm.
-	 * <p>
-	 * The VM#name, VM#templateId and VM#clusterId properties are required.
-	 *
-	 * @param vm  the VM definition from which to create the new VM
-	 * @return    the new newly created VM
-	 */
-	@POST
-	@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
-	@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
-	public Response add(@Context UriInfo uriInfo, VM vm);
+    /**
+     * Creates a new VM and adds it to the database. The VM is created
+     * based on the properties of @vm.
+     * <p>
+     * The VM#name, VM#templateId and VM#clusterId properties are required.
+     *
+     * @param vm  the VM definition from which to create the new VM
+     * @return    the new newly created VM
+     */
+    @POST
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
+    public Response add(@Context UriInfo uriInfo, VM vm);
 
-	@DELETE
-	@Path("{id}")
-	public void remove(@PathParam("id") String id);
+    @DELETE
+    @Path("{id}")
+    public void remove(@PathParam("id") String id);
 
     /**
      * Sub-resource locator method, returns individual VmResource on which the
      * remainder of the URI is dispatched.
-     * 
+     *
      * @param id  the VM ID
      * @return    matching subresource if found
      */

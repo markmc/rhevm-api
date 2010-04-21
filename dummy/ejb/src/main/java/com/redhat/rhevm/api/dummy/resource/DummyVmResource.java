@@ -18,7 +18,6 @@
  */
 package com.redhat.rhevm.api.dummy.resource;
 
-
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
@@ -29,90 +28,89 @@ import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.dummy.model.DummyVmStatus;
 import com.redhat.rhevm.api.dummy.model.DummyVM;
 
-public class DummyVmResource implements VmResource
-{
-	/* FIXME: would like to do:
-	 * private @Context UriInfo uriInfo;
-	 */
+public class DummyVmResource implements VmResource {
+    /* FIXME: would like to do:
+     * private @Context UriInfo uriInfo;
+     */
 
     private DummyVM vm;
-    
+
     /**
      * Package-protected ctor, never needs to be instantiated by JAX-RS framework.
-     * 
+     *
      * @param vm  encapsulated VM
      */
     DummyVmResource(DummyVM vm) {
         this.vm = vm;
     }
-    
+
     /**
      * Package-level accessor for encapsulated VM
-     * 
+     *
      * @return  encapsulated VM
      */
     VM getVM() {
         return vm;
     }
 
-	VM addLinks(UriBuilder uriBuilder) {
-		vm.setLink(new Link("self", uriBuilder.build()));
-		vm.setActions(new Actions(uriBuilder, VmResource.class));
-		return new VM(vm);
-	}
-	
-	/* FIXME: kill uriInfo param, make href auto-generated? */
-	@Override
-	public VM get(UriInfo uriInfo) {
-		return addLinks(uriInfo.getRequestUriBuilder());
-	}
+    VM addLinks(UriBuilder uriBuilder) {
+        vm.setLink(new Link("self", uriBuilder.build()));
+        vm.setActions(new Actions(uriBuilder, VmResource.class));
+        return new VM(vm);
+    }
 
-	@Override
-	public VM update(UriInfo uriInfo, VM vm) {
-		this.vm.update(vm);
-		return addLinks(uriInfo.getRequestUriBuilder());
-	}
+    /* FIXME: kill uriInfo param, make href auto-generated? */
+    @Override
+    public VM get(UriInfo uriInfo) {
+        return addLinks(uriInfo.getRequestUriBuilder());
+    }
 
-	@Override
-	public void start() {
-		vm.setStatus(DummyVmStatus.UP);
-	}
+    @Override
+    public VM update(UriInfo uriInfo, VM vm) {
+        this.vm.update(vm);
+        return addLinks(uriInfo.getRequestUriBuilder());
+    }
 
-	@Override
-	public void stop() {
-		vm.setStatus(DummyVmStatus.DOWN);
-	}
+    @Override
+    public void start() {
+        vm.setStatus(DummyVmStatus.UP);
+    }
 
-	@Override
-	public void shutdown() {
-		vm.setStatus(DummyVmStatus.DOWN);
-	}
+    @Override
+    public void stop() {
+        vm.setStatus(DummyVmStatus.DOWN);
+    }
 
-	@Override
-	public void suspend() {
-	}
+    @Override
+    public void shutdown() {
+        vm.setStatus(DummyVmStatus.DOWN);
+    }
 
-	@Override
-	public void restore() {
-	}
+    @Override
+    public void suspend() {
+    }
 
-	@Override
-	public void migrate() {
-	}
+    @Override
+    public void restore() {
+    }
 
-	@Override
-	public void move() {
-	}
+    @Override
+    public void migrate() {
+    }
 
-	@Override
-	public void detach() {
-	}
+    @Override
+    public void move() {
+    }
 
-	@Override
-	public void changeCD() {
-	}
+    @Override
+    public void detach() {
+    }
 
-	@Override
-	public void ejectCD() {
-	}
+    @Override
+    public void changeCD() {
+    }
+
+    @Override
+    public void ejectCD() {
+    }
 }

@@ -1,0 +1,54 @@
+
+== Coding Style ==
+
+We follow standard Java coding style:
+
+  http://java.sun.com/docs/codeconv/html/CodeConvTOC.doc.html
+
+Four spaces are used for indentation and tabs are never used.
+
+In Eclipse, you should go to:
+
+  Windows->Preferences->Java->Code Style->Formatter
+
+then select the 'Java conventions' profile, click Edit, change the
+profile name to 'Java conventions [no tabs]' and then in:
+
+  Indentation, General settings->Tab policy
+
+select 'Spaces Only' and hit OK.
+
+== On Whitespace ==
+
+Graphic designers know that the judicious use of whitespace is
+critical in good design. That goes for code legibility too. If adding
+a blank line makes your code more legible, then go for it!
+
+On the other hand, trailing whitespace is the spawn of satan. Okay,
+maybe not, but it adds no value and can cause unnecessary churn and
+conflicts. So, let's try and avoid it.
+
+Set up a git pre-commit hook in your local repository to check for it:
+
+  $> mv .git/hooks/pre-commit.sample .git/hooks/pre-commit
+
+This will not allow you to create a commit containing trailing
+whitespace. You can also manually check your current changes using:
+
+  $> git diff --check
+
+In Eclipse, you go to 'Windows->Preferences->General->Keys' and bind
+'Remove Trailing Whitespace' to e.g. Alt-w. That way you can just do
+Alt-w before saving a file.
+
+== Git ==
+
+Before committing any changes, add the following to your ~/.gitconfig:
+
+  [user]
+    name = Joe X. User
+    email = joe.user@example.com
+
+Try and isolate logical changes into individual commits. You can
+modify your latest commit using 'git commit --amend' and modify your
+commit queue using 'git rebase -i origin/master'.

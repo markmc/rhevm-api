@@ -26,34 +26,33 @@ import javax.ws.rs.core.Response;
 import org.jboss.resteasy.client.ClientResponse;
 import com.redhat.rhevm.api.model.Link;
 
-public class DummyApiResourceTest extends DummyTestBase
-{
-	@Test
-	public void testEntryPoint() throws Exception {
-		ClientResponse response = api.head();
+public class DummyApiResourceTest extends DummyTestBase {
+    @Test
+    public void testEntryPoint() throws Exception {
+        ClientResponse response = api.head();
 
-		assertEquals(Response.Status.Family.SUCCESSFUL, response.getResponseStatus().getFamily());
-		assertEquals(Response.Status.OK, response.getResponseStatus());
+        assertEquals(Response.Status.Family.SUCCESSFUL, response.getResponseStatus().getFamily());
+        assertEquals(Response.Status.OK, response.getResponseStatus());
 
-		MultivaluedMap<String, String> headers = response.getHeaders();
+        MultivaluedMap<String, String> headers = response.getHeaders();
 
-		List<String> linkHeaders = headers.get("Link");
+        List<String> linkHeaders = headers.get("Link");
 
-		assertNotNull(linkHeaders);
+        assertNotNull(linkHeaders);
 
-		List<Link> links = new ArrayList<Link>();
+        List<Link> links = new ArrayList<Link>();
 
-		for (String s : linkHeaders) {
-			/* FIXME: WTF are the headers concatenated into a single string? */
-			for (String t : s.split(",")) {
-				Link l = Link.valueOf(t);
-				assertEquals(t, l.toString());
-				links.add(l);
-			}
-		}
+        for (String s : linkHeaders) {
+            /* FIXME: WTF are the headers concatenated into a single string? */
+            for (String t : s.split(",")) {
+                Link l = Link.valueOf(t);
+                assertEquals(t, l.toString());
+                links.add(l);
+            }
+        }
 
-		assertEquals(2, links.size());
-		assertEquals("hosts", links.get(0).getRel());
-		assertEquals("vms", links.get(1).getRel());
-	}
+        assertEquals(2, links.size());
+        assertEquals("hosts", links.get(0).getRel());
+        assertEquals("vms", links.get(1).getRel());
+    }
 }

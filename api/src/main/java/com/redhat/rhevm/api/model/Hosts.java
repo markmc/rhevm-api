@@ -34,14 +34,13 @@ import org.jboss.resteasy.annotations.providers.jaxb.json.BadgerFish;
 @BadgerFish
 @XmlRootElement(name = "hosts")
 @XmlAccessorType(XmlAccessType.NONE)
-public class Hosts
-{
-	@XmlElementRef
-	public Collection<Host> getHosts() {
-		return hosts;
-	}
-	public void setHosts(Collection<Host> hosts) {
-		this.hosts = hosts;
-	}
-	protected Collection<Host> hosts = new ArrayList<Host>();
+public class Hosts {
+    @XmlElementRef
+    public Collection<Host> getHosts() {
+        return hosts;
+    }
+    public void setHosts(Collection<Host> hosts) {
+        this.hosts = hosts;
+    }
+    protected Collection<Host> hosts = new ArrayList<Host>();
 }

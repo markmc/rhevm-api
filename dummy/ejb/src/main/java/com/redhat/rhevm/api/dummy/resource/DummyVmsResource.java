@@ -32,10 +32,9 @@ import com.redhat.rhevm.api.resource.VmsResource;
 import com.redhat.rhevm.api.dummy.model.DummyVM;
 
 @Stateless
-public class DummyVmsResource implements VmsResource
-{
+public class DummyVmsResource implements VmsResource {
     /* REVISIT: Singleton lifecycle probably requires that UriInfo
-     * must be modelled as a method parameter, as there would be 
+     * must be modelled as a method parameter, as there would be
      * concurrency issues around injection into a data member
      */
 

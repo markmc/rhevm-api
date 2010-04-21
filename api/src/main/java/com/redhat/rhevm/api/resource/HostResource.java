@@ -42,71 +42,70 @@ import com.redhat.rhevm.api.model.Hosts;
 @Path("/hosts")
 @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
 @Formatted
-public interface HostResource
-{
-	/* FIXME: can we make uriInfo a field instead of a parameter to
-	 *        each method? Adding @Context to the implementation
-	 *        class doesn't seem to work.
-	 */
+public interface HostResource {
+    /* FIXME: can we make uriInfo a field instead of a parameter to
+     *        each method? Adding @Context to the implementation
+     *        class doesn't seem to work.
+     */
 
-	@GET
-	@Path("{id}")
-	public Host get(@Context UriInfo uriInfo, @PathParam("id") String id);
+    @GET
+    @Path("{id}")
+    public Host get(@Context UriInfo uriInfo, @PathParam("id") String id);
 
-	@GET
-	public Hosts list(@Context UriInfo uriInfo);
+    @GET
+    public Hosts list(@Context UriInfo uriInfo);
 
-	/* FIXME: need to move this to e.g. a top-level /search
-	 * @GET
-	 * public Hosts search(String criteria);
-	 */
+    /* FIXME: need to move this to e.g. a top-level /search
+     * @GET
+     * public Hosts search(String criteria);
+     */
 
-	/**
-	 * Creates a new host and adds it to the database. The host is
-	 * created based on the properties of @host.
-	 * <p>
-	 * The Host#name, Host#address and Host#rootPassword properties
-	 * are required.
-	 *
-	 * @param host  the host definition from which to create the new
-	 *              host
-	 * @return      the new newly created Host
-	 */
-	@POST
-	@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
-	public Response add(@Context UriInfo uriInfo, Host host);
+    /**
+     * Creates a new host and adds it to the database. The host is
+     * created based on the properties of @host.
+     * <p>
+     * The Host#name, Host#address and Host#rootPassword properties
+     * are required.
+     *
+     * @param host  the host definition from which to create the new
+     *              host
+     * @return      the new newly created Host
+     */
+    @POST
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
+    public Response add(@Context UriInfo uriInfo, Host host);
 
-	/**
-	 * Modifies an existing host's properties in the database.
-	 * <p>
-	 * Only the Host#name property can be modified.
-	 *
-	 * @param host  the host definition with the modified properties
-	 * @return      the updated Host
-	 */
-	@PUT
-	@Path("{id}")
-	@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
-	public Host update(@Context UriInfo uriInfo, @PathParam("id") String id, Host host);
+    /**
+     * Modifies an existing host's properties in the database.
+     * <p>
+     * Only the Host#name property can be modified.
+     *
+     * @param host  the host definition with the modified properties
+     * @return      the updated Host
+     */
+    @PUT
+    @Path("{id}")
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
+    public Host update(@Context UriInfo uriInfo, @PathParam("id") String id, Host host);
 
-	@DELETE
-	@Path("{id}")
-	public void remove(@PathParam("id") String id);
+    @DELETE
+    @Path("{id}")
+    public void remove(@PathParam("id") String id);
 
-	@POST
-	@Action
-	@Path("{id}")
-	public void approve(@PathParam("id") String id);
+    @POST
+    @Action
+    @Path("{id}")
+    public void approve(@PathParam("id") String id);
 
-	@POST
-	@Action
-	@Path("{id}")
-	public void fence(@PathParam("id") String id);
+    @POST
+    @Action
+    @Path("{id}")
+    public void fence(@PathParam("id") String id);
 
-	@POST
-	@Action
-	@Path("{id}")
-	public void resume(@PathParam("id") String id);
+    @POST
+    @Action
+    @Path("{id}")
+    public void resume(@PathParam("id") String id);
 
-	//@WebMethod public void connectStorage(String id, String storageDevice);
+    //@WebMethod public void connectStorage(String id, String storageDevice);
 }
