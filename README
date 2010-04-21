@@ -1,23 +1,11 @@
 = RHEV-M API Definition =
 
-This is the very early stages of a project to define an official Web
-Service API for RHEV-M.
+This is the very early stages of a project to define an official
+RESTful API for RHEV-M.
 
-There are three parts to the project:
+See our wiki for more details:
 
-  1) The API definition - Java interfaces defining the API methods and
-     base classes defining the API's object model. These are annotated
-     with JAX-WS and JAXB annotations.
-
-  2) A dummy implementation - an EJB implementing the API using dummy
-     data. This allows one to experiment with the API without needing
-     a RHEV-M installation.
-
-  3) A PowerShell wrapper implementation - an EJB implementing the API
-     by wrapping the RHEV-M 2.2 PowerShell API.
-
-It is planned that a future version of RHEV-M will implement the API
-without wrapping the existing PowerShell API.
+  https://fedorahosted.org/rhevm-api/
 
 == Disclaimers ==
 
