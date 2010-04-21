@@ -29,8 +29,6 @@ import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
-import static com.redhat.rhevm.api.powershell.util.PowerShellUtils.runCommand;
-
 public class PowerShellVmResource implements VmResource {
     /*
      * FIXME: would like to do: private @Context UriInfo uriInfo;
@@ -80,27 +78,27 @@ public class PowerShellVmResource implements VmResource {
 
     @Override
     public void start() {
-        runCommand("start-vm -vmid " + id);
+        PowerShellUtils.runCommand("start-vm -vmid " + id);
     }
 
     @Override
     public void stop() {
-        runCommand("stop-vm -vmid " + id);
+        PowerShellUtils.runCommand("stop-vm -vmid " + id);
     }
 
     @Override
     public void shutdown() {
-        runCommand("shutdown-vm -vmid " + id);
+        PowerShellUtils.runCommand("shutdown-vm -vmid " + id);
     }
 
     @Override
     public void suspend() {
-        runCommand("suspend-vm -vmid " + id);
+        PowerShellUtils.runCommand("suspend-vm -vmid " + id);
     }
 
     @Override
     public void restore() {
-        runCommand("restore-vm -vmid " + id);
+        PowerShellUtils.runCommand("restore-vm -vmid " + id);
     }
 
     @Override
