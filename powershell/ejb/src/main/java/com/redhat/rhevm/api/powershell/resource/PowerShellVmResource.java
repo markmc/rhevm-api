@@ -64,7 +64,7 @@ public class PowerShellVmResource implements VmResource {
     public VM update(UriInfo uriInfo, VM vm) {
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$v = get-vm " + vm.getId() + "\n");
+        buf.append("$v = get-vm " + id + "\n");
 
         if (vm.getName() != null) {
             buf.append("$v.name = \"" + vm.getName() + "\"");
