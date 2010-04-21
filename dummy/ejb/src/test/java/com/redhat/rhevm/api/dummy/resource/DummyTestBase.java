@@ -57,7 +57,7 @@ public class DummyTestBase extends Assert {
 
     @Path("/")
     protected interface ApiResource {
-        @HEAD public ClientResponse head();
+        @HEAD public ClientResponse<Object> head();
     }
     protected static ApiResource api;
 

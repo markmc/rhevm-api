@@ -29,7 +29,7 @@ import com.redhat.rhevm.api.model.Link;
 public class DummyApiResourceTest extends DummyTestBase {
     @Test
     public void testEntryPoint() throws Exception {
-        ClientResponse response = api.head();
+        ClientResponse<Object> response = api.head();
 
         assertEquals(Response.Status.Family.SUCCESSFUL, response.getResponseStatus().getFamily());
         assertEquals(Response.Status.OK, response.getResponseStatus());
