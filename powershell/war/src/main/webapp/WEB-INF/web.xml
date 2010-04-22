@@ -5,9 +5,13 @@
 <web-app>
    <display-name>RHEV-M Powershell API Implementation</display-name>
 
-   <context-param>
+   <!--<context-param>
       <param-name>resteasy.jndi.resources</param-name>
       <param-value>rhevm-api-powershell/PowerShellApiResource/local,rhevm-api-powershell/PowerShellHostResource/local,rhevm-api-powershell/PowerShellVmResource/local</param-value>
+   </context-param>-->
+   <context-param>
+      <param-name>javax.ws.rs.Application</param-name>
+      <param-value>com.redhat.rhevm.api.powershell.deploy.PowerShellApplication</param-value>
    </context-param>
 
    <listener>
