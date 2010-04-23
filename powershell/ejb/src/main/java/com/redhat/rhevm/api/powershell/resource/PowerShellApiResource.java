@@ -35,18 +35,22 @@ import com.redhat.rhevm.api.resource.ApiResource;
 
 @Stateless
 public class PowerShellApiResource implements ApiResource {
+
+    private void addHeader(Response.ResponseBuilder responseBuilder, UriBuilder uriBuilder, String path) {
+        URI uri = uriBuilder.clone().path(path).build();
+
+        responseBuilder.header("Link", new Link(path, uri));
+    }
+
     @Override
     public Response head(UriInfo uriInfo) {
-        UriBuilder absolute = uriInfo.getBaseUriBuilder();
+        UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
 
-        URI hostsUrl = absolute.clone().path("hosts").build();
-        URI vmsUrl   = absolute.clone().path("vms").build();
+        Response.ResponseBuilder responseBuilder = Response.ok();
 
-        Response.ResponseBuilder builder = Response.ok();
+        addHeader(responseBuilder, uriBuilder, "hosts");
+        addHeader(responseBuilder, uriBuilder, "vms");
 
-        builder.header("Link", new Link("hosts", hostsUrl));
-        builder.header("Link", new Link("vms", vmsUrl));
-
-        return builder.build();
+        return responseBuilder.build();
     }
 }
