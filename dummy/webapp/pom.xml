@@ -8,10 +8,10 @@
     <version>0.1-SNAPSHOT</version>
   </parent>
 
-  <artifactId>rhevm-api-dummy-war</artifactId>
+  <artifactId>rhevm-api-dummy-webapp</artifactId>
   <packaging>war</packaging>
 
-  <name>RHEV-M API Dummy Implementation WAR</name>
+  <name>RHEV-M API Dummy Implementation Webapp</name>
   <url>http://fedorahosted.org/rhevm-api/</url>
 
   <properties>
@@ -22,7 +22,7 @@
 
     <dependency>
       <groupId>com.redhat.rhevm.api</groupId>
-      <artifactId>rhevm-api-dummy-ejb</artifactId>
+      <artifactId>rhevm-api-dummy-jaxrs</artifactId>
       <version>0.1-SNAPSHOT</version>
     </dependency>
 

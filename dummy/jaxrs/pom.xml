@@ -9,10 +9,10 @@
     <version>0.1-SNAPSHOT</version>
   </parent>
 
-  <artifactId>rhevm-api-dummy-ejb</artifactId>
+  <artifactId>rhevm-api-dummy-jaxrs</artifactId>
   <packaging>ejb</packaging>
 
-  <name>RHEV-M API Dummy Implementation EJB</name>
+  <name>RHEV-M API Dummy Implementation JAX-RS</name>
   <url>http://fedorahosted.org/rhevm-api/</url>
 
   <dependencies>
