@@ -24,6 +24,7 @@ import java.util.Set;
 import javax.ws.rs.core.Application;
 
 import com.redhat.rhevm.api.dummy.resource.DummyApiResource;
+import com.redhat.rhevm.api.dummy.resource.DummyDataCentersResource;
 import com.redhat.rhevm.api.dummy.resource.DummyHostsResource;
 import com.redhat.rhevm.api.dummy.resource.DummyVmsResource;
 
@@ -33,6 +34,7 @@ public class DummyApplication extends Application {
     private Set<Class<?>> classes = new HashSet<Class<?>>();
 
     public DummyApplication() {
+        singletons.add(new DummyDataCentersResource());
         singletons.add(new DummyHostsResource());
         singletons.add(new DummyVmsResource());
         classes.add(DummyApiResource.class);

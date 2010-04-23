@@ -51,8 +51,9 @@ public class DummyApiResourceTest extends DummyTestBase {
             }
         }
 
-        assertEquals(2, links.size());
-        assertEquals("hosts", links.get(0).getRel());
-        assertEquals("vms", links.get(1).getRel());
+        assertEquals(3, links.size());
+        assertEquals("datacenters", links.get(0).getRel());
+        assertEquals("hosts", links.get(1).getRel());
+        assertEquals("vms", links.get(2).getRel());
     }
 }
