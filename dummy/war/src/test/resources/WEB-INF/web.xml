@@ -2,6 +2,10 @@
         "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
         "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
+<!-- This is a copy of src/main/webapp/WEB-INF/web.xml to facilitate
+     unit testing, must be kepy manually in synch. Is there a link
+     abstraction in git? -->
+
 <web-app>
    <display-name>RHEV-M Dummy API Implementation</display-name>
 

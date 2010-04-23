@@ -22,6 +22,7 @@
     <javax.servlet.api.version>2.5</javax.servlet.api.version>
     <commons-logging.version>1.1.1</commons-logging.version>
     <resteasy.version>2.0-beta-2</resteasy.version>
+    <httpunit.version>1.7</httpunit.version>
   </properties>
 
   <repositories>
@@ -92,6 +93,31 @@
         <artifactId>tjws</artifactId>
         <version>${resteasy.version}</version>
         <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>httpunit</groupId>
+        <artifactId>httpunit</artifactId>
+        <version>${httpunit.version}</version>
+        <scope>test</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>xerces</groupId>
+            <artifactId>xmlParserAPIs</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>jtidy</groupId>
+            <artifactId>jtidy</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
     </dependencies>

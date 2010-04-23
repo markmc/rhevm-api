@@ -14,4 +14,41 @@
   <name>RHEV-M API Dummy Implementation WAR</name>
   <url>http://fedorahosted.org/rhevm-api/</url>
 
+  <dependencies>
+
+    <dependency>
+      <groupId>com.redhat.rhevm.api</groupId>
+      <artifactId>rhevm-api-dummy-ejb</artifactId>
+      <version>0.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-jaxrs</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>httpunit</groupId>
+      <artifactId>httpunit</artifactId>
+      <scope>test</scope>
+      <version>${httpunit.version}</version>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <finalName>rhevm-api-dummy</finalName>
+  </build>
+
 </project>
