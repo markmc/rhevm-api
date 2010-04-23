@@ -20,7 +20,6 @@ package com.redhat.rhevm.api.dummy.resource;
 
 import java.util.HashMap;
 
-import javax.ejb.Stateless;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -31,7 +30,6 @@ import com.redhat.rhevm.api.resource.DataCenterResource;
 import com.redhat.rhevm.api.resource.DataCentersResource;
 import com.redhat.rhevm.api.dummy.model.DummyDataCenter;
 
-@Stateless
 public class DummyDataCentersResource implements DataCentersResource {
     /* FIXME: would like to do:
      * private @Context UriInfo uriInfo;

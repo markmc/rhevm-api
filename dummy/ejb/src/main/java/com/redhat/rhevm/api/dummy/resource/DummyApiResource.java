@@ -20,7 +20,6 @@ package com.redhat.rhevm.api.dummy.resource;
 
 import java.net.URI;
 
-import javax.ejb.Stateless;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -33,7 +32,6 @@ import com.redhat.rhevm.api.resource.ApiResource;
  *        top-level api package
  */
 
-@Stateless
 public class DummyApiResource implements ApiResource {
 
     private void addHeader(Response.ResponseBuilder responseBuilder, UriBuilder uriBuilder, String path) {

@@ -20,7 +20,6 @@ package com.redhat.rhevm.api.dummy.resource;
 
 import java.util.HashMap;
 
-import javax.ejb.Stateless;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -31,7 +30,6 @@ import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.resource.VmsResource;
 import com.redhat.rhevm.api.dummy.model.DummyVM;
 
-@Stateless
 public class DummyVmsResource implements VmsResource {
     /* REVISIT: Singleton lifecycle probably requires that UriInfo
      * must be modelled as a method parameter, as there would be
