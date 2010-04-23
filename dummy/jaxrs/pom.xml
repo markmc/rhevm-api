@@ -10,7 +10,7 @@
   </parent>
 
   <artifactId>rhevm-api-dummy-jaxrs</artifactId>
-  <packaging>ejb</packaging>
+  <packaging>jar</packaging>
 
   <name>RHEV-M API Dummy Implementation JAX-RS</name>
   <url>http://fedorahosted.org/rhevm-api/</url>

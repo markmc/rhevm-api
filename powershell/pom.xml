@@ -15,9 +15,8 @@
   <url>http://fedorahosted.org/rhevm-api/</url>
 
   <modules>
-    <module>ejb</module>
-    <module>war</module>
-    <module>ear</module>
+    <module>jaxrs</module>
+    <module>webapp</module>
   </modules>
 
 </project>

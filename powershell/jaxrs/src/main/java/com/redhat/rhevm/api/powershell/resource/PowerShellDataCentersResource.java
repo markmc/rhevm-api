@@ -21,7 +21,6 @@ package com.redhat.rhevm.api.powershell.resource;
 import java.net.URI;
 import java.util.List;
 
-import javax.ejb.Stateless;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -32,7 +31,6 @@ import com.redhat.rhevm.api.resource.DataCenterResource;
 import com.redhat.rhevm.api.resource.DataCentersResource;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
-@Stateless
 public class PowerShellDataCentersResource implements DataCentersResource {
     /* FIXME: would like to do:
      * private @Context UriInfo uriInfo;
