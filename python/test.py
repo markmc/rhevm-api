@@ -17,17 +17,31 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
 # 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 
+import http
+import xmlfmt
+import yamlfmt
+import jsonfmt
+import sys
+import getopt
+
 opts = {
     'host' : 'localhost',
     'port' : 8080,
     'impl' : "dummy",
 }
-opts['uri'] = 'http://%(host)s:%(port)s/rhevm-api-%(impl)s-war/' % opts
 
-import http
-import xmlfmt
-import yamlfmt
-import jsonfmt
+if len(sys.argv) > 1:
+   options, oargs = getopt.getopt(sys.argv[1:], "h:p:i:", ["host=", "port=", "impl="])
+   for opt, a in options:
+       if opt in ("-h", "--host"):
+           opts['host'] = a
+       if opt in ("-p", "--port"):
+           opts['port'] = a
+       if opt in ("-i", "--impl"):
+           opts['impl'] = a
+
+
+opts['uri'] = 'http://%(host)s:%(port)s/rhevm-api-%(impl)s/' % opts
 
 links = http.HEAD_for_links(opts)
 
