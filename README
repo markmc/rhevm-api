@@ -43,7 +43,7 @@ Build:
 
 Deploy:
 
- $> cp ~/.m2/repository/com/redhat/rhevm/api/rhevm-api-dummy-ear/0.1-SNAPSHOT/rhevm-api-dummy-ear-0.1-SNAPSHOT.ear /usr/local/jboss-5.1.0.GA/server/default/deploy/rhevm-api-dummy.ear
+ $> cp dummy/webapp/target/rhevm-api-dummy.war /usr/local/jboss-5.1.0.GA/server/default/deploy/rhevm-api-dummy.ear
 
 Run:
 
@@ -67,5 +67,5 @@ Run:
 
 Test:
 
- $> ./python/test.py -port=8099
+ $> ./python/test.py --port=8099
 
