@@ -18,7 +18,6 @@
 
   <properties>
     <junit.version>4.8.1</junit.version>
-    <javax.ejb.api.version>3.0</javax.ejb.api.version>
     <javax.servlet.api.version>2.5</javax.servlet.api.version>
     <commons-logging.version>1.1.1</commons-logging.version>
     <resteasy.version>2.0-beta-2</resteasy.version>
@@ -43,13 +42,6 @@
 
   <dependencyManagement>
     <dependencies>
-
-      <dependency>
-        <groupId>javax.ejb</groupId>
-        <artifactId>ejb-api</artifactId>
-        <version>${javax.ejb.api.version}</version>
-        <scope>provided</scope>
-      </dependency>
 
       <dependency>
         <groupId>javax.servlet</groupId>
@@ -145,13 +137,6 @@
           <configuration>
             <source>1.6</source>
             <target>1.6</target>
-          </configuration>
-        </plugin>
-
-        <plugin>
-          <artifactId>maven-ejb-plugin</artifactId>
-          <configuration>
-            <ejbVersion>3.0</ejbVersion>
           </configuration>
         </plugin>
 
