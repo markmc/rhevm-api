@@ -15,7 +15,9 @@
   <url>http://fedorahosted.org/rhevm-api/</url>
 
   <modules>
+    <module>base</module>
     <module>vms</module>
+    <module>hosts</module>
     <module>feature</module>
   </modules>
 

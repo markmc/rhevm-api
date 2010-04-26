@@ -8,16 +8,11 @@
     <version>0.1-SNAPSHOT</version>
   </parent>
 
-  <artifactId>rhevm-api-cli-vms</artifactId>
+  <artifactId>rhevm-api-cli-hosts</artifactId>
   <packaging>bundle</packaging>
 
-  <name>RHEV-M API Command Line Interface - VMs</name>
+  <name>RHEV-M API Command Line Interface - Hosts</name>
   <url>http://fedorahosted.org/rhevm-api/</url>
-
-  <properties>
-    <felix.compendium.version>1.2.0</felix.compendium.version>
-    <felix.osgi.version>1.4.0</felix.osgi.version>
-  </properties>
 
   <dependencies>
 
@@ -36,21 +31,18 @@
     <dependency>
       <groupId>org.apache.felix</groupId>
       <artifactId>org.osgi.core</artifactId>
-      <version>${felix.osgi.version}</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.apache.felix</groupId>
       <artifactId>org.osgi.compendium</artifactId>
-      <version>${felix.compendium.version}</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.apache.felix.karaf.shell</groupId>
       <artifactId>org.apache.felix.karaf.shell.console</artifactId>
-      <version>${felix.karaf.version}</version>
     </dependency>
 
   </dependencies>

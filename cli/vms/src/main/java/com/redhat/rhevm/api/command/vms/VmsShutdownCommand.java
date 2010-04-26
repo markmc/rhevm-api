@@ -16,35 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api.command;
+package com.redhat.rhevm.api.command.vms;
 
-import org.apache.felix.karaf.shell.console.OsgiCommandSupport;
-
-import com.redhat.rhevm.api.model.Link;
-import com.redhat.rhevm.api.model.VM;
-import com.redhat.rhevm.api.model.VMs;
+import org.apache.felix.gogo.commands.Command;
 
 /**
- * VM command base
+ * Shuts down a VM
  */
-public abstract class AbstractVmsCommand extends OsgiCommandSupport {
+@Command(scope = "vms", name = "shutdown", description = "Shutdown a Virtual Machine.")
+public class VmsShutdownCommand extends AbstractVmsActionCommand {
 
-    protected String baseUrl;
-    protected VmClient vmClient;
-
-    public String getBaseUrl() {
-        return baseUrl;
-    }
-
-    public void setBaseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
-    }
-
-    public VmClient getVmClient() {
-        return vmClient;
-    }
-
-    public void setVmClient(VmClient vmClient) {
-        this.vmClient = vmClient;
+    protected Object doExecute() throws Exception {
+        doAction("shutdown");
+        return null;
     }
 }

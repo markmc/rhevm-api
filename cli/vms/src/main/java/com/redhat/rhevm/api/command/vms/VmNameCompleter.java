@@ -16,32 +16,36 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api.command;
+package com.redhat.rhevm.api.command.vms;
 
-import org.apache.felix.gogo.commands.Command;
-import org.apache.felix.gogo.commands.Option;
+import java.util.List;
 
+import org.apache.felix.karaf.shell.console.Completer;
+import org.apache.felix.karaf.shell.console.completer.StringsCompleter;
+
+import com.redhat.rhevm.api.command.base.BaseClient;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
 
-/**
- * Displays the VMs
- */
-@Command(scope = "vms", name = "list", description = "Lists Virtual Machines.")
-public class VmsListCommand extends AbstractVmsCommand {
+public class VmNameCompleter implements Completer {
 
-    @Option(name = "-b", aliases = {"--bound"}, description="Upper bound on number of VMs to display", required = false, multiValued = false)
-    protected int limit = Integer.MAX_VALUE;
+    private BaseClient client;
 
-    protected Object doExecute() throws Exception {
-        VMs vms = vmClient.getVMs();
-        int i = 0;
-        for (VM vm : vms.getVMs()) {
-            if (++i > limit) {
-                break;
-            }
-            System.out.println("[ " + vm.getName() + "] [" + (vm.getId().length() < "ID".length() ? " " : "") + vm.getId() + "]" );
-        }
-        return null;
+    public void setClient(BaseClient client) {
+        this.client = client;
     }
+
+    public int complete(final String buffer, final int cursor, final List candidates) {
+        StringsCompleter delegate = new StringsCompleter();
+        try {
+             VMs vms = client.getCollection("vms", VMs.class);
+             for (VM vm : vms.getVMs()) {
+                delegate.getStrings().add(vm.getName());
+            }
+        } catch (Exception e) {
+            // Ignore
+        }
+        return delegate.complete(buffer, cursor, candidates);
+    }
+
 }

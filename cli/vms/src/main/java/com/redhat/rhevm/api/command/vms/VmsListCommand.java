@@ -16,18 +16,32 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api.command;
+package com.redhat.rhevm.api.command.vms;
 
 import org.apache.felix.gogo.commands.Command;
+import org.apache.felix.gogo.commands.Option;
+
+import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.model.VMs;
 
 /**
- * Start a VM
+ * Displays the VMs
  */
-@Command(scope = "vms", name = "start", description = "Start a Virtual Machine.")
-public class VmsStartCommand extends AbstractVmsActionCommand {
+@Command(scope = "vms", name = "list", description = "Lists Virtual Machines.")
+public class VmsListCommand extends AbstractVmsCommand {
+
+    @Option(name = "-b", aliases = {"--bound"}, description="Upper bound on number of VMs to display", required = false, multiValued = false)
+    protected int limit = Integer.MAX_VALUE;
 
     protected Object doExecute() throws Exception {
-        doAction("start");
+        VMs vms = client.getCollection("vms", VMs.class);
+        int i = 0;
+        for (VM vm : vms.getVMs()) {
+            if (++i > limit) {
+                break;
+            }
+            System.out.println("[ " + vm.getName() + "] [" + (vm.getId().length() < "ID".length() ? " " : "") + vm.getId() + "]" );
+        }
         return null;
     }
 }

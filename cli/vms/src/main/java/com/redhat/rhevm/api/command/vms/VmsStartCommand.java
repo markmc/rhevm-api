@@ -16,18 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api.command;
+package com.redhat.rhevm.api.command.vms;
 
 import org.apache.felix.gogo.commands.Command;
 
 /**
- * Detach a VM
+ * Start a VM
  */
-@Command(scope = "vms", name = "detach", description = "Detach a Virtual Machine.")
-public class VmsDetachCommand extends AbstractVmsActionCommand {
+@Command(scope = "vms", name = "start", description = "Start a Virtual Machine.")
+public class VmsStartCommand extends AbstractVmsActionCommand {
 
     protected Object doExecute() throws Exception {
-        doAction("detach");
+        doAction("start");
         return null;
     }
 }

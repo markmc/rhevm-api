@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api.command;
+package com.redhat.rhevm.api.command.vms;
 
 import java.util.Collection;
 
@@ -35,14 +35,14 @@ public abstract class AbstractVmsActionCommand extends AbstractVmsCommand {
     protected String name;
 
     protected void doAction(String action) throws Exception {
-        VMs vms = vmClient.getVMs();
+        VMs vms = client.getCollection("vms", VMs.class);
         // need to do better than linear search for large collections
         for (VM vm : vms.getVMs()) {
             if (name.equals(vm.getName())) {
                 Collection<Link> links = vm.getActions().getLinks();
                 for (Link l : links) {
                    if (l.getRel().equals(action)) {
-                       vmClient.actionVM(action, l);
+                       client.doAction(action, l);
                        return;
                    }
                 }

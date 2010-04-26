@@ -10,61 +10,61 @@
 
   <command-bundle xmlns="http://felix.apache.org/karaf/xmlns/shell/v1.0.0">
     <command name="vms/list">
-      <action class="com.redhat.rhevm.api.command.VmsListCommand">
-        <property name="vmClient" ref="vmClient" />
+      <action class="com.redhat.rhevm.api.command.vms.VmsListCommand">
+        <property name="client" ref="baseClient" />
       </action>
     </command>
     <command name="vms/shutdown">
-      <action class="com.redhat.rhevm.api.command.VmsShutdownCommand">
-        <property name="vmClient" ref="vmClient" />
+      <action class="com.redhat.rhevm.api.command.vms.VmsShutdownCommand">
+        <property name="client" ref="baseClient" />
       </action>
       <completers>
         <ref component-id="vmNameCompleter" />
       </completers>
     </command>
     <command name="vms/migrate">
-      <action class="com.redhat.rhevm.api.command.VmsMigrateCommand">
-        <property name="vmClient" ref="vmClient" />
+      <action class="com.redhat.rhevm.api.command.vms.VmsMigrateCommand">
+        <property name="client" ref="baseClient" />
       </action>
       <completers>
         <ref component-id="vmNameCompleter" />
       </completers>
     </command>
     <command name="vms/stop">
-      <action class="com.redhat.rhevm.api.command.VmsStopCommand">
-        <property name="vmClient" ref="vmClient" />
+      <action class="com.redhat.rhevm.api.command.vms.VmsStopCommand">
+        <property name="client" ref="baseClient" />
       </action>
       <completers>
         <ref component-id="vmNameCompleter" />
       </completers>
     </command>
     <command name="vms/start">
-      <action class="com.redhat.rhevm.api.command.VmsStartCommand">
-        <property name="vmClient" ref="vmClient" />
+      <action class="com.redhat.rhevm.api.command.vms.VmsStartCommand">
+        <property name="client" ref="baseClient" />
       </action>
       <completers>
         <ref component-id="vmNameCompleter" />
       </completers>
     </command>
     <command name="vms/detach">
-      <action class="com.redhat.rhevm.api.command.VmsDetachCommand">
-        <property name="vmClient" ref="vmClient" />
+      <action class="com.redhat.rhevm.api.command.vms.VmsDetachCommand">
+        <property name="client" ref="baseClient" />
       </action>
       <completers>
         <ref component-id="vmNameCompleter" />
       </completers>
     </command>
     <command name="vms/suspend">
-      <action class="com.redhat.rhevm.api.command.VmsSuspendCommand">
-        <property name="vmClient" ref="vmClient" />
+      <action class="com.redhat.rhevm.api.command.vms.VmsSuspendCommand">
+        <property name="client" ref="baseClient" />
       </action>
       <completers>
         <ref component-id="vmNameCompleter" />
       </completers>
     </command>
     <command name="vms/restore">
-      <action class="com.redhat.rhevm.api.command.VmsRestoreCommand">
-        <property name="vmClient" ref="vmClient" />
+      <action class="com.redhat.rhevm.api.command.vms.VmsRestoreCommand">
+        <property name="client" ref="baseClient" />
       </action>
       <completers>
         <ref component-id="vmNameCompleter" />
@@ -73,11 +73,11 @@
   </command-bundle>
 
 
-  <bean id="vmNameCompleter" class="com.redhat.rhevm.api.command.VmNameCompleter">
-    <property name="vmClient" ref="vmClient" />
+  <bean id="vmNameCompleter" class="com.redhat.rhevm.api.command.vms.VmNameCompleter">
+    <property name="client" ref="baseClient" />
   </bean>
 
-  <bean id="vmClient" class="com.redhat.rhevm.api.command.VmClient"  activation="eager">
+  <bean id="baseClient" class="com.redhat.rhevm.api.command.base.BaseClient"  activation="eager">
     <property name="baseUrl" value="$[rhevm.base.url]"/>
   </bean>
 

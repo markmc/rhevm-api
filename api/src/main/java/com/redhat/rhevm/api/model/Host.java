@@ -50,7 +50,7 @@ public class Host {
     public Host() {
     }
 
-    /* FIXME: can we make this attritbute be auto-generated
+    /* FIXME: can we make this attribute be auto-generated
      *        somehow?
      */
     @XmlElementRef

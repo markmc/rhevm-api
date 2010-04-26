@@ -24,6 +24,9 @@
     <resteasy.version>2.0-beta-2</resteasy.version>
     <httpunit.version>1.7</httpunit.version>
     <felix.karaf.version>1.4.0</felix.karaf.version>
+    <felix.compendium.version>1.2.0</felix.compendium.version>
+    <felix.osgi.version>1.4.0</felix.osgi.version>
+    <cxf.version>2.2.6</cxf.version>
   </properties>
 
   <repositories>
@@ -61,6 +64,32 @@
         <groupId>org.jboss.resteasy</groupId>
         <artifactId>resteasy-jaxb-provider</artifactId>
         <version>${resteasy.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.cxf</groupId>
+        <artifactId>cxf-rt-frontend-jaxrs</artifactId>
+        <version>${cxf.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>org.osgi.core</artifactId>
+        <version>${felix.osgi.version}</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>org.osgi.compendium</artifactId>
+        <version>${felix.compendium.version}</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.felix.karaf.shell</groupId>
+        <artifactId>org.apache.felix.karaf.shell.console</artifactId>
+        <version>${felix.karaf.version}</version>
       </dependency>
 
       <dependency>

@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api.command;
+package com.redhat.rhevm.api.command.base;
 
 import java.io.InputStream;
 import java.util.Collection;
@@ -33,14 +33,12 @@ import org.apache.cxf.jaxrs.JAXRSBindingFactory;
 import org.apache.cxf.jaxrs.client.WebClient;
 
 import com.redhat.rhevm.api.model.Link;
-import com.redhat.rhevm.api.model.VM;
-import com.redhat.rhevm.api.model.VMs;
 
 /**
- * VM client make RESTful invocations via a direct API (to avoid leakage
+ * Client to make RESTful invocations via a direct API (to avoid leakage
  * of the URI structure, as would occur via a proxy-based API).
  */
-public class VmClient {
+public class BaseClient {
 
     protected String baseUrl;
 
@@ -52,16 +50,17 @@ public class VmClient {
         this.baseUrl = baseUrl;
     }
 
-    protected VMs getVMs() throws Exception {
-        WebClient get = WebClient.create(getTopLink("vms"));
-        Response vms = get.path("/").accept("application/xml").get();
-        InputStream is = (InputStream)vms.getEntity();
-        JAXBContext context = JAXBContext.newInstance(VMs.class);
+    public <S> S getCollection(String rel, Class<S> clz) throws Exception {
+        WebClient get = WebClient.create(getTopLink(rel));
+        Response resp = get.path("/").accept("application/xml").get();
+        InputStream is = (InputStream)resp.getEntity();
+        JAXBContext context = JAXBContext.newInstance(clz);
         Unmarshaller unmarshaller = context.createUnmarshaller();
-        return (VMs)unmarshaller.unmarshal(is);
+        S ret = clz.cast(unmarshaller.unmarshal(is));
+        return ret;
     }
 
-    protected void actionVM(String action, Link link) throws Exception {
+    public void doAction(String action, Link link) throws Exception {
         WebClient post = WebClient.create(link.getHref());
         Response r = post.path("/").post(null);
         if (r.getStatus() == 204) {
