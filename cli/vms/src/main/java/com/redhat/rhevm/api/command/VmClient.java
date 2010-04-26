@@ -83,14 +83,16 @@ public class VmClient {
     }
 
     private String getLink(Response r, String rel) {
-        String link = null;
+        String ret = null;
         List<Object> links = r.getMetadata().get("Link");
         for (Object o : links) {
-            String l = (String)o;
-            if (l.endsWith("rel=" + rel)) {
-                return l.substring(l.indexOf("<") + 1, l.indexOf(">"));
+            for (String l : ((String)o).split(",")) {
+                Link link = Link.valueOf(l);
+                if (rel.equals((link.getRel()))) {
+                    ret = link.getHref();
+                }
             }
         }
-        return link;
+        return ret;
     }
 }

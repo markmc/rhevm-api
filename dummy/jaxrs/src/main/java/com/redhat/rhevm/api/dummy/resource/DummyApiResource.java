@@ -34,10 +34,19 @@ import com.redhat.rhevm.api.resource.ApiResource;
 
 public class DummyApiResource implements ApiResource {
 
-    private void addHeader(Response.ResponseBuilder responseBuilder, UriBuilder uriBuilder, String path) {
-        URI uri = uriBuilder.clone().path(path).build();
+    private void addHeader(Response.ResponseBuilder responseBuilder, UriBuilder uriBuilder, String ... path) {
+        // concantenate links in a single header with a comma-separated value,
+        // which is the canonical form according to:
+        // http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
+        //
+        StringBuffer link = new StringBuffer();
+        for (String p : path) {
+            URI uri = uriBuilder.clone().path(p).build();
+            link.append(new Link(p, uri)).append(",");
+        }
+        link.setLength(link.length() - 1);
 
-        responseBuilder.header("Link", new Link(path, uri));
+        responseBuilder.header("Link", link);
     }
 
     @Override
@@ -46,9 +55,7 @@ public class DummyApiResource implements ApiResource {
 
         Response.ResponseBuilder responseBuilder = Response.ok();
 
-        addHeader(responseBuilder, uriBuilder, "datacenters");
-        addHeader(responseBuilder, uriBuilder, "hosts");
-        addHeader(responseBuilder, uriBuilder, "vms");
+        addHeader(responseBuilder, uriBuilder, "datacenters", "hosts", "vms");
 
         return responseBuilder.build();
     }

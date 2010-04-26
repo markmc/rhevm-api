@@ -43,7 +43,6 @@ public class DummyApiResourceTest extends DummyTestBase {
         List<Link> links = new ArrayList<Link>();
 
         for (String s : linkHeaders) {
-            /* FIXME: WTF are the headers concatenated into a single string? */
             for (String t : s.split(",")) {
                 Link l = Link.valueOf(t);
                 assertEquals(t, l.toString());

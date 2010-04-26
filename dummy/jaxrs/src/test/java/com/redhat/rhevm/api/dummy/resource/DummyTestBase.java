@@ -75,11 +75,11 @@ public class DummyTestBase extends Assert {
     protected Link getEntryPoint(String rel) {
         MultivaluedMap<String, String> headers = api.head().getHeaders();
         for (String s : headers.get("Link")) {
-            /* FIXME: WTF are the headers concatenated into a single string? */
             for (String t : s.split(",")) {
                 Link link = Link.valueOf(t);
-                if (rel.equals(link.getRel()))
+                if (rel.equals(link.getRel())) {
                     return link;
+                }
             }
         }
         throw new RuntimeException("No '" + rel + "' Link header found");
