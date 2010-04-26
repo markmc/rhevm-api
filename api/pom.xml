@@ -10,7 +10,7 @@
   </parent>
 
   <artifactId>rhevm-api</artifactId>
-  <packaging>jar</packaging>
+  <packaging>bundle</packaging>
 
   <name>RHEV-M API Definition</name>
   <url>http://www.redhat.com/virtualization/rhev/</url>
@@ -58,6 +58,12 @@
         <configuration>
           <srcdir>src/main/java/com/redhat/rhevm/api/model</srcdir>
         </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <extensions>true</extensions>
       </plugin>
 
     </plugins>

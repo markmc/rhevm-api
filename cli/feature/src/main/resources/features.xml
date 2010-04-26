@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<features>
+  <feature name="rhevm-api-cli">
+    <feature>cxf-jaxrs</feature>
+    <bundle>wrap:mvn:org.jboss.resteasy/resteasy-jaxb-provider/2.0-beta-2</bundle>
+    <bundle>wrap:mvn:org.jboss.resteasy/resteasy-jettison-provider/2.0-beta-2</bundle>
+    <bundle>mvn:com.redhat.rhevm.api/rhevm-api/0.1-SNAPSHOT</bundle>
+    <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-vms/0.1-SNAPSHOT</bundle>
+  </feature>
+</features>

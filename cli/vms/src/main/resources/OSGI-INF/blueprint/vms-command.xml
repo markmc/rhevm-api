@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:ext="http://geronimo.apache.org/blueprint/xmlns/blueprint-ext/v1.0.0">
+
+  <ext:property-placeholder placeholder-prefix="$[" placeholder-suffix="]">
+    <ext:default-properties>
+      <ext:property name="rhevm.base.url" value="http://localhost:8099/rhevm-api-dummy"/>
+    </ext:default-properties>
+  </ext:property-placeholder>
+
+  <command-bundle xmlns="http://felix.apache.org/karaf/xmlns/shell/v1.0.0">
+    <command name="vms/list">
+      <action class="com.redhat.rhevm.api.command.VmsListCommand">
+        <property name="vmClient" ref="vmClient" />
+      </action>
+    </command>
+    <command name="vms/shutdown">
+      <action class="com.redhat.rhevm.api.command.VmsShutdownCommand">
+        <property name="vmClient" ref="vmClient" />
+      </action>
+      <completers>
+        <ref component-id="vmNameCompleter" />
+      </completers>
+    </command>
+    <command name="vms/migrate">
+      <action class="com.redhat.rhevm.api.command.VmsMigrateCommand">
+        <property name="vmClient" ref="vmClient" />
+      </action>
+      <completers>
+        <ref component-id="vmNameCompleter" />
+      </completers>
+    </command>
+    <command name="vms/stop">
+      <action class="com.redhat.rhevm.api.command.VmsStopCommand">
+        <property name="vmClient" ref="vmClient" />
+      </action>
+      <completers>
+        <ref component-id="vmNameCompleter" />
+      </completers>
+    </command>
+    <command name="vms/start">
+      <action class="com.redhat.rhevm.api.command.VmsStartCommand">
+        <property name="vmClient" ref="vmClient" />
+      </action>
+      <completers>
+        <ref component-id="vmNameCompleter" />
+      </completers>
+    </command>
+    <command name="vms/detach">
+      <action class="com.redhat.rhevm.api.command.VmsDetachCommand">
+        <property name="vmClient" ref="vmClient" />
+      </action>
+      <completers>
+        <ref component-id="vmNameCompleter" />
+      </completers>
+    </command>
+    <command name="vms/suspend">
+      <action class="com.redhat.rhevm.api.command.VmsSuspendCommand">
+        <property name="vmClient" ref="vmClient" />
+      </action>
+      <completers>
+        <ref component-id="vmNameCompleter" />
+      </completers>
+    </command>
+    <command name="vms/restore">
+      <action class="com.redhat.rhevm.api.command.VmsRestoreCommand">
+        <property name="vmClient" ref="vmClient" />
+      </action>
+      <completers>
+        <ref component-id="vmNameCompleter" />
+      </completers>
+    </command>
+  </command-bundle>
+
+
+  <bean id="vmNameCompleter" class="com.redhat.rhevm.api.command.VmNameCompleter">
+    <property name="vmClient" ref="vmClient" />
+  </bean>
+
+  <bean id="vmClient" class="com.redhat.rhevm.api.command.VmClient"  activation="eager">
+    <property name="baseUrl" value="$[rhevm.base.url]"/>
+  </bean>
+
+</blueprint>
+

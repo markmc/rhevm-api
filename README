@@ -69,3 +69,43 @@ Test:
 
  $> ./python/test.py --port=8099
 
+
+=== Using the Command Line Interface ===
+
+The RHEVM-API project provides a simple CLI with command-completion
+based on the Apache Felix Gogo shell. Using the CLI currently requires
+an external installation of Apache ServiceMix for convenience, but
+ultimately we intend to provide a more minimal option based on the
+Karaf shell plus a JAX-RS provider implementation.
+
+To install ServiceMix:
+
+$> wget https://repository.apache.org/content/repositories/orgapacheservicemix-041/org/apache/servicemix/apache-servicemix/4.2.0/apache-servicemix-4.2.0.tar.gz
+$> gunzip apache-servicemix-4.2.0.tar.gz
+$> tar xf apache-servicemix-4.2.0.tar
+$> cd apache-servicemix-4.2.0
+
+Then simply launch ServiceMix:
+
+$> bin/servicemix
+
+The very first time you run it, allow ServiceMix a few seconds to
+activate all the system bundles, then run the following commands to
+install the CXF JAX-RS provider and the RHEVM-API components:
+
+karaf@root> features:addUrl mvn:com.redhat.rhevm.api/rhevm-api-cli/0.1-SNAPSHOT/xml/features
+
+karaf@root> features:install rhevm-api-cli
+
+Then the vms commands will become available via tab-completion, so for
+example v<TAB>l<TAB> will resolve to "vms:list", whereas v<TAB>sh<TAB>
+vm<TAB> will resolve to vms:shutdown with a list of VM names to choose
+from.
+
+The --help option is supported with each command giving basic
+man-style documentation.
+
+By default the base URL used matches the port for deployment option #2
+described above, but this can be over-ridden, for example:
+
+$> export JAVA_OPTS=-Drhevm.base.url=http://localhost:8080/rhevm-api-dummy

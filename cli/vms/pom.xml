@@ -1,0 +1,70 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.redhat.rhevm.api</groupId>
+    <artifactId>cli-parent</artifactId>
+    <version>0.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>rhevm-api-cli-vms</artifactId>
+  <packaging>bundle</packaging>
+
+  <name>RHEV-M API Command Line Interface - VMs</name>
+  <url>http://fedorahosted.org/rhevm-api/</url>
+
+  <properties>
+    <felix.compendium.version>1.2.0</felix.compendium.version>
+    <felix.osgi.version>1.4.0</felix.osgi.version>
+  </properties>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>com.redhat.rhevm.api</groupId>
+      <artifactId>rhevm-api-dummy-jaxrs</artifactId>
+      <version>0.1-SNAPSHOT</version>
+    </dependency>
+
+        <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.osgi.core</artifactId>
+            <version>${felix.osgi.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.osgi.compendium</artifactId>
+            <version>${felix.compendium.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.felix.karaf.shell</groupId>
+            <artifactId>org.apache.felix.karaf.shell.console</artifactId>
+            <version>${felix.karaf.version}</version>
+        </dependency>
+
+        <dependency>
+         <groupId>org.apache.cxf</groupId>
+         <artifactId>cxf-rt-frontend-jaxrs</artifactId>
+         <version>2.2.6</version>
+        </dependency>
+
+
+  </dependencies>
+
+  <build>
+    <plugins>
+
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <extensions>true</extensions>
+      </plugin>
+
+    </plugins>
+  </build>
+</project>
