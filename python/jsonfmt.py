@@ -35,10 +35,7 @@ class Base:
 
         for key in self.KEYS:
             if key in dict:
-                if '$' in dict[key]:
-                    setattr(self, key, dict[key]['$'])
-                else:
-                    setattr(self, key, dict[key])
+                setattr(self, key, dict[key])
 
         if hasattr(self, 'link'):
             self.link = Link(self.link['@rel'], self.link['@href'])
@@ -54,10 +51,10 @@ class Base:
 
         for key in self.KEYS:
             if hasattr(self, key):
-                dict[key] = {'$' : getattr(self, key)}
+                dict[key] = getattr(self, key)
 
         if 'link' in dict:
-            dict['link'] = {'@rel' : dict['link']['$'].rel, '@href' : dict['link']['$'].href}
+            dict['link'] = {'@rel' : dict['link'].rel, '@href' : dict['link'].href}
 
         return {self.ROOT_ELEMENT : dict}
 
