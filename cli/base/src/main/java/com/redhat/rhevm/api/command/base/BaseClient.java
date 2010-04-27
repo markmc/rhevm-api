@@ -51,34 +51,74 @@ public class BaseClient {
     }
 
     public <S> S getCollection(String rel, Class<S> clz) throws Exception {
-        WebClient get = WebClient.create(getTopLink(rel));
-        Response resp = get.path("/").accept("application/xml").get();
-        InputStream is = (InputStream)resp.getEntity();
-        JAXBContext context = JAXBContext.newInstance(clz);
-        Unmarshaller unmarshaller = context.createUnmarshaller();
-        S ret = clz.cast(unmarshaller.unmarshal(is));
+        S ret = clz.newInstance();
+        Response r = null;
+        Exception failure = null;
+        String top = getTopLink(rel);
+
+        if (top != null) {
+            try {
+                WebClient get = WebClient.create(top);
+                r = get.path("/").accept("application/xml").get();
+            } catch (Exception e) {
+                failure = e;
+            }
+
+            if (failure != null || r.getStatus() != 200) {
+                String baseError = "cannot follow " + top + ", failed with ";
+                diagnose(baseError, failure, r);
+            } else {
+                InputStream is = (InputStream)r.getEntity();
+                JAXBContext context = JAXBContext.newInstance(clz);
+                Unmarshaller unmarshaller = context.createUnmarshaller();
+                ret = clz.cast(unmarshaller.unmarshal(is));
+            }
+        }
         return ret;
     }
 
     public void doAction(String action, Link link) throws Exception {
-        WebClient post = WebClient.create(link.getHref());
-        Response r = post.path("/").post(null);
-        if (r.getStatus() == 204) {
-            System.out.println(action + " succeeded");
+        Response r = null;
+        Exception failure = null;
+
+        try {
+            WebClient post = WebClient.create(link.getHref());
+            r = post.path("/").post(null);
+        } catch (Exception e) {
+            failure = e;
+        }
+
+        if (failure != null || r.getStatus() != 204) {
+            diagnose(action + " failed with", failure, r);
         } else {
-            System.err.println(action + " failed");
+            System.out.println(action + " succeeded");
         }
     }
 
-    protected String getTopLink(String rel) throws Exception {
+    protected String getTopLink(String rel) {
+        String ret = null;
+        Response links = null;
+        Exception failure = null;
+
         BindingFactoryManager manager =
             BusFactory.getDefaultBus().getExtension(BindingFactoryManager.class);
-        manager.registerBindingFactory(JAXRSBindingFactory.JAXRS_BINDING_ID, 
+        manager.registerBindingFactory(JAXRSBindingFactory.JAXRS_BINDING_ID,
                                        new JAXRSBindingFactory());
 
-        WebClient head = WebClient.create(getBaseUrl());
-        Response links = head.path("/").head();
-        return links.getStatus() == 200 ? getLink(links, rel) : null;
+        try {
+            WebClient head = WebClient.create(getBaseUrl());
+            links = head.path("/").head();
+            ret = links.getStatus() == 200 ? getLink(links, rel) : null;
+        } catch (Exception e) {
+            failure = e;
+        }
+
+        if (failure != null || links.getStatus() != 200) {
+            String baseError = "cannot follow " + getBaseUrl() + ", failed with ";
+            diagnose(baseError, failure, links);
+        }
+
+        return ret;
     }
 
     private String getLink(Response r, String rel) {
@@ -94,4 +134,21 @@ public class BaseClient {
         }
         return ret;
     }
+
+    private void diagnose(String baseError, Exception failure, Response r) {
+        if (failure != null) {
+            System.err.println(baseError + failure.getMessage());
+        } else if (r.getStatus() != 201) {
+            System.err.println(baseError + getStatus(r));
+        }
+    }
+
+    private String getStatus(Response r) {
+        Response.Status status = Response.Status.fromStatusCode(r.getStatus());
+        return new StringBuffer(Integer.toString(r.getStatus()))
+                       .append(" ").append(status.toString())
+                       .append(" (").append(status.getFamily()).append(")")
+                       .toString();
+    }
+
 }

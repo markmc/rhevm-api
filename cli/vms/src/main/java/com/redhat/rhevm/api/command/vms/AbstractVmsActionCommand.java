@@ -49,6 +49,5 @@ public abstract class AbstractVmsActionCommand extends AbstractCommand {
                 }
             }
         }
-        System.err.println("VM[" + name + "] not found.");
     }
 }
