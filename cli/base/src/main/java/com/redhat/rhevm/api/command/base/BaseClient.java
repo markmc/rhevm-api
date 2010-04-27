@@ -66,7 +66,7 @@ public class BaseClient {
 
             if (failure != null || r.getStatus() != 200) {
                 String baseError = "cannot follow " + top + ", failed with ";
-                diagnose(baseError, failure, r);
+                diagnose(baseError, failure, r, 200);
             } else {
                 InputStream is = (InputStream)r.getEntity();
                 JAXBContext context = JAXBContext.newInstance(clz);
@@ -89,7 +89,7 @@ public class BaseClient {
         }
 
         if (failure != null || r.getStatus() != 204) {
-            diagnose(action + " failed with", failure, r);
+            diagnose(action + " failed with ", failure, r, 204);
         } else {
             System.out.println(action + " succeeded");
         }
@@ -115,7 +115,7 @@ public class BaseClient {
 
         if (failure != null || links.getStatus() != 200) {
             String baseError = "cannot follow " + getBaseUrl() + ", failed with ";
-            diagnose(baseError, failure, links);
+            diagnose(baseError, failure, links, 200);
         }
 
         return ret;
@@ -135,10 +135,10 @@ public class BaseClient {
         return ret;
     }
 
-    private void diagnose(String baseError, Exception failure, Response r) {
+    private void diagnose(String baseError, Exception failure, Response r, int expected) {
         if (failure != null) {
             System.err.println(baseError + failure.getMessage());
-        } else if (r.getStatus() != 201) {
+        } else if (r.getStatus() != expected) {
             System.err.println(baseError + getStatus(r));
         }
     }
