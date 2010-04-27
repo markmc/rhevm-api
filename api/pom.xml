@@ -43,12 +43,11 @@
     <plugins>
 
       <plugin>
-        <groupId>com.sun.tools.jxc.maven2</groupId>
-        <artifactId>maven-jaxb-schemagen-plugin</artifactId>
+        <groupId>com.sun.tools.xjc.maven2</groupId>
+        <artifactId>maven-jaxb-plugin</artifactId>
 
         <executions>
           <execution>
-            <phase>generate-resources</phase>
             <goals>
               <goal>generate</goal>
             </goals>
@@ -56,7 +55,7 @@
         </executions>
 
         <configuration>
-          <srcdir>src/main/java/com/redhat/rhevm/api/model</srcdir>
+          <generatePackage>com.redhat.rhevm.api.model.jaxb</generatePackage>
         </configuration>
       </plugin>
 
