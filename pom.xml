@@ -23,6 +23,8 @@
     <commons-logging.version>1.1.1</commons-logging.version>
     <resteasy.version>2.0-beta-2</resteasy.version>
     <httpunit.version>1.7</httpunit.version>
+    <jaxb.schemagen.plugin.version>1.2</jaxb.schemagen.plugin.version>
+    <bundle.plugin.version>2.0.0</bundle.plugin.version>
     <felix.karaf.version>1.4.0</felix.karaf.version>
     <felix.compendium.version>1.2.0</felix.compendium.version>
     <felix.osgi.version>1.4.0</felix.osgi.version>
@@ -160,7 +162,7 @@
         <plugin>
           <groupId>com.sun.tools.jxc.maven2</groupId>
           <artifactId>maven-jaxb-schemagen-plugin</artifactId>
-          <version>1.2</version>
+          <version>${jaxb.schemagen.plugin.version}</version>
         </plugin>
 
         <plugin>
@@ -174,7 +176,7 @@
         <plugin>
           <groupId>org.apache.felix</groupId>
           <artifactId>maven-bundle-plugin</artifactId>
-          <version>2.0.0</version>
+          <version>${bundle.plugin.version}</version>
         </plugin>
 
       </plugins>
