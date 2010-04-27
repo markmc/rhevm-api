@@ -23,7 +23,9 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.stream.StreamSource;
 import javax.ws.rs.core.Response;
 
 import org.apache.cxf.BusFactory;
@@ -72,7 +74,8 @@ public class BaseClient {
                 InputStream is = (InputStream)r.getEntity();
                 JAXBContext context = JAXBContext.newInstance(clz);
                 Unmarshaller unmarshaller = context.createUnmarshaller();
-                ret = clz.cast(unmarshaller.unmarshal(is));
+                JAXBElement<S> root = unmarshaller.unmarshal(new StreamSource(is), clz);
+                ret = root.getValue();
             }
         }
         return ret;

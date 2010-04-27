@@ -49,5 +49,8 @@ public abstract class AbstractVmsActionCommand extends AbstractCommand {
                 }
             }
         }
+        if (vms.getVMs().size() > 0) {
+            System.err.println(name + " is unknown, use tab-completion to see a list of valid targets"); 
+        }
     }
 }
