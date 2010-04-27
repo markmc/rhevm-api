@@ -22,6 +22,7 @@ import java.util.Collection;
 
 import org.apache.felix.gogo.commands.Argument;
 
+import com.redhat.rhevm.api.command.base.AbstractCommand;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
@@ -29,7 +30,7 @@ import com.redhat.rhevm.api.model.VMs;
 /**
  * Performs an action on a VM
  */
-public abstract class AbstractVmsActionCommand extends AbstractVmsCommand {
+public abstract class AbstractVmsActionCommand extends AbstractCommand {
 
     @Argument(index = 0, name = "name", description = "The name of the VM", required = true, multiValued = false)
     protected String name;

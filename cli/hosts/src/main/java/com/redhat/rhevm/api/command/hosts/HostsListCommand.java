@@ -21,6 +21,7 @@ package com.redhat.rhevm.api.command.hosts;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 
+import com.redhat.rhevm.api.command.base.AbstractCommand;
 import com.redhat.rhevm.api.command.base.BaseClient;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.Hosts;
@@ -29,7 +30,7 @@ import com.redhat.rhevm.api.model.Hosts;
  * Displays the Hosts
  */
 @Command(scope = "hosts", name = "list", description = "Lists Hosts.")
-public class HostsListCommand extends AbstractHostsCommand {
+public class HostsListCommand extends AbstractCommand {
 
     @Option(name = "-b", aliases = {"--bound"}, description="Upper bound on number of Hosts to display", required = false, multiValued = false)
     protected int limit = Integer.MAX_VALUE;

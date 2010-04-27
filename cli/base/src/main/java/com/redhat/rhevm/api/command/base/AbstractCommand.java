@@ -16,19 +16,16 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api.command.vms;
+package com.redhat.rhevm.api.command.base;
 
 import org.apache.felix.karaf.shell.console.OsgiCommandSupport;
 
 import com.redhat.rhevm.api.command.base.BaseClient;
-import com.redhat.rhevm.api.model.Link;
-import com.redhat.rhevm.api.model.VM;
-import com.redhat.rhevm.api.model.VMs;
 
 /**
- * VM command base
+ * Command base
  */
-public abstract class AbstractVmsCommand extends OsgiCommandSupport {
+public abstract class AbstractCommand extends OsgiCommandSupport {
 
     protected String baseUrl;
     protected BaseClient client;

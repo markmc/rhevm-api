@@ -21,6 +21,7 @@ package com.redhat.rhevm.api.command.vms;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 
+import com.redhat.rhevm.api.command.base.AbstractCommand;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
 
@@ -28,7 +29,7 @@ import com.redhat.rhevm.api.model.VMs;
  * Displays the VMs
  */
 @Command(scope = "vms", name = "list", description = "Lists Virtual Machines.")
-public class VmsListCommand extends AbstractVmsCommand {
+public class VmsListCommand extends AbstractCommand {
 
     @Option(name = "-b", aliases = {"--bound"}, description="Upper bound on number of VMs to display", required = false, multiValued = false)
     protected int limit = Integer.MAX_VALUE;
