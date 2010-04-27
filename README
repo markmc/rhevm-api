@@ -80,9 +80,8 @@ Karaf shell plus a JAX-RS provider implementation.
 
 To install ServiceMix:
 
-$> wget https://repository.apache.org/content/repositories/orgapacheservicemix-041/org/apache/servicemix/apache-servicemix/4.2.0/apache-servicemix-4.2.0.tar.gz
-$> gunzip apache-servicemix-4.2.0.tar.gz
-$> tar xf apache-servicemix-4.2.0.tar
+$> wget https://repository.apache.org/content/repositories/releases/org/apache/servicemix/apache-servicemix/4.2.0/apache-servicemix-4.2.0.tar.gz
+$> tar -xvzf apache-servicemix-4.2.0.tar.gz
 $> cd apache-servicemix-4.2.0
 
 Then simply launch ServiceMix:
