@@ -24,6 +24,7 @@ import org.junit.Test;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import org.jboss.resteasy.client.ClientResponse;
+import com.redhat.rhevm.api.model.LinkHeader;
 import com.redhat.rhevm.api.model.Link;
 
 public class DummyApiResourceTest extends DummyTestBase {
@@ -44,8 +45,8 @@ public class DummyApiResourceTest extends DummyTestBase {
 
         for (String s : linkHeaders) {
             for (String t : s.split(",")) {
-                Link l = Link.valueOf(t);
-                assertEquals(t, l.toString());
+                Link l = LinkHeader.parse(t);
+                assertEquals(t, LinkHeader.format(l));
                 links.add(l);
             }
         }

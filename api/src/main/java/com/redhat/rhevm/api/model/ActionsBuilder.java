@@ -19,41 +19,38 @@
 package com.redhat.rhevm.api.model;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.lang.reflect.Method;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlRootElement;
 
 import javax.ws.rs.core.UriBuilder;
 
-/* FIXME: could probably drop @XmlAccessorType */
+import com.redhat.rhevm.api.model.Actions;
+import com.redhat.rhevm.api.model.Link;
 
-@XmlRootElement(name = "action")
-@XmlAccessorType(XmlAccessType.NONE)
-public class Actions {
-    public Actions() {
+public class ActionsBuilder {
+
+    private UriBuilder uriBuilder;
+    private Class<?> service;
+
+    public ActionsBuilder(UriBuilder uriBuilder, Class<?> service) {
+        this.uriBuilder = uriBuilder;
+        this.service = service;
     }
 
-    public Actions(UriBuilder uriBuilder, Class<?> service) {
+    public Actions build() {
+        Actions actions = new Actions();
+
         for (Method method : service.getMethods()) {
             if (method.getAnnotation(Action.class) != null) {
                 URI uri = uriBuilder.clone().path(method.getName()).build();
 
-                links.add(new Link(method.getName(), uri));
+                Link link = new Link();
+                link.setRel(method.getName());
+                link.setHref(uri.toString());
+
+                actions.getLinks().add(link);
             }
         }
-    }
 
-    @XmlElementRef
-    public Collection<Link> getLinks() {
-        return links;
+        return actions;
     }
-    public void setLinks(Collection<Link> links) {
-        this.links = links;
-    }
-    protected Collection<Link> links = new ArrayList<Link>();
 }

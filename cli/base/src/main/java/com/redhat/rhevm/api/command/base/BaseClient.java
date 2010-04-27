@@ -32,6 +32,7 @@ import org.apache.cxf.jaxrs.JAXRSBindingFactory;
 
 import org.apache.cxf.jaxrs.client.WebClient;
 
+import com.redhat.rhevm.api.model.LinkHeader;
 import com.redhat.rhevm.api.model.Link;
 
 /**
@@ -126,7 +127,7 @@ public class BaseClient {
         List<Object> links = r.getMetadata().get("Link");
         for (Object o : links) {
             for (String l : ((String)o).split(",")) {
-                Link link = Link.valueOf(l);
+                Link link = LinkHeader.parse(l);
                 if (rel.equals((link.getRel()))) {
                     ret = link.getHref();
                 }

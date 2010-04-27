@@ -25,16 +25,14 @@ import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.powershell.model.PowerShellHost;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
-public class PowerShellHost extends Host {
-    public PowerShellHost() {
-    }
+public class PowerShellHost {
 
     public static ArrayList<Host> parse(String output) {
         ArrayList<HashMap<String,String>> hostsProps = PowerShellUtils.parseProps(output);
         ArrayList<Host> ret = new ArrayList<Host>();
 
         for (HashMap<String,String> props : hostsProps) {
-            PowerShellHost host = new PowerShellHost();
+            Host host = new Host();
 
             host.setId(props.get("hostid"));
 

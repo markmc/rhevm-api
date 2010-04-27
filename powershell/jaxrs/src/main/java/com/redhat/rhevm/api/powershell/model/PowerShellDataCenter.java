@@ -25,17 +25,14 @@ import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.powershell.model.PowerShellDataCenter;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
-public class PowerShellDataCenter extends DataCenter {
-
-    public PowerShellDataCenter() {
-    }
+public class PowerShellDataCenter {
 
     public static ArrayList<DataCenter> parse(String output) {
         ArrayList<HashMap<String,String>> datacentersProps = PowerShellUtils.parseProps(output);
         ArrayList<DataCenter> ret = new ArrayList<DataCenter>();
 
         for (HashMap<String,String> props : datacentersProps) {
-            PowerShellDataCenter datacenter = new PowerShellDataCenter();
+            DataCenter datacenter = new DataCenter();
 
             datacenter.setId(props.get("datacenterid"));
 

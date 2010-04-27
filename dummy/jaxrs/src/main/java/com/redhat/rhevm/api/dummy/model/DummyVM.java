@@ -18,14 +18,21 @@
  */
 package com.redhat.rhevm.api.dummy.model;
 
+import javax.ws.rs.core.UriBuilder;
+import com.redhat.rhevm.api.model.ActionsBuilder;
+import com.redhat.rhevm.api.model.Actions;
+import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.VM;
 
-public class DummyVM extends VM {
+public class DummyVM {
+
+    public VM jaxb = new VM();
+
     private static int counter = 0;
 
     public DummyVM() {
-        id = Integer.toString(++counter);
-        setHostId(Integer.toString(counter % 2));
+        jaxb.setId(Integer.toString(++counter));
+        jaxb.setHostId(Integer.toString(counter % 2));
     }
 
     public DummyVM(VM vm) {
@@ -43,6 +50,17 @@ public class DummyVM extends VM {
 
     public void update(VM vm) {
         // update writable fields only
-        this.name = vm.getName();
+        jaxb.setName(vm.getName());
+    }
+
+    public VM getJaxb(UriBuilder uriBuilder, ActionsBuilder actionsBuilder) {
+        Link link = new Link();
+        link.setRel("self");
+        link.setHref(uriBuilder.build().toString());
+
+        jaxb.setLink(link);
+        jaxb.setActions(actionsBuilder.build());
+
+        return jaxb;
     }
 }

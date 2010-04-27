@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+           xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+           jaxb:version="2.1" jaxb:extensionBindingPrefixes="xjc">
 
   <xs:element name="action" type="Actions"/>
 
@@ -19,6 +22,11 @@
 
   <xs:complexType name="Actions">
     <xs:sequence>
+      <xs:annotation>
+        <xs:appinfo>
+            <jaxb:property name="Links"/>
+        </xs:appinfo>
+      </xs:annotation>
       <xs:element ref="link" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:complexType>
@@ -29,53 +37,77 @@
     <xs:attribute name="rel" type="xs:string"/>
   </xs:complexType>
 
-  <xs:complexType name="DataCenter">
+  <xs:complexType name="BaseResource">
     <xs:sequence>
-      <xs:element name="actions" type="Actions" minOccurs="0"/>
-      <xs:element name="id" type="xs:string" minOccurs="0"/>
-      <xs:element ref="link"/>
       <xs:element name="name" type="xs:string" minOccurs="0"/>
-      <xs:element name="type" type="StorageType" minOccurs="0"/>
+      <xs:element name="id" type="xs:string" minOccurs="0"/>
+      <xs:element name="actions" type="Actions" minOccurs="0"/>
+      <xs:element ref="link"/>
     </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="DataCenter">
+    <xs:complexContent>
+      <xs:extension base="BaseResource">
+        <xs:sequence>
+          <xs:element name="type" type="StorageType" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <xs:complexType name="DataCenters">
     <xs:sequence>
+      <xs:annotation>
+        <xs:appinfo>
+            <jaxb:property name="DataCenters"/>
+        </xs:appinfo>
+      </xs:annotation>
       <xs:element ref="datacenter" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="Host">
-    <xs:sequence>
-      <xs:element name="actions" type="Actions" minOccurs="0"/>
-      <xs:element name="address" type="xs:string" minOccurs="0"/>
-      <xs:element name="id" type="xs:string" minOccurs="0"/>
-      <xs:element ref="link"/>
-      <xs:element name="name" type="xs:string" minOccurs="0"/>
-      <xs:element name="root_password" type="xs:string" minOccurs="0"/>
-    </xs:sequence>
+    <xs:complexContent>
+      <xs:extension base="BaseResource">
+        <xs:sequence>
+          <xs:element name="address" type="xs:string" minOccurs="0"/>
+          <xs:element name="root_password" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <xs:complexType name="Hosts">
     <xs:sequence>
+      <xs:annotation>
+        <xs:appinfo>
+            <jaxb:property name="Hosts"/>
+        </xs:appinfo>
+      </xs:annotation>
       <xs:element ref="host" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="VM">
-    <xs:sequence>
-      <xs:element name="actions" type="Actions" minOccurs="0"/>
-      <xs:element name="cluster_id" type="xs:string" minOccurs="0"/>
-      <xs:element name="host_id" type="xs:string" minOccurs="0"/>
-      <xs:element name="id" type="xs:string" minOccurs="0"/>
-      <xs:element ref="link"/>
-      <xs:element name="name" type="xs:string" minOccurs="0"/>
-      <xs:element name="template_id" type="xs:string" minOccurs="0"/>
-    </xs:sequence>
+    <xs:complexContent>
+      <xs:extension base="BaseResource">
+        <xs:sequence>
+          <xs:element name="cluster_id" type="xs:string" minOccurs="0"/>
+          <xs:element name="host_id" type="xs:string" minOccurs="0"/>
+          <xs:element name="template_id" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <xs:complexType name="VMs">
     <xs:sequence>
+      <xs:annotation>
+        <xs:appinfo>
+            <jaxb:property name="VMs"/>
+        </xs:appinfo>
+      </xs:annotation>
       <xs:element ref="vm" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:complexType>

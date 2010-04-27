@@ -18,13 +18,20 @@
  */
 package com.redhat.rhevm.api.dummy.model;
 
+import javax.ws.rs.core.UriBuilder;
+import com.redhat.rhevm.api.model.ActionsBuilder;
+import com.redhat.rhevm.api.model.Actions;
 import com.redhat.rhevm.api.model.DataCenter;
+import com.redhat.rhevm.api.model.Link;
 
-public class DummyDataCenter extends DataCenter {
+public class DummyDataCenter {
+
+    public DataCenter jaxb = new DataCenter();
+
     private static int counter = 0;
 
     public DummyDataCenter() {
-        id = Integer.toString(++counter);
+        jaxb.setId(Integer.toString(++counter));
     }
 
     public DummyDataCenter(DataCenter datacenter) {
@@ -34,7 +41,18 @@ public class DummyDataCenter extends DataCenter {
 
     public void update(DataCenter datacenter) {
         // update writable fields only
-        this.name = datacenter.getName();
-        this.type = datacenter.getType();
+        jaxb.setName(datacenter.getName());
+        jaxb.setType(datacenter.getType());
+    }
+
+    public DataCenter getJaxb(UriBuilder uriBuilder, ActionsBuilder actionsBuilder) {
+        Link link = new Link();
+        link.setRel("self");
+        link.setHref(uriBuilder.build().toString());
+
+        jaxb.setLink(link);
+        jaxb.setActions(actionsBuilder.build());
+
+        return jaxb;
     }
 }

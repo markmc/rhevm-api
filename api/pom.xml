@@ -55,7 +55,8 @@
         </executions>
 
         <configuration>
-          <generatePackage>com.redhat.rhevm.api.model.jaxb</generatePackage>
+          <generatePackage>com.redhat.rhevm.api.model</generatePackage>
+          <extension>true</extension>
         </configuration>
       </plugin>
 

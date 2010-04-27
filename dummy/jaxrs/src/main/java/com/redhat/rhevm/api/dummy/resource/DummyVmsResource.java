@@ -41,9 +41,9 @@ public class DummyVmsResource implements VmsResource {
 
     static {
         while (vms.size() < 10) {
-            DummyVmResource vm = new DummyVmResource(new DummyVM());
-            vm.getVM().setName("vm" + Integer.toString(vms.size()));
-            vms.put(vm.getVM().getId(), vm);
+            DummyVM vm = new DummyVM();
+            vm.jaxb.setName("vm" + Integer.toString(vms.size()));
+            vms.put(vm.jaxb.getId(), new DummyVmResource(vm));
         }
     }
 

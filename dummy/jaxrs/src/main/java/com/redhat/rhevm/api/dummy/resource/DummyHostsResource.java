@@ -40,9 +40,9 @@ public class DummyHostsResource implements HostsResource {
 
     static {
         while (hosts.size() < 4) {
-            DummyHostResource host = new DummyHostResource(new DummyHost());
-            host.getHost().setName("host" + Integer.toString(hosts.size()));
-            hosts.put(host.getHost().getId(), host);
+            DummyHost host = new DummyHost();
+            host.jaxb.setName("host" + Integer.toString(hosts.size()));
+            hosts.put(host.jaxb.getId(), new DummyHostResource(host));
         }
     }
 

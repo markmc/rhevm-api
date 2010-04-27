@@ -18,13 +18,20 @@
  */
 package com.redhat.rhevm.api.dummy.model;
 
+import javax.ws.rs.core.UriBuilder;
+import com.redhat.rhevm.api.model.ActionsBuilder;
+import com.redhat.rhevm.api.model.Actions;
 import com.redhat.rhevm.api.model.Host;
+import com.redhat.rhevm.api.model.Link;
 
-public class DummyHost extends Host {
+public class DummyHost {
+
+    public Host jaxb = new Host();
+
     private static int counter = 0;
 
     public DummyHost() {
-        id = Integer.toString(++counter);
+        jaxb.setId(Integer.toString(++counter));
     }
 
     public DummyHost(Host host) {
@@ -34,6 +41,17 @@ public class DummyHost extends Host {
 
     public void update(Host host) {
         // update writable fields only
-        this.name = host.getName();
+        jaxb.setName(host.getName());
+    }
+
+    public Host getJaxb(UriBuilder uriBuilder, ActionsBuilder actionsBuilder) {
+        Link link = new Link();
+        link.setRel("self");
+        link.setHref(uriBuilder.build().toString());
+
+        jaxb.setLink(link);
+        jaxb.setActions(actionsBuilder.build());
+
+        return jaxb;
     }
 }

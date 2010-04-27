@@ -21,8 +21,7 @@ package com.redhat.rhevm.api.dummy.resource;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.model.Actions;
-import com.redhat.rhevm.api.model.Link;
+import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.resource.HostResource;
 import com.redhat.rhevm.api.dummy.model.DummyHost;
@@ -49,13 +48,12 @@ public class DummyHostResource implements HostResource {
      * @return  encapsulated host
      */
     Host getHost() {
-        return host;
+        return host.jaxb;
     }
 
     public Host addLinks(UriBuilder uriBuilder) {
-        host.setLink(new Link("self", uriBuilder.build()));
-        host.setActions(new Actions(uriBuilder, HostResource.class));
-        return new Host(host);
+        ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, HostResource.class);
+        return host.getJaxb(uriBuilder, actionsBuilder);
     }
 
     /* FIXME: kill uriInfo param, make href auto-generated? */

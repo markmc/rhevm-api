@@ -21,8 +21,7 @@ package com.redhat.rhevm.api.dummy.resource;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.model.Actions;
-import com.redhat.rhevm.api.model.Link;
+import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.dummy.model.DummyVmStatus;
@@ -50,13 +49,12 @@ public class DummyVmResource implements VmResource {
      * @return  encapsulated VM
      */
     public VM getVM() {
-        return vm;
+        return vm.jaxb;
     }
 
     public VM addLinks(UriBuilder uriBuilder) {
-        vm.setLink(new Link("self", uriBuilder.build()));
-        vm.setActions(new Actions(uriBuilder, VmResource.class));
-        return new VM(vm);
+        ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, VmResource.class);
+        return vm.getJaxb(uriBuilder, actionsBuilder);
     }
 
     /* FIXME: kill uriInfo param, make href auto-generated? */

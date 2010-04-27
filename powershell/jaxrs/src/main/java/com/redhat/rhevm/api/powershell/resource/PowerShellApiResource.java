@@ -18,13 +18,11 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import java.net.URI;
-
-
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.model.LinkHeader;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.resource.ApiResource;
 
@@ -39,16 +37,20 @@ public class PowerShellApiResource implements ApiResource {
         // which is the canonical form according to:
         // http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
         //
-        StringBuffer link = new StringBuffer();
+        StringBuffer header = new StringBuffer();
+
         for (String p : path) {
-            URI uri = uriBuilder.clone().path(p).build();
-            link.append(new Link(p, uri)).append(",");
+            Link link = new Link();
+            link.setRel(p);
+            link.setHref(uriBuilder.clone().path(p).build().toString());
+
+            header.append(LinkHeader.format(link)).append(",");
         }
-        link.setLength(link.length() - 1);
 
-        responseBuilder.header("Link", link);
+        header.setLength(header.length() - 1);
+
+        responseBuilder.header("Link", header);
     }
-
 
     @Override
     public Response head(UriInfo uriInfo) {

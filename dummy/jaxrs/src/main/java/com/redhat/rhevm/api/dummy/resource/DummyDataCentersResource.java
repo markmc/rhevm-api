@@ -40,9 +40,9 @@ public class DummyDataCentersResource implements DataCentersResource {
 
     static {
         while (datacenters.size() < 2) {
-            DummyDataCenterResource datacenter = new DummyDataCenterResource(new DummyDataCenter());
-            datacenter.getDataCenter().setName("datacenter" + Integer.toString(datacenters.size()));
-            datacenters.put(datacenter.getDataCenter().getId(), datacenter);
+            DummyDataCenter datacenter = new DummyDataCenter();
+            datacenter.jaxb.setName("datacenter" + Integer.toString(datacenters.size()));
+            datacenters.put(datacenter.jaxb.getId(), new DummyDataCenterResource(datacenter));
         }
     }
 

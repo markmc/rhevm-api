@@ -35,6 +35,7 @@ import org.jboss.resteasy.plugins.providers.RegisterBuiltin;
 import org.jboss.resteasy.plugins.server.tjws.TJWSEmbeddedJaxrsServer;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
+import com.redhat.rhevm.api.model.LinkHeader;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
@@ -76,7 +77,7 @@ public class DummyTestBase extends Assert {
         MultivaluedMap<String, String> headers = api.head().getHeaders();
         for (String s : headers.get("Link")) {
             for (String t : s.split(",")) {
-                Link link = Link.valueOf(t);
+                Link link = LinkHeader.parse(t);
                 if (rel.equals(link.getRel())) {
                     return link;
                 }

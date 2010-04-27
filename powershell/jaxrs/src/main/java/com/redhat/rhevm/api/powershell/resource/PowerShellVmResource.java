@@ -51,8 +51,13 @@ public class PowerShellVmResource implements VmResource {
     }
 
     public static VM addLink(VM vm, URI uri) {
-        vm.setLink(new Link("self", uri));
-        return new VM(vm);
+        Link link = new Link();
+        link.setRel("self");
+        link.setHref(uri.toString());
+
+        vm.setLink(link);
+
+        return vm;
     }
 
     @Override

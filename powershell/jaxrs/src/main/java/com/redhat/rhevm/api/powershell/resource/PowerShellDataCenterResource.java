@@ -51,8 +51,13 @@ public class PowerShellDataCenterResource implements DataCenterResource {
     }
 
     public static DataCenter addLink(DataCenter datacenter, URI uri) {
-        datacenter.setLink(new Link("self", uri));
-        return new DataCenter(datacenter);
+        Link link = new Link();
+        link.setRel("self");
+        link.setHref(uri.toString());
+
+        datacenter.setLink(link);
+
+        return datacenter;
     }
 
     @Override

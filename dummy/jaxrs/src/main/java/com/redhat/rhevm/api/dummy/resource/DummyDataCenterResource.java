@@ -21,8 +21,7 @@ package com.redhat.rhevm.api.dummy.resource;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.model.Actions;
-import com.redhat.rhevm.api.model.Link;
+import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.resource.DataCenterResource;
 import com.redhat.rhevm.api.dummy.model.DummyDataCenter;
@@ -49,13 +48,12 @@ public class DummyDataCenterResource implements DataCenterResource {
      * @return  encapsulated datacenter
      */
     DataCenter getDataCenter() {
-        return datacenter;
+        return datacenter.jaxb;
     }
 
     public DataCenter addLinks(UriBuilder uriBuilder) {
-        datacenter.setLink(new Link("self", uriBuilder.build()));
-        datacenter.setActions(new Actions(uriBuilder, DataCenterResource.class));
-        return new DataCenter(datacenter);
+        ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, DataCenterResource.class);
+        return datacenter.getJaxb(uriBuilder, actionsBuilder);
     }
 
     /* FIXME: kill uriInfo param, make href auto-generated? */

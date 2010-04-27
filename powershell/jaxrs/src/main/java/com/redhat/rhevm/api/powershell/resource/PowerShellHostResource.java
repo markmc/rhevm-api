@@ -54,8 +54,13 @@ public class PowerShellHostResource implements HostResource {
     }
 
     public static Host addLink(Host host, URI uri) {
-        host.setLink(new Link("self", uri));
-        return new Host(host);
+        Link link = new Link();
+        link.setRel("self");
+        link.setHref(uri.toString());
+
+        host.setLink(link);
+
+        return host;
     }
 
     @Override
