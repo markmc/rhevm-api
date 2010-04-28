@@ -18,39 +18,20 @@
  */
 package com.redhat.rhevm.api.command.vms;
 
-import java.util.Collection;
-
 import org.apache.felix.gogo.commands.Argument;
 
-import com.redhat.rhevm.api.command.base.AbstractCommand;
-import com.redhat.rhevm.api.model.Link;
-import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.command.base.AbstractActionCommand;
 import com.redhat.rhevm.api.model.VMs;
 
 /**
  * Performs an action on a VM
  */
-public abstract class AbstractVmsActionCommand extends AbstractCommand {
+public abstract class AbstractVmsActionCommand extends AbstractActionCommand {
 
     @Argument(index = 0, name = "name", description = "The name of the VM", required = true, multiValued = false)
     protected String name;
 
     protected void doAction(String action) throws Exception {
-        VMs vms = client.getCollection("vms", VMs.class);
-        // need to do better than linear search for large collections
-        for (VM vm : vms.getVMs()) {
-            if (name.equals(vm.getName())) {
-                Collection<Link> links = vm.getActions().getLinks();
-                for (Link l : links) {
-                   if (l.getRel().equals(action)) {
-                       client.doAction(action, l);
-                       return;
-                   }
-                }
-            }
-        }
-        if (vms.getVMs().size() > 0) {
-            System.err.println(name + " is unknown, use tab-completion to see a list of valid targets"); 
-        }
+        doAction(client.getCollection("vms", VMs.class).getVMs(), action, name);
     }
 }
