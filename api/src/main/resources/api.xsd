@@ -14,6 +14,10 @@
 
   <xs:element name="hosts" type="Hosts"/>
 
+  <xs:element name="storage_domain" type="StorageDomain"/>
+
+  <xs:element name="storage_domains" type="StorageDomains"/>
+
   <xs:element name="link" type="Link"/>
 
   <xs:element name="vm" type="VM"/>
@@ -89,6 +93,53 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:group name="NfsStorage">
+    <xs:sequence>
+      <xs:element name="host" type="xs:string"/>
+      <xs:element name="path" type="xs:string"/>
+    </xs:sequence>
+  </xs:group>
+
+  <xs:group name="IscsiStorage">
+    <xs:sequence>
+      <xs:element name="LUN" type="xs:int"/>
+      <xs:element name="IP" type="xs:string"/>
+      <xs:element name="port" type="xs:short"/>
+    </xs:sequence>
+  </xs:group>
+
+  <xs:complexType name="Storage">
+    <xs:sequence>
+      <xs:element name="type" type="StorageType" minOccurs="1" maxOccurs="1"/>
+      <xs:choice>
+        <xs:group ref="NfsStorage"/>
+        <xs:group ref="IscsiStorage"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="StorageDomain">
+    <xs:complexContent>
+      <xs:extension base="BaseResource">
+        <xs:sequence>
+          <xs:element name="type" type="StorageDomainType" minOccurs="0"/>
+          <xs:element name="storage" type="Storage"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="StorageDomains">
+    <xs:sequence>
+      <xs:annotation>
+        <xs:appinfo>
+            <jaxb:property name="StorageDomains"/>
+        </xs:appinfo>
+      </xs:annotation>
+      <xs:element ref="storage_domain" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="VM">
     <xs:complexContent>
       <xs:extension base="BaseResource">
@@ -111,6 +162,14 @@
       <xs:element ref="vm" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:complexType>
+
+  <xs:simpleType name="StorageDomainType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="DATA"/>
+      <xs:enumeration value="ISO"/>
+      <xs:enumeration value="EXPORT"/>
+    </xs:restriction>
+  </xs:simpleType>
 
   <xs:simpleType name="StorageType">
     <xs:restriction base="xs:string">
