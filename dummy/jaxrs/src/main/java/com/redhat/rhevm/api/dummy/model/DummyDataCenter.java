@@ -42,7 +42,7 @@ public class DummyDataCenter {
     public void update(DataCenter datacenter) {
         // update writable fields only
         jaxb.setName(datacenter.getName());
-        jaxb.setType(datacenter.getType());
+        jaxb.setStorageType(datacenter.getStorageType());
     }
 
     public DataCenter getJaxb(UriBuilder uriBuilder, ActionsBuilder actionsBuilder) {

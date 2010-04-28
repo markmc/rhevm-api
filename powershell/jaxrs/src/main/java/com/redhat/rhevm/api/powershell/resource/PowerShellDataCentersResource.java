@@ -63,7 +63,7 @@ public class PowerShellDataCentersResource implements DataCentersResource {
 
         buf.append("add-datacenter");
 
-        buf.append(" -type " + datacenter.getType().toString());
+        buf.append(" -type " + datacenter.getStorageType().toString());
 
         if (datacenter.getName() != null) {
             buf.append(" -name " + datacenter.getName());

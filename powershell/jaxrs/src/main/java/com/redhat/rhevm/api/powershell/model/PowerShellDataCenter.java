@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.redhat.rhevm.api.model.DataCenter;
+import com.redhat.rhevm.api.model.StorageType;
 import com.redhat.rhevm.api.powershell.model.PowerShellDataCenter;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
@@ -35,6 +36,7 @@ public class PowerShellDataCenter {
             DataCenter datacenter = new DataCenter();
 
             datacenter.setId(props.get("datacenterid"));
+            datacenter.setStorageType(StorageType.fromValue(props.get("type")));
 
             ret.add(datacenter);
         }

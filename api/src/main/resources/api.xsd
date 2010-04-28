@@ -50,7 +50,7 @@
     <xs:complexContent>
       <xs:extension base="BaseResource">
         <xs:sequence>
-          <xs:element name="type" type="StorageType" minOccurs="0"/>
+          <xs:element name="storage_type" type="StorageType" minOccurs="0"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>

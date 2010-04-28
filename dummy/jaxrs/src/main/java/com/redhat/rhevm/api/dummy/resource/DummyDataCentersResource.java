@@ -26,6 +26,7 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.DataCenters;
+import com.redhat.rhevm.api.model.StorageType;
 import com.redhat.rhevm.api.resource.DataCenterResource;
 import com.redhat.rhevm.api.resource.DataCentersResource;
 import com.redhat.rhevm.api.dummy.model.DummyDataCenter;
@@ -42,6 +43,7 @@ public class DummyDataCentersResource implements DataCentersResource {
         while (datacenters.size() < 2) {
             DummyDataCenter datacenter = new DummyDataCenter();
             datacenter.jaxb.setName("datacenter" + Integer.toString(datacenters.size()));
+            datacenter.jaxb.setStorageType((datacenters.size() % 2) == 0 ? StorageType.ISCSI : StorageType.NFS);
             datacenters.put(datacenter.jaxb.getId(), new DummyDataCenterResource(datacenter));
         }
     }
