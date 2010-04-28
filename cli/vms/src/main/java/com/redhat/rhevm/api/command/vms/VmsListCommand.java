@@ -21,28 +21,21 @@ package com.redhat.rhevm.api.command.vms;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 
-import com.redhat.rhevm.api.command.base.AbstractCommand;
-import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.command.base.AbstractListCommand;
+import com.redhat.rhevm.api.model.BaseResource;
 import com.redhat.rhevm.api.model.VMs;
 
 /**
  * Displays the VMs
  */
 @Command(scope = "vms", name = "list", description = "Lists Virtual Machines.")
-public class VmsListCommand extends AbstractCommand {
+public class VmsListCommand extends AbstractListCommand {
 
     @Option(name = "-b", aliases = {"--bound"}, description="Upper bound on number of VMs to display", required = false, multiValued = false)
     protected int limit = Integer.MAX_VALUE;
 
     protected Object doExecute() throws Exception {
-        VMs vms = client.getCollection("vms", VMs.class);
-        int i = 0;
-        for (VM vm : vms.getVMs()) {
-            if (++i > limit) {
-                break;
-            }
-            System.out.println("[ " + vm.getName() + "] [" + (vm.getId().length() < "ID".length() ? " " : "") + vm.getId() + "]" );
-        }
+        doList(client.getCollection("vms", VMs.class).getVMs(), limit);
         return null;
     }
 }

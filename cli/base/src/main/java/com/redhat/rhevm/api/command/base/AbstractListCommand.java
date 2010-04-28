@@ -16,25 +16,28 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api.command.hosts;
+package com.redhat.rhevm.api.command.base;
 
-import org.apache.felix.gogo.commands.Command;
-import org.apache.felix.gogo.commands.Option;
+import java.util.List;
 
-import com.redhat.rhevm.api.command.base.AbstractListCommand;
-import com.redhat.rhevm.api.model.Hosts;
+import com.redhat.rhevm.api.model.BaseResource;
+
 
 /**
- * Displays the Hosts
+ * Displays the resources
  */
-@Command(scope = "hosts", name = "list", description = "Lists Hosts.")
-public class HostsListCommand extends AbstractListCommand {
+public abstract class AbstractListCommand extends AbstractCommand {
 
-    @Option(name = "-b", aliases = {"--bound"}, description="Upper bound on number of Hosts to display", required = false, multiValued = false)
-    protected int limit = Integer.MAX_VALUE;
-
-    protected Object doExecute() throws Exception {
-        doList(client.getCollection("hosts", Hosts.class).getHosts(), limit);
+    protected Object doList(List <? extends BaseResource> collection, int limit) throws Exception {
+        int i = 0;
+        for (BaseResource resource : collection) {
+            if (++i > limit) {
+                break;
+            }
+            System.out.println("[ " + resource.getName() + "] ["
+                + (resource.getId().length() < "ID".length() ? " " : "")
+                + resource.getId() + "]" );
+        }
         return null;
     }
 }

@@ -14,7 +14,37 @@
         <property name="client" ref="baseClient" />
       </action>
     </command>
+
+    <command name="hosts/approve">
+      <action class="com.redhat.rhevm.api.command.hosts.HostsApproveCommand">
+        <property name="client" ref="baseClient" />
+      </action>
+      <completers>
+        <ref component-id="hostNameCompleter" />
+      </completers>
+    </command>
+    <command name="hosts/fence">
+      <action class="com.redhat.rhevm.api.command.hosts.HostsFenceCommand">
+        <property name="client" ref="baseClient" />
+      </action>
+      <completers>
+        <ref component-id="hostNameCompleter" />
+      </completers>
+    </command>
+    <command name="hosts/resume">
+      <action class="com.redhat.rhevm.api.command.hosts.HostsResumeCommand">
+        <property name="client" ref="baseClient" />
+      </action>
+      <completers>
+        <ref component-id="hostNameCompleter" />
+      </completers>
+    </command>
   </command-bundle>
+
+
+  <bean id="hostNameCompleter" class="com.redhat.rhevm.api.command.hosts.HostNameCompleter">
+    <property name="client" ref="baseClient" />
+  </bean>
 
   <bean id="baseClient" class="com.redhat.rhevm.api.command.base.BaseClient"  activation="eager">
     <property name="baseUrl" value="$[rhevm.base.url]"/>

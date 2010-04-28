@@ -18,6 +18,7 @@
     <module>base</module>
     <module>vms</module>
     <module>hosts</module>
+    <module>datacenters</module>
     <module>feature</module>
   </modules>
 

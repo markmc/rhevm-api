@@ -20,32 +20,14 @@ package com.redhat.rhevm.api.command.vms;
 
 import java.util.List;
 
-import org.apache.felix.karaf.shell.console.Completer;
-import org.apache.felix.karaf.shell.console.completer.StringsCompleter;
-
-import com.redhat.rhevm.api.command.base.BaseClient;
-import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.command.base.AbstractNameCompleter;
+import com.redhat.rhevm.api.model.BaseResource;
 import com.redhat.rhevm.api.model.VMs;
 
-public class VmNameCompleter implements Completer {
+public class VmNameCompleter extends AbstractNameCompleter {
 
-    private BaseClient client;
-
-    public void setClient(BaseClient client) {
-        this.client = client;
-    }
-
-    public int complete(final String buffer, final int cursor, final List candidates) {
-        StringsCompleter delegate = new StringsCompleter();
-        try {
-             VMs vms = client.getCollection("vms", VMs.class);
-             for (VM vm : vms.getVMs()) {
-                delegate.getStrings().add(vm.getName());
-            }
-        } catch (Exception e) {
-            // Ignore
-        }
-        return delegate.complete(buffer, cursor, candidates);
+    protected List<? extends BaseResource> getCollection() throws Exception {
+        return client.getCollection("vms", VMs.class).getVMs();
     }
 
 }

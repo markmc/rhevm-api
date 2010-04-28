@@ -18,23 +18,16 @@
  */
 package com.redhat.rhevm.api.command.hosts;
 
-import org.apache.felix.gogo.commands.Command;
-import org.apache.felix.gogo.commands.Option;
+import java.util.List;
 
-import com.redhat.rhevm.api.command.base.AbstractListCommand;
+import com.redhat.rhevm.api.command.base.AbstractNameCompleter;
+import com.redhat.rhevm.api.model.BaseResource;
 import com.redhat.rhevm.api.model.Hosts;
 
-/**
- * Displays the Hosts
- */
-@Command(scope = "hosts", name = "list", description = "Lists Hosts.")
-public class HostsListCommand extends AbstractListCommand {
+public class HostNameCompleter extends AbstractNameCompleter {
 
-    @Option(name = "-b", aliases = {"--bound"}, description="Upper bound on number of Hosts to display", required = false, multiValued = false)
-    protected int limit = Integer.MAX_VALUE;
-
-    protected Object doExecute() throws Exception {
-        doList(client.getCollection("hosts", Hosts.class).getHosts(), limit);
-        return null;
+    protected List<? extends BaseResource> getCollection() throws Exception {
+        return client.getCollection("hosts", Hosts.class).getHosts();
     }
+
 }

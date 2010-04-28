@@ -19,22 +19,15 @@
 package com.redhat.rhevm.api.command.hosts;
 
 import org.apache.felix.gogo.commands.Command;
-import org.apache.felix.gogo.commands.Option;
-
-import com.redhat.rhevm.api.command.base.AbstractListCommand;
-import com.redhat.rhevm.api.model.Hosts;
 
 /**
- * Displays the Hosts
+ * Approves a Host.
  */
-@Command(scope = "hosts", name = "list", description = "Lists Hosts.")
-public class HostsListCommand extends AbstractListCommand {
-
-    @Option(name = "-b", aliases = {"--bound"}, description="Upper bound on number of Hosts to display", required = false, multiValued = false)
-    protected int limit = Integer.MAX_VALUE;
+@Command(scope = "hosts", name = "approve", description = "Shutdown a Host.")
+public class HostsApproveCommand extends AbstractHostsActionCommand {
 
     protected Object doExecute() throws Exception {
-        doList(client.getCollection("hosts", Hosts.class).getHosts(), limit);
+        doAction("approve");
         return null;
     }
 }

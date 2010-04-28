@@ -8,5 +8,6 @@
     <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-base/0.1-SNAPSHOT</bundle>
     <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-vms/0.1-SNAPSHOT</bundle>
     <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-hosts/0.1-SNAPSHOT</bundle>
+    <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-datacenters/0.1-SNAPSHOT</bundle>
   </feature>
 </features>
