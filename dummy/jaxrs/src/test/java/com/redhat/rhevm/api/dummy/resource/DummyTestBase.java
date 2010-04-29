@@ -37,6 +37,8 @@ import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
 import com.redhat.rhevm.api.model.LinkHeader;
 import com.redhat.rhevm.api.model.Link;
+import com.redhat.rhevm.api.model.StorageDomain;
+import com.redhat.rhevm.api.model.StorageDomains;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.resource.MediaType;
@@ -73,6 +75,17 @@ public class DummyTestBase extends Assert {
         return ProxyFactory.create(VmsResource.class, uri);
     }
 
+    @Path("/")
+    @Produces(MediaType.APPLICATION_XML)
+    protected interface StorageDomainsResource {
+        @GET public StorageDomains list();
+        @GET @Path("{id}") public StorageDomain get(@PathParam("id") String id);
+    }
+
+    protected StorageDomainsResource createStorageDomainsResource(String uri) {
+        return ProxyFactory.create(StorageDomainsResource.class, uri);
+    }
+
     protected Link getEntryPoint(String rel) {
         MultivaluedMap<String, String> headers = api.head().getHeaders();
         for (String s : headers.get("Link")) {
@@ -91,6 +104,7 @@ public class DummyTestBase extends Assert {
         server.setPort(port);
         server.start();
         server.getDeployment().getDispatcher().getRegistry().addPerRequestResource(DummyApiResource.class);
+        server.getDeployment().getDispatcher().getRegistry().addPerRequestResource(DummyStorageDomainsResource.class);
         server.getDeployment().getDispatcher().getRegistry().addPerRequestResource(DummyVmsResource.class);
 
         RegisterBuiltin.register(ResteasyProviderFactory.getInstance());

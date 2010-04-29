@@ -58,7 +58,7 @@ public class DummyApiResource implements ApiResource {
 
         Response.ResponseBuilder responseBuilder = Response.ok();
 
-        addHeader(responseBuilder, uriBuilder, "datacenters", "hosts", "vms");
+        addHeader(responseBuilder, uriBuilder, "datacenters", "hosts", "storagedomains", "vms");
 
         return responseBuilder.build();
     }

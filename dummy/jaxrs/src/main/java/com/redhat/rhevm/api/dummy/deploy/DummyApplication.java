@@ -26,6 +26,7 @@ import javax.ws.rs.core.Application;
 import com.redhat.rhevm.api.dummy.resource.DummyApiResource;
 import com.redhat.rhevm.api.dummy.resource.DummyDataCentersResource;
 import com.redhat.rhevm.api.dummy.resource.DummyHostsResource;
+import com.redhat.rhevm.api.dummy.resource.DummyStorageDomainsResource;
 import com.redhat.rhevm.api.dummy.resource.DummyVmsResource;
 
 public class DummyApplication extends Application {
@@ -36,6 +37,7 @@ public class DummyApplication extends Application {
     public DummyApplication() {
         singletons.add(new DummyDataCentersResource());
         singletons.add(new DummyHostsResource());
+        singletons.add(new DummyStorageDomainsResource());
         singletons.add(new DummyVmsResource());
         classes.add(DummyApiResource.class);
     }
