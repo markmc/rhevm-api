@@ -21,10 +21,11 @@ package com.redhat.rhevm.api.dummy.model;
 import javax.ws.rs.core.UriBuilder;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.Actions;
+import com.redhat.rhevm.api.model.ActionValidator;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.Link;
 
-public class DummyStorageDomain {
+public class DummyStorageDomain implements ActionValidator {
 
     public StorageDomain jaxb = new StorageDomain();
 
@@ -44,13 +45,31 @@ public class DummyStorageDomain {
         jaxb.setName(storageDomain.getName());
     }
 
+    public boolean validateAction(String action) {
+        switch (jaxb.getStatus()) {
+        case UNINITIALIZED:
+            return action.equals("initialize");
+        case UNATTACHED:
+            return action.equals("attach");
+        case ACTIVE:
+            return action.equals("deactivate");
+        case INACTIVE:
+            return action.equals("activate") || action.equals("detach");
+        case LOCKED:
+        case MIXED:
+        default:
+            assert false : jaxb.getStatus();
+            return false;
+        }
+    }
+
     public StorageDomain getJaxb(UriBuilder uriBuilder, ActionsBuilder actionsBuilder) {
         Link link = new Link();
         link.setRel("self");
         link.setHref(uriBuilder.build().toString());
 
         jaxb.setLink(link);
-        jaxb.setActions(actionsBuilder.build());
+        jaxb.setActions(actionsBuilder.build(this));
 
         return jaxb;
     }

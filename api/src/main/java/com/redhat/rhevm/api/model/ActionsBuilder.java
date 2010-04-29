@@ -37,10 +37,15 @@ public class ActionsBuilder {
     }
 
     public Actions build() {
+        return build(null);
+    }
+
+    public Actions build(ActionValidator validator) {
         Actions actions = new Actions();
 
         for (Method method : service.getMethods()) {
-            if (method.getAnnotation(Action.class) != null) {
+            if (method.getAnnotation(Action.class) != null &&
+                (validator == null || validator.validateAction(method.getName()))) {
                 URI uri = uriBuilder.clone().path(method.getName()).build();
 
                 Link link = new Link();

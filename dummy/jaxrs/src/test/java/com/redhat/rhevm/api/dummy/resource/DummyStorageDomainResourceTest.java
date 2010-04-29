@@ -90,26 +90,26 @@ public class DummyStorageDomainResourceTest extends DummyTestBase {
         StorageDomain domain = service.list().getStorageDomains().get(0);
         assertNotNull(domain);
 
-        assertEquals(service.get(domain.getId()).getStatus(), StorageDomainStatus.UNINITIALIZED);
-
+        assertEquals(domain.getStatus(), StorageDomainStatus.UNINITIALIZED);
         createActionResource(getActionUri(domain, "initialize")).post();
 
-        assertEquals(service.get(domain.getId()).getStatus(), StorageDomainStatus.UNATTACHED);
-
+        domain = service.get(domain.getId());
+        assertEquals(domain.getStatus(), StorageDomainStatus.UNATTACHED);
         createActionResource(getActionUri(domain, "attach")).post();
 
-        assertEquals(service.get(domain.getId()).getStatus(), StorageDomainStatus.INACTIVE);
-
+        domain = service.get(domain.getId());
+        assertEquals(domain.getStatus(), StorageDomainStatus.INACTIVE);
         createActionResource(getActionUri(domain, "activate")).post();
 
-        assertEquals(service.get(domain.getId()).getStatus(), StorageDomainStatus.ACTIVE);
-
+        domain = service.get(domain.getId());
+        assertEquals(domain.getStatus(), StorageDomainStatus.ACTIVE);
         createActionResource(getActionUri(domain, "deactivate")).post();
 
-        assertEquals(service.get(domain.getId()).getStatus(), StorageDomainStatus.INACTIVE);
-
+        domain = service.get(domain.getId());
+        assertEquals(domain.getStatus(), StorageDomainStatus.INACTIVE);
         createActionResource(getActionUri(domain, "detach")).post();
 
-        assertEquals(service.get(domain.getId()).getStatus(), StorageDomainStatus.UNATTACHED);
+        domain = service.get(domain.getId());
+        assertEquals(domain.getStatus(), StorageDomainStatus.UNATTACHED);
     }
 }
