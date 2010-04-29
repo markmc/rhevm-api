@@ -56,7 +56,7 @@ public interface DataCentersResource {
 
     @POST
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
-    public Response add(@Context UriInfo uriInfo, DataCenter datacenter);
+    public Response add(@Context UriInfo uriInfo, DataCenter dataCenter);
 
     @DELETE
     @Path("{id}")

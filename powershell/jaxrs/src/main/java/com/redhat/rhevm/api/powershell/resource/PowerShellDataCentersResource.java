@@ -36,11 +36,11 @@ public class PowerShellDataCentersResource implements DataCentersResource {
      * private @Context UriInfo uriInfo;
      */
 
-    private DataCenters addLinks(List<DataCenter> datacenters, UriInfo uriInfo) {
+    private DataCenters addLinks(List<DataCenter> dataCenters, UriInfo uriInfo) {
         DataCenters ret = new DataCenters();
-        for (DataCenter datacenter : datacenters) {
-            UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(datacenter.getId());
-            ret.getDataCenters().add(PowerShellDataCenterResource.addLink(datacenter, uriBuilder.build()));
+        for (DataCenter dataCenter : dataCenters) {
+            UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(dataCenter.getId());
+            ret.getDataCenters().add(PowerShellDataCenterResource.addLink(dataCenter, uriBuilder.build()));
         }
         return ret;
     }
@@ -58,22 +58,22 @@ public class PowerShellDataCentersResource implements DataCentersResource {
 */
 
     @Override
-    public Response add(UriInfo uriInfo, DataCenter datacenter) {
+    public Response add(UriInfo uriInfo, DataCenter dataCenter) {
         StringBuilder buf = new StringBuilder();
 
         buf.append("add-datacenter");
 
-        buf.append(" -type " + datacenter.getStorageType().toString());
+        buf.append(" -type " + dataCenter.getStorageType().toString());
 
-        if (datacenter.getName() != null) {
-            buf.append(" -name " + datacenter.getName());
+        if (dataCenter.getName() != null) {
+            buf.append(" -name " + dataCenter.getName());
         }
 
-        datacenter = PowerShellDataCenterResource.runAndParseSingle(buf.toString());
+        dataCenter = PowerShellDataCenterResource.runAndParseSingle(buf.toString());
 
-        URI uri = uriInfo.getRequestUriBuilder().path(datacenter.getId()).build();
+        URI uri = uriInfo.getRequestUriBuilder().path(dataCenter.getId()).build();
 
-        return Response.created(uri).entity(PowerShellDataCenterResource.addLink(datacenter, uri)).build();
+        return Response.created(uri).entity(PowerShellDataCenterResource.addLink(dataCenter, uri)).build();
     }
 
     @Override

@@ -29,16 +29,16 @@ import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 public class PowerShellDataCenter {
 
     public static ArrayList<DataCenter> parse(String output) {
-        ArrayList<HashMap<String,String>> datacentersProps = PowerShellUtils.parseProps(output);
+        ArrayList<HashMap<String,String>> dataCentersProps = PowerShellUtils.parseProps(output);
         ArrayList<DataCenter> ret = new ArrayList<DataCenter>();
 
-        for (HashMap<String,String> props : datacentersProps) {
-            DataCenter datacenter = new DataCenter();
+        for (HashMap<String,String> props : dataCentersProps) {
+            DataCenter dataCenter = new DataCenter();
 
-            datacenter.setId(props.get("datacenterid"));
-            datacenter.setStorageType(StorageType.fromValue(props.get("type")));
+            dataCenter.setId(props.get("dataCenterid"));
+            dataCenter.setStorageType(StorageType.fromValue(props.get("type")));
 
-            ret.add(datacenter);
+            ret.add(dataCenter);
         }
 
         return ret;

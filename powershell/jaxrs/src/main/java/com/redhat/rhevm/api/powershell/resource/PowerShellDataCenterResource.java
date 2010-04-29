@@ -45,19 +45,19 @@ public class PowerShellDataCenterResource implements DataCenterResource {
     }
 
     public static DataCenter runAndParseSingle(String command) {
-        ArrayList<DataCenter> datacenters = runAndParse(command);
+        ArrayList<DataCenter> dataCenters = runAndParse(command);
 
-        return !datacenters.isEmpty() ? datacenters.get(0) : null;
+        return !dataCenters.isEmpty() ? dataCenters.get(0) : null;
     }
 
-    public static DataCenter addLink(DataCenter datacenter, URI uri) {
+    public static DataCenter addLink(DataCenter dataCenter, URI uri) {
         Link link = new Link();
         link.setRel("self");
         link.setHref(uri.toString());
 
-        datacenter.setLink(link);
+        dataCenter.setLink(link);
 
-        return datacenter;
+        return dataCenter;
     }
 
     @Override
@@ -66,13 +66,13 @@ public class PowerShellDataCenterResource implements DataCenterResource {
     }
 
     @Override
-    public DataCenter update(UriInfo uriInfo, DataCenter datacenter) {
+    public DataCenter update(UriInfo uriInfo, DataCenter dataCenter) {
         StringBuilder buf = new StringBuilder();
 
         buf.append("$h = get-datacenter " + id + "\n");
 
-        if (datacenter.getName() != null) {
-            buf.append("$h.name = \"" + datacenter.getName() + "\"");
+        if (dataCenter.getName() != null) {
+            buf.append("$h.name = \"" + dataCenter.getName() + "\"");
         }
 
         buf.append("\n");

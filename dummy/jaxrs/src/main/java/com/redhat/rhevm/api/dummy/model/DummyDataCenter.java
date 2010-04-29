@@ -34,15 +34,15 @@ public class DummyDataCenter {
         jaxb.setId(Integer.toString(++counter));
     }
 
-    public DummyDataCenter(DataCenter datacenter) {
+    public DummyDataCenter(DataCenter dataCenter) {
         this();
-        update(datacenter);
+        update(dataCenter);
     }
 
-    public void update(DataCenter datacenter) {
+    public void update(DataCenter dataCenter) {
         // update writable fields only
-        jaxb.setName(datacenter.getName());
-        jaxb.setStorageType(datacenter.getStorageType());
+        jaxb.setName(dataCenter.getName());
+        jaxb.setStorageType(dataCenter.getStorageType());
     }
 
     public DataCenter getJaxb(UriBuilder uriBuilder, ActionsBuilder actionsBuilder) {

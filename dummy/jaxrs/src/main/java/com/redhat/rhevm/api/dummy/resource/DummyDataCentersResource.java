@@ -37,14 +37,14 @@ public class DummyDataCentersResource implements DataCentersResource {
      */
 
     /* FIXME: synchronize access to this */
-    private static HashMap<String, DummyDataCenterResource> datacenters = new HashMap<String, DummyDataCenterResource>();
+    private static HashMap<String, DummyDataCenterResource> dataCenters = new HashMap<String, DummyDataCenterResource>();
 
     static {
-        while (datacenters.size() < 2) {
-            DummyDataCenter datacenter = new DummyDataCenter();
-            datacenter.jaxb.setName("datacenter" + Integer.toString(datacenters.size()));
-            datacenter.jaxb.setStorageType((datacenters.size() % 2) == 0 ? StorageType.ISCSI : StorageType.NFS);
-            datacenters.put(datacenter.jaxb.getId(), new DummyDataCenterResource(datacenter));
+        while (dataCenters.size() < 2) {
+            DummyDataCenter dataCenter = new DummyDataCenter();
+            dataCenter.jaxb.setName("dataCenter" + Integer.toString(dataCenters.size()));
+            dataCenter.jaxb.setStorageType((dataCenters.size() % 2) == 0 ? StorageType.ISCSI : StorageType.NFS);
+            dataCenters.put(dataCenter.jaxb.getId(), new DummyDataCenterResource(dataCenter));
         }
     }
 
@@ -52,36 +52,36 @@ public class DummyDataCentersResource implements DataCentersResource {
     public DataCenters list(UriInfo uriInfo) {
         DataCenters ret = new DataCenters();
 
-        for (DummyDataCenterResource datacenter : datacenters.values()) {
-            String id = datacenter.getDataCenter().getId();
+        for (DummyDataCenterResource dataCenter : dataCenters.values()) {
+            String id = dataCenter.getDataCenter().getId();
             UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(id);
-            ret.getDataCenters().add(datacenter.addLinks(uriBuilder));
+            ret.getDataCenters().add(dataCenter.addLinks(uriBuilder));
         }
 
         return ret;
     }
 
     @Override
-    public Response add(UriInfo uriInfo, DataCenter datacenter) {
-        DummyDataCenterResource newDataCenter = new DummyDataCenterResource(new DummyDataCenter(datacenter));
+    public Response add(UriInfo uriInfo, DataCenter dataCenter) {
+        DummyDataCenterResource newDataCenter = new DummyDataCenterResource(new DummyDataCenter(dataCenter));
 
         String id = newDataCenter.getDataCenter().getId();
-        datacenters.put(id, newDataCenter);
+        dataCenters.put(id, newDataCenter);
 
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(id);
 
-        datacenter = newDataCenter.addLinks(uriBuilder);
+        dataCenter = newDataCenter.addLinks(uriBuilder);
 
-        return Response.created(uriBuilder.build()).entity(datacenter).build();
+        return Response.created(uriBuilder.build()).entity(dataCenter).build();
     }
 
     @Override
     public void remove(String id) {
-        datacenters.remove(id);
+        dataCenters.remove(id);
     }
 
     @Override
     public DataCenterResource getDataCenterSubResource(UriInfo uriInfo, String id) {
-        return datacenters.get(id);
+        return dataCenters.get(id);
     }
 }

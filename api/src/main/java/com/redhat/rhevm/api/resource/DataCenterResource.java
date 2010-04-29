@@ -45,5 +45,5 @@ public interface DataCenterResource {
 
     @PUT
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
-    public DataCenter update(@Context UriInfo uriInfo, DataCenter datacenter);
+    public DataCenter update(@Context UriInfo uriInfo, DataCenter dataCenter);
 }

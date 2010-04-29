@@ -31,29 +31,29 @@ public class DummyDataCenterResource implements DataCenterResource {
      * private @Context UriInfo uriInfo;
      */
 
-    private DummyDataCenter datacenter;
+    private DummyDataCenter dataCenter;
 
     /**
      * Package-protected ctor, never needs to be instantiated by JAX-RS framework.
      *
-     * @param datacenter  encapsulated datacenter
+     * @param dataCenter  encapsulated DataCenter
      */
-    DummyDataCenterResource(DummyDataCenter datacenter) {
-        this.datacenter = datacenter;
+    DummyDataCenterResource(DummyDataCenter dataCenter) {
+        this.dataCenter = dataCenter;
     }
 
     /**
-     * Package-level accessor for encapsulated datacenter
+     * Package-level accessor for encapsulated DataCenter
      *
-     * @return  encapsulated datacenter
+     * @return  encapsulated dataCenter
      */
     DataCenter getDataCenter() {
-        return datacenter.jaxb;
+        return dataCenter.jaxb;
     }
 
     public DataCenter addLinks(UriBuilder uriBuilder) {
         ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, DataCenterResource.class);
-        return datacenter.getJaxb(uriBuilder, actionsBuilder);
+        return dataCenter.getJaxb(uriBuilder, actionsBuilder);
     }
 
     /* FIXME: kill uriInfo param, make href auto-generated? */
@@ -63,8 +63,8 @@ public class DummyDataCenterResource implements DataCenterResource {
     }
 
     @Override
-    public DataCenter update(UriInfo uriInfo, DataCenter datacenter) {
-        this.datacenter.update(datacenter);
+    public DataCenter update(UriInfo uriInfo, DataCenter dataCenter) {
+        this.dataCenter.update(dataCenter);
         return addLinks(uriInfo.getRequestUriBuilder());
     }
 }
