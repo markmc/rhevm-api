@@ -27,6 +27,7 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.Storage;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.StorageDomains;
+import com.redhat.rhevm.api.model.StorageDomainStatus;
 import com.redhat.rhevm.api.model.StorageDomainType;
 import com.redhat.rhevm.api.model.StorageType;
 import com.redhat.rhevm.api.resource.StorageDomainResource;
@@ -46,6 +47,7 @@ public class DummyStorageDomainsResource implements StorageDomainsResource {
         DummyStorageDomain domain = new DummyStorageDomain();
         domain.jaxb.setName(name);
         domain.jaxb.setType(domainType);
+        domain.jaxb.setStatus(StorageDomainStatus.UNINITIALIZED);
 
         storageDomains.put(domain.jaxb.getId(), new DummyStorageDomainResource(domain));
     }

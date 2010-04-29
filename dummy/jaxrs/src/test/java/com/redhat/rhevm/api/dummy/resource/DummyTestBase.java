@@ -26,6 +26,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.HEAD;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MultivaluedMap;
 
@@ -84,6 +85,16 @@ public class DummyTestBase extends Assert {
 
     protected StorageDomainsResource createStorageDomainsResource(String uri) {
         return ProxyFactory.create(StorageDomainsResource.class, uri);
+    }
+
+    @Path("/")
+    @Produces(MediaType.APPLICATION_XML)
+    protected interface ActionResource {
+        @POST public void post();
+    }
+
+    protected ActionResource createActionResource(String uri) {
+        return ProxyFactory.create(ActionResource.class, uri);
     }
 
     protected Link getEntryPoint(String rel) {

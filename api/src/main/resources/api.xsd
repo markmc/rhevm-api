@@ -123,6 +123,7 @@
       <xs:extension base="BaseResource">
         <xs:sequence>
           <xs:element name="type" type="StorageDomainType" minOccurs="0"/>
+          <xs:element name="status" type="StorageDomainStatus" minOccurs="0"/>
           <xs:element name="storage" type="Storage"/>
         </xs:sequence>
       </xs:extension>
@@ -168,6 +169,17 @@
       <xs:enumeration value="DATA"/>
       <xs:enumeration value="ISO"/>
       <xs:enumeration value="EXPORT"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="StorageDomainStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ACTIVE"/>
+      <xs:enumeration value="INACTIVE"/>
+      <xs:enumeration value="LOCKED"/>
+      <xs:enumeration value="MIXED"/>
+      <xs:enumeration value="UNATTACHED"/>
+      <xs:enumeration value="UNINITIALIZED"/>
     </xs:restriction>
   </xs:simpleType>
 

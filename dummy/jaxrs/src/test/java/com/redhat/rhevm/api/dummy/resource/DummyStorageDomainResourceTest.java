@@ -23,6 +23,7 @@ import org.junit.Test;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.StorageDomains;
+import com.redhat.rhevm.api.model.StorageDomainStatus;
 
 public class DummyStorageDomainResourceTest extends DummyTestBase {
     private DummyTestBase.StorageDomainsResource getService() {
@@ -64,5 +65,51 @@ public class DummyStorageDomainResourceTest extends DummyTestBase {
             checkStorageDomain(d);
             assertEquals(domain.getId(), d.getId());
         }
+    }
+
+    private String getActionUri(StorageDomain domain, String action) {
+        String uri = null;
+
+        for (Link actionLink : domain.getActions().getLinks()) {
+            if (actionLink.getRel().equals(action)) {
+                uri = actionLink.getHref();
+                break;
+            }
+        }
+
+        assertNotNull(uri);
+
+        return uri;
+    }
+
+    @Test
+    public void testStorageDomainStatus() throws Exception {
+        DummyTestBase.StorageDomainsResource service = getService();
+        assertNotNull(service);
+
+        StorageDomain domain = service.list().getStorageDomains().get(0);
+        assertNotNull(domain);
+
+        assertEquals(service.get(domain.getId()).getStatus(), StorageDomainStatus.UNINITIALIZED);
+
+        createActionResource(getActionUri(domain, "initialize")).post();
+
+        assertEquals(service.get(domain.getId()).getStatus(), StorageDomainStatus.UNATTACHED);
+
+        createActionResource(getActionUri(domain, "attach")).post();
+
+        assertEquals(service.get(domain.getId()).getStatus(), StorageDomainStatus.INACTIVE);
+
+        createActionResource(getActionUri(domain, "activate")).post();
+
+        assertEquals(service.get(domain.getId()).getStatus(), StorageDomainStatus.ACTIVE);
+
+        createActionResource(getActionUri(domain, "deactivate")).post();
+
+        assertEquals(service.get(domain.getId()).getStatus(), StorageDomainStatus.INACTIVE);
+
+        createActionResource(getActionUri(domain, "detach")).post();
+
+        assertEquals(service.get(domain.getId()).getStatus(), StorageDomainStatus.UNATTACHED);
     }
 }

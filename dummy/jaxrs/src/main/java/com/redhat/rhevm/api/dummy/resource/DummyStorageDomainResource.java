@@ -23,6 +23,7 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.StorageDomain;
+import com.redhat.rhevm.api.model.StorageDomainStatus;
 import com.redhat.rhevm.api.resource.StorageDomainResource;
 import com.redhat.rhevm.api.dummy.model.DummyStorageDomain;
 
@@ -66,21 +67,31 @@ public class DummyStorageDomainResource implements StorageDomainResource {
 
     @Override
     public void initialize() {
+        // FIXME: error if not uninitialized
+        this.storageDomain.jaxb.setStatus(StorageDomainStatus.UNATTACHED);
     }
 
     @Override
     public void attach() {
+        // FIXME: error if already attached
+        this.storageDomain.jaxb.setStatus(StorageDomainStatus.INACTIVE);
     }
 
     @Override
     public void detach() {
+        // FIXME: error if not attached
+        this.storageDomain.jaxb.setStatus(StorageDomainStatus.UNATTACHED);
     }
 
     @Override
     public void activate() {
+        // FIXME: error if not attached
+        this.storageDomain.jaxb.setStatus(StorageDomainStatus.ACTIVE);
     }
 
     @Override
     public void deactivate() {
+        // FIXME: error if not active
+        this.storageDomain.jaxb.setStatus(StorageDomainStatus.INACTIVE);
     }
 }
