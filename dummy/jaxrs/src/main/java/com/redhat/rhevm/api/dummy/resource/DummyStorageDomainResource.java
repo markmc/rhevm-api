@@ -72,18 +72,6 @@ public class DummyStorageDomainResource implements StorageDomainResource {
     }
 
     @Override
-    public void attach() {
-        // FIXME: error if already attached
-        this.storageDomain.jaxb.setStatus(StorageDomainStatus.INACTIVE);
-    }
-
-    @Override
-    public void detach() {
-        // FIXME: error if not attached
-        this.storageDomain.jaxb.setStatus(StorageDomainStatus.UNATTACHED);
-    }
-
-    @Override
     public void activate() {
         // FIXME: error if not attached
         this.storageDomain.jaxb.setStatus(StorageDomainStatus.ACTIVE);

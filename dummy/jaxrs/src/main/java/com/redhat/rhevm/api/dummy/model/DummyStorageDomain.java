@@ -50,11 +50,11 @@ public class DummyStorageDomain implements ActionValidator {
         case UNINITIALIZED:
             return action.equals("initialize");
         case UNATTACHED:
-            return action.equals("attach");
+            return false;
         case ACTIVE:
             return action.equals("deactivate");
         case INACTIVE:
-            return action.equals("activate") || action.equals("detach");
+            return action.equals("activate");
         case LOCKED:
         case MIXED:
         default:

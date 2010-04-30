@@ -44,16 +44,6 @@ public interface StorageDomainResource {
 
     @POST
     @Actionable
-    @Path("attach")
-    public void attach();
-
-    @POST
-    @Actionable
-    @Path("detach")
-    public void detach();
-
-    @POST
-    @Actionable
     @Path("activate")
     public void activate();
 
