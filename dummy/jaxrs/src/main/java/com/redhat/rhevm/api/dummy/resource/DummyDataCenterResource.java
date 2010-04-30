@@ -24,6 +24,7 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.resource.DataCenterResource;
+import com.redhat.rhevm.api.resource.StorageDomainsResource;
 import com.redhat.rhevm.api.dummy.model.DummyDataCenter;
 
 public class DummyDataCenterResource implements DataCenterResource {
@@ -32,6 +33,7 @@ public class DummyDataCenterResource implements DataCenterResource {
      */
 
     private DummyDataCenter dataCenter;
+    private DummyDataCenterStorageDomainsResource storageDomains = new DummyDataCenterStorageDomainsResource();
 
     /**
      * Package-protected ctor, never needs to be instantiated by JAX-RS framework.
@@ -66,5 +68,10 @@ public class DummyDataCenterResource implements DataCenterResource {
     public DataCenter update(UriInfo uriInfo, DataCenter dataCenter) {
         this.dataCenter.update(dataCenter);
         return addLinks(uriInfo.getRequestUriBuilder());
+    }
+
+    @Override
+    public StorageDomainsResource getStorageDomainsResource() {
+        return storageDomains;
     }
 }

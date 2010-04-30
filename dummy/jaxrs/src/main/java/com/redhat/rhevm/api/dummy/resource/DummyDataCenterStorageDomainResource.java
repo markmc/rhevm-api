@@ -28,35 +28,45 @@ import com.redhat.rhevm.api.model.StorageDomainStatus;
 import com.redhat.rhevm.api.resource.StorageDomainResource;
 import com.redhat.rhevm.api.dummy.model.DummyStorageDomain;
 
-public class DummyStorageDomainResource implements StorageDomainResource, ActionValidator {
+public class DummyDataCenterStorageDomainResource implements StorageDomainResource, ActionValidator {
 
-    private DummyStorageDomain storageDomain;
+    private String id;
+    private StorageDomainStatus status;
 
     /**
      * Package-protected ctor, never needs to be instantiated by JAX-RS framework.
      *
      * @param storageDomain  encapsulated StorageDomain
      */
-    DummyStorageDomainResource(DummyStorageDomain storageDomain) {
-        this.storageDomain = storageDomain;
+    DummyDataCenterStorageDomainResource(String id, StorageDomainStatus status) {
+        this.id = id;
+        this.status = status;
     }
 
-    /**
-     * Package-level accessor for encapsulated StorageDomain
-     *
-     * @return  encapsulated storageDomain
-     */
     DummyStorageDomain getStorageDomain() {
-        return storageDomain;
+        DummyStorageDomainResource resource = DummyStorageDomainsResource.getStorageDomain(id);
+        return resource.getStorageDomain();
     }
 
-    public StorageDomain addLinks(UriBuilder uriBuilder, ActionValidator actionValidator) {
-        ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, StorageDomainResource.class, actionValidator);
-        return storageDomain.getJaxb(uriBuilder, actionsBuilder);
+    /*
+     * FIXME: this sucks
+     */
+    private StorageDomain cloneStorageDomain(StorageDomain domain, StorageDomainStatus status) {
+        StorageDomain ret = new StorageDomain();
+        ret.setId(domain.getId());
+        ret.setName(domain.getName());
+        ret.setActions(domain.getActions());
+        ret.setLink(domain.getLink());
+        ret.setType(domain.getType());
+        ret.setStorage(domain.getStorage());
+        ret.setStatus(status);
+        return ret;
     }
 
     public StorageDomain addLinks(UriBuilder uriBuilder) {
-        return addLinks(uriBuilder, this);
+        DummyStorageDomainResource resource = DummyStorageDomainsResource.getStorageDomain(id);
+        StorageDomain ret = resource.addLinks(uriBuilder, this);
+        return cloneStorageDomain(ret, status);
     }
 
     @Override
@@ -66,40 +76,41 @@ public class DummyStorageDomainResource implements StorageDomainResource, Action
 
     @Override
     public StorageDomain update(UriInfo uriInfo, StorageDomain storageDomain) {
-        this.storageDomain.update(storageDomain);
+        DummyStorageDomainResource resource = DummyStorageDomainsResource.getStorageDomain(id);
+        this.getStorageDomain().update(storageDomain);
         return addLinks(uriInfo.getRequestUriBuilder());
     }
 
     @Override
     public void initialize() {
-        // FIXME: error if not uninitialized
-        this.storageDomain.jaxb.setStatus(StorageDomainStatus.UNATTACHED);
+        // FIXME: throw an exception
     }
 
     @Override
     public void activate() {
-        // FIXME: throw an exception
+        // FIXME: error if not attached
+        this.status = StorageDomainStatus.ACTIVE;
     }
 
     @Override
     public void deactivate() {
-        // FIXME: throw an exception
+        // FIXME: error if not active
+        this.status = StorageDomainStatus.INACTIVE;
     }
 
     public boolean validateAction(String action) {
-        StorageDomain jaxb = storageDomain.jaxb;
-
-        switch (jaxb.getStatus()) {
+        switch (this.status) {
         case UNINITIALIZED:
-            return action.equals("initialize");
         case UNATTACHED:
-        case ACTIVE:
-        case INACTIVE:
             return false;
+        case ACTIVE:
+            return action.equals("deactivate");
+        case INACTIVE:
+            return action.equals("activate");
         case LOCKED:
         case MIXED:
         default:
-            assert false : jaxb.getStatus();
+            assert false : this.status;
             return false;
         }
     }
