@@ -30,17 +30,19 @@ public class ActionsBuilder {
 
     private UriBuilder uriBuilder;
     private Class<?> service;
+    private ActionValidator validator;
 
-    public ActionsBuilder(UriBuilder uriBuilder, Class<?> service) {
+    public ActionsBuilder(UriBuilder uriBuilder, Class<?> service, ActionValidator validator) {
         this.uriBuilder = uriBuilder;
         this.service = service;
+        this.validator = validator;
+    }
+
+    public ActionsBuilder(UriBuilder uriBuilder, Class<?> service) {
+        this(uriBuilder, service, null);
     }
 
     public Actions build() {
-        return build(null);
-    }
-
-    public Actions build(ActionValidator validator) {
         Actions actions = new Actions();
 
         for (Method method : service.getMethods()) {

@@ -22,12 +22,13 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.ActionsBuilder;
+import com.redhat.rhevm.api.model.ActionValidator;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.StorageDomainStatus;
 import com.redhat.rhevm.api.resource.StorageDomainResource;
 import com.redhat.rhevm.api.dummy.model.DummyStorageDomain;
 
-public class DummyStorageDomainResource implements StorageDomainResource {
+public class DummyStorageDomainResource implements StorageDomainResource, ActionValidator {
 
     private DummyStorageDomain storageDomain;
 
@@ -50,7 +51,7 @@ public class DummyStorageDomainResource implements StorageDomainResource {
     }
 
     public StorageDomain addLinks(UriBuilder uriBuilder) {
-        ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, StorageDomainResource.class);
+        ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, StorageDomainResource.class, this);
         return storageDomain.getJaxb(uriBuilder, actionsBuilder);
     }
 
@@ -81,5 +82,25 @@ public class DummyStorageDomainResource implements StorageDomainResource {
     public void deactivate() {
         // FIXME: error if not active
         this.storageDomain.jaxb.setStatus(StorageDomainStatus.INACTIVE);
+    }
+
+    public boolean validateAction(String action) {
+        StorageDomain jaxb = storageDomain.jaxb;
+
+        switch (jaxb.getStatus()) {
+        case UNINITIALIZED:
+            return action.equals("initialize");
+        case UNATTACHED:
+            return false;
+        case ACTIVE:
+            return action.equals("deactivate");
+        case INACTIVE:
+            return action.equals("activate");
+        case LOCKED:
+        case MIXED:
+        default:
+            assert false : jaxb.getStatus();
+            return false;
+        }
     }
 }
