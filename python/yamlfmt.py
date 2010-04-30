@@ -47,6 +47,15 @@ class Actions(Base):
 class Link(Base):
     yaml_tag = '!link'
 
+class Action(Base):
+    yaml_tag = '!action'
+
+class GracePeriod(Base):
+    yaml_tag = '!grace_period'
+
+def parseAction(doc):
+    return yaml.load(doc)
+
 def parseVM(doc):
     return yaml.load(doc)
 

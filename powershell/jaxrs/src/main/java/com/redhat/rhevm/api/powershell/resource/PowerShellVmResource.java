@@ -21,23 +21,25 @@ package com.redhat.rhevm.api.powershell.resource;
 import java.net.URI;
 import java.util.ArrayList;
 
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.Response.Status;
 
+import com.redhat.rhevm.api.common.resource.AbstractVmResource;
+import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.VM;
-import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
-public class PowerShellVmResource implements VmResource {
+public class PowerShellVmResource extends AbstractVmResource {
     /*
      * FIXME: would like to do: private @Context UriInfo uriInfo;
      */
 
-    private String id;
 
     public PowerShellVmResource(String id) {
-        this.id = id;
+        super(id);
     }
 
     public static ArrayList<VM> runAndParse(String command) {
@@ -82,47 +84,63 @@ public class PowerShellVmResource implements VmResource {
     }
 
     @Override
-    public void start() {
-        PowerShellUtils.runCommand("start-vm -vmid " + id);
+    public Response start(UriInfo uriInfo, Action action) {
+        return doAction(uriInfo, action, new CommandRunner("start-vm"));
     }
 
     @Override
-    public void stop() {
-        PowerShellUtils.runCommand("stop-vm -vmid " + id);
+    public Response stop(UriInfo uriInfo, Action action) {
+        return doAction(uriInfo, action, new CommandRunner("stop-vm"));
     }
 
     @Override
-    public void shutdown() {
-        PowerShellUtils.runCommand("shutdown-vm -vmid " + id);
+    public Response shutdown(UriInfo uriInfo, Action action) {
+        return doAction(uriInfo, action, new CommandRunner("shutdown-vm"));
     }
 
     @Override
-    public void suspend() {
-        PowerShellUtils.runCommand("suspend-vm -vmid " + id);
+    public Response suspend(UriInfo uriInfo, Action action) {
+        return doAction(uriInfo, action, new CommandRunner("suspend-vm"));
     }
 
     @Override
-    public void restore() {
-        PowerShellUtils.runCommand("restore-vm -vmid " + id);
+    public Response restore(UriInfo uriInfo, Action action) {
+        return doAction(uriInfo, action, new CommandRunner("restore-vm"));
     }
 
     @Override
-    public void migrate() {
+    public Response migrate(UriInfo uriInfo, Action action) {
+        return doAction(uriInfo,action, DO_NOTHING);
     }
 
     @Override
-    public void move() {
+    public Response move(UriInfo uriInfo, Action action) {
+        return doAction(uriInfo,action, DO_NOTHING);
     }
 
     @Override
-    public void detach() {
+    public Response detach(UriInfo uriInfo, Action action) {
+        return doAction(uriInfo,action, DO_NOTHING);
     }
 
     @Override
-    public void changeCD() {
+    public Response changeCD(UriInfo uriInfo, Action action) {
+        return doAction(uriInfo,action, DO_NOTHING);
     }
 
     @Override
-    public void ejectCD() {
+    public Response ejectCD(UriInfo uriInfo, Action action) {
+        return doAction(uriInfo,action, DO_NOTHING);
     }
+
+    private class CommandRunner implements Runnable {
+        private String command;
+        CommandRunner(String command) {
+            this.command = command;
+        }
+        public void run() {
+            PowerShellUtils.runCommand(command + " -vmid " + id);
+        }
+    }
+
 }

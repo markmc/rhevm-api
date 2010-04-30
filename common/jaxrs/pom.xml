@@ -5,14 +5,14 @@
 
   <parent>
     <groupId>com.redhat.rhevm.api</groupId>
-    <artifactId>powershell-parent</artifactId>
+    <artifactId>common-parent</artifactId>
     <version>0.1-SNAPSHOT</version>
   </parent>
 
-  <artifactId>rhevm-api-powershell-jaxrs</artifactId>
+  <artifactId>rhevm-api-common-jaxrs</artifactId>
   <packaging>jar</packaging>
 
-  <name>RHEV-M API Powershell Wrapper Implementation JAX-RS</name>
+  <name>RHEV-M API Common JAX-RS</name>
   <url>http://fedorahosted.org/rhevm-api/</url>
 
   <dependencies>
@@ -20,12 +20,6 @@
     <dependency>
       <groupId>com.redhat.rhevm.api</groupId>
       <artifactId>rhevm-api</artifactId>
-      <version>0.1-SNAPSHOT</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.redhat.rhevm.api</groupId>
-      <artifactId>rhevm-api-common-jaxrs</artifactId>
       <version>0.1-SNAPSHOT</version>
     </dependency>
 

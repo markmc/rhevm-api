@@ -44,7 +44,7 @@ public class ActionsBuilder {
         Actions actions = new Actions();
 
         for (Method method : service.getMethods()) {
-            if (method.getAnnotation(Action.class) != null &&
+            if (method.getAnnotation(Actionable.class) != null &&
                 (validator == null || validator.validateAction(method.getName()))) {
                 URI uri = uriBuilder.clone().path(method.getName()).build();
 

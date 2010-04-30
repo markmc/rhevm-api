@@ -100,6 +100,39 @@ class Host(Base):
         s += '</host>'
         return s
 
+class Action(Base):
+    ROOT_ELEMENT = 'action'
+    KEYS = ['id', 'async', 'status', 'self', 'grace']
+
+    def dump(self):
+        s = '<action>'
+        if hasattr(self, 'id'):
+            s += '<id>' + getattr(self, 'id') + '</id>'
+        if hasattr(self, 'async'):
+            s += '<async>' + getattr(self, 'async') + '</async>'
+        if hasattr(self, 'self'):
+            s += '<link rel=\'self\' href=\'' + getattr(self, 'self') + '\' />'
+        if hasattr(self, 'grace'):
+            s += getattr(self, 'grace')
+        s += '</action>'
+        return s
+
+class GracePeriod(Base):
+    ROOT_ELEMENT = 'grace_period'
+    KEYS = ['expiry', 'absolute']
+
+    def dump(self):
+        s = '<grace_period>'
+        if hasattr(self, 'expiry'):
+            s += '<expiry>' + getattr(self, 'expiry') + '</expiry>'
+        if hasattr(self, 'absolute'):
+            s += '<absolute>' + getattr(self, 'absolute') + '</absolute>'
+        s += '</grace_period>'
+        return s
+
+def parseAction(doc):
+    return Action(xml.dom.minidom.parseString(doc).getElementsByTagName(Action.ROOT_ELEMENT)[0])
+
 def parseVM(doc):
     return VM(xml.dom.minidom.parseString(doc).getElementsByTagName(VM.ROOT_ELEMENT)[0])
 

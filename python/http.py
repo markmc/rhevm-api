@@ -49,7 +49,11 @@ def GET(opts, uri, type = None):
         if not type is None:
             headers['Accept'] = type
         cnx.request('GET', uri, headers = headers)
-        return cnx.getresponse().read()
+        ret = { 'status' : 0, 'body' : None }
+        resp = cnx.getresponse()
+        ret['status'] = resp.status
+        ret['body'] = resp.read()
+        return ret
     finally:
         cnx.close()
 
@@ -61,12 +65,11 @@ def POST(opts, uri, body = None, type = None):
             headers['Content-type'] = type
             headers['Accept'] = type
         cnx.request('POST', uri, body, headers = headers)
+        ret = { 'status' : 0, 'body' : None }
         resp = cnx.getresponse()
-        body = resp.read()
-        if not body:
-            return resp.status
-        else:
-            return body
+        ret['status'] = resp.status
+        ret['body'] = resp.read()
+        return ret
     finally:
         cnx.close()
 

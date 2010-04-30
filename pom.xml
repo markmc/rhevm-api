@@ -12,6 +12,7 @@
 
   <modules>
     <module>api</module>
+    <module>common</module>
     <module>powershell</module>
     <module>dummy</module>
     <module>cli</module>

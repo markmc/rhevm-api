@@ -32,7 +32,7 @@ import javax.ws.rs.core.UriInfo;
  */
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
-import com.redhat.rhevm.api.model.Action;
+import com.redhat.rhevm.api.model.Actionable;
 import com.redhat.rhevm.api.model.Host;
 
 @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
@@ -59,17 +59,17 @@ public interface HostResource {
     public Host update(@Context UriInfo uriInfo, Host host);
 
     @POST
-    @Action
+    @Actionable
     @Path("approve")
     public void approve();
 
     @POST
-    @Action
+    @Actionable
     @Path("fence")
     public void fence();
 
     @POST
-    @Action
+    @Actionable
     @Path("resume")
     public void resume();
 

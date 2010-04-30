@@ -22,16 +22,19 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.POST;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.PUT;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.Response;
 
 /* FIXME: doesn't seem to do anything ? Also, we could do without
  *        the explicit dependency on RESTeasy
  */
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
+import com.redhat.rhevm.api.model.Actionable;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.VM;
 
@@ -57,54 +60,67 @@ public interface VmResource {
     @PUT
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
     public VM update(@Context UriInfo uriInfo, VM vm);
+    
+    @Path("{action: (start|stop|shutdown|suspend|restore|migrate|move|detach|changeCD|ejectCD)}/{oid}")
+    public ActionResource getActionSubresource(@PathParam("action")String action, @PathParam("oid")String oid);
 
     @POST
-    @Action
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
+    @Actionable
     @Path("start")
-    public void start();
-
+    public Response start(@Context UriInfo uriInfo, Action action);
+ 
     @POST
-    @Action
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
+    @Actionable
     @Path("stop")
-    public void stop();
-
+    public Response stop(@Context UriInfo uriInfo, Action action);
+    
     @POST
-    @Action
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
+    @Actionable
     @Path("shutdown")
-    public void shutdown();
+    public Response shutdown(@Context UriInfo uriInfo, Action action);
 
     @POST
-    @Action
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
+    @Actionable
     @Path("suspend")
-    public void suspend();
+    public Response suspend(@Context UriInfo uriInfo, Action action);
 
     @POST
-    @Action
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
+    @Actionable
     @Path("restore")
-    public void restore();
+    public Response restore(@Context UriInfo uriInfo, Action action);
 
     @POST
-    @Action
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
+    @Actionable
     @Path("migrate")
-    public void migrate();
+    public Response migrate(@Context UriInfo uriInfo, Action action);
 
     @POST
-    @Action
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
+    @Actionable
     @Path("move")
-    public void move();
+    public Response move(@Context UriInfo uriInfo, Action action);
 
     @POST
-    @Action
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
+    @Actionable
     @Path("detach")
-    public void detach();
+    public Response detach(@Context UriInfo uriInfo, Action action);
 
     @POST
-    @Action
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
+    @Actionable
     @Path("changeCD")
-    public void changeCD();
+    public Response changeCD(@Context UriInfo uriInfo, Action action);
 
     @POST
-    @Action
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
+    @Actionable
     @Path("ejectCD")
-    public void ejectCD();
+    public Response ejectCD(@Context UriInfo uriInfo, Action action);
 }

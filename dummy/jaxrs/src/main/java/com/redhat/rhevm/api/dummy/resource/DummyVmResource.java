@@ -18,16 +18,19 @@
  */
 package com.redhat.rhevm.api.dummy.resource;
 
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.common.resource.AbstractVmResource;
+import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.dummy.model.DummyVmStatus;
 import com.redhat.rhevm.api.dummy.model.DummyVM;
 
-public class DummyVmResource implements VmResource {
+public class DummyVmResource extends AbstractVmResource {
     /* FIXME: would like to do:
      * private @Context UriInfo uriInfo;
      */
@@ -40,6 +43,7 @@ public class DummyVmResource implements VmResource {
      * @param vm  encapsulated VM
      */
     public DummyVmResource(DummyVM vm) {
+        super(vm.jaxb.getId());
         this.vm = vm;
     }
 
@@ -70,45 +74,66 @@ public class DummyVmResource implements VmResource {
     }
 
     @Override
-    public void start() {
-        vm.setStatus(DummyVmStatus.UP);
+    public Response start(UriInfo uriInfo, Action action) {
+        return doAction(uriInfo, action, new VmStatusSetter(DummyVmStatus.UP));
+    }
+
+
+    @Override
+    public Response stop(UriInfo uriInfo, Action action) {
+        return doAction(uriInfo, action, new VmStatusSetter(DummyVmStatus.DOWN));
+
     }
 
     @Override
-    public void stop() {
-        vm.setStatus(DummyVmStatus.DOWN);
+    public Response shutdown(UriInfo uriInfo, Action action) {
+        return doAction(uriInfo, action, new VmStatusSetter(DummyVmStatus.DOWN));
     }
 
     @Override
-    public void shutdown() {
-        vm.setStatus(DummyVmStatus.DOWN);
+    public Response suspend(UriInfo uriInfo, Action action) {
+        return doAction(uriInfo, action, DO_NOTHING);
     }
 
     @Override
-    public void suspend() {
+    public Response restore(UriInfo uriInfo, Action action) {
+        return doAction(uriInfo, action, DO_NOTHING);
     }
 
     @Override
-    public void restore() {
+    public Response migrate(UriInfo uriInfo, Action action) {
+        return doAction(uriInfo, action, DO_NOTHING);
     }
 
     @Override
-    public void migrate() {
+    public Response move(UriInfo uriInfo, Action action) {
+        return doAction(uriInfo, action, DO_NOTHING);
     }
 
     @Override
-    public void move() {
+    public Response detach(UriInfo uriInfo, Action action) {
+        return doAction(uriInfo, action, DO_NOTHING);
+
     }
 
     @Override
-    public void detach() {
+    public Response changeCD(UriInfo uriInfo, Action action) {
+        return doAction(uriInfo, action, DO_NOTHING);
+
     }
 
     @Override
-    public void changeCD() {
+    public Response ejectCD(UriInfo uriInfo, Action action) {
+        return doAction(uriInfo, action, DO_NOTHING);
     }
 
-    @Override
-    public void ejectCD() {
+    private class VmStatusSetter implements Runnable {
+        private DummyVmStatus status;
+        VmStatusSetter(DummyVmStatus status) {
+            this.status = status;
+        }
+        public void run() {
+            vm.setStatus(status);
+        }
     }
 }

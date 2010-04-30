@@ -66,11 +66,22 @@ class Host(Base):
     ROOT_ELEMENT = 'host'
     KEYS = ['id', 'name', 'link']
 
+class Action(Base):
+    ROOT_ELEMENT = 'action'
+    KEYS = ['id', 'async', 'status', 'self', 'grace']
+
+class GracePeriod(Base):
+    ROOT_ELEMENT = 'grace_period'
+    KEYS = ['expiry', 'absolute']
+
 class Encoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, Base):
             return obj.as_dict()
         return json.JSONEncoder.default(self, obj)
+
+def parseAction(doc):
+    return Action(json.loads(doc))
 
 def parseVM(doc):
     return VM(json.loads(doc))

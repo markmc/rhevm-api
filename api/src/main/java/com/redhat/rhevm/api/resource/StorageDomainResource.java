@@ -27,7 +27,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.model.Action;
+import com.redhat.rhevm.api.model.Actionable;
 import com.redhat.rhevm.api.model.StorageDomain;
 
 @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
@@ -40,27 +40,27 @@ public interface StorageDomainResource {
     public StorageDomain update(@Context UriInfo uriInfo, StorageDomain storageDomain);
 
     @POST
-    @Action
+    @Actionable
     @Path("initialize")
     public void initialize();
 
     @POST
-    @Action
+    @Actionable
     @Path("attach")
     public void attach();
 
     @POST
-    @Action
+    @Actionable
     @Path("detach")
     public void detach();
 
     @POST
-    @Action
+    @Actionable
     @Path("activate")
     public void activate();
 
     @POST
-    @Action
+    @Actionable
     @Path("deactivate")
     public void deactivate();
 }

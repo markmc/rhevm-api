@@ -92,7 +92,7 @@ public class DummyWebappTest extends Assert {
 
     @Test
     public void testVmAction() throws Exception {
-        doTestPost(VMS_PATH + "/1/migrate", "<vm><name>foobar</name></vm>", 204, null);
+        doTestPost(VMS_PATH + "/1/migrate", "<action><async>true</async></action>", 202, null);
     }
 
     private void doTestGet(String context, String expectedReponsePattern) throws Exception {
