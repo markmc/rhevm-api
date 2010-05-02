@@ -22,6 +22,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HEAD;
 import javax.ws.rs.Path;
@@ -36,6 +37,8 @@ import org.jboss.resteasy.plugins.providers.RegisterBuiltin;
 import org.jboss.resteasy.plugins.server.tjws.TJWSEmbeddedJaxrsServer;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
+import com.redhat.rhevm.api.model.DataCenter;
+import com.redhat.rhevm.api.model.DataCenters;
 import com.redhat.rhevm.api.model.LinkHeader;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.StorageDomain;
@@ -85,6 +88,18 @@ public class DummyTestBase extends Assert {
 
     protected StorageDomainsResource createStorageDomainsResource(String uri) {
         return ProxyFactory.create(StorageDomainsResource.class, uri);
+    }
+
+    @Path("/")
+    @Produces(MediaType.APPLICATION_XML)
+    protected interface DataCentersResource {
+        @GET public DataCenters list();
+        @GET @Path("{id}") public DataCenter get(@PathParam("id") String id);
+        @POST @Consumes(MediaType.APPLICATION_XML) @Path("{id}/storagedomains") public StorageDomain attachStorageDomain(@PathParam("id") String id, StorageDomain storageDomain);
+    }
+
+    protected DataCentersResource createDataCentersResource(String uri) {
+        return ProxyFactory.create(DataCentersResource.class, uri);
     }
 
     @Path("/")

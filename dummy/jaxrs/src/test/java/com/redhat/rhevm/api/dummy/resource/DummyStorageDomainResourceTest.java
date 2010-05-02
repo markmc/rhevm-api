@@ -95,23 +95,5 @@ public class DummyStorageDomainResourceTest extends DummyTestBase {
 
         domain = service.get(domain.getId());
         assertEquals(domain.getStatus(), StorageDomainStatus.UNATTACHED);
-/* FIXME
-        createActionResource(getActionUri(domain, "attach")).post();
-
-        domain = service.get(domain.getId());
-        assertEquals(domain.getStatus(), StorageDomainStatus.INACTIVE);
-        createActionResource(getActionUri(domain, "activate")).post();
-
-        domain = service.get(domain.getId());
-        assertEquals(domain.getStatus(), StorageDomainStatus.ACTIVE);
-        createActionResource(getActionUri(domain, "deactivate")).post();
-
-        domain = service.get(domain.getId());
-        assertEquals(domain.getStatus(), StorageDomainStatus.INACTIVE);
-        createActionResource(getActionUri(domain, "detach")).post();
-
-        domain = service.get(domain.getId());
-        assertEquals(domain.getStatus(), StorageDomainStatus.UNATTACHED);
-*/
     }
 }
