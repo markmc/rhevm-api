@@ -25,15 +25,9 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 
-/* FIXME: doesn't seem to do anything ? Also, we could do without
- *        the explicit dependency on RESTeasy
- */
-import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
-
 import com.redhat.rhevm.api.model.DataCenter;
 
 @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
-@Formatted
 public interface DataCenterResource {
     /* FIXME: can we make uriInfo a field instead of a parameter to
      *        each method? Adding @Context to the implementation

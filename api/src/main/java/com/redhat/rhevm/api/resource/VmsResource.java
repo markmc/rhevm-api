@@ -29,17 +29,11 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-/* FIXME: doesn't seem to do anything ? Also, we could do without
- *        the explicit dependency on RESTeasy
- */
-import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
-
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
 
 @Path("/vms")
 @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
-@Formatted
 public interface VmsResource {
     /* REVISIT: Singleton lifecycle probably requires that UriInfo
      * must be modelled as a method parameter, as there would be

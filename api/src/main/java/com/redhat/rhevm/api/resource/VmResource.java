@@ -29,17 +29,11 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response;
 
-/* FIXME: doesn't seem to do anything ? Also, we could do without
- *        the explicit dependency on RESTeasy
- */
-import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
-
 import com.redhat.rhevm.api.model.Actionable;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.VM;
 
 @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
-@Formatted
 public interface VmResource {
     /* FIXME: can we make uriInfo a field instead of a parameter to
      *        each method? Adding @Context to the implementation
