@@ -31,7 +31,6 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.DataCenters;
 
-@Path("/datacenters")
 public interface DataCentersResource {
     /* FIXME: can we make uriInfo a field instead of a parameter to
      *        each method? Adding @Context to the implementation

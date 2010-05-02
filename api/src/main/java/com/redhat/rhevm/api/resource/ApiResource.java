@@ -40,4 +40,16 @@ public interface ApiResource {
 
     @HEAD
     public Response head(@Context UriInfo uriInfo);
+
+    @Path("datacenters")
+    public DataCentersResource getDataCentersSubResource(@Context UriInfo uriInfo);
+
+    @Path("hosts")
+    public HostsResource getHostsSubResource(@Context UriInfo uriInfo);
+
+    @Path("storagedomains")
+    public StorageDomainsResource getStorageDomainsSubResource(@Context UriInfo uriInfo);
+
+    @Path("vms")
+    public VmsResource getVmsSubResource(@Context UriInfo uriInfo);
 }

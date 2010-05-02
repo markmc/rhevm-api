@@ -115,8 +115,6 @@ public class DummyTestBase extends Assert {
         server.setPort(port);
         server.start();
         server.getDeployment().getDispatcher().getRegistry().addPerRequestResource(DummyApiResource.class);
-        server.getDeployment().getDispatcher().getRegistry().addPerRequestResource(DummyStorageDomainsResource.class);
-        server.getDeployment().getDispatcher().getRegistry().addPerRequestResource(DummyVmsResource.class);
 
         RegisterBuiltin.register(ResteasyProviderFactory.getInstance());
 

@@ -25,12 +25,20 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.LinkHeader;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.resource.ApiResource;
+import com.redhat.rhevm.api.resource.DataCentersResource;
+import com.redhat.rhevm.api.resource.HostsResource;
+import com.redhat.rhevm.api.resource.StorageDomainsResource;
+import com.redhat.rhevm.api.resource.VmsResource;
 
 /* FIXME: it'd be nice to move this whole thing into the
  *        top-level api package
  */
 
 public class PowerShellApiResource implements ApiResource {
+
+    private PowerShellDataCentersResource dataCenters = new PowerShellDataCentersResource();
+    private PowerShellHostsResource hosts = new PowerShellHostsResource();
+    private PowerShellVmsResource vms = new PowerShellVmsResource();
 
     private void addHeader(Response.ResponseBuilder responseBuilder, UriBuilder uriBuilder, String ... path) {
         // concantenate links in a single header with a comma-separated value,
@@ -61,5 +69,25 @@ public class PowerShellApiResource implements ApiResource {
         addHeader(responseBuilder, uriBuilder, "datacenters", "hosts", "vms");
 
         return responseBuilder.build();
+    }
+
+    @Override
+    public DataCentersResource getDataCentersSubResource(UriInfo uriInfo) {
+        return dataCenters;
+    }
+
+    @Override
+    public HostsResource getHostsSubResource(UriInfo uriInfo) {
+        return hosts;
+    }
+
+    @Override
+    public StorageDomainsResource getStorageDomainsSubResource(UriInfo uriInfo) {
+        return null;
+    }
+
+    @Override
+    public VmsResource getVmsSubResource(UriInfo uriInfo) {
+        return vms;
     }
 }
