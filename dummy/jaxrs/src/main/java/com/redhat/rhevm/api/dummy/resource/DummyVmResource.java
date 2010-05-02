@@ -52,8 +52,8 @@ public class DummyVmResource extends AbstractVmResource {
      *
      * @return  encapsulated VM
      */
-    public VM getVM() {
-        return vm.jaxb;
+    public DummyVM getVM() {
+        return vm;
     }
 
     public VM addLinks(UriBuilder uriBuilder) {

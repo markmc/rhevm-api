@@ -47,8 +47,8 @@ public class DummyDataCenterResource implements DataCenterResource {
      *
      * @return  encapsulated dataCenter
      */
-    DataCenter getDataCenter() {
-        return dataCenter.jaxb;
+    DummyDataCenter getDataCenter() {
+        return dataCenter;
     }
 
     public DataCenter addLinks(UriBuilder uriBuilder) {

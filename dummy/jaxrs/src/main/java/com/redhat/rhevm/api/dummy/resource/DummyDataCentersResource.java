@@ -53,7 +53,7 @@ public class DummyDataCentersResource implements DataCentersResource {
         DataCenters ret = new DataCenters();
 
         for (DummyDataCenterResource dataCenter : dataCenters.values()) {
-            String id = dataCenter.getDataCenter().getId();
+            String id = dataCenter.getDataCenter().jaxb.getId();
             UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(id);
             ret.getDataCenters().add(dataCenter.addLinks(uriBuilder));
         }
@@ -65,7 +65,7 @@ public class DummyDataCentersResource implements DataCentersResource {
     public Response add(UriInfo uriInfo, DataCenter dataCenter) {
         DummyDataCenterResource newDataCenter = new DummyDataCenterResource(new DummyDataCenter(dataCenter));
 
-        String id = newDataCenter.getDataCenter().getId();
+        String id = newDataCenter.getDataCenter().jaxb.getId();
         dataCenters.put(id, newDataCenter);
 
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(id);

@@ -45,8 +45,8 @@ public class DummyStorageDomainResource implements StorageDomainResource {
      *
      * @return  encapsulated storageDomain
      */
-    StorageDomain getStorageDomain() {
-        return storageDomain.jaxb;
+    DummyStorageDomain getStorageDomain() {
+        return storageDomain;
     }
 
     public StorageDomain addLinks(UriBuilder uriBuilder) {

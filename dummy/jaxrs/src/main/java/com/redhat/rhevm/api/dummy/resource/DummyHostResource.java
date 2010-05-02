@@ -47,8 +47,8 @@ public class DummyHostResource implements HostResource {
      *
      * @return  encapsulated host
      */
-    Host getHost() {
-        return host.jaxb;
+    DummyHost getHost() {
+        return host;
     }
 
     public Host addLinks(UriBuilder uriBuilder) {

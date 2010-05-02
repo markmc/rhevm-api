@@ -51,7 +51,7 @@ public class DummyHostsResource implements HostsResource {
         Hosts ret = new Hosts();
 
         for (DummyHostResource host : hosts.values()) {
-            String id = host.getHost().getId();
+            String id = host.getHost().jaxb.getId();
             UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(id);
             ret.getHosts().add(host.addLinks(uriBuilder));
         }
@@ -63,7 +63,7 @@ public class DummyHostsResource implements HostsResource {
     public Response add(UriInfo uriInfo, Host host) {
         DummyHostResource newHost = new DummyHostResource(new DummyHost(host));
 
-        String id = newHost.getHost().getId();
+        String id = newHost.getHost().jaxb.getId();
         hosts.put(id, newHost);
 
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(id);

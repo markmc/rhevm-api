@@ -52,7 +52,7 @@ public class DummyVmsResource implements VmsResource {
         VMs ret = new VMs();
 
         for (DummyVmResource vm : vms.values()) {
-            String id = vm.getVM().getId();
+            String id = vm.getVM().jaxb.getId();
             UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(id);
             ret.getVMs().add(vm.addLinks(uriBuilder));
         }
@@ -64,7 +64,7 @@ public class DummyVmsResource implements VmsResource {
     public Response add(UriInfo uriInfo, VM vm) {
         DummyVmResource newVM = new DummyVmResource(new DummyVM(vm));
 
-        String id = newVM.getVM().getId();
+        String id = newVM.getVM().jaxb.getId();
         vms.put(id, newVM);
 
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(id);

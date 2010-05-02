@@ -62,7 +62,7 @@ public class DummyStorageDomainsResource implements StorageDomainsResource {
         StorageDomains ret = new StorageDomains();
 
         for (DummyStorageDomainResource storageDomain : storageDomains.values()) {
-            String id = storageDomain.getStorageDomain().getId();
+            String id = storageDomain.getStorageDomain().jaxb.getId();
             UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(id);
             ret.getStorageDomains().add(storageDomain.addLinks(uriBuilder));
         }
@@ -74,7 +74,7 @@ public class DummyStorageDomainsResource implements StorageDomainsResource {
     public Response add(UriInfo uriInfo, StorageDomain storageDomain) {
         DummyStorageDomainResource newStorageDomain = new DummyStorageDomainResource(new DummyStorageDomain(storageDomain));
 
-        String id = newStorageDomain.getStorageDomain().getId();
+        String id = newStorageDomain.getStorageDomain().jaxb.getId();
         storageDomains.put(id, newStorageDomain);
 
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(id);
