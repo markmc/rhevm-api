@@ -30,6 +30,7 @@
     <felix.compendium.version>1.2.0</felix.compendium.version>
     <felix.osgi.version>1.4.0</felix.osgi.version>
     <cxf.version>2.2.6</cxf.version>
+    <easymock.version>2.5.2</easymock.version>
   </properties>
 
   <repositories>
@@ -144,6 +145,13 @@
             <artifactId>jtidy</artifactId>
           </exclusion>
         </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.easymock</groupId>
+        <artifactId>easymockclassextension</artifactId>
+        <version>${easymock.version}</version>
+        <scope>test</scope>
       </dependency>
 
     </dependencies>

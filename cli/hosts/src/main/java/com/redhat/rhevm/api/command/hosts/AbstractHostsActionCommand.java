@@ -21,6 +21,7 @@ package com.redhat.rhevm.api.command.hosts;
 import org.apache.felix.gogo.commands.Argument;
 
 import com.redhat.rhevm.api.command.base.AbstractActionCommand;
+import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Hosts;
 
 /**
@@ -31,7 +32,7 @@ public abstract class AbstractHostsActionCommand extends AbstractActionCommand {
     @Argument(index = 0, name = "name", description = "The name of the Host", required = true, multiValued = false)
     protected String name;
 
-    protected void doAction(String action) throws Exception {
-        doAction(client.getCollection("hosts", Hosts.class).getHosts(), action, name);
+    protected void doAction(String verb, Action action) throws Exception {
+        doAction(client.getCollection("hosts", Hosts.class).getHosts(), verb, action, name);
     }
 }

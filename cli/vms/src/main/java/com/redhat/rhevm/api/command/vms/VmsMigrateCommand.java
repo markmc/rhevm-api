@@ -20,6 +20,8 @@ package com.redhat.rhevm.api.command.vms;
 
 import org.apache.felix.gogo.commands.Command;
 
+import com.redhat.rhevm.api.model.Action;
+
 /**
  * Shuts down a VM
  */
@@ -27,7 +29,7 @@ import org.apache.felix.gogo.commands.Command;
 public class VmsMigrateCommand extends AbstractVmsActionCommand {
 
     protected Object doExecute() throws Exception {
-        doAction("migrate");
+        doAction("migrate", new Action());
         return null;
     }
 }

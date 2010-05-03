@@ -20,6 +20,8 @@ package com.redhat.rhevm.api.command.vms;
 
 import org.apache.felix.gogo.commands.Command;
 
+import com.redhat.rhevm.api.model.Action;
+
 /**
  * Suspend a VM
  */
@@ -27,7 +29,7 @@ import org.apache.felix.gogo.commands.Command;
 public class VmsSuspendCommand extends AbstractVmsActionCommand {
 
     protected Object doExecute() throws Exception {
-        doAction("suspend");
+        doAction("suspend", new Action());
         return null;
     }
 }

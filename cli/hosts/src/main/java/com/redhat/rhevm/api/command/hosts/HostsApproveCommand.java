@@ -20,6 +20,8 @@ package com.redhat.rhevm.api.command.hosts;
 
 import org.apache.felix.gogo.commands.Command;
 
+import com.redhat.rhevm.api.model.Action;
+
 /**
  * Approves a Host.
  */
@@ -27,7 +29,7 @@ import org.apache.felix.gogo.commands.Command;
 public class HostsApproveCommand extends AbstractHostsActionCommand {
 
     protected Object doExecute() throws Exception {
-        doAction("approve");
+        doAction("approve", new Action());
         return null;
     }
 }

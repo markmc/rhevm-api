@@ -21,7 +21,10 @@ package com.redhat.rhevm.api.command.base;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.felix.gogo.commands.Option;
 import com.redhat.rhevm.api.command.base.AbstractCommand;
+import com.redhat.rhevm.api.model.Action;
+import com.redhat.rhevm.api.model.GracePeriod;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.BaseResource;
 
@@ -30,21 +33,37 @@ import com.redhat.rhevm.api.model.BaseResource;
  */
 public abstract class AbstractActionCommand extends AbstractCommand {
 
-    protected void doAction(List<? extends BaseResource> collection, String action, String name) throws Exception {
+    @Option(name = "-a", aliases = { "--async" }, description = "request that the action is processed asynchronously", required = false, multiValued = false)
+    private boolean async;
+
+    @Option(name = "-g", aliases = {"--grace"}, description="Grace period to wait before initiating action", required = false, multiValued = false)
+    protected long grace = -1L;
+
+    protected void doAction(List<? extends BaseResource> collection, String verb, Action action, String name) throws Exception {
+        applyOptions(action);
         // need to do better than linear search for large collections
         for (BaseResource resource : collection) {
             if (name.equals(resource.getName())) {
                 Collection<Link> links = resource.getActions().getLinks();
                 for (Link l : links) {
-                   if (l.getRel().equals(action)) {
-                       client.doAction(action, l);
+                   if (l.getRel().equals(verb)) {
+                       client.doAction(verb, action, l);
                        return;
                    }
                 }
             }
         }
         if (collection.size() > 0) {
-            System.err.println(name + " is unknown, use tab-completion to see a list of valid targets"); 
+            System.err.println(name + " is unknown, use tab-completion to see a list of valid targets");
+        }
+    }
+
+    private void applyOptions(Action action) {
+        action.setAsync(async);
+        if (grace != -1) {
+            GracePeriod gracePeriod = new GracePeriod();
+            gracePeriod.setExpiry(grace);
+            action.setGracePeriod(gracePeriod);
         }
     }
 }

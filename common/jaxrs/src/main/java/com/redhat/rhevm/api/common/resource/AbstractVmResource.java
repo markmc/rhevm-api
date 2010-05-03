@@ -19,14 +19,12 @@
 package com.redhat.rhevm.api.common.resource;
 
 import java.net.URI;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
+import com.redhat.rhevm.api.common.util.ReapedMap;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.resource.ActionResource;
 
@@ -34,21 +32,28 @@ import com.redhat.rhevm.api.resource.VmResource;
 
 public abstract class AbstractVmResource implements VmResource {
 
+    private static final long REAP_AFTER = 2 * 60 * 60 * 1000L; // 2 hours
+
+    private static ReapedMap.ValueToKeyMapper<String, ActionResource> KEY_MAPPER =
+        new ReapedMap.ValueToKeyMapper<String, ActionResource>() {
+            public String getKey(ActionResource value) {
+                return value.getAction().getId();
+            }
+        };
+
     protected static Runnable DO_NOTHING = new Runnable() { public void run(){} };
 
-    // FIXME: replace with reapable map
-    private Map<String, ActionResource> actions =
-        Collections.synchronizedMap(new HashMap<String, ActionResource>());
-
+    protected ReapedMap<String, ActionResource> actions;
     protected String id;
 
     public AbstractVmResource(String id) {
         this.id = id;
+        actions = new ReapedMap<String, ActionResource>(KEY_MAPPER, REAP_AFTER);
     }
 
     public Response doAction(UriInfo uriInfo, Action action, final Runnable task) {
         Response.Status status = null;
-        ActionResource actionResource = new BaseActionResource(uriInfo, action);
+        final ActionResource actionResource = new BaseActionResource(uriInfo, action);
         if (action.isAsync()) {
             action.setStatus(com.redhat.rhevm.api.model.Status.PENDING);
             actions.put(action.getId(), actionResource);
@@ -56,6 +61,7 @@ public abstract class AbstractVmResource implements VmResource {
             new Thread(new AbstractActionTask(action) {
                 public void run() {
                     perform(action, task);
+                    actions.reapable(KEY_MAPPER.getKey(actionResource));
                 }
             }).start();
             status = Status.ACCEPTED;
@@ -72,19 +78,23 @@ public abstract class AbstractVmResource implements VmResource {
 
     @Override
     public ActionResource getActionSubresource(String action, String oid) {
+        // redirect back to the target VM if action no longer cached
+        // REVISIT: ultimately we should look at redirecting
+        // to the event/audit log
+        //
         ActionResource exists = actions.get(oid);
         return exists != null
                ? exists
                : new ActionResource() {
                     @Override
                     public Response get(UriInfo uriInfo) {
-                        // redirect back to the target VM
-                        // REVISIT: ultimately we should look at redirecting
-                        // to the event/audit log
-                        //
                         URI redirect = uriInfo.getBaseUriBuilder().path("/vms" + id).build();
                         Response.Status status = Response.Status.MOVED_PERMANENTLY;
                         return Response.status(status).location(redirect).build();
+                    }
+                    @Override
+                    public Action getAction() {
+                        return null;
                     }
                 };
     }
@@ -98,8 +108,8 @@ public abstract class AbstractVmResource implements VmResource {
                 // ignore
             }
         }
+        task.run();
         action.setStatus(com.redhat.rhevm.api.model.Status.COMPLETE);
-            task.run();
     }
 
     private abstract class AbstractActionTask implements Runnable {

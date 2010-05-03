@@ -20,6 +20,8 @@ package com.redhat.rhevm.api.command.vms;
 
 import org.apache.felix.gogo.commands.Command;
 
+import com.redhat.rhevm.api.model.Action;
+
 /**
  * Detach a VM
  */
@@ -27,7 +29,7 @@ import org.apache.felix.gogo.commands.Command;
 public class VmsDetachCommand extends AbstractVmsActionCommand {
 
     protected Object doExecute() throws Exception {
-        doAction("detach");
+        doAction("detach", new Action());
         return null;
     }
 }

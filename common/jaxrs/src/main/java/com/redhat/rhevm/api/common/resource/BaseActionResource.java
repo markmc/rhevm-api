@@ -40,6 +40,11 @@ public class BaseActionResource implements ActionResource {
         return Response.ok(action).build();
     }
 
+    @Override
+    public Action getAction() {
+        return action;
+    }
+
     private void addLinks(UriInfo uriInfo) {
         Link self = new Link();
         self.setRel("replay");

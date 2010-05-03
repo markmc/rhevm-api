@@ -26,10 +26,14 @@ import javax.ws.rs.core.UriInfo;
 
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
+import com.redhat.rhevm.api.model.Action;
+
 @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
 @Formatted
 public interface ActionResource {
 
     @GET
     public Response get(@Context UriInfo uriInfo);
+
+    public Action getAction();
 }

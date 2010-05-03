@@ -34,8 +34,10 @@ import org.apache.cxf.jaxrs.JAXRSBindingFactory;
 
 import org.apache.cxf.jaxrs.client.WebClient;
 
+import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.LinkHeader;
 import com.redhat.rhevm.api.model.Link;
+import com.redhat.rhevm.api.model.Status;
 
 /**
  * Client to make RESTful invocations via a direct API (to avoid leakage
@@ -71,31 +73,33 @@ public class BaseClient {
                 String baseError = "cannot follow " + top + ", failed with ";
                 diagnose(baseError, failure, r, 200);
             } else {
-                InputStream is = (InputStream)r.getEntity();
-                JAXBContext context = JAXBContext.newInstance(clz);
-                Unmarshaller unmarshaller = context.createUnmarshaller();
-                JAXBElement<S> root = unmarshaller.unmarshal(new StreamSource(is), clz);
-                ret = root.getValue();
+                ret = unmarshall(r, clz);
             }
         }
         return ret;
     }
 
-    public void doAction(String action, Link link) throws Exception {
+    public void doAction(String verb, Action action, Link link) throws Exception {
         Response r = null;
         Exception failure = null;
 
         try {
             WebClient post = WebClient.create(link.getHref());
-            r = post.path("/").post(null);
+            r = post.path("/").post(action);
         } catch (Exception e) {
             failure = e;
         }
 
-        if (failure != null || r.getStatus() != 204) {
-            diagnose(action + " failed with ", failure, r, 204);
+        int expectedStatus = action.isAsync() ? 202 : 200;
+        if (failure != null || r.getStatus() != expectedStatus) {
+            diagnose(verb + " failed with ", failure, r, expectedStatus);
         } else {
-            System.out.println(action + " succeeded");
+            Action reaction = unmarshall(r, Action.class);
+            String monitor =
+                Status.COMPLETE.equals(reaction.getStatus())
+                ? ""
+                : ", monitor @ " + getLink(reaction.getLink(), "self");
+            System.out.println(verb + " " + reaction.getStatus() + monitor);
         }
     }
 
@@ -125,6 +129,14 @@ public class BaseClient {
         return ret;
     }
 
+    private <S> S unmarshall(Response r, Class<S> clz) throws Exception {
+        InputStream is = (InputStream)r.getEntity();
+        JAXBContext context = JAXBContext.newInstance(clz);
+        Unmarshaller unmarshaller = context.createUnmarshaller();
+        JAXBElement<S> root = unmarshaller.unmarshal(new StreamSource(is), clz);
+        return root.getValue();
+    }
+
     private String getLink(Response r, String rel) {
         String ret = null;
         List<Object> links = r.getMetadata().get("Link");
@@ -134,6 +146,16 @@ public class BaseClient {
                 if (rel.equals((link.getRel()))) {
                     ret = link.getHref();
                 }
+            }
+        }
+        return ret;
+    }
+
+    private String getLink(List<Link> links, String rel) {
+        String ret = null;
+        for (Link link : links) {
+            if (rel.equals((link.getRel()))) {
+                ret = link.getHref();
             }
         }
         return ret;

@@ -20,6 +20,8 @@ package com.redhat.rhevm.api.command.vms;
 
 import org.apache.felix.gogo.commands.Command;
 
+import com.redhat.rhevm.api.model.Action;
+
 /**
  * Start a VM
  */
@@ -27,7 +29,7 @@ import org.apache.felix.gogo.commands.Command;
 public class VmsStartCommand extends AbstractVmsActionCommand {
 
     protected Object doExecute() throws Exception {
-        doAction("start");
+        doAction("start", new Action());
         return null;
     }
 }

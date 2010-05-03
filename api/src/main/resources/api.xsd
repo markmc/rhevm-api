@@ -26,8 +26,6 @@
 
   <xs:element name="grace_period" type="GracePeriod"/>
 
-  <xs:element name="action" type="Action"/>
-
   <xs:complexType name="GracePeriod">
       <xs:sequence>
         <xs:element name="expiry" type="xs:long"/>
@@ -43,23 +41,27 @@
   </xs:group>
 
   <!-- Represents a potentially asynchronous operation -->
-  <xs:complexType name="Action">
-    <xs:sequence>
-     <!-- The following are used by the client
-          when initiating an operation -->
-        <xs:element name="async" type="xs:boolean" minOccurs="0"/>
-        <!-- action-specific parameter(s) for the operation (if required) -->
-        <xs:group ref="ActionParameterGroup"/>
+  <!-- Use an anonymous complex type as opposed to an instance of a defined
+       type, to force JAXB to decorate generated class with @XmlRootElement -->
+  <xs:element name="action">
+    <xs:complexType>
+      <xs:sequence>
+       <!-- The following are used by the client
+            when initiating an operation -->
+          <xs:element name="async" type="xs:boolean" minOccurs="0"/>
+          <!-- action-specific parameter(s) for the operation (if required) -->
+          <xs:group ref="ActionParameterGroup"/>
 
-      <!-- The following are used by the server when
-           responding to an operation or status query -->
-        <xs:element name="id" type="xs:string" minOccurs="0"/>
-        <xs:element name="status" type="Status" minOccurs="0"/>
-        <!-- Link to self (rel="self") -->
-        <!-- Link to original action (rel="replay") -->
-        <xs:element ref="link" minOccurs="2" maxOccurs="unbounded"/>
-    </xs:sequence>
-  </xs:complexType>
+        <!-- The following are used by the server when
+             responding to an operation or status query -->
+          <xs:element name="id" type="xs:string" minOccurs="0"/>
+          <xs:element name="status" type="Status" minOccurs="0"/>
+          <!-- Link to self (rel="self") -->
+          <!-- Link to original action (rel="replay") -->
+          <xs:element ref="link" minOccurs="2" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
 
   <xs:simpleType name="Status">
     <xs:restriction base="xs:string">

@@ -21,6 +21,7 @@ package com.redhat.rhevm.api.command.vms;
 import org.apache.felix.gogo.commands.Argument;
 
 import com.redhat.rhevm.api.command.base.AbstractActionCommand;
+import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.VMs;
 
 /**
@@ -31,7 +32,7 @@ public abstract class AbstractVmsActionCommand extends AbstractActionCommand {
     @Argument(index = 0, name = "name", description = "The name of the VM", required = true, multiValued = false)
     protected String name;
 
-    protected void doAction(String action) throws Exception {
-        doAction(client.getCollection("vms", VMs.class).getVMs(), action, name);
+    protected void doAction(String verb, Action action) throws Exception {
+        doAction(client.getCollection("vms", VMs.class).getVMs(), verb, action, name);
     }
 }
