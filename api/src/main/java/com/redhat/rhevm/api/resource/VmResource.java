@@ -52,7 +52,7 @@ public interface VmResource {
     @PUT
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
     public VM update(@Context UriInfo uriInfo, VM vm);
-    
+
     @Path("{action: (start|stop|shutdown|suspend|restore|migrate|move|detach|changeCD|ejectCD)}/{oid}")
     public ActionResource getActionSubresource(@PathParam("action")String action, @PathParam("oid")String oid);
 
@@ -61,13 +61,13 @@ public interface VmResource {
     @Actionable
     @Path("start")
     public Response start(@Context UriInfo uriInfo, Action action);
- 
+
     @POST
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
     @Actionable
     @Path("stop")
     public Response stop(@Context UriInfo uriInfo, Action action);
-    
+
     @POST
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
     @Actionable
