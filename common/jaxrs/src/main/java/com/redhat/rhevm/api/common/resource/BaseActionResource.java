@@ -18,6 +18,8 @@
  */
 package com.redhat.rhevm.api.common.resource;
 
+import java.util.UUID;
+
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
@@ -31,7 +33,7 @@ public class BaseActionResource implements ActionResource {
 
     BaseActionResource(UriInfo uriInfo, Action action) {
         this.action = action;
-        action.setId(Long.toString(System.currentTimeMillis()));
+        action.setId(UUID.randomUUID().toString());
         addLinks(uriInfo);
     }
 

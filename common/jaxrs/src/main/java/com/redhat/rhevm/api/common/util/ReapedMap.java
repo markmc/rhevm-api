@@ -77,8 +77,8 @@ public class ReapedMap<K, V> extends HashMap<K, V> {
      *
      * @param keyMapper keyMapper maps from value to key type
      * @param reapAfter entries become eligible for reaping after this duration (ms)
-     * @param queue reference queue in case mappings in case aggressive GC eats
-     * referent before it is reaped
+     * @param queue reference queue to avoid leaked mappings in case where
+     * aggressive GC eats referent before it is reaped
      */
     ReapedMap(ValueToKeyMapper<K, V> keyMapper, long reapAfter, ReferenceQueue<V> queue) {
         this.keyMapper = keyMapper;
@@ -150,7 +150,7 @@ public class ReapedMap<K, V> extends HashMap<K, V> {
     public synchronized void reapable(K k) {
         V v = super.remove(k);
         if (v != null) {
-            reapableMap.put(k, new SoftlyReferencedValue<V>(v));
+            reapableMap.put(k, new SoftlyReferencedValue<V>(new SoftReference<V>(v, queue)));
         }
         reap();
     }
@@ -209,12 +209,12 @@ public class ReapedMap<K, V> extends HashMap<K, V> {
      * Encapsulate soft-reference and timestamp (thet latter is used for
      * eager reaping)
      */
-    private class SoftlyReferencedValue<S> {
-        SoftReference<S> value;
+    private class SoftlyReferencedValue<V> {
+        SoftReference<V> value;
         long timestamp;
 
-        SoftlyReferencedValue(S v) {
-            value = new SoftReference<S>(v);
+        SoftlyReferencedValue(SoftReference<V> value) {
+            this.value = value;
             timestamp = System.currentTimeMillis();
         }
 

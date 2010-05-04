@@ -7,3 +7,5 @@ transfers:
   storagedomains: com.redhat.rhevm.api.model.StorageDomains
   vm: com.redhat.rhevm.api.model.VM
   vms: com.redhat.rhevm.api.model.VMs
+  grace_period: com.redhat.rhevm.api.model.GracePeriod
+  action: com.redhat.rhevm.api.model.Action

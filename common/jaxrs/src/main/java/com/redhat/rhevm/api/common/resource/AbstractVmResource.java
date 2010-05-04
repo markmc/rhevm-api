@@ -88,7 +88,7 @@ public abstract class AbstractVmResource implements VmResource {
                : new ActionResource() {
                     @Override
                     public Response get(UriInfo uriInfo) {
-                        URI redirect = uriInfo.getBaseUriBuilder().path("/vms" + id).build();
+                        URI redirect = uriInfo.getBaseUriBuilder().path("/vms/" + id).build();
                         Response.Status status = Response.Status.MOVED_PERMANENTLY;
                         return Response.status(status).location(redirect).build();
                     }
