@@ -25,6 +25,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.PUT;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response;
 
@@ -51,7 +52,7 @@ public interface VmResource {
      */
     @PUT
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
-    public VM update(@Context UriInfo uriInfo, VM vm);
+    public VM update(@Context HttpHeaders headers, @Context UriInfo uriInfo, VM vm);
 
     @Path("{action: (start|stop|shutdown|suspend|restore|migrate|move|detach|changeCD|ejectCD)}/{oid}")
     public ActionResource getActionSubresource(@PathParam("action")String action, @PathParam("oid")String oid);

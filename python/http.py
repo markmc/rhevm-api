@@ -81,7 +81,11 @@ def PUT(opts, uri, body, type = None):
             headers['Content-type'] = type
             headers['Accept'] = type
         cnx.request('PUT', uri, body, headers = headers)
-        return cnx.getresponse().read()
+        ret = { 'status' : 0, 'body' : None }
+        resp = cnx.getresponse()
+        ret['status'] = resp.status
+        ret['body'] = resp.read()
+        return ret
     finally:
         cnx.close()
 

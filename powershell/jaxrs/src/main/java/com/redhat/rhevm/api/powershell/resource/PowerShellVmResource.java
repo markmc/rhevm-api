@@ -21,9 +21,9 @@ package com.redhat.rhevm.api.powershell.resource;
 import java.net.URI;
 import java.util.ArrayList;
 
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.core.Response.Status;
 
 import com.redhat.rhevm.api.common.resource.AbstractVmResource;
 import com.redhat.rhevm.api.model.Action;
@@ -37,9 +37,11 @@ public class PowerShellVmResource extends AbstractVmResource {
      * FIXME: would like to do: private @Context UriInfo uriInfo;
      */
 
+    private VM prototype = new VM();
 
     public PowerShellVmResource(String id) {
         super(id);
+        prototype.setId(id);
     }
 
     public static ArrayList<VM> runAndParse(String command) {
@@ -68,7 +70,9 @@ public class PowerShellVmResource extends AbstractVmResource {
     }
 
     @Override
-    public VM update(UriInfo uriInfo, VM vm) {
+    public VM update(HttpHeaders headers, UriInfo uriInfo, VM vm) {
+        validateUpdate(vm, prototype, headers);
+
         StringBuilder buf = new StringBuilder();
 
         buf.append("$v = get-vm " + id + "\n");

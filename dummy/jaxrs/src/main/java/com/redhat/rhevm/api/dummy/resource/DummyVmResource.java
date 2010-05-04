@@ -18,6 +18,7 @@
  */
 package com.redhat.rhevm.api.dummy.resource;
 
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -68,7 +69,8 @@ public class DummyVmResource extends AbstractVmResource {
     }
 
     @Override
-    public VM update(UriInfo uriInfo, VM vm) {
+    public VM update(HttpHeaders headers, UriInfo uriInfo, VM vm) {
+        validateUpdate(vm, this.vm.jaxb, headers);
         this.vm.update(vm);
         return addLinks(uriInfo.getRequestUriBuilder());
     }

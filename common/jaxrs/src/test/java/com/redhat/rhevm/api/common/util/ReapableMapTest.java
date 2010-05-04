@@ -122,6 +122,7 @@ public class ReapableMapTest extends Assert {
         control.verify();
     }
 
+    @SuppressWarnings("unchecked")
     private void setUpGCExpectations() {
         ReferenceQueue<Integer> queue = (ReferenceQueue<Integer>)control.createMock(ReferenceQueue.class);
         map = new ReapedMap<String, Integer>(MAPPER, 10000, queue);
@@ -135,9 +136,10 @@ public class ReapableMapTest extends Assert {
         Reference<? extends Integer> ref = control.createMock(Reference.class);
         // awkward syntax required to work around compilation error
         // on Reference<capture#nnn ? extends Integer> mismatch
-        IExpectationSetters<? extends Reference<? extends Integer>> setter = expect(queue.poll());
-        ((IExpectationSetters<Reference<? extends Integer>>)setter).andReturn(ref);
-        expect(ref.get()).andReturn(new Integer(3));
+        IExpectationSetters<? extends Reference<? extends Integer>> qSetter = expect(queue.poll());
+        ((IExpectationSetters<Reference<? extends Integer>>)qSetter).andReturn(ref);
+        IExpectationSetters<? extends Integer> refSetter = expect(ref.get());
+        ((IExpectationSetters<Integer>)refSetter).andReturn(new Integer(3));
         control.replay();
     }
 

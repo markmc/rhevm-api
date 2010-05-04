@@ -20,12 +20,16 @@ package com.redhat.rhevm.api.common.resource;
 
 import java.net.URI;
 
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
+import com.redhat.rhevm.api.common.util.MutabilityAssertor;
 import com.redhat.rhevm.api.common.util.ReapedMap;
 import com.redhat.rhevm.api.model.Action;
+import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.resource.ActionResource;
 
 import com.redhat.rhevm.api.resource.VmResource;
@@ -33,6 +37,8 @@ import com.redhat.rhevm.api.resource.VmResource;
 public abstract class AbstractVmResource implements VmResource {
 
     private static final long REAP_AFTER = 2 * 60 * 60 * 1000L; // 2 hours
+
+    protected static final String[] STRICTLY_IMMUTABLE = {"id"};
 
     private static ReapedMap.ValueToKeyMapper<String, ActionResource> KEY_MAPPER =
         new ReapedMap.ValueToKeyMapper<String, ActionResource>() {
@@ -51,7 +57,31 @@ public abstract class AbstractVmResource implements VmResource {
         actions = new ReapedMap<String, ActionResource>(KEY_MAPPER, REAP_AFTER);
     }
 
-    public Response doAction(UriInfo uriInfo, Action action, final Runnable task) {
+    /**
+     * Validate update from an immutability point of view.
+     *
+     * @param incoming  the incoming VM representation
+     * @param existing  the existing VM representation
+     * @throws WebApplicationException wrapping an appropriate response
+     * iff an immutability constraint has been broken
+     */
+    protected void validateUpdate(VM incoming, VM existing, HttpHeaders headers) {
+        Response error = MutabilityAssertor.imposeConstraints(STRICTLY_IMMUTABLE, incoming, existing, headers);
+        if (error != null) {
+            throw new WebApplicationException(error);
+        }
+    }
+
+    /**
+     * Perform an action, managing asynchrony and returning an appropriate
+     * response.
+     *
+     * @param uriInfo  wraps the URI for the current request
+     * @param action   represents the pending action
+     * @param task     fulfils the action
+     * @return
+     */
+    protected Response doAction(UriInfo uriInfo, Action action, final Runnable task) {
         Response.Status status = null;
         final ActionResource actionResource = new BaseActionResource(uriInfo, action);
         if (action.isAsync()) {

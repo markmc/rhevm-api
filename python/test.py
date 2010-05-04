@@ -102,9 +102,16 @@ for fmt in [xmlfmt]:
     print http.GET(opts, foo_vm.link.href, type = fmt.MEDIA_TYPE)['body']
 
     foo_vm.name = 'bar'
-    print http.PUT(opts, foo_vm.link.href, foo_vm.dump(), fmt.MEDIA_TYPE)
+    print http.PUT(opts, foo_vm.link.href, foo_vm.dump(), fmt.MEDIA_TYPE)['body']
+
+    foo_vm.name = 'wonga'
+    foo_vm.id = 'snafu'
+    ret = http.PUT(opts, foo_vm.link.href, foo_vm.dump(), fmt.MEDIA_TYPE)
+    print ret['body']
+    assert ret['status'] == 409, "Expected 409 status, got %d" % ret['status']
+
     bar_host.name = 'foo'
-    print http.PUT(opts, bar_host.link.href, bar_host.dump(), fmt.MEDIA_TYPE)
+    print http.PUT(opts, bar_host.link.href, bar_host.dump(), fmt.MEDIA_TYPE)['body']
 
     print http.DELETE(opts, foo_vm.link.href)
     print http.DELETE(opts, bar_host.link.href)

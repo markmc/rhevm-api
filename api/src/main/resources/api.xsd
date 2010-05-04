@@ -4,6 +4,12 @@
            xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
            jaxb:version="2.1" jaxb:extensionBindingPrefixes="xjc">
 
+  <xs:annotation>
+    <xs:appinfo>
+      <jaxb:globalBindings generateIsSetMethod="true"/>
+    </xs:appinfo>
+  </xs:annotation>
+
   <xs:element name="actions" type="Actions"/>
 
   <xs:element name="datacenter" type="DataCenter"/>
@@ -26,11 +32,20 @@
 
   <xs:element name="grace_period" type="GracePeriod"/>
 
+  <xs:element name="fault" type="Fault"/>
+
+  <xs:complexType name="Fault">
+    <xs:sequence>
+      <xs:element name="reason" type="xs:string"/>
+      <xs:element name="detail" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="GracePeriod">
-      <xs:sequence>
-        <xs:element name="expiry" type="xs:long"/>
-        <xs:element name="absolute" type="xs:boolean" minOccurs="0"/>
-      </xs:sequence>
+    <xs:sequence>
+      <xs:element name="expiry" type="xs:long"/>
+      <xs:element name="absolute" type="xs:boolean" minOccurs="0"/>
+    </xs:sequence>
   </xs:complexType>
 
   <xs:group name="ActionParameterGroup">
