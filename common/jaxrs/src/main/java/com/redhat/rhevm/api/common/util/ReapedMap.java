@@ -206,7 +206,7 @@ public class ReapedMap<K, V> extends HashMap<K, V> {
     }
 
     /**
-     * Encapsulate soft-reference and timestamp (thet latter is used for
+     * Encapsulate soft-reference and timestamp (the latter is used for
      * eager reaping)
      */
     private class SoftlyReferencedValue<V> {
