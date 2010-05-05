@@ -48,6 +48,10 @@ public class DummyDataCentersResource implements DataCentersResource {
         }
     }
 
+    public static String getHref(UriBuilder baseUriBuilder, String id) {
+        return baseUriBuilder.clone().path("datacenters").path(id).build().toString();
+    }
+
     @Override
     public DataCenters list(UriInfo uriInfo) {
         DataCenters ret = new DataCenters();

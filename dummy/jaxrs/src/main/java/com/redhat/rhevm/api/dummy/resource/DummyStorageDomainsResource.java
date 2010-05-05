@@ -57,6 +57,10 @@ public class DummyStorageDomainsResource implements StorageDomainsResource {
         addStorageDomain(StorageDomainType.ISO, "isos_0", StorageType.NFS, "172.31.0.6", "/exports/RHEV/iso/0");
     }
 
+    public static String getHref(UriBuilder baseUriBuilder, String id) {
+        return baseUriBuilder.clone().path("storagedomains").path(id).build().toString();
+    }
+
     @Override
     public StorageDomains list(UriInfo uriInfo) {
         StorageDomains ret = new StorageDomains();
