@@ -19,39 +19,37 @@
 package com.redhat.rhevm.api.resource;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.model.Actionable;
-import com.redhat.rhevm.api.model.StorageDomain;
+import com.redhat.rhevm.api.model.Attachment;
+import com.redhat.rhevm.api.model.Attachments;
 
-public interface StorageDomainResource {
+public interface AttachmentsResource {
     @GET
-    public StorageDomain get(@Context UriInfo uriInfo);
+    public Attachments list(@Context UriInfo uriInfo);
 
-    @PUT
+    @POST
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
-    public StorageDomain update(@Context UriInfo uriInfo, StorageDomain storageDomain);
+    public Response add(@Context UriInfo uriInfo, Attachment attachment);
 
-    @POST
-    @Actionable
-    @Path("initialize")
-    public void initialize();
+    @DELETE
+    @Path("{id}")
+    public void remove(@PathParam("id") String id);
 
-    @POST
-    @Actionable
-    @Path("activate")
-    public void activate();
-
-    @POST
-    @Actionable
-    @Path("deactivate")
-    public void deactivate();
-
-    @Path("attachments")
-    public AttachmentsResource getAttachmentsResource();
+    /**
+     * Sub-resource locator method, returns individual AttachmentResource on which the
+     * remainder of the URI is dispatched.
+     *
+     * @param id  the Attachment ID
+     * @return    matching subresource if found
+     */
+    @Path("{id}")
+    public AttachmentResource getAttachmentSubResource(@Context UriInfo uriInfo, @PathParam("id") String id);
 }

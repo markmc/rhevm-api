@@ -25,6 +25,7 @@ import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.ActionValidator;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.StorageDomainStatus;
+import com.redhat.rhevm.api.resource.AttachmentsResource;
 import com.redhat.rhevm.api.resource.StorageDomainResource;
 import com.redhat.rhevm.api.dummy.model.DummyStorageDomain;
 
@@ -102,5 +103,9 @@ public class DummyStorageDomainResource implements StorageDomainResource, Action
             assert false : jaxb.getStatus();
             return false;
         }
+    }
+
+    public AttachmentsResource getAttachmentsResource() {
+        return null;
     }
 }
