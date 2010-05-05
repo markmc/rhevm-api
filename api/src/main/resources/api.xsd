@@ -118,6 +118,38 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <!-- Attachments, representing a Storage Domain attached to a Data Center -->
+
+  <xs:element name="attachment" type="Attachment"/>
+
+  <xs:element name="attachments" type="Attachments"/>
+
+  <xs:complexType name="Attachment">
+    <xs:sequence>
+      <xs:element name="datacenter" type="DataCenter">
+        <xs:annotation>
+          <xs:appinfo>
+            <jaxb:property name="DataCenter"/>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="storage_domain" type="StorageDomain" minOccurs="0"/>
+      <xs:element name="status" type="StorageDomainStatus" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="href" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="Attachments">
+    <xs:sequence>
+      <xs:annotation>
+        <xs:appinfo>
+            <jaxb:property name="Attachments"/>
+        </xs:appinfo>
+      </xs:annotation>
+      <xs:element ref="attachment" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <!-- Common to all resources -->
 
   <xs:complexType name="BaseResource">
@@ -148,6 +180,7 @@
       <xs:extension base="BaseResource">
         <xs:sequence>
           <xs:element name="storage_type" type="StorageType" minOccurs="0"/>
+          <xs:element name="attachments" type="Attachments" minOccurs="0"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -230,6 +263,7 @@
           <xs:element name="type" type="StorageDomainType" minOccurs="0"/>
           <xs:element name="status" type="StorageDomainStatus" minOccurs="0"/>
           <xs:element name="storage" type="Storage"/>
+          <!-- also a rel="attachments" link, see Attachments above -->
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
