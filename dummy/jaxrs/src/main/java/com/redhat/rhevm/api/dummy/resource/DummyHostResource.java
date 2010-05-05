@@ -18,15 +18,17 @@
  */
 package com.redhat.rhevm.api.dummy.resource;
 
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.common.resource.AbstractHostResource;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.resource.HostResource;
 import com.redhat.rhevm.api.dummy.model.DummyHost;
 
-public class DummyHostResource implements HostResource {
+public class DummyHostResource extends AbstractHostResource {
     /* FIXME: would like to do:
      * private @Context UriInfo uriInfo;
      */
@@ -39,6 +41,7 @@ public class DummyHostResource implements HostResource {
      * @param host  encapsulated host
      */
     DummyHostResource(DummyHost host) {
+        super(host.jaxb.getId());
         this.host = host;
     }
 
@@ -63,7 +66,8 @@ public class DummyHostResource implements HostResource {
     }
 
     @Override
-    public Host update(UriInfo uriInfo, Host host) {
+    public Host update(HttpHeaders headers, UriInfo uriInfo, Host host) {
+        validateUpdate(host, this.host.jaxb, headers);
         this.host.update(host);
         return addLinks(uriInfo.getRequestUriBuilder());
     }

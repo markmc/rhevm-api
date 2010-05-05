@@ -20,7 +20,6 @@ package com.redhat.rhevm.api.common.resource;
 
 import java.net.URI;
 
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -62,14 +61,12 @@ public abstract class AbstractVmResource implements VmResource {
      *
      * @param incoming  the incoming VM representation
      * @param existing  the existing VM representation
+     * @param headers   the incoming HTTP headers
      * @throws WebApplicationException wrapping an appropriate response
      * iff an immutability constraint has been broken
      */
     protected void validateUpdate(VM incoming, VM existing, HttpHeaders headers) {
-        Response error = MutabilityAssertor.imposeConstraints(STRICTLY_IMMUTABLE, incoming, existing, headers);
-        if (error != null) {
-            throw new WebApplicationException(error);
-        }
+        MutabilityAssertor.validateUpdate(STRICTLY_IMMUTABLE, incoming, existing, headers);
     }
 
     /**

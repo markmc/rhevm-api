@@ -21,9 +21,11 @@ package com.redhat.rhevm.api.common.util;
 
 import java.text.MessageFormat;
 
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.BaseResource;
 import com.redhat.rhevm.api.model.Fault;
@@ -48,12 +50,32 @@ public class MutabilityAssertor {
     private static final Response.Status BROKEN_CONSTRAINT_STATUS = Response.Status.CONFLICT;
 
     /**
+     * Validate update from an immutability point of view.
+     *
+     * @param <T>       representation type
+     * @param <T>       representation type
+     * @param strict    array of strictly immutable field names
+     * @param incoming  the incoming Host representation
+     * @param existing  the existing Host representation
+     * @param headers   the incoming HTTP headers
+     * @throws WebApplicationException wrapping an appropriate response
+     * iff an immutability constraint has been broken
+     */
+    public static <T extends BaseResource> void validateUpdate(String[] strict, T incoming, T existing, HttpHeaders headers) {
+        Response error = MutabilityAssertor.imposeConstraints(strict, incoming, existing, headers);
+        if (error != null) {
+            throw new WebApplicationException(error);
+        }
+    }
+
+    /**
      * Impose immutability constraints.
      *
      * @param <T>       representation type
      * @param strict    array of strictly immutable field names
      * @param incoming  incoming representation
      * @param existing  existing representation
+     * @param headers   the incoming HTTP headers
      * @return          error Response if appropriate
      */
     public static <T extends BaseResource> Response imposeConstraints(String[] strict, T incoming, T existing, HttpHeaders headers) {

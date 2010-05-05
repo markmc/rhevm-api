@@ -21,23 +21,28 @@ package com.redhat.rhevm.api.powershell.resource;
 import java.net.URI;
 import java.util.ArrayList;
 
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.common.resource.AbstractHostResource;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.Link;
-import com.redhat.rhevm.api.resource.HostResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellHost;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
-public class PowerShellHostResource implements HostResource {
+public class PowerShellHostResource extends AbstractHostResource {
     /* FIXME: would like to do:
      * private @Context UriInfo uriInfo;
      */
 
-    private String id;
+    private Host prototype;
 
     public PowerShellHostResource(String id) {
-        this.id = id;
+        super(id);
+    }
+
+    public String getId() {
+        return id;
     }
 
     /* needed because there are two get-host commands */
@@ -66,11 +71,14 @@ public class PowerShellHostResource implements HostResource {
 
     @Override
     public Host get(UriInfo uriInfo) {
-        return addLink(runAndParseSingle(CMD_PREFIX + "get-host " + id), uriInfo.getRequestUriBuilder().build());
+        return setPrototype(addLink(runAndParseSingle(CMD_PREFIX + "get-host " + id),
+                                    uriInfo.getRequestUriBuilder().build()));
     }
 
     @Override
-    public Host update(UriInfo uriInfo, Host host) {
+    public Host update(HttpHeaders headers, UriInfo uriInfo, Host host) {
+        validateUpdate(host, getPrototype(), headers);
+
         StringBuilder buf = new StringBuilder();
 
         buf.append("$h = get-host " + id + "\n");
@@ -82,7 +90,8 @@ public class PowerShellHostResource implements HostResource {
         buf.append("\n");
         buf.append("update-host -hostobject $v");
 
-        return addLink(runAndParseSingle(buf.toString()), uriInfo.getRequestUriBuilder().build());
+        return setPrototype(addLink(runAndParseSingle(buf.toString()),
+                                    uriInfo.getRequestUriBuilder().build()));
     }
 
     @Override
@@ -97,6 +106,17 @@ public class PowerShellHostResource implements HostResource {
     @Override
     public void resume() {
     }
+
+    private synchronized Host getPrototype() {
+        return prototype == null
+               ? prototype = runAndParseSingle(CMD_PREFIX + "get-host " + id)
+               : prototype;
+    }
+
+    private synchronized Host setPrototype(Host prototype) {
+        return this.prototype = prototype;
+    }
+
 
 /*
     @Override

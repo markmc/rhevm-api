@@ -22,6 +22,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HEAD;
 import javax.ws.rs.PUT;
@@ -37,6 +38,8 @@ import org.jboss.resteasy.plugins.providers.RegisterBuiltin;
 import org.jboss.resteasy.plugins.server.tjws.TJWSEmbeddedJaxrsServer;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
+import com.redhat.rhevm.api.model.Host;
+import com.redhat.rhevm.api.model.Hosts;
 import com.redhat.rhevm.api.model.LinkHeader;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.StorageDomain;
@@ -76,6 +79,18 @@ public class DummyTestBase extends Assert {
 
     protected VmsResource createVmsResource(String uri) {
         return ProxyFactory.create(VmsResource.class, uri);
+    }
+
+    @Path("/")
+    @Produces(MediaType.APPLICATION_XML)
+    protected interface HostsResource {
+        @GET public Hosts list();
+        @GET @Path("{id}") public Host get(@PathParam("id") String id);
+        @PUT @Path("{id}") @Consumes(MediaType.APPLICATION_XML) public Host update(@PathParam("id") String id, Host host);
+    }
+
+    protected HostsResource createHostsResource(String uri) {
+        return ProxyFactory.create(HostsResource.class, uri);
     }
 
     @Path("/")

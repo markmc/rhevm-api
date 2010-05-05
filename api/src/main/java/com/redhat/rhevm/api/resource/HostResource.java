@@ -24,6 +24,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Actionable;
@@ -48,7 +49,7 @@ public interface HostResource {
      */
     @PUT
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
-    public Host update(@Context UriInfo uriInfo, Host host);
+    public Host update(@Context HttpHeaders headers, @Context UriInfo uriInfo, Host host);
 
     @POST
     @Actionable

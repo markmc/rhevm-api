@@ -25,6 +25,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.common.util.ReapedMap;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.Hosts;
 import com.redhat.rhevm.api.resource.HostResource;
@@ -35,6 +36,19 @@ public class PowerShellHostsResource implements HostsResource {
     /* FIXME: would like to do:
      * private @Context UriInfo uriInfo;
      */
+
+    private static ReapedMap.ValueToKeyMapper<String, PowerShellHostResource> KEY_MAPPER =
+        new ReapedMap.ValueToKeyMapper<String, PowerShellHostResource>() {
+            public String getKey(PowerShellHostResource value) {
+                return value.getId();
+            }
+        };
+
+    private ReapedMap<String, PowerShellHostResource> hosts;
+
+    public PowerShellHostsResource() {
+        hosts = new ReapedMap<String, PowerShellHostResource>(KEY_MAPPER);
+    }
 
     private Hosts addLinks(List<Host> hosts, UriInfo uriInfo) {
         Hosts ret = new Hosts();
@@ -89,7 +103,15 @@ public class PowerShellHostsResource implements HostsResource {
 
     @Override
     public HostResource getHostSubResource(UriInfo uriInfo, String id) {
-        return new PowerShellHostResource(id);
+       synchronized (hosts) {
+            PowerShellHostResource ret = hosts.get(id);
+            if (ret == null) {
+                ret = new PowerShellHostResource(id);
+                hosts.put(id, ret);
+                hosts.reapable(id);
+            }
+            return ret;
+        }
     }
 
 /*
