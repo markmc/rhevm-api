@@ -18,8 +18,10 @@
  */
 package com.redhat.rhevm.api.dummy.resource;
 
+import org.jboss.resteasy.client.ClientResponseFailure;
 import org.junit.Test;
 
+import com.redhat.rhevm.api.model.Fault;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
@@ -63,6 +65,38 @@ public class DummyVmResourceTest extends DummyTestBase {
             VM t = service.get(vm.getId());
             checkVM(t);
             assertEquals(vm.getId(), t.getId());
+        }
+    }
+
+    @Test
+    public void testVmGoodUpdate() throws Exception {
+        DummyTestBase.VmsResource service = getService();
+        assertNotNull(service);
+
+        VM update = new VM();
+        update.setName("wonga");
+        VM updated = service.update("1", update);
+        assertNotNull(updated);
+        assertEquals(updated.getName(), "wonga");
+        checkVM(updated);
+    }
+
+    @Test
+    public void testVmBadUpdate() throws Exception {
+        DummyTestBase.VmsResource service = getService();
+        assertNotNull(service);
+
+        VM update = new VM();
+        update.setId("fluffy");
+        try {
+            service.update("2", update);
+            fail("expected ClientResponseFailure");
+        } catch (ClientResponseFailure cfe) {
+            assertEquals(409, cfe.getResponse().getStatus());
+            Fault fault = (Fault)cfe.getResponse().getEntity(Fault.class);
+            assertNotNull(fault);
+            assertEquals("Broken immutability constraint", fault.getReason());
+            assertEquals("Attempt to set immutable field: id", fault.getDetail());
         }
     }
 }
