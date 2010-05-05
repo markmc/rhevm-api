@@ -70,6 +70,14 @@
         <ref component-id="vmNameCompleter" />
       </completers>
     </command>
+    <command name="vms/update">
+      <action class="com.redhat.rhevm.api.command.vms.VmsUpdateCommand">
+        <property name="client" ref="baseClient" />
+      </action>
+      <completers>
+        <ref component-id="vmNameCompleter" />
+      </completers>
+    </command>
   </command-bundle>
 
 

@@ -5,6 +5,7 @@
     <bundle>wrap:mvn:org.jboss.resteasy/resteasy-jaxb-provider/2.0-beta-2</bundle>
     <bundle>wrap:mvn:org.jboss.resteasy/resteasy-jettison-provider/2.0-beta-2</bundle>
     <bundle>wrap:mvn:com.redhat.rhevm.api/rhevm-api/0.1-SNAPSHOT</bundle>
+    <bundle>wrap:mvn:com.redhat.rhevm.api/rhevm-api-common-jaxrs/0.1-SNAPSHOT</bundle>
     <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-base/0.1-SNAPSHOT</bundle>
     <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-vms/0.1-SNAPSHOT</bundle>
     <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-hosts/0.1-SNAPSHOT</bundle>

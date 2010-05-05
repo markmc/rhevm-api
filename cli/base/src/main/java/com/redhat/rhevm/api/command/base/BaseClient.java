@@ -35,6 +35,8 @@ import org.apache.cxf.jaxrs.JAXRSBindingFactory;
 import org.apache.cxf.jaxrs.client.WebClient;
 
 import com.redhat.rhevm.api.model.Action;
+import com.redhat.rhevm.api.model.BaseResource;
+import com.redhat.rhevm.api.model.Fault;
 import com.redhat.rhevm.api.model.LinkHeader;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.Status;
@@ -103,6 +105,22 @@ public class BaseClient {
         }
     }
 
+    public <T extends BaseResource> void doUpdate(T resource, String field, Link link) throws Exception {
+        Response r = null;
+        Exception failure = null;
+
+        try {
+             WebClient post = WebClient.create(link.getHref());
+             r = post.path("/").put(resource);
+        } catch (Exception e) {
+             failure = e;
+        }
+
+        if (failure != null || r.getStatus() != 200) {
+            diagnose("update of " + field + " failed with ", failure, r, 200, 409);
+        }
+    }
+
     protected String getTopLink(String rel) {
         String ret = null;
         Response links = null;
@@ -162,10 +180,23 @@ public class BaseClient {
     }
 
     private void diagnose(String baseError, Exception failure, Response r, int expected) {
+        diagnose(baseError, failure, r, expected, -1);
+    }
+
+    private void diagnose(String baseError, Exception failure, Response r, int expected, int faultStatus) {
         if (failure != null) {
             System.err.println(baseError + failure.getMessage());
         } else if (r.getStatus() != expected) {
             System.err.println(baseError + getStatus(r));
+            if (r.getStatus() == faultStatus) {
+                try {
+                    Fault fault = unmarshall(r, Fault.class);
+                    System.out.println("reason: " + fault.getReason());
+                    System.out.println("detail: " + fault.getDetail());
+                } catch (Exception e) {
+                    // be tolerant of fault unmarshall failures
+                }
+            }
         }
     }
 

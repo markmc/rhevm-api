@@ -18,7 +18,6 @@
  */
 package com.redhat.rhevm.api.command.base;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.felix.gogo.commands.Option;
@@ -41,20 +40,13 @@ public abstract class AbstractActionCommand extends AbstractCommand {
 
     protected void doAction(List<? extends BaseResource> collection, String verb, Action action, String name) throws Exception {
         applyOptions(action);
-        // need to do better than linear search for large collections
-        for (BaseResource resource : collection) {
-            if (name.equals(resource.getName())) {
-                Collection<Link> links = resource.getActions().getLinks();
-                for (Link l : links) {
-                   if (l.getRel().equals(verb)) {
-                       client.doAction(verb, action, l);
-                       return;
-                   }
-                }
+        BaseResource resource = getResource(collection, name);
+        if (resource != null) {
+            Link link = getLink(resource, verb);
+            if (link != null) {
+                client.doAction(verb, action, link);
+                return;
             }
-        }
-        if (collection.size() > 0) {
-            System.err.println(name + " is unknown, use tab-completion to see a list of valid targets");
         }
     }
 

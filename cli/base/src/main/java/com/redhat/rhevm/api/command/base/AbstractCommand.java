@@ -18,9 +18,14 @@
  */
 package com.redhat.rhevm.api.command.base;
 
+import java.util.Collection;
+import java.util.List;
+
 import org.apache.felix.karaf.shell.console.OsgiCommandSupport;
 
 import com.redhat.rhevm.api.command.base.BaseClient;
+import com.redhat.rhevm.api.model.BaseResource;
+import com.redhat.rhevm.api.model.Link;
 
 /**
  * Command base
@@ -44,5 +49,30 @@ public abstract class AbstractCommand extends OsgiCommandSupport {
 
     public void setClient(BaseClient client) {
         this.client = client;
+    }
+
+    protected BaseResource getResource(List<? extends BaseResource> collection, String name) {
+        // need to do better than linear search for large collections
+        for (BaseResource resource : collection) {
+            if (name.equals(resource.getName())) {
+                return resource;
+            }
+        }
+        if (collection.size() > 0) {
+            System.err.println(name + " is unknown, use tab-completion to see a list of valid targets");
+        }
+        return null;
+    }
+
+    protected Link getLink(BaseResource resource, String rel) {
+        Link ret = null;
+        Collection<Link> links = resource.getActions().getLinks();
+        for (Link l : links) {
+           if (l.getRel().equals(rel)) {
+               ret = l;
+               break;
+           }
+        }
+        return ret;
     }
 }
