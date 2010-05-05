@@ -82,4 +82,23 @@ public class DummyAttachmentsResource implements AttachmentsResource {
     public AttachmentResource getAttachmentSubResource(UriInfo uriInfo, String id) {
         return attachments.get(id);
     }
+
+    /**
+     * Build a URI for any existing attachment to the given data center
+     *
+     * @param uriInfo  URI context of the current request
+     * @param dataCenterId  the ID of the data center
+     * @return  a URI representing the attachment
+     */
+    public String getAttachmentHref(UriInfo uriInfo, String dataCenterId) {
+        if (attachments.get(dataCenterId) == null) {
+            return null;
+        }
+
+        UriBuilder uriBuilder =
+            uriInfo.getBaseUriBuilder().path("storagedomains").path(storageDomainId)
+                                       .path("attachments").path(dataCenterId);
+
+        return uriBuilder.build().toString();
+    }
 }

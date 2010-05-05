@@ -22,6 +22,7 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.ActionsBuilder;
+import com.redhat.rhevm.api.model.Attachments;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.resource.DataCenterResource;
 import com.redhat.rhevm.api.dummy.model.DummyDataCenter;
@@ -52,7 +53,11 @@ public class DummyDataCenterResource implements DataCenterResource {
     }
 
     public DataCenter addLinks(UriInfo uriInfo, UriBuilder uriBuilder) {
+        Attachments attachments = DummyStorageDomainsResource.getAttachmentsForDataCenter(uriInfo, dataCenter.jaxb.getId());
+        dataCenter.jaxb.setAttachments(attachments);
+
         ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, DataCenterResource.class);
+
         return dataCenter.getJaxb(uriBuilder, actionsBuilder);
     }
 

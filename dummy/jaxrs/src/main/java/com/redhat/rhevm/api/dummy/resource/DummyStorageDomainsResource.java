@@ -24,6 +24,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.model.Attachment;
+import com.redhat.rhevm.api.model.Attachments;
 import com.redhat.rhevm.api.model.Storage;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.StorageDomains;
@@ -96,5 +98,31 @@ public class DummyStorageDomainsResource implements StorageDomainsResource {
     @Override
     public StorageDomainResource getStorageDomainSubResource(UriInfo uriInfo, String id) {
         return storageDomains.get(id);
+    }
+
+    /**
+     * Build a list of storage domains attached to a data center
+     *
+     * @param uriInfo  the URI context of the current request
+     * @param dataCenterId  the ID of the data center
+     * @return  an encapsulation of the attachments
+     */
+    public static Attachments getAttachmentsForDataCenter(UriInfo uriInfo, String dataCenterId) {
+        Attachments attachments = new Attachments();
+
+        for (DummyStorageDomainResource storageDomain : storageDomains.values()) {
+            String href = storageDomain.getAttachmentHref(uriInfo, dataCenterId);
+
+            if (href == null) {
+                continue;
+            }
+
+            Attachment attachment = new Attachment();
+            attachment.setHref(href);
+
+            attachments.getAttachments().add(attachment);
+        }
+
+        return attachments;
     }
 }

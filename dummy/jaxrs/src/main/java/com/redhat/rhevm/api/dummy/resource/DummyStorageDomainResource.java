@@ -97,4 +97,15 @@ public class DummyStorageDomainResource implements StorageDomainResource, Action
     public AttachmentsResource getAttachmentsResource() {
         return attachments;
     }
+
+    /**
+     * Build a URI for any existing attachment to the given data center
+     *
+     * @param uriInfo  URI context of the current request
+     * @param dataCenterId  the ID of the data center
+     * @return  a URI representing the attachment
+     */
+    public String getAttachmentHref(UriInfo uriInfo, String dataCenterId) {
+        return attachments.getAttachmentHref(uriInfo, dataCenterId);
+    }
 }
