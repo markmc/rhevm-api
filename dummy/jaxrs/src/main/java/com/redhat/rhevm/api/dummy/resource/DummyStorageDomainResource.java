@@ -33,6 +33,8 @@ public class DummyStorageDomainResource implements StorageDomainResource, Action
 
     private DummyStorageDomain storageDomain;
 
+    private DummyAttachmentsResource attachments;
+
     /**
      * Package-protected ctor, never needs to be instantiated by JAX-RS framework.
      *
@@ -40,6 +42,7 @@ public class DummyStorageDomainResource implements StorageDomainResource, Action
      */
     DummyStorageDomainResource(DummyStorageDomain storageDomain) {
         this.storageDomain = storageDomain;
+        this.attachments = new DummyAttachmentsResource(storageDomain.jaxb.getId());
     }
 
     /**
@@ -106,6 +109,6 @@ public class DummyStorageDomainResource implements StorageDomainResource, Action
     }
 
     public AttachmentsResource getAttachmentsResource() {
-        return null;
+        return attachments;
     }
 }

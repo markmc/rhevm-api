@@ -21,44 +21,32 @@ package com.redhat.rhevm.api.dummy.model;
 import javax.ws.rs.core.UriBuilder;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.Actions;
-import com.redhat.rhevm.api.model.StorageDomain;
+import com.redhat.rhevm.api.model.Attachment;
+import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.Link;
 
-public class DummyStorageDomain {
+public class DummyAttachment {
 
-    public StorageDomain jaxb = new StorageDomain();
+    public Attachment jaxb = new Attachment();
 
-    private static int counter = 0;
-
-    public DummyStorageDomain() {
-        jaxb.setId(Integer.toString(++counter));
+    public DummyAttachment(Attachment attachment) {
+        update(attachment);
     }
 
-    public DummyStorageDomain(StorageDomain storageDomain) {
-        this();
-        update(storageDomain);
-    }
-
-    public void update(StorageDomain storageDomain) {
+    public void update(Attachment attachment) {
         // update writable fields only
-        jaxb.setName(storageDomain.getName());
+        if (attachment.getDataCenter() != null) {
+            DataCenter dataCenter = new DataCenter();
+
+            // we're only interested in its id
+            dataCenter.setId(attachment.getDataCenter().getId());
+
+            jaxb.setDataCenter(dataCenter);
+        }
     }
 
-    public StorageDomain getJaxb(UriBuilder uriBuilder, ActionsBuilder actionsBuilder) {
-        jaxb.getLinks().clear();
-
-        Link link = new Link();
-        link.setRel("self");
-        link.setHref(uriBuilder.build().toString());
-        jaxb.getLinks().add(link);
-
-        link = new Link();
-        link.setRel("attachments");
-        link.setHref(uriBuilder.clone().path("attachments").build().toString());
-        jaxb.getLinks().add(link);
-
-        jaxb.setActions(actionsBuilder.build());
-
+    public Attachment getJaxb(UriBuilder uriBuilder) {
+        jaxb.setHref(uriBuilder.build().toString());
         return jaxb;
     }
 }
