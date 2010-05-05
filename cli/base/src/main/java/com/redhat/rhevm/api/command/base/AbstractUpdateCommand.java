@@ -40,18 +40,19 @@ public abstract class AbstractUpdateCommand extends AbstractCommand {
     @Option(name = "-v", aliases = {"--value"}, description="New value for field", required = true, multiValued = false)
     protected String value;
 
-    protected void doUpdate(List<? extends BaseResource> collection, String name) throws Exception {
-        BaseResource resource = getResource(collection, name);
+    protected <T extends BaseResource> T doUpdate(List<T> collection, Class<T> clz, String name) throws Exception {
+        T resource = getResource(collection, name);
         if (resource != null) {
             if (set(resource, field, value)) {
                 Link link = resource.getLinks().get(0);
                 if (link != null) {
-                    client.doUpdate(resource, field, link);
-                    return;
+                    return client.doUpdate(resource, clz, field, link);
                 }
             } else {
                 System.err.println(field + " is unknown or not a top-level primitive element");
             }
         }
+        return null;
     }
 }
+

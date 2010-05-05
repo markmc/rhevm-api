@@ -21,6 +21,7 @@ package com.redhat.rhevm.api.command.vms;
 import org.apache.felix.gogo.commands.Argument;
 
 import com.redhat.rhevm.api.command.base.AbstractUpdateCommand;
+import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
 
 /**
@@ -32,7 +33,27 @@ public class VmsUpdateCommand extends AbstractUpdateCommand {
     protected String name;
 
     protected Object doExecute() throws Exception {
-        doUpdate(client.getCollection("vms", VMs.class).getVMs(), name);
+        VM vm = doUpdate(client.getCollection("vms", VMs.class).getVMs(), VM.class, name);
+        display(vm);
         return null;
     }
+
+    protected void display(VM vm) {
+        if (vm != null) {
+            StringBuffer print = new StringBuffer("[NAME");
+            pad(print, vm.getName(), "NAME").append("] [ID");
+            pad(print, vm.getId(), "ID").append("]\n[");
+            pad(print, "NAME", vm.getName()).append(vm.getName()).append("] [");
+            pad(print, "ID", vm.getId()).append(vm.getId()).append("]\n");
+            System.out.print(print.toString());
+        }
+    }
+
+    protected StringBuffer pad(StringBuffer sb, String longer, String shorter) {
+        for (int i = 0 ; i < longer.length() - shorter.length() ; i++) {
+            sb.append(" ");
+        }
+        return sb;
+    }
 }
+

@@ -105,13 +105,15 @@ public class BaseClient {
         }
     }
 
-    public <T extends BaseResource> void doUpdate(T resource, String field, Link link) throws Exception {
+    public <T extends BaseResource> T doUpdate(T resource, Class<T> clz, String field, Link link) throws Exception {
         Response r = null;
         Exception failure = null;
+        T ret = null;
 
         try {
              WebClient post = WebClient.create(link.getHref());
              r = post.path("/").put(resource);
+             ret = unmarshall(r, clz);
         } catch (Exception e) {
              failure = e;
         }
@@ -119,6 +121,7 @@ public class BaseClient {
         if (failure != null || r.getStatus() != 200) {
             diagnose("update of " + field + " failed with ", failure, r, 200, 409);
         }
+        return ret;
     }
 
     protected String getTopLink(String rel) {

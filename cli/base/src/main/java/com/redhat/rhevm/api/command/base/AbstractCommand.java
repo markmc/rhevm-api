@@ -51,9 +51,9 @@ public abstract class AbstractCommand extends OsgiCommandSupport {
         this.client = client;
     }
 
-    protected BaseResource getResource(List<? extends BaseResource> collection, String name) {
+    protected <T extends BaseResource> T getResource(List<T> collection, String name) {
         // need to do better than linear search for large collections
-        for (BaseResource resource : collection) {
+        for (T resource : collection) {
             if (name.equals(resource.getName())) {
                 return resource;
             }
