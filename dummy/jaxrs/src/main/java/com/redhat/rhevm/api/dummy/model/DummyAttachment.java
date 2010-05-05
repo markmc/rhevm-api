@@ -45,8 +45,9 @@ public class DummyAttachment {
         }
     }
 
-    public Attachment getJaxb(UriBuilder uriBuilder) {
+    public Attachment getJaxb(UriBuilder uriBuilder, ActionsBuilder actionsBuilder) {
         jaxb.setHref(uriBuilder.build().toString());
+        jaxb.setActions(actionsBuilder.build());
         return jaxb;
     }
 }

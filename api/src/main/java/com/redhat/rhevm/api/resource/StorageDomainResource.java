@@ -42,16 +42,6 @@ public interface StorageDomainResource {
     @Path("initialize")
     public void initialize();
 
-    @POST
-    @Actionable
-    @Path("activate")
-    public void activate();
-
-    @POST
-    @Actionable
-    @Path("deactivate")
-    public void deactivate();
-
     @Path("attachments")
     public AttachmentsResource getAttachmentsResource();
 }

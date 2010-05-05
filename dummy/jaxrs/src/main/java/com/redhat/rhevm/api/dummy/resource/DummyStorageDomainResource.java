@@ -76,18 +76,6 @@ public class DummyStorageDomainResource implements StorageDomainResource, Action
         this.storageDomain.jaxb.setStatus(StorageDomainStatus.UNATTACHED);
     }
 
-    @Override
-    public void activate() {
-        // FIXME: error if not attached
-        this.storageDomain.jaxb.setStatus(StorageDomainStatus.ACTIVE);
-    }
-
-    @Override
-    public void deactivate() {
-        // FIXME: error if not active
-        this.storageDomain.jaxb.setStatus(StorageDomainStatus.INACTIVE);
-    }
-
     public boolean validateAction(String action) {
         StorageDomain jaxb = storageDomain.jaxb;
 
@@ -95,11 +83,9 @@ public class DummyStorageDomainResource implements StorageDomainResource, Action
         case UNINITIALIZED:
             return action.equals("initialize");
         case UNATTACHED:
-            return false;
         case ACTIVE:
-            return action.equals("deactivate");
         case INACTIVE:
-            return action.equals("activate");
+            return false;
         case LOCKED:
         case MIXED:
         default:

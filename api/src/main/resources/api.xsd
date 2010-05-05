@@ -135,6 +135,7 @@
       </xs:element>
       <xs:element name="storage_domain" type="StorageDomain" minOccurs="0"/>
       <xs:element name="status" type="StorageDomainStatus" minOccurs="0"/>
+      <xs:element name="actions" type="Actions" minOccurs="0"/>
     </xs:sequence>
     <xs:attribute name="href" type="xs:string"/>
   </xs:complexType>

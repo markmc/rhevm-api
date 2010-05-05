@@ -20,13 +20,26 @@ package com.redhat.rhevm.api.resource;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Attachment;
+import com.redhat.rhevm.api.model.Actionable;
 
 public interface AttachmentResource {
     @GET
     public Attachment get(@Context UriInfo uriInfo);
+
+    @POST
+    @Actionable
+    @Path("activate")
+    public void activate();
+
+    @POST
+    @Actionable
+    @Path("deactivate")
+    public void deactivate();
 }
