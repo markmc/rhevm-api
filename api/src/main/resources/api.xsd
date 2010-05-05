@@ -26,8 +26,6 @@
 
   <xs:element name="link" type="Link"/>
 
-  <xs:element name="vm" type="VM"/>
-
   <xs:element name="vms" type="VMs"/>
 
   <xs:element name="grace_period" type="GracePeriod"/>
@@ -203,17 +201,24 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="VM">
-    <xs:complexContent>
-      <xs:extension base="BaseResource">
-        <xs:sequence>
-          <xs:element name="cluster_id" type="xs:string" minOccurs="0"/>
-          <xs:element name="host_id" type="xs:string" minOccurs="0"/>
-          <xs:element name="template_id" type="xs:string" minOccurs="0"/>
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
+  <xs:element name="vm">
+    <xs:annotation>
+      <xs:appinfo>
+         <jaxb:class name="VM"/>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="BaseResource">
+          <xs:sequence>
+            <xs:element name="cluster_id" type="xs:string" minOccurs="0"/>
+            <xs:element name="host_id" type="xs:string" minOccurs="0"/>
+            <xs:element name="template_id" type="xs:string" minOccurs="0"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
 
   <xs:complexType name="VMs">
     <xs:sequence>
