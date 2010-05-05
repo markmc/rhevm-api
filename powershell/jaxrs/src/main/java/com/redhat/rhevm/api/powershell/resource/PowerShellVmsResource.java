@@ -25,6 +25,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.common.util.ReapedMap;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.resource.VmResource;
@@ -36,6 +37,19 @@ public class PowerShellVmsResource implements VmsResource {
     /* FIXME: would like to do:
      * private @Context UriInfo uriInfo;
      */
+
+    private static ReapedMap.ValueToKeyMapper<String, PowerShellVmResource> KEY_MAPPER =
+        new ReapedMap.ValueToKeyMapper<String, PowerShellVmResource>() {
+            public String getKey(PowerShellVmResource value) {
+                return value.getId();
+            }
+        };
+
+    private ReapedMap<String, PowerShellVmResource> vms;
+
+    public PowerShellVmsResource() {
+        vms = new ReapedMap<String, PowerShellVmResource>(KEY_MAPPER);
+    }
 
     private VMs addLinks(List<VM> vms, UriInfo uriInfo) {
         VMs ret = new VMs();
@@ -94,6 +108,14 @@ public class PowerShellVmsResource implements VmsResource {
 
     @Override
     public VmResource getVmSubResource(UriInfo uriInfo, String id) {
-        return new PowerShellVmResource(id);
+        synchronized (vms) {
+            PowerShellVmResource ret = vms.get(id);
+            if (ret == null) {
+                ret = new PowerShellVmResource(id);
+                vms.put(id, ret);
+                vms.reapable(id);
+            }
+            return ret;
+        }
     }
 }
