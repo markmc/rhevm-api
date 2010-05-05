@@ -209,11 +209,11 @@ public class ReapedMap<K, V> extends HashMap<K, V> {
      * Encapsulate soft-reference and timestamp (the latter is used for
      * eager reaping)
      */
-    private class SoftlyReferencedValue<V> {
-        SoftReference<V> value;
+    private class SoftlyReferencedValue<S> {
+        SoftReference<S> value;
         long timestamp;
 
-        SoftlyReferencedValue(SoftReference<V> value) {
+        SoftlyReferencedValue(SoftReference<S> value) {
             this.value = value;
             timestamp = System.currentTimeMillis();
         }
