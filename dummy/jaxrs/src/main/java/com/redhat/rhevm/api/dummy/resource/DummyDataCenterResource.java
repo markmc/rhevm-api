@@ -51,7 +51,7 @@ public class DummyDataCenterResource implements DataCenterResource {
         return dataCenter;
     }
 
-    public DataCenter addLinks(UriBuilder uriBuilder) {
+    public DataCenter addLinks(UriInfo uriInfo, UriBuilder uriBuilder) {
         ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, DataCenterResource.class);
         return dataCenter.getJaxb(uriBuilder, actionsBuilder);
     }
@@ -59,12 +59,12 @@ public class DummyDataCenterResource implements DataCenterResource {
     /* FIXME: kill uriInfo param, make href auto-generated? */
     @Override
     public DataCenter get(UriInfo uriInfo) {
-        return addLinks(uriInfo.getRequestUriBuilder());
+        return addLinks(uriInfo, uriInfo.getRequestUriBuilder());
     }
 
     @Override
     public DataCenter update(UriInfo uriInfo, DataCenter dataCenter) {
         this.dataCenter.update(dataCenter);
-        return addLinks(uriInfo.getRequestUriBuilder());
+        return addLinks(uriInfo, uriInfo.getRequestUriBuilder());
     }
 }
