@@ -10,25 +10,17 @@
     </xs:appinfo>
   </xs:annotation>
 
-  <xs:element name="actions" type="Actions"/>
-
-  <xs:element name="datacenter" type="DataCenter"/>
-
-  <xs:element name="datacenters" type="DataCenters"/>
-
-  <xs:element name="host" type="Host"/>
-
-  <xs:element name="hosts" type="Hosts"/>
-
-  <xs:element name="storage_domain" type="StorageDomain"/>
-
-  <xs:element name="storage_domains" type="StorageDomains"/>
+  <!-- Links -->
 
   <xs:element name="link" type="Link"/>
 
-  <xs:element name="vms" type="VMs"/>
+  <xs:complexType name="Link">
+    <xs:sequence/>
+    <xs:attribute name="href" type="xs:string"/>
+    <xs:attribute name="rel" type="xs:string"/>
+  </xs:complexType>
 
-  <xs:element name="grace_period" type="GracePeriod"/>
+  <!-- Faults -->
 
   <xs:element name="fault" type="Fault"/>
 
@@ -38,6 +30,8 @@
       <xs:element name="detail" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
+
+  <!-- Actions -->
 
   <xs:complexType name="GracePeriod">
     <xs:sequence>
@@ -95,11 +89,36 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="Link">
-    <xs:sequence/>
-    <xs:attribute name="href" type="xs:string"/>
-    <xs:attribute name="rel" type="xs:string"/>
-  </xs:complexType>
+  <!-- Enums -->
+
+  <xs:simpleType name="StorageDomainType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="DATA"/>
+      <xs:enumeration value="ISO"/>
+      <xs:enumeration value="EXPORT"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="StorageDomainStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ACTIVE"/>
+      <xs:enumeration value="INACTIVE"/>
+      <xs:enumeration value="LOCKED"/>
+      <xs:enumeration value="MIXED"/>
+      <xs:enumeration value="UNATTACHED"/>
+      <xs:enumeration value="UNINITIALIZED"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="StorageType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ISCSI"/>
+      <xs:enumeration value="FCP"/>
+      <xs:enumeration value="NFS"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- Common to all resources -->
 
   <xs:complexType name="BaseResource">
     <xs:sequence>
@@ -117,6 +136,12 @@
       </xs:element>
     </xs:sequence>
   </xs:complexType>
+
+  <!-- Data Centers -->
+
+  <xs:element name="datacenter" type="DataCenter"/>
+
+  <xs:element name="datacenters" type="DataCenters"/>
 
   <xs:complexType name="DataCenter">
     <xs:complexContent>
@@ -139,6 +164,12 @@
     </xs:sequence>
   </xs:complexType>
 
+  <!-- Hosts -->
+
+  <xs:element name="host" type="Host"/>
+
+  <xs:element name="hosts" type="Hosts"/>
+
   <xs:complexType name="Host">
     <xs:complexContent>
       <xs:extension base="BaseResource">
@@ -160,6 +191,12 @@
       <xs:element ref="host" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:complexType>
+
+  <!-- Storage Domains -->
+
+  <xs:element name="storage_domain" type="StorageDomain"/>
+
+  <xs:element name="storage_domains" type="StorageDomains"/>
 
   <xs:group name="NfsStorage">
     <xs:sequence>
@@ -209,6 +246,10 @@
     </xs:sequence>
   </xs:complexType>
 
+  <!-- Virtual Machines -->
+
+  <xs:element name="vms" type="VMs"/>
+
   <xs:element name="vm">
     <xs:annotation>
       <xs:appinfo>
@@ -238,32 +279,5 @@
       <xs:element ref="vm" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:complexType>
-
-  <xs:simpleType name="StorageDomainType">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="DATA"/>
-      <xs:enumeration value="ISO"/>
-      <xs:enumeration value="EXPORT"/>
-    </xs:restriction>
-  </xs:simpleType>
-
-  <xs:simpleType name="StorageDomainStatus">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="ACTIVE"/>
-      <xs:enumeration value="INACTIVE"/>
-      <xs:enumeration value="LOCKED"/>
-      <xs:enumeration value="MIXED"/>
-      <xs:enumeration value="UNATTACHED"/>
-      <xs:enumeration value="UNINITIALIZED"/>
-    </xs:restriction>
-  </xs:simpleType>
-
-  <xs:simpleType name="StorageType">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="ISCSI"/>
-      <xs:enumeration value="FCP"/>
-      <xs:enumeration value="NFS"/>
-    </xs:restriction>
-  </xs:simpleType>
 
 </xs:schema>
