@@ -55,7 +55,8 @@ public class PowerShellDataCenterResource implements DataCenterResource {
         link.setRel("self");
         link.setHref(uri.toString());
 
-        dataCenter.setLink(link);
+        dataCenter.getLinks().clear();
+        dataCenter.getLinks().add(link);
 
         return dataCenter;
     }

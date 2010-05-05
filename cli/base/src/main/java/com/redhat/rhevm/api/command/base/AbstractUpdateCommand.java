@@ -44,7 +44,7 @@ public abstract class AbstractUpdateCommand extends AbstractCommand {
         BaseResource resource = getResource(collection, name);
         if (resource != null) {
             if (set(resource, field, value)) {
-                Link link = resource.getLink();
+                Link link = resource.getLinks().get(0);
                 if (link != null) {
                     client.doUpdate(resource, field, link);
                     return;

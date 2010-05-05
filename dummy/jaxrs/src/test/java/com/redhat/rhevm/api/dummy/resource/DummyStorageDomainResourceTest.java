@@ -33,10 +33,11 @@ public class DummyStorageDomainResourceTest extends DummyTestBase {
     private void checkStorageDomain(StorageDomain domain) {
         assertNotNull(domain.getName());
         assertNotNull(domain.getId());
-        assertNotNull(domain.getLink());
-        assertNotNull(domain.getLink().getRel());
-        assertNotNull(domain.getLink().getHref());
-        assertTrue(domain.getLink().getHref().endsWith("/storagedomains/" + domain.getId()));
+        assertNotNull(domain.getLinks());
+        assertNotNull(domain.getLinks().get(0));
+        assertNotNull(domain.getLinks().get(0).getRel());
+        assertNotNull(domain.getLinks().get(0).getHref());
+        assertTrue(domain.getLinks().get(0).getHref().endsWith("/storagedomains/" + domain.getId()));
         assertNotNull(domain.getActions());
         assertTrue(domain.getActions().getLinks().size() > 0);
         boolean includesInitLink = false;

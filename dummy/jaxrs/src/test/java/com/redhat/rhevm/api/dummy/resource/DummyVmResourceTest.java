@@ -32,10 +32,10 @@ public class DummyVmResourceTest extends DummyTestBase {
     private void checkVM(VM vm) {
         assertNotNull(vm.getName());
         assertNotNull(vm.getId());
-        assertNotNull(vm.getLink());
-        assertNotNull(vm.getLink().getRel());
-        assertNotNull(vm.getLink().getHref());
-        assertTrue(vm.getLink().getHref().endsWith("/vms/" + vm.getId()));
+        assertNotNull(vm.getLinks().get(0));
+        assertNotNull(vm.getLinks().get(0).getRel());
+        assertNotNull(vm.getLinks().get(0).getHref());
+        assertTrue(vm.getLinks().get(0).getHref().endsWith("/vms/" + vm.getId()));
         assertNotNull(vm.getActions());
         assertTrue(vm.getActions().getLinks().size() > 0);
         boolean includesStartLink = false;

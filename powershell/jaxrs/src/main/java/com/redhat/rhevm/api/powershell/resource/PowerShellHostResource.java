@@ -58,7 +58,8 @@ public class PowerShellHostResource implements HostResource {
         link.setRel("self");
         link.setHref(uri.toString());
 
-        host.setLink(link);
+        host.getLinks().clear();
+        host.getLinks().add(link);
 
         return host;
     }

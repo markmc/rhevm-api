@@ -58,7 +58,8 @@ public class DummyVM {
         link.setRel("self");
         link.setHref(uriBuilder.build().toString());
 
-        jaxb.setLink(link);
+        jaxb.getLinks().clear();
+        jaxb.getLinks().add(link);
         jaxb.setActions(actionsBuilder.build());
 
         return jaxb;

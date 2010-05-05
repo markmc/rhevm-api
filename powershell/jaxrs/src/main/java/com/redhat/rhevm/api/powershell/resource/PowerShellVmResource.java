@@ -72,7 +72,8 @@ public class PowerShellVmResource extends AbstractVmResource {
         link.setRel("self");
         link.setHref(uri.toString());
 
-        vm.setLink(link);
+        vm.getLinks().clear();
+        vm.getLinks().add(link);
 
         return vm;
     }

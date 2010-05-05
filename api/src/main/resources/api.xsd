@@ -106,7 +106,15 @@
       <xs:element name="name" type="xs:string" minOccurs="0"/>
       <xs:element name="id" type="xs:string" minOccurs="0"/>
       <xs:element name="actions" type="Actions" minOccurs="0"/>
-      <xs:element ref="link"/>
+      <!-- rel="self" is a reference back to the resource itself -->
+      <!-- other resource specific link relation types may be definied -->
+      <xs:element ref="link" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <jaxb:property name="Links"/>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
     </xs:sequence>
   </xs:complexType>
 
