@@ -20,7 +20,6 @@ package com.redhat.rhevm.api.resource;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
@@ -39,7 +38,4 @@ public interface DataCenterResource {
     @PUT
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
     public DataCenter update(@Context UriInfo uriInfo, DataCenter dataCenter);
-
-    @Path("storagedomains")
-    public StorageDomainsResource getStorageDomainsResource();
 }

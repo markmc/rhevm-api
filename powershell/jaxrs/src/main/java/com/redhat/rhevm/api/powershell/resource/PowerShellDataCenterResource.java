@@ -25,7 +25,6 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.Link;
-import com.redhat.rhevm.api.resource.StorageDomainsResource;
 import com.redhat.rhevm.api.resource.DataCenterResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellDataCenter;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
@@ -80,9 +79,5 @@ public class PowerShellDataCenterResource implements DataCenterResource {
         buf.append("update-datacenter -datacenterobject $v");
 
         return addLink(runAndParseSingle(buf.toString()), uriInfo.getRequestUriBuilder().build());
-    }
-
-    public StorageDomainsResource getStorageDomainsResource() {
-        return null;
     }
 }

@@ -50,13 +50,9 @@ public class DummyStorageDomainResource implements StorageDomainResource, Action
         return storageDomain;
     }
 
-    public StorageDomain addLinks(UriBuilder uriBuilder, ActionValidator actionValidator) {
-        ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, StorageDomainResource.class, actionValidator);
-        return storageDomain.getJaxb(uriBuilder, actionsBuilder);
-    }
-
     public StorageDomain addLinks(UriBuilder uriBuilder) {
-        return addLinks(uriBuilder, this);
+        ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, StorageDomainResource.class, this);
+        return storageDomain.getJaxb(uriBuilder, actionsBuilder);
     }
 
     @Override
@@ -78,12 +74,14 @@ public class DummyStorageDomainResource implements StorageDomainResource, Action
 
     @Override
     public void activate() {
-        // FIXME: throw an exception
+        // FIXME: error if not attached
+        this.storageDomain.jaxb.setStatus(StorageDomainStatus.ACTIVE);
     }
 
     @Override
     public void deactivate() {
-        // FIXME: throw an exception
+        // FIXME: error if not active
+        this.storageDomain.jaxb.setStatus(StorageDomainStatus.INACTIVE);
     }
 
     public boolean validateAction(String action) {
@@ -93,9 +91,11 @@ public class DummyStorageDomainResource implements StorageDomainResource, Action
         case UNINITIALIZED:
             return action.equals("initialize");
         case UNATTACHED:
-        case ACTIVE:
-        case INACTIVE:
             return false;
+        case ACTIVE:
+            return action.equals("deactivate");
+        case INACTIVE:
+            return action.equals("activate");
         case LOCKED:
         case MIXED:
         default:
