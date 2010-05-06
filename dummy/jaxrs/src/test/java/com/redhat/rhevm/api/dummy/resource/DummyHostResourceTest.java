@@ -34,10 +34,8 @@ public class DummyHostResourceTest extends DummyTestBase {
     private void checkHost(Host host) {
         assertNotNull(host.getName());
         assertNotNull(host.getId());
-        assertNotNull(host.getLinks().get(0));
-        assertNotNull(host.getLinks().get(0).getRel());
-        assertNotNull(host.getLinks().get(0).getHref());
-        assertTrue(host.getLinks().get(0).getHref().endsWith("/hosts/" + host.getId()));
+        assertNotNull(host.getHref());
+        assertTrue(host.getHref().endsWith("/hosts/" + host.getId()));
         assertNotNull(host.getActions());
         assertTrue(host.getActions().getLinks().size() > 0);
         boolean includesApproveLink = false;

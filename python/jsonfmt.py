@@ -58,15 +58,15 @@ class Base:
 
 class VM(Base):
     ROOT_ELEMENT = 'vm'
-    KEYS = ['id', 'name', '@href']
+    KEYS = ['@id', 'name', '@href']
 
 class Host(Base):
     ROOT_ELEMENT = 'host'
-    KEYS = ['id', 'name', '@hef']
+    KEYS = ['@id', 'name', '@hef']
 
 class Action(Base):
     ROOT_ELEMENT = 'action'
-    KEYS = ['id', 'async', 'status', '@href', 'grace']
+    KEYS = ['@id', 'async', 'status', '@href', 'grace']
 
 class GracePeriod(Base):
     ROOT_ELEMENT = 'grace_period'

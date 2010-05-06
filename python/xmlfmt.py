@@ -74,11 +74,11 @@ class VM(Base):
         s = '<vm'
         if hasattr(self, 'href'):
             s += ' href=\'' + getattr(self, 'href') + '\''
+        if hasattr(self, 'id'):
+            s += ' id=\'' + getattr(self, 'id') + '\''
         s += '>'
         if hasattr(self, 'name'):
             s += '<name>' + getattr(self, 'name') + '</name>'
-        if hasattr(self, 'id'):
-            s += '<id>' + getattr(self, 'id') + '</id>'
         s += '</vm>'
         return s
 
@@ -91,11 +91,11 @@ class Host(Base):
         s = '<host'
         if hasattr(self, 'href'):
             s += ' href=\'' + getattr(self, 'href') + '\''
+        if hasattr(self, 'id'):
+            s += ' id=\'' + getattr(self, 'id') + '\''
         s += '>'
         if hasattr(self, 'name'):
             s += '<name>' + getattr(self, 'name') + '</name>'
-        if hasattr(self, 'id'):
-            s += '<id>' + getattr(self, 'id') + '</id>'
         s += '</host>'
         return s
 
@@ -107,9 +107,9 @@ class Action(Base):
         s = '<action'
         if hasattr(self, 'href'):
             s += ' href=\'' + getattr(self, 'href') + '\''
-        s += '>'
         if hasattr(self, 'id'):
-            s += '<id>' + getattr(self, 'id') + '</id>'
+            s += ' id=\'' + getattr(self, 'id') + '\''
+        s += '>'
         if hasattr(self, 'async'):
             s += '<async>' + getattr(self, 'async') + '</async>'
         if hasattr(self, 'grace'):

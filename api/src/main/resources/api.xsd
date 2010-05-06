@@ -59,14 +59,14 @@
           <!-- action-specific parameter(s) for the operation (if required) -->
           <xs:group ref="ActionParameterGroup"/>
 
-        <!-- The following are used by the server when
-             responding to an operation or status query -->
-          <xs:element name="id" type="xs:string" minOccurs="0"/>
+        <!-- The following, and the href/id attributes are used by the
+             server when responding to an operation or status query -->
           <xs:element name="status" type="Status" minOccurs="0"/>
           <!-- Link to original action (rel="replay") -->
           <xs:element ref="link" minOccurs="1" maxOccurs="unbounded"/>
       </xs:sequence>
       <xs:attribute name="href" type="xs:string"/>
+      <xs:attribute name="id" type="xs:string"/>
     </xs:complexType>
   </xs:element>
 
@@ -156,7 +156,6 @@
   <xs:complexType name="BaseResource">
     <xs:sequence>
       <xs:element name="name" type="xs:string" minOccurs="0"/>
-      <xs:element name="id" type="xs:string" minOccurs="0"/>
       <xs:element name="actions" type="Actions" minOccurs="0"/>
       <!-- link relation types may be defined by specific resources -->
       <xs:element ref="link" minOccurs="0" maxOccurs="unbounded">
@@ -168,6 +167,7 @@
       </xs:element>
     </xs:sequence>
     <xs:attribute name="href" type="xs:string"/>
+    <xs:attribute name="id" type="xs:string"/>
   </xs:complexType>
 
   <!-- Data Centers -->
