@@ -18,7 +18,6 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import java.net.URI;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
@@ -36,18 +35,14 @@ public class PowerShellDataCentersResource implements DataCentersResource {
      * private @Context UriInfo uriInfo;
      */
 
-    private DataCenters addLinks(List<DataCenter> dataCenters, UriInfo uriInfo) {
-        DataCenters ret = new DataCenters();
-        for (DataCenter dataCenter : dataCenters) {
-            UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(dataCenter.getId());
-            ret.getDataCenters().add(PowerShellDataCenterResource.addLink(dataCenter, uriBuilder.build()));
-        }
-        return ret;
-    }
-
     @Override
     public DataCenters list(UriInfo uriInfo) {
-        return addLinks(PowerShellDataCenterResource.runAndParse("select-datacenter"), uriInfo);
+        DataCenters ret = new DataCenters();
+        for (DataCenter dataCenter : PowerShellDataCenterResource.runAndParse("select-datacenter")) {
+            UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(dataCenter.getId());
+            ret.getDataCenters().add(PowerShellDataCenterResource.addLinks(dataCenter, uriBuilder));
+        }
+        return ret;
     }
 
 /* FIXME: move this
@@ -71,9 +66,11 @@ public class PowerShellDataCentersResource implements DataCentersResource {
 
         dataCenter = PowerShellDataCenterResource.runAndParseSingle(buf.toString());
 
-        URI uri = uriInfo.getRequestUriBuilder().path(dataCenter.getId()).build();
+        UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(dataCenter.getId());
 
-        return Response.created(uri).entity(PowerShellDataCenterResource.addLink(dataCenter, uri)).build();
+        dataCenter = PowerShellDataCenterResource.addLinks(dataCenter, uriBuilder);
+
+        return Response.created(uriBuilder.build()).entity(dataCenter).build();
     }
 
     @Override

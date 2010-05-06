@@ -18,10 +18,10 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import java.net.URI;
 import java.util.ArrayList;
 
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.common.resource.AbstractHostResource;
@@ -57,15 +57,15 @@ public class PowerShellHostResource extends AbstractHostResource {
         return !hosts.isEmpty() ? hosts.get(0) : null;
     }
 
-    public static Host addLink(Host host, URI uri) {
-        host.setHref(uri.toString());
+    public static Host addLinks(Host host, UriBuilder uriBuilder) {
+        host.setHref(uriBuilder.build().toString());
         return host;
     }
 
     @Override
     public Host get(UriInfo uriInfo) {
-        return setPrototype(addLink(runAndParseSingle(CMD_PREFIX + "get-host " + id),
-                                    uriInfo.getRequestUriBuilder().build()));
+        return setPrototype(addLinks(runAndParseSingle(CMD_PREFIX + "get-host " + id),
+                                     uriInfo.getRequestUriBuilder()));
     }
 
     @Override
@@ -83,8 +83,8 @@ public class PowerShellHostResource extends AbstractHostResource {
         buf.append("\n");
         buf.append("update-host -hostobject $v");
 
-        return setPrototype(addLink(runAndParseSingle(buf.toString()),
-                                    uriInfo.getRequestUriBuilder().build()));
+        return setPrototype(addLinks(runAndParseSingle(buf.toString()),
+                                     uriInfo.getRequestUriBuilder()));
     }
 
     @Override

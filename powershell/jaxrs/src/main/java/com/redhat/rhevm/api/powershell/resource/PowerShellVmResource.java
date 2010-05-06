@@ -18,11 +18,11 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import java.net.URI;
 import java.util.ArrayList;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.common.resource.AbstractVmResource;
@@ -66,15 +66,15 @@ public class PowerShellVmResource extends AbstractVmResource {
         return !vms.isEmpty() ? vms.get(0) : null;
     }
 
-    public static VM addLink(VM vm, URI uri) {
-        vm.setHref(uri.toString());
+    public static VM addLinks(VM vm, UriBuilder uriBuilder) {
+        vm.setHref(uriBuilder.toString());
         return vm;
     }
 
     @Override
     public VM get(UriInfo uriInfo) {
-        return setPrototype(addLink(runAndParseSingle("get-vm " + id),
-                                    uriInfo.getRequestUriBuilder().build()));
+        return setPrototype(addLinks(runAndParseSingle("get-vm " + id),
+                                     uriInfo.getRequestUriBuilder()));
     }
 
     @Override
@@ -92,8 +92,8 @@ public class PowerShellVmResource extends AbstractVmResource {
         buf.append("\n");
         buf.append("update-vm -vmobject $v");
 
-        return setPrototype(addLink(runAndParseSingle(buf.toString()),
-                                    uriInfo.getRequestUriBuilder().build()));
+        return setPrototype(addLinks(runAndParseSingle(buf.toString()),
+                                     uriInfo.getRequestUriBuilder()));
     }
 
     @Override

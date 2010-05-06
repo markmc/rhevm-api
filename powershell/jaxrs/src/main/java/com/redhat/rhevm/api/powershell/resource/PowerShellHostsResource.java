@@ -18,7 +18,6 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import java.net.URI;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
@@ -50,18 +49,14 @@ public class PowerShellHostsResource implements HostsResource {
         hosts = new ReapedMap<String, PowerShellHostResource>(KEY_MAPPER);
     }
 
-    private Hosts addLinks(List<Host> hosts, UriInfo uriInfo) {
-        Hosts ret = new Hosts();
-        for (Host host : hosts) {
-            UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(host.getId());
-            ret.getHosts().add(PowerShellHostResource.addLink(host, uriBuilder.build()));
-        }
-        return ret;
-    }
-
     @Override
     public Hosts list(UriInfo uriInfo) {
-        return addLinks(PowerShellHostResource.runAndParse("select-host"), uriInfo);
+        Hosts ret = new Hosts();
+        for (Host host : PowerShellHostResource.runAndParse("select-host")) {
+            UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(host.getId());
+            ret.getHosts().add(PowerShellHostResource.addLinks(host, uriBuilder));
+        }
+        return ret;
     }
 
 /* FIXME: move this
@@ -91,9 +86,11 @@ public class PowerShellHostsResource implements HostsResource {
 
         host = PowerShellHostResource.runAndParseSingle(buf.toString());
 
-        URI uri = uriInfo.getRequestUriBuilder().path(host.getId()).build();
+        UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(host.getId());
 
-        return Response.created(uri).entity(PowerShellHostResource.addLink(host, uri)).build();
+        host = PowerShellHostResource.addLinks(host, uriBuilder);
+
+        return Response.created(uriBuilder.build()).entity(uriBuilder).build();
     }
 
     @Override

@@ -18,7 +18,6 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import java.net.URI;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
@@ -51,18 +50,14 @@ public class PowerShellVmsResource implements VmsResource {
         vms = new ReapedMap<String, PowerShellVmResource>(KEY_MAPPER);
     }
 
-    private VMs addLinks(List<VM> vms, UriInfo uriInfo) {
-        VMs ret = new VMs();
-        for (VM vm : vms) {
-            UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(vm.getId());
-            ret.getVMs().add(PowerShellVmResource.addLink(vm, uriBuilder.build()));
-        }
-        return ret;
-    }
-
     @Override
     public VMs list(UriInfo uriInfo) {
-        return addLinks(PowerShellVmResource.runAndParse("select-vm"), uriInfo);
+        VMs ret = new VMs();
+        for (VM vm : PowerShellVmResource.runAndParse("select-vm")) {
+            UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(vm.getId());
+            ret.getVMs().add(PowerShellVmResource.addLinks(vm, uriBuilder));
+        }
+        return ret;
     }
 
 /* FIXME: move this
@@ -96,9 +91,11 @@ public class PowerShellVmsResource implements VmsResource {
 
         vm = PowerShellVmResource.runAndParseSingle(buf.toString());
 
-        URI uri = uriInfo.getRequestUriBuilder().path(vm.getId()).build();
+        UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(vm.getId());
 
-        return Response.created(uri).entity(PowerShellVmResource.addLink(vm, uri)).build();
+        vm = PowerShellVmResource.addLinks(vm, uriBuilder);
+
+        return Response.created(uriBuilder.build()).entity(vm).build();
     }
 
     @Override

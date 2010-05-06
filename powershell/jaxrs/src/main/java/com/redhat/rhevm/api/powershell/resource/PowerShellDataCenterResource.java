@@ -18,9 +18,9 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import java.net.URI;
 import java.util.ArrayList;
 
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.DataCenter;
@@ -49,14 +49,14 @@ public class PowerShellDataCenterResource implements DataCenterResource {
         return !dataCenters.isEmpty() ? dataCenters.get(0) : null;
     }
 
-    public static DataCenter addLink(DataCenter dataCenter, URI uri) {
-        dataCenter.setHref(uri.toString());
+    public static DataCenter addLinks(DataCenter dataCenter, UriBuilder uriBuilder) {
+        dataCenter.setHref(uriBuilder.build().toString());
         return dataCenter;
     }
 
     @Override
     public DataCenter get(UriInfo uriInfo) {
-        return addLink(runAndParseSingle("get-datacenter " + id), uriInfo.getRequestUriBuilder().build());
+        return addLinks(runAndParseSingle("get-datacenter " + id), uriInfo.getRequestUriBuilder());
     }
 
     @Override
@@ -72,6 +72,6 @@ public class PowerShellDataCenterResource implements DataCenterResource {
         buf.append("\n");
         buf.append("update-datacenter -datacenterobject $v");
 
-        return addLink(runAndParseSingle(buf.toString()), uriInfo.getRequestUriBuilder().build());
+        return addLinks(runAndParseSingle(buf.toString()), uriInfo.getRequestUriBuilder());
     }
 }
