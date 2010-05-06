@@ -20,31 +20,41 @@ package com.redhat.rhevm.api.common.resource;
 
 import javax.ws.rs.core.HttpHeaders;
 
-import com.redhat.rhevm.api.model.Host;
+import com.redhat.rhevm.api.model.BaseResource;
 
-import com.redhat.rhevm.api.resource.HostResource;
 import com.redhat.rhevm.api.common.util.MutabilityAssertor;
 
-public abstract class AbstractHostResource implements HostResource {
+
+public abstract class AbstractUpdatableResource<R extends BaseResource> {
 
     protected static final String[] STRICTLY_IMMUTABLE = {"id"};
 
     protected String id;
 
-    public AbstractHostResource(String id) {
+    public AbstractUpdatableResource(String id) {
         this.id = id;
     }
 
     /**
      * Validate update from an immutability point of view.
      *
-     * @param incoming  the incoming Host representation
-     * @param existing  the existing Host representation
+     * @param incoming  the incoming resource representation
+     * @param existing  the existing resource representation
      * @param headers   the incoming HTTP headers
      * @throws WebApplicationException wrapping an appropriate response
      * iff an immutability constraint has been broken
      */
-    protected void validateUpdate(Host incoming, Host existing, HttpHeaders headers) {
-        MutabilityAssertor.validateUpdate(STRICTLY_IMMUTABLE, incoming, existing, headers);
+    protected void validateUpdate(R incoming, R existing, HttpHeaders headers) {
+        MutabilityAssertor.validateUpdate(getStrictlyImmutable(), incoming, existing, headers);
+    }
+
+    /**
+     * Override this method if any additional resource-specific fields are
+     * strictly immutable
+     *
+     * @return array of strict immutable field names
+     */
+    protected String[] getStrictlyImmutable() {
+        return STRICTLY_IMMUTABLE;
     }
 }

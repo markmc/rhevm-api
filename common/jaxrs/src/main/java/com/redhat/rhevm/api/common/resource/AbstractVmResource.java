@@ -33,11 +33,9 @@ import com.redhat.rhevm.api.resource.ActionResource;
 
 import com.redhat.rhevm.api.resource.VmResource;
 
-public abstract class AbstractVmResource implements VmResource {
+public abstract class AbstractVmResource extends AbstractUpdatableResource<VM> implements VmResource {
 
     private static final long REAP_AFTER = 2 * 60 * 60 * 1000L; // 2 hours
-
-    protected static final String[] STRICTLY_IMMUTABLE = {"id"};
 
     private static ReapedMap.ValueToKeyMapper<String, ActionResource> KEY_MAPPER =
         new ReapedMap.ValueToKeyMapper<String, ActionResource>() {
@@ -49,24 +47,10 @@ public abstract class AbstractVmResource implements VmResource {
     protected static Runnable DO_NOTHING = new Runnable() { public void run(){} };
 
     protected ReapedMap<String, ActionResource> actions;
-    protected String id;
 
     public AbstractVmResource(String id) {
-        this.id = id;
+        super(id);
         actions = new ReapedMap<String, ActionResource>(KEY_MAPPER, REAP_AFTER);
-    }
-
-    /**
-     * Validate update from an immutability point of view.
-     *
-     * @param incoming  the incoming VM representation
-     * @param existing  the existing VM representation
-     * @param headers   the incoming HTTP headers
-     * @throws WebApplicationException wrapping an appropriate response
-     * iff an immutability constraint has been broken
-     */
-    protected void validateUpdate(VM incoming, VM existing, HttpHeaders headers) {
-        MutabilityAssertor.validateUpdate(STRICTLY_IMMUTABLE, incoming, existing, headers);
     }
 
     /**

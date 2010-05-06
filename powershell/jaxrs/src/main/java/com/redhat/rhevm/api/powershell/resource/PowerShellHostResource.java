@@ -24,12 +24,13 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.common.resource.AbstractHostResource;
+import com.redhat.rhevm.api.common.resource.AbstractUpdatableResource;
 import com.redhat.rhevm.api.model.Host;
+import com.redhat.rhevm.api.resource.HostResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellHost;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
-public class PowerShellHostResource extends AbstractHostResource {
+public class PowerShellHostResource extends AbstractUpdatableResource<Host> implements HostResource {
     /* FIXME: would like to do:
      * private @Context UriInfo uriInfo;
      */
