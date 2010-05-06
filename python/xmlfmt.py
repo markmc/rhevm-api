@@ -71,10 +71,10 @@ class VM(Base):
     KEYS = ['id', 'name', 'href']
 
     def dump(self):
-        if not hasattr(self, 'href'):
-            s = '<vm>'
-        else:
-            s = '<vm href=\'' + getattr(self, 'href') + '\'>'
+        s = '<vm'
+        if hasattr(self, 'href'):
+            s += ' href=\'' + getattr(self, 'href') + '\''
+        s += '>'
         if hasattr(self, 'name'):
             s += '<name>' + getattr(self, 'name') + '</name>'
         if hasattr(self, 'id'):
@@ -88,10 +88,10 @@ class Host(Base):
     KEYS = ['id', 'name', 'href']
 
     def dump(self):
-        if not hasattr(self, 'href'):
-            s = '<host>'
-        else:
-            s = '<host href=\'' + getattr(self, 'href') + '\'>'
+        s = '<host'
+        if hasattr(self, 'href'):
+            s += ' href=\'' + getattr(self, 'href') + '\''
+        s += '>'
         if hasattr(self, 'name'):
             s += '<name>' + getattr(self, 'name') + '</name>'
         if hasattr(self, 'id'):
@@ -104,11 +104,10 @@ class Action(Base):
     KEYS = ['id', 'async', 'status', 'href', 'grace']
 
     def dump(self):
-        s = '<action>'
-        if not hasattr(self, 'href'):
-            s = '<action>'
-        else:
-            s = '<action href=\'' + getattr(self, 'href') + '\'>'
+        s = '<action'
+        if hasattr(self, 'href'):
+            s += ' href=\'' + getattr(self, 'href') + '\''
+        s += '>'
         if hasattr(self, 'id'):
             s += '<id>' + getattr(self, 'id') + '</id>'
         if hasattr(self, 'async'):
