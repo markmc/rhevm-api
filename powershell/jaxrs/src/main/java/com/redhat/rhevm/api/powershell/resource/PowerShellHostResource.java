@@ -34,7 +34,12 @@ public class PowerShellHostResource extends AbstractHostResource {
      * private @Context UriInfo uriInfo;
      */
 
-    private Host prototype;
+    private Host host;
+
+    public PowerShellHostResource(Host host) {
+        super(host.getId());
+        this.host = host;
+    }
 
     public PowerShellHostResource(String id) {
         super(id);
@@ -57,20 +62,24 @@ public class PowerShellHostResource extends AbstractHostResource {
         return !hosts.isEmpty() ? hosts.get(0) : null;
     }
 
-    public static Host addLinks(Host host, UriBuilder uriBuilder) {
+    public Host addLinks(UriBuilder uriBuilder) {
+        assert host != null;
         host.setHref(uriBuilder.build().toString());
         return host;
     }
 
     @Override
     public Host get(UriInfo uriInfo) {
-        return setPrototype(addLinks(runAndParseSingle(CMD_PREFIX + "get-host " + id),
-                                     uriInfo.getRequestUriBuilder()));
+        host = runAndParseSingle(CMD_PREFIX + "get-host " + id);
+        return addLinks(uriInfo.getRequestUriBuilder());
     }
 
     @Override
     public Host update(HttpHeaders headers, UriInfo uriInfo, Host host) {
-        validateUpdate(host, getPrototype(), headers);
+        if (this.host == null) {
+            this.host = runAndParseSingle(CMD_PREFIX + "get-host " + id);
+        }
+        validateUpdate(host, this.host, headers);
 
         StringBuilder buf = new StringBuilder();
 
@@ -83,8 +92,9 @@ public class PowerShellHostResource extends AbstractHostResource {
         buf.append("\n");
         buf.append("update-host -hostobject $v");
 
-        return setPrototype(addLinks(runAndParseSingle(buf.toString()),
-                                     uriInfo.getRequestUriBuilder()));
+        this.host = runAndParseSingle(buf.toString());
+
+        return addLinks(uriInfo.getRequestUriBuilder());
     }
 
     @Override
@@ -99,17 +109,6 @@ public class PowerShellHostResource extends AbstractHostResource {
     @Override
     public void resume() {
     }
-
-    private synchronized Host getPrototype() {
-        return prototype == null
-               ? prototype = runAndParseSingle(CMD_PREFIX + "get-host " + id)
-               : prototype;
-    }
-
-    private synchronized Host setPrototype(Host prototype) {
-        return this.prototype = prototype;
-    }
-
 
 /*
     @Override

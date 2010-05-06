@@ -53,8 +53,9 @@ public class PowerShellHostsResource implements HostsResource {
     public Hosts list(UriInfo uriInfo) {
         Hosts ret = new Hosts();
         for (Host host : PowerShellHostResource.runAndParse("select-host")) {
+            PowerShellHostResource resource = new PowerShellHostResource(host);
             UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(host.getId());
-            ret.getHosts().add(PowerShellHostResource.addLinks(host, uriBuilder));
+            ret.getHosts().add(resource.addLinks(uriBuilder));
         }
         return ret;
     }
@@ -86,11 +87,11 @@ public class PowerShellHostsResource implements HostsResource {
 
         host = PowerShellHostResource.runAndParseSingle(buf.toString());
 
+        PowerShellHostResource resource = new PowerShellHostResource(host);
+
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(host.getId());
 
-        host = PowerShellHostResource.addLinks(host, uriBuilder);
-
-        return Response.created(uriBuilder.build()).entity(uriBuilder).build();
+        return Response.created(uriBuilder.build()).entity(resource.addLinks(uriBuilder)).build();
     }
 
     @Override

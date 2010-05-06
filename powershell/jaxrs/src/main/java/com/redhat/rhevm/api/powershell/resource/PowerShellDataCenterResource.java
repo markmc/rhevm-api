@@ -33,10 +33,15 @@ public class PowerShellDataCenterResource implements DataCenterResource {
      * private @Context UriInfo uriInfo;
      */
 
-    private String id;
+    private DataCenter dataCenter;
+
+    public PowerShellDataCenterResource(DataCenter dataCenter) {
+        this.dataCenter = dataCenter;
+    }
 
     public PowerShellDataCenterResource(String id) {
-        this.id = id;
+        dataCenter = new DataCenter();
+        dataCenter.setId(id);
     }
 
     public static ArrayList<DataCenter> runAndParse(String command) {
@@ -49,21 +54,22 @@ public class PowerShellDataCenterResource implements DataCenterResource {
         return !dataCenters.isEmpty() ? dataCenters.get(0) : null;
     }
 
-    public static DataCenter addLinks(DataCenter dataCenter, UriBuilder uriBuilder) {
+    public DataCenter addLinks(UriBuilder uriBuilder) {
         dataCenter.setHref(uriBuilder.build().toString());
         return dataCenter;
     }
 
     @Override
     public DataCenter get(UriInfo uriInfo) {
-        return addLinks(runAndParseSingle("get-datacenter " + id), uriInfo.getRequestUriBuilder());
+        dataCenter = runAndParseSingle("get-datacenter " + dataCenter.getId());
+        return addLinks(uriInfo.getRequestUriBuilder());
     }
 
     @Override
     public DataCenter update(UriInfo uriInfo, DataCenter dataCenter) {
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$h = get-datacenter " + id + "\n");
+        buf.append("$h = get-datacenter " + dataCenter.getId() + "\n");
 
         if (dataCenter.getName() != null) {
             buf.append("$h.name = \"" + dataCenter.getName() + "\"");
@@ -72,6 +78,8 @@ public class PowerShellDataCenterResource implements DataCenterResource {
         buf.append("\n");
         buf.append("update-datacenter -datacenterobject $v");
 
-        return addLinks(runAndParseSingle(buf.toString()), uriInfo.getRequestUriBuilder());
+        this.dataCenter = runAndParseSingle(buf.toString());
+
+        return addLinks(uriInfo.getRequestUriBuilder());
     }
 }

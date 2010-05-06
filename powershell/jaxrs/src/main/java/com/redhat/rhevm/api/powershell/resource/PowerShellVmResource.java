@@ -37,16 +37,21 @@ public class PowerShellVmResource extends AbstractVmResource {
      */
 
     /**
-     * Prototype caches VM state from last retrieval or update, so that
+     * A cache of VM state from last retrieval or update, so that
      * a snapshot of existing state is available for checking immutability
      * constraints on any subsequent updates.
      * Note that the some VM state may change as a result of other actions
      * (for example its status would be updated by the start operation),
-     * but that doesn't need to be reflected in the prototype as this is
+     * but that doesn't need to be reflected in this cache as we are
      * only concerned with the fundamental immutable state of the resource
      * which would not be impacted by an action.
      */
-    private VM prototype;
+    private VM vm;
+
+    public PowerShellVmResource(VM vm) {
+        super(vm.getId());
+        this.vm = vm;
+    }
 
     public PowerShellVmResource(String id) {
         super(id);
@@ -66,20 +71,24 @@ public class PowerShellVmResource extends AbstractVmResource {
         return !vms.isEmpty() ? vms.get(0) : null;
     }
 
-    public static VM addLinks(VM vm, UriBuilder uriBuilder) {
+    public VM addLinks(UriBuilder uriBuilder) {
+        assert vm != null;
         vm.setHref(uriBuilder.toString());
         return vm;
     }
 
     @Override
     public VM get(UriInfo uriInfo) {
-        return setPrototype(addLinks(runAndParseSingle("get-vm " + id),
-                                     uriInfo.getRequestUriBuilder()));
+        vm = runAndParseSingle("get-vm " + id);
+        return addLinks(uriInfo.getRequestUriBuilder());
     }
 
     @Override
     public VM update(HttpHeaders headers, UriInfo uriInfo, VM vm) {
-        validateUpdate(vm, getPrototype(), headers);
+        if (this.vm != null) {
+            this.vm = runAndParseSingle("get-vm " + id);
+        }
+        validateUpdate(vm, this.vm, headers);
 
         StringBuilder buf = new StringBuilder();
 
@@ -92,8 +101,9 @@ public class PowerShellVmResource extends AbstractVmResource {
         buf.append("\n");
         buf.append("update-vm -vmobject $v");
 
-        return setPrototype(addLinks(runAndParseSingle(buf.toString()),
-                                     uriInfo.getRequestUriBuilder()));
+        this.vm = runAndParseSingle(buf.toString());
+
+        return addLinks(uriInfo.getRequestUriBuilder());
     }
 
     @Override
@@ -144,16 +154,6 @@ public class PowerShellVmResource extends AbstractVmResource {
     @Override
     public Response ejectCD(UriInfo uriInfo, Action action) {
         return doAction(uriInfo,action, DO_NOTHING);
-    }
-
-    private synchronized VM getPrototype() {
-        return prototype == null
-               ? prototype = runAndParseSingle("get-vm " + id)
-               : prototype;
-    }
-
-    private synchronized VM setPrototype(VM prototype) {
-        return this.prototype = prototype;
     }
 
     private class CommandRunner implements Runnable {
