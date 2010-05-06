@@ -24,9 +24,6 @@ import java.util.Set;
 import javax.ws.rs.core.Application;
 
 import com.redhat.rhevm.api.powershell.resource.PowerShellApiResource;
-import com.redhat.rhevm.api.powershell.resource.PowerShellDataCentersResource;
-import com.redhat.rhevm.api.powershell.resource.PowerShellHostsResource;
-import com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource;
 
 public class PowerShellApplication extends Application {
 
@@ -34,9 +31,7 @@ public class PowerShellApplication extends Application {
     private Set<Class<?>> classes = new HashSet<Class<?>>();
 
     public PowerShellApplication() {
-        singletons.add(new PowerShellDataCentersResource());
-        singletons.add(new PowerShellHostsResource());
-        singletons.add(new PowerShellVmsResource());
+        singletons.add(new PowerShellApiResource());
         classes.add(PowerShellApiResource.class);
     }
 
