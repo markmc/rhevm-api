@@ -48,14 +48,14 @@ public class BaseActionResource implements ActionResource {
     }
 
     private void addLinks(UriInfo uriInfo) {
-        Link self = new Link();
-        self.setRel("replay");
-        self.setHref(uriInfo.getRequestUri().toString());
-        action.getLink().add(self);
-
         Link replay = new Link();
-        replay.setRel("self");
-        replay.setHref(uriInfo.getRequestUriBuilder().path(action.getId()).build().toString());
+        replay.setRel("replay");
+        replay.setHref(uriInfo.getRequestUri().toString());
         action.getLink().add(replay);
+
+        Link self = new Link();
+        self.setRel("self");
+        self.setHref(uriInfo.getRequestUriBuilder().path(action.getId()).build().toString());
+        action.getLink().add(self);
     }
 }
