@@ -37,7 +37,7 @@ public class PowerShellUtils {
                 props = null;
             }
 
-            String[] parts = s.split(":");
+            String[] parts = s.split(":", 2);
             if (parts.length != 2)
                 continue;
 
