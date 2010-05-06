@@ -80,6 +80,7 @@ public class DummyHostResourceTest extends DummyTestBase {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testHostBadUpdate() throws Exception {
         DummyTestBase.HostsResource service = getService();
         assertNotNull(service);
@@ -91,6 +92,9 @@ public class DummyHostResourceTest extends DummyTestBase {
             fail("expected ClientResponseFailure");
         } catch (ClientResponseFailure cfe) {
             assertEquals(409, cfe.getResponse().getStatus());
+            // ClientResponseFailure should really support a 
+            // <T> ClientResponse<T> getResponse(Class<T> clz) 
+            // style of accessor for the response to avoid the unchecked warnin
             Fault fault = (Fault)cfe.getResponse().getEntity(Fault.class);
             assertNotNull(fault);
             assertEquals("Broken immutability constraint", fault.getReason());

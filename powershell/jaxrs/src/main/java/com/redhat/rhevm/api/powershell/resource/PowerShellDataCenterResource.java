@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.DataCenter;
-import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.resource.DataCenterResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellDataCenter;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;

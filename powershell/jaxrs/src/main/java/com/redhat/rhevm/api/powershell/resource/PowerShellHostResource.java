@@ -26,7 +26,6 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.common.resource.AbstractHostResource;
 import com.redhat.rhevm.api.model.Host;
-import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.powershell.model.PowerShellHost;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 

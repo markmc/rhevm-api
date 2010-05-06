@@ -20,7 +20,6 @@ package com.redhat.rhevm.api.dummy.model;
 
 import javax.ws.rs.core.UriBuilder;
 import com.redhat.rhevm.api.model.ActionsBuilder;
-import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.VM;
 
 public class DummyVM {

@@ -21,7 +21,6 @@ package com.redhat.rhevm.api.dummy.model;
 import javax.ws.rs.core.UriBuilder;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.Host;
-import com.redhat.rhevm.api.model.Link;
 
 public class DummyHost {
 

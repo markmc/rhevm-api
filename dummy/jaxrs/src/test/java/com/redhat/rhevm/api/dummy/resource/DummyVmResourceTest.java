@@ -80,6 +80,7 @@ public class DummyVmResourceTest extends DummyTestBase {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testVmBadUpdate() throws Exception {
         DummyTestBase.VmsResource service = getService();
         assertNotNull(service);
