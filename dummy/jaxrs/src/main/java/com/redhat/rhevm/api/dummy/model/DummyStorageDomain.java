@@ -44,16 +44,12 @@ public class DummyStorageDomain {
     }
 
     public StorageDomain getJaxb(UriBuilder uriBuilder, ActionsBuilder actionsBuilder) {
-        jaxb.getLinks().clear();
+        jaxb.setHref(uriBuilder.build().toString());
 
         Link link = new Link();
-        link.setRel("self");
-        link.setHref(uriBuilder.build().toString());
-        jaxb.getLinks().add(link);
-
-        link = new Link();
         link.setRel("attachments");
         link.setHref(uriBuilder.clone().path("attachments").build().toString());
+        jaxb.getLinks().clear();
         jaxb.getLinks().add(link);
 
         jaxb.setActions(actionsBuilder.build());

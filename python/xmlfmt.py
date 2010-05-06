@@ -58,9 +58,6 @@ class Base:
             if key in dict:
                 setattr(self, key, dict[key])
 
-        if hasattr(self, 'self'):
-            self.link = Link('self', getattr(self, 'self'))
-
     def __str__(self):
         dict = {}
         for key in self.KEYS:
@@ -71,47 +68,51 @@ class Base:
 class VM(Base):
     COLLECTION_ELEMENT = 'vms'
     ROOT_ELEMENT = 'vm'
-    KEYS = ['id', 'name', 'self']
+    KEYS = ['id', 'name', 'href']
 
     def dump(self):
-        s = '<vm>'
+        if not hasattr(self, 'href'):
+            s = '<vm>'
+        else:
+            s = '<vm href=\'' + getattr(self, 'href') + '\'>'
         if hasattr(self, 'name'):
             s += '<name>' + getattr(self, 'name') + '</name>'
         if hasattr(self, 'id'):
             s += '<id>' + getattr(self, 'id') + '</id>'
-        if hasattr(self, 'self'):
-            s += '<link rel=\'self\' href=\'' + getattr(self, 'self') + '\' />'
         s += '</vm>'
         return s
 
 class Host(Base):
     COLLECTION_ELEMENT = 'hosts'
     ROOT_ELEMENT = 'host'
-    KEYS = ['id', 'name', 'self']
+    KEYS = ['id', 'name', 'href']
 
     def dump(self):
-        s = '<host>'
+        if not hasattr(self, 'href'):
+            s = '<host>'
+        else:
+            s = '<host href=\'' + getattr(self, 'href') + '\'>'
         if hasattr(self, 'name'):
             s += '<name>' + getattr(self, 'name') + '</name>'
         if hasattr(self, 'id'):
             s += '<id>' + getattr(self, 'id') + '</id>'
-        if hasattr(self, 'self'):
-            s += '<link rel=\'self\' href=\'' + getattr(self, 'self') + '\' />'
         s += '</host>'
         return s
 
 class Action(Base):
     ROOT_ELEMENT = 'action'
-    KEYS = ['id', 'async', 'status', 'self', 'grace']
+    KEYS = ['id', 'async', 'status', 'href', 'grace']
 
     def dump(self):
         s = '<action>'
+        if not hasattr(self, 'href'):
+            s = '<action>'
+        else:
+            s = '<action href=\'' + getattr(self, 'href') + '\'>'
         if hasattr(self, 'id'):
             s += '<id>' + getattr(self, 'id') + '</id>'
         if hasattr(self, 'async'):
             s += '<async>' + getattr(self, 'async') + '</async>'
-        if hasattr(self, 'self'):
-            s += '<link rel=\'self\' href=\'' + getattr(self, 'self') + '\' />'
         if hasattr(self, 'grace'):
             s += getattr(self, 'grace')
         s += '</action>'

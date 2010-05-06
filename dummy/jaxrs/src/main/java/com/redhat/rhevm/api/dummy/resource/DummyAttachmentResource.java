@@ -59,12 +59,7 @@ public class DummyAttachmentResource implements AttachmentResource, ActionValida
 
         String href = DummyStorageDomainsResource.getHref(baseUriBuilder, storageDomain.getId());
 
-        Link link = new Link();
-        link.setRel("self");
-        link.setHref(href);
-
-        storageDomain.getLinks().clear();
-        storageDomain.getLinks().add(link);
+        storageDomain.setHref(href);
     }
 
     private void setDataCenterHref(UriBuilder baseUriBuilder) {
@@ -72,12 +67,7 @@ public class DummyAttachmentResource implements AttachmentResource, ActionValida
 
         String href = DummyDataCentersResource.getHref(baseUriBuilder, dataCenter.getId());
 
-        Link link = new Link();
-        link.setRel("self");
-        link.setHref(href);
-
-        dataCenter.getLinks().clear();
-        dataCenter.getLinks().add(link);
+        dataCenter.setHref(href);
     }
 
     public Attachment addLinks(UriInfo uriInfo, UriBuilder uriBuilder) {

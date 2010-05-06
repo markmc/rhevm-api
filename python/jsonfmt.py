@@ -35,10 +35,9 @@ class Base:
 
         for key in self.KEYS:
             if key in dict:
-                setattr(self, key, dict[key])
-
-        if hasattr(self, 'link'):
-            self.link = Link(self.link['@rel'], self.link['@href'])
+                if key.startswith('@'):
+                    k = key[1:]
+                setattr(self, k, dict[key])
 
     def dump(self):
         return json.dumps(self, cls=Encoder);
@@ -51,24 +50,23 @@ class Base:
 
         for key in self.KEYS:
             if hasattr(self, key):
-                dict[key] = getattr(self, key)
-
-        if 'link' in dict:
-            dict['link'] = {'@rel' : dict['link'].rel, '@href' : dict['link'].href}
+                if key.startswith('@'):
+                    k = key[1:]
+                dict[key] = getattr(self, k)
 
         return {self.ROOT_ELEMENT : dict}
 
 class VM(Base):
     ROOT_ELEMENT = 'vm'
-    KEYS = ['id', 'name', 'link']
+    KEYS = ['id', 'name', '@href']
 
 class Host(Base):
     ROOT_ELEMENT = 'host'
-    KEYS = ['id', 'name', 'link']
+    KEYS = ['id', 'name', '@hef']
 
 class Action(Base):
     ROOT_ELEMENT = 'action'
-    KEYS = ['id', 'async', 'status', 'self', 'grace']
+    KEYS = ['id', 'async', 'status', '@href', 'grace']
 
 class GracePeriod(Base):
     ROOT_ELEMENT = 'grace_period'

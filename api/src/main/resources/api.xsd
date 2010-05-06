@@ -63,10 +63,10 @@
              responding to an operation or status query -->
           <xs:element name="id" type="xs:string" minOccurs="0"/>
           <xs:element name="status" type="Status" minOccurs="0"/>
-          <!-- Link to self (rel="self") -->
           <!-- Link to original action (rel="replay") -->
-          <xs:element ref="link" minOccurs="2" maxOccurs="unbounded"/>
+          <xs:element ref="link" minOccurs="1" maxOccurs="unbounded"/>
       </xs:sequence>
+      <xs:attribute name="href" type="xs:string"/>
     </xs:complexType>
   </xs:element>
 
@@ -158,9 +158,8 @@
       <xs:element name="name" type="xs:string" minOccurs="0"/>
       <xs:element name="id" type="xs:string" minOccurs="0"/>
       <xs:element name="actions" type="Actions" minOccurs="0"/>
-      <!-- rel="self" is a reference back to the resource itself -->
-      <!-- other resource specific link relation types may be definied -->
-      <xs:element ref="link" maxOccurs="unbounded">
+      <!-- link relation types may be defined by specific resources -->
+      <xs:element ref="link" minOccurs="0" maxOccurs="unbounded">
         <xs:annotation>
           <xs:appinfo>
             <jaxb:property name="Links"/>
@@ -168,6 +167,7 @@
         </xs:annotation>
       </xs:element>
     </xs:sequence>
+    <xs:attribute name="href" type="xs:string"/>
   </xs:complexType>
 
   <!-- Data Centers -->

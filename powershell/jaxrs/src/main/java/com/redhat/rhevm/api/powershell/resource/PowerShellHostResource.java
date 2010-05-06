@@ -59,13 +59,7 @@ public class PowerShellHostResource extends AbstractHostResource {
     }
 
     public static Host addLink(Host host, URI uri) {
-        Link link = new Link();
-        link.setRel("self");
-        link.setHref(uri.toString());
-
-        host.getLinks().clear();
-        host.getLinks().add(link);
-
+        host.setHref(uri.toString());
         return host;
     }
 

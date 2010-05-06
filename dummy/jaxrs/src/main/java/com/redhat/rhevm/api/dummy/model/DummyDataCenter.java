@@ -45,14 +45,8 @@ public class DummyDataCenter {
     }
 
     public DataCenter getJaxb(UriBuilder uriBuilder, ActionsBuilder actionsBuilder) {
-        Link link = new Link();
-        link.setRel("self");
-        link.setHref(uriBuilder.build().toString());
-
-        jaxb.getLinks().clear();
-        jaxb.getLinks().add(link);
+        jaxb.setHref(uriBuilder.build().toString());
         jaxb.setActions(actionsBuilder.build());
-
         return jaxb;
     }
 }
