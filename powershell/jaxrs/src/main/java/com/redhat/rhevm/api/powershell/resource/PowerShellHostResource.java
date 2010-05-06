@@ -35,8 +35,6 @@ public class PowerShellHostResource extends AbstractUpdatableResource<Host> impl
      * private @Context UriInfo uriInfo;
      */
 
-    private Host prototype;
-
     public PowerShellHostResource(String id) {
         super(id);
     }
@@ -65,7 +63,7 @@ public class PowerShellHostResource extends AbstractUpdatableResource<Host> impl
 
     @Override
     public Host get(UriInfo uriInfo) {
-        return setPrototype(addLinks(runAndParseSingle(CMD_PREFIX + "get-host " + id),
+        return setPrototype(addLinks(getRepresentation(),
                                      uriInfo.getRequestUriBuilder()));
     }
 
@@ -101,16 +99,9 @@ public class PowerShellHostResource extends AbstractUpdatableResource<Host> impl
     public void resume() {
     }
 
-    private synchronized Host getPrototype() {
-        return prototype == null
-               ? prototype = runAndParseSingle(CMD_PREFIX + "get-host " + id)
-               : prototype;
+    protected Host getRepresentation() {
+        return runAndParseSingle(CMD_PREFIX + "get-host " + id);
     }
-
-    private synchronized Host setPrototype(Host prototype) {
-        return this.prototype = prototype;
-    }
-
 
 /*
     @Override

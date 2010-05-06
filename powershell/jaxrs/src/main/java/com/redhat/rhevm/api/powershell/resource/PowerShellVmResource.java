@@ -36,18 +36,6 @@ public class PowerShellVmResource extends AbstractVmResource {
      * FIXME: would like to do: private @Context UriInfo uriInfo;
      */
 
-    /**
-     * Prototype caches VM state from last retrieval or update, so that
-     * a snapshot of existing state is available for checking immutability
-     * constraints on any subsequent updates.
-     * Note that the some VM state may change as a result of other actions
-     * (for example its status would be updated by the start operation),
-     * but that doesn't need to be reflected in the prototype as this is
-     * only concerned with the fundamental immutable state of the resource
-     * which would not be impacted by an action.
-     */
-    private VM prototype;
-
     public PowerShellVmResource(String id) {
         super(id);
     }
@@ -73,7 +61,7 @@ public class PowerShellVmResource extends AbstractVmResource {
 
     @Override
     public VM get(UriInfo uriInfo) {
-        return setPrototype(addLinks(runAndParseSingle("get-vm " + id),
+        return setPrototype(addLinks(getRepresentation(),
                                      uriInfo.getRequestUriBuilder()));
     }
 
@@ -146,14 +134,8 @@ public class PowerShellVmResource extends AbstractVmResource {
         return doAction(uriInfo,action, DO_NOTHING);
     }
 
-    private synchronized VM getPrototype() {
-        return prototype == null
-               ? prototype = runAndParseSingle("get-vm " + id)
-               : prototype;
-    }
-
-    private synchronized VM setPrototype(VM prototype) {
-        return this.prototype = prototype;
+    protected VM getRepresentation() {
+        return runAndParseSingle("get-vm " + id);
     }
 
     private class CommandRunner implements Runnable {
