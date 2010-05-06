@@ -76,6 +76,7 @@ public class DummyStorageDomainResource implements StorageDomainResource, Action
         this.storageDomain.jaxb.setStatus(StorageDomainStatus.UNATTACHED);
     }
 
+    @Override
     public boolean validateAction(String action) {
         StorageDomain jaxb = storageDomain.jaxb;
 

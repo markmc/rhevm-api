@@ -97,6 +97,7 @@ public class DummyAttachmentResource implements AttachmentResource, ActionValida
         this.attachment.jaxb.getStorageDomain().setStatus(StorageDomainStatus.INACTIVE);
     }
 
+    @Override
     public boolean validateAction(String action) {
         Attachment jaxb = attachment.jaxb;
 
