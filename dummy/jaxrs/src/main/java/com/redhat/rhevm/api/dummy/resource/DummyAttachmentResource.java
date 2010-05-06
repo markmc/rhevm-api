@@ -28,20 +28,20 @@ import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.StorageDomainStatus;
 import com.redhat.rhevm.api.resource.AttachmentResource;
-import com.redhat.rhevm.api.dummy.model.DummyAttachment;
+
 
 public class DummyAttachmentResource implements AttachmentResource, ActionValidator {
 
-    private DummyAttachment attachment;
+    private Attachment model;
 
     /**
      * Package-protected ctor, never needs to be instantiated by JAX-RS framework.
      *
      * @param attachment  encapsulated Attachment
      */
-    DummyAttachmentResource(DummyAttachment attachment) {
-        this.attachment = attachment;
-        this.attachment.jaxb.setStatus(StorageDomainStatus.INACTIVE);
+    DummyAttachmentResource(Attachment attachment) {
+        model = attachment;
+        getModel().setStatus(StorageDomainStatus.INACTIVE);
     }
 
     /**
@@ -49,12 +49,12 @@ public class DummyAttachmentResource implements AttachmentResource, ActionValida
      *
      * @return  encapsulated attachment
      */
-    DummyAttachment getAttachment() {
-        return attachment;
+    public Attachment getModel() {
+        return model;
     }
 
     private void setStorageDomainHref(UriBuilder baseUriBuilder) {
-        StorageDomain storageDomain = attachment.jaxb.getStorageDomain();
+        StorageDomain storageDomain = getModel().getStorageDomain();
 
         String href = DummyStorageDomainsResource.getHref(baseUriBuilder, storageDomain.getId());
 
@@ -62,7 +62,7 @@ public class DummyAttachmentResource implements AttachmentResource, ActionValida
     }
 
     private void setDataCenterHref(UriBuilder baseUriBuilder) {
-        DataCenter dataCenter = attachment.jaxb.getDataCenter();
+        DataCenter dataCenter = getModel().getDataCenter();
 
         String href = DummyDataCentersResource.getHref(baseUriBuilder, dataCenter.getId());
 
@@ -77,7 +77,10 @@ public class DummyAttachmentResource implements AttachmentResource, ActionValida
 
         ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, AttachmentResource.class, this);
 
-        return attachment.getJaxb(uriBuilder, actionsBuilder);
+        getModel().setHref(uriBuilder.build().toString());
+        getModel().setActions(actionsBuilder.build());
+
+        return getModel();
     }
 
     @Override
@@ -88,20 +91,19 @@ public class DummyAttachmentResource implements AttachmentResource, ActionValida
     @Override
     public void activate() {
         // FIXME: error if not attached
-        this.attachment.jaxb.getStorageDomain().setStatus(StorageDomainStatus.ACTIVE);
+        getModel().getStorageDomain().setStatus(StorageDomainStatus.ACTIVE);
     }
 
     @Override
     public void deactivate() {
         // FIXME: error if not active
-        this.attachment.jaxb.getStorageDomain().setStatus(StorageDomainStatus.INACTIVE);
+        getModel().getStorageDomain().setStatus(StorageDomainStatus.INACTIVE);
     }
 
     @Override
     public boolean validateAction(String action) {
-        Attachment jaxb = attachment.jaxb;
 
-        switch (jaxb.getStatus()) {
+        switch (getModel().getStatus()) {
         case ACTIVE:
             return action.equals("deactivate");
         case INACTIVE:
@@ -111,7 +113,7 @@ public class DummyAttachmentResource implements AttachmentResource, ActionValida
         case LOCKED:
         case MIXED:
         default:
-            assert false : jaxb.getStatus();
+            assert false : getModel().getStatus();
             return false;
         }
     }

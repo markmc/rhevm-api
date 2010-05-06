@@ -29,7 +29,9 @@ import com.redhat.rhevm.api.model.DataCenters;
 import com.redhat.rhevm.api.model.StorageType;
 import com.redhat.rhevm.api.resource.DataCenterResource;
 import com.redhat.rhevm.api.resource.DataCentersResource;
-import com.redhat.rhevm.api.dummy.model.DummyDataCenter;
+
+import static com.redhat.rhevm.api.common.resource.AbstractUpdatableResource.initialize;
+
 
 public class DummyDataCentersResource implements DataCentersResource {
     /* FIXME: would like to do:
@@ -41,10 +43,11 @@ public class DummyDataCentersResource implements DataCentersResource {
 
     static {
         while (dataCenters.size() < 2) {
-            DummyDataCenter dataCenter = new DummyDataCenter();
-            dataCenter.jaxb.setName("dataCenter" + Integer.toString(dataCenters.size()));
-            dataCenter.jaxb.setStorageType((dataCenters.size() % 2) == 0 ? StorageType.ISCSI : StorageType.NFS);
-            dataCenters.put(dataCenter.jaxb.getId(), new DummyDataCenterResource(dataCenter));
+            DataCenter dataCenter = new DataCenter();
+            dataCenter.setName("dataCenter" + Integer.toString(dataCenters.size()));
+            dataCenter.setStorageType((dataCenters.size() % 2) == 0 ? StorageType.ISCSI : StorageType.NFS);
+            DummyDataCenterResource resource = new DummyDataCenterResource(initialize(dataCenter));
+            dataCenters.put(resource.getModel().getId(), resource);
         }
     }
 
@@ -57,7 +60,7 @@ public class DummyDataCentersResource implements DataCentersResource {
         DataCenters ret = new DataCenters();
 
         for (DummyDataCenterResource dataCenter : dataCenters.values()) {
-            String id = dataCenter.getDataCenter().jaxb.getId();
+            String id = dataCenter.getModel().getId();
             UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(id);
             ret.getDataCenters().add(dataCenter.addLinks(uriInfo, uriBuilder));
         }
@@ -67,9 +70,11 @@ public class DummyDataCentersResource implements DataCentersResource {
 
     @Override
     public Response add(UriInfo uriInfo, DataCenter dataCenter) {
-        DummyDataCenterResource newDataCenter = new DummyDataCenterResource(new DummyDataCenter(dataCenter));
+        // update writable fields only
 
-        String id = newDataCenter.getDataCenter().jaxb.getId();
+        DummyDataCenterResource newDataCenter = new DummyDataCenterResource(initialize(dataCenter));
+
+        String id = newDataCenter.getModel().getId();
         dataCenters.put(id, newDataCenter);
 
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(id);

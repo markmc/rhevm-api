@@ -45,7 +45,7 @@ import org.junit.Test;
 public class DummyWebappTest extends Assert {
 
     private static final String BASE_URL = "http://somehost";
-    private static final String RHEVM_CONTEXT_PATH = "/rhevm-api-dummy-war";
+    private static final String RHEVM_CONTEXT_PATH = "/rhevm-api-dummy";
     private static final String VMS_PATH = "/vms";
     private static final String HOSTS_PATH = "/hosts";
     private static final String CONFIG_PATH = "/WEB-INF/web.xml";
@@ -66,7 +66,7 @@ public class DummyWebappTest extends Assert {
 
     @Test
     public void testVmSubResource() throws Exception {
-        doTestGet(VMS_PATH + "/1", "<name>vm0</name>");
+        doTestGet(VMS_PATH + "/1", "<name>vm1</name>");
     }
 
     @Test
@@ -76,7 +76,7 @@ public class DummyWebappTest extends Assert {
 
     @Test
     public void testHostSubResource() throws Exception {
-        doTestGet(HOSTS_PATH + "/1", "<name>host0</name>");
+        doTestGet(HOSTS_PATH + "/1", "<name>host1</name>");
     }
 
     @Test
@@ -125,7 +125,10 @@ public class DummyWebappTest extends Assert {
         // assertEquals("unexpected response content", "application/xml", response.getContentType());
         if (expectedResponsePattern != null) {
             InputStream is = response.getInputStream();
-            assertTrue("unexpected response", toString(is).indexOf(expectedResponsePattern) != -1);
+            String respStr = toString(is);
+            assertTrue("unexpected response: " + respStr
+                       + ", no match for: " + expectedResponsePattern,
+                       respStr.indexOf(expectedResponsePattern) != -1);
         }
     }
 
@@ -133,8 +136,8 @@ public class DummyWebappTest extends Assert {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         int c = is.read();
         while (c != -1) {
-            c = is.read();
             os.write(c);
+            c = is.read();
         }
         os.flush();
         return os.toString();

@@ -28,7 +28,9 @@ import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.Hosts;
 import com.redhat.rhevm.api.resource.HostResource;
 import com.redhat.rhevm.api.resource.HostsResource;
-import com.redhat.rhevm.api.dummy.model.DummyHost;
+
+import static com.redhat.rhevm.api.common.resource.AbstractUpdatableResource.initialize;
+
 
 public class DummyHostsResource implements HostsResource {
     /* FIXME: would like to do:
@@ -40,9 +42,9 @@ public class DummyHostsResource implements HostsResource {
 
     static {
         while (hosts.size() < 4) {
-            DummyHost host = new DummyHost();
-            host.jaxb.setName("host" + Integer.toString(hosts.size()));
-            hosts.put(host.jaxb.getId(), new DummyHostResource(host));
+            Host host = new Host();
+            DummyHostResource resource = new DummyHostResource(initialize(host));
+            hosts.put(resource.getModel().getId(), resource);
         }
     }
 
@@ -51,7 +53,7 @@ public class DummyHostsResource implements HostsResource {
         Hosts ret = new Hosts();
 
         for (DummyHostResource host : hosts.values()) {
-            String id = host.getHost().jaxb.getId();
+            String id = host.getModel().getId();
             UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(id);
             ret.getHosts().add(host.addLinks(uriBuilder));
         }
@@ -61,9 +63,9 @@ public class DummyHostsResource implements HostsResource {
 
     @Override
     public Response add(UriInfo uriInfo, Host host) {
-        DummyHostResource newHost = new DummyHostResource(new DummyHost(host));
+        DummyHostResource newHost = new DummyHostResource(initialize(host));
 
-        String id = newHost.getHost().jaxb.getId();
+        String id = newHost.getModel().getId();
         hosts.put(id, newHost);
 
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(id);

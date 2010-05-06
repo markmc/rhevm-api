@@ -21,17 +21,18 @@ package com.redhat.rhevm.api.dummy.resource;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.common.resource.AbstractUpdatableResource;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.ActionValidator;
+import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.StorageDomain;
-import com.redhat.rhevm.api.model.StorageDomainStatus;
 import com.redhat.rhevm.api.resource.AttachmentsResource;
 import com.redhat.rhevm.api.resource.StorageDomainResource;
-import com.redhat.rhevm.api.dummy.model.DummyStorageDomain;
 
-public class DummyStorageDomainResource implements StorageDomainResource, ActionValidator {
+import static com.redhat.rhevm.api.model.StorageDomainStatus.*;
 
-    private DummyStorageDomain storageDomain;
+
+public class DummyStorageDomainResource extends AbstractUpdatableResource<StorageDomain> implements StorageDomainResource, ActionValidator {
 
     private DummyAttachmentsResource attachments;
 
@@ -40,23 +41,21 @@ public class DummyStorageDomainResource implements StorageDomainResource, Action
      *
      * @param storageDomain  encapsulated StorageDomain
      */
-    DummyStorageDomainResource(DummyStorageDomain storageDomain) {
-        this.storageDomain = storageDomain;
-        this.attachments = new DummyAttachmentsResource(storageDomain.jaxb.getId());
-    }
-
-    /**
-     * Package-level accessor for encapsulated StorageDomain
-     *
-     * @return  encapsulated storageDomain
-     */
-    DummyStorageDomain getStorageDomain() {
-        return storageDomain;
+    DummyStorageDomainResource(StorageDomain storageDomain) {
+        super(storageDomain, storageDomain.getId());
+        this.attachments = new DummyAttachmentsResource(storageDomain.getId());
     }
 
     public StorageDomain addLinks(UriBuilder uriBuilder) {
         ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, StorageDomainResource.class, this);
-        return storageDomain.getJaxb(uriBuilder, actionsBuilder);
+        getModel().setHref(uriBuilder.build().toString());
+        Link link = new Link();
+        link.setRel("attachments");
+        link.setHref(uriBuilder.clone().path("attachments").build().toString());
+        getModel().getLinks().clear();
+        getModel().getLinks().add(link);
+        getModel().setActions(actionsBuilder.build());
+        return getModel();
     }
 
     @Override
@@ -66,21 +65,21 @@ public class DummyStorageDomainResource implements StorageDomainResource, Action
 
     @Override
     public StorageDomain update(UriInfo uriInfo, StorageDomain storageDomain) {
-        this.storageDomain.update(storageDomain);
+        // update writable fields only
+        getModel().setName(storageDomain.getName());
         return addLinks(uriInfo.getRequestUriBuilder());
     }
 
     @Override
     public void initialize() {
         // FIXME: error if not uninitialized
-        this.storageDomain.jaxb.setStatus(StorageDomainStatus.UNATTACHED);
+        getModel().setStatus(UNATTACHED);
     }
 
     @Override
     public boolean validateAction(String action) {
-        StorageDomain jaxb = storageDomain.jaxb;
 
-        switch (jaxb.getStatus()) {
+        switch (getModel().getStatus()) {
         case UNINITIALIZED:
             return action.equals("initialize");
         case UNATTACHED:
@@ -90,7 +89,7 @@ public class DummyStorageDomainResource implements StorageDomainResource, Action
         case LOCKED:
         case MIXED:
         default:
-            assert false : jaxb.getStatus();
+            assert false : getModel().getStatus();
             return false;
         }
     }

@@ -28,7 +28,9 @@ import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.resource.VmsResource;
-import com.redhat.rhevm.api.dummy.model.DummyVM;
+
+import static com.redhat.rhevm.api.common.resource.AbstractUpdatableResource.initialize;
+
 
 public class DummyVmsResource implements VmsResource {
     /* REVISIT: Singleton lifecycle probably requires that UriInfo
@@ -41,9 +43,9 @@ public class DummyVmsResource implements VmsResource {
 
     static {
         while (vms.size() < 10) {
-            DummyVM vm = new DummyVM();
-            vm.jaxb.setName("vm" + Integer.toString(vms.size()));
-            vms.put(vm.jaxb.getId(), new DummyVmResource(vm));
+            VM vm = new VM();
+            DummyVmResource resource = new DummyVmResource(initialize(vm));
+            vms.put(resource.getModel().getId(), resource);
         }
     }
 
@@ -52,7 +54,7 @@ public class DummyVmsResource implements VmsResource {
         VMs ret = new VMs();
 
         for (DummyVmResource vm : vms.values()) {
-            String id = vm.getVM().jaxb.getId();
+            String id = vm.getModel().getId();
             UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(id);
             ret.getVMs().add(vm.addLinks(uriBuilder));
         }
@@ -62,12 +64,11 @@ public class DummyVmsResource implements VmsResource {
 
     @Override
     public Response add(UriInfo uriInfo, VM vm) {
-        DummyVmResource newVM = new DummyVmResource(new DummyVM(vm));
+        DummyVmResource newVM = new DummyVmResource(initialize(vm));
 
-        String id = newVM.getVM().jaxb.getId();
-        vms.put(id, newVM);
+        vms.put(vm.getId(), newVM);
 
-        UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(id);
+        UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(vm.getId());
 
         VM ret = newVM.addLinks(uriBuilder);
 

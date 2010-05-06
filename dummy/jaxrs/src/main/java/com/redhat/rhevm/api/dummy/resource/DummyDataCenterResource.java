@@ -25,40 +25,32 @@ import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.Attachments;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.resource.DataCenterResource;
-import com.redhat.rhevm.api.dummy.model.DummyDataCenter;
+import com.redhat.rhevm.api.common.resource.AbstractUpdatableResource;
 
-public class DummyDataCenterResource implements DataCenterResource {
+
+public class DummyDataCenterResource extends AbstractUpdatableResource<DataCenter> implements DataCenterResource {
     /* FIXME: would like to do:
      * private @Context UriInfo uriInfo;
      */
-
-    private DummyDataCenter dataCenter;
 
     /**
      * Package-protected ctor, never needs to be instantiated by JAX-RS framework.
      *
      * @param dataCenter  encapsulated DataCenter
      */
-    DummyDataCenterResource(DummyDataCenter dataCenter) {
-        this.dataCenter = dataCenter;
-    }
-
-    /**
-     * Package-level accessor for encapsulated DataCenter
-     *
-     * @return  encapsulated dataCenter
-     */
-    DummyDataCenter getDataCenter() {
-        return dataCenter;
+    DummyDataCenterResource(DataCenter dataCenter) {
+        super(dataCenter, dataCenter.getId());
     }
 
     public DataCenter addLinks(UriInfo uriInfo, UriBuilder uriBuilder) {
-        Attachments attachments = DummyStorageDomainsResource.getAttachmentsForDataCenter(uriInfo, dataCenter.jaxb.getId());
-        dataCenter.jaxb.setAttachments(attachments);
+        Attachments attachments = DummyStorageDomainsResource.getAttachmentsForDataCenter(uriInfo, getModel().getId());
+        getModel().setAttachments(attachments);
 
         ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, DataCenterResource.class);
 
-        return dataCenter.getJaxb(uriBuilder, actionsBuilder);
+        getModel().setHref(uriBuilder.build().toString());
+        getModel().setActions(actionsBuilder.build());
+        return getModel();
     }
 
     /* FIXME: kill uriInfo param, make href auto-generated? */
@@ -69,7 +61,9 @@ public class DummyDataCenterResource implements DataCenterResource {
 
     @Override
     public DataCenter update(UriInfo uriInfo, DataCenter dataCenter) {
-        this.dataCenter.update(dataCenter);
+        // update writable fields only
+        getModel().setName(dataCenter.getName());
+        getModel().setStorageType(dataCenter.getStorageType());
         return addLinks(uriInfo, uriInfo.getRequestUriBuilder());
     }
 }

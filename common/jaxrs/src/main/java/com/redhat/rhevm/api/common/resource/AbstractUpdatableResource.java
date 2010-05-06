@@ -18,6 +18,10 @@
  */
 package com.redhat.rhevm.api.common.resource;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import javax.ws.rs.core.HttpHeaders;
 
 import com.redhat.rhevm.api.model.BaseResource;
@@ -29,11 +33,13 @@ public abstract class AbstractUpdatableResource<R extends BaseResource> {
 
     protected static final String[] STRICTLY_IMMUTABLE = {"id"};
 
-    protected String id;
+    private static Map<Class<?>, AtomicInteger> counters = new HashMap<Class<?>, AtomicInteger>();
+
 
     /**
-     * Prototype caches resource state from last retrieval or update, so that
-     * a snapshot of existing state is available for checking immutability
+     * For resources that do not maintain their own representation, we
+     * cache resource state from last retrieval or update, so that a
+     * snapshot of existing state is available for checking immutability
      * constraints on any subsequent updates.
      * Note that the some resource state may change as a result of other actions
      * (for example its status would be updated by the start operation),
@@ -41,10 +47,22 @@ public abstract class AbstractUpdatableResource<R extends BaseResource> {
      * only concerned with the fundamental immutable state of the resource
      * which would not be impacted by an action.
      */
-    private R prototype;
+    private R model;
 
-    public AbstractUpdatableResource(String id) {
+    protected String id;
+
+    public AbstractUpdatableResource(R model, String id) {
+        this.model = model;
         this.id = id;
+    }
+
+    public static <R extends BaseResource> R initialize(R model) {
+        int index = getCounter(model.getClass());
+        model.setId(Integer.toString(index));
+        if (!model.isSetName()) {
+            model.setName(model.getClass().getSimpleName().toLowerCase() + index);
+        }
+        return model;
     }
 
     /**
@@ -70,17 +88,35 @@ public abstract class AbstractUpdatableResource<R extends BaseResource> {
         return STRICTLY_IMMUTABLE;
     }
 
-    protected synchronized R getPrototype() {
-        return prototype == null
-               ? prototype = getRepresentation()
-               : prototype;
+    public synchronized R getModel() {
+        return model == null
+               ? model = refreshRepresentation()
+               : model;
     }
 
-    protected synchronized R setPrototype(R prototype) {
-        return this.prototype = prototype;
+    protected synchronized R setModel(R model) {
+        return this.model = model;
     }
 
-    protected R getRepresentation() {
+    /**
+     * Refresh representation from arms-length source
+     */
+    protected R refreshRepresentation() {
         return null;
+    }
+
+    /**
+     * A per-generic-instantiation map of counters.
+     *
+     * @param   clz the generic type parameter
+     * @return  the counter value for that type
+     */
+    private static int getCounter(Class<?> clz) {
+        AtomicInteger i = counters.get(clz);
+        if (i == null) {
+            i = new AtomicInteger();
+            counters.put(clz, i);
+        }
+        return i.incrementAndGet();
     }
 }

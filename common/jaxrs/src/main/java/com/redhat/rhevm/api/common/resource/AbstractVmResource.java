@@ -20,12 +20,10 @@ package com.redhat.rhevm.api.common.resource;
 
 import java.net.URI;
 
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
-import com.redhat.rhevm.api.common.util.MutabilityAssertor;
 import com.redhat.rhevm.api.common.util.ReapedMap;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.VM;
@@ -48,8 +46,8 @@ public abstract class AbstractVmResource extends AbstractUpdatableResource<VM> i
 
     protected ReapedMap<String, ActionResource> actions;
 
-    public AbstractVmResource(String id) {
-        super(id);
+    public AbstractVmResource(VM vm, String id) {
+        super(vm, id);
         actions = new ReapedMap<String, ActionResource>(KEY_MAPPER, REAP_AFTER);
     }
 

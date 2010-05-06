@@ -29,37 +29,29 @@ import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.dummy.model.DummyVmStatus;
-import com.redhat.rhevm.api.dummy.model.DummyVM;
+
 
 public class DummyVmResource extends AbstractVmResource {
     /* FIXME: would like to do:
      * private @Context UriInfo uriInfo;
      */
 
-    private DummyVM vm;
+    private DummyVmStatus status;
 
     /**
      * Package-protected ctor, never needs to be instantiated by JAX-RS framework.
      *
      * @param vm  encapsulated VM
      */
-    public DummyVmResource(DummyVM vm) {
-        super(vm.jaxb.getId());
-        this.vm = vm;
-    }
-
-    /**
-     * Package-level accessor for encapsulated VM
-     *
-     * @return  encapsulated VM
-     */
-    public DummyVM getVM() {
-        return vm;
+    public DummyVmResource(VM vm) {
+        super(vm, vm.getId());
     }
 
     public VM addLinks(UriBuilder uriBuilder) {
         ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, VmResource.class);
-        return vm.getJaxb(uriBuilder, actionsBuilder);
+        getModel().setHref(uriBuilder.build().toString());
+        getModel().setActions(actionsBuilder.build());
+        return getModel();
     }
 
     /* FIXME: kill uriInfo param, make href auto-generated? */
@@ -70,8 +62,9 @@ public class DummyVmResource extends AbstractVmResource {
 
     @Override
     public VM update(HttpHeaders headers, UriInfo uriInfo, VM vm) {
-        validateUpdate(vm, this.vm.jaxb, headers);
-        this.vm.update(vm);
+        validateUpdate(vm, getModel(), headers);
+        // update writable fields only
+        getModel().setName(vm.getName());
         return addLinks(uriInfo.getRequestUriBuilder());
     }
 
@@ -135,7 +128,7 @@ public class DummyVmResource extends AbstractVmResource {
             this.status = status;
         }
         public void run() {
-            vm.setStatus(status);
+            DummyVmResource.this.status = status;
         }
     }
 }

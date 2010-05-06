@@ -26,10 +26,11 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Attachment;
 import com.redhat.rhevm.api.model.Attachments;
+import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.resource.AttachmentResource;
 import com.redhat.rhevm.api.resource.AttachmentsResource;
-import com.redhat.rhevm.api.dummy.model.DummyAttachment;
+
 
 public class DummyAttachmentsResource implements AttachmentsResource {
     /* FIXME: synchronize access to this */
@@ -57,13 +58,23 @@ public class DummyAttachmentsResource implements AttachmentsResource {
 
     @Override
     public Response add(UriInfo uriInfo, Attachment attachment) {
-        DummyAttachmentResource newAttachment = new DummyAttachmentResource(new DummyAttachment(attachment));
+        // update writable fields only
+        if (attachment.getDataCenter() != null) {
+            DataCenter dataCenter = new DataCenter();
+
+            // we're only interested in its id
+            dataCenter.setId(attachment.getDataCenter().getId());
+
+            attachment.setDataCenter(dataCenter);
+        }
+
+        DummyAttachmentResource newAttachment = new DummyAttachmentResource(attachment);
 
         StorageDomain storageDomain = new StorageDomain();
         storageDomain.setId(storageDomainId);
-        newAttachment.getAttachment().jaxb.setStorageDomain(storageDomain);
+        newAttachment.getModel().setStorageDomain(storageDomain);
 
-        String id = newAttachment.getAttachment().jaxb.getDataCenter().getId();
+        String id = newAttachment.getModel().getDataCenter().getId();
         attachments.put(id, newAttachment);
 
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(id);

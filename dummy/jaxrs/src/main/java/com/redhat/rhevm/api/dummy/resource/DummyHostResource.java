@@ -26,37 +26,27 @@ import com.redhat.rhevm.api.common.resource.AbstractUpdatableResource;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.resource.HostResource;
-import com.redhat.rhevm.api.dummy.model.DummyHost;
+
 
 public class DummyHostResource extends AbstractUpdatableResource<Host> implements HostResource {
     /* FIXME: would like to do:
      * private @Context UriInfo uriInfo;
      */
 
-    private DummyHost host;
-
     /**
      * Package-protected ctor, never needs to be instantiated by JAX-RS framework.
      *
      * @param host  encapsulated host
      */
-    DummyHostResource(DummyHost host) {
-        super(host.jaxb.getId());
-        this.host = host;
-    }
-
-    /**
-     * Package-level accessor for encapsulated host
-     *
-     * @return  encapsulated host
-     */
-    DummyHost getHost() {
-        return host;
+    DummyHostResource(Host host) {
+        super(host, host.getId());
     }
 
     public Host addLinks(UriBuilder uriBuilder) {
         ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, HostResource.class);
-        return host.getJaxb(uriBuilder, actionsBuilder);
+        getModel().setHref(uriBuilder.build().toString());
+        getModel().setActions(actionsBuilder.build());
+        return getModel();
     }
 
     /* FIXME: kill uriInfo param, make href auto-generated? */
@@ -67,8 +57,9 @@ public class DummyHostResource extends AbstractUpdatableResource<Host> implement
 
     @Override
     public Host update(HttpHeaders headers, UriInfo uriInfo, Host host) {
-        validateUpdate(host, this.host.jaxb, headers);
-        this.host.update(host);
+        validateUpdate(host, getModel(), headers);
+        // update writable fields only
+        getModel().setName(host.getName());
         return addLinks(uriInfo.getRequestUriBuilder());
     }
 

@@ -34,7 +34,9 @@ import com.redhat.rhevm.api.model.StorageDomainType;
 import com.redhat.rhevm.api.model.StorageType;
 import com.redhat.rhevm.api.resource.StorageDomainResource;
 import com.redhat.rhevm.api.resource.StorageDomainsResource;
-import com.redhat.rhevm.api.dummy.model.DummyStorageDomain;
+
+import static com.redhat.rhevm.api.common.resource.AbstractUpdatableResource.initialize;
+
 
 public class DummyStorageDomainsResource implements StorageDomainsResource {
 
@@ -46,12 +48,12 @@ public class DummyStorageDomainsResource implements StorageDomainsResource {
         storage.setHost(host);
         storage.setPath(path);
 
-        DummyStorageDomain domain = new DummyStorageDomain();
-        domain.jaxb.setName(name);
-        domain.jaxb.setType(domainType);
-        domain.jaxb.setStatus(StorageDomainStatus.UNINITIALIZED);
-
-        storageDomains.put(domain.jaxb.getId(), new DummyStorageDomainResource(domain));
+        StorageDomain domain = new StorageDomain();
+        domain.setName(name);
+        domain.setType(domainType);
+        domain.setStatus(StorageDomainStatus.UNINITIALIZED);
+        DummyStorageDomainResource resource = new DummyStorageDomainResource(initialize(domain));
+        storageDomains.put(resource.getModel().getId(), resource);
     }
 
     static {
@@ -68,7 +70,7 @@ public class DummyStorageDomainsResource implements StorageDomainsResource {
         StorageDomains ret = new StorageDomains();
 
         for (DummyStorageDomainResource storageDomain : storageDomains.values()) {
-            String id = storageDomain.getStorageDomain().jaxb.getId();
+            String id = storageDomain.getModel().getId();
             UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(id);
             ret.getStorageDomains().add(storageDomain.addLinks(uriBuilder));
         }
@@ -78,9 +80,9 @@ public class DummyStorageDomainsResource implements StorageDomainsResource {
 
     @Override
     public Response add(UriInfo uriInfo, StorageDomain storageDomain) {
-        DummyStorageDomainResource newStorageDomain = new DummyStorageDomainResource(new DummyStorageDomain(storageDomain));
+        DummyStorageDomainResource newStorageDomain = new DummyStorageDomainResource(initialize(storageDomain));
 
-        String id = newStorageDomain.getStorageDomain().jaxb.getId();
+        String id = newStorageDomain.getModel().getId();
         storageDomains.put(id, newStorageDomain);
 
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(id);

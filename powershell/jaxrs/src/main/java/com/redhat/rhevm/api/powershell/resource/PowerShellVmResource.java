@@ -37,7 +37,7 @@ public class PowerShellVmResource extends AbstractVmResource {
      */
 
     public PowerShellVmResource(String id) {
-        super(id);
+        super(null, id);
     }
 
     public String getId() {
@@ -61,13 +61,13 @@ public class PowerShellVmResource extends AbstractVmResource {
 
     @Override
     public VM get(UriInfo uriInfo) {
-        return setPrototype(addLinks(getRepresentation(),
-                                     uriInfo.getRequestUriBuilder()));
+        return setModel(addLinks(refreshRepresentation(),
+                                 uriInfo.getRequestUriBuilder()));
     }
 
     @Override
     public VM update(HttpHeaders headers, UriInfo uriInfo, VM vm) {
-        validateUpdate(vm, getPrototype(), headers);
+        validateUpdate(vm, getModel(), headers);
 
         StringBuilder buf = new StringBuilder();
 
@@ -80,8 +80,8 @@ public class PowerShellVmResource extends AbstractVmResource {
         buf.append("\n");
         buf.append("update-vm -vmobject $v");
 
-        return setPrototype(addLinks(runAndParseSingle(buf.toString()),
-                                     uriInfo.getRequestUriBuilder()));
+        return setModel(addLinks(runAndParseSingle(buf.toString()),
+                                 uriInfo.getRequestUriBuilder()));
     }
 
     @Override
@@ -134,7 +134,7 @@ public class PowerShellVmResource extends AbstractVmResource {
         return doAction(uriInfo,action, DO_NOTHING);
     }
 
-    protected VM getRepresentation() {
+    protected VM refreshRepresentation() {
         return runAndParseSingle("get-vm " + id);
     }
 

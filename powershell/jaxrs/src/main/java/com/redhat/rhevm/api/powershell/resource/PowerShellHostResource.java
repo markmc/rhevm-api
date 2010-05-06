@@ -36,7 +36,7 @@ public class PowerShellHostResource extends AbstractUpdatableResource<Host> impl
      */
 
     public PowerShellHostResource(String id) {
-        super(id);
+        super(null, id);
     }
 
     public String getId() {
@@ -63,13 +63,13 @@ public class PowerShellHostResource extends AbstractUpdatableResource<Host> impl
 
     @Override
     public Host get(UriInfo uriInfo) {
-        return setPrototype(addLinks(getRepresentation(),
-                                     uriInfo.getRequestUriBuilder()));
+        return setModel(addLinks(refreshRepresentation(),
+                                 uriInfo.getRequestUriBuilder()));
     }
 
     @Override
     public Host update(HttpHeaders headers, UriInfo uriInfo, Host host) {
-        validateUpdate(host, getPrototype(), headers);
+        validateUpdate(host, getModel(), headers);
 
         StringBuilder buf = new StringBuilder();
 
@@ -82,8 +82,8 @@ public class PowerShellHostResource extends AbstractUpdatableResource<Host> impl
         buf.append("\n");
         buf.append("update-host -hostobject $v");
 
-        return setPrototype(addLinks(runAndParseSingle(buf.toString()),
-                                     uriInfo.getRequestUriBuilder()));
+        return setModel(addLinks(runAndParseSingle(buf.toString()),
+                                 uriInfo.getRequestUriBuilder()));
     }
 
     @Override
@@ -99,7 +99,7 @@ public class PowerShellHostResource extends AbstractUpdatableResource<Host> impl
     public void resume() {
     }
 
-    protected Host getRepresentation() {
+    protected Host refreshRepresentation() {
         return runAndParseSingle(CMD_PREFIX + "get-host " + id);
     }
 
