@@ -38,6 +38,7 @@ public class PowerShellApiResource implements ApiResource {
 
     private PowerShellDataCentersResource dataCenters = new PowerShellDataCentersResource();
     private PowerShellHostsResource hosts = new PowerShellHostsResource();
+    private PowerShellStorageDomainsResource storageDomains = new PowerShellStorageDomainsResource();
     private PowerShellVmsResource vms = new PowerShellVmsResource();
 
     private void addHeader(Response.ResponseBuilder responseBuilder, UriBuilder uriBuilder, String ... path) {
@@ -83,7 +84,7 @@ public class PowerShellApiResource implements ApiResource {
 
     @Override
     public StorageDomainsResource getStorageDomainsSubResource(UriInfo uriInfo) {
-        return null;
+        return storageDomains;
     }
 
     @Override
