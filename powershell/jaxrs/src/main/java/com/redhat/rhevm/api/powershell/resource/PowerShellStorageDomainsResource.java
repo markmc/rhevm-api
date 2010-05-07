@@ -101,7 +101,16 @@ public class PowerShellStorageDomainsResource implements StorageDomainsResource 
 
     @Override
     public void remove(String id) {
-        PowerShellUtils.runCommand("remove-storagedomain -storagedomainid " + id);
+        StringBuilder buf = new StringBuilder();
+
+        buf.append("remove-storagedomain --force");
+
+        buf.append(" --storagedomainid " + id);
+
+        // FIXME: we need a teardown action
+        buf.append(" -hostid XXXX ");
+
+        PowerShellUtils.runCommand(buf.toString());
     }
 
     @Override
