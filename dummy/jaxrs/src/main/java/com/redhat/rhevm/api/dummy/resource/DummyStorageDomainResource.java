@@ -43,6 +43,7 @@ public class DummyStorageDomainResource extends AbstractUpdatableResource<Storag
      */
     DummyStorageDomainResource(StorageDomain storageDomain) {
         super(storageDomain, storageDomain.getId());
+        getModel().setStatus(UNINITIALIZED);
         this.attachments = new DummyAttachmentsResource(storageDomain.getId());
     }
 

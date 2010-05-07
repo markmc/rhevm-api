@@ -51,7 +51,6 @@ public class DummyStorageDomainsResource implements StorageDomainsResource {
         StorageDomain domain = new StorageDomain();
         domain.setName(name);
         domain.setType(domainType);
-        domain.setStatus(StorageDomainStatus.UNINITIALIZED);
         DummyStorageDomainResource resource = new DummyStorageDomainResource(initialize(domain));
         storageDomains.put(resource.getModel().getId(), resource);
     }
