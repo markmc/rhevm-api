@@ -58,7 +58,21 @@ public class PowerShellStorageDomainsResource implements StorageDomainsResource 
         // FIXME: we don't know this until initialize
         buf.append(" -hostid XXXX ");
 
-        buf.append(" -domaintype " + storageDomain.getType().toString());
+        buf.append(" -domaintype ");
+        switch (storageDomain.getType()) {
+        case DATA:
+            buf.append("Data");
+            break;
+        case ISO:
+            buf.append("ISO");
+            break;
+        case EXPORT:
+            buf.append("Export");
+            break;
+        default:
+            assert false : storageDomain.getType();
+            break;
+        }
 
         Storage storage = storageDomain.getStorage();
 
