@@ -18,8 +18,6 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import java.util.List;
-
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;

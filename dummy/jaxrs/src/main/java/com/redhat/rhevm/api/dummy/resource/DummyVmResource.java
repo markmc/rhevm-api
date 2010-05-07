@@ -36,6 +36,7 @@ public class DummyVmResource extends AbstractVmResource {
      * private @Context UriInfo uriInfo;
      */
 
+    @SuppressWarnings("unused")
     private DummyVmStatus status;
 
     /**

@@ -19,7 +19,6 @@
 package com.redhat.rhevm.api.powershell.resource;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
 import javax.ws.rs.core.Response;
@@ -28,7 +27,6 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Storage;
 import com.redhat.rhevm.api.model.StorageDomain;
-import com.redhat.rhevm.api.model.StorageDomainType;
 import com.redhat.rhevm.api.model.StorageDomains;
 import com.redhat.rhevm.api.model.StorageDomainStatus;
 import com.redhat.rhevm.api.resource.StorageDomainResource;
