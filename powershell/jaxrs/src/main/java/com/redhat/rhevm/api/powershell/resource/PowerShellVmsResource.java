@@ -54,9 +54,8 @@ public class PowerShellVmsResource implements VmsResource {
     public VMs list(UriInfo uriInfo) {
         VMs ret = new VMs();
         for (VM vm : PowerShellVmResource.runAndParse("select-vm")) {
-            PowerShellVmResource resource = new PowerShellVmResource(vm);
             UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(vm.getId());
-            ret.getVMs().add(resource.addLinks(uriBuilder));
+            ret.getVMs().add(PowerShellVmResource.addLinks(vm, uriBuilder));
         }
         return ret;
     }
@@ -92,11 +91,11 @@ public class PowerShellVmsResource implements VmsResource {
 
         vm = PowerShellVmResource.runAndParseSingle(buf.toString());
 
-        PowerShellVmResource resource = new PowerShellVmResource(vm);
-
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(vm.getId());
 
-        return Response.created(uriBuilder.build()).entity(resource.addLinks(uriBuilder)).build();
+        vm = PowerShellVmResource.addLinks(vm, uriBuilder);
+
+        return Response.created(uriBuilder.build()).entity(vm).build();
     }
 
     @Override

@@ -39,9 +39,8 @@ public class PowerShellDataCentersResource implements DataCentersResource {
     public DataCenters list(UriInfo uriInfo) {
         DataCenters ret = new DataCenters();
         for (DataCenter dataCenter : PowerShellDataCenterResource.runAndParse("select-datacenter")) {
-            PowerShellDataCenterResource resource = new PowerShellDataCenterResource(dataCenter);
             UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(dataCenter.getId());
-            ret.getDataCenters().add(resource.addLinks(uriBuilder));
+            ret.getDataCenters().add(PowerShellDataCenterResource.addLinks(dataCenter, uriBuilder));
         }
         return ret;
     }
@@ -67,11 +66,11 @@ public class PowerShellDataCentersResource implements DataCentersResource {
 
         dataCenter = PowerShellDataCenterResource.runAndParseSingle(buf.toString());
 
-        PowerShellDataCenterResource resource = new PowerShellDataCenterResource(dataCenter);
-
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(dataCenter.getId());
 
-        return Response.created(uriBuilder.build()).entity(resource.addLinks(uriBuilder)).build();
+        dataCenter = PowerShellDataCenterResource.addLinks(dataCenter, uriBuilder);
+
+        return Response.created(uriBuilder.build()).entity(dataCenter).build();
     }
 
     @Override
