@@ -20,23 +20,24 @@ package com.redhat.rhevm.api.powershell.resource;
 
 import java.util.ArrayList;
 
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.common.resource.AbstractUpdatableResource;
 import com.redhat.rhevm.api.model.DataCenter;
+import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.resource.DataCenterResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellDataCenter;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
-public class PowerShellDataCenterResource implements DataCenterResource {
+public class PowerShellDataCenterResource extends AbstractUpdatableResource<DataCenter> implements DataCenterResource {
     /* FIXME: would like to do:
      * private @Context UriInfo uriInfo;
      */
 
-    private String id;
-
     public PowerShellDataCenterResource(String id) {
-        this.id = id;
+        super(null, id);
     }
 
     public static ArrayList<DataCenter> runAndParse(String command) {
@@ -56,11 +57,13 @@ public class PowerShellDataCenterResource implements DataCenterResource {
 
     @Override
     public DataCenter get(UriInfo uriInfo) {
-        return addLinks(runAndParseSingle("get-datacenter " + id), uriInfo.getRequestUriBuilder());
+        return setModel(addLinks(refreshRepresentation(), uriInfo.getRequestUriBuilder()));
     }
 
     @Override
-    public DataCenter update(UriInfo uriInfo, DataCenter dataCenter) {
+    public DataCenter update(HttpHeaders headers, UriInfo uriInfo, DataCenter dataCenter) {
+        validateUpdate(dataCenter, getModel(), headers);
+
         StringBuilder buf = new StringBuilder();
 
         buf.append("$h = get-datacenter " + id + "\n");
@@ -72,6 +75,12 @@ public class PowerShellDataCenterResource implements DataCenterResource {
         buf.append("\n");
         buf.append("update-datacenter -datacenterobject $v");
 
-        return addLinks(runAndParseSingle(buf.toString()), uriInfo.getRequestUriBuilder());
+        return setModel(addLinks(runAndParseSingle(buf.toString()),
+                                 uriInfo.getRequestUriBuilder()));
     }
+
+    protected DataCenter refreshRepresentation() {
+        return runAndParseSingle("get-datacenter " + id);
+    }
+
 }

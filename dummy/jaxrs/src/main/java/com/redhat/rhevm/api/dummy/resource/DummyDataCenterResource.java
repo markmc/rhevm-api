@@ -18,6 +18,7 @@
  */
 package com.redhat.rhevm.api.dummy.resource;
 
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
@@ -60,7 +61,8 @@ public class DummyDataCenterResource extends AbstractUpdatableResource<DataCente
     }
 
     @Override
-    public DataCenter update(UriInfo uriInfo, DataCenter dataCenter) {
+    public DataCenter update(HttpHeaders headers, UriInfo uriInfo, DataCenter dataCenter) {
+        validateUpdate(dataCenter, getModel(), headers);
         // update writable fields only
         getModel().setName(dataCenter.getName());
         getModel().setStorageType(dataCenter.getStorageType());

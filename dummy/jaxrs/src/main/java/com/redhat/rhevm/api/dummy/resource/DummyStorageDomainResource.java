@@ -18,6 +18,7 @@
  */
 package com.redhat.rhevm.api.dummy.resource;
 
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
@@ -66,7 +67,8 @@ public class DummyStorageDomainResource extends AbstractUpdatableResource<Storag
     }
 
     @Override
-    public StorageDomain update(UriInfo uriInfo, StorageDomain storageDomain) {
+    public StorageDomain update(HttpHeaders headers, UriInfo uriInfo, StorageDomain storageDomain) {
+        validateUpdate(storageDomain, getModel(), headers);
         // update writable fields only
         getModel().setName(storageDomain.getName());
         return addLinks(uriInfo.getRequestUriBuilder());

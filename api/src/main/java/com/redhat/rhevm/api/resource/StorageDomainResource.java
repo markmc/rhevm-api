@@ -24,6 +24,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Action;
@@ -36,7 +37,7 @@ public interface StorageDomainResource {
 
     @PUT
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
-    public StorageDomain update(@Context UriInfo uriInfo, StorageDomain storageDomain);
+    public StorageDomain update(@Context HttpHeaders headers, @Context UriInfo uriInfo, StorageDomain storageDomain);
 
     // FIXME: these actions need to return a response
 

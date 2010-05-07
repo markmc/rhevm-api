@@ -61,13 +61,13 @@ public class PowerShellStorageDomainsResource implements StorageDomainsResource 
             }
             PowerShellStorageDomainResource resource = new PowerShellStorageDomainResource(storageDomain, this);
             UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(storageDomain.getId());
-            ret.getStorageDomains().add(resource.addLinks(uriBuilder));
+            ret.getStorageDomains().add(resource.addLinks(storageDomain, uriBuilder));
         }
 
         for (String id : stagedDomains.keySet()) {
             PowerShellStorageDomainResource resource = stagedDomains.get(id);
             UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(id);
-            ret.getStorageDomains().add(resource.addLinks(uriBuilder));
+            ret.getStorageDomains().add(resource.addLinks(resource.getModel(), uriBuilder));
         }
 
         return ret;
@@ -84,7 +84,7 @@ public class PowerShellStorageDomainsResource implements StorageDomainsResource 
 
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(storageDomain.getId());
 
-        return Response.created(uriBuilder.build()).entity(resource.addLinks(uriBuilder)).build();
+        return Response.created(uriBuilder.build()).entity(resource.addLinks(storageDomain, uriBuilder)).build();
     }
 
     @Override
@@ -101,8 +101,14 @@ public class PowerShellStorageDomainsResource implements StorageDomainsResource 
             if (toRhevmIdMapping.containsKey(id)) {
                 id = toRhevmIdMapping.get(id);
             }
-            return new PowerShellStorageDomainResource(id, this);
+            return createSubResource(id);
         }
+    }
+
+    protected PowerShellStorageDomainResource createSubResource(String id) {
+        StorageDomain storageDomain = new StorageDomain();
+        storageDomain.setId(id);
+        return new PowerShellStorageDomainResource(storageDomain, this);
     }
 
     /**
