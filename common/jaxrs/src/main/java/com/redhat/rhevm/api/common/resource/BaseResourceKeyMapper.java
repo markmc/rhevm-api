@@ -16,10 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api.resource;
+
+package com.redhat.rhevm.api.common.resource;
+
+import com.redhat.rhevm.api.common.util.ReapedMap;
+import com.redhat.rhevm.api.model.BaseResource;
 
 
-import com.redhat.rhevm.api.model.DataCenter;
-
-public interface DataCenterResource extends UpdatableResource<DataCenter> {
+public class BaseResourceKeyMapper<R extends BaseResource,
+                                   T extends AbstractUpdatableResource<R>>
+    implements ReapedMap.ValueToKeyMapper<String, T> {
+ 
+    public String getKey(T value) {
+        return value.getModel().getId();
+    }
 }

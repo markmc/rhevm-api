@@ -19,31 +19,25 @@
 package com.redhat.rhevm.api.resource;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.Path;
-import javax.ws.rs.POST;
+import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.model.Action;
-import com.redhat.rhevm.api.model.Actionable;
-import com.redhat.rhevm.api.model.StorageDomain;
+import com.redhat.rhevm.api.model.BaseResource;
 
-public interface StorageDomainResource extends UpdatableResource<StorageDomain> {
 
-    // FIXME: these actions need to return a response
+public interface UpdatableResource<R extends BaseResource> {
+    /* FIXME: can we make uriInfo a field instead of a parameter to
+     *        each method? Adding @Context to the implementation
+     *        class doesn't seem to work.
+     */
 
-    @POST
+    @GET
+    public R get(@Context UriInfo uriInfo);
+
+    @PUT
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
-    @Actionable
-    @Path("initialize")
-    public void initialize(@Context UriInfo uriInfo, Action action);
-
-    @POST
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
-    @Actionable
-    @Path("teardown")
-    public void teardown(@Context UriInfo uriInfo, Action action);
-
-    @Path("attachments")
-    public AttachmentsResource getAttachmentsResource();
+    public R update(@Context HttpHeaders headers, @Context UriInfo uriInfo, R resource);
 }

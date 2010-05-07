@@ -18,38 +18,13 @@
  */
 package com.redhat.rhevm.api.resource;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Actionable;
 import com.redhat.rhevm.api.model.Host;
 
-public interface HostResource {
-    /* FIXME: can we make uriInfo a field instead of a parameter to
-     *        each method? Adding @Context to the implementation
-     *        class doesn't seem to work.
-     */
-
-    @GET
-    public Host get(@Context UriInfo uriInfo);
-
-    /**
-     * Modifies an existing host's properties in the database.
-     * <p>
-     * Only the Host#name property can be modified.
-     *
-     * @param host  the host definition with the modified properties
-     * @return      the updated Host
-     */
-    @PUT
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
-    public Host update(@Context HttpHeaders headers, @Context UriInfo uriInfo, Host host);
+public interface HostResource extends UpdatableResource<Host> {
 
     @POST
     @Actionable

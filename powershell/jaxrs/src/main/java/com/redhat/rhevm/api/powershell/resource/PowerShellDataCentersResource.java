@@ -28,7 +28,10 @@ import com.redhat.rhevm.api.resource.DataCenterResource;
 import com.redhat.rhevm.api.resource.DataCentersResource;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
-public class PowerShellDataCentersResource implements DataCentersResource {
+public class PowerShellDataCentersResource
+    extends AbstractPowerShellCollectionResource<DataCenter, PowerShellDataCenterResource>
+    implements DataCentersResource {
+
     /* FIXME: would like to do:
      * private @Context UriInfo uriInfo;
      */
@@ -74,10 +77,16 @@ public class PowerShellDataCentersResource implements DataCentersResource {
     @Override
     public void remove(String id) {
         PowerShellUtils.runCommand("remove-datacenter -datacenterid " + id);
+        removeSubResource(id);
     }
 
     @Override
     public DataCenterResource getDataCenterSubResource(UriInfo uriInfo, String id) {
+        return getSubResource(id);
+    }
+
+    protected PowerShellDataCenterResource createSubResource(String id) {
         return new PowerShellDataCenterResource(id);
     }
+
 }

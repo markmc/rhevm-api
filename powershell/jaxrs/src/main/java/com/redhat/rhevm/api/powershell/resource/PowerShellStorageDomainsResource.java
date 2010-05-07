@@ -25,15 +25,13 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.model.Storage;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.StorageDomains;
 import com.redhat.rhevm.api.model.StorageDomainStatus;
 import com.redhat.rhevm.api.resource.StorageDomainResource;
 import com.redhat.rhevm.api.resource.StorageDomainsResource;
-import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
-public class PowerShellStorageDomainsResource implements StorageDomainsResource {
+public class PowerShellStorageDomainsResource extends AbstractPowerShellCollectionResource<StorageDomain, PowerShellStorageDomainResource> implements StorageDomainsResource {
 
     /* FIXME: these maps shouldn't be static and they need synchronization */
 
@@ -91,6 +89,7 @@ public class PowerShellStorageDomainsResource implements StorageDomainsResource 
     public void remove(String id) {
         removeIdMapping(id);
         stagedDomains.remove(id);
+        removeSubResource(id);
     }
 
     @Override
@@ -101,7 +100,8 @@ public class PowerShellStorageDomainsResource implements StorageDomainsResource 
             if (toRhevmIdMapping.containsKey(id)) {
                 id = toRhevmIdMapping.get(id);
             }
-            return createSubResource(id);
+            // only used cached resource in unstaged case
+            return getSubResource(id);
         }
     }
 
@@ -131,7 +131,7 @@ public class PowerShellStorageDomainsResource implements StorageDomainsResource 
     }
 
     /**
-     * Remove a stoage domain from the set of staged storage domains.
+     * Remove a storage domain from the set of staged storage domains.
      * <p>
      * This method should be called when a storage domain has been
      * initialized. At this point it exists in RHEV-M itself and
@@ -150,7 +150,7 @@ public class PowerShellStorageDomainsResource implements StorageDomainsResource 
      * allocated and the ones allocated by RHEV-M.
      *
      * @param id our ID
-     * @parem rhevmId RHEV-M's ID
+     * @param rhevmId RHEV-M's ID
      */
     private void addIdMapping(String id, String rhevmId) {
         toRhevmIdMapping.put(id, rhevmId);

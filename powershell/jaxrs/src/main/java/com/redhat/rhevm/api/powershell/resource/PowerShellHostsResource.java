@@ -22,30 +22,19 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.common.util.ReapedMap;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.Hosts;
 import com.redhat.rhevm.api.resource.HostResource;
 import com.redhat.rhevm.api.resource.HostsResource;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
-public class PowerShellHostsResource implements HostsResource {
+public class PowerShellHostsResource
+    extends AbstractPowerShellCollectionResource<Host, PowerShellHostResource>
+    implements HostsResource {
+    
     /* FIXME: would like to do:
      * private @Context UriInfo uriInfo;
      */
-
-    private static ReapedMap.ValueToKeyMapper<String, PowerShellHostResource> KEY_MAPPER =
-        new ReapedMap.ValueToKeyMapper<String, PowerShellHostResource>() {
-            public String getKey(PowerShellHostResource value) {
-                return value.getId();
-            }
-        };
-
-    private ReapedMap<String, PowerShellHostResource> hosts;
-
-    public PowerShellHostsResource() {
-        hosts = new ReapedMap<String, PowerShellHostResource>(KEY_MAPPER);
-    }
 
     @Override
     public Hosts list(UriInfo uriInfo) {
@@ -94,19 +83,16 @@ public class PowerShellHostsResource implements HostsResource {
     @Override
     public void remove(String id) {
         PowerShellUtils.runCommand("remove-host -hostid " + id);
+        removeSubResource(id);
     }
 
     @Override
     public HostResource getHostSubResource(UriInfo uriInfo, String id) {
-       synchronized (hosts) {
-            PowerShellHostResource ret = hosts.get(id);
-            if (ret == null) {
-                ret = new PowerShellHostResource(id);
-                hosts.put(id, ret);
-                hosts.reapable(id);
-            }
-            return ret;
-        }
+        return getSubResource(id);
+    }
+
+    protected PowerShellHostResource createSubResource(String id) {
+        return new PowerShellHostResource(id);
     }
 
 /*

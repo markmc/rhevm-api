@@ -86,11 +86,14 @@ public class PowerShellStorageDomainResource extends AbstractUpdatableResource<S
         validateUpdate(storageDomain, getModel(), headers);
 
         StringBuilder buf = new StringBuilder();
-        if (!staged) {
+        if (staged) {
+            // update writable fields only
+            getModel().setName(storageDomain.getName());
+        } else {
             buf.append("$h = get-storagedomain " + id + "\n");
 
-            if (getModel().getName() != null) {
-                buf.append("$h.name = \"" + getModel().getName() + "\"");
+            if (storageDomain.getName() != null) {
+                buf.append("$h.name = \"" + storageDomain.getName() + "\"");
             }
 
             buf.append("\n");
@@ -98,7 +101,7 @@ public class PowerShellStorageDomainResource extends AbstractUpdatableResource<S
         }
 
         return setModel(addLinks(staged
-                                 ? setModel(storageDomain)
+                                 ? getModel()
                                  : runAndParseSingle(buf.toString()),
                                  uriInfo.getRequestUriBuilder()));
     }
@@ -166,8 +169,11 @@ public class PowerShellStorageDomainResource extends AbstractUpdatableResource<S
         }
 
         setModel(PowerShellStorageDomainResource.runAndParseSingle(buf.toString()));
-        parent.unstageDomain(id, getModel().getId());
-        id = getModel().getId();
+        // unstage with fabricated ID, real RHEVM ID
+        String rhevmId = getModel().getId();
+        parent.unstageDomain(id, rhevmId);
+        // set super-class id to real RHEVM ID for later unstaging
+        id = rhevmId;
     }
 
     @Override
@@ -176,13 +182,14 @@ public class PowerShellStorageDomainResource extends AbstractUpdatableResource<S
 
         buf.append("remove-storagedomain --force");
 
-        buf.append(" --storagedomainid " + getModel().getId());
+        buf.append(" --storagedomainid " + id);
 
         buf.append(" -hostid " + action.getHost().getId());
 
         PowerShellUtils.runCommand(buf.toString());
 
-        parent.stageDomain(getModel().getId(), this);
+        // unstage with real RHEVM ID
+        parent.stageDomain(id, this);
     }
 
     @Override

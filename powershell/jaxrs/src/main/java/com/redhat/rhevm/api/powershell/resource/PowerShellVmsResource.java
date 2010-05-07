@@ -22,6 +22,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.common.resource.BaseResourceKeyMapper;
 import com.redhat.rhevm.api.common.util.ReapedMap;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
@@ -35,17 +36,10 @@ public class PowerShellVmsResource implements VmsResource {
      * private @Context UriInfo uriInfo;
      */
 
-    private static ReapedMap.ValueToKeyMapper<String, PowerShellVmResource> KEY_MAPPER =
-        new ReapedMap.ValueToKeyMapper<String, PowerShellVmResource>() {
-            public String getKey(PowerShellVmResource value) {
-                return value.getId();
-            }
-        };
-
     private ReapedMap<String, PowerShellVmResource> vms;
 
     public PowerShellVmsResource() {
-        vms = new ReapedMap<String, PowerShellVmResource>(KEY_MAPPER);
+        vms = new ReapedMap<String, PowerShellVmResource>(new BaseResourceKeyMapper<VM, PowerShellVmResource>());
     }
 
     @Override
@@ -99,6 +93,7 @@ public class PowerShellVmsResource implements VmsResource {
     @Override
     public void remove(String id) {
         runCommand("remove-vm -vmid " + id);
+        removeSubResource(id);
     }
 
     @Override
@@ -111,6 +106,12 @@ public class PowerShellVmsResource implements VmsResource {
                 vms.reapable(id);
             }
             return ret;
+        }
+    }
+
+    protected void removeSubResource(String id) {
+        synchronized (vms) {
+            vms.remove(id);
         }
     }
 }
