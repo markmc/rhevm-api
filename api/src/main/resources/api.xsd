@@ -43,6 +43,8 @@
   <xs:group name="ActionParameterGroup">
     <xs:sequence>
       <xs:element name="grace_period" type="GracePeriod" minOccurs="0"/>
+      <!-- for StorageDomain initialize/teardown actions -->
+      <xs:element name="host" type="Host" minOccurs="0"/>
       <!-- ... etc., explicitly enumerate all the parameter types -->
     </xs:sequence>
   </xs:group>

@@ -26,6 +26,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Actionable;
 import com.redhat.rhevm.api.model.StorageDomain;
 
@@ -37,15 +38,19 @@ public interface StorageDomainResource {
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
     public StorageDomain update(@Context UriInfo uriInfo, StorageDomain storageDomain);
 
-    @POST
-    @Actionable
-    @Path("initialize")
-    public void initialize();
+    // FIXME: these actions need to return a response
 
     @POST
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
+    @Actionable
+    @Path("initialize")
+    public void initialize(@Context UriInfo uriInfo, Action action);
+
+    @POST
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
     @Actionable
     @Path("teardown")
-    public void teardown();
+    public void teardown(@Context UriInfo uriInfo, Action action);
 
     @Path("attachments")
     public AttachmentsResource getAttachmentsResource();

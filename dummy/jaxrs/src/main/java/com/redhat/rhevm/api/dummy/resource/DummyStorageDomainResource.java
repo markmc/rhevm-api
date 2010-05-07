@@ -22,6 +22,7 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.common.resource.AbstractUpdatableResource;
+import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.ActionValidator;
 import com.redhat.rhevm.api.model.Link;
@@ -72,13 +73,13 @@ public class DummyStorageDomainResource extends AbstractUpdatableResource<Storag
     }
 
     @Override
-    public void initialize() {
+    public void initialize(UriInfo uriInfo, Action action) {
         // FIXME: error if not uninitialized
         getModel().setStatus(UNATTACHED);
     }
 
     @Override
-    public void teardown() {
+    public void teardown(UriInfo uriInfo, Action action) {
         // FIXME: error if not unattached
         getModel().setStatus(UNINITIALIZED);
     }

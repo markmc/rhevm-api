@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.ActionValidator;
 import com.redhat.rhevm.api.model.Storage;
@@ -131,7 +132,7 @@ public class PowerShellStorageDomainResource implements StorageDomainResource, A
     }
 
     @Override
-    public void initialize() {
+    public void initialize(UriInfo uriInfo, Action action) {
         StringBuilder buf = new StringBuilder();
 
         buf.append("add-storagedomain");
@@ -140,8 +141,7 @@ public class PowerShellStorageDomainResource implements StorageDomainResource, A
             buf.append(" -name " + storageDomain.getName());
         }
 
-        // FIXME: need a parameter for this
-        buf.append(" -hostid XXXX ");
+        buf.append(" -hostid " + action.getHost().getId());
 
         buf.append(" -domaintype ");
         switch (storageDomain.getType()) {
@@ -183,15 +183,14 @@ public class PowerShellStorageDomainResource implements StorageDomainResource, A
     }
 
     @Override
-    public void teardown() {
+    public void teardown(UriInfo uriInfo, Action action) {
         StringBuilder buf = new StringBuilder();
 
         buf.append("remove-storagedomain --force");
 
         buf.append(" --storagedomainid " + storageDomain.getId());
 
-        // FIXME: need a parameter for this
-        buf.append(" -hostid XXXX ");
+        buf.append(" -hostid " + action.getHost().getId());
 
         PowerShellUtils.runCommand(buf.toString());
 

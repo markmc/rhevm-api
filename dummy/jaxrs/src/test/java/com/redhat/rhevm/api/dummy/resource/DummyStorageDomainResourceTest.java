@@ -20,6 +20,7 @@ package com.redhat.rhevm.api.dummy.resource;
 
 import org.junit.Test;
 
+import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.StorageDomains;
@@ -89,24 +90,27 @@ public class DummyStorageDomainResourceTest extends DummyTestBase {
         assertNotNull(domain);
 
         assertEquals(domain.getStatus(), StorageDomainStatus.UNINITIALIZED);
-        createActionResource(getActionUri(domain, "initialize")).post();
+
+        Action action = new Action();
+
+        createActionResource(getActionUri(domain, "initialize")).post(action);
 
         domain = service.get(domain.getId());
         assertEquals(domain.getStatus(), StorageDomainStatus.UNATTACHED);
 /* FIXME
-        createActionResource(getActionUri(domain, "attach")).post();
+        createActionResource(getActionUri(domain, "attach")).post(action);
 
         domain = service.get(domain.getId());
         assertEquals(domain.getStatus(), StorageDomainStatus.INACTIVE);
-        createActionResource(getActionUri(domain, "activate")).post();
+        createActionResource(getActionUri(domain, "activate")).post(action);
 
         domain = service.get(domain.getId());
         assertEquals(domain.getStatus(), StorageDomainStatus.ACTIVE);
-        createActionResource(getActionUri(domain, "deactivate")).post();
+        createActionResource(getActionUri(domain, "deactivate")).post(action);
 
         domain = service.get(domain.getId());
         assertEquals(domain.getStatus(), StorageDomainStatus.INACTIVE);
-        createActionResource(getActionUri(domain, "detach")).post();
+        createActionResource(getActionUri(domain, "detach")).post(action);
 
         domain = service.get(domain.getId());
         assertEquals(domain.getStatus(), StorageDomainStatus.UNATTACHED);

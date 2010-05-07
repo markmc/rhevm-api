@@ -38,6 +38,7 @@ import org.jboss.resteasy.plugins.providers.RegisterBuiltin;
 import org.jboss.resteasy.plugins.server.tjws.TJWSEmbeddedJaxrsServer;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
+import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.Hosts;
 import com.redhat.rhevm.api.model.LinkHeader;
@@ -107,7 +108,7 @@ public class DummyTestBase extends Assert {
     @Path("/")
     @Produces(MediaType.APPLICATION_XML)
     protected interface ActionResource {
-        @POST public void post();
+        @POST @Consumes(MediaType.APPLICATION_XML) public void post(Action action);
     }
 
     protected ActionResource createActionResource(String uri) {
