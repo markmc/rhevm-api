@@ -25,7 +25,9 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.ActionValidator;
+import com.redhat.rhevm.api.model.Storage;
 import com.redhat.rhevm.api.model.StorageDomain;
+import com.redhat.rhevm.api.model.StorageDomainStatus;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.resource.AttachmentsResource;
 import com.redhat.rhevm.api.resource.StorageDomainResource;
@@ -35,13 +37,30 @@ import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 public class PowerShellStorageDomainResource implements StorageDomainResource, ActionValidator {
 
     private StorageDomain storageDomain;
+    private PowerShellStorageDomainsResource parent;
 
-    public PowerShellStorageDomainResource(StorageDomain storageDomain) {
+    /* Whether this storage domain exists yet in RHEV-M */
+    private boolean staged;
+
+    public PowerShellStorageDomainResource(StorageDomain storageDomain,
+                                           PowerShellStorageDomainsResource parent,
+                                           boolean staged) {
         this.storageDomain = storageDomain;
+        this.parent = parent;
+        this.staged = staged;
     }
 
-    public PowerShellStorageDomainResource(String id) {
+    public PowerShellStorageDomainResource(StorageDomain storageDomain, PowerShellStorageDomainsResource parent) {
+        this(storageDomain, parent, false);
+    }
+
+    public PowerShellStorageDomainResource(String id, PowerShellStorageDomainsResource parent) {
         storageDomain = new StorageDomain();
+        storageDomain.setId(id);
+        this.parent = parent;
+    }
+
+    public void setId(String id) {
         storageDomain.setId(id);
     }
 
@@ -57,6 +76,7 @@ public class PowerShellStorageDomainResource implements StorageDomainResource, A
 
     public StorageDomain addLinks(UriBuilder uriBuilder) {
         ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, StorageDomainResource.class, this);
+        storageDomain = parent.mapId(storageDomain);
         storageDomain.setActions(actionsBuilder.build());
         storageDomain.setHref(uriBuilder.build().toString());
         return storageDomain;
@@ -64,24 +84,30 @@ public class PowerShellStorageDomainResource implements StorageDomainResource, A
 
     @Override
     public StorageDomain get(UriInfo uriInfo) {
-        storageDomain = runAndParseSingle("get-storagedomain " + storageDomain.getId());
+        if (!staged) {
+            storageDomain = runAndParseSingle("get-storagedomain " + storageDomain.getId());
+        }
         return addLinks(uriInfo.getRequestUriBuilder());
     }
 
     @Override
     public StorageDomain update(UriInfo uriInfo, StorageDomain storageDomain) {
-        StringBuilder buf = new StringBuilder();
+        if (!staged) {
+            StringBuilder buf = new StringBuilder();
 
-        buf.append("$h = get-storagedomain " + storageDomain.getId() + "\n");
+            buf.append("$h = get-storagedomain " + storageDomain.getId() + "\n");
 
-        if (storageDomain.getName() != null) {
-            buf.append("$h.name = \"" + storageDomain.getName() + "\"");
+            if (storageDomain.getName() != null) {
+                buf.append("$h.name = \"" + storageDomain.getName() + "\"");
+            }
+
+            buf.append("\n");
+            buf.append("update-storagedomain -storagedomainobject $v");
+
+            this.storageDomain = runAndParseSingle(buf.toString());
+        } else {
+            this.storageDomain = storageDomain;
         }
-
-        buf.append("\n");
-        buf.append("update-storagedomain -storagedomainobject $v");
-
-        this.storageDomain = runAndParseSingle(buf.toString());
 
         return addLinks(uriInfo.getRequestUriBuilder());
     }
@@ -92,6 +118,7 @@ public class PowerShellStorageDomainResource implements StorageDomainResource, A
         case UNINITIALIZED:
             return action.equals("initialize");
         case UNATTACHED:
+            return action.equals("teardown");
         case ACTIVE:
         case INACTIVE:
             return false;
@@ -105,10 +132,70 @@ public class PowerShellStorageDomainResource implements StorageDomainResource, A
 
     @Override
     public void initialize() {
+        StringBuilder buf = new StringBuilder();
+
+        buf.append("add-storagedomain");
+
+        if (storageDomain.getName() != null) {
+            buf.append(" -name " + storageDomain.getName());
+        }
+
+        // FIXME: need a parameter for this
+        buf.append(" -hostid XXXX ");
+
+        buf.append(" -domaintype ");
+        switch (storageDomain.getType()) {
+        case DATA:
+            buf.append("Data");
+            break;
+        case ISO:
+            buf.append("ISO");
+            break;
+        case EXPORT:
+            buf.append("Export");
+            break;
+        default:
+            assert false : storageDomain.getType();
+            break;
+        }
+
+        Storage storage = storageDomain.getStorage();
+
+        buf.append(" -storagetype " + storage.getType().toString());
+        buf.append(" -storage ");
+
+        switch (storage.getType()) {
+        case NFS:
+            buf.append(storage.getHost() + ":" + storage.getPath());
+            break;
+        case ISCSI:
+        case FCP:
+        default:
+            assert false : storage.getType();
+            break;
+        }
+
+        String id = storageDomain.getId();
+
+        storageDomain = PowerShellStorageDomainResource.runAndParseSingle(buf.toString());
+
+        parent.unstageDomain(id, storageDomain.getId());
     }
 
     @Override
     public void teardown() {
+        StringBuilder buf = new StringBuilder();
+
+        buf.append("remove-storagedomain --force");
+
+        buf.append(" --storagedomainid " + storageDomain.getId());
+
+        // FIXME: need a parameter for this
+        buf.append(" -hostid XXXX ");
+
+        PowerShellUtils.runCommand(buf.toString());
+
+        parent.stageDomain(storageDomain.getId(), this);
     }
 
     @Override
