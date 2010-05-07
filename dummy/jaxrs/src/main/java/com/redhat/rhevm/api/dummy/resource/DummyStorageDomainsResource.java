@@ -94,6 +94,7 @@ public class DummyStorageDomainsResource implements StorageDomainsResource {
 
     @Override
     public void remove(String id) {
+        // FIXME: error if not uninitialized
         storageDomains.remove(id);
     }
 

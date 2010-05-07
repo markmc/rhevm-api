@@ -42,6 +42,11 @@ public interface StorageDomainResource {
     @Path("initialize")
     public void initialize();
 
+    @POST
+    @Actionable
+    @Path("teardown")
+    public void teardown();
+
     @Path("attachments")
     public AttachmentsResource getAttachmentsResource();
 }

@@ -105,6 +105,10 @@ public class PowerShellStorageDomainResource implements StorageDomainResource, A
     }
 
     @Override
+    public void teardown() {
+    }
+
+    @Override
     public AttachmentsResource getAttachmentsResource() {
         return null;
     }

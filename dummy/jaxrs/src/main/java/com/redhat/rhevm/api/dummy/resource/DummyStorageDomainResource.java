@@ -77,6 +77,12 @@ public class DummyStorageDomainResource extends AbstractUpdatableResource<Storag
     }
 
     @Override
+    public void teardown() {
+        // FIXME: error if not unattached
+        getModel().setStatus(UNINITIALIZED);
+    }
+
+    @Override
     public boolean validateAction(String action) {
 
         switch (getModel().getStatus()) {
