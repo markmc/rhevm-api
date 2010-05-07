@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.ActionValidator;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.Link;
@@ -55,6 +56,8 @@ public class PowerShellStorageDomainResource implements StorageDomainResource, A
     }
 
     public StorageDomain addLinks(UriBuilder uriBuilder) {
+        ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, StorageDomainResource.class, this);
+        storageDomain.setActions(actionsBuilder.build());
         storageDomain.setHref(uriBuilder.build().toString());
         return storageDomain;
     }
