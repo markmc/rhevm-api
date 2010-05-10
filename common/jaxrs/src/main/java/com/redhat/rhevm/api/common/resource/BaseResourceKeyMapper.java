@@ -26,7 +26,7 @@ import com.redhat.rhevm.api.model.BaseResource;
 public class BaseResourceKeyMapper<R extends BaseResource,
                                    T extends AbstractUpdatableResource<R>>
     implements ReapedMap.ValueToKeyMapper<String, T> {
- 
+
     public String getKey(T value) {
         return value.getModel().getId();
     }
