@@ -32,6 +32,14 @@ import java.util.Map;
  * Models a strongly-referenced primary hash map, coupled with a reapable
  * secondary map based on soft-referenced values (rather than keys, as is
  * the case with the java.util.WeakHashMap).
+ *
+ * Use this like a normal hash map, but when values need no longer be
+ * retained they should be marked as reapable. The value may then be
+ * freed either when the reapAfter timeout expires or at the discretion
+ * of the garbage collector if the VM experiences memory pressure. In
+ * the latter case, a key mapper is needed to map the GC collected value
+ * back to the key it is associated with in the map.
+ *
  * REVISIT: does the world really need yet another hand-rolled cache type?
  * REVISIT: inherited entrySet() etc. don't take account of secondary
  *
