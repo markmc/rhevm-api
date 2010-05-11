@@ -43,7 +43,7 @@ Build:
 
 Deploy:
 
- $> cp dummy/webapp/target/rhevm-api-dummy.war /usr/local/jboss-5.1.0.GA/server/default/deploy/rhevm-api-dummy.ear
+ $> cp dummy/webapp/target/rhevm-api-dummy.war /usr/local/jboss-5.1.0.GA/server/default/deploy/rhevm-api-dummy.war
 
 Run:
 
