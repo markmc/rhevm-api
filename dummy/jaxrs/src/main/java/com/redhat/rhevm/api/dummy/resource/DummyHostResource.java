@@ -22,13 +22,12 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.common.resource.AbstractUpdatableResource;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.resource.HostResource;
 
 
-public class DummyHostResource extends AbstractUpdatableResource<Host> implements HostResource {
+public class DummyHostResource extends AbstractDummyResource<Host> implements HostResource {
     /* FIXME: would like to do:
      * private @Context UriInfo uriInfo;
      */
@@ -39,7 +38,7 @@ public class DummyHostResource extends AbstractUpdatableResource<Host> implement
      * @param host  encapsulated host
      */
     DummyHostResource(Host host) {
-        super(host, host.getId());
+        super(host);
     }
 
     public Host addLinks(UriBuilder uriBuilder) {

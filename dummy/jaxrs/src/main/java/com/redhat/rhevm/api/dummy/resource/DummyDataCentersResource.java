@@ -30,7 +30,7 @@ import com.redhat.rhevm.api.model.StorageType;
 import com.redhat.rhevm.api.resource.DataCenterResource;
 import com.redhat.rhevm.api.resource.DataCentersResource;
 
-import static com.redhat.rhevm.api.common.resource.AbstractUpdatableResource.initialize;
+import static com.redhat.rhevm.api.dummy.resource.AbstractDummyResource.initialize;
 
 
 public class DummyDataCentersResource implements DataCentersResource {

@@ -26,10 +26,9 @@ import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.Attachments;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.resource.DataCenterResource;
-import com.redhat.rhevm.api.common.resource.AbstractUpdatableResource;
 
 
-public class DummyDataCenterResource extends AbstractUpdatableResource<DataCenter> implements DataCenterResource {
+public class DummyDataCenterResource extends AbstractDummyResource<DataCenter> implements DataCenterResource {
     /* FIXME: would like to do:
      * private @Context UriInfo uriInfo;
      */
@@ -40,7 +39,7 @@ public class DummyDataCenterResource extends AbstractUpdatableResource<DataCente
      * @param dataCenter  encapsulated DataCenter
      */
     DummyDataCenterResource(DataCenter dataCenter) {
-        super(dataCenter, dataCenter.getId());
+        super(dataCenter);
     }
 
     public DataCenter addLinks(UriInfo uriInfo, UriBuilder uriBuilder) {

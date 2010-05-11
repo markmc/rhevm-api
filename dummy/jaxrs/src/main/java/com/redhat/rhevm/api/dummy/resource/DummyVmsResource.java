@@ -29,7 +29,7 @@ import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.resource.VmsResource;
 
-import static com.redhat.rhevm.api.common.resource.AbstractUpdatableResource.initialize;
+import static com.redhat.rhevm.api.dummy.resource.AbstractDummyResource.initialize;
 
 
 public class DummyVmsResource implements VmsResource {

@@ -25,19 +25,19 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.common.resource.AbstractVmResource;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+import com.redhat.rhevm.api.resource.VmResource;
 
-public class PowerShellVmResource extends AbstractVmResource {
+public class PowerShellVmResource extends AbstractPowerShellResource<VM> implements VmResource {
     /*
      * FIXME: would like to do: private @Context UriInfo uriInfo;
      */
 
     public PowerShellVmResource(String id) {
-        super(null, id);
+        super(id);
     }
 
     public String getId() {

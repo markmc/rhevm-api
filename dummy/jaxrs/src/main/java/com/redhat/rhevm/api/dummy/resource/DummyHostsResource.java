@@ -29,7 +29,7 @@ import com.redhat.rhevm.api.model.Hosts;
 import com.redhat.rhevm.api.resource.HostResource;
 import com.redhat.rhevm.api.resource.HostsResource;
 
-import static com.redhat.rhevm.api.common.resource.AbstractUpdatableResource.initialize;
+import static com.redhat.rhevm.api.dummy.resource.AbstractDummyResource.initialize;
 
 
 public class DummyHostsResource implements HostsResource {

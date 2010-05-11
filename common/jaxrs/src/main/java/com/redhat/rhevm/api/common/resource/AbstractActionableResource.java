@@ -26,12 +26,10 @@ import javax.ws.rs.core.Response.Status;
 
 import com.redhat.rhevm.api.common.util.ReapedMap;
 import com.redhat.rhevm.api.model.Action;
-import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.model.BaseResource;
 import com.redhat.rhevm.api.resource.ActionResource;
 
-import com.redhat.rhevm.api.resource.VmResource;
-
-public abstract class AbstractVmResource extends AbstractUpdatableResource<VM> implements VmResource {
+public abstract class AbstractActionableResource<R extends BaseResource> extends AbstractUpdatableResource<R> {
 
     private static final long REAP_AFTER = 2 * 60 * 60 * 1000L; // 2 hours
 
@@ -46,8 +44,8 @@ public abstract class AbstractVmResource extends AbstractUpdatableResource<VM> i
 
     protected ReapedMap<String, ActionResource> actions;
 
-    public AbstractVmResource(VM vm, String id) {
-        super(vm, id);
+    public AbstractActionableResource(R resource) {
+        super(resource);
         actions = new ReapedMap<String, ActionResource>(KEY_MAPPER, REAP_AFTER);
     }
 
@@ -85,7 +83,6 @@ public abstract class AbstractVmResource extends AbstractUpdatableResource<VM> i
         return Response.status(status).entity(action).build();
     }
 
-    @Override
     public ActionResource getActionSubresource(String action, String oid) {
         // redirect back to the target VM if action no longer cached
         // REVISIT: ultimately we should look at redirecting
@@ -97,7 +94,7 @@ public abstract class AbstractVmResource extends AbstractUpdatableResource<VM> i
                : new ActionResource() {
                     @Override
                     public Response get(UriInfo uriInfo) {
-                        URI redirect = uriInfo.getBaseUriBuilder().path("/vms/" + id).build();
+                        URI redirect = uriInfo.getBaseUriBuilder().path("/vms/" + getModel().getId()).build();
                         Response.Status status = Response.Status.MOVED_PERMANENTLY;
                         return Response.status(status).location(redirect).build();
                     }

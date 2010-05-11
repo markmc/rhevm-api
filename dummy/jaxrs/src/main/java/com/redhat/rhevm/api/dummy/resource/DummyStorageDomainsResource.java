@@ -34,7 +34,7 @@ import com.redhat.rhevm.api.model.StorageType;
 import com.redhat.rhevm.api.resource.StorageDomainResource;
 import com.redhat.rhevm.api.resource.StorageDomainsResource;
 
-import static com.redhat.rhevm.api.common.resource.AbstractUpdatableResource.initialize;
+import static com.redhat.rhevm.api.dummy.resource.AbstractDummyResource.initialize;
 
 
 public class DummyStorageDomainsResource implements StorageDomainsResource {

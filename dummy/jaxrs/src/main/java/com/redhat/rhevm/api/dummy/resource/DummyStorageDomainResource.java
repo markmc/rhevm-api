@@ -22,7 +22,6 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.common.resource.AbstractUpdatableResource;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.ActionValidator;
@@ -34,7 +33,7 @@ import com.redhat.rhevm.api.resource.StorageDomainResource;
 import static com.redhat.rhevm.api.model.StorageDomainStatus.*;
 
 
-public class DummyStorageDomainResource extends AbstractUpdatableResource<StorageDomain> implements StorageDomainResource, ActionValidator {
+public class DummyStorageDomainResource extends AbstractDummyResource<StorageDomain> implements StorageDomainResource, ActionValidator {
 
     private DummyAttachmentsResource attachments;
 
@@ -44,7 +43,7 @@ public class DummyStorageDomainResource extends AbstractUpdatableResource<Storag
      * @param storageDomain  encapsulated StorageDomain
      */
     DummyStorageDomainResource(StorageDomain storageDomain) {
-        super(storageDomain, storageDomain.getId());
+        super(storageDomain);
         getModel().setStatus(UNINITIALIZED);
         this.attachments = new DummyAttachmentsResource(storageDomain.getId());
     }

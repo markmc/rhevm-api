@@ -23,7 +23,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.common.resource.AbstractVmResource;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.VM;
@@ -31,7 +30,7 @@ import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.dummy.model.DummyVmStatus;
 
 
-public class DummyVmResource extends AbstractVmResource {
+public class DummyVmResource extends AbstractDummyResource<VM> implements VmResource {
     /* FIXME: would like to do:
      * private @Context UriInfo uriInfo;
      */
@@ -45,7 +44,7 @@ public class DummyVmResource extends AbstractVmResource {
      * @param vm  encapsulated VM
      */
     public DummyVmResource(VM vm) {
-        super(vm, vm.getId());
+        super(vm);
     }
 
     public VM addLinks(UriBuilder uriBuilder) {
