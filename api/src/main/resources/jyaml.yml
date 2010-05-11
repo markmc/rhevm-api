@@ -1,7 +1,9 @@
 transfers:
   actions: com.redhat.rhevm.api.model.Actions
   attachment: com.redhat.rhevm.api.model.Attachment
-  attachments: com.redhat.rhevm.api.mode.Attachments
+  attachments: com.redhat.rhevm.api.model.Attachments
+  datacenter: com.redhat.rhevm.api.model.DataCenter
+  datacenters: com.redhat.rhevm.api.model.DataCenters
   host: com.redhat.rhevm.api.model.Host
   hosts: com.redhat.rhevm.api.model.Hosts
   link: com.redhat.rhevm.api.model.Link
