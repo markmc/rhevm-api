@@ -36,11 +36,7 @@ public class ReapableMapTest extends Assert {
 
     private static final String[] NUMBERS = { "one", "two", "three", "four", "five" };
 
-    private static final ReapedMap.ValueToKeyMapper<String, Integer> MAPPER = new ReapedMap.ValueToKeyMapper<String, Integer>() {
-        public String getKey(Integer i) {
-            return i <= NUMBERS.length ? NUMBERS[i-1] : null;
-        }
-    };
+    private static final NumberMapper MAPPER = new NumberMapper();
 
     private IMocksControl control;
     private ReapedMap<String, Integer> map;
@@ -52,7 +48,7 @@ public class ReapableMapTest extends Assert {
 
     @Test
     public void testReapingWithoutGC() throws Exception {
-        map = new ReapedMap<String, Integer>(MAPPER, 1000);
+        map = new ReapedMap<String, Integer>(1000);
         populate(1, 2, 3);
         assertSizes(3, 0);
         assertExpected(1, 2, 3);
@@ -123,7 +119,7 @@ public class ReapableMapTest extends Assert {
     @SuppressWarnings("unchecked")
     private void setUpGCExpectations() {
         ReferenceQueue<Integer> queue = (ReferenceQueue<Integer>)control.createMock(ReferenceQueue.class);
-        map = new ReapedMap<String, Integer>(MAPPER, 10000, queue);
+        map = new ReapedMap<String, Integer>(10000, queue);
         expect(queue.poll()).andReturn(null);
         expect(queue.poll()).andReturn(null);
         expect(queue.poll()).andReturn(null);
@@ -131,13 +127,14 @@ public class ReapableMapTest extends Assert {
         expect(queue.poll()).andReturn(null);
         // the sixth queue poll simulates a GC event and triggers deletion
         // on the reapable map
-        Reference<? extends Integer> ref = control.createMock(Reference.class);
+        ReapedMap.IdAwareReference<String, Integer> ref = control.createMock(ReapedMap.IdAwareReference.class);
         // awkward syntax required to work around compilation error
         // on Reference<capture#nnn ? extends Integer> mismatch
         IExpectationSetters<? extends Reference<? extends Integer>> qSetter = expect(queue.poll());
         ((IExpectationSetters<Reference<? extends Integer>>)qSetter).andReturn(ref);
-        IExpectationSetters<? extends Integer> refSetter = expect(ref.get());
-        ((IExpectationSetters<Integer>)refSetter).andReturn(new Integer(3));
+        IExpectationSetters<? extends String> refSetter = expect(ref.getKey());
+        ((IExpectationSetters<String>)refSetter).andReturn("three");
+
         control.replay();
     }
 
@@ -157,4 +154,10 @@ public class ReapableMapTest extends Assert {
             assertEquals(v, map.get(MAPPER.getKey(v)));
         }
     }
+
+    private static class NumberMapper {
+        public String getKey(Integer i) {
+            return i <= NUMBERS.length ? NUMBERS[i-1] : null;
+        }
+    };
 }

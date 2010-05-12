@@ -19,7 +19,6 @@
 
 package com.redhat.rhevm.api.common.util;
 
-import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
 import java.util.HashMap;
@@ -36,9 +35,7 @@ import java.util.Map;
  * Use this like a normal hash map, but when values need no longer be
  * retained they should be marked as reapable. The value may then be
  * freed either when the reapAfter timeout expires or at the discretion
- * of the garbage collector if the VM experiences memory pressure. In
- * the latter case, a key mapper is needed to map the GC collected value
- * back to the key it is associated with in the map.
+ * of the garbage collector if the VM experiences memory pressure.
  *
  * REVISIT: does the world really need yet another hand-rolled cache type?
  * REVISIT: inherited entrySet() etc. don't take account of secondary
@@ -53,7 +50,6 @@ public class ReapedMap<K, V> extends HashMap<K, V> {
 
     private static Long DEFAULT_REAP_AFTER = 10 * 60 * 1000L; // 10 minutes
 
-    private ValueToKeyMapper<K, V> keyMapper;
     private long reapAfter;
     private ReferenceQueue<V> queue;
 
@@ -63,50 +59,43 @@ public class ReapedMap<K, V> extends HashMap<K, V> {
     // - reap requires a predictable iteration order (based on insertion order)
     //   hence the use of LinkedHasMap
     //
-    LinkedHashMap<K, SoftlyReferencedValue<V>> reapableMap;
+    LinkedHashMap<K, IdAwareReference<K, V>> reapableMap;
 
-    /**
-     * @param keyMapper maps from value to key type
-     */
-    public ReapedMap(ValueToKeyMapper<K, V> keyMapper) {
-        this(keyMapper, DEFAULT_REAP_AFTER);
+    public ReapedMap() {
+        this(DEFAULT_REAP_AFTER);
     }
 
     /**
-     * @param keyMapper keyMapper maps from value to key type
      * @param reapAfter entries become eligible for reaping after this duration (ms)
      */
-    public ReapedMap(ValueToKeyMapper<K, V> keyMapper, long reapAfter) {
-        this(keyMapper, reapAfter, new ReferenceQueue<V>());
+    public ReapedMap(long reapAfter) {
+        this(reapAfter, new ReferenceQueue<V>());
     }
 
     /**
      * Package-protected constructor intended for test use.
      *
-     * @param keyMapper keyMapper maps from value to key type
      * @param reapAfter entries become eligible for reaping after this duration (ms)
      * @param queue reference queue to avoid leaked mappings in case where
      * aggressive GC eats referent before it is reaped
      */
-    ReapedMap(ValueToKeyMapper<K, V> keyMapper, long reapAfter, ReferenceQueue<V> queue) {
-        this.keyMapper = keyMapper;
+    ReapedMap(long reapAfter, ReferenceQueue<V> queue) {
         this.reapAfter = reapAfter;
         this.queue = queue;
-        reapableMap = new LinkedHashMap<K, SoftlyReferencedValue<V>>();
+        reapableMap = new LinkedHashMap<K, IdAwareReference<K, V>>();
     }
 
     @Override
     public synchronized V get(Object key) {
         V ret = super.get(key);
         if (ret == null) {
-            SoftlyReferencedValue<V> softValue = reapableMap.get(key);
-            if (softValue != null) {
-                SoftReference<V> softRef = softValue.value;
-                if (softRef.isEnqueued()) {
-                    softRef.clear();
+            IdAwareReference<K, V> ref = reapableMap.get(key);
+            if (ref != null) {
+                if (ref.isEnqueued()) {
+                    ref.clear();
                     reapableMap.remove(key);
                 } else {
-                    ret = softRef.get();
+                    ret = ref.get();
                     if (ret == null) {
                         reapableMap.remove(key);
                     }
@@ -127,13 +116,12 @@ public class ReapedMap<K, V> extends HashMap<K, V> {
     public synchronized V remove(Object key) {
         V ret = super.remove(key);
         if (ret == null) {
-            SoftlyReferencedValue<V> softValue = reapableMap.remove(key);
-            if (softValue != null) {
-                SoftReference<V> softRef = softValue.value;
-                if (softRef.isEnqueued()) {
-                    softRef.clear();
+            IdAwareReference<K, V> ref = reapableMap.remove(key);
+            if (ref != null) {
+                if (ref.isEnqueued()) {
+                    ref.clear();
                 } else {
-                    ret = softRef.get();
+                    ret = ref.get();
                 }
             }
         }
@@ -158,7 +146,7 @@ public class ReapedMap<K, V> extends HashMap<K, V> {
     public synchronized void reapable(K k) {
         V v = super.remove(k);
         if (v != null) {
-            reapableMap.put(k, new SoftlyReferencedValue<V>(new SoftReference<V>(v, queue)));
+            reapableMap.put(k, new IdAwareReference<K, V>(k, v, queue));
         }
         reap();
     }
@@ -179,13 +167,13 @@ public class ReapedMap<K, V> extends HashMap<K, V> {
         // reap entries older than age permitted
         //
         long now = System.currentTimeMillis();
-        Iterator<Map.Entry<K, SoftlyReferencedValue<V>>> entries = reapableMap.entrySet().iterator();
+        Iterator<Map.Entry<K, IdAwareReference<K, V>>> entries = reapableMap.entrySet().iterator();
         while (entries.hasNext()) {
-            Map.Entry<K, SoftlyReferencedValue<V>> entry = entries.next();
-            SoftlyReferencedValue<V> v = entry.getValue();
+            Map.Entry<K, IdAwareReference<K, V>> entry = entries.next();
+            IdAwareReference<K, V> v = entry.getValue();
             if (now - v.timestamp > reapAfter) {
                 entries.remove();
-                entry.getValue().value.clear();
+                entry.getValue().clear();
                 entry.setValue(null);
             } else {
                 // guaranteed iteration on insertion order => no older entries
@@ -197,47 +185,50 @@ public class ReapedMap<K, V> extends HashMap<K, V> {
         // poll reference queue for GC-pending references to trigger
         // reaping of referent
         //
-        Reference<? extends V> ref = null;
+        Object ref = null;
         while ((ref = queue.poll()) != null) {
-            V value = ref.get();
+            @SuppressWarnings("unchecked")
+            IdAwareReference<K, V> value = (IdAwareReference<K, V>)ref;
             if (value != null) {
-                reapableMap.remove(keyMapper.getKey(value));
+                reapableMap.remove(value.getKey());
             }
         }
     }
 
     /**
-     * Required to map back from GC-pending value to the corresponding key
+     * Encapsulate key and timestamp (the latter is used for
+     * eager reaping). The reference queue provides access to
+     * finalizable instances of the reference type, not the
+     * class wrapping it. Hence we must extend SoftReference
+     * as opposed to encapsulating it.
      */
-    public interface ValueToKeyMapper<K, V>  {
-        K getKey(V value);
-    }
-
-    /**
-     * Encapsulate soft-reference and timestamp (the latter is used for
-     * eager reaping)
-     */
-    private class SoftlyReferencedValue<S> {
-        SoftReference<S> value;
+    static class IdAwareReference<T, S> extends SoftReference<S> {
         long timestamp;
+        T key;
 
-        SoftlyReferencedValue(SoftReference<S> value) {
-            this.value = value;
+        IdAwareReference(T key, S value, ReferenceQueue<S> queue) {
+            super(value, queue);
+            this.key = key;
             timestamp = System.currentTimeMillis();
         }
 
-        public boolean equals (Object other) {
+        public T getKey() {
+            return key;
+        }
+
+        public boolean equals(Object other) {
             boolean ret = false;
-            try {
-                ret = other == value
-                      || (value.equals(((SoftlyReferencedValue<?>)other).value));
-            } catch (ClassCastException cee) {
-            }
+            S one = null;
+            ret = other == this
+                  || (other instanceof SoftReference<?>
+                      && (one = get()) != null
+                      && one.equals(((SoftReference<?>)other).get()));
             return ret;
         }
 
         public int hashCode() {
-            return value.hashCode();
+            S one = get();
+            return one != null ? one.hashCode() : 0;
         }
     }
 }

@@ -19,7 +19,6 @@
 package com.redhat.rhevm.api.powershell.resource;
 
 import com.redhat.rhevm.api.common.resource.AbstractUpdatableResource;
-import com.redhat.rhevm.api.common.resource.BaseResourceKeyMapper;
 import com.redhat.rhevm.api.common.util.ReapedMap;
 import com.redhat.rhevm.api.model.BaseResource;
 
@@ -28,7 +27,7 @@ public abstract class AbstractPowerShellCollectionResource<R extends BaseResourc
     private ReapedMap<String, U> resources;
 
     public AbstractPowerShellCollectionResource() {
-        resources = new ReapedMap<String, U>(new BaseResourceKeyMapper<R, U>());
+        resources = new ReapedMap<String, U>();
     }
 
     protected U getSubResource(String id) {

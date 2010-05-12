@@ -33,20 +33,13 @@ public abstract class AbstractActionableResource<R extends BaseResource> extends
 
     private static final long REAP_AFTER = 2 * 60 * 60 * 1000L; // 2 hours
 
-    private static ReapedMap.ValueToKeyMapper<String, ActionResource> KEY_MAPPER =
-        new ReapedMap.ValueToKeyMapper<String, ActionResource>() {
-            public String getKey(ActionResource value) {
-                return value.getAction().getId();
-            }
-        };
-
     protected static Runnable DO_NOTHING = new Runnable() { public void run(){} };
 
     protected ReapedMap<String, ActionResource> actions;
 
     public AbstractActionableResource(R resource) {
         super(resource);
-        actions = new ReapedMap<String, ActionResource>(KEY_MAPPER, REAP_AFTER);
+        actions = new ReapedMap<String, ActionResource>(REAP_AFTER);
     }
 
     /**
@@ -68,7 +61,7 @@ public abstract class AbstractActionableResource<R extends BaseResource> extends
             new Thread(new AbstractActionTask(action) {
                 public void run() {
                     perform(action, task);
-                    actions.reapable(KEY_MAPPER.getKey(actionResource));
+                    actions.reapable(actionResource.getAction().getId());
                 }
             }).start();
             status = Status.ACCEPTED;

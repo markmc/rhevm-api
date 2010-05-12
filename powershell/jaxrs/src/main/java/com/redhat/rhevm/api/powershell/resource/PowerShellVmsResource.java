@@ -22,7 +22,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.common.resource.BaseResourceKeyMapper;
 import com.redhat.rhevm.api.common.util.ReapedMap;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
@@ -39,7 +38,7 @@ public class PowerShellVmsResource implements VmsResource {
     private ReapedMap<String, PowerShellVmResource> vms;
 
     public PowerShellVmsResource() {
-        vms = new ReapedMap<String, PowerShellVmResource>(new BaseResourceKeyMapper<VM, PowerShellVmResource>());
+        vms = new ReapedMap<String, PowerShellVmResource>();
     }
 
     @Override
