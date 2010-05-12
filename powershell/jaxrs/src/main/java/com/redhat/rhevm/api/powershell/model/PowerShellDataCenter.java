@@ -35,7 +35,7 @@ public class PowerShellDataCenter {
         for (HashMap<String,String> props : dataCentersProps) {
             DataCenter dataCenter = new DataCenter();
 
-            dataCenter.setId(props.get("dataCenterid"));
+            dataCenter.setId(props.get("datacenterid"));
             dataCenter.setStorageType(StorageType.fromValue(props.get("type")));
 
             ret.add(dataCenter);
