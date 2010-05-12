@@ -89,4 +89,14 @@ public class PowerShellDataCentersResource
         return new PowerShellDataCenterResource(id);
     }
 
+    /**
+     * Build an absolute URI for a given data center
+     *
+     * @param baseUriBuilder a UriBuilder representing the base URI
+     * @param id the data center ID
+     * @return an absolute URI
+     */
+    public static String getHref(UriBuilder baseUriBuilder, String id) {
+        return baseUriBuilder.clone().path("datacenters").path(id).build().toString();
+    }
 }

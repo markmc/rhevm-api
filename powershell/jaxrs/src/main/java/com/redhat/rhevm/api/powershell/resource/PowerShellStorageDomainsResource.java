@@ -182,4 +182,15 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
         }
         return storageDomain;
     }
+
+    /**
+     * Build an absolute URI for a given storage domain
+     *
+     * @param baseUriBuilder a UriBuilder representing the base URI
+     * @param id the storage domain ID
+     * @return an absolute URI
+     */
+    public static String getHref(UriBuilder baseUriBuilder, String id) {
+        return baseUriBuilder.clone().path("storagedomains").path(id).build().toString();
+    }
 }

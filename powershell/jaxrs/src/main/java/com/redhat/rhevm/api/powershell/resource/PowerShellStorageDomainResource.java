@@ -27,6 +27,7 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.ActionValidator;
+import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.Storage;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.resource.AttachmentsResource;
@@ -72,6 +73,13 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellResource<
         storageDomain = parent.mapId(storageDomain);
         storageDomain.setActions(actionsBuilder.build());
         storageDomain.setHref(uriBuilder.build().toString());
+
+        Link link = new Link();
+        link.setRel("attachments");
+        link.setHref(uriBuilder.clone().path("attachments").build().toString());
+        storageDomain.getLinks().clear();
+        storageDomain.getLinks().add(link);
+
         return storageDomain;
     }
 
@@ -194,7 +202,7 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellResource<
 
     @Override
     public AttachmentsResource getAttachmentsResource() {
-        return null;
+        return new PowerShellAttachmentsResource(id);
     }
 
     protected StorageDomain refreshRepresentation() {
