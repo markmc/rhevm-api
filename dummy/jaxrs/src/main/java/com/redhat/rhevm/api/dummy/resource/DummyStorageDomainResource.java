@@ -22,6 +22,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.ActionValidator;
@@ -50,14 +51,15 @@ public class DummyStorageDomainResource extends AbstractDummyResource<StorageDom
 
     public StorageDomain addLinks(UriBuilder uriBuilder) {
         ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, StorageDomainResource.class, this);
-        getModel().setHref(uriBuilder.build().toString());
+        StorageDomain storageDomain = JAXBHelper.clone(OBJECT_FACTORY.createStorageDomain(getModel()));
+        storageDomain.setHref(uriBuilder.build().toString());
         Link link = new Link();
         link.setRel("attachments");
         link.setHref(uriBuilder.clone().path("attachments").build().toString());
-        getModel().getLinks().clear();
-        getModel().getLinks().add(link);
-        getModel().setActions(actionsBuilder.build());
-        return getModel();
+        storageDomain.getLinks().clear();
+        storageDomain.getLinks().add(link);
+        storageDomain.setActions(actionsBuilder.build());
+        return storageDomain;
     }
 
     @Override

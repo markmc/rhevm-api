@@ -24,6 +24,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.ActionValidator;
@@ -70,7 +71,7 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellResource<
 
     public StorageDomain addLinks(StorageDomain storageDomain, UriBuilder uriBuilder) {
         ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, StorageDomainResource.class, this);
-        storageDomain = parent.mapId(storageDomain);
+        storageDomain = JAXBHelper.clone(OBJECT_FACTORY.createStorageDomain(parent.mapId(storageDomain)));
         storageDomain.setActions(actionsBuilder.build());
         storageDomain.setHref(uriBuilder.build().toString());
 
@@ -85,13 +86,11 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellResource<
 
     @Override
     public StorageDomain get(UriInfo uriInfo) {
-        StorageDomain storageDomain = refreshRepresentation();
-        setModel(storageDomain);
-        return addLinks(storageDomain, uriInfo.getRequestUriBuilder());
+        return addLinks(refreshRepresentation(), uriInfo.getRequestUriBuilder());
     }
 
     @Override
-    public StorageDomain update(HttpHeaders headers, UriInfo uriInfo, StorageDomain storageDomain) {
+    public StorageDomain update(HttpHeaders headers, final UriInfo uriInfo, StorageDomain storageDomain) {
         validateUpdate(storageDomain, getModel(), headers);
 
         StringBuilder buf = new StringBuilder();
@@ -111,7 +110,15 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellResource<
             setModel(runAndParseSingle(buf.toString()));
         }
 
-        return addLinks(getModel(), uriInfo.getRequestUriBuilder());
+        Mutator mutator = new Mutator<StorageDomain>() {
+                             public StorageDomain mutate(StorageDomain curr) {
+                                 return addLinks(curr,
+                                                 uriInfo.getRequestUriBuilder());
+                             }
+                          };
+        return staged
+               ? mutateModel(mutator)
+               : mutateModel(runAndParseSingle(buf.toString()), mutator);
     }
 
     @Override
@@ -208,6 +215,6 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellResource<
     protected StorageDomain refreshRepresentation() {
         return staged
                ? getModel()
-               : runAndParseSingle("get-storagedomain " + id);
+               : setModel(runAndParseSingle("get-storagedomain " + id));
     }
 }

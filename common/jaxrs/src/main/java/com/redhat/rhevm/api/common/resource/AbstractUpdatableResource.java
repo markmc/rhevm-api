@@ -21,6 +21,7 @@ package com.redhat.rhevm.api.common.resource;
 import javax.ws.rs.core.HttpHeaders;
 
 import com.redhat.rhevm.api.model.BaseResource;
+import com.redhat.rhevm.api.model.ObjectFactory;
 
 import com.redhat.rhevm.api.common.util.MutabilityAssertor;
 
@@ -29,6 +30,7 @@ public abstract class AbstractUpdatableResource<R extends BaseResource> {
 
     protected static final String[] STRICTLY_IMMUTABLE = {"id"};
 
+    protected final ObjectFactory OBJECT_FACTORY = new ObjectFactory();
 
     protected R model;
 

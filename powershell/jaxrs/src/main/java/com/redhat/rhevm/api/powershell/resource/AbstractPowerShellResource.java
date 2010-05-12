@@ -57,9 +57,36 @@ public abstract class AbstractPowerShellResource<R extends BaseResource> extends
     }
 
     /**
+     * Used to support an atomic mutation based on the current
+     * model
+     *
+     * @param mutator implements the mutation
+     * @return        the mutated value
+     */
+    protected synchronized R mutateModel(Mutator<R> mutator) {
+        return mutateModel(getModel(), mutator);
+    }
+
+    /**
+     * Used to support an atomic mutation based on the current
+     * model
+     *
+     * @param current initial value to use
+     * @param mutator implements the mutation
+     * @return        the mutated value     
+     */
+    protected synchronized R mutateModel(R current, Mutator<R> m) {
+        return m.mutate(current);
+    }
+
+    /**
      * Refresh representation from arms-length source
      */
     protected R refreshRepresentation() {
         return null;
+    }
+
+    protected interface Mutator<R> {
+        R mutate(R model);
     }
 }
