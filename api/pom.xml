@@ -13,7 +13,7 @@
   <packaging>jar</packaging>
 
   <name>RHEV-M API Definition</name>
-  <url>http://www.redhat.com/virtualization/rhev/</url>
+  <url>http://fedorahosted.org/rhevm-api/</url>
 
   <dependencies>
 
