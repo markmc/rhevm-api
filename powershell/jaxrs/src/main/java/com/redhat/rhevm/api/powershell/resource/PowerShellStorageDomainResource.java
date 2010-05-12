@@ -77,7 +77,9 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellResource<
 
     @Override
     public StorageDomain get(UriInfo uriInfo) {
-        return setModel(addLinks(refreshRepresentation(), uriInfo.getRequestUriBuilder()));
+        StorageDomain storageDomain = refreshRepresentation();
+        setModel(storageDomain);
+        return addLinks(storageDomain, uriInfo.getRequestUriBuilder());
     }
 
     @Override
@@ -97,12 +99,11 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellResource<
 
             buf.append("\n");
             buf.append("update-storagedomain -storagedomainobject $v");
+
+            setModel(runAndParseSingle(buf.toString()));
         }
 
-        return setModel(addLinks(staged
-                                 ? getModel()
-                                 : runAndParseSingle(buf.toString()),
-                                 uriInfo.getRequestUriBuilder()));
+        return addLinks(getModel(), uriInfo.getRequestUriBuilder());
     }
 
     @Override
