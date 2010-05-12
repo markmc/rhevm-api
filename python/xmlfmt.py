@@ -99,6 +99,23 @@ class Host(Base):
         s += '</host>'
         return s
 
+class StorageDomain(Base):
+    COLLECTION_ELEMENT = 'storage_domains'
+    ROOT_ELEMENT = 'storage_domain'
+    KEYS = ['id', 'name', 'href', 'type', 'status', 'attachments']
+
+    def dump(self):
+        s = '<storage_domain'
+        if hasattr(self, 'href'):
+            s += ' href=\'' + getattr(self, 'href') + '\''
+        if hasattr(self, 'id'):
+            s += ' id=\'' + getattr(self, 'id') + '\''
+        s += '>'
+        if hasattr(self, 'name'):
+            s += '<name>' + getattr(self, 'name') + '</name>'
+        s += '</storage_domain>'
+        return s
+
 class Action(Base):
     ROOT_ELEMENT = 'action'
     KEYS = ['id', 'async', 'status', 'href', 'grace']
@@ -139,6 +156,9 @@ def parseVM(doc):
 def parseHost(doc):
     return Host(xml.dom.minidom.parseString(doc).getElementsByTagName(Host.ROOT_ELEMENT)[0])
 
+def parseStorageDomain(doc):
+    return StorageDomain(xml.dom.minidom.parseString(doc).getElementsByTagName(StorageDomain.ROOT_ELEMENT)[0])
+
 def parseCollection(doc, entityType):
     collection = xml.dom.minidom.parseString(doc).getElementsByTagName(entityType.COLLECTION_ELEMENT)[0]
 
@@ -155,3 +175,6 @@ def parseVmCollection(doc):
 
 def parseHostCollection(doc):
     return parseCollection(doc, Host)
+
+def parseStorageDomainCollection(doc):
+    return parseCollection(doc, StorageDomain)

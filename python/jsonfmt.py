@@ -64,6 +64,10 @@ class Host(Base):
     ROOT_ELEMENT = 'host'
     KEYS = ['@id', 'name', '@hef']
 
+class StorageDomain(Base):
+    ROOT_ELEMENT = 'storage_domain'
+    KEYS = ['@id', 'name', '@hef']
+
 class Action(Base):
     ROOT_ELEMENT = 'action'
     KEYS = ['@id', 'async', 'status', '@href', 'grace']
@@ -87,6 +91,9 @@ def parseVM(doc):
 def parseHost(doc):
     return Host(json.loads(doc))
 
+def parseStorageDomain(doc):
+    return StorageDomain(json.loads(doc))
+
 def parseVmCollection(doc):
     ret = []
     for vm in json.loads(doc)['vms']['vm']:
@@ -97,4 +104,10 @@ def parseHostCollection(doc):
     ret = []
     for host in json.loads(doc)['hosts']['host']:
         ret.append(Host({'host':host}))
+    return ret
+
+def parseStorageDomainCollection(doc):
+    ret = []
+    for storage_domain in json.loads(doc)['storage_domains']['storage_domain']:
+        ret.append(StorageDomain({'storage_domain':storage_domain}))
     return ret

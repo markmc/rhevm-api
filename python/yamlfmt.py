@@ -35,11 +35,17 @@ class VM(Base):
 class Host(Base):
     yaml_tag = '!host'
 
+class StorageDomain(Base):
+    yaml_tag = '!storagedomain'
+
 class VMs(Base):
     yaml_tag = '!vms'
 
 class Hosts(Base):
     yaml_tag = '!hosts'
+
+class StorageDomains(Base):
+    yaml_tag = '!storagedomains'
 
 class Actions(Base):
     yaml_tag = '!actions'
@@ -62,8 +68,14 @@ def parseVM(doc):
 def parseHost(doc):
     return yaml.load(doc)
 
+def parseStorageDomain(doc):
+    return yaml.load(doc)
+
 def parseVmCollection(doc):
     return yaml.load(doc).VMs
 
 def parseHostCollection(doc):
+    return yaml.load(doc).hosts
+
+def parseStorageDomainCollection(doc):
     return yaml.load(doc).hosts
