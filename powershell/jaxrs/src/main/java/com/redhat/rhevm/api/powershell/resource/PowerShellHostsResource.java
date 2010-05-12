@@ -31,7 +31,7 @@ import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 public class PowerShellHostsResource
     extends AbstractPowerShellCollectionResource<Host, PowerShellHostResource>
     implements HostsResource {
-    
+
     /* FIXME: would like to do:
      * private @Context UriInfo uriInfo;
      */

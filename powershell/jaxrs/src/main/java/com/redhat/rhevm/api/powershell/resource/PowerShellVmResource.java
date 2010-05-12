@@ -111,27 +111,27 @@ public class PowerShellVmResource extends AbstractPowerShellResource<VM> impleme
 
     @Override
     public Response migrate(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo,action, DO_NOTHING);
+        return doAction(uriInfo, action, DO_NOTHING);
     }
 
     @Override
     public Response move(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo,action, DO_NOTHING);
+        return doAction(uriInfo, action, DO_NOTHING);
     }
 
     @Override
     public Response detach(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo,action, DO_NOTHING);
+        return doAction(uriInfo, action, DO_NOTHING);
     }
 
     @Override
     public Response changeCD(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo,action, DO_NOTHING);
+        return doAction(uriInfo, action, DO_NOTHING);
     }
 
     @Override
     public Response ejectCD(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo,action, DO_NOTHING);
+        return doAction(uriInfo, action, DO_NOTHING);
     }
 
     protected VM refreshRepresentation() {

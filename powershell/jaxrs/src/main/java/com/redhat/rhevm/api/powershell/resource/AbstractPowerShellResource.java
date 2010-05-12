@@ -38,12 +38,12 @@ public abstract class AbstractPowerShellResource<R extends BaseResource> extends
      * only concerned with the fundamental immutable state of the resource
      * which would not be impacted by an action.
      */
-    
+
     public AbstractPowerShellResource(String id) {
         this(null, id);
         this.id = id;
     }
-    
+
     public AbstractPowerShellResource(R model, String id) {
         super(model);
         this.id = id;
