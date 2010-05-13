@@ -31,20 +31,14 @@ public abstract class AbstractDummyResource<R extends BaseResource> extends Abst
 
     private static Map<Class<?>, AtomicInteger> counters = new HashMap<Class<?>, AtomicInteger>();
 
-    public AbstractDummyResource(R model) {
-        super(model);
+    public AbstractDummyResource(String id) {
+        super(id);
     }
 
-    public static <R extends BaseResource> R initialize(R model) {
-        int index = getCounter(model.getClass());
-        model.setId(Integer.toString(index));
-        if (!model.isSetName()) {
-            model.setName(model.getClass().getSimpleName().toLowerCase() + index);
-        }
-        return model;
+    public static String allocateId(Class<?> clazz) {
+        return Integer.toString(getCounter(clazz));
     }
-    
-    @Override
+
     public synchronized R getModel() {
         return model;
     }

@@ -32,10 +32,17 @@ public abstract class AbstractUpdatableResource<R extends BaseResource> {
 
     protected final ObjectFactory OBJECT_FACTORY = new ObjectFactory();
 
-    protected R model;
+    protected final R model = newModel();
 
-    public AbstractUpdatableResource(R model) {
-        this.model = model;
+    /**
+     * Create a new instance of the resource
+     *
+     * @return a newly construced instance
+     */
+    protected abstract R newModel();
+
+    public AbstractUpdatableResource(String id) {
+        setId(id);
     }
 
     /**
@@ -48,7 +55,16 @@ public abstract class AbstractUpdatableResource<R extends BaseResource> {
      * iff an immutability constraint has been broken
      */
     protected void validateUpdate(R incoming, HttpHeaders headers) {
-        MutabilityAssertor.validateUpdate(getStrictlyImmutable(), incoming, getModel(), headers);
+        refresh();
+        MutabilityAssertor.validateUpdate(getStrictlyImmutable(), incoming, model, headers);
+    }
+
+    public void setId(String id) {
+        model.setId(id);
+    }
+
+    public String getId() {
+        return model.getId();
     }
 
     /**
@@ -61,9 +77,11 @@ public abstract class AbstractUpdatableResource<R extends BaseResource> {
         return STRICTLY_IMMUTABLE;
     }
 
-    public abstract R getModel();
-
-    protected synchronized R setModel(R model) {
-        return this.model = model;
-    }
+    /**
+     * Refresh the current model state for update validity checking.
+     *
+     * Override this method if any additional resource-specific fields
+     * are strictly immutable by the client but may change in the backend.
+     */
+    protected void refresh() {}
 }

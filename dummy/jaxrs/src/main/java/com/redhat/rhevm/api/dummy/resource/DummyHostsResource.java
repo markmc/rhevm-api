@@ -29,7 +29,7 @@ import com.redhat.rhevm.api.model.Hosts;
 import com.redhat.rhevm.api.resource.HostResource;
 import com.redhat.rhevm.api.resource.HostsResource;
 
-import static com.redhat.rhevm.api.dummy.resource.AbstractDummyResource.initialize;
+import static com.redhat.rhevm.api.dummy.resource.AbstractDummyResource.allocateId;
 
 
 public class DummyHostsResource implements HostsResource {
@@ -42,8 +42,8 @@ public class DummyHostsResource implements HostsResource {
 
     static {
         while (hosts.size() < 4) {
-            Host host = new Host();
-            DummyHostResource resource = new DummyHostResource(initialize(host));
+            DummyHostResource resource = new DummyHostResource(allocateId(Host.class));
+            resource.getModel().setName("host" + resource.getModel().getId());
             hosts.put(resource.getModel().getId(), resource);
         }
     }
@@ -63,14 +63,16 @@ public class DummyHostsResource implements HostsResource {
 
     @Override
     public Response add(UriInfo uriInfo, Host host) {
-        DummyHostResource newHost = new DummyHostResource(initialize(host));
+        DummyHostResource resource = new DummyHostResource(allocateId(Host.class));
 
-        String id = newHost.getModel().getId();
-        hosts.put(id, newHost);
+        resource.updateModel(host);
+
+        String id = resource.getId();
+        hosts.put(id, resource);
 
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(id);
 
-        host = newHost.addLinks(uriBuilder);
+        host = resource.addLinks(uriBuilder);
 
         return Response.created(uriBuilder.build()).entity(host).build();
     }

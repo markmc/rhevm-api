@@ -42,10 +42,20 @@ public class DummyStorageDomainResource extends AbstractDummyResource<StorageDom
      *
      * @param storageDomain  encapsulated StorageDomain
      */
-    DummyStorageDomainResource(StorageDomain storageDomain) {
-        super(storageDomain);
+    DummyStorageDomainResource(String id) {
+        super(id);
         getModel().setStatus(UNINITIALIZED);
-        this.attachments = new DummyAttachmentsResource(storageDomain.getId());
+        this.attachments = new DummyAttachmentsResource(id);
+    }
+
+    protected StorageDomain newModel() {
+        return new StorageDomain();
+    }
+
+    // FIXME: this needs to be atomic
+    public void updateModel(StorageDomain storageDomain) {
+        // update writable fields only
+        getModel().setName(storageDomain.getName());
     }
 
     public StorageDomain addLinks(UriBuilder uriBuilder) {
@@ -72,8 +82,7 @@ public class DummyStorageDomainResource extends AbstractDummyResource<StorageDom
     @Override
     public StorageDomain update(HttpHeaders headers, UriInfo uriInfo, StorageDomain storageDomain) {
         validateUpdate(storageDomain, headers);
-        // update writable fields only
-        getModel().setName(storageDomain.getName());
+        updateModel(storageDomain);
         return addLinks(uriInfo.getRequestUriBuilder());
     }
 

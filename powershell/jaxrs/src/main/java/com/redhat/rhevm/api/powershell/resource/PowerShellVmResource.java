@@ -27,11 +27,12 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.resource.VmResource;
+import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
-import com.redhat.rhevm.api.resource.VmResource;
 
-public class PowerShellVmResource extends AbstractPowerShellResource<VM> implements VmResource {
+public class PowerShellVmResource extends AbstractActionableResource<VM> implements VmResource {
     /*
      * FIXME: would like to do: private @Context UriInfo uriInfo;
      */
@@ -40,8 +41,8 @@ public class PowerShellVmResource extends AbstractPowerShellResource<VM> impleme
         super(id);
     }
 
-    public String getId() {
-        return id;
+    protected VM newModel() {
+        return new VM();
     }
 
     public static ArrayList<VM> runAndParse(String command) {
@@ -61,8 +62,7 @@ public class PowerShellVmResource extends AbstractPowerShellResource<VM> impleme
 
     @Override
     public VM get(UriInfo uriInfo) {
-        return setModel(addLinks(refreshRepresentation(),
-                                 uriInfo.getRequestUriBuilder()));
+        return addLinks(runAndParseSingle("get-vm " + getId()), uriInfo.getRequestUriBuilder());
     }
 
     @Override
@@ -71,7 +71,7 @@ public class PowerShellVmResource extends AbstractPowerShellResource<VM> impleme
 
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$v = get-vm " + id + "\n");
+        buf.append("$v = get-vm " + getId() + "\n");
 
         if (vm.getName() != null) {
             buf.append("$v.name = \"" + vm.getName() + "\"");
@@ -80,8 +80,7 @@ public class PowerShellVmResource extends AbstractPowerShellResource<VM> impleme
         buf.append("\n");
         buf.append("update-vm -vmobject $v");
 
-        return setModel(addLinks(runAndParseSingle(buf.toString()),
-                                 uriInfo.getRequestUriBuilder()));
+        return addLinks(runAndParseSingle(buf.toString()), uriInfo.getRequestUriBuilder());
     }
 
     @Override
@@ -134,17 +133,13 @@ public class PowerShellVmResource extends AbstractPowerShellResource<VM> impleme
         return doAction(uriInfo, action, DO_NOTHING);
     }
 
-    protected VM refreshRepresentation() {
-        return runAndParseSingle("get-vm " + id);
-    }
-
     private class CommandRunner implements Runnable {
         private String command;
         CommandRunner(String command) {
             this.command = command;
         }
         public void run() {
-            PowerShellUtils.runCommand(command + " -vmid " + id);
+            PowerShellUtils.runCommand(command + " -vmid " + getId());
         }
     }
 

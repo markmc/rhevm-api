@@ -57,7 +57,7 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
             if (fromRhevmIdMapping.containsKey(storageDomain.getId())) {
                 storageDomain.setId(fromRhevmIdMapping.get(storageDomain.getId()));
             }
-            PowerShellStorageDomainResource resource = new PowerShellStorageDomainResource(storageDomain, this);
+            PowerShellStorageDomainResource resource = new PowerShellStorageDomainResource(storageDomain.getId(), this);
             UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(storageDomain.getId());
             ret.getStorageDomains().add(resource.addLinks(storageDomain, uriBuilder));
         }
@@ -65,7 +65,7 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
         for (String id : stagedDomains.keySet()) {
             PowerShellStorageDomainResource resource = stagedDomains.get(id);
             UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(id);
-            ret.getStorageDomains().add(resource.addLinks(resource.getModel(), uriBuilder));
+            ret.getStorageDomains().add(resource.addLinks(resource.getStaged(), uriBuilder));
         }
 
         return ret;
@@ -76,7 +76,8 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
         storageDomain.setId(UUID.randomUUID().toString());
         storageDomain.setStatus(StorageDomainStatus.UNINITIALIZED);
 
-        PowerShellStorageDomainResource resource = new PowerShellStorageDomainResource(storageDomain, this, true);
+        PowerShellStorageDomainResource resource =
+            new PowerShellStorageDomainResource(storageDomain.getId(), this, storageDomain);
 
         stagedDomains.put(storageDomain.getId(), resource);
 
@@ -106,9 +107,7 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
     }
 
     protected PowerShellStorageDomainResource createSubResource(String id) {
-        StorageDomain storageDomain = new StorageDomain();
-        storageDomain.setId(id);
-        return new PowerShellStorageDomainResource(storageDomain, this);
+        return new PowerShellStorageDomainResource(id, this);
     }
 
     /**

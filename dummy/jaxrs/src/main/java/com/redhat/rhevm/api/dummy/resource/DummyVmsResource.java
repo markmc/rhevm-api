@@ -29,7 +29,7 @@ import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.resource.VmsResource;
 
-import static com.redhat.rhevm.api.dummy.resource.AbstractDummyResource.initialize;
+import static com.redhat.rhevm.api.dummy.resource.AbstractDummyResource.allocateId;
 
 
 public class DummyVmsResource implements VmsResource {
@@ -43,8 +43,8 @@ public class DummyVmsResource implements VmsResource {
 
     static {
         while (vms.size() < 10) {
-            VM vm = new VM();
-            DummyVmResource resource = new DummyVmResource(initialize(vm));
+            DummyVmResource resource = new DummyVmResource(allocateId(VM.class));
+            resource.getModel().setName("vm" + resource.getModel().getId());
             vms.put(resource.getModel().getId(), resource);
         }
     }
@@ -64,15 +64,18 @@ public class DummyVmsResource implements VmsResource {
 
     @Override
     public Response add(UriInfo uriInfo, VM vm) {
-        DummyVmResource newVM = new DummyVmResource(initialize(vm));
+        DummyVmResource resource = new DummyVmResource(allocateId(VM.class));
 
-        vms.put(vm.getId(), newVM);
+        resource.updateModel(vm);
 
-        UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(vm.getId());
+        String id = resource.getId();
+        vms.put(id, resource);
 
-        VM ret = newVM.addLinks(uriBuilder);
+        UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(id);
 
-        return Response.created(uriBuilder.build()).entity(ret).build();
+        vm = resource.addLinks(uriBuilder);
+
+        return Response.created(uriBuilder.build()).entity(vm).build();
     }
 
     @Override

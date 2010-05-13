@@ -34,7 +34,7 @@ import com.redhat.rhevm.api.model.StorageType;
 import com.redhat.rhevm.api.resource.StorageDomainResource;
 import com.redhat.rhevm.api.resource.StorageDomainsResource;
 
-import static com.redhat.rhevm.api.dummy.resource.AbstractDummyResource.initialize;
+import static com.redhat.rhevm.api.dummy.resource.AbstractDummyResource.allocateId;
 
 
 public class DummyStorageDomainsResource implements StorageDomainsResource {
@@ -42,15 +42,18 @@ public class DummyStorageDomainsResource implements StorageDomainsResource {
     private static HashMap<String, DummyStorageDomainResource> storageDomains = new HashMap<String, DummyStorageDomainResource>();
 
     private static void addStorageDomain(StorageDomainType domainType, String name, StorageType storageType, String host, String path) {
+        DummyStorageDomainResource resource = new DummyStorageDomainResource(allocateId(StorageDomain.class));
+
+        StorageDomain domain = new StorageDomain();
+        resource.getModel().setName(name);
+        resource.getModel().setType(domainType);
+
         Storage storage = new Storage();
         storage.setType(storageType);
         storage.setHost(host);
         storage.setPath(path);
+        resource.getModel().setStorage(storage);
 
-        StorageDomain domain = new StorageDomain();
-        domain.setName(name);
-        domain.setType(domainType);
-        DummyStorageDomainResource resource = new DummyStorageDomainResource(initialize(domain));
         storageDomains.put(resource.getModel().getId(), resource);
     }
 
@@ -78,14 +81,16 @@ public class DummyStorageDomainsResource implements StorageDomainsResource {
 
     @Override
     public Response add(UriInfo uriInfo, StorageDomain storageDomain) {
-        DummyStorageDomainResource newStorageDomain = new DummyStorageDomainResource(initialize(storageDomain));
+        DummyStorageDomainResource resource = new DummyStorageDomainResource(allocateId(StorageDomain.class));
 
-        String id = newStorageDomain.getModel().getId();
-        storageDomains.put(id, newStorageDomain);
+        resource.updateModel(storageDomain);
+
+        String id = resource.getId();
+        storageDomains.put(id, resource);
 
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(id);
 
-        storageDomain = newStorageDomain.addLinks(uriBuilder);
+        storageDomain = resource.addLinks(uriBuilder);
 
         return Response.created(uriBuilder.build()).entity(storageDomain).build();
     }

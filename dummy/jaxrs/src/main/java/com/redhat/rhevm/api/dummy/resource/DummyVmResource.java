@@ -43,15 +43,31 @@ public class DummyVmResource extends AbstractDummyResource<VM> implements VmReso
      *
      * @param vm  encapsulated VM
      */
-    public DummyVmResource(VM vm) {
-        super(vm);
+    public DummyVmResource(String id) {
+        super(id);
+    }
+
+    protected VM newModel() {
+        return new VM();
+    }
+
+    // FIXME: this needs to be atomic
+    public void updateModel(VM vm) {
+        // update writable fields only
+        getModel().setName(vm.getName());
     }
 
     public VM addLinks(UriBuilder uriBuilder) {
+        // FIXME: no createVM(VM) method ?
+        // VM vm = JAXBHelper.clone(OBJECT_FACTORY.createVM(getModel()));
+        VM vm = getModel();
+
+        vm.setHref(uriBuilder.build().toString());
+
         ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, VmResource.class);
-        getModel().setHref(uriBuilder.build().toString());
-        getModel().setActions(actionsBuilder.build());
-        return getModel();
+        vm.setActions(actionsBuilder.build());
+
+        return vm;
     }
 
     /* FIXME: kill uriInfo param, make href auto-generated? */
@@ -63,8 +79,7 @@ public class DummyVmResource extends AbstractDummyResource<VM> implements VmReso
     @Override
     public VM update(HttpHeaders headers, UriInfo uriInfo, VM vm) {
         validateUpdate(vm, headers);
-        // update writable fields only
-        getModel().setName(vm.getName());
+        updateModel(vm);
         return addLinks(uriInfo.getRequestUriBuilder());
     }
 

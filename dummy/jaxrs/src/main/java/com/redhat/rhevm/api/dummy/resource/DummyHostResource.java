@@ -25,6 +25,7 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.resource.HostResource;
+import com.redhat.rhevm.api.common.util.JAXBHelper;
 
 
 public class DummyHostResource extends AbstractDummyResource<Host> implements HostResource {
@@ -37,15 +38,29 @@ public class DummyHostResource extends AbstractDummyResource<Host> implements Ho
      *
      * @param host  encapsulated host
      */
-    DummyHostResource(Host host) {
-        super(host);
+    DummyHostResource(String id) {
+        super(id);
+    }
+
+    protected Host newModel() {
+        return new Host();
+    }
+
+    // FIXME: this needs to be atomic
+    public void updateModel(Host host) {
+        // update writable fields only
+        getModel().setName(host.getName());
     }
 
     public Host addLinks(UriBuilder uriBuilder) {
+        Host host = JAXBHelper.clone(OBJECT_FACTORY.createHost(getModel()));
+
+        host.setHref(uriBuilder.build().toString());
+
         ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, HostResource.class);
-        getModel().setHref(uriBuilder.build().toString());
-        getModel().setActions(actionsBuilder.build());
-        return getModel();
+        host.setActions(actionsBuilder.build());
+
+        return host;
     }
 
     /* FIXME: kill uriInfo param, make href auto-generated? */
@@ -57,8 +72,7 @@ public class DummyHostResource extends AbstractDummyResource<Host> implements Ho
     @Override
     public Host update(HttpHeaders headers, UriInfo uriInfo, Host host) {
         validateUpdate(host, headers);
-        // update writable fields only
-        getModel().setName(host.getName());
+        updateModel(host);
         return addLinks(uriInfo.getRequestUriBuilder());
     }
 
