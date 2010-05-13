@@ -33,8 +33,7 @@ import com.redhat.rhevm.api.resource.StorageDomainResource;
 
 import static com.redhat.rhevm.api.model.StorageDomainStatus.*;
 
-
-public class DummyStorageDomainResource extends AbstractDummyResource<StorageDomain> implements StorageDomainResource, ActionValidator {
+public class DummyStorageDomainResource extends AbstractDummyResource<StorageDomain> implements StorageDomainResource {
 
     private DummyAttachmentsResource attachments;
 
@@ -50,15 +49,18 @@ public class DummyStorageDomainResource extends AbstractDummyResource<StorageDom
     }
 
     public StorageDomain addLinks(UriBuilder uriBuilder) {
-        ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, StorageDomainResource.class, this);
         StorageDomain storageDomain = JAXBHelper.clone(OBJECT_FACTORY.createStorageDomain(getModel()));
         storageDomain.setHref(uriBuilder.build().toString());
+
+        ActionValidator actionValidator = new StorageDomainActionValidator(storageDomain);
+        ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, StorageDomainResource.class, actionValidator);
+        storageDomain.setActions(actionsBuilder.build());
+
         Link link = new Link();
         link.setRel("attachments");
         link.setHref(uriBuilder.clone().path("attachments").build().toString());
         storageDomain.getLinks().clear();
         storageDomain.getLinks().add(link);
-        storageDomain.setActions(actionsBuilder.build());
         return storageDomain;
     }
 
@@ -87,24 +89,6 @@ public class DummyStorageDomainResource extends AbstractDummyResource<StorageDom
         getModel().setStatus(UNINITIALIZED);
     }
 
-    @Override
-    public boolean validateAction(String action) {
-
-        switch (getModel().getStatus()) {
-        case UNINITIALIZED:
-            return action.equals("initialize");
-        case UNATTACHED:
-        case ACTIVE:
-        case INACTIVE:
-            return false;
-        case LOCKED:
-        case MIXED:
-        default:
-            assert false : getModel().getStatus();
-            return false;
-        }
-    }
-
     public AttachmentsResource getAttachmentsResource() {
         return attachments;
     }
@@ -118,5 +102,30 @@ public class DummyStorageDomainResource extends AbstractDummyResource<StorageDom
      */
     public String getAttachmentHref(UriInfo uriInfo, String dataCenterId) {
         return attachments.getAttachmentHref(uriInfo, dataCenterId);
+    }
+
+    private class StorageDomainActionValidator implements ActionValidator {
+        private StorageDomain storageDomain;
+
+        public StorageDomainActionValidator(StorageDomain storageDomain) {
+            this.storageDomain = storageDomain;
+        }
+
+        @Override
+        public boolean validateAction(String action) {
+            switch (storageDomain.getStatus()) {
+            case UNINITIALIZED:
+                return action.equals("initialize");
+            case UNATTACHED:
+            case ACTIVE:
+            case INACTIVE:
+                return false;
+            case LOCKED:
+            case MIXED:
+            default:
+                assert false : storageDomain.getStatus();
+                return false;
+            }
+        }
     }
 }

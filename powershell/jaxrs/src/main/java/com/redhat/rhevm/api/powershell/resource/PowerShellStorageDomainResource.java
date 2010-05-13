@@ -36,7 +36,7 @@ import com.redhat.rhevm.api.resource.StorageDomainResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellStorageDomain;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
-public class PowerShellStorageDomainResource extends AbstractPowerShellResource<StorageDomain> implements StorageDomainResource, ActionValidator {
+public class PowerShellStorageDomainResource extends AbstractPowerShellResource<StorageDomain> implements StorageDomainResource {
 
     private PowerShellStorageDomainsResource parent;
 
@@ -70,10 +70,12 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellResource<
     }
 
     public StorageDomain addLinks(StorageDomain storageDomain, UriBuilder uriBuilder) {
-        ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, StorageDomainResource.class, this);
         storageDomain = JAXBHelper.clone(OBJECT_FACTORY.createStorageDomain(parent.mapId(storageDomain)));
-        storageDomain.setActions(actionsBuilder.build());
         storageDomain.setHref(uriBuilder.build().toString());
+
+        ActionValidator actionValidator = new StorageDomainActionValidator(storageDomain);
+        ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, StorageDomainResource.class, actionValidator);
+        storageDomain.setActions(actionsBuilder.build());
 
         Link link = new Link();
         link.setRel("attachments");
@@ -119,24 +121,6 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellResource<
         return staged
                ? mutateModel(mutator)
                : mutateModel(runAndParseSingle(buf.toString()), mutator);
-    }
-
-    @Override
-    public boolean validateAction(String action) {
-        switch (getModel().getStatus()) {
-        case UNINITIALIZED:
-            return action.equals("initialize");
-        case UNATTACHED:
-            return action.equals("teardown");
-        case ACTIVE:
-        case INACTIVE:
-            return false;
-        case LOCKED:
-        case MIXED:
-        default:
-            assert false : getModel().getStatus();
-            return false;
-        }
     }
 
     @Override
@@ -216,5 +200,31 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellResource<
         return staged
                ? getModel()
                : setModel(runAndParseSingle("get-storagedomain " + id));
+    }
+
+    private class StorageDomainActionValidator implements ActionValidator {
+        private StorageDomain storageDomain;
+
+        public StorageDomainActionValidator(StorageDomain storageDomain) {
+            this.storageDomain = storageDomain;
+        }
+
+        @Override
+        public boolean validateAction(String action) {
+            switch (storageDomain.getStatus()) {
+            case UNINITIALIZED:
+                return action.equals("initialize");
+            case UNATTACHED:
+                return action.equals("teardown");
+            case ACTIVE:
+            case INACTIVE:
+                return false;
+            case LOCKED:
+            case MIXED:
+            default:
+                assert false : storageDomain.getStatus();
+                return false;
+            }
+        }
     }
 }

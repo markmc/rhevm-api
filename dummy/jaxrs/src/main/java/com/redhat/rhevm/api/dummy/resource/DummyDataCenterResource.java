@@ -43,13 +43,14 @@ public class DummyDataCenterResource extends AbstractDummyResource<DataCenter> i
     }
 
     public DataCenter addLinks(UriInfo uriInfo, UriBuilder uriBuilder) {
+        getModel().setHref(uriBuilder.build().toString());
+
+        ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, DataCenterResource.class);
+        getModel().setActions(actionsBuilder.build());
+
         Attachments attachments = DummyStorageDomainsResource.getAttachmentsForDataCenter(uriInfo, getModel().getId());
         getModel().setAttachments(attachments);
 
-        ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, DataCenterResource.class);
-
-        getModel().setHref(uriBuilder.build().toString());
-        getModel().setActions(actionsBuilder.build());
         return getModel();
     }
 

@@ -29,7 +29,7 @@ import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.StorageDomainStatus;
 import com.redhat.rhevm.api.resource.AttachmentResource;
 
-public class PowerShellAttachmentResource implements AttachmentResource, ActionValidator {
+public class PowerShellAttachmentResource implements AttachmentResource {
 
     private Attachment model;
 
@@ -70,12 +70,13 @@ public class PowerShellAttachmentResource implements AttachmentResource, ActionV
     public Attachment addLinks(UriInfo uriInfo, UriBuilder uriBuilder) {
         UriBuilder baseUriBuilder = uriInfo.getBaseUriBuilder();
 
+        getModel().setHref(uriBuilder.build().toString());
+
         setStorageDomainHref(baseUriBuilder);
         setDataCenterHref(baseUriBuilder);
 
-        ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, AttachmentResource.class, this);
-
-        getModel().setHref(uriBuilder.build().toString());
+        ActionValidator actionValidator = new AttachmentActionValidator(getModel());
+        ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, AttachmentResource.class, actionValidator);
         getModel().setActions(actionsBuilder.build());
 
         return getModel();
@@ -96,20 +97,28 @@ public class PowerShellAttachmentResource implements AttachmentResource, ActionV
         // FIXME: implement
     }
 
-    @Override
-    public boolean validateAction(String action) {
-        switch (getModel().getStatus()) {
-        case ACTIVE:
-            return action.equals("deactivate");
-        case INACTIVE:
-            return action.equals("activate");
-        case UNINITIALIZED:
-        case UNATTACHED:
-        case LOCKED:
-        case MIXED:
-        default:
-            assert false : getModel().getStatus();
-            return false;
+    private class AttachmentActionValidator implements ActionValidator {
+        private Attachment attachment;
+
+        public AttachmentActionValidator(Attachment attachment) {
+            this.attachment = attachment;
+        }
+
+        @Override
+        public boolean validateAction(String action) {
+            switch (attachment.getStatus()) {
+            case ACTIVE:
+                return action.equals("deactivate");
+            case INACTIVE:
+                return action.equals("activate");
+            case UNINITIALIZED:
+            case UNATTACHED:
+            case LOCKED:
+            case MIXED:
+            default:
+                assert false : attachment.getStatus();
+                return false;
+            }
         }
     }
 }
