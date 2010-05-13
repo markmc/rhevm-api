@@ -56,7 +56,7 @@ public class DummyHostResource extends AbstractDummyResource<Host> implements Ho
 
     @Override
     public Host update(HttpHeaders headers, UriInfo uriInfo, Host host) {
-        validateUpdate(host, getModel(), headers);
+        validateUpdate(host, headers);
         // update writable fields only
         getModel().setName(host.getName());
         return addLinks(uriInfo.getRequestUriBuilder());

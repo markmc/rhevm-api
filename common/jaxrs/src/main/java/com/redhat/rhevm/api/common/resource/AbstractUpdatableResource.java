@@ -47,8 +47,8 @@ public abstract class AbstractUpdatableResource<R extends BaseResource> {
      * @throws WebApplicationException wrapping an appropriate response
      * iff an immutability constraint has been broken
      */
-    protected void validateUpdate(R incoming, R existing, HttpHeaders headers) {
-        MutabilityAssertor.validateUpdate(getStrictlyImmutable(), incoming, existing, headers);
+    protected void validateUpdate(R incoming, HttpHeaders headers) {
+        MutabilityAssertor.validateUpdate(getStrictlyImmutable(), incoming, getModel(), headers);
     }
 
     /**

@@ -91,7 +91,7 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellResource<
 
     @Override
     public StorageDomain update(HttpHeaders headers, final UriInfo uriInfo, StorageDomain storageDomain) {
-        validateUpdate(storageDomain, getModel(), headers);
+        validateUpdate(storageDomain, headers);
 
         StringBuilder buf = new StringBuilder();
         if (staged) {

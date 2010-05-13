@@ -67,7 +67,7 @@ public class PowerShellVmResource extends AbstractPowerShellResource<VM> impleme
 
     @Override
     public VM update(HttpHeaders headers, UriInfo uriInfo, VM vm) {
-        validateUpdate(vm, getModel(), headers);
+        validateUpdate(vm, headers);
 
         StringBuilder buf = new StringBuilder();
 

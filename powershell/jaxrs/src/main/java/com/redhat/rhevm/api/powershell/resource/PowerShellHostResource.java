@@ -68,7 +68,7 @@ public class PowerShellHostResource extends AbstractPowerShellResource<Host> imp
 
     @Override
     public Host update(HttpHeaders headers, UriInfo uriInfo, Host host) {
-        validateUpdate(host, getModel(), headers);
+        validateUpdate(host, headers);
 
         StringBuilder buf = new StringBuilder();
 

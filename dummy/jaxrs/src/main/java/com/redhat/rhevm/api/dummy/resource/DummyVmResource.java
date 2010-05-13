@@ -62,7 +62,7 @@ public class DummyVmResource extends AbstractDummyResource<VM> implements VmReso
 
     @Override
     public VM update(HttpHeaders headers, UriInfo uriInfo, VM vm) {
-        validateUpdate(vm, getModel(), headers);
+        validateUpdate(vm, headers);
         // update writable fields only
         getModel().setName(vm.getName());
         return addLinks(uriInfo.getRequestUriBuilder());

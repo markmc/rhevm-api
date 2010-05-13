@@ -60,7 +60,7 @@ public class PowerShellDataCenterResource extends AbstractPowerShellResource<Dat
 
     @Override
     public DataCenter update(HttpHeaders headers, UriInfo uriInfo, DataCenter dataCenter) {
-        validateUpdate(dataCenter, getModel(), headers);
+        validateUpdate(dataCenter, headers);
 
         StringBuilder buf = new StringBuilder();
 

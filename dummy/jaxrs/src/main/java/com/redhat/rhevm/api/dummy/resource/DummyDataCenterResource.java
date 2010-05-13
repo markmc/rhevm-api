@@ -61,7 +61,7 @@ public class DummyDataCenterResource extends AbstractDummyResource<DataCenter> i
 
     @Override
     public DataCenter update(HttpHeaders headers, UriInfo uriInfo, DataCenter dataCenter) {
-        validateUpdate(dataCenter, getModel(), headers);
+        validateUpdate(dataCenter, headers);
         // update writable fields only
         getModel().setName(dataCenter.getName());
         getModel().setStorageType(dataCenter.getStorageType());

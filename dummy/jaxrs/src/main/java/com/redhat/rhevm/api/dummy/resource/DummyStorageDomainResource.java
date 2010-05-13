@@ -69,7 +69,7 @@ public class DummyStorageDomainResource extends AbstractDummyResource<StorageDom
 
     @Override
     public StorageDomain update(HttpHeaders headers, UriInfo uriInfo, StorageDomain storageDomain) {
-        validateUpdate(storageDomain, getModel(), headers);
+        validateUpdate(storageDomain, headers);
         // update writable fields only
         getModel().setName(storageDomain.getName());
         return addLinks(uriInfo.getRequestUriBuilder());
