@@ -26,6 +26,7 @@ import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.Attachments;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.resource.DataCenterResource;
+import com.redhat.rhevm.api.common.util.JAXBHelper;
 
 
 public class DummyDataCenterResource extends AbstractDummyResource<DataCenter> implements DataCenterResource {
@@ -38,20 +39,33 @@ public class DummyDataCenterResource extends AbstractDummyResource<DataCenter> i
      *
      * @param dataCenter  encapsulated DataCenter
      */
-    DummyDataCenterResource(DataCenter dataCenter) {
-        super(dataCenter);
+    DummyDataCenterResource(String id) {
+        super(id);
+    }
+
+    protected DataCenter newModel() {
+        return new DataCenter();
+    }
+
+    // FIXME: this needs to be atomic
+    public void updateModel(DataCenter dataCenter) {
+        // update writable fields only
+        getModel().setName(dataCenter.getName());
+        getModel().setStorageType(dataCenter.getStorageType());
     }
 
     public DataCenter addLinks(UriInfo uriInfo, UriBuilder uriBuilder) {
-        getModel().setHref(uriBuilder.build().toString());
+        DataCenter dataCenter = JAXBHelper.clone(OBJECT_FACTORY.createDatacenter(getModel()));
+
+        dataCenter.setHref(uriBuilder.build().toString());
 
         ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, DataCenterResource.class);
-        getModel().setActions(actionsBuilder.build());
+        dataCenter.setActions(actionsBuilder.build());
 
-        Attachments attachments = DummyStorageDomainsResource.getAttachmentsForDataCenter(uriInfo, getModel().getId());
-        getModel().setAttachments(attachments);
+        Attachments attachments = DummyStorageDomainsResource.getAttachmentsForDataCenter(uriInfo, dataCenter.getId());
+        dataCenter.setAttachments(attachments);
 
-        return getModel();
+        return dataCenter;
     }
 
     /* FIXME: kill uriInfo param, make href auto-generated? */
@@ -63,9 +77,7 @@ public class DummyDataCenterResource extends AbstractDummyResource<DataCenter> i
     @Override
     public DataCenter update(HttpHeaders headers, UriInfo uriInfo, DataCenter dataCenter) {
         validateUpdate(dataCenter, headers);
-        // update writable fields only
-        getModel().setName(dataCenter.getName());
-        getModel().setStorageType(dataCenter.getStorageType());
+        updateModel(dataCenter);
         return addLinks(uriInfo, uriInfo.getRequestUriBuilder());
     }
 }

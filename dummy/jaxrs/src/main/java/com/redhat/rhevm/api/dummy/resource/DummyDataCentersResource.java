@@ -30,7 +30,7 @@ import com.redhat.rhevm.api.model.StorageType;
 import com.redhat.rhevm.api.resource.DataCenterResource;
 import com.redhat.rhevm.api.resource.DataCentersResource;
 
-import static com.redhat.rhevm.api.dummy.resource.AbstractDummyResource.initialize;
+import static com.redhat.rhevm.api.dummy.resource.AbstractDummyResource.allocateId;
 
 
 public class DummyDataCentersResource implements DataCentersResource {
@@ -43,10 +43,9 @@ public class DummyDataCentersResource implements DataCentersResource {
 
     static {
         while (dataCenters.size() < 2) {
-            DataCenter dataCenter = new DataCenter();
-            dataCenter.setName("dataCenter" + Integer.toString(dataCenters.size()));
-            dataCenter.setStorageType((dataCenters.size() % 2) == 0 ? StorageType.ISCSI : StorageType.NFS);
-            DummyDataCenterResource resource = new DummyDataCenterResource(initialize(dataCenter));
+            DummyDataCenterResource resource = new DummyDataCenterResource(allocateId(DataCenter.class));
+            resource.getModel().setName("datacenter" + resource.getModel().getId());
+            resource.getModel().setStorageType((dataCenters.size() % 2) == 0 ? StorageType.ISCSI : StorageType.NFS);
             dataCenters.put(resource.getModel().getId(), resource);
         }
     }
@@ -70,16 +69,16 @@ public class DummyDataCentersResource implements DataCentersResource {
 
     @Override
     public Response add(UriInfo uriInfo, DataCenter dataCenter) {
-        // update writable fields only
+        DummyDataCenterResource resource = new DummyDataCenterResource(allocateId(DataCenter.class));
 
-        DummyDataCenterResource newDataCenter = new DummyDataCenterResource(initialize(dataCenter));
+        resource.updateModel(dataCenter);
 
-        String id = newDataCenter.getModel().getId();
-        dataCenters.put(id, newDataCenter);
+        String id = resource.getId();
+        dataCenters.put(id, resource);
 
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(id);
 
-        dataCenter = newDataCenter.addLinks(uriInfo, uriBuilder);
+        dataCenter = resource.addLinks(uriInfo, uriBuilder);
 
         return Response.created(uriBuilder.build()).entity(dataCenter).build();
     }

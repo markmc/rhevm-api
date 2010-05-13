@@ -26,10 +26,11 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.resource.HostResource;
+import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellHost;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
-public class PowerShellHostResource extends AbstractPowerShellResource<Host> implements HostResource {
+public class PowerShellHostResource extends AbstractActionableResource<Host> implements HostResource {
     /* FIXME: would like to do:
      * private @Context UriInfo uriInfo;
      */
@@ -38,8 +39,8 @@ public class PowerShellHostResource extends AbstractPowerShellResource<Host> imp
         super(id);
     }
 
-    public String getId() {
-        return id;
+    protected Host newModel() {
+        return new Host();
     }
 
     /* needed because there are two get-host commands */
@@ -62,8 +63,7 @@ public class PowerShellHostResource extends AbstractPowerShellResource<Host> imp
 
     @Override
     public Host get(UriInfo uriInfo) {
-        return setModel(addLinks(refreshRepresentation(),
-                                 uriInfo.getRequestUriBuilder()));
+        return addLinks(runAndParseSingle(CMD_PREFIX + "get-host " + getId()), uriInfo.getRequestUriBuilder());
     }
 
     @Override
@@ -72,7 +72,7 @@ public class PowerShellHostResource extends AbstractPowerShellResource<Host> imp
 
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$h = get-host " + id + "\n");
+        buf.append("$h = get-host " + getId() + "\n");
 
         if (host.getName() != null) {
             buf.append("$h.name = \"" + host.getName() + "\"");
@@ -81,13 +81,12 @@ public class PowerShellHostResource extends AbstractPowerShellResource<Host> imp
         buf.append("\n");
         buf.append("update-host -hostobject $v");
 
-        return setModel(addLinks(runAndParseSingle(buf.toString()),
-                                 uriInfo.getRequestUriBuilder()));
+        return addLinks(runAndParseSingle(buf.toString()), uriInfo.getRequestUriBuilder());
     }
 
     @Override
     public void approve() {
-        PowerShellUtils.runCommand("approve-host -hostid " + id);
+        PowerShellUtils.runCommand("approve-host -hostid " + getId());
     }
 
     @Override
@@ -96,10 +95,6 @@ public class PowerShellHostResource extends AbstractPowerShellResource<Host> imp
 
     @Override
     public void resume() {
-    }
-
-    protected Host refreshRepresentation() {
-        return runAndParseSingle(CMD_PREFIX + "get-host " + id);
     }
 
 /*

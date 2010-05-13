@@ -37,8 +37,8 @@ public abstract class AbstractActionableResource<R extends BaseResource> extends
 
     protected ReapedMap<String, ActionResource> actions;
 
-    public AbstractActionableResource(R resource) {
-        super(resource);
+    public AbstractActionableResource(String id) {
+        super(id);
         actions = new ReapedMap<String, ActionResource>(REAP_AFTER);
     }
 
@@ -87,7 +87,7 @@ public abstract class AbstractActionableResource<R extends BaseResource> extends
                : new ActionResource() {
                     @Override
                     public Response get(UriInfo uriInfo) {
-                        URI redirect = uriInfo.getBaseUriBuilder().path("/vms/" + getModel().getId()).build();
+                        URI redirect = uriInfo.getBaseUriBuilder().path("/vms/" + getId()).build();
                         Response.Status status = Response.Status.MOVED_PERMANENTLY;
                         return Response.status(status).location(redirect).build();
                     }
