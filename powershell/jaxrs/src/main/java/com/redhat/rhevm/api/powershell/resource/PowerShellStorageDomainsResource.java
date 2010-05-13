@@ -176,9 +176,22 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
      * @param storageDomain the StorageDomain to map
      * @return the mapped StorageDomain
      */
-    public StorageDomain mapId(StorageDomain storageDomain) {
+    public StorageDomain mapFromRhevmId(StorageDomain storageDomain) {
         if (fromRhevmIdMapping.containsKey(storageDomain.getId())) {
             storageDomain.setId(fromRhevmIdMapping.get(storageDomain.getId()));
+        }
+        return storageDomain;
+    }
+
+    /**
+     * Map the StorageDomain's ID to a RHEV-M ID.
+     *
+     * @param storageDomain the StorageDomain to map
+     * @return the mapped StorageDomain
+     */
+    public StorageDomain mapToRhevmId(StorageDomain storageDomain) {
+        if (toRhevmIdMapping.containsKey(storageDomain.getId())) {
+            storageDomain.setId(toRhevmIdMapping.get(storageDomain.getId()));
         }
         return storageDomain;
     }

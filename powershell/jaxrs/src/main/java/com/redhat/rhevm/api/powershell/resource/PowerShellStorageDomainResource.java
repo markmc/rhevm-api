@@ -70,7 +70,7 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellResource<
     }
 
     public StorageDomain addLinks(StorageDomain storageDomain, UriBuilder uriBuilder) {
-        storageDomain = JAXBHelper.clone(OBJECT_FACTORY.createStorageDomain(parent.mapId(storageDomain)));
+        storageDomain = JAXBHelper.clone(OBJECT_FACTORY.createStorageDomain(parent.mapFromRhevmId(storageDomain)));
         storageDomain.setHref(uriBuilder.build().toString());
 
         ActionValidator actionValidator = new StorageDomainActionValidator(storageDomain);
