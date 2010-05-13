@@ -16,6 +16,7 @@
     <module>powershell</module>
     <module>dummy</module>
     <module>cli</module>
+    <module>itests</module>
   </modules>
 
   <properties>
@@ -31,6 +32,8 @@
     <felix.osgi.version>1.4.0</felix.osgi.version>
     <cxf.version>2.2.6</cxf.version>
     <easymock.version>2.5.2</easymock.version>
+    <xharness.version>1.0-beta-5</xharness.version>
+    <ant.version>1.7.1</ant.version>
   </properties>
 
   <repositories>
@@ -152,6 +155,30 @@
         <artifactId>easymockclassextension</artifactId>
         <version>${easymock.version}</version>
         <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.codehaus.xharness</groupId>
+        <artifactId>xharness</artifactId>
+        <version>${xharness.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.ant</groupId>
+        <artifactId>ant</artifactId>
+        <version>${ant.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.ant</groupId>
+        <artifactId>ant-trax</artifactId>
+        <version>${ant.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.ant</groupId>
+        <artifactId>ant-nodeps</artifactId>
+        <version>${ant.version}</version>
       </dependency>
 
     </dependencies>

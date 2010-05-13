@@ -1,0 +1,247 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.redhat.rhevm.api</groupId>
+    <artifactId>parent</artifactId>
+    <version>0.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>rhevm-itests</artifactId>
+  <packaging>pom</packaging>
+
+  <name>RHEV-M API Intergation Tests</name>
+  <url>http://fedorahosted.org/rhevm-api/</url>
+
+  <properties>
+    <rhevm.api.impl>rhevm-api-dummy</rhevm.api.impl>
+    <jboss.version>6.0.0.M1</jboss.version>
+    <kits.dir>${project.build.directory}/kits</kits.dir>
+    <jboss.dir>${kits.dir}/jboss</jboss.dir>
+    <jboss.home>${jboss.dir}/jboss-${jboss.version}</jboss.home>
+    <jboss.bin>${jboss.home}/bin</jboss.bin>
+  </properties>
+
+  <build>
+    <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>unpack</id>
+            <phase>process-test-resources</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.jboss.jbossas</groupId>
+                  <artifactId>jboss-as-distribution</artifactId>
+                  <version>${jboss.version}</version>
+                  <type>zip</type>
+                  <overWrite>false</overWrite>
+                  <outputDirectory>${jboss.dir}</outputDirectory>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy</id>
+            <phase>process-test-resources</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>com.redhat.rhevm.api</groupId>
+                  <artifactId>${rhevm.api.impl}-webapp</artifactId>
+                  <version>${pom.version}</version>
+                  <type>war</type>
+                  <overWrite>true</overWrite>
+                  <outputDirectory>${jboss.home}/server/default/deploy</outputDirectory>
+                  <destFileName>${rhevm.api.impl}.war</destFileName>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>run-xharness-tests</id>
+            <phase>integration-test</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+
+                <!-- REVIST factor out into seperate xml files
+                     per-testgroup at least, maybe even per-testcase -->
+
+                <property name="results.dir"
+                          value="${project.build.directory}/xharness"/>
+
+                <condition property="shell.extension" value=".sh">
+                  <os family="unix"/>
+                </condition>
+                <condition property="shell.extension" value=".bat">
+                  <os family="windows"/>
+                </condition>
+
+                <path id="xharness.lib">
+                  <pathelement path="${maven.test.classpath}"/>
+                  <pathelement path="${maven.plugin.classpath}"/>
+                </path>
+
+                <taskdef resource="xharnesstasks.properties"
+                         classpathref="xharness.lib"
+                         loaderref="xharness.loader"/>
+                <typedef resource="xharnesstypes.properties"
+                         classpathref="xharness.lib"
+                         loaderref="xharness.loader"/>
+
+                <mkdir dir="${results.dir}/xml"/>
+
+
+                <xharness name="rhevm-api" resultsdir="${results.dir}/xml">
+
+                  <servicedef name="jboss">
+                    <start>
+                      <xh-execbg executable="${jboss.bin}/run${shell.extension}"
+                                 processname="jboss_server">
+                        <envset>
+                          <env key="JBOSS_HOME" value="${jboss.home}"/>
+                        </envset>
+                      </xh-execbg>
+                      <assert timeout="120">
+                        <outputcontains stream="stdout" task="xh-execbg">deploy, ctxPath=/${rhevm.api.impl}</outputcontains>
+                      </assert>
+                    </start>
+
+                    <stop>
+                      <xh-exec executable="${jboss.bin}/shutdown${shell.extension}">
+                        <arg value="-S"/>
+                      </xh-exec>
+                      <assert timeout="10">
+                        <outputcontains stream="stdout" task="xh-exec">Shutdown message has been posted to the server.</outputcontains>
+                      </assert>
+                      <!-- Just in case! -->
+                      <kill processname="jboss_server" failonerror="false"/>
+                    </stop>
+                  </servicedef>
+
+
+                  <testgroup name="setup">
+                    <!-- REVISIT kinda nasty hack, use a skipable test to set
+                         execute permission on the JBoss scripts only on Unix,
+                         should be a task instead of a testcase -->
+                    <testcase name="set.script.modes">
+                      <skip description="Skipped on non-Unix platforms">
+                        <not>
+                          <os family="unix"/>
+                        </not>
+                      </skip>
+                      <xh-exec executable="chmod">
+                        <arg value="u+x"/>
+                        <arg value="${jboss.bin}/run.sh"/>
+                        <arg value="${jboss.bin}/shutdown.sh"/>
+                      </xh-exec>
+                    </testcase>
+                  </testgroup>
+
+
+                  <testgroup name="basic">
+
+                    <!-- Launch JBoss -->
+                    <jboss/>
+
+                    <!-- Exercise python client -->
+                    <testcase name="python.client" owner="eglynn">
+                      <xh-exec executable="python">
+                        <arg value="../python/test.py"/>
+                      </xh-exec>
+                      <assert>
+                        <outputcontains stream="stdout" min="2">204</outputcontains>
+                      </assert>
+                    </testcase>
+
+                    <!-- Exercise CLI -->
+                    <testcase name="command.line.interface" owner="eglynn">
+                      <!-- TODO: complete -->
+                    </testcase>
+
+                  </testgroup>
+
+                </xharness>
+
+
+                <mkdir dir="${results.dir}/html"/>
+
+                <xharnessreport todir="${results.dir}/html" failonerror="true">
+                  <fileset dir="${results.dir}/xml">
+                    <include name="*.xml"/>
+                  </fileset>
+                  <report format="frames" todir="${results.dir}/html"/>
+                </xharnessreport>
+
+                <mkdir dir="${results.dir}/html"/>
+
+                <echo/>
+                <echo message=" For ${pom.name} results, point your browser at:${line.separator}  file://${results.dir}/html/index.html"/>
+                <echo/>
+
+              </tasks>
+            </configuration>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.codehaus.xharness</groupId>
+            <artifactId>xharness</artifactId>
+            <version>${xharness.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.apache.ant</groupId>
+            <artifactId>ant</artifactId>
+            <version>${ant.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.apache.ant</groupId>
+            <artifactId>ant-trax</artifactId>
+            <version>${ant.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.apache.ant</groupId>
+            <artifactId>ant-nodeps</artifactId>
+            <version>${ant.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.apache.ant</groupId>
+            <artifactId>ant-junit</artifactId>
+            <version>${ant.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+
+    </plugins>
+  </build>
+
+</project>
