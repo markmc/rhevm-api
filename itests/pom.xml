@@ -17,8 +17,8 @@
 
   <properties>
     <rhevm.api.impl>rhevm-api-dummy</rhevm.api.impl>
-    <jboss.version>6.0.0.M1</jboss.version>
     <kits.dir>${project.build.directory}/kits</kits.dir>
+    <jboss.version>6.0.0.M1</jboss.version>
     <jboss.dir>${kits.dir}/jboss</jboss.dir>
     <jboss.home>${jboss.dir}/jboss-${jboss.version}</jboss.home>
     <jboss.bin>${jboss.home}/bin</jboss.bin>
@@ -201,8 +201,6 @@
                   </fileset>
                   <report format="frames" todir="${results.dir}/html"/>
                 </xharnessreport>
-
-                <mkdir dir="${results.dir}/html"/>
 
                 <echo/>
                 <echo message=" For ${pom.name} results, point your browser at:${line.separator}  file://${results.dir}/html/index.html"/>

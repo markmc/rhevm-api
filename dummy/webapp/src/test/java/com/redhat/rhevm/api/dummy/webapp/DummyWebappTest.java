@@ -27,6 +27,7 @@ import java.io.InputStream;
 import com.meterware.httpunit.GetMethodWebRequest;
 import com.meterware.httpunit.HttpUnitOptions;
 import com.meterware.httpunit.PostMethodWebRequest;
+import com.meterware.httpunit.PutMethodWebRequest;
 import com.meterware.httpunit.WebRequest;
 import com.meterware.httpunit.WebResponse;
 import com.meterware.servletunit.ServletRunner;
@@ -85,9 +86,9 @@ public class DummyWebappTest extends Assert {
     }
 
     // FIXME: fails with a 405, suspect a HttpUnit-ism
-    // @Test
+    @Test
     public void testVmUpdate() throws Exception {
-        doTestPost(VMS_PATH + "/1", "<vm><name>foobar</name></vm>", 200, "<name>foobar</name>");
+        doTestPut(VMS_PATH + "/1", "<vm><name>foobar</name></vm>", 200, "<name>foobar</name>");
     }
 
     @Test
@@ -107,11 +108,28 @@ public class DummyWebappTest extends Assert {
                             String body,
                             int expectedStatus,
                             String expectedReponsePattern) throws Exception {
+        doTestPush(context, body, expectedStatus, expectedReponsePattern, true);
+    }
+
+    private void doTestPut(String context,
+                           String body,
+                           int expectedStatus,
+                           String expectedReponsePattern) throws Exception {
+        doTestPush(context, body, expectedStatus, expectedReponsePattern, false);
+    }
+
+    private void doTestPush(String context,
+                            String body,
+                            int expectedStatus,
+                            String expectedReponsePattern,
+                            boolean isPost) throws Exception {
         ServletUnitClient client = runner.newClient();
         InputStream requestBody = new ByteArrayInputStream((PROLOGUE + body).getBytes());
         String contentType = "application/xml";
         WebRequest request =
-            new PostMethodWebRequest(BASE_URL + RHEVM_CONTEXT_PATH + context, requestBody, contentType);
+            isPost
+            ? new PostMethodWebRequest(BASE_URL + RHEVM_CONTEXT_PATH + context, requestBody, contentType)
+            : new PutMethodWebRequest(BASE_URL + RHEVM_CONTEXT_PATH + context, requestBody, contentType);
         request.setHeaderField("Accept", "application/xml");
 
         verify(client.getResponse(request), expectedStatus, expectedReponsePattern);
