@@ -42,10 +42,6 @@ public class DummyHostResource extends AbstractDummyResource<Host> implements Ho
         super(id);
     }
 
-    protected Host newModel() {
-        return new Host();
-    }
-
     // FIXME: this needs to be atomic
     public void updateModel(Host host) {
         // update writable fields only

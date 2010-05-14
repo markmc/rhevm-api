@@ -85,7 +85,6 @@ public class DummyWebappTest extends Assert {
         doTestPost(VMS_PATH, "<vm><name>snafu</name></vm>", 201, "<name>snafu</name>");
     }
 
-    // FIXME: fails with a 405, suspect a HttpUnit-ism
     @Test
     public void testVmUpdate() throws Exception {
         doTestPut(VMS_PATH + "/1", "<vm><name>foobar</name></vm>", 200, "<name>foobar</name>");

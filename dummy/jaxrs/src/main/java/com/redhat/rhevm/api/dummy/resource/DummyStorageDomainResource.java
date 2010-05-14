@@ -48,10 +48,6 @@ public class DummyStorageDomainResource extends AbstractDummyResource<StorageDom
         this.attachments = new DummyAttachmentsResource(id);
     }
 
-    protected StorageDomain newModel() {
-        return new StorageDomain();
-    }
-
     // FIXME: this needs to be atomic
     public void updateModel(StorageDomain storageDomain) {
         // update writable fields only

@@ -43,10 +43,6 @@ public class DummyDataCenterResource extends AbstractDummyResource<DataCenter> i
         super(id);
     }
 
-    protected DataCenter newModel() {
-        return new DataCenter();
-    }
-
     // FIXME: this needs to be atomic
     public void updateModel(DataCenter dataCenter) {
         // update writable fields only

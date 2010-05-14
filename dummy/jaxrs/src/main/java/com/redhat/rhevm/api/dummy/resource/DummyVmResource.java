@@ -27,6 +27,7 @@ import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.resource.VmResource;
+import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.dummy.model.DummyVmStatus;
 
 
@@ -47,10 +48,6 @@ public class DummyVmResource extends AbstractDummyResource<VM> implements VmReso
         super(id);
     }
 
-    protected VM newModel() {
-        return new VM();
-    }
-
     // FIXME: this needs to be atomic
     public void updateModel(VM vm) {
         // update writable fields only
@@ -58,9 +55,7 @@ public class DummyVmResource extends AbstractDummyResource<VM> implements VmReso
     }
 
     public VM addLinks(UriBuilder uriBuilder) {
-        // FIXME: no createVM(VM) method ?
-        // VM vm = JAXBHelper.clone(OBJECT_FACTORY.createVM(getModel()));
-        VM vm = getModel();
+        VM vm = JAXBHelper.clone("vm", VM.class, getModel());
 
         vm.setHref(uriBuilder.build().toString());
 

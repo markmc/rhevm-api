@@ -19,6 +19,10 @@
 package com.redhat.rhevm.api.common.util;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+
+import com.redhat.rhevm.api.common.resource.AbstractUpdatableResource;
+import com.redhat.rhevm.api.model.BaseResource;
 
 public class ReflectionHelper {
 
@@ -27,6 +31,16 @@ public class ReflectionHelper {
     private static final String IS_SET_ROOT = "isSet";
 
     private ReflectionHelper() {}
+
+    @SuppressWarnings("unchecked")
+    public static <R extends BaseResource> R newModel(AbstractUpdatableResource<R> resource) {
+        R ret = null;
+        try {
+            ret = ((Class<R>)((ParameterizedType)resource.getClass().getGenericSuperclass()).getActualTypeArguments()[0]).newInstance();
+        } catch (Exception e) {
+        }
+        return ret;
+    }
 
     public static String capitalize(String s) {
         return Character.isLowerCase(s.charAt(0))

@@ -9,6 +9,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.namespace.QName;
 import javax.xml.transform.stream.StreamSource;
 
 public class JAXBHelper {
@@ -34,6 +35,10 @@ public class JAXBHelper {
         } catch (Exception e) {
         }
         return ret;
+    }
+
+    public static <S> S clone(String localName, Class<S> clz, S s) {
+        return clone(new JAXBElement<S>(new QName("", localName), clz, null, s));
     }
 
     private static <S> void marshall(OutputStream os, JAXBElement<S> element) throws Exception {

@@ -54,10 +54,6 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
         this(id, parent, null);
     }
 
-    protected StorageDomain newModel() {
-        return new StorageDomain();
-    }
-
     public StorageDomain getStaged() {
         return staged;
     }

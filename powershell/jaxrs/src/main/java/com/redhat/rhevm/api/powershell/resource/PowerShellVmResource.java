@@ -41,10 +41,6 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
         super(id);
     }
 
-    protected VM newModel() {
-        return new VM();
-    }
-
     public static ArrayList<VM> runAndParse(String command) {
         return PowerShellVM.parse(PowerShellUtils.runCommand(command));
     }

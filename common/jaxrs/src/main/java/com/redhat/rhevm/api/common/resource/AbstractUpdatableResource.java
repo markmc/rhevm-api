@@ -24,6 +24,7 @@ import com.redhat.rhevm.api.model.BaseResource;
 import com.redhat.rhevm.api.model.ObjectFactory;
 
 import com.redhat.rhevm.api.common.util.MutabilityAssertor;
+import com.redhat.rhevm.api.common.util.ReflectionHelper;
 
 
 public abstract class AbstractUpdatableResource<R extends BaseResource> {
@@ -37,9 +38,11 @@ public abstract class AbstractUpdatableResource<R extends BaseResource> {
     /**
      * Create a new instance of the resource
      *
-     * @return a newly construced instance
+     * @return a newly constructed instance
      */
-    protected abstract R newModel();
+    protected R newModel() {
+        return ReflectionHelper.newModel(this);
+    }
 
     public AbstractUpdatableResource(String id) {
         setId(id);

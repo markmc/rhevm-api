@@ -39,10 +39,6 @@ public class PowerShellHostResource extends AbstractActionableResource<Host> imp
         super(id);
     }
 
-    protected Host newModel() {
-        return new Host();
-    }
-
     /* needed because there are two get-host commands */
     private static final String CMD_PREFIX = "rhevmpssnapin\\";
 

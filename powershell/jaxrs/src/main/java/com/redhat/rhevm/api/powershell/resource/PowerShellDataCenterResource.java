@@ -39,10 +39,6 @@ public class PowerShellDataCenterResource extends AbstractActionableResource<Dat
         super(id);
     }
 
-    protected DataCenter newModel() {
-        return new DataCenter();
-    }
-
     public static ArrayList<DataCenter> runAndParse(String command) {
         return PowerShellDataCenter.parse(PowerShellUtils.runCommand(command));
     }
