@@ -39,7 +39,7 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
         this.storageDomainId = storageDomainId;
     }
 
-    private static Attachment buildAttachment(String dataCenterId, String storageDomainId, StorageDomainStatus status) {
+    private static Attachment buildAttachment(String dataCenterId, String storageDomainId) {
         Attachment attachment = new Attachment();
 
         attachment.setDataCenter(new DataCenter());
@@ -48,7 +48,17 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
         attachment.setStorageDomain(new StorageDomain());
         attachment.getStorageDomain().setId(storageDomainId);
 
-        attachment.setStatus(status);
+        return attachment;
+    }
+
+    private static Attachment buildAttachment(DataCenter dataCenter, StorageDomain storageDomain) {
+        Attachment attachment = buildAttachment(dataCenter.getId(), storageDomain.getId());
+
+        attachment.setStatus(storageDomain.getStatus());
+
+        if (storageDomain.isSetMaster()) {
+            attachment.setMaster(storageDomain.isMaster());
+        }
 
         return attachment;
     }
@@ -71,7 +81,7 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
             StorageDomain storageDomain = PowerShellStorageDomainResource.runAndParseSingle(buf.toString());
 
             // FIXME: we need the "Status" property not "SharedStatus" here
-            Attachment attachment = buildAttachment(dataCenter.getId(), storageDomainId, storageDomain.getStatus());
+            Attachment attachment = buildAttachment(dataCenter, storageDomain);
 
             PowerShellAttachmentResource resource = new PowerShellAttachmentResource(attachment);
             UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(dataCenter.getId());
@@ -94,7 +104,7 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
         StorageDomain storageDomain = PowerShellStorageDomainResource.runAndParseSingle(buf.toString());
 
         // FIXME: we need the "Status" property not "SharedStatus" here
-        attachment = buildAttachment(dataCenter.getId(), storageDomainId, storageDomain.getStatus());
+        attachment = buildAttachment(dataCenter, storageDomain);
 
         PowerShellAttachmentResource resource = new PowerShellAttachmentResource(attachment);
 
@@ -118,7 +128,7 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
 
     @Override
     public AttachmentResource getAttachmentSubResource(UriInfo uriInfo, String id) {
-        Attachment attachment = buildAttachment(id, storageDomainId, null);
+        Attachment attachment = buildAttachment(id, storageDomainId);
 
         return new PowerShellAttachmentResource(attachment);
     }

@@ -44,7 +44,7 @@ public class PowerShellStorageDomain {
             String domainType = props.get("domaintype").toUpperCase();
             if (domainType.endsWith(" (MASTER)")) {
                 domainType = domainType.split(" ")[0];
-                // FIXME: storageDomain.setIsMaster(true);
+                storageDomain.setMaster(true);
             }
             storageDomain.setType(StorageDomainType.fromValue(domainType));
 

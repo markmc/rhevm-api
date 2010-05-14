@@ -137,6 +137,7 @@
       </xs:element>
       <xs:element name="storage_domain" type="StorageDomain" minOccurs="0"/>
       <xs:element name="status" type="StorageDomainStatus" minOccurs="0"/>
+      <xs:element name="master" type="xs:boolean" minOccurs="0"/>
       <xs:element name="actions" type="Actions" minOccurs="0"/>
     </xs:sequence>
     <xs:attribute name="href" type="xs:string"/>
@@ -265,6 +266,7 @@
         <xs:sequence>
           <xs:element name="type" type="StorageDomainType" minOccurs="0"/>
           <xs:element name="status" type="StorageDomainStatus" minOccurs="0"/>
+          <xs:element name="master" type="xs:boolean" minOccurs="0"/>
           <xs:element name="storage" type="Storage"/>
           <!-- also a rel="attachments" link, see Attachments above -->
         </xs:sequence>
