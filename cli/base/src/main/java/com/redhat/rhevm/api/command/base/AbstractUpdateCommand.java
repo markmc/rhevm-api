@@ -25,7 +25,6 @@ import org.apache.felix.gogo.commands.Option;
 
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.BaseResource;
-import com.redhat.rhevm.api.model.Link;
 
 import static com.redhat.rhevm.api.common.util.ReflectionHelper.set;
 
@@ -44,9 +43,8 @@ public abstract class AbstractUpdateCommand extends AbstractCommand {
         T resource = getResource(collection, name);
         if (resource != null) {
             if (set(resource, field, value)) {
-                Link link = resource.getLinks().get(0);
-                if (link != null) {
-                    return client.doUpdate(resource, clz, field, link);
+                if (resource.getHref() != null) {
+                    return client.doUpdate(resource, clz, field, resource.getHref());
                 }
             } else {
                 System.err.println(field + " is unknown or not a top-level primitive element");

@@ -100,18 +100,18 @@ public class BaseClient {
             String monitor =
                 Status.COMPLETE.equals(reaction.getStatus())
                 ? ""
-                : ", monitor @ " + getLink(reaction.getLink(), "self");
+                : ", monitor @ " + reaction.getHref();
             System.out.println(verb + " " + reaction.getStatus() + monitor);
         }
     }
 
-    public <T extends BaseResource> T doUpdate(T resource, Class<T> clz, String field, Link link) throws Exception {
+    public <T extends BaseResource> T doUpdate(T resource, Class<T> clz, String field, String href) throws Exception {
         Response r = null;
         Exception failure = null;
         T ret = null;
 
         try {
-             WebClient post = WebClient.create(link.getHref());
+             WebClient post = WebClient.create(href);
              r = post.path("/").put(resource);
              ret = unmarshall(r, clz);
         } catch (Exception e) {
