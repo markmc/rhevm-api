@@ -22,6 +22,10 @@
     <jboss.dir>${kits.dir}/jboss</jboss.dir>
     <jboss.home>${jboss.dir}/jboss-${jboss.version}</jboss.home>
     <jboss.bin>${jboss.home}/bin</jboss.bin>
+    <smx.version>4.2.0</smx.version>
+    <rhevm-admin.dir>${kits.dir}/rhevm-admin</rhevm-admin.dir>
+    <rhevm-admin.home>${rhevm-admin.dir}/apache-servicemix-${smx.version}</rhevm-admin.home>
+    <rhevm-admin.bin>${rhevm-admin.home}/bin</rhevm-admin.bin>
   </properties>
 
   <build>
@@ -46,6 +50,14 @@
                   <type>zip</type>
                   <overWrite>false</overWrite>
                   <outputDirectory>${jboss.dir}</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.apache.servicemix</groupId>
+                  <artifactId>apache-servicemix</artifactId>
+                  <version>${smx.version}</version>
+                  <type>tar.gz</type>
+                  <overWrite>false</overWrite>
+                  <outputDirectory>${rhevm-admin.dir}</outputDirectory>
                 </artifactItem>
               </artifactItems>
             </configuration>
@@ -98,6 +110,8 @@
 
                 <property name="results.dir"
                           value="${project.build.directory}/xharness"/>
+                <property name="jboss.http" value="8180"/>
+                <property name="jboss.rmi" value="1199"/>
 
                 <condition property="shell.extension" value=".sh">
                   <os family="unix"/>
@@ -130,6 +144,7 @@
                         <envset>
                           <env key="JBOSS_HOME" value="${jboss.home}"/>
                         </envset>
+                        <arg value="-Djboss.service.binding.set=ports-01"/>
                       </xh-execbg>
                       <assert timeout="120">
                         <outputcontains stream="stdout" task="xh-execbg">deploy, ctxPath=/${rhevm.api.impl}</outputcontains>
@@ -138,7 +153,7 @@
 
                     <stop>
                       <xh-exec executable="${jboss.bin}/shutdown${shell.extension}">
-                        <arg value="-S"/>
+                        <arg line="-s jnp://localhost:${jboss.rmi}"/>
                       </xh-exec>
                       <assert timeout="10">
                         <outputcontains stream="stdout" task="xh-exec">Shutdown message has been posted to the server.</outputcontains>
@@ -148,6 +163,61 @@
                     </stop>
                   </servicedef>
 
+                  <macrodef name="rhevm-client">
+                    <attribute name="command"/>
+                    <sequential>
+                      <xh-java jar="${rhevm-admin.home}/lib/karaf-client.jar">
+                        <arg line="-r 10 -d 5 -u smx -p smx '@{command}'"/>
+                      </xh-java>
+                    </sequential>
+                  </macrodef>
+
+                  <macrodef name="output-has">
+                    <attribute name="pattern"/>
+                    <attribute name="min" default="1"/>
+                    <sequential>
+                      <assert>
+                        <outputcontains stream="stdout" min="@{min}">@{pattern}</outputcontains>
+                      </assert>
+                    </sequential>
+                  </macrodef>
+
+                  <macrodef name="output-doesnt-have">
+                    <attribute name="pattern"/>
+                    <attribute name="min" default="1"/>
+                    <sequential>
+                      <assert>
+                        <not>
+                          <outputcontains stream="stdout" min="@{min}">@{pattern}</outputcontains>
+                        </not>
+                      </assert>
+                    </sequential>
+                  </macrodef>
+
+                  <servicedef name="rhevm-admin">
+                    <start>
+                      <xh-exec executable="${rhevm-admin.bin}/start">
+                        <envset>
+                          <env key="JAVA_OPTS"
+                               value="-Drhevm.base.url=http://localhost:${jboss.http}/${rhevm.api.impl}"/>
+                        </envset>
+                      </xh-exec>
+                      <sleep seconds="20"/>
+                      <rhevm-client command="features:addUrl mvn:com.redhat.rhevm.api/rhevm-api-cli/${pom.version}/xml/features"/>
+
+                      <rhevm-client command="features:install rhevm-api-cli"/>
+                    </start>
+
+                    <verify>
+                      <rhevm-client command="osgi:list | grep RHEV"/>
+                      <output-has pattern="RHEV-M API Command Line Interface - Base"/>
+                    </verify>
+
+                    <stop>
+                      <rhevm-client command="shutdown"/>
+                      <sleep seconds="5"/>
+                    </stop>
+                  </servicedef>
 
                   <testgroup name="setup">
                     <!-- REVISIT kinda nasty hack, use a skipable test to set
@@ -168,24 +238,54 @@
                   </testgroup>
 
 
-                  <testgroup name="basic">
+                  <testgroup name="basic.clients">
 
-                    <!-- Launch JBoss -->
                     <jboss/>
 
-                    <!-- Exercise python client -->
+                    <rhevm-admin/>
+
                     <testcase name="python.client" owner="eglynn">
                       <xh-exec executable="python">
                         <arg value="../python/test.py"/>
+                        <arg value="--port=${jboss.http}"/>
                       </xh-exec>
-                      <assert>
-                        <outputcontains stream="stdout" min="2">204</outputcontains>
-                      </assert>
+                      <output-has min="2" pattern="204"/>
                     </testcase>
 
-                    <!-- Exercise CLI -->
-                    <testcase name="command.line.interface" owner="eglynn">
-                      <!-- TODO: complete -->
+                    <testcase name="cli.vms.list" owner="eglynn">
+                      <rhevm-client command="vms:list"/>
+                      <output-has pattern="[ vm8] [ 8]"/>
+                    </testcase>
+
+                    <testcase name="cli.hosts.list" owner="eglynn">
+                      <rhevm-client command="hosts:list"/>
+                      <output-has pattern="[ host2] [ 2]"/>
+                    </testcase>
+
+                    <testcase name="cli.datacenters.list" owner="eglynn">
+                      <rhevm-client command="datacenters:list"/>
+                      <output-has pattern="[ datacenter1] [ 1]"/>
+                    </testcase>
+
+                    <testcase name="cli.vm.update" owner="eglynn">
+                      <rhevm-client command="vms:update -f name -v foo vm8"/>
+                      <output-has pattern="[ foo] [ 8]"/>
+                    </testcase>
+
+                    <testcase name="cli.confirm.vm.update" owner="eglynn">
+                      <rhevm-client command="vms:list"/>
+                      <output-has pattern="[ foo] [ 8]"/>
+                      <output-doesnt-have pattern="[ vm8] [ 8]"/>
+                    </testcase>
+
+                    <testcase name="cli.vm.start.sync" owner="eglynn">
+                      <rhevm-client command="vms:start vm5"/>
+                      <output-has pattern="start COMPLETE"/>
+                    </testcase>
+
+                    <testcase name="cli.vm.start.async" owner="eglynn">
+                      <rhevm-client command="vms:start --async --grace=1000 vm5"/>
+                      <output-has pattern="start IN_PROGRESS, monitor @ http://localhost:${jboss.http}/${rhevm.api.impl}/vms/5/start/"/>
                     </testcase>
 
                   </testgroup>
@@ -203,7 +303,9 @@
                 </xharnessreport>
 
                 <echo/>
-                <echo message=" For ${pom.name} results, point your browser at:${line.separator}  file://${results.dir}/html/index.html"/>
+                <echo message=" For ${pom.name} results, point your browser at:"/>
+                <echo/>
+                <echo message="  file://${results.dir}/html/index.html"/>
                 <echo/>
 
               </tasks>
