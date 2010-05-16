@@ -9,7 +9,7 @@
   <import file="secondary.xml"/>
 
 
-  <target name="itests" depends="setup.xharness,setup.modes">
+  <target name="itests" depends="setup">
 
     <xharness name="rhevm-api" resultsdir="${results.dir}/xml">
 
@@ -64,9 +64,8 @@
 
         <testcase name="cli.vm.start.async" owner="eglynn">
           <rhevm-client command="vms:start --async --grace=1000 vm5"/>
-          <output-has-one-of
-            pattern="start IN_PROGRESS, monitor @ http://localhost:${jboss.http}/${rhevm.api.impl}/vms/5/start/"
-            alternative="start PENDING, monitor @ http://localhost:${jboss.http}/${rhevm.api.impl}/vms/5/start/"/>
+          <output-matches
+            pattern="start (IN_PROGRESS|PENDING), monitor @ http://localhost:${jboss.http}/${rhevm.api.impl}/vms/5/start/"/>
         </testcase>
 
       </testgroup>

@@ -6,6 +6,16 @@
   <property name="jboss.rmi" value="1199"/>
 
 
+  <target name="setup.xharness">
+    <taskdef resource="xharnesstasks.properties"
+             classpathref="itests.classpath"
+             loaderref="xharness.loader"/>
+    <typedef resource="xharnesstypes.properties"
+             classpathref="itests.classpath"
+             loaderref="xharness.loader"/>
+  </target>
+
+
   <target name="setup.platform">
     <condition property="is.unix">
       <os family="unix"/>
@@ -19,23 +29,30 @@
   </target>
 
 
-  <target name="setup.xharness" depends="setup.platform">
-    <taskdef resource="xharnesstasks.properties"
-             classpathref="itests.classpath"
-             loaderref="xharness.loader"/>
-    <typedef resource="xharnesstypes.properties"
-             classpathref="itests.classpath"
-             loaderref="xharness.loader"/>
-    <mkdir dir="${results.dir}/xml"/>
-  </target>
-
-
-  <target name="setup.modes" if="is.unix" depends="setup.platform">
+  <target name="setup.modes" if="is.unix">
     <xh-exec executable="chmod">
       <arg value="u+x"/>
       <arg value="${jboss.bin}/run.sh"/>
       <arg value="${jboss.bin}/shutdown.sh"/>
     </xh-exec>
+  </target>
+
+
+  <target name="setup" depends="setup.xharness,setup.platform">
+    <antcall target="setup.modes"/>
+    <available file="${results.dir}" type="dir" property="have.old.results"/>
+    <antcall target="archive.old.results"/>
+    <mkdir dir="${results.dir}/xml"/>
+  </target>
+
+
+  <target name="archive.old.results" if="have.old.results">
+    <tstamp>
+      <format property="retained" pattern="yyyy-MM-dd-hh-mm-ss" unit="second"/>
+    </tstamp>
+    <move todir="${results.dir}/../retained_results/${retained}">
+      <fileset dir="${results.dir}"/>
+    </move>
   </target>
 
 
@@ -54,6 +71,10 @@
     <echo/>
     <echo message="  file://${results.dir}/html/index.html"/>
     <echo/>
+  </target>
+
+  <target name="save.results.dir" if="results.dir.exists">
+
   </target>
 
 </project>

@@ -19,15 +19,11 @@
     </sequential>
   </macrodef>
 
-  <macrodef name="output-has-one-of">
+  <macrodef name="output-matches">
     <attribute name="pattern"/>
-    <attribute name="alternative"/>
     <sequential>
       <assert>
-        <or>
-          <outputcontains stream="stdout">@{pattern}</outputcontains>
-          <outputcontains stream="stdout">@{alternative}</outputcontains>
-        </or>
+        <outputregex stream="stdout">@{pattern}</outputregex>
       </assert>
     </sequential>
   </macrodef>
