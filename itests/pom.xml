@@ -21,11 +21,8 @@
     <jboss.version>6.0.0.M1</jboss.version>
     <jboss.dir>${kits.dir}/jboss</jboss.dir>
     <jboss.home>${jboss.dir}/jboss-${jboss.version}</jboss.home>
-    <jboss.bin>${jboss.home}/bin</jboss.bin>
     <smx.version>4.2.0</smx.version>
     <rhevm-admin.dir>${kits.dir}/rhevm-admin</rhevm-admin.dir>
-    <rhevm-admin.home>${rhevm-admin.dir}/apache-servicemix-${smx.version}</rhevm-admin.home>
-    <rhevm-admin.bin>${rhevm-admin.home}/bin</rhevm-admin.bin>
   </properties>
 
   <build>
@@ -104,210 +101,20 @@
             </goals>
             <configuration>
               <tasks>
-
-                <!-- REVIST factor out into seperate xml files
-                     per-testgroup at least, maybe even per-testcase -->
-
+                <property name="poject.name" value="${pom.name}"/>
+                <property name="rhevm.api.version" value="${pom.version}"/>
+                <property name="rhevm.api.impl" value="${rhevm.api.impl}"/>
+                <property name="rhevm-admin.home" value="${rhevm-admin.dir}/apache-servicemix-${smx.version}"/>
+                <property name="rhevm-admin.bin" value="${rhevm-admin.home}/bin"/>
+                <property name="jboss.home" value="${jboss.dir}/jboss-${jboss.version}"/>
+                <property name="jboss.bin" value="${jboss.home}/bin"/>
                 <property name="results.dir"
-                          value="${project.build.directory}/xharness"/>
-                <property name="jboss.http" value="8180"/>
-                <property name="jboss.rmi" value="1199"/>
-
-                <condition property="shell.extension" value=".sh">
-                  <os family="unix"/>
-                </condition>
-                <condition property="shell.extension" value=".bat">
-                  <os family="windows"/>
-                </condition>
-
-                <path id="xharness.lib">
+                          value="${project.build.directory}/itests/results"/>
+                <path id="itests.classpath">
                   <pathelement path="${maven.test.classpath}"/>
                   <pathelement path="${maven.plugin.classpath}"/>
                 </path>
-
-                <taskdef resource="xharnesstasks.properties"
-                         classpathref="xharness.lib"
-                         loaderref="xharness.loader"/>
-                <typedef resource="xharnesstypes.properties"
-                         classpathref="xharness.lib"
-                         loaderref="xharness.loader"/>
-
-                <mkdir dir="${results.dir}/xml"/>
-
-
-                <xharness name="rhevm-api" resultsdir="${results.dir}/xml">
-
-                  <servicedef name="jboss">
-                    <start>
-                      <xh-execbg executable="${jboss.bin}/run${shell.extension}"
-                                 processname="jboss_server">
-                        <envset>
-                          <env key="JBOSS_HOME" value="${jboss.home}"/>
-                        </envset>
-                        <arg value="-Djboss.service.binding.set=ports-01"/>
-                      </xh-execbg>
-                      <assert timeout="120">
-                        <outputcontains stream="stdout" task="xh-execbg">deploy, ctxPath=/${rhevm.api.impl}</outputcontains>
-                      </assert>
-                    </start>
-
-                    <stop>
-                      <xh-exec executable="${jboss.bin}/shutdown${shell.extension}">
-                        <arg line="-s jnp://localhost:${jboss.rmi}"/>
-                      </xh-exec>
-                      <assert timeout="10">
-                        <outputcontains stream="stdout" task="xh-exec">Shutdown message has been posted to the server.</outputcontains>
-                      </assert>
-                      <!-- Just in case! -->
-                      <kill processname="jboss_server" failonerror="false"/>
-                    </stop>
-                  </servicedef>
-
-                  <macrodef name="rhevm-client">
-                    <attribute name="command"/>
-                    <sequential>
-                      <xh-java jar="${rhevm-admin.home}/lib/karaf-client.jar">
-                        <arg line="-r 10 -d 5 -u smx -p smx '@{command}'"/>
-                      </xh-java>
-                    </sequential>
-                  </macrodef>
-
-                  <macrodef name="output-has">
-                    <attribute name="pattern"/>
-                    <attribute name="min" default="1"/>
-                    <sequential>
-                      <assert>
-                        <outputcontains stream="stdout" min="@{min}">@{pattern}</outputcontains>
-                      </assert>
-                    </sequential>
-                  </macrodef>
-
-                  <macrodef name="output-doesnt-have">
-                    <attribute name="pattern"/>
-                    <attribute name="min" default="1"/>
-                    <sequential>
-                      <assert>
-                        <not>
-                          <outputcontains stream="stdout" min="@{min}">@{pattern}</outputcontains>
-                        </not>
-                      </assert>
-                    </sequential>
-                  </macrodef>
-
-                  <servicedef name="rhevm-admin">
-                    <start>
-                      <xh-exec executable="${rhevm-admin.bin}/start">
-                        <envset>
-                          <env key="JAVA_OPTS"
-                               value="-Drhevm.base.url=http://localhost:${jboss.http}/${rhevm.api.impl}"/>
-                        </envset>
-                      </xh-exec>
-                      <sleep seconds="20"/>
-                      <rhevm-client command="features:addUrl mvn:com.redhat.rhevm.api/rhevm-api-cli/${pom.version}/xml/features"/>
-
-                      <rhevm-client command="features:install rhevm-api-cli"/>
-                    </start>
-
-                    <verify>
-                      <rhevm-client command="osgi:list | grep RHEV"/>
-                      <output-has pattern="RHEV-M API Command Line Interface - Base"/>
-                    </verify>
-
-                    <stop>
-                      <rhevm-client command="shutdown"/>
-                      <sleep seconds="5"/>
-                    </stop>
-                  </servicedef>
-
-                  <testgroup name="setup">
-                    <!-- REVISIT kinda nasty hack, use a skipable test to set
-                         execute permission on the JBoss scripts only on Unix,
-                         should be a task instead of a testcase -->
-                    <testcase name="set.script.modes">
-                      <skip description="Skipped on non-Unix platforms">
-                        <not>
-                          <os family="unix"/>
-                        </not>
-                      </skip>
-                      <xh-exec executable="chmod">
-                        <arg value="u+x"/>
-                        <arg value="${jboss.bin}/run.sh"/>
-                        <arg value="${jboss.bin}/shutdown.sh"/>
-                      </xh-exec>
-                    </testcase>
-                  </testgroup>
-
-
-                  <testgroup name="basic.clients">
-
-                    <jboss/>
-
-                    <rhevm-admin/>
-
-                    <testcase name="python.client" owner="eglynn">
-                      <xh-exec executable="python">
-                        <arg value="../python/test.py"/>
-                        <arg value="--port=${jboss.http}"/>
-                      </xh-exec>
-                      <output-has min="2" pattern="204"/>
-                    </testcase>
-
-                    <testcase name="cli.vms.list" owner="eglynn">
-                      <rhevm-client command="vms:list"/>
-                      <output-has pattern="[ vm8] [ 8]"/>
-                    </testcase>
-
-                    <testcase name="cli.hosts.list" owner="eglynn">
-                      <rhevm-client command="hosts:list"/>
-                      <output-has pattern="[ host2] [ 2]"/>
-                    </testcase>
-
-                    <testcase name="cli.datacenters.list" owner="eglynn">
-                      <rhevm-client command="datacenters:list"/>
-                      <output-has pattern="[ datacenter1] [ 1]"/>
-                    </testcase>
-
-                    <testcase name="cli.vm.update" owner="eglynn">
-                      <rhevm-client command="vms:update -f name -v foo vm8"/>
-                      <output-has pattern="[ foo] [ 8]"/>
-                    </testcase>
-
-                    <testcase name="cli.confirm.vm.update" owner="eglynn">
-                      <rhevm-client command="vms:list"/>
-                      <output-has pattern="[ foo] [ 8]"/>
-                      <output-doesnt-have pattern="[ vm8] [ 8]"/>
-                    </testcase>
-
-                    <testcase name="cli.vm.start.sync" owner="eglynn">
-                      <rhevm-client command="vms:start vm5"/>
-                      <output-has pattern="start COMPLETE"/>
-                    </testcase>
-
-                    <testcase name="cli.vm.start.async" owner="eglynn">
-                      <rhevm-client command="vms:start --async --grace=1000 vm5"/>
-                      <output-has pattern="start IN_PROGRESS, monitor @ http://localhost:${jboss.http}/${rhevm.api.impl}/vms/5/start/"/>
-                    </testcase>
-
-                  </testgroup>
-
-                </xharness>
-
-
-                <mkdir dir="${results.dir}/html"/>
-
-                <xharnessreport todir="${results.dir}/html" failonerror="true">
-                  <fileset dir="${results.dir}/xml">
-                    <include name="*.xml"/>
-                  </fileset>
-                  <report format="frames" todir="${results.dir}/html"/>
-                </xharnessreport>
-
-                <echo/>
-                <echo message=" For ${pom.name} results, point your browser at:"/>
-                <echo/>
-                <echo message="  file://${results.dir}/html/index.html"/>
-                <echo/>
-
+                <ant target="itests" inheritRefs="true" antfile="src/main/resources/itests.xml" dir="${basedir}"/>
               </tasks>
             </configuration>
           </execution>

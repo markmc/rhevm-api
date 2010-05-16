@@ -1,0 +1,46 @@
+<!-- Common Macro definitions for RHEVM-API Integration Tests -->
+
+  <macrodef name="rhevm-client">
+    <attribute name="command"/>
+    <sequential>
+      <xh-java jar="${rhevm-admin.home}/lib/karaf-client.jar">
+        <arg line="-r 10 -d 5 -u smx -p smx '@{command}'"/>
+      </xh-java>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="output-has">
+    <attribute name="pattern"/>
+    <attribute name="min" default="1"/>
+    <sequential>
+      <assert>
+        <outputcontains stream="stdout" min="@{min}">@{pattern}</outputcontains>
+      </assert>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="output-has-one-of">
+    <attribute name="pattern"/>
+    <attribute name="alternative"/>
+    <sequential>
+      <assert>
+        <or>
+          <outputcontains stream="stdout">@{pattern}</outputcontains>
+          <outputcontains stream="stdout">@{alternative}</outputcontains>
+        </or>
+      </assert>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="output-doesnt-have">
+    <attribute name="pattern"/>
+    <attribute name="min" default="1"/>
+    <sequential>
+      <assert>
+        <not>
+          <outputcontains stream="stdout" min="@{min}">@{pattern}</outputcontains>
+        </not>
+      </assert>
+    </sequential>
+  </macrodef>
+

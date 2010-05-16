@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<!DOCTYPE project [
+      <!ENTITY macros SYSTEM "./macros.xml">
+      <!ENTITY services SYSTEM "./services.xml">
+  ]>
+
+<project name="RHEVM-API Integration Tests" default="itests">
+
+  <import file="secondary.xml"/>
+
+
+  <target name="itests" depends="setup.xharness,setup.modes">
+
+    <xharness name="rhevm-api" resultsdir="${results.dir}/xml">
+
+      <testgroup name="basic.clients">
+
+        &macros;
+        &services;
+
+        <jboss/>
+
+        <rhevm-admin/>
+
+        <testcase name="python.client" owner="eglynn">
+          <xh-exec executable="python">
+            <arg value="../python/test.py"/>
+            <arg value="--port=${jboss.http}"/>
+          </xh-exec>
+          <output-has min="2" pattern="204"/>
+        </testcase>
+
+        <testcase name="cli.vms.list" owner="eglynn">
+          <rhevm-client command="vms:list"/>
+          <output-has pattern="[ vm8] [ 8]"/>
+        </testcase>
+
+        <testcase name="cli.hosts.list" owner="eglynn">
+          <rhevm-client command="hosts:list"/>
+          <output-has pattern="[ host2] [ 2]"/>
+        </testcase>
+
+        <testcase name="cli.datacenters.list" owner="eglynn">
+          <rhevm-client command="datacenters:list"/>
+          <output-has pattern="[ datacenter1] [ 1]"/>
+        </testcase>
+
+        <testcase name="cli.vm.update" owner="eglynn">
+          <rhevm-client command="vms:update -f name -v boo vm8"/>
+          <output-has pattern="[ boo] [ 8]"/>
+        </testcase>
+
+        <testcase name="cli.confirm.vm.update" owner="eglynn">
+          <rhevm-client command="vms:list"/>
+          <output-has pattern="[ boo] [ 8]"/>
+          <output-doesnt-have pattern="[ vm8] [ 8]"/>
+        </testcase>
+
+        <testcase name="cli.vm.start.sync" owner="eglynn">
+          <rhevm-client command="vms:start vm5"/>
+          <output-has pattern="start COMPLETE"/>
+          <output-doesnt-have pattern="monitor @"/>
+        </testcase>
+
+        <testcase name="cli.vm.start.async" owner="eglynn">
+          <rhevm-client command="vms:start --async --grace=1000 vm5"/>
+          <output-has-one-of
+            pattern="start IN_PROGRESS, monitor @ http://localhost:${jboss.http}/${rhevm.api.impl}/vms/5/start/"
+            alternative="start PENDING, monitor @ http://localhost:${jboss.http}/${rhevm.api.impl}/vms/5/start/"/>
+        </testcase>
+
+      </testgroup>
+
+    </xharness>
+
+    <antcall target="generate.report"/>
+
+  </target>
+
+
+</project>

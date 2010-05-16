@@ -1,0 +1,55 @@
+<!-- Common Service definitions for RHEVM-API Integration Tests -->
+
+  <servicedef name="jboss">
+    <start>
+      <xh-execbg executable="${jboss.bin}/run${shell.extension}"
+                 processname="jboss_server">
+        <envset>
+          <env key="JBOSS_HOME" value="${jboss.home}"/>
+          <env key="JAVA_OPTS"
+               value="-Xmx1024M -XX:MaxPermSize=256M"/>
+        </envset>
+        <arg value="-Djboss.service.binding.set=ports-01"/>
+      </xh-execbg>
+      <assert timeout="120">
+        <outputcontains stream="stdout" task="xh-execbg">deploy, ctxPath=/${rhevm.api.impl}</outputcontains>
+      </assert>
+    </start>
+
+    <stop>
+      <xh-exec executable="${jboss.bin}/shutdown${shell.extension}">
+        <arg line="-s jnp://localhost:${jboss.rmi}"/>
+      </xh-exec>
+      <assert timeout="10">
+        <outputcontains stream="stdout" task="xh-exec">Shutdown message has been posted to the server.</outputcontains>
+      </assert>
+      <!-- Just in case! -->
+      <kill processname="jboss_server" failonerror="false"/>
+    </stop>
+  </servicedef>
+
+
+  <servicedef name="rhevm-admin">
+    <start>
+      <xh-exec executable="${rhevm-admin.bin}/start">
+        <envset>
+          <env key="JAVA_OPTS"
+               value="-Drhevm.base.url=http://localhost:${jboss.http}/${rhevm.api.impl}"/>
+        </envset>
+      </xh-exec>
+      <sleep seconds="20"/>
+      <rhevm-client command="features:addUrl mvn:com.redhat.rhevm.api/rhevm-api-cli/${rhevm.api.version}/xml/features"/>
+
+      <rhevm-client command="features:install rhevm-api-cli"/>
+    </start>
+
+    <verify>
+      <rhevm-client command="osgi:list | grep RHEV"/>
+      <output-has pattern="RHEV-M API Command Line Interface - Base"/>
+    </verify>
+
+    <stop>
+      <rhevm-client command="shutdown"/>
+      <sleep seconds="5"/>
+    </stop>
+  </servicedef>

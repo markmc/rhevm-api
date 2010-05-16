@@ -1,0 +1,59 @@
+<!-- Secondary targets for RHEVM-API Integration Tests -->
+<project name="RHEVM-API Integration Test Setup">
+
+  <!-- using standard ports offset by 100 to avoid clashes -->
+  <property name="jboss.http" value="8180"/>
+  <property name="jboss.rmi" value="1199"/>
+
+
+  <target name="setup.platform">
+    <condition property="is.unix">
+      <os family="unix"/>
+    </condition>
+    <condition property="shell.extension" value=".sh">
+      <os family="unix"/>
+    </condition>
+    <condition property="shell.extension" value=".bat">
+      <os family="windows"/>
+    </condition>
+  </target>
+
+
+  <target name="setup.xharness" depends="setup.platform">
+    <taskdef resource="xharnesstasks.properties"
+             classpathref="itests.classpath"
+             loaderref="xharness.loader"/>
+    <typedef resource="xharnesstypes.properties"
+             classpathref="itests.classpath"
+             loaderref="xharness.loader"/>
+    <mkdir dir="${results.dir}/xml"/>
+  </target>
+
+
+  <target name="setup.modes" if="is.unix" depends="setup.platform">
+    <xh-exec executable="chmod">
+      <arg value="u+x"/>
+      <arg value="${jboss.bin}/run.sh"/>
+      <arg value="${jboss.bin}/shutdown.sh"/>
+    </xh-exec>
+  </target>
+
+
+  <target name="generate.report">
+    <mkdir dir="${results.dir}/html"/>
+
+    <xharnessreport todir="${results.dir}/html" failonerror="true">
+      <fileset dir="${results.dir}/xml">
+        <include name="*.xml"/>
+      </fileset>
+      <report format="frames" todir="${results.dir}/html"/>
+    </xharnessreport>
+
+    <echo/>
+    <echo message=" For ${project.name} results, point your browser at:"/>
+    <echo/>
+    <echo message="  file://${results.dir}/html/index.html"/>
+    <echo/>
+  </target>
+
+</project>

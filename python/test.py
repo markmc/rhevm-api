@@ -84,7 +84,7 @@ for fmt in [xmlfmt]:
         print resp['body']
         resp_action = fmt.parseAction(resp['body'])
         assert resp_action.status != "COMPLETE", "Unexpected COMPLETE action status"
-    time.sleep(3)
+    time.sleep(4)
     resp = http.GET(opts, resp_action.href, fmt.MEDIA_TYPE)
     print resp['body']
     resp_action = fmt.parseAction(resp['body'])
