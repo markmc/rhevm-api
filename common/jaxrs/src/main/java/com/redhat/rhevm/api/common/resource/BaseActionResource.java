@@ -39,6 +39,7 @@ public class BaseActionResource implements ActionResource {
 
     @Override
     public Response get(UriInfo uriInfo) {
+        // FIXME: addLinks(uriInfo);
         return Response.ok(action).build();
     }
 

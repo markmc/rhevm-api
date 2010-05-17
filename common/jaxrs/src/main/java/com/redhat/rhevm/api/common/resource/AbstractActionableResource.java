@@ -86,6 +86,7 @@ public abstract class AbstractActionableResource<R extends BaseResource> extends
                : new ActionResource() {
                     @Override
                     public Response get(UriInfo uriInfo) {
+                        // FIXME: need to abstract away "vms" here
                         URI redirect = uriInfo.getBaseUriBuilder().path("/vms/" + getId()).build();
                         Response.Status status = Response.Status.MOVED_PERMANENTLY;
                         return Response.status(status).location(redirect).build();
