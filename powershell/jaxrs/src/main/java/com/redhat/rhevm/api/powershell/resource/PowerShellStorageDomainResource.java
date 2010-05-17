@@ -24,6 +24,8 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
+import com.redhat.rhevm.api.common.resource.StorageDomainActionValidator;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.ActionsBuilder;
@@ -33,7 +35,6 @@ import com.redhat.rhevm.api.model.Storage;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.resource.AttachmentsResource;
 import com.redhat.rhevm.api.resource.StorageDomainResource;
-import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellStorageDomain;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
@@ -254,31 +255,5 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
     @Override
     public AttachmentsResource getAttachmentsResource() {
         return new PowerShellAttachmentsResource(getId());
-    }
-
-    private class StorageDomainActionValidator implements ActionValidator {
-        private StorageDomain storageDomain;
-
-        public StorageDomainActionValidator(StorageDomain storageDomain) {
-            this.storageDomain = storageDomain;
-        }
-
-        @Override
-        public boolean validateAction(String action) {
-            switch (storageDomain.getStatus()) {
-            case UNINITIALIZED:
-                return action.equals("initialize");
-            case UNATTACHED:
-                return action.equals("teardown");
-            case ACTIVE:
-            case INACTIVE:
-                return false;
-            case LOCKED:
-            case MIXED:
-            default:
-                assert false : storageDomain.getStatus();
-                return false;
-            }
-        }
     }
 }

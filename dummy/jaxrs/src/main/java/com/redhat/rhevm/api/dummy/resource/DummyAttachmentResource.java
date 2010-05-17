@@ -21,6 +21,7 @@ package com.redhat.rhevm.api.dummy.resource;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.common.resource.AttachmentActionValidator;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.ActionValidator;
 import com.redhat.rhevm.api.model.Attachment;
@@ -98,30 +99,5 @@ public class DummyAttachmentResource implements AttachmentResource {
     public void deactivate() {
         // FIXME: error if not active
         getModel().getStorageDomain().setStatus(StorageDomainStatus.INACTIVE);
-    }
-
-    public class AttachmentActionValidator implements ActionValidator {
-        private Attachment attachment;
-
-        public AttachmentActionValidator(Attachment attachment) {
-            this.attachment = attachment;
-        }
-
-        @Override
-        public boolean validateAction(String action) {
-            switch (attachment.getStatus()) {
-            case ACTIVE:
-                return action.equals("deactivate");
-            case INACTIVE:
-                return action.equals("activate");
-            case UNINITIALIZED:
-            case UNATTACHED:
-            case LOCKED:
-            case MIXED:
-            default:
-                assert false : attachment.getStatus();
-                return false;
-            }
-        }
     }
 }
