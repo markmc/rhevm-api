@@ -54,7 +54,7 @@ public abstract class AbstractActionableResource<R extends BaseResource> extends
     protected Response doAction(UriInfo uriInfo, Action action, final Runnable task) {
         Response.Status status = null;
         final ActionResource actionResource = new BaseActionResource(uriInfo, action);
-        if (action.isAsync()) {
+        if (action.isSetAsync() && action.isAsync()) {
             action.setStatus(com.redhat.rhevm.api.model.Status.PENDING);
             actions.put(action.getId(), actionResource);
             // FIXME: use executor
