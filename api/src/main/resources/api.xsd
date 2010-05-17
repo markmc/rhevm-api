@@ -120,40 +120,6 @@
     </xs:restriction>
   </xs:simpleType>
 
-  <!-- Attachments, representing a Storage Domain attached to a Data Center -->
-
-  <xs:element name="attachment" type="Attachment"/>
-
-  <xs:element name="attachments" type="Attachments"/>
-
-  <xs:complexType name="Attachment">
-    <xs:sequence>
-      <xs:element name="datacenter" type="DataCenter">
-        <xs:annotation>
-          <xs:appinfo>
-            <jaxb:property name="DataCenter"/>
-          </xs:appinfo>
-        </xs:annotation>
-      </xs:element>
-      <xs:element name="storage_domain" type="StorageDomain" minOccurs="0"/>
-      <xs:element name="status" type="StorageDomainStatus" minOccurs="0"/>
-      <xs:element name="master" type="xs:boolean" minOccurs="0"/>
-      <xs:element name="actions" type="Actions" minOccurs="0"/>
-    </xs:sequence>
-    <xs:attribute name="href" type="xs:string"/>
-  </xs:complexType>
-
-  <xs:complexType name="Attachments">
-    <xs:sequence>
-      <xs:annotation>
-        <xs:appinfo>
-            <jaxb:property name="Attachments"/>
-        </xs:appinfo>
-      </xs:annotation>
-      <xs:element ref="attachment" maxOccurs="unbounded"/>
-    </xs:sequence>
-  </xs:complexType>
-
   <!-- Common to all resources -->
 
   <xs:complexType name="BaseResource">
@@ -171,6 +137,42 @@
     </xs:sequence>
     <xs:attribute name="href" type="xs:string"/>
     <xs:attribute name="id" type="xs:string"/>
+  </xs:complexType>
+
+  <!-- Attachments, representing a Storage Domain attached to a Data Center -->
+
+  <xs:element name="attachment" type="Attachment"/>
+
+  <xs:element name="attachments" type="Attachments"/>
+
+  <xs:complexType name="Attachment">
+    <xs:complexContent>
+      <xs:extension base="BaseResource">
+        <xs:sequence>
+          <xs:element name="datacenter" type="DataCenter">
+            <xs:annotation>
+              <xs:appinfo>
+                <jaxb:property name="DataCenter"/>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="storage_domain" type="StorageDomain" minOccurs="0"/>
+          <xs:element name="status" type="StorageDomainStatus" minOccurs="0"/>
+          <xs:element name="master" type="xs:boolean" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Attachments">
+    <xs:sequence>
+      <xs:annotation>
+        <xs:appinfo>
+            <jaxb:property name="Attachments"/>
+        </xs:appinfo>
+      </xs:annotation>
+      <xs:element ref="attachment" maxOccurs="unbounded"/>
+    </xs:sequence>
   </xs:complexType>
 
   <!-- Data Centers -->

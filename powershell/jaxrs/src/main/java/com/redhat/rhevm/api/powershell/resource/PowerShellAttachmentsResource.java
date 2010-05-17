@@ -39,20 +39,14 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
         this.storageDomainId = storageDomainId;
     }
 
-    private static Attachment buildAttachment(String dataCenterId, String storageDomainId) {
+    private static Attachment buildAttachment(DataCenter dataCenter, StorageDomain storageDomain) {
         Attachment attachment = new Attachment();
 
         attachment.setDataCenter(new DataCenter());
-        attachment.getDataCenter().setId(dataCenterId);
+        attachment.getDataCenter().setId(dataCenter.getId());
 
         attachment.setStorageDomain(new StorageDomain());
-        attachment.getStorageDomain().setId(storageDomainId);
-
-        return attachment;
-    }
-
-    private static Attachment buildAttachment(DataCenter dataCenter, StorageDomain storageDomain) {
-        Attachment attachment = buildAttachment(dataCenter.getId(), storageDomain.getId());
+        attachment.getStorageDomain().setId(storageDomain.getId());
 
         attachment.setStatus(storageDomain.getStatus());
 
@@ -82,9 +76,8 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
 
             Attachment attachment = buildAttachment(dataCenter, storageDomain);
 
-            PowerShellAttachmentResource resource = new PowerShellAttachmentResource(attachment);
             UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(dataCenter.getId());
-            ret.getAttachments().add(resource.addLinks(uriInfo, uriBuilder));
+            ret.getAttachments().add(PowerShellAttachmentResource.addLinks(attachment, uriInfo, uriBuilder));
         }
 
         return ret;
@@ -104,11 +97,9 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
 
         attachment = buildAttachment(dataCenter, storageDomain);
 
-        PowerShellAttachmentResource resource = new PowerShellAttachmentResource(attachment);
-
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(dataCenter.getId());
 
-        attachment = resource.addLinks(uriInfo, uriBuilder);
+        attachment = PowerShellAttachmentResource.addLinks(attachment, uriInfo, uriBuilder);
 
         return Response.created(uriBuilder.build()).entity(attachment).build();
     }
@@ -126,9 +117,8 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
 
     @Override
     public AttachmentResource getAttachmentSubResource(UriInfo uriInfo, String id) {
-        Attachment attachment = buildAttachment(id, storageDomainId);
-
-        return new PowerShellAttachmentResource(attachment);
+        // FIXME: check whether the storage domain is actually attached to this data center
+        return new PowerShellAttachmentResource(id, storageDomainId);
     }
 
     /**

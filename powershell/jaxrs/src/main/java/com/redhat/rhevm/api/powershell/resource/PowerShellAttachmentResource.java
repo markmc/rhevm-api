@@ -21,6 +21,7 @@ package com.redhat.rhevm.api.powershell.resource;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.common.resource.AttachmentActionValidator;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.ActionValidator;
@@ -29,62 +30,65 @@ import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.resource.AttachmentResource;
 
-public class PowerShellAttachmentResource implements AttachmentResource {
+public class PowerShellAttachmentResource extends AbstractActionableResource<StorageDomain> implements AttachmentResource {
 
-    private Attachment model;
+    private String storageDomainId;
 
     /**
      * Package-protected ctor, never needs to be instantiated by JAX-RS framework.
      *
      * @param attachment  encapsulated Attachment
      */
-    PowerShellAttachmentResource(Attachment attachment) {
-        model = attachment;
+    PowerShellAttachmentResource(String dataCenterId, String storageDomainId) {
+        super(dataCenterId);
+        this.storageDomainId = storageDomainId;
     }
 
-    /**
-     * Package-level accessor for encapsulated Attachment
-     *
-     * @return  encapsulated attachment
-     */
-    public Attachment getModel() {
-        return model;
-    }
-
-    private void setStorageDomainHref(UriBuilder baseUriBuilder) {
-        StorageDomain storageDomain = getModel().getStorageDomain();
+    private static void setStorageDomainHref(Attachment attachment, UriBuilder baseUriBuilder) {
+        StorageDomain storageDomain = attachment.getStorageDomain();
 
         String href = PowerShellStorageDomainsResource.getHref(baseUriBuilder, storageDomain.getId());
 
         storageDomain.setHref(href);
     }
 
-    private void setDataCenterHref(UriBuilder baseUriBuilder) {
-        DataCenter dataCenter = getModel().getDataCenter();
+    private static void setDataCenterHref(Attachment attachment, UriBuilder baseUriBuilder) {
+        DataCenter dataCenter = attachment.getDataCenter();
 
         String href = PowerShellDataCentersResource.getHref(baseUriBuilder, dataCenter.getId());
 
         dataCenter.setHref(href);
     }
 
-    public Attachment addLinks(UriInfo uriInfo, UriBuilder uriBuilder) {
+    public static Attachment addLinks(Attachment attachment, UriInfo uriInfo, UriBuilder uriBuilder) {
         UriBuilder baseUriBuilder = uriInfo.getBaseUriBuilder();
 
-        getModel().setHref(uriBuilder.build().toString());
+        attachment.setHref(uriBuilder.build().toString());
 
-        setStorageDomainHref(baseUriBuilder);
-        setDataCenterHref(baseUriBuilder);
+        setStorageDomainHref(attachment, baseUriBuilder);
+        setDataCenterHref(attachment, baseUriBuilder);
 
-        ActionValidator actionValidator = new AttachmentActionValidator(getModel());
+        ActionValidator actionValidator = new AttachmentActionValidator(attachment);
         ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, AttachmentResource.class, actionValidator);
-        getModel().setActions(actionsBuilder.build());
+        attachment.setActions(actionsBuilder.build());
 
-        return getModel();
+        return attachment;
     }
 
     @Override
     public Attachment get(UriInfo uriInfo) {
-        return addLinks(uriInfo, uriInfo.getRequestUriBuilder());
+        Attachment attachment = new Attachment();
+
+        DataCenter dataCenter = new DataCenter();
+        dataCenter.setId(getId());
+        attachment.setDataCenter(dataCenter);
+
+        StorageDomain storageDomain = new StorageDomain();
+        storageDomain.setId(storageDomainId);
+        attachment.setStorageDomain(storageDomain);
+
+        // FIXME: query for the current state
+        return addLinks(attachment, uriInfo, uriInfo.getRequestUriBuilder());
     }
 
     @Override

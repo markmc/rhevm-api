@@ -30,9 +30,8 @@ import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.StorageDomainStatus;
 import com.redhat.rhevm.api.resource.AttachmentResource;
 
-public class DummyAttachmentResource implements AttachmentResource {
 
-    private Attachment model;
+public class DummyAttachmentResource extends AbstractDummyResource<Attachment> implements AttachmentResource {
 
     /**
      * Package-protected ctor, never needs to be instantiated by JAX-RS framework.
@@ -40,17 +39,24 @@ public class DummyAttachmentResource implements AttachmentResource {
      * @param attachment  encapsulated Attachment
      */
     DummyAttachmentResource(Attachment attachment) {
-        model = attachment;
-        getModel().setStatus(StorageDomainStatus.INACTIVE);
+        super(attachment.getDataCenter().getId());
+        attachment.setStatus(StorageDomainStatus.INACTIVE);
+        updateModel(attachment);
     }
 
-    /**
-     * Package-level accessor for encapsulated Attachment
-     *
-     * @return  encapsulated attachment
-     */
-    public Attachment getModel() {
-        return model;
+    public void updateModel(Attachment attachment) {
+        DataCenter dataCenter = new DataCenter();
+        dataCenter.setId(attachment.getDataCenter().getId());
+        getModel().setDataCenter(dataCenter);
+
+        StorageDomain storageDomain = new StorageDomain();
+        storageDomain.setId(attachment.getStorageDomain().getId());
+        getModel().setStorageDomain(storageDomain);
+
+        getModel().setId(dataCenter.getId());
+        getModel().setName(dataCenter.getId());
+        getModel().setStatus(attachment.getStatus());
+        getModel().setMaster(attachment.isMaster());
     }
 
     private void setStorageDomainHref(UriBuilder baseUriBuilder) {
