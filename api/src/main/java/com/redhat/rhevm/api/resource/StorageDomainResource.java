@@ -22,9 +22,11 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Action;
@@ -45,19 +47,20 @@ public interface StorageDomainResource /* extends UpdatableResource<StorageDomai
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
     public StorageDomain update(@Context HttpHeaders headers, @Context UriInfo uriInfo, StorageDomain storageDomain);
 
-    // FIXME: these actions need to return a response
+    @Path("{action: (initialize|teardown)}/{oid}")
+    public ActionResource getActionSubresource(@PathParam("action") String action, @PathParam("oid") String oid);
 
     @POST
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
     @Actionable
     @Path("initialize")
-    public void initialize(@Context UriInfo uriInfo, Action action);
+    public Response initialize(@Context UriInfo uriInfo, Action action);
 
     @POST
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
     @Actionable
     @Path("teardown")
-    public void teardown(@Context UriInfo uriInfo, Action action);
+    public Response teardown(@Context UriInfo uriInfo, Action action);
 
     @Path("attachments")
     public AttachmentsResource getAttachmentsResource();

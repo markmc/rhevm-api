@@ -19,6 +19,7 @@
 package com.redhat.rhevm.api.dummy.resource;
 
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
@@ -29,10 +30,9 @@ import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.ActionValidator;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.StorageDomain;
+import com.redhat.rhevm.api.model.StorageDomainStatus;
 import com.redhat.rhevm.api.resource.AttachmentsResource;
 import com.redhat.rhevm.api.resource.StorageDomainResource;
-
-import static com.redhat.rhevm.api.model.StorageDomainStatus.*;
 
 public class DummyStorageDomainResource extends AbstractDummyResource<StorageDomain> implements StorageDomainResource {
 
@@ -45,7 +45,7 @@ public class DummyStorageDomainResource extends AbstractDummyResource<StorageDom
      */
     DummyStorageDomainResource(String id) {
         super(id);
-        getModel().setStatus(UNINITIALIZED);
+        getModel().setStatus(StorageDomainStatus.UNINITIALIZED);
         this.attachments = new DummyAttachmentsResource(id);
     }
 
@@ -84,15 +84,15 @@ public class DummyStorageDomainResource extends AbstractDummyResource<StorageDom
     }
 
     @Override
-    public void initialize(UriInfo uriInfo, Action action) {
+    public Response initialize(UriInfo uriInfo, Action action) {
         // FIXME: error if not uninitialized
-        getModel().setStatus(UNATTACHED);
+        return doAction(uriInfo, action, new StorageDomainStatusSetter(StorageDomainStatus.UNATTACHED));
     }
 
     @Override
-    public void teardown(UriInfo uriInfo, Action action) {
+    public Response teardown(UriInfo uriInfo, Action action) {
         // FIXME: error if not unattached
-        getModel().setStatus(UNINITIALIZED);
+        return doAction(uriInfo, action, new StorageDomainStatusSetter(StorageDomainStatus.UNINITIALIZED));
     }
 
     public AttachmentsResource getAttachmentsResource() {
@@ -108,5 +108,15 @@ public class DummyStorageDomainResource extends AbstractDummyResource<StorageDom
      */
     public String getAttachmentHref(UriInfo uriInfo, String dataCenterId) {
         return attachments.getAttachmentHref(uriInfo, dataCenterId);
+    }
+
+    private class StorageDomainStatusSetter implements Runnable {
+        private StorageDomainStatus status;
+        public StorageDomainStatusSetter(StorageDomainStatus status) {
+            this.status = status;
+        }
+        public void run() {
+            DummyStorageDomainResource.this.getModel().setStatus(status);
+        }
     }
 }

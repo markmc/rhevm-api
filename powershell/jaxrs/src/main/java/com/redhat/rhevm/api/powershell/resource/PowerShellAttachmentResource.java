@@ -18,11 +18,13 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.common.resource.AttachmentActionValidator;
+import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.ActionValidator;
 import com.redhat.rhevm.api.model.Attachment;
@@ -92,12 +94,14 @@ public class PowerShellAttachmentResource extends AbstractActionableResource<Sto
     }
 
     @Override
-    public void activate() {
+    public Response activate(UriInfo uriInfo, Action action) {
         // FIXME: implement
+        return doAction(uriInfo, action, new Runnable() { public void run() {} });
     }
 
     @Override
-    public void deactivate() {
+    public Response deactivate(UriInfo uriInfo, Action action) {
         // FIXME: implement
+        return doAction(uriInfo, action, new Runnable() { public void run() {} });
     }
 }

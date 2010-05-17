@@ -18,10 +18,12 @@
  */
 package com.redhat.rhevm.api.dummy.resource;
 
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.common.resource.AttachmentActionValidator;
+import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.ActionValidator;
 import com.redhat.rhevm.api.model.Attachment;
@@ -96,14 +98,24 @@ public class DummyAttachmentResource extends AbstractDummyResource<Attachment> i
     }
 
     @Override
-    public void activate() {
+    public Response activate(UriInfo uriInfo, Action action) {
         // FIXME: error if not attached
-        getModel().getStorageDomain().setStatus(StorageDomainStatus.ACTIVE);
+        return doAction(uriInfo, action, new AttachmentStatusSetter(StorageDomainStatus.ACTIVE));
     }
 
     @Override
-    public void deactivate() {
+    public Response deactivate(UriInfo uriInfo, Action action) {
         // FIXME: error if not active
-        getModel().getStorageDomain().setStatus(StorageDomainStatus.INACTIVE);
+        return doAction(uriInfo, action, new AttachmentStatusSetter(StorageDomainStatus.INACTIVE));
+    }
+
+    private class AttachmentStatusSetter implements Runnable {
+        private StorageDomainStatus status;
+        public AttachmentStatusSetter(StorageDomainStatus status) {
+            this.status = status;
+        }
+        public void run() {
+            DummyAttachmentResource.this.getModel().getStorageDomain().setStatus(status);
+        }
     }
 }

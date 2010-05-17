@@ -21,6 +21,7 @@ package com.redhat.rhevm.api.powershell.resource;
 import java.util.ArrayList;
 
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
@@ -182,78 +183,113 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
     }
 
     @Override
-    public void initialize(UriInfo uriInfo, Action action) {
-        StringBuilder buf = new StringBuilder();
-
-        buf.append("add-storagedomain");
-
-        if (staged.getName() != null) {
-            buf.append(" -name " + staged.getName());
-        }
-
-        buf.append(" -hostid " + action.getHost().getId());
-
-        buf.append(" -domaintype ");
-        switch (staged.getType()) {
-        case DATA:
-            buf.append("Data");
-            break;
-        case ISO:
-            buf.append("ISO");
-            break;
-        case EXPORT:
-            buf.append("Export");
-            break;
-        default:
-            assert false : staged.getType();
-            break;
-        }
-
-        Storage storage = staged.getStorage();
-
-        buf.append(" -storagetype " + storage.getType().toString());
-        buf.append(" -storage ");
-
-        switch (storage.getType()) {
-        case NFS:
-            buf.append(storage.getHost() + ":" + storage.getPath());
-            break;
-        case ISCSI:
-        case FCP:
-        default:
-            assert false : storage.getType();
-            break;
-        }
-
-        StorageDomain storageDomain = PowerShellStorageDomainResource.runAndParseSingle(buf.toString(), true);
-
-        parent.unstageDomain(getId(), storageDomain.getId());
+    public Response initialize(UriInfo uriInfo, Action action) {
+        return doAction(uriInfo, action, new StorageDomainInitializer(uriInfo, action));
     }
 
+
     @Override
-    public void teardown(UriInfo uriInfo, Action action) {
-        StorageDomain storageDomain = new StorageDomain();
-        storageDomain.setId(getId());
-        parent.mapToRhevmId(storageDomain);
-
-        storageDomain = runAndParseSingle("get-storagedomain " + storageDomain.getId(), true);
-
-        StringBuilder buf = new StringBuilder();
-
-        buf.append("remove-storagedomain --force");
-
-        buf.append(" --storagedomainid " + storageDomain.getId());
-
-        buf.append(" -hostid " + action.getHost().getId());
-
-        PowerShellUtils.runCommand(buf.toString());
-
-        staged = parent.mapFromRhevmId(storageDomain);
-        parent.stageDomain(getId(), this);
+    public Response teardown(UriInfo uriInfo, Action action) {
+        return doAction(uriInfo, action, new StorageDomainTeardowner(uriInfo, action));
     }
 
     @Override
     public AttachmentsResource getAttachmentsResource() {
         return new PowerShellAttachmentsResource(getId());
+    }
+
+
+    private abstract class StorageDomainAction implements Runnable {
+        protected UriInfo uriInfo;
+        protected Action action;
+        protected String id;
+        protected StorageDomain staged;
+        protected PowerShellStorageDomainsResource parent;
+        public StorageDomainAction(UriInfo uriInfo, Action action) {
+            this.uriInfo = uriInfo;
+            this.action = action;
+            this.id = PowerShellStorageDomainResource.this.getId();
+            this.staged = PowerShellStorageDomainResource.this.staged;
+            this.parent = PowerShellStorageDomainResource.this.parent;
+        }
+    }
+
+    private class StorageDomainInitializer extends StorageDomainAction {
+        public StorageDomainInitializer(UriInfo uriInfo, Action action) {
+            super(uriInfo, action);
+        }
+        public void run() {
+            StringBuilder buf = new StringBuilder();
+
+            buf.append("add-storagedomain");
+
+            if (staged.getName() != null) {
+                buf.append(" -name " + staged.getName());
+            }
+
+            buf.append(" -hostid " + action.getHost().getId());
+
+            buf.append(" -domaintype ");
+            switch (staged.getType()) {
+            case DATA:
+                buf.append("Data");
+                break;
+            case ISO:
+                buf.append("ISO");
+                break;
+            case EXPORT:
+                buf.append("Export");
+                break;
+            default:
+                assert false : staged.getType();
+                break;
+            }
+
+            Storage storage = staged.getStorage();
+
+            buf.append(" -storagetype " + storage.getType().toString());
+            buf.append(" -storage ");
+
+            switch (storage.getType()) {
+            case NFS:
+                buf.append(storage.getHost() + ":" + storage.getPath());
+                break;
+            case ISCSI:
+            case FCP:
+            default:
+                assert false : storage.getType();
+                break;
+            }
+
+            StorageDomain storageDomain = PowerShellStorageDomainResource.runAndParseSingle(buf.toString(), true);
+
+            parent.unstageDomain(id, storageDomain.getId());
+        }
+    }
+
+    private class StorageDomainTeardowner extends StorageDomainAction {
+        public StorageDomainTeardowner(UriInfo uriInfo, Action action) {
+            super(uriInfo, action);
+        }
+        public void run() {
+            StorageDomain storageDomain = new StorageDomain();
+            storageDomain.setId(id);
+            parent.mapToRhevmId(storageDomain);
+
+            storageDomain = runAndParseSingle("get-storagedomain " + storageDomain.getId(), true);
+
+            StringBuilder buf = new StringBuilder();
+
+            buf.append("remove-storagedomain --force");
+
+            buf.append(" --storagedomainid " + storageDomain.getId());
+
+            buf.append(" -hostid " + action.getHost().getId());
+
+            PowerShellUtils.runCommand(buf.toString());
+
+            staged = parent.mapFromRhevmId(storageDomain);
+            parent.stageDomain(id, PowerShellStorageDomainResource.this);
+        }
     }
 }
