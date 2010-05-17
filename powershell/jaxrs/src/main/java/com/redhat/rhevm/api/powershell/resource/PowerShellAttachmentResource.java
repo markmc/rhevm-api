@@ -79,17 +79,19 @@ public class PowerShellAttachmentResource extends AbstractActionableResource<Sto
 
     @Override
     public Attachment get(UriInfo uriInfo) {
-        Attachment attachment = new Attachment();
+        StringBuilder buf = new StringBuilder();
+
+        buf.append("get-storagedomain");
+        buf.append(" -datacenterid " + getId());
+        buf.append(" -storagedomainid " + storageDomainId);
+
+        StorageDomain storageDomain = PowerShellStorageDomainResource.runAndParseSingle(buf.toString());
 
         DataCenter dataCenter = new DataCenter();
         dataCenter.setId(getId());
-        attachment.setDataCenter(dataCenter);
 
-        StorageDomain storageDomain = new StorageDomain();
-        storageDomain.setId(storageDomainId);
-        attachment.setStorageDomain(storageDomain);
+        Attachment attachment = PowerShellAttachmentsResource.buildAttachment(dataCenter, storageDomain);
 
-        // FIXME: query for the current state
         return addLinks(attachment, uriInfo, uriInfo.getRequestUriBuilder());
     }
 

@@ -39,7 +39,7 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
         this.storageDomainId = storageDomainId;
     }
 
-    private static Attachment buildAttachment(DataCenter dataCenter, StorageDomain storageDomain) {
+    public static Attachment buildAttachment(DataCenter dataCenter, StorageDomain storageDomain) {
         Attachment attachment = new Attachment();
 
         attachment.setDataCenter(new DataCenter());
