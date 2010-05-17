@@ -29,6 +29,7 @@ import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.StorageDomainStatus;
 import com.redhat.rhevm.api.resource.AttachmentResource;
 import com.redhat.rhevm.api.resource.AttachmentsResource;
+import com.redhat.rhevm.api.powershell.util.PowerShellException;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 public class PowerShellAttachmentsResource implements AttachmentsResource {
@@ -115,22 +116,48 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
         PowerShellUtils.runCommand(buf.toString());
     }
 
+    /**
+     * Query whether this storage domain is attach to the specified
+     * data center
+     *
+     * @param dataCenterId the data center to check
+     * @return #true if attached to the data center, #false otherwise
+     */
+    private boolean isAttached(String dataCenterId) {
+        try {
+            StringBuilder buf = new StringBuilder();
+
+            buf.append("get-storagedomain");
+            buf.append(" -datacenterid " + dataCenterId);
+            buf.append(" -storagedomainid " + storageDomainId);
+            PowerShellUtils.runCommand(buf.toString());
+
+            return true;
+        } catch (PowerShellException e) {
+            return false;
+        }
+    }
+
     @Override
     public AttachmentResource getAttachmentSubResource(UriInfo uriInfo, String id) {
-        // FIXME: check whether the storage domain is actually attached to this data center
-        return new PowerShellAttachmentResource(id, storageDomainId);
+        return isAttached(id) ?
+            new PowerShellAttachmentResource(id, storageDomainId) :
+            null;
     }
 
     /**
-     * Build a URI for any existing attachment to the given data center
+     * Build a URI for any existing attachment to the given data center,
+     * assuming the storage domain is actually attached to that data
+     * center.
      *
      * @param uriInfo  URI context of the current request
      * @param dataCenterId  the ID of the data center
-     * @return  a URI representing the attachment
+     * @return  a URI representing the attachment, or null.
      */
     public String getAttachmentHref(UriInfo uriInfo, String dataCenterId) {
-
-        // FIXME: check whether the storage domain is actually attached to this data center
+        if (!isAttached(dataCenterId)) {
+            return null;
+        }
 
         UriBuilder uriBuilder =
             uriInfo.getBaseUriBuilder().path("storagedomains").path(storageDomainId)
