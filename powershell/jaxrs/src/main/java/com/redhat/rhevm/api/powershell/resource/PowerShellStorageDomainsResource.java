@@ -19,6 +19,7 @@
 package com.redhat.rhevm.api.powershell.resource;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import javax.ws.rs.core.Response;
@@ -53,7 +54,9 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
     public StorageDomains list(UriInfo uriInfo) {
         StorageDomains ret = new StorageDomains();
 
-        for (StorageDomain storageDomain : PowerShellStorageDomainResource.runAndParse("select-storagedomain")) {
+        List<StorageDomain> storageDomains = PowerShellStorageDomainResource.runAndParse("select-storagedomain", true);
+
+        for (StorageDomain storageDomain : storageDomains) {
             if (fromRhevmIdMapping.containsKey(storageDomain.getId())) {
                 storageDomain.setId(fromRhevmIdMapping.get(storageDomain.getId()));
             }

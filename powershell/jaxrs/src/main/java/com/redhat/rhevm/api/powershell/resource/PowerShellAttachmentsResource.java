@@ -80,7 +80,6 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
 
             StorageDomain storageDomain = PowerShellStorageDomainResource.runAndParseSingle(buf.toString());
 
-            // FIXME: we need the "Status" property not "SharedStatus" here
             Attachment attachment = buildAttachment(dataCenter, storageDomain);
 
             PowerShellAttachmentResource resource = new PowerShellAttachmentResource(attachment);
@@ -103,7 +102,6 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
 
         StorageDomain storageDomain = PowerShellStorageDomainResource.runAndParseSingle(buf.toString());
 
-        // FIXME: we need the "Status" property not "SharedStatus" here
         attachment = buildAttachment(dataCenter, storageDomain);
 
         PowerShellAttachmentResource resource = new PowerShellAttachmentResource(attachment);

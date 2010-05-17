@@ -58,14 +58,73 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
         return staged;
     }
 
-    public static ArrayList<StorageDomain> runAndParse(String command) {
-        return PowerShellStorageDomain.parse(PowerShellUtils.runCommand(command));
+    /**
+     * Run a powershell command and parse the output as a list of storage
+     * domains.
+     * <p>
+     * If the resulting storage domains are being viewed in the context
+     * of a specific data center, then the caller wants the value of the
+     * 'status' property. In this case, @sharedStatus should be #false.
+     * <p>
+     * If the storage domain is being viewed outside of the context of any
+     * data center, then the 'sharedStatus' property contains the required
+     * status and the caller should supply #true for @sharedStatus.
+     *
+     * @param command the powershell command to execute
+     * @param sharedStatus whether the 'sharedStatus' property is needed
+     * @return a list of storage domains
+     */
+    public static ArrayList<StorageDomain> runAndParse(String command, boolean sharedStatus) {
+        ArrayList<PowerShellStorageDomain> storageDomains =
+            PowerShellStorageDomain.parse(PowerShellUtils.runCommand(command));
+        ArrayList<StorageDomain> ret = new ArrayList<StorageDomain>();
+
+        for (PowerShellStorageDomain storageDomain : storageDomains) {
+            if (!sharedStatus) {
+                storageDomain.setStatus(storageDomain.getSharedStatus());
+            }
+            ret.add(storageDomain);
+        }
+
+        return ret;
     }
 
-    public static StorageDomain runAndParseSingle(String command) {
-        ArrayList<StorageDomain> storageDomains = runAndParse(command);
+    /**
+     * Run a powershell command and parse the output as a list of storage
+     * domains. The 'sharedStatus' property in the output from the command
+     * is ignored.
+     *
+     * @param command the powershell command to execute
+     * @return a list of storage domains
+     */
+    public static ArrayList<StorageDomain> runAndParse(String command) {
+        return runAndParse(command, false);
+    }
+
+    /**
+     * Run a powershell command and parse the output as a single storage
+     * domain.
+     *
+     * @param command the powershell command to execute
+     * @param whether the 'sharedStatus' property is needed
+     * @return a single storage domain, or null
+     */
+    public static StorageDomain runAndParseSingle(String command, boolean sharedStatus) {
+        ArrayList<StorageDomain> storageDomains = runAndParse(command, sharedStatus);
 
         return !storageDomains.isEmpty() ? storageDomains.get(0) : null;
+    }
+
+    /**
+     * Run a powershell command and parse the output as a single storage
+     * domain. The 'sharedStatus' property in the output from the command
+     * is ignored.
+     *
+     * @param command the powershell command to execute
+     * @return a single storage domain, or null
+     */
+    public static StorageDomain runAndParseSingle(String command) {
+        return runAndParseSingle(command, false);
     }
 
     public StorageDomain addLinks(StorageDomain storageDomain, UriBuilder uriBuilder) {
@@ -90,7 +149,7 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
         if (staged != null) {
             storageDomain = JAXBHelper.clone(OBJECT_FACTORY.createStorageDomain(staged));
         } else {
-            storageDomain = parent.mapFromRhevmId(runAndParseSingle("get-storagedomain " + getId()));
+            storageDomain = parent.mapFromRhevmId(runAndParseSingle("get-storagedomain " + getId(), true));
         }
         return addLinks(storageDomain, uriInfo.getRequestUriBuilder());
     }
@@ -115,7 +174,7 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
             buf.append("\n");
             buf.append("update-storagedomain -storagedomainobject $v");
 
-            storageDomain = parent.mapFromRhevmId(runAndParseSingle(buf.toString()));
+            storageDomain = parent.mapFromRhevmId(runAndParseSingle(buf.toString(), true));
         }
 
         return addLinks(storageDomain, uriInfo.getRequestUriBuilder());
@@ -165,7 +224,7 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
             break;
         }
 
-        StorageDomain storageDomain = PowerShellStorageDomainResource.runAndParseSingle(buf.toString());
+        StorageDomain storageDomain = PowerShellStorageDomainResource.runAndParseSingle(buf.toString(), true);
 
         parent.unstageDomain(getId(), storageDomain.getId());
     }
@@ -176,7 +235,7 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
         storageDomain.setId(getId());
         parent.mapToRhevmId(storageDomain);
 
-        storageDomain = runAndParseSingle("get-storagedomain " + storageDomain.getId());
+        storageDomain = runAndParseSingle("get-storagedomain " + storageDomain.getId(), true);
 
         StringBuilder buf = new StringBuilder();
 

@@ -29,14 +29,32 @@ import com.redhat.rhevm.api.model.StorageType;
 import com.redhat.rhevm.api.powershell.model.PowerShellStorageDomain;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
-public class PowerShellStorageDomain {
+public class PowerShellStorageDomain extends StorageDomain {
 
-    public static ArrayList<StorageDomain> parse(String output) {
+    private StorageDomainStatus sharedStatus;
+
+    public StorageDomainStatus getSharedStatus() {
+        return sharedStatus;
+    }
+    public void setSharedStatus(StorageDomainStatus sharedStatus) {
+        this.sharedStatus = sharedStatus;
+    }
+
+    private static StorageDomainStatus parseStatus(HashMap<String,String> props, String key) {
+        try {
+            return StorageDomainStatus.fromValue(props.get(key).toUpperCase());
+        } catch (IllegalArgumentException iae) {
+            // ignore - assume status is 'Unknown'
+            return null;
+        }
+    }
+
+    public static ArrayList<PowerShellStorageDomain> parse(String output) {
         ArrayList<HashMap<String,String>> storageDomainsProps = PowerShellUtils.parseProps(output);
-        ArrayList<StorageDomain> ret = new ArrayList<StorageDomain>();
+        ArrayList<PowerShellStorageDomain> ret = new ArrayList<PowerShellStorageDomain>();
 
         for (HashMap<String,String> props : storageDomainsProps) {
-            StorageDomain storageDomain = new StorageDomain();
+            PowerShellStorageDomain storageDomain = new PowerShellStorageDomain();
 
             storageDomain.setId(props.get("storagedomainid"));
             storageDomain.setName(props.get("name"));
@@ -48,7 +66,8 @@ public class PowerShellStorageDomain {
             }
             storageDomain.setType(StorageDomainType.fromValue(domainType));
 
-            storageDomain.setStatus(StorageDomainStatus.fromValue(props.get("sharedstatus").toUpperCase()));
+            storageDomain.setStatus(parseStatus(props, "status"));
+            storageDomain.setSharedStatus(parseStatus(props, "sharedstatus"));
 
             Storage storage = new Storage();
 
