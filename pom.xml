@@ -16,10 +16,20 @@
     <module>powershell</module>
     <module>dummy</module>
     <module>cli</module>
-    <module>itests</module>
+    <module>${extra.module}</module>
   </modules>
 
+  <profiles>
+    <profile>
+      <id>integration</id>
+      <properties>
+        <extra.module>itests</extra.module>
+      </properties>
+    </profile>
+  </profiles>
+
   <properties>
+    <extra.module>null</extra.module>
     <junit.version>4.8.1</junit.version>
     <javax.servlet.api.version>2.5</javax.servlet.api.version>
     <commons-logging.version>1.1.1</commons-logging.version>
