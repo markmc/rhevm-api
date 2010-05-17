@@ -254,7 +254,7 @@ public class PowerShellVmResourceTest extends Assert {
         assertEquals(vm.getName(), name);
     }
 
-    private void verifyResponse(Response r, boolean async) {
+    private void verifyResponse(Response r, boolean async) throws Exception {
         assertEquals("unexpected status", async ? 202 : 200, r.getStatus());
         Object entity = r.getEntity();
         assertTrue("expect Action response entity", entity instanceof Action);
@@ -272,6 +272,7 @@ public class PowerShellVmResourceTest extends Assert {
         assertEquals("expected replay link", "replay", action.getLink().get(0).getRel());
         assertNotNull(action.getLink().get(0).getHref());
         assertTrue(action.getLink().get(0).getHref().startsWith("/vms/12345/"));
+        Thread.sleep(200);
     }
 
     private void verifyUpdateException(WebApplicationException wae) {
