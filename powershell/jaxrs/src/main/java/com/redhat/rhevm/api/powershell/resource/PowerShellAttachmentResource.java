@@ -31,6 +31,7 @@ import com.redhat.rhevm.api.model.Attachment;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.resource.AttachmentResource;
+import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 public class PowerShellAttachmentResource extends AbstractActionableResource<StorageDomain> implements AttachmentResource {
 
@@ -97,13 +98,28 @@ public class PowerShellAttachmentResource extends AbstractActionableResource<Sto
 
     @Override
     public Response activate(UriInfo uriInfo, Action action) {
-        // FIXME: implement
-        return doAction(uriInfo, new DoNothingTask(action));
+        return doAction(uriInfo, new AttachmentActionTask(action, "activate-storagedomain"));
     }
 
     @Override
     public Response deactivate(UriInfo uriInfo, Action action) {
-        // FIXME: implement
-        return doAction(uriInfo, new DoNothingTask(action));
+        return doAction(uriInfo, new AttachmentActionTask(action, "deactivate-storagedomain"));
+    }
+
+    private class AttachmentActionTask extends AbstractActionTask {
+        private String command;
+        public AttachmentActionTask(Action action, String command) {
+            super(action);
+            this.command = command;
+        }
+        public void run() {
+            StringBuilder buf = new StringBuilder();
+
+            buf.append(command);
+            buf.append(" -datacenterid " + getId());
+            buf.append(" -storagedomainid " + storageDomainId);
+
+            PowerShellUtils.runCommand(buf.toString());
+        }
     }
 }
