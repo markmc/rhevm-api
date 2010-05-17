@@ -96,12 +96,12 @@ public class PowerShellAttachmentResource extends AbstractActionableResource<Sto
     @Override
     public Response activate(UriInfo uriInfo, Action action) {
         // FIXME: implement
-        return doAction(uriInfo, action, new Runnable() { public void run() {} });
+        return doAction(uriInfo, new DoNothingTask(action));
     }
 
     @Override
     public Response deactivate(UriInfo uriInfo, Action action) {
         // FIXME: implement
-        return doAction(uriInfo, action, new Runnable() { public void run() {} });
+        return doAction(uriInfo, new DoNothingTask(action));
     }
 }

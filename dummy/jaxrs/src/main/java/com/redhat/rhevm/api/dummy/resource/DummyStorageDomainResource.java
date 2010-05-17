@@ -86,13 +86,13 @@ public class DummyStorageDomainResource extends AbstractDummyResource<StorageDom
     @Override
     public Response initialize(UriInfo uriInfo, Action action) {
         // FIXME: error if not uninitialized
-        return doAction(uriInfo, action, new StorageDomainStatusSetter(StorageDomainStatus.UNATTACHED));
+        return doAction(uriInfo, new StorageDomainStatusSetter(action, StorageDomainStatus.UNATTACHED));
     }
 
     @Override
     public Response teardown(UriInfo uriInfo, Action action) {
         // FIXME: error if not unattached
-        return doAction(uriInfo, action, new StorageDomainStatusSetter(StorageDomainStatus.UNINITIALIZED));
+        return doAction(uriInfo, new StorageDomainStatusSetter(action, StorageDomainStatus.UNINITIALIZED));
     }
 
     public AttachmentsResource getAttachmentsResource() {
@@ -110,9 +110,10 @@ public class DummyStorageDomainResource extends AbstractDummyResource<StorageDom
         return attachments.getAttachmentHref(uriInfo, dataCenterId);
     }
 
-    private class StorageDomainStatusSetter implements Runnable {
+    private class StorageDomainStatusSetter extends AbstractActionTask {
         private StorageDomainStatus status;
-        public StorageDomainStatusSetter(StorageDomainStatus status) {
+        public StorageDomainStatusSetter(Action action, StorageDomainStatus status) {
+            super(action);
             this.status = status;
         }
         public void run() {

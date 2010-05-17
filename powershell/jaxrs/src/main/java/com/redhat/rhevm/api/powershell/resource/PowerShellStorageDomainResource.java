@@ -184,13 +184,13 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
 
     @Override
     public Response initialize(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, action, new StorageDomainInitializer(uriInfo, action));
+        return doAction(uriInfo, new StorageDomainInitializer(action));
     }
 
 
     @Override
     public Response teardown(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, action, new StorageDomainTeardowner(uriInfo, action));
+        return doAction(uriInfo, new StorageDomainTeardowner(action));
     }
 
     @Override
@@ -198,25 +198,21 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
         return new PowerShellAttachmentsResource(getId());
     }
 
-
-    private abstract class StorageDomainAction implements Runnable {
-        protected UriInfo uriInfo;
-        protected Action action;
+    private abstract class StorageDomainActionTask extends AbstractActionTask {
         protected String id;
         protected StorageDomain staged;
         protected PowerShellStorageDomainsResource parent;
-        public StorageDomainAction(UriInfo uriInfo, Action action) {
-            this.uriInfo = uriInfo;
-            this.action = action;
+        public StorageDomainActionTask(Action action) {
+            super(action);
             this.id = PowerShellStorageDomainResource.this.getId();
             this.staged = PowerShellStorageDomainResource.this.staged;
             this.parent = PowerShellStorageDomainResource.this.parent;
         }
     }
 
-    private class StorageDomainInitializer extends StorageDomainAction {
-        public StorageDomainInitializer(UriInfo uriInfo, Action action) {
-            super(uriInfo, action);
+    private class StorageDomainInitializer extends StorageDomainActionTask {
+        public StorageDomainInitializer(Action action) {
+            super(action);
         }
         public void run() {
             StringBuilder buf = new StringBuilder();
@@ -267,9 +263,9 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
         }
     }
 
-    private class StorageDomainTeardowner extends StorageDomainAction {
-        public StorageDomainTeardowner(UriInfo uriInfo, Action action) {
-            super(uriInfo, action);
+    private class StorageDomainTeardowner extends StorageDomainActionTask {
+        public StorageDomainTeardowner(Action action) {
+            super(action);
         }
         public void run() {
             StorageDomain storageDomain = new StorageDomain();

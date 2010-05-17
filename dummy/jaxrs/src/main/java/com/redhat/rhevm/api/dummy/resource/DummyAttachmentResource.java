@@ -100,18 +100,19 @@ public class DummyAttachmentResource extends AbstractDummyResource<Attachment> i
     @Override
     public Response activate(UriInfo uriInfo, Action action) {
         // FIXME: error if not attached
-        return doAction(uriInfo, action, new AttachmentStatusSetter(StorageDomainStatus.ACTIVE));
+        return doAction(uriInfo, new AttachmentStatusSetter(action, StorageDomainStatus.ACTIVE));
     }
 
     @Override
     public Response deactivate(UriInfo uriInfo, Action action) {
         // FIXME: error if not active
-        return doAction(uriInfo, action, new AttachmentStatusSetter(StorageDomainStatus.INACTIVE));
+        return doAction(uriInfo, new AttachmentStatusSetter(action, StorageDomainStatus.INACTIVE));
     }
 
-    private class AttachmentStatusSetter implements Runnable {
+    private class AttachmentStatusSetter extends AbstractActionTask {
         private StorageDomainStatus status;
-        public AttachmentStatusSetter(StorageDomainStatus status) {
+        public AttachmentStatusSetter(Action action, StorageDomainStatus status) {
+            super(action);
             this.status = status;
         }
         public void run() {

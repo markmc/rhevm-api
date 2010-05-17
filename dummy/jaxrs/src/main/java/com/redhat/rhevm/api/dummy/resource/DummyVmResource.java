@@ -80,61 +80,62 @@ public class DummyVmResource extends AbstractDummyResource<VM> implements VmReso
 
     @Override
     public Response start(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, action, new VmStatusSetter(DummyVmStatus.UP));
+        return doAction(uriInfo, new VmStatusSetter(action, DummyVmStatus.UP));
     }
 
 
     @Override
     public Response stop(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, action, new VmStatusSetter(DummyVmStatus.DOWN));
+        return doAction(uriInfo, new VmStatusSetter(action, DummyVmStatus.DOWN));
 
     }
 
     @Override
     public Response shutdown(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, action, new VmStatusSetter(DummyVmStatus.DOWN));
+        return doAction(uriInfo, new VmStatusSetter(action, DummyVmStatus.DOWN));
     }
 
     @Override
     public Response suspend(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, action, DO_NOTHING);
+        return doAction(uriInfo, new DoNothingTask(action));
     }
 
     @Override
     public Response restore(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, action, DO_NOTHING);
+        return doAction(uriInfo, new DoNothingTask(action));
     }
 
     @Override
     public Response migrate(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, action, DO_NOTHING);
+        return doAction(uriInfo, new DoNothingTask(action));
     }
 
     @Override
     public Response move(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, action, DO_NOTHING);
+        return doAction(uriInfo, new DoNothingTask(action));
     }
 
     @Override
     public Response detach(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, action, DO_NOTHING);
+        return doAction(uriInfo, new DoNothingTask(action));
 
     }
 
     @Override
     public Response changeCD(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, action, DO_NOTHING);
+        return doAction(uriInfo, new DoNothingTask(action));
 
     }
 
     @Override
     public Response ejectCD(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, action, DO_NOTHING);
+        return doAction(uriInfo, new DoNothingTask(action));
     }
 
-    private class VmStatusSetter implements Runnable {
+    private class VmStatusSetter extends AbstractActionTask {
         private DummyVmStatus status;
-        VmStatusSetter(DummyVmStatus status) {
+        VmStatusSetter(Action action, DummyVmStatus status) {
+            super(action);
             this.status = status;
         }
         public void run() {

@@ -33,8 +33,6 @@ public abstract class AbstractActionableResource<R extends BaseResource> extends
 
     private static final long REAP_AFTER = 2 * 60 * 60 * 1000L; // 2 hours
 
-    protected static Runnable DO_NOTHING = new Runnable() { public void run(){} };
-
     protected ReapedMap<String, ActionResource> actions;
 
     public AbstractActionableResource(String id) {
@@ -51,16 +49,17 @@ public abstract class AbstractActionableResource<R extends BaseResource> extends
      * @param task     fulfils the action
      * @return
      */
-    protected Response doAction(UriInfo uriInfo, Action action, final Runnable task) {
+    protected Response doAction(UriInfo uriInfo, final AbstractActionTask task) {
+        Action action = task.action;
         Response.Status status = null;
-        final ActionResource actionResource = new BaseActionResource(uriInfo, action);
+        final ActionResource actionResource = new BaseActionResource(uriInfo, task.action);
         if (action.isSetAsync() && action.isAsync()) {
             action.setStatus(com.redhat.rhevm.api.model.Status.PENDING);
             actions.put(action.getId(), actionResource);
             // FIXME: use executor
-            new Thread(new AbstractActionTask(action) {
+            new Thread(new Runnable() {
                 public void run() {
-                    perform(action, task);
+                    perform(task);
                     actions.reapable(actionResource.getAction().getId());
                 }
             }).start();
@@ -69,7 +68,7 @@ public abstract class AbstractActionableResource<R extends BaseResource> extends
             // no need for self link in action if synchronous (as no querying
             // will ever be needed)
             //
-            perform(action, task);
+            perform(task);
             status = Status.OK;
         }
 
@@ -98,23 +97,31 @@ public abstract class AbstractActionableResource<R extends BaseResource> extends
                 };
     }
 
-    private void perform(Action action, Runnable task) {
-        action.setStatus(com.redhat.rhevm.api.model.Status.IN_PROGRESS);
-        if (action.getGracePeriod() != null) {
+    private void perform(AbstractActionTask task) {
+        task.action.setStatus(com.redhat.rhevm.api.model.Status.IN_PROGRESS);
+        if (task.action.getGracePeriod() != null) {
             try {
-                Thread.sleep(action.getGracePeriod().getExpiry());
+                Thread.sleep(task.action.getGracePeriod().getExpiry());
             } catch (Exception e) {
                 // ignore
             }
         }
         task.run();
-        action.setStatus(com.redhat.rhevm.api.model.Status.COMPLETE);
+        task.action.setStatus(com.redhat.rhevm.api.model.Status.COMPLETE);
     }
 
-    private abstract class AbstractActionTask implements Runnable {
+    protected static abstract class AbstractActionTask implements Runnable {
         protected Action action;
-        AbstractActionTask(Action action) {
+        public AbstractActionTask(Action action) {
             this.action = action;
+        }
+    }
+
+    protected static class DoNothingTask extends AbstractActionTask {
+        public DoNothingTask(Action action) {
+            super(action);
+        }
+        public void run(){
         }
     }
 }

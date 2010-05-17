@@ -81,57 +81,58 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
 
     @Override
     public Response start(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, action, new CommandRunner("start-vm"));
+        return doAction(uriInfo, new CommandRunner(action, "start-vm"));
     }
 
     @Override
     public Response stop(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, action, new CommandRunner("stop-vm"));
+        return doAction(uriInfo, new CommandRunner(action, "stop-vm"));
     }
 
     @Override
     public Response shutdown(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, action, new CommandRunner("shutdown-vm"));
+        return doAction(uriInfo, new CommandRunner(action, "shutdown-vm"));
     }
 
     @Override
     public Response suspend(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, action, new CommandRunner("suspend-vm"));
+        return doAction(uriInfo, new CommandRunner(action, "suspend-vm"));
     }
 
     @Override
     public Response restore(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, action, new CommandRunner("restore-vm"));
+        return doAction(uriInfo, new CommandRunner(action, "restore-vm"));
     }
 
     @Override
     public Response migrate(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, action, DO_NOTHING);
+        return doAction(uriInfo, new DoNothingTask(action));
     }
 
     @Override
     public Response move(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, action, DO_NOTHING);
+        return doAction(uriInfo, new DoNothingTask(action));
     }
 
     @Override
     public Response detach(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, action, DO_NOTHING);
+        return doAction(uriInfo, new DoNothingTask(action));
     }
 
     @Override
     public Response changeCD(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, action, DO_NOTHING);
+        return doAction(uriInfo, new DoNothingTask(action));
     }
 
     @Override
     public Response ejectCD(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, action, DO_NOTHING);
+        return doAction(uriInfo, new DoNothingTask(action));
     }
 
-    private class CommandRunner implements Runnable {
+    private class CommandRunner extends AbstractActionTask {
         private String command;
-        CommandRunner(String command) {
+        CommandRunner(Action action, String command) {
+            super(action);
             this.command = command;
         }
         public void run() {
