@@ -42,6 +42,7 @@
     <felix.osgi.version>1.4.0</felix.osgi.version>
     <cxf.version>2.2.6</cxf.version>
     <easymock.version>2.5.2</easymock.version>
+    <powermock.version>1.3.8</powermock.version>
     <xharness.version>1.0-beta-5</xharness.version>
     <ant.version>1.7.1</ant.version>
   </properties>
@@ -50,6 +51,10 @@
     <repository>
       <id>jboss</id> <!-- For RESTeasy -->
       <url>http://repository.jboss.org/maven2</url>
+    </repository>
+    <repository>
+      <id>powermock-repo</id> <!-- For PowerMock -->
+      <url>http://powermock.googlecode.com/svn/repo/</url>
     </repository>
   </repositories>
 
@@ -164,6 +169,20 @@
         <groupId>org.easymock</groupId>
         <artifactId>easymockclassextension</artifactId>
         <version>${easymock.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.powermock.modules</groupId>
+        <artifactId>powermock-module-junit4</artifactId>
+        <version>${powermock.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.powermock.api</groupId>
+        <artifactId>powermock-api-easymock</artifactId>
+        <version>${powermock.version}</version>
         <scope>test</scope>
       </dependency>
 

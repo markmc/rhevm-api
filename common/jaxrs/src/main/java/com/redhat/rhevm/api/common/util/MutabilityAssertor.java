@@ -102,7 +102,7 @@ public class MutabilityAssertor {
     }
 
     private static String getContentType(HttpHeaders headers) {
-        return headers.getAcceptableMediaTypes() != null && headers.getAcceptableMediaTypes().size() > 1
+        return headers.getAcceptableMediaTypes() != null && headers.getAcceptableMediaTypes().size() > 0
               ? headers.getAcceptableMediaTypes().get(0).toString()
               : headers.getMediaType() != null
                 ? headers.getMediaType().toString()

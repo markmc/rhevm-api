@@ -52,7 +52,7 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
     }
 
     public static VM addLinks(VM vm, UriBuilder uriBuilder) {
-        vm.setHref(uriBuilder.toString());
+        vm.setHref(uriBuilder.build().toString());
         return vm;
     }
 
