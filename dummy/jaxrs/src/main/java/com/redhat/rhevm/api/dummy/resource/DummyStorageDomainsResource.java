@@ -44,7 +44,6 @@ public class DummyStorageDomainsResource implements StorageDomainsResource {
     private static void addStorageDomain(StorageDomainType domainType, String name, StorageType storageType, String host, String path) {
         DummyStorageDomainResource resource = new DummyStorageDomainResource(allocateId(StorageDomain.class));
 
-        StorageDomain domain = new StorageDomain();
         resource.getModel().setName(name);
         resource.getModel().setType(domainType);
 
