@@ -20,7 +20,6 @@ package com.redhat.rhevm.api.powershell.resource;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.ws.rs.WebApplicationException;
@@ -30,53 +29,35 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Fault;
 import com.redhat.rhevm.api.model.Status;
 import com.redhat.rhevm.api.model.VM;
 
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 
-import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import static org.easymock.classextension.EasyMock.expect;
 import static org.easymock.classextension.EasyMock.isA;
 
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
 import static org.powermock.api.easymock.PowerMock.createMock;
 import static org.powermock.api.easymock.PowerMock.mockStatic;
 import static org.powermock.api.easymock.PowerMock.replayAll;
-import static org.powermock.api.easymock.PowerMock.verifyAll;
 
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest( { PowerShellCmd.class })
-public class PowerShellVmResourceTest extends Assert {
+public class PowerShellVmResourceTest extends BasePowerShellResourceTest {
 
-    private static final String URI_ROOT = "http://localhost:8099";
     private static final String GET_RETURN = "vmid: 12345 \n name: sedna";
     private static final String ACTION_RETURN = "replace with realistic powershell return";
     private static final String UPDATE_COMMAND = "$v = get-vm 12345\n$v.name = \"eris\"\nupdate-vm -vmobject $v";
     private static final String UPDATE_RETURN = "vmid: 12345 \n name: eris";
 
-    private ControllableExecutor executor;
     private PowerShellVmResource resource;
 
     @Before
     public void setUp() {
-        executor = new ControllableExecutor();
         resource = new PowerShellVmResource("12345", executor);
-    }
-
-    @After
-    public void tearDown() {
-        verifyAll();
     }
 
     @Test
@@ -110,70 +91,70 @@ public class PowerShellVmResourceTest extends Assert {
 
     @Test
     public void testStart() throws Exception {
-        verifyResponse(
+        verifyActionResponse(
             resource.start(setUpActionExpectation("start", "start-vm"), getAction()),
             false);
     }
 
     @Test
     public void testStop() throws Exception {
-        verifyResponse(
+        verifyActionResponse(
             resource.stop(setUpActionExpectation("stop", "stop-vm"), getAction()),
             false);
     }
 
     @Test
     public void testShutdown() throws Exception {
-        verifyResponse(
+        verifyActionResponse(
             resource.shutdown(setUpActionExpectation("shutdown", "shutdown-vm"), getAction()),
             false);
     }
 
     @Test
     public void testSuspend() throws Exception {
-        verifyResponse(
+        verifyActionResponse(
             resource.suspend(setUpActionExpectation("suspend", "suspend-vm"), getAction()),
             false);
     }
 
     @Test
     public void testRestore() throws Exception {
-        verifyResponse(
+        verifyActionResponse(
             resource.restore(setUpActionExpectation("restore", "restore-vm"), getAction()),
             false);
     }
 
     @Test
     public void testStartAsync() throws Exception {
-        verifyResponse(
+        verifyActionResponse(
             resource.start(setUpActionExpectation("start", "start-vm"), getAction(true)),
             true);
     }
 
     @Test
     public void testStopAsync() throws Exception {
-        verifyResponse(
+        verifyActionResponse(
             resource.stop(setUpActionExpectation("stop", "stop-vm"), getAction(true)),
             true);
     }
 
     @Test
     public void testShutdownAsync() throws Exception {
-        verifyResponse(
+        verifyActionResponse(
             resource.shutdown(setUpActionExpectation("shutdown", "shutdown-vm"), getAction(true)),
             true);
     }
 
     @Test
     public void testSuspendAsync() throws Exception {
-        verifyResponse(
+        verifyActionResponse(
             resource.suspend(setUpActionExpectation("suspend", "suspend-vm"), getAction(true)),
             true);
     }
 
     @Test
     public void testRestoreAsync() throws Exception {
-        verifyResponse(
+        verifyActionResponse(
             resource.restore(setUpActionExpectation("restore", "restore-vm"), getAction(true)),
             true);
     }
@@ -191,22 +172,7 @@ public class PowerShellVmResourceTest extends Assert {
     }
 
     private UriInfo setUpActionExpectation(String verb, String command) throws Exception {
-        mockStatic(PowerShellCmd.class);
-        expect(PowerShellCmd.runCommand(command + " -vmid 12345")).andReturn(ACTION_RETURN);
-
-        URI replayUri = new URI("/vms/12345/" + verb);
-        URI actionUri = new URI("/vms/12345/" + verb + "/56789");
-
-        UriInfo uriInfo = createMock(UriInfo.class);
-        UriBuilder uriBuilder = createMock(UriBuilder.class);
-        expect(uriInfo.getRequestUriBuilder()).andReturn(uriBuilder);
-        expect(uriBuilder.path(isA(String.class))).andReturn(uriBuilder);
-        expect(uriBuilder.build()).andReturn(actionUri);
-        expect(uriInfo.getRequestUri()).andReturn(replayUri);
-
-        replayAll();
-
-        return uriInfo;
+        return setUpActionExpectation("/vms/12345/", verb, command + " -vmid 12345", ACTION_RETURN);
     }
 
     private HttpHeaders setUpHeadersExpectation() {
@@ -229,43 +195,14 @@ public class PowerShellVmResourceTest extends Assert {
         return vm;
     }
 
-    private Action getAction() {
-        return getAction(false);
-    }
-
-    private Action getAction(boolean async) {
-        Action action = new Action();
-        action.setId("56789");
-        action.setAsync(async);
-        return action;
-    }
-
     private void verifyVM(VM vm, String name) {
         assertNotNull(vm);
         assertEquals(vm.getId(), "12345");
         assertEquals(vm.getName(), name);
     }
 
-    private void verifyResponse(Response r, boolean async) throws Exception {
-        assertEquals("unexpected status", async ? 202 : 200, r.getStatus());
-        Object entity = r.getEntity();
-        assertTrue("expect Action response entity", entity instanceof Action);
-        Action action = (Action)entity;
-        assertNotNull(action.getHref());
-        assertNotNull(action.getId());
-        assertNotNull(action.getLink());
-        assertEquals(async, action.isAsync());
-        assertTrue("unexpected status", async
-                   ? action.getStatus().equals(Status.PENDING)
-                     || action.getStatus().equals(Status.IN_PROGRESS)
-                     || action.getStatus().equals(Status.COMPLETE)
-                   : action.getStatus().equals(Status.COMPLETE));
-        assertEquals(1, action.getLink().size());
-        assertEquals("expected replay link", "replay", action.getLink().get(0).getRel());
-        assertNotNull(action.getLink().get(0).getHref());
-        assertTrue(action.getLink().get(0).getHref().startsWith("/vms/12345/"));
-        assertEquals("unexpected async task", async ? 1 : 0, executor.taskCount());
-        executor.runNext();
+    private void verifyActionResponse(Response r, boolean async) throws Exception {
+        verifyActionResponse(r, "/vms/12345/", async);
     }
 
     private void verifyUpdateException(WebApplicationException wae) {
