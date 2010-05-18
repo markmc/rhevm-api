@@ -12,7 +12,7 @@
         <arg value="-Djboss.service.binding.set=ports-01"/>
       </xh-execbg>
       <assert timeout="120">
-        <outputcontains stream="stdout" task="xh-execbg">deploy, ctxPath=/${rhevm.api.impl}</outputcontains>
+        <outputcontains stream="stdout" task="xh-execbg">[[/${rhevm.api.impl}]] Initializing Spring root WebApplicationContext</outputcontains>
       </assert>
     </start>
 

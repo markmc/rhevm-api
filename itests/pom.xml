@@ -101,7 +101,7 @@
             </goals>
             <configuration>
               <tasks>
-                <property name="poject.name" value="${pom.name}"/>
+                <property name="project.name" value="${pom.name}"/>
                 <property name="rhevm.api.version" value="${pom.version}"/>
                 <property name="rhevm.api.impl" value="${rhevm.api.impl}"/>
                 <property name="rhevm-admin.home" value="${rhevm-admin.dir}/apache-servicemix-${smx.version}"/>
