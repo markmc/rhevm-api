@@ -4,7 +4,7 @@
 
   <ext:property-placeholder placeholder-prefix="$[" placeholder-suffix="]">
     <ext:default-properties>
-      <ext:property name="rhevm.base.url" value="http://localhost:8099/rhevm-api-dummy"/>
+      <ext:property name="rhevm.base.url" value="http://localhost:8099/rhevm-api-mock"/>
     </ext:default-properties>
   </ext:property-placeholder>
 

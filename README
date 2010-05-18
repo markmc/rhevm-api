@@ -43,7 +43,7 @@ Build:
 
 Deploy:
 
- $> cp dummy/webapp/target/rhevm-api-dummy.war /usr/local/jboss-5.1.0.GA/server/default/deploy/rhevm-api-dummy.war
+ $> cp mock/webapp/target/rhevm-api-mock.war /usr/local/jboss-5.1.0.GA/server/default/deploy/rhevm-api-mock.war
 
 Run:
 
@@ -63,7 +63,7 @@ Build:
 
 Run:
 
- $> cd dummy/webapp ; mvn jetty:run
+ $> cd mock/webapp ; mvn jetty:run
 
 Test:
 
@@ -107,4 +107,4 @@ man-style documentation.
 By default the base URL used matches the port for deployment option #2
 described above, but this can be over-ridden, for example:
 
-$> export JAVA_OPTS=-Drhevm.base.url=http://localhost:8080/rhevm-api-dummy
+$> export JAVA_OPTS=-Drhevm.base.url=http://localhost:8080/rhevm-api-mock

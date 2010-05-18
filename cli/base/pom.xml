@@ -18,7 +18,7 @@
 
     <dependency>
       <groupId>com.redhat.rhevm.api</groupId>
-      <artifactId>rhevm-api-dummy-jaxrs</artifactId>
+      <artifactId>rhevm-api-mock-jaxrs</artifactId>
       <version>0.1-SNAPSHOT</version>
     </dependency>
 

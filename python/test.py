@@ -28,7 +28,7 @@ import time
 opts = {
     'host' : 'localhost',
     'port' : 8080,
-    'impl' : "dummy",
+    'impl' : "mock",
 }
 
 if len(sys.argv) > 1:

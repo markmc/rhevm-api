@@ -16,7 +16,7 @@
   <url>http://fedorahosted.org/rhevm-api/</url>
 
   <properties>
-    <rhevm.api.impl>rhevm-api-dummy</rhevm.api.impl>
+    <rhevm.api.impl>rhevm-api-mock</rhevm.api.impl>
     <kits.dir>${project.build.directory}/kits</kits.dir>
     <jboss.version>6.0.0.M1</jboss.version>
     <jboss.dir>${kits.dir}/jboss</jboss.dir>

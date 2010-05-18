@@ -14,7 +14,7 @@
     <module>api</module>
     <module>common</module>
     <module>powershell</module>
-    <module>dummy</module>
+    <module>mock</module>
     <module>cli</module>
     <module>${extra.module}</module>
   </modules>
