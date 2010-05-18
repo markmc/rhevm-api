@@ -25,21 +25,12 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.LinkHeader;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.resource.ApiResource;
-import com.redhat.rhevm.api.resource.DataCentersResource;
-import com.redhat.rhevm.api.resource.HostsResource;
-import com.redhat.rhevm.api.resource.StorageDomainsResource;
-import com.redhat.rhevm.api.resource.VmsResource;
 
 /* FIXME: it'd be nice to move this whole thing into the
  *        top-level api package
  */
 
 public class MockApiResource implements ApiResource {
-
-    private MockDataCentersResource dataCenters = new MockDataCentersResource();
-    private MockHostsResource hosts = new MockHostsResource();
-    private MockStorageDomainsResource storageDomains = new MockStorageDomainsResource();
-    private MockVmsResource vms = new MockVmsResource();
 
     private void addHeader(Response.ResponseBuilder responseBuilder, UriBuilder uriBuilder, String ... path) {
         // concantenate links in a single header with a comma-separated value,
@@ -70,25 +61,5 @@ public class MockApiResource implements ApiResource {
         addHeader(responseBuilder, uriBuilder, "datacenters", "hosts", "storagedomains", "vms");
 
         return responseBuilder.build();
-    }
-
-    @Override
-    public DataCentersResource getDataCentersSubResource(UriInfo uriInfo) {
-        return dataCenters;
-    }
-
-    @Override
-    public HostsResource getHostsSubResource(UriInfo uriInfo) {
-        return hosts;
-    }
-
-    @Override
-    public StorageDomainsResource getStorageDomainsSubResource(UriInfo uriInfo) {
-        return storageDomains;
-    }
-
-    @Override
-    public VmsResource getVmsSubResource(UriInfo uriInfo) {
-        return vms;
     }
 }

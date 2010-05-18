@@ -19,6 +19,7 @@
 package com.redhat.rhevm.api.powershell.resource;
 
 import java.util.ArrayList;
+import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.UriBuilder;
@@ -35,8 +36,8 @@ public class PowerShellHostResource extends AbstractActionableResource<Host> imp
      * private @Context UriInfo uriInfo;
      */
 
-    public PowerShellHostResource(String id) {
-        super(id);
+    public PowerShellHostResource(String id, Executor executor) {
+        super(id, executor);
     }
 
     /* needed because there are two get-host commands */

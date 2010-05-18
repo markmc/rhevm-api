@@ -18,7 +18,9 @@
  */
 package com.redhat.rhevm.api.mock.resource;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -37,12 +39,13 @@ import com.redhat.rhevm.api.resource.StorageDomainsResource;
 import static com.redhat.rhevm.api.mock.resource.AbstractMockResource.allocateId;
 
 
-public class MockStorageDomainsResource implements StorageDomainsResource {
+public class MockStorageDomainsResource extends AbstractMockCollectionResource implements StorageDomainsResource {
 
-    private static HashMap<String, MockStorageDomainResource> storageDomains = new HashMap<String, MockStorageDomainResource>();
+    private static Map<String, MockStorageDomainResource> storageDomains =
+        Collections.synchronizedMap(new HashMap<String, MockStorageDomainResource>());
 
-    private static void addStorageDomain(StorageDomainType domainType, String name, StorageType storageType, String host, String path) {
-        MockStorageDomainResource resource = new MockStorageDomainResource(allocateId(StorageDomain.class));
+    private void addStorageDomain(StorageDomainType domainType, String name, StorageType storageType, String host, String path) {
+        MockStorageDomainResource resource = new MockStorageDomainResource(allocateId(StorageDomain.class), getExecutor());
 
         resource.getModel().setName(name);
         resource.getModel().setType(domainType);
@@ -56,9 +59,13 @@ public class MockStorageDomainsResource implements StorageDomainsResource {
         storageDomains.put(resource.getModel().getId(), resource);
     }
 
-    static {
-        addStorageDomain(StorageDomainType.DATA, "images_0", StorageType.NFS, "172.31.0.6", "/exports/RHEV/images/0");
-        addStorageDomain(StorageDomainType.ISO, "isos_0", StorageType.NFS, "172.31.0.6", "/exports/RHEV/iso/0");
+    public void populate() {
+        synchronized (storageDomains) {
+            if (storageDomains.size() == 0) {
+                addStorageDomain(StorageDomainType.DATA, "images_0", StorageType.NFS, "172.31.0.6", "/exports/RHEV/images/0");
+                addStorageDomain(StorageDomainType.ISO, "isos_0", StorageType.NFS, "172.31.0.6", "/exports/RHEV/iso/0");
+            }
+        }
     }
 
     public static String getHref(UriBuilder baseUriBuilder, String id) {
@@ -80,7 +87,7 @@ public class MockStorageDomainsResource implements StorageDomainsResource {
 
     @Override
     public Response add(UriInfo uriInfo, StorageDomain storageDomain) {
-        MockStorageDomainResource resource = new MockStorageDomainResource(allocateId(StorageDomain.class));
+        MockStorageDomainResource resource = new MockStorageDomainResource(allocateId(StorageDomain.class), getExecutor());
 
         resource.updateModel(storageDomain);
 

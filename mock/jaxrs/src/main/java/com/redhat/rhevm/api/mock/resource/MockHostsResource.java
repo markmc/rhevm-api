@@ -18,7 +18,9 @@
  */
 package com.redhat.rhevm.api.mock.resource;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -32,19 +34,21 @@ import com.redhat.rhevm.api.resource.HostsResource;
 import static com.redhat.rhevm.api.mock.resource.AbstractMockResource.allocateId;
 
 
-public class MockHostsResource implements HostsResource {
+public class MockHostsResource extends AbstractMockCollectionResource implements HostsResource {
     /* FIXME: would like to do:
      * private @Context UriInfo uriInfo;
      */
 
-    /* FIXME: synchronize access to this */
-    private static HashMap<String, MockHostResource> hosts = new HashMap<String, MockHostResource>();
+    private static Map<String, MockHostResource> hosts =
+        Collections.synchronizedMap(new HashMap<String, MockHostResource>());
 
-    static {
-        while (hosts.size() < 4) {
-            MockHostResource resource = new MockHostResource(allocateId(Host.class));
-            resource.getModel().setName("host" + resource.getModel().getId());
-            hosts.put(resource.getModel().getId(), resource);
+    public void populate() {
+        synchronized (hosts) {
+            while (hosts.size() < 4) {
+                MockHostResource resource = new MockHostResource(allocateId(Host.class), getExecutor());
+                resource.getModel().setName("host" + resource.getModel().getId());
+                hosts.put(resource.getModel().getId(), resource);
+            }
         }
     }
 
@@ -63,7 +67,7 @@ public class MockHostsResource implements HostsResource {
 
     @Override
     public Response add(UriInfo uriInfo, Host host) {
-        MockHostResource resource = new MockHostResource(allocateId(Host.class));
+        MockHostResource resource = new MockHostResource(allocateId(Host.class), getExecutor());
 
         resource.updateModel(host);
 

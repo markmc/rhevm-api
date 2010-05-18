@@ -47,7 +47,7 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
     public PowerShellStorageDomainResource(String id,
                                            PowerShellStorageDomainsResource parent,
                                            StorageDomain staged) {
-        super(id);
+        super(id, parent.getExecutor());
         this.parent = parent;
         this.staged = staged;
     }

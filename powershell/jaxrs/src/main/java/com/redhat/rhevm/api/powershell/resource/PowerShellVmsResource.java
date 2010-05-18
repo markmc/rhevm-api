@@ -18,6 +18,8 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.util.concurrent.Executor;
+
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -36,6 +38,7 @@ public class PowerShellVmsResource implements VmsResource {
      */
 
     private ReapedMap<String, PowerShellVmResource> vms;
+    private Executor executor;
 
     public PowerShellVmsResource() {
         vms = new ReapedMap<String, PowerShellVmResource>();
@@ -100,7 +103,7 @@ public class PowerShellVmsResource implements VmsResource {
         synchronized (vms) {
             PowerShellVmResource ret = vms.get(id);
             if (ret == null) {
-                ret = new PowerShellVmResource(id);
+                ret = new PowerShellVmResource(id, executor);
                 vms.put(id, ret);
                 vms.reapable(id);
             }
@@ -112,5 +115,9 @@ public class PowerShellVmsResource implements VmsResource {
         synchronized (vms) {
             vms.remove(id);
         }
+    }
+
+    public void setExecutor(Executor executor) {
+        this.executor = executor;
     }
 }

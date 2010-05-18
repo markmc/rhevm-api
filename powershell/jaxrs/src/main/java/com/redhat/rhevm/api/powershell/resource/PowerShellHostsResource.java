@@ -92,7 +92,7 @@ public class PowerShellHostsResource
     }
 
     protected PowerShellHostResource createSubResource(String id) {
-        return new PowerShellHostResource(id);
+        return new PowerShellHostResource(id, getExecutor());
     }
 
 /*

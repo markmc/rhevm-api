@@ -19,6 +19,7 @@
 package com.redhat.rhevm.api.mock.resource;
 
 import java.util.HashMap;
+import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -32,15 +33,15 @@ import com.redhat.rhevm.api.resource.AttachmentResource;
 import com.redhat.rhevm.api.resource.AttachmentsResource;
 
 
-public class MockAttachmentsResource implements AttachmentsResource {
-    /* FIXME: synchronize access to this */
+public class MockAttachmentsResource extends AbstractMockCollectionResource implements AttachmentsResource {
     // keyed off the data center id
     private static HashMap<String, MockAttachmentResource> attachments = new HashMap<String, MockAttachmentResource>();
 
     private String storageDomainId;
 
-    public MockAttachmentsResource(String storageDomainId) {
+    public MockAttachmentsResource(String storageDomainId, Executor executor) {
         this.storageDomainId = storageDomainId;
+        setExecutor(executor);
     }
 
     @Override
@@ -68,7 +69,7 @@ public class MockAttachmentsResource implements AttachmentsResource {
             attachment.setDataCenter(dataCenter);
         }
 
-        MockAttachmentResource newAttachment = new MockAttachmentResource(attachment);
+        MockAttachmentResource newAttachment = new MockAttachmentResource(attachment, getExecutor());
 
         StorageDomain storageDomain = new StorageDomain();
         storageDomain.setId(storageDomainId);

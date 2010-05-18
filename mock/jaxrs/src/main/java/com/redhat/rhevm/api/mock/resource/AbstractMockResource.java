@@ -20,6 +20,7 @@ package com.redhat.rhevm.api.mock.resource;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.redhat.rhevm.api.model.BaseResource;
@@ -33,6 +34,10 @@ public abstract class AbstractMockResource<R extends BaseResource> extends Abstr
 
     public AbstractMockResource(String id) {
         super(id);
+    }
+
+    public AbstractMockResource(String id, Executor executor) {
+        super(id, executor);
     }
 
     public static String allocateId(Class<?> clazz) {

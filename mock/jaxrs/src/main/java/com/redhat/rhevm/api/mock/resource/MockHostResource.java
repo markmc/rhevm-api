@@ -18,6 +18,8 @@
  */
 package com.redhat.rhevm.api.mock.resource;
 
+import java.util.concurrent.Executor;
+
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -36,10 +38,11 @@ public class MockHostResource extends AbstractMockResource<Host> implements Host
     /**
      * Package-protected ctor, never needs to be instantiated by JAX-RS framework.
      *
-     * @param host  encapsulated host
+     * @param host     encapsulated host
+     * @param executor executor used for asynchronous actions
      */
-    MockHostResource(String id) {
-        super(id);
+    MockHostResource(String id, Executor executor) {
+        super(id, executor);
     }
 
     // FIXME: this needs to be atomic

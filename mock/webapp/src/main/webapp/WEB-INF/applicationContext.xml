@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans default-init-method="populate"
+  xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:p="http://www.springframework.org/schema/p"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+  http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+  <!-- Top-level Resources -->
+  <bean id="mockApiResource"
+        class="com.redhat.rhevm.api.mock.resource.MockApiResource"/>
+
+  <bean id="mockVmsResource"
+        class="com.redhat.rhevm.api.mock.resource.MockVmsResource">
+    <property name="executor"><ref bean="threadPoolExecutor"/></property>
+  </bean>
+
+  <bean id="mockHostsResource"
+        class="com.redhat.rhevm.api.mock.resource.MockHostsResource">
+    <property name="executor"><ref bean="threadPoolExecutor"/></property>
+  </bean>
+
+  <bean id="mockStorageDomainsResource"
+        class="com.redhat.rhevm.api.mock.resource.MockStorageDomainsResource">
+    <property name="executor"><ref bean="threadPoolExecutor"/></property>
+  </bean>
+
+  <bean id="mockDataCentersResource"
+        class="com.redhat.rhevm.api.mock.resource.MockDataCentersResource">
+    <property name="executor"><ref bean="threadPoolExecutor"/></property>
+  </bean>
+
+  <!-- Shared Executor -->
+  <bean id="keepAliveUnit"
+        class="java.util.concurrent.TimeUnit"
+        factory-method="valueOf">
+    <constructor-arg>
+      <value>SECONDS</value>
+    </constructor-arg>
+  </bean>
+
+  <bean id="taskQueue"
+        class="java.util.concurrent.LinkedBlockingQueue"/>
+
+  <bean id="threadPoolExecutor"
+        class="java.util.concurrent.ThreadPoolExecutor">
+    <constructor-arg value="5"/>
+    <constructor-arg value="100"/>
+    <constructor-arg value="3600"/>
+    <constructor-arg><ref bean="keepAliveUnit"/></constructor-arg>
+    <constructor-arg><ref bean="taskQueue"/></constructor-arg>
+  </bean>
+
+</beans>
+ 
+

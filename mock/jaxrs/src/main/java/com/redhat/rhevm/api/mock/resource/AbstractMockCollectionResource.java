@@ -16,28 +16,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api.resource;
 
-import javax.ws.rs.HEAD;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+package com.redhat.rhevm.api.mock.resource;
 
-/* FIXME:
- * different backends shouldn't need to specialize this,
- * we should make this a concrete implementation instead
- * of an interface
- */
+import java.util.concurrent.Executor;
 
-@Path("/")
-@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
-public interface ApiResource {
-    /* FIXME: use @Context on a private field instead of
-     *        having it passed as a parameter
-     */
+public abstract class AbstractMockCollectionResource {
 
-    @HEAD
-    public Response head(@Context UriInfo uriInfo);
+    private Executor executor;
+
+    public Executor getExecutor() {
+        return executor;
+    }
+
+    public void setExecutor(Executor executor) {
+        this.executor = executor;
+    }
 }
+

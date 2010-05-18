@@ -18,6 +18,8 @@
  */
 package com.redhat.rhevm.api.mock.resource;
 
+import java.util.concurrent.Executor;
+
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -42,10 +44,11 @@ public class MockVmResource extends AbstractMockResource<VM> implements VmResour
     /**
      * Package-protected ctor, never needs to be instantiated by JAX-RS framework.
      *
-     * @param vm  encapsulated VM
+     * @param vm       encapsulated VM
+     * @param executor executor used for asynchronous actions
      */
-    public MockVmResource(String id) {
-        super(id);
+    public MockVmResource(String id, Executor executor) {
+        super(id, executor);
     }
 
     // FIXME: this needs to be atomic

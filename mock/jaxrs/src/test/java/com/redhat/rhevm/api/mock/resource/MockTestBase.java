@@ -18,6 +18,11 @@
  */
 package com.redhat.rhevm.api.mock.resource;
 
+import java.util.concurrent.Executor;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -130,9 +135,23 @@ public class MockTestBase extends Assert {
 
     @Before
     public void setup() throws Exception {
+        Executor executor =
+            new ThreadPoolExecutor(5, 100, 3600, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
         server.setPort(port);
         server.start();
-        server.getDeployment().getDispatcher().getRegistry().addPerRequestResource(MockApiResource.class);
+        server.getDeployment().getDispatcher().getRegistry().addSingletonResource(new MockApiResource());
+        MockVmsResource vms = new MockVmsResource();
+        vms.setExecutor(executor);
+        vms.populate();
+        server.getDeployment().getDispatcher().getRegistry().addSingletonResource(vms);
+        MockHostsResource hosts = new MockHostsResource();
+        hosts.setExecutor(executor);
+        hosts.populate();
+        server.getDeployment().getDispatcher().getRegistry().addSingletonResource(hosts);
+        MockStorageDomainsResource storageDomains = new MockStorageDomainsResource();
+        storageDomains.setExecutor(executor);
+        storageDomains.populate();
+        server.getDeployment().getDispatcher().getRegistry().addSingletonResource(storageDomains);
 
         RegisterBuiltin.register(ResteasyProviderFactory.getInstance());
 

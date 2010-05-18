@@ -5,13 +5,12 @@
 <web-app>
    <display-name>RHEV-M Mock API Implementation</display-name>
 
-   <context-param>
-      <param-name>javax.ws.rs.Application</param-name>
-      <param-value>com.redhat.rhevm.api.mock.deploy.MockApplication</param-value>
-   </context-param>
-
    <listener>
       <listener-class>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>
+   </listener>
+
+   <listener>
+      <listener-class>org.jboss.resteasy.plugins.spring.SpringContextLoaderListener</listener-class>
    </listener>
 
    <servlet>

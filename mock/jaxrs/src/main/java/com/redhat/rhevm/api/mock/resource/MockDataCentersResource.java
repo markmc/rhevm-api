@@ -18,7 +18,9 @@
  */
 package com.redhat.rhevm.api.mock.resource;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -33,20 +35,22 @@ import com.redhat.rhevm.api.resource.DataCentersResource;
 import static com.redhat.rhevm.api.mock.resource.AbstractMockResource.allocateId;
 
 
-public class MockDataCentersResource implements DataCentersResource {
+public class MockDataCentersResource extends AbstractMockCollectionResource implements DataCentersResource {
     /* FIXME: would like to do:
      * private @Context UriInfo uriInfo;
      */
 
-    /* FIXME: synchronize access to this */
-    private static HashMap<String, MockDataCenterResource> dataCenters = new HashMap<String, MockDataCenterResource>();
+    private static Map<String, MockDataCenterResource> dataCenters =
+        Collections.synchronizedMap(new HashMap<String, MockDataCenterResource>());
 
-    static {
-        while (dataCenters.size() < 2) {
-            MockDataCenterResource resource = new MockDataCenterResource(allocateId(DataCenter.class));
-            resource.getModel().setName("datacenter" + resource.getModel().getId());
-            resource.getModel().setStorageType((dataCenters.size() % 2) == 0 ? StorageType.ISCSI : StorageType.NFS);
-            dataCenters.put(resource.getModel().getId(), resource);
+    public void populate() {
+        synchronized (dataCenters) {
+            while (dataCenters.size() < 2) {
+                MockDataCenterResource resource = new MockDataCenterResource(allocateId(DataCenter.class), getExecutor());
+                resource.getModel().setName("datacenter" + resource.getModel().getId());
+                resource.getModel().setStorageType((dataCenters.size() % 2) == 0 ? StorageType.ISCSI : StorageType.NFS);
+                dataCenters.put(resource.getModel().getId(), resource);
+            }
         }
     }
 
@@ -69,7 +73,7 @@ public class MockDataCentersResource implements DataCentersResource {
 
     @Override
     public Response add(UriInfo uriInfo, DataCenter dataCenter) {
-        MockDataCenterResource resource = new MockDataCenterResource(allocateId(DataCenter.class));
+        MockDataCenterResource resource = new MockDataCenterResource(allocateId(DataCenter.class), getExecutor());
 
         resource.updateModel(dataCenter);
 

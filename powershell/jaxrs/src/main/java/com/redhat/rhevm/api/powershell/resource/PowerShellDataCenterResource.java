@@ -19,6 +19,7 @@
 package com.redhat.rhevm.api.powershell.resource;
 
 import java.util.ArrayList;
+import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.UriBuilder;
@@ -36,8 +37,8 @@ public class PowerShellDataCenterResource extends AbstractActionableResource<Dat
      * private @Context UriInfo uriInfo;
      */
 
-    public PowerShellDataCenterResource(String id) {
-        super(id);
+    public PowerShellDataCenterResource(String id, Executor executor) {
+        super(id, executor);
     }
 
     public static ArrayList<DataCenter> runAndParse(String command) {

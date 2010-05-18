@@ -31,6 +31,7 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
 
+@Path("/vms")
 public interface VmsResource {
     /* REVISIT: Singleton lifecycle probably requires that UriInfo
      * must be modelled as a method parameter, as there would be

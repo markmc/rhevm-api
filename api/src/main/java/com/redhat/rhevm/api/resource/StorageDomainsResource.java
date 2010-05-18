@@ -31,6 +31,7 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.StorageDomains;
 
+@Path("/storagedomains")
 public interface StorageDomainsResource {
 
     @GET

@@ -18,6 +18,8 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.util.concurrent.Executor;
+
 import com.redhat.rhevm.api.common.resource.AbstractUpdatableResource;
 import com.redhat.rhevm.api.common.util.ReapedMap;
 import com.redhat.rhevm.api.model.BaseResource;
@@ -25,6 +27,7 @@ import com.redhat.rhevm.api.model.BaseResource;
 public abstract class AbstractPowerShellCollectionResource<R extends BaseResource,
                                                            U extends AbstractUpdatableResource<R>> {
     private ReapedMap<String, U> resources;
+    private Executor executor;
 
     public AbstractPowerShellCollectionResource() {
         resources = new ReapedMap<String, U>();
@@ -46,6 +49,14 @@ public abstract class AbstractPowerShellCollectionResource<R extends BaseResourc
         synchronized (resources) {
             resources.remove(id);
         }
+    }
+
+    public Executor getExecutor() {
+        return executor;
+    }
+
+    public void setExecutor(Executor executor) {
+        this.executor = executor;
     }
 
     protected abstract U createSubResource(String id);

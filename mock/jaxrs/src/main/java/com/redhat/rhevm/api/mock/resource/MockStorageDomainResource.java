@@ -18,6 +18,8 @@
  */
 package com.redhat.rhevm.api.mock.resource;
 
+import java.util.concurrent.Executor;
+
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -42,11 +44,12 @@ public class MockStorageDomainResource extends AbstractMockResource<StorageDomai
      * Package-protected ctor, never needs to be instantiated by JAX-RS framework.
      *
      * @param storageDomain  encapsulated StorageDomain
+     * @param executor       executor used for asynchronous actions
      */
-    MockStorageDomainResource(String id) {
-        super(id);
+    MockStorageDomainResource(String id, Executor executor) {
+        super(id, executor);
         getModel().setStatus(StorageDomainStatus.UNINITIALIZED);
-        this.attachments = new MockAttachmentsResource(id);
+        this.attachments = new MockAttachmentsResource(id, executor);
     }
 
     // FIXME: this needs to be atomic

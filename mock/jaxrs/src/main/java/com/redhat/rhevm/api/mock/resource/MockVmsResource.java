@@ -18,7 +18,9 @@
  */
 package com.redhat.rhevm.api.mock.resource;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -32,20 +34,22 @@ import com.redhat.rhevm.api.resource.VmsResource;
 import static com.redhat.rhevm.api.mock.resource.AbstractMockResource.allocateId;
 
 
-public class MockVmsResource implements VmsResource {
+public class MockVmsResource extends AbstractMockCollectionResource implements VmsResource {
     /* REVISIT: Singleton lifecycle probably requires that UriInfo
      * must be modelled as a method parameter, as there would be
      * concurrency issues around injection into a data member
      */
 
-    /* FIXME: synchronize access to this */
-    private static HashMap<String, MockVmResource> vms = new HashMap<String, MockVmResource>();
+    private static Map<String, MockVmResource> vms =
+        Collections.synchronizedMap(new HashMap<String, MockVmResource>());
 
-    static {
-        while (vms.size() < 10) {
-            MockVmResource resource = new MockVmResource(allocateId(VM.class));
-            resource.getModel().setName("vm" + resource.getModel().getId());
-            vms.put(resource.getModel().getId(), resource);
+    public void populate() {
+        synchronized (vms) {
+            while (vms.size() < 10) {
+                MockVmResource resource = new MockVmResource(allocateId(VM.class), getExecutor());
+                resource.getModel().setName("vm" + resource.getModel().getId());
+                vms.put(resource.getModel().getId(), resource);
+            }
         }
     }
 
@@ -64,7 +68,7 @@ public class MockVmsResource implements VmsResource {
 
     @Override
     public Response add(UriInfo uriInfo, VM vm) {
-        MockVmResource resource = new MockVmResource(allocateId(VM.class));
+        MockVmResource resource = new MockVmResource(allocateId(VM.class), getExecutor());
 
         resource.updateModel(vm);
 

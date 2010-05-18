@@ -18,6 +18,8 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.util.concurrent.Executor;
+
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -35,6 +37,7 @@ import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 public class PowerShellAttachmentsResource implements AttachmentsResource {
 
     private String storageDomainId;
+    private Executor executor;
 
     public PowerShellAttachmentsResource(String storageDomainId) {
         this.storageDomainId = storageDomainId;
@@ -129,7 +132,7 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
             buf.append(" -storagedomainid " + storageDomainId);
             PowerShellCmd.runCommand(buf.toString());
 
-            return new PowerShellAttachmentResource(id, storageDomainId);
+            return new PowerShellAttachmentResource(id, storageDomainId, executor);
         } catch (PowerShellException e) {
             return null;
         }
@@ -163,5 +166,9 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
         }
 
         return attachments;
+    }
+
+    public void setExecutor(Executor executor) {
+        this.executor = executor;
     }
 }

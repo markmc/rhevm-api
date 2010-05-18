@@ -18,6 +18,8 @@
  */
 package com.redhat.rhevm.api.mock.resource;
 
+import java.util.concurrent.Executor;
+
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -39,9 +41,10 @@ public class MockAttachmentResource extends AbstractMockResource<Attachment> imp
      * Package-protected ctor, never needs to be instantiated by JAX-RS framework.
      *
      * @param attachment  encapsulated Attachment
+     * @param executor    executor used for asynchronous actions
      */
-    MockAttachmentResource(Attachment attachment) {
-        super(attachment.getDataCenter().getId());
+    MockAttachmentResource(Attachment attachment, Executor executor) {
+        super(attachment.getDataCenter().getId(), executor);
         attachment.setStatus(StorageDomainStatus.INACTIVE);
         updateModel(attachment);
     }

@@ -39,10 +39,6 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
      * FIXME: would like to do: private @Context UriInfo uriInfo;
      */
 
-    public PowerShellVmResource(String id) {
-        super(id);
-    }
-
     public PowerShellVmResource(String id, Executor executor) {
         super(id, executor);
     }
