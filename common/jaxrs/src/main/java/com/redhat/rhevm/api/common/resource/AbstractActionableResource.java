@@ -105,6 +105,10 @@ public abstract class AbstractActionableResource<R extends BaseResource> extends
                 };
     }
 
+    public Executor getExecutor() {
+	return executor;
+    }
+
     private void perform(AbstractActionTask task) {
         task.action.setStatus(com.redhat.rhevm.api.model.Status.IN_PROGRESS);
         if (task.action.getGracePeriod() != null) {
