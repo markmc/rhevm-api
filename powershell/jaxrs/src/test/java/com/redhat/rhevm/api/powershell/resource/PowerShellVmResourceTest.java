@@ -65,11 +65,13 @@ public class PowerShellVmResourceTest extends Assert {
     private static final String UPDATE_COMMAND = "$v = get-vm 12345\n$v.name = \"eris\"\nupdate-vm -vmobject $v";
     private static final String UPDATE_RETURN = "vmid: 12345 \n name: eris";
 
+    private ControllableExecutor executor;
     private PowerShellVmResource resource;
 
     @Before
     public void setUp() {
-        resource = new PowerShellVmResource("12345");
+        executor = new ControllableExecutor();
+        resource = new PowerShellVmResource("12345", executor);
     }
 
     @After
@@ -272,7 +274,8 @@ public class PowerShellVmResourceTest extends Assert {
         assertEquals("expected replay link", "replay", action.getLink().get(0).getRel());
         assertNotNull(action.getLink().get(0).getHref());
         assertTrue(action.getLink().get(0).getHref().startsWith("/vms/12345/"));
-        Thread.sleep(200);
+        assertEquals("unexpected async task", async ? 1 : 0, executor.taskCount());
+        executor.runNext();
     }
 
     private void verifyUpdateException(WebApplicationException wae) {
