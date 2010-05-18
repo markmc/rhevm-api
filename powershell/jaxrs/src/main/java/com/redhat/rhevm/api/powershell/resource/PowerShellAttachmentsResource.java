@@ -42,6 +42,9 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
     public static Attachment buildAttachment(DataCenter dataCenter, StorageDomain storageDomain) {
         Attachment attachment = new Attachment();
 
+        attachment.setId(dataCenter.getId());
+        attachment.setName(dataCenter.getId());
+
         attachment.setDataCenter(new DataCenter());
         attachment.getDataCenter().setId(dataCenter.getId());
 
