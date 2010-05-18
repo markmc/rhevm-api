@@ -19,6 +19,7 @@
 package com.redhat.rhevm.api.common.resource;
 
 import java.net.URI;
+import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -33,12 +34,19 @@ public abstract class AbstractActionableResource<R extends BaseResource> extends
 
     private static final long REAP_AFTER = 2 * 60 * 60 * 1000L; // 2 hours
 
+    protected Executor executor;
     protected ReapedMap<String, ActionResource> actions;
 
     public AbstractActionableResource(String id) {
+        this(id, new SimpleExecutor());
+    }
+    
+    public AbstractActionableResource(String id, Executor executor) {
         super(id);
+        this.executor = executor;
         actions = new ReapedMap<String, ActionResource>(REAP_AFTER);
     }
+
 
     /**
      * Perform an action, managing asynchrony and returning an appropriate
@@ -56,13 +64,12 @@ public abstract class AbstractActionableResource<R extends BaseResource> extends
         if (action.isSetAsync() && action.isAsync()) {
             action.setStatus(com.redhat.rhevm.api.model.Status.PENDING);
             actions.put(action.getId(), actionResource);
-            // FIXME: use executor
-            new Thread(new Runnable() {
+            executor.execute(new Runnable() {
                 public void run() {
                     perform(task);
                     actions.reapable(actionResource.getAction().getId());
                 }
-            }).start();
+            });
             status = Status.ACCEPTED;
         } else {
             // no need for self link in action if synchronous (as no querying
@@ -123,6 +130,15 @@ public abstract class AbstractActionableResource<R extends BaseResource> extends
             super(action);
         }
         public void run(){
+        }
+    }
+    
+    /**
+     * Fallback executor, starts a new thread for each task.
+     */
+    protected static class SimpleExecutor implements Executor {
+        public void execute(Runnable task) {
+            new Thread(task).start();
         }
     }
 }

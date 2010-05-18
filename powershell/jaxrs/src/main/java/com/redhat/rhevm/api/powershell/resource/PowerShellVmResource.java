@@ -19,6 +19,7 @@
 package com.redhat.rhevm.api.powershell.resource;
 
 import java.util.ArrayList;
+import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
@@ -40,6 +41,11 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
     public PowerShellVmResource(String id) {
         super(id);
     }
+    
+    public PowerShellVmResource(String id, Executor executor) {
+        super(id, executor);
+    }
+
 
     public static ArrayList<VM> runAndParse(String command) {
         return PowerShellVM.parse(PowerShellUtils.runCommand(command));
