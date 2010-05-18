@@ -149,13 +149,7 @@
     <xs:complexContent>
       <xs:extension base="BaseResource">
         <xs:sequence>
-          <xs:element name="datacenter" type="DataCenter">
-            <xs:annotation>
-              <xs:appinfo>
-                <jaxb:property name="DataCenter"/>
-              </xs:appinfo>
-            </xs:annotation>
-          </xs:element>
+          <xs:element name="data_center" type="DataCenter"/>
           <xs:element name="storage_domain" type="StorageDomain" minOccurs="0"/>
           <xs:element name="status" type="StorageDomainStatus" minOccurs="0"/>
           <xs:element name="master" type="xs:boolean" minOccurs="0"/>
@@ -177,9 +171,9 @@
 
   <!-- Data Centers -->
 
-  <xs:element name="datacenter" type="DataCenter"/>
+  <xs:element name="data_center" type="DataCenter"/>
 
-  <xs:element name="datacenters" type="DataCenters"/>
+  <xs:element name="data_centers" type="DataCenters"/>
 
   <xs:complexType name="DataCenter">
     <xs:complexContent>
@@ -199,7 +193,7 @@
             <jaxb:property name="DataCenters"/>
         </xs:appinfo>
       </xs:annotation>
-      <xs:element ref="datacenter" maxOccurs="unbounded"/>
+      <xs:element ref="data_center" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:complexType>
 

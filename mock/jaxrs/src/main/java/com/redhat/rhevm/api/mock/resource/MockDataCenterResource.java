@@ -51,7 +51,7 @@ public class MockDataCenterResource extends AbstractMockResource<DataCenter> imp
     }
 
     public DataCenter addLinks(UriInfo uriInfo, UriBuilder uriBuilder) {
-        DataCenter dataCenter = JAXBHelper.clone(OBJECT_FACTORY.createDatacenter(getModel()));
+        DataCenter dataCenter = JAXBHelper.clone(OBJECT_FACTORY.createDataCenter(getModel()));
 
         dataCenter.setHref(uriBuilder.build().toString());
 
