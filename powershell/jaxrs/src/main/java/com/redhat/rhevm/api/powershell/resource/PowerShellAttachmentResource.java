@@ -18,6 +18,8 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.util.concurrent.Executor;
+
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -43,6 +45,11 @@ public class PowerShellAttachmentResource extends AbstractActionableResource<Sto
      *
      * @param attachment  encapsulated Attachment
      */
+    PowerShellAttachmentResource(String dataCenterId, String storageDomainId, Executor executor) {
+        super(dataCenterId, executor);
+        this.storageDomainId = storageDomainId;
+    }
+
     PowerShellAttachmentResource(String dataCenterId, String storageDomainId) {
         super(dataCenterId);
         this.storageDomainId = storageDomainId;
