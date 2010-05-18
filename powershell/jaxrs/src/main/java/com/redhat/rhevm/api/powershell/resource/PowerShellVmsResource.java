@@ -27,8 +27,8 @@ import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.resource.VmsResource;
+import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 
-import static com.redhat.rhevm.api.powershell.util.PowerShellUtils.runCommand;
 
 public class PowerShellVmsResource implements VmsResource {
     /* FIXME: would like to do:
@@ -91,7 +91,7 @@ public class PowerShellVmsResource implements VmsResource {
 
     @Override
     public void remove(String id) {
-        runCommand("remove-vm -vmid " + id);
+        PowerShellCmd.runCommand("remove-vm -vmid " + id);
         removeSubResource(id);
     }
 

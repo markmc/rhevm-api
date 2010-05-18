@@ -28,7 +28,7 @@ import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.resource.HostResource;
 import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellHost;
-import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 
 public class PowerShellHostResource extends AbstractActionableResource<Host> implements HostResource {
     /* FIXME: would like to do:
@@ -43,7 +43,7 @@ public class PowerShellHostResource extends AbstractActionableResource<Host> imp
     private static final String CMD_PREFIX = "rhevmpssnapin\\";
 
     public static ArrayList<Host> runAndParse(String command) {
-        return PowerShellHost.parse(PowerShellUtils.runCommand(command));
+        return PowerShellHost.parse(PowerShellCmd.runCommand(command));
     }
 
     public static Host runAndParseSingle(String command) {
@@ -82,7 +82,7 @@ public class PowerShellHostResource extends AbstractActionableResource<Host> imp
 
     @Override
     public void approve() {
-        PowerShellUtils.runCommand("approve-host -hostid " + getId());
+        PowerShellCmd.runCommand("approve-host -hostid " + getId());
     }
 
     @Override

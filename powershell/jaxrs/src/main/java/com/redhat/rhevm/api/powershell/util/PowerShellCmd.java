@@ -25,7 +25,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 public class PowerShellCmd {
-    private final Log log = LogFactory.getLog(this.getClass());
+    private static final Log log = LogFactory.getLog(PowerShellCmd.class);
 
     private String script;
 
@@ -125,5 +125,21 @@ public class PowerShellCmd {
                 }
             }
         }
+    }
+
+    public static String runCommand(String command) {
+        PowerShellCmd cmd = new PowerShellCmd(command);
+
+        int exitstatus = cmd.run();
+
+        if (!cmd.getStdErr().isEmpty()) {
+            log.warn(cmd.getStdErr());
+        }
+
+        if (exitstatus != 0) {
+            throw new PowerShellException("Command '" + command + "' exited with status=" + exitstatus);
+        }
+
+        return cmd.getStdOut();
     }
 }

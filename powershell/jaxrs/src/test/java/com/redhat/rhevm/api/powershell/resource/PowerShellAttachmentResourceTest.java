@@ -28,7 +28,7 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.Attachment;
 import com.redhat.rhevm.api.model.StorageDomainStatus;
 
-import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -48,7 +48,7 @@ import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest( { PowerShellUtils.class })
+@PrepareForTest( { PowerShellCmd.class })
 public class PowerShellAttachmentResourceTest extends Assert {
 
     private static final String URI_ROOT = "http://localhost:8099";
@@ -68,19 +68,6 @@ public class PowerShellAttachmentResourceTest extends Assert {
         "type: nfs\n" +
         "nfspath: foo.bar:/blaa/and/butter\n";
 
-    private ArrayList<HashMap<String,String>> getReturnProps() {
-        ArrayList<HashMap<String,String>> parsedProps = new ArrayList<HashMap<String,String>>();
-        HashMap<String,String> props = new HashMap<String,String>();
-        props.put("storagedomainid", STORAGE_DOMAIN_ID);
-        props.put("status", "active");
-        props.put("sharedstatus", "active");
-        props.put("domaintype", "data (master)");
-        props.put("type", "nfs");
-        props.put("nfspath", "foo.bar:/blaa/and/butter");
-        parsedProps.add(props);
-        return parsedProps;
-    }
-
     private PowerShellAttachmentResource resource;
 
     @Before
@@ -99,9 +86,8 @@ public class PowerShellAttachmentResourceTest extends Assert {
     }
 
     private UriInfo setUpAttachmentExpectations() throws Exception {
-        mockStatic(PowerShellUtils.class);
-        expect(PowerShellUtils.runCommand(GET_COMMAND)).andReturn(GET_RETURN);
-        expect(PowerShellUtils.parseProps(GET_RETURN)).andReturn(getReturnProps());
+        mockStatic(PowerShellCmd.class);
+        expect(PowerShellCmd.runCommand(GET_COMMAND)).andReturn(GET_RETURN);
         UriInfo uriInfo = createMock(UriInfo.class);
         UriBuilder uriBuilder = createMock(UriBuilder.class);
         expect(uriInfo.getRequestUriBuilder()).andReturn(uriBuilder).anyTimes();

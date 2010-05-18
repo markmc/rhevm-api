@@ -31,7 +31,8 @@ import com.redhat.rhevm.api.model.Attachment;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.resource.AttachmentResource;
-import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+
 
 public class PowerShellAttachmentResource extends AbstractActionableResource<StorageDomain> implements AttachmentResource {
 
@@ -119,7 +120,7 @@ public class PowerShellAttachmentResource extends AbstractActionableResource<Sto
             buf.append(" -datacenterid " + getId());
             buf.append(" -storagedomainid " + storageDomainId);
 
-            PowerShellUtils.runCommand(buf.toString());
+            PowerShellCmd.runCommand(buf.toString());
         }
     }
 }

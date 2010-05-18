@@ -31,7 +31,8 @@ import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
-import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+
 
 public class PowerShellVmResource extends AbstractActionableResource<VM> implements VmResource {
     /*
@@ -41,14 +42,14 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
     public PowerShellVmResource(String id) {
         super(id);
     }
-    
+
     public PowerShellVmResource(String id, Executor executor) {
         super(id, executor);
     }
 
 
     public static ArrayList<VM> runAndParse(String command) {
-        return PowerShellVM.parse(PowerShellUtils.runCommand(command));
+        return PowerShellVM.parse(PowerShellCmd.runCommand(command));
     }
 
     public static VM runAndParseSingle(String command) {
@@ -142,7 +143,7 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
             this.command = command;
         }
         public void run() {
-            PowerShellUtils.runCommand(command + " -vmid " + getId());
+            PowerShellCmd.runCommand(command + " -vmid " + getId());
         }
     }
 

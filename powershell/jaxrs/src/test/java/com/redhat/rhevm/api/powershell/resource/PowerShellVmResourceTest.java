@@ -35,7 +35,7 @@ import com.redhat.rhevm.api.model.Fault;
 import com.redhat.rhevm.api.model.Status;
 import com.redhat.rhevm.api.model.VM;
 
-import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -56,7 +56,7 @@ import static org.powermock.api.easymock.PowerMock.verifyAll;
 
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest( { PowerShellUtils.class })
+@PrepareForTest( { PowerShellCmd.class })
 public class PowerShellVmResourceTest extends Assert {
 
     private static final String URI_ROOT = "http://localhost:8099";
@@ -179,9 +179,8 @@ public class PowerShellVmResourceTest extends Assert {
     }
 
     private UriInfo setUpVmExpectations(String command, String ret, String name) throws Exception {
-        mockStatic(PowerShellUtils.class);
-        expect(PowerShellUtils.runCommand(command)).andReturn(ret);
-        expect(PowerShellUtils.parseProps(ret)).andReturn(getProps(name));
+        mockStatic(PowerShellCmd.class);
+        expect(PowerShellCmd.runCommand(command)).andReturn(ret);
         UriInfo uriInfo = createMock(UriInfo.class);
         UriBuilder uriBuilder = createMock(UriBuilder.class);
         expect(uriInfo.getRequestUriBuilder()).andReturn(uriBuilder).anyTimes();
@@ -192,8 +191,8 @@ public class PowerShellVmResourceTest extends Assert {
     }
 
     private UriInfo setUpActionExpectation(String verb, String command) throws Exception {
-        mockStatic(PowerShellUtils.class);
-        expect(PowerShellUtils.runCommand(command + " -vmid 12345")).andReturn(ACTION_RETURN);
+        mockStatic(PowerShellCmd.class);
+        expect(PowerShellCmd.runCommand(command + " -vmid 12345")).andReturn(ACTION_RETURN);
 
         URI replayUri = new URI("/vms/12345/" + verb);
         URI actionUri = new URI("/vms/12345/" + verb + "/56789");
@@ -208,15 +207,6 @@ public class PowerShellVmResourceTest extends Assert {
         replayAll();
 
         return uriInfo;
-    }
-
-    private ArrayList<HashMap<String,String>> getProps(String name) {
-        ArrayList<HashMap<String,String>> parsedProps = new ArrayList<HashMap<String,String>>();
-        HashMap<String,String> vmProps = new HashMap<String,String>();
-        vmProps.put("vmid", "12345");
-        vmProps.put("name", name);
-        parsedProps.add(vmProps);
-        return parsedProps;
     }
 
     private HttpHeaders setUpHeadersExpectation() {

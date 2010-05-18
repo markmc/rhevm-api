@@ -54,20 +54,4 @@ public class PowerShellUtils {
 
         return ret;
     }
-
-    public static String runCommand(String command) {
-        PowerShellCmd cmd = new PowerShellCmd(command);
-
-        int exitstatus = cmd.run();
-
-        if (!cmd.getStdErr().isEmpty()) {
-            log.warn(cmd.getStdErr());
-        }
-
-        if (exitstatus != 0) {
-            throw new PowerShellException("Command '" + command + "' exited with status=" + exitstatus);
-        }
-
-        return cmd.getStdOut();
-    }
 }

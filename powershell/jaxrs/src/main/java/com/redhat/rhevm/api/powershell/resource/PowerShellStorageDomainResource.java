@@ -37,7 +37,7 @@ import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.resource.AttachmentsResource;
 import com.redhat.rhevm.api.resource.StorageDomainResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellStorageDomain;
-import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 
 public class PowerShellStorageDomainResource extends AbstractActionableResource<StorageDomain> implements StorageDomainResource {
 
@@ -78,7 +78,7 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
      */
     public static ArrayList<StorageDomain> runAndParse(String command, boolean sharedStatus) {
         ArrayList<PowerShellStorageDomain> storageDomains =
-            PowerShellStorageDomain.parse(PowerShellUtils.runCommand(command));
+            PowerShellStorageDomain.parse(PowerShellCmd.runCommand(command));
         ArrayList<StorageDomain> ret = new ArrayList<StorageDomain>();
 
         for (PowerShellStorageDomain storageDomain : storageDomains) {
@@ -282,7 +282,7 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
 
             buf.append(" -hostid " + action.getHost().getId());
 
-            PowerShellUtils.runCommand(buf.toString());
+            PowerShellCmd.runCommand(buf.toString());
 
             staged = parent.mapFromRhevmId(storageDomain);
             parent.stageDomain(id, PowerShellStorageDomainResource.this);

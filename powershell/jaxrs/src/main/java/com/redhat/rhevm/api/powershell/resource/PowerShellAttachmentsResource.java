@@ -29,7 +29,8 @@ import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.resource.AttachmentResource;
 import com.redhat.rhevm.api.resource.AttachmentsResource;
 import com.redhat.rhevm.api.powershell.util.PowerShellException;
-import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+
 
 public class PowerShellAttachmentsResource implements AttachmentsResource {
 
@@ -115,7 +116,7 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
         buf.append(" -datacenterid " + id);
         buf.append(" -storagedomainid " + storageDomainId);
 
-        PowerShellUtils.runCommand(buf.toString());
+        PowerShellCmd.runCommand(buf.toString());
     }
 
     @Override
@@ -126,7 +127,7 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
             buf.append("get-storagedomain");
             buf.append(" -datacenterid " + id);
             buf.append(" -storagedomainid " + storageDomainId);
-            PowerShellUtils.runCommand(buf.toString());
+            PowerShellCmd.runCommand(buf.toString());
 
             return new PowerShellAttachmentResource(id, storageDomainId);
         } catch (PowerShellException e) {

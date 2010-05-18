@@ -26,7 +26,7 @@ import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.DataCenters;
 import com.redhat.rhevm.api.resource.DataCenterResource;
 import com.redhat.rhevm.api.resource.DataCentersResource;
-import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 
 public class PowerShellDataCentersResource
     extends AbstractPowerShellCollectionResource<DataCenter, PowerShellDataCenterResource>
@@ -76,7 +76,7 @@ public class PowerShellDataCentersResource
 
     @Override
     public void remove(String id) {
-        PowerShellUtils.runCommand("remove-datacenter -datacenterid " + id);
+        PowerShellCmd.runCommand("remove-datacenter -datacenterid " + id);
         removeSubResource(id);
     }
 

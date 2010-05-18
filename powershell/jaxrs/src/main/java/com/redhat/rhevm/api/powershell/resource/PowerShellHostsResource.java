@@ -26,7 +26,7 @@ import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.Hosts;
 import com.redhat.rhevm.api.resource.HostResource;
 import com.redhat.rhevm.api.resource.HostsResource;
-import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 
 public class PowerShellHostsResource
     extends AbstractPowerShellCollectionResource<Host, PowerShellHostResource>
@@ -82,7 +82,7 @@ public class PowerShellHostsResource
 
     @Override
     public void remove(String id) {
-        PowerShellUtils.runCommand("remove-host -hostid " + id);
+        PowerShellCmd.runCommand("remove-host -hostid " + id);
         removeSubResource(id);
     }
 

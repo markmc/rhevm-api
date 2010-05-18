@@ -29,7 +29,7 @@ import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.resource.DataCenterResource;
 import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellDataCenter;
-import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 
 public class PowerShellDataCenterResource extends AbstractActionableResource<DataCenter> implements DataCenterResource {
     /* FIXME: would like to do:
@@ -41,7 +41,7 @@ public class PowerShellDataCenterResource extends AbstractActionableResource<Dat
     }
 
     public static ArrayList<DataCenter> runAndParse(String command) {
-        return PowerShellDataCenter.parse(PowerShellUtils.runCommand(command));
+        return PowerShellDataCenter.parse(PowerShellCmd.runCommand(command));
     }
 
     public static DataCenter runAndParseSingle(String command) {
