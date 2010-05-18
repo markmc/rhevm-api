@@ -20,7 +20,6 @@ package com.redhat.rhevm.api.common.resource;
 
 import com.redhat.rhevm.api.model.ActionValidator;
 import com.redhat.rhevm.api.model.StorageDomain;
-import com.redhat.rhevm.api.model.StorageDomainStatus;
 
 public class StorageDomainActionValidator implements ActionValidator {
     private StorageDomain storageDomain;

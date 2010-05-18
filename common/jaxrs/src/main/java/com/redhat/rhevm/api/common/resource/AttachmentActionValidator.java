@@ -20,7 +20,6 @@ package com.redhat.rhevm.api.common.resource;
 
 import com.redhat.rhevm.api.model.ActionValidator;
 import com.redhat.rhevm.api.model.Attachment;
-import com.redhat.rhevm.api.model.StorageDomainStatus;
 
 public class AttachmentActionValidator implements ActionValidator {
     private Attachment attachment;

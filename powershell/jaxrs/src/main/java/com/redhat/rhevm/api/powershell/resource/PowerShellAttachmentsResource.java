@@ -26,7 +26,6 @@ import com.redhat.rhevm.api.model.Attachment;
 import com.redhat.rhevm.api.model.Attachments;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.StorageDomain;
-import com.redhat.rhevm.api.model.StorageDomainStatus;
 import com.redhat.rhevm.api.resource.AttachmentResource;
 import com.redhat.rhevm.api.resource.AttachmentsResource;
 import com.redhat.rhevm.api.powershell.util.PowerShellException;
