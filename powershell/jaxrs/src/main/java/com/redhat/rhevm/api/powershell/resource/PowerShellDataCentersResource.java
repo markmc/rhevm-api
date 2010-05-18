@@ -41,7 +41,7 @@ public class PowerShellDataCentersResource
         DataCenters ret = new DataCenters();
         for (DataCenter dataCenter : PowerShellDataCenterResource.runAndParse("select-datacenter")) {
             UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(dataCenter.getId());
-            ret.getDataCenters().add(PowerShellDataCenterResource.addLinks(dataCenter, uriBuilder));
+            ret.getDataCenters().add(PowerShellDataCenterResource.addLinks(dataCenter, uriInfo, uriBuilder));
         }
         return ret;
     }
@@ -69,7 +69,7 @@ public class PowerShellDataCentersResource
 
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(dataCenter.getId());
 
-        dataCenter = PowerShellDataCenterResource.addLinks(dataCenter, uriBuilder);
+        dataCenter = PowerShellDataCenterResource.addLinks(dataCenter, uriInfo, uriBuilder);
 
         return Response.created(uriBuilder.build()).entity(dataCenter).build();
     }

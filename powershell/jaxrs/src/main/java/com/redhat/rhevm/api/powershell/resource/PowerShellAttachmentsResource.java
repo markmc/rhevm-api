@@ -115,53 +115,49 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
         PowerShellUtils.runCommand(buf.toString());
     }
 
-    /**
-     * Query whether this storage domain is attach to the specified
-     * data center
-     *
-     * @param dataCenterId the data center to check
-     * @return #true if attached to the data center, #false otherwise
-     */
-    private boolean isAttached(String dataCenterId) {
+    @Override
+    public AttachmentResource getAttachmentSubResource(UriInfo uriInfo, String id) {
         try {
             StringBuilder buf = new StringBuilder();
 
             buf.append("get-storagedomain");
-            buf.append(" -datacenterid " + dataCenterId);
+            buf.append(" -datacenterid " + id);
             buf.append(" -storagedomainid " + storageDomainId);
             PowerShellUtils.runCommand(buf.toString());
 
-            return true;
+            return new PowerShellAttachmentResource(id, storageDomainId);
         } catch (PowerShellException e) {
-            return false;
+            return null;
         }
-    }
-
-    @Override
-    public AttachmentResource getAttachmentSubResource(UriInfo uriInfo, String id) {
-        return isAttached(id) ?
-            new PowerShellAttachmentResource(id, storageDomainId) :
-            null;
     }
 
     /**
-     * Build a URI for any existing attachment to the given data center,
-     * assuming the storage domain is actually attached to that data
-     * center.
+     * Build a list of storage domains attached to a data center
      *
-     * @param uriInfo  URI context of the current request
+     * @param uriInfo  the URI context of the current request
      * @param dataCenterId  the ID of the data center
-     * @return  a URI representing the attachment, or null.
+     * @return  an encapsulation of the attachments
      */
-    public String getAttachmentHref(UriInfo uriInfo, String dataCenterId) {
-        if (!isAttached(dataCenterId)) {
-            return null;
+    public static Attachments getAttachmentsForDataCenter(UriInfo uriInfo, String dataCenterId) {
+        Attachments attachments = new Attachments();
+
+        StringBuilder buf = new StringBuilder();
+
+        buf.append("get-storagedomain");
+        buf.append(" -datacenterid " + dataCenterId);
+
+        for (StorageDomain storageDomain : PowerShellStorageDomainResource.runAndParse(buf.toString())) {
+            UriBuilder uriBuilder =
+                uriInfo.getBaseUriBuilder().path("storagedomains").path(storageDomain.getId())
+                                           .path("attachments").path(dataCenterId);
+
+            Attachment attachment = new Attachment();
+            attachment.setHref(uriBuilder.build().toString());
+
+            attachments.getAttachments().add(attachment);
+
         }
 
-        UriBuilder uriBuilder =
-            uriInfo.getBaseUriBuilder().path("storagedomains").path(storageDomainId)
-                                       .path("attachments").path(dataCenterId);
-
-        return uriBuilder.build().toString();
+        return attachments;
     }
 }

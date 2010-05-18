@@ -24,6 +24,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.model.Attachments;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.resource.DataCenterResource;
 import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
@@ -49,14 +50,18 @@ public class PowerShellDataCenterResource extends AbstractActionableResource<Dat
         return !dataCenters.isEmpty() ? dataCenters.get(0) : null;
     }
 
-    public static DataCenter addLinks(DataCenter dataCenter, UriBuilder uriBuilder) {
+    public static DataCenter addLinks(DataCenter dataCenter, UriInfo uriInfo, UriBuilder uriBuilder) {
         dataCenter.setHref(uriBuilder.build().toString());
+
+        Attachments attachments = PowerShellAttachmentsResource.getAttachmentsForDataCenter(uriInfo, dataCenter.getId());
+        dataCenter.setAttachments(attachments);
+
         return dataCenter;
     }
 
     @Override
     public DataCenter get(UriInfo uriInfo) {
-        return addLinks(runAndParseSingle("get-datacenter " + getId()), uriInfo.getRequestUriBuilder());
+        return addLinks(runAndParseSingle("get-datacenter " + getId()), uriInfo, uriInfo.getRequestUriBuilder());
     }
 
     @Override
@@ -74,6 +79,6 @@ public class PowerShellDataCenterResource extends AbstractActionableResource<Dat
         buf.append("\n");
         buf.append("update-datacenter -datacenterobject $v");
 
-        return addLinks(runAndParseSingle(buf.toString()), uriInfo.getRequestUriBuilder());
+        return addLinks(runAndParseSingle(buf.toString()), uriInfo, uriInfo.getRequestUriBuilder());
     }
 }
