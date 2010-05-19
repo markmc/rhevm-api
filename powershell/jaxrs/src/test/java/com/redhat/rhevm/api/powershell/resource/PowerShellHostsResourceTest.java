@@ -18,7 +18,7 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.model.Host;
 
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
@@ -33,28 +33,26 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest( { PowerShellUtils.class, PowerShellCmd.class })
-public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResourceTest<VM, PowerShellVmResource, PowerShellVmsResource> {
+public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionResourceTest<Host, PowerShellHostResource, PowerShellHostsResource> {
 
-    private static final String ADD_COMMAND_PROLOG =
-	"$templ = get-template -templateid template_1\n";
     private static final String ADD_COMMAND_EPILOG =
-	"-templateobject $templ -hostclusterid hostcluster_1";
+	"-hostname 127.0.0.1 -rootpassword celestial";
 
-    public PowerShellVmsResourceTest() {
-	super(new PowerShellVmResource("0", null), "vms", "vm");
+    public PowerShellHostsResourceTest() {
+	super(new PowerShellHostResource("0", null), "hosts", "host");
     }
 
     @Test
     public void testList() throws Exception {
         verifyCollection(
-            resource.list(setUpResourceExpectations(getSelectCommand(), getSelectReturn(), NAMES)).getVMs(),
+            resource.list(setUpResourceExpectations(getSelectCommand(), getSelectReturn(), NAMES)).getHosts(),
             NAMES);
     }
 
     @Test
     public void testAdd() throws Exception {
         verifyResponse(
-            resource.add(setUpResourceExpectations(ADD_COMMAND_PROLOG + getAddCommand() + ADD_COMMAND_EPILOG,
+            resource.add(setUpResourceExpectations(getAddCommand() + ADD_COMMAND_EPILOG,
         	                                   getAddReturn(),
         	                                   NEW_NAME),
         	         getModel(NEW_NAME)),
@@ -70,16 +68,16 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     @Test
     public void testGetSubResource() throws Exception {
         verifyResource(
-            (PowerShellVmResource)resource.getVmSubResource(setUpResourceExpectations(null, null), Integer.toString(NEW_NAME.hashCode())),
+            (PowerShellHostResource)resource.getHostSubResource(setUpResourceExpectations(null, null), Integer.toString(NEW_NAME.hashCode())),
             NEW_NAME);
     }
 
-    protected PowerShellVmsResource getResource() {
-	return new PowerShellVmsResource();
+    protected PowerShellHostsResource getResource() {
+	return new PowerShellHostsResource();
     }
 
-    protected void setExtraProperties(VM vm) {
-        vm.setTemplateId("template_1");
-        vm.setClusterId("hostcluster_1");
+    protected void setExtraProperties(Host host) {
+        host.setAddress("127.0.0.1");
+        host.setRootPassword("celestial");
     }
 }
