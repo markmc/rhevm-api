@@ -20,8 +20,6 @@ package com.redhat.rhevm.api.powershell.resource;
 
 import com.redhat.rhevm.api.model.Host;
 
-import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
-
 import org.junit.Test;
 
 public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionResourceTest<Host, PowerShellHostResource, PowerShellHostsResource> {

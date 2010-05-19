@@ -20,8 +20,6 @@ package com.redhat.rhevm.api.powershell.resource;
 
 import com.redhat.rhevm.api.model.VM;
 
-import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
-
 import org.junit.Test;
 
 public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResourceTest<VM, PowerShellVmResource, PowerShellVmsResource> {
