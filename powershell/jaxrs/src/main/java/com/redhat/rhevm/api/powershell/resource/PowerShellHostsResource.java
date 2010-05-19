@@ -77,7 +77,7 @@ public class PowerShellHostsResource
 
         host = PowerShellHostResource.addLinks(host, uriBuilder);
 
-        return Response.created(uriBuilder.build()).entity(uriBuilder).build();
+        return Response.created(uriBuilder.build()).entity(host).build();
     }
 
     @Override
