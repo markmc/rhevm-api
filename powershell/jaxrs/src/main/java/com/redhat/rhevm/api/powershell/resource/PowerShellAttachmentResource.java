@@ -36,7 +36,7 @@ import com.redhat.rhevm.api.resource.AttachmentResource;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 
 
-public class PowerShellAttachmentResource extends AbstractActionableResource<StorageDomain> implements AttachmentResource {
+public class PowerShellAttachmentResource extends AbstractActionableResource<Attachment> implements AttachmentResource {
 
     private String storageDomainId;
 
