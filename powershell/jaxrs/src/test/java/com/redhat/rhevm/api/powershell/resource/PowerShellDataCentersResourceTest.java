@@ -57,7 +57,7 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
 
     @Test
     public void testAdd() throws Exception {
-    String [] commands = { getAddCommand() + ADD_COMMAND_EPILOG,
+        String [] commands = { getAddCommand() + ADD_COMMAND_EPILOG,
                            GET_STORAGE_COMMAND + NEW_NAME.hashCode()};
         String [] returns =  { getAddReturn(ADD_RETURN_EPILOG),
                            MessageFormat.format(GET_STORAGE_RETURN, "rhea".hashCode(), "rhea") };
@@ -68,7 +68,7 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
 
     @Test
     public void testRemove() throws Exception {
-    setUpResourceExpectations(getRemoveCommand(), null);
+        setUpResourceExpectations(getRemoveCommand(), null);
         resource.remove(Integer.toString(NAMES[1].hashCode()));
     }
 
