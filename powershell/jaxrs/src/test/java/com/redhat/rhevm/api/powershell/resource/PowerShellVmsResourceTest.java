@@ -21,10 +21,8 @@ package com.redhat.rhevm.api.powershell.resource;
 import com.redhat.rhevm.api.model.VM;
 
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
-import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 import org.junit.Test;
-
 
 public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResourceTest<VM, PowerShellVmResource, PowerShellVmsResource> {
 
@@ -63,7 +61,8 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     @Test
     public void testGetSubResource() throws Exception {
         verifyResource(
-            (PowerShellVmResource)resource.getVmSubResource(setUpResourceExpectations(null, null), Integer.toString(NEW_NAME.hashCode())),
+            (PowerShellVmResource)resource.getVmSubResource(setUpResourceExpectations(NOTHING, NOTHING, 0),
+        	                                            Integer.toString(NEW_NAME.hashCode())),
             NEW_NAME);
     }
 
@@ -71,7 +70,7 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
 	return new PowerShellVmsResource();
     }
 
-    protected void setExtraProperties(VM vm) {
+    protected void populateModel(VM vm) {
         vm.setTemplateId("template_1");
         vm.setClusterId("hostcluster_1");
     }

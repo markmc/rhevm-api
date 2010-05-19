@@ -20,8 +20,6 @@ package com.redhat.rhevm.api.powershell.resource;
 
 import java.net.URI;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Executor;
 
@@ -35,7 +33,6 @@ import com.redhat.rhevm.api.common.resource.AbstractUpdatableResource;
 import com.redhat.rhevm.api.common.util.ReflectionHelper;
 
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
-import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -43,6 +40,7 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 
 import static org.easymock.classextension.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.isA;
 
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -66,15 +64,17 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
     protected static final String NEW_NAME = "ceres";
     private static final String SELECT_COMMAND = "select-{0}";
     private static final String SELECT_RETURN =
-	"{0}id: " + "sedna".hashCode() + " \n name: sedna\n\n" +
-	"{0}id: " + "eris".hashCode() + " \n name: eris\n\n" +
-	"{0}id: " + "orcus".hashCode() + " \n name: orcus";
+	"{0}id: " + "sedna".hashCode() + " \n name: sedna {1}\n\n" +
+	"{0}id: " + "eris".hashCode() + " \n name: eris {1}\n\n" +
+	"{0}id: " + "orcus".hashCode() + " \n name: orcus {1}";
 
     private static final String ADD_COMMAND = "add-{0} -name ceres ";
     private static final String ADD_RETURN =
-	"{0}id: " + "ceres".hashCode() + " \n name: ceres\n\n";
+	"{0}id: " + "ceres".hashCode() + " \n name: ceres {1}\n\n";
 
     private static final String REMOVE_COMMAND = "remove-{0} -{0}id " + "eris".hashCode();
+
+    protected static final String[] NOTHING = null;
 
     protected T resource;
     protected U updatable;
@@ -101,9 +101,15 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
     }
 
     protected UriInfo setUpResourceExpectations(String command, String ret, String ... names) throws Exception {
-        if (command != null) {
+	return setUpResourceExpectations(asArray(command), asArray(ret), 0, names);
+    }
+
+    protected UriInfo setUpResourceExpectations(String[] commands, String[] rets, int baseUris, String ... names) throws Exception {
+        if (commands != null) {
             mockStatic(PowerShellCmd.class);
-            expect(PowerShellCmd.runCommand(command)).andReturn(ret);
+            for (int i = 0 ; i < Math.min(commands.length, rets.length) ; i++) {
+                expect(PowerShellCmd.runCommand(commands[i])).andReturn(rets[i]);
+            }
         }
         UriInfo uriInfo = createMock(UriInfo.class);
         for (String name : names) {
@@ -111,6 +117,12 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
             expect(uriInfo.getRequestUriBuilder()).andReturn(uriBuilder);
             expect(uriBuilder.path(Integer.toString(name.hashCode()))).andReturn(uriBuilder);
             expect(uriBuilder.build()).andReturn(new URI(URI_ROOT + collectionName + name.hashCode())).anyTimes();
+        }
+        for (int i = 0 ; i < baseUris ; i++) {
+            UriBuilder uriBuilder = createMock(UriBuilder.class);
+            expect(uriInfo.getBaseUriBuilder()).andReturn(uriBuilder);
+            expect(uriBuilder.path(isA(String.class))).andReturn(uriBuilder).anyTimes();
+            expect(uriBuilder.build()).andReturn(new URI(URI_ROOT + "/foo")).anyTimes();
         }
         replayAll();
 
@@ -122,7 +134,11 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
     }
 
     protected String getSelectReturn() {
-	return MessageFormat.format(SELECT_RETURN, individualName);
+	return getSelectReturn("");
+    }
+
+    protected String getSelectReturn(String epilog) {
+	return MessageFormat.format(SELECT_RETURN, individualName, epilog);
     }
 
     protected String getAddCommand() {
@@ -130,7 +146,11 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
     }
 
     protected String getAddReturn() {
-	return MessageFormat.format(ADD_RETURN, individualName);
+	return getAddReturn("");
+    }
+
+    protected String getAddReturn(String epilog) {
+	return MessageFormat.format(ADD_RETURN, individualName, epilog);
     }
 
     protected String getRemoveCommand() {
@@ -141,7 +161,7 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
         R model = ReflectionHelper.newModel(updatable);
         model.setId(Integer.toString(name.hashCode()));
         model.setName(name);
-        setExtraProperties(model);
+        populateModel(model);
         return model;
     }
 
@@ -162,7 +182,7 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
 
     protected void verifyCollection(List<R> collection, String ... names) {
         assertNotNull(collection);
-        assertEquals("unexpected number of VMs", collection.size(), names.length);
+        assertEquals("unexpected collection size", collection.size(), names.length);
         for (String name: names) {
             R model = collection.remove(0);
             assertEquals(model.getId(), Integer.toString(name.hashCode()));
@@ -176,8 +196,12 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
 	assertSame(resource.getExecutor(), executor);
     }
 
+    protected static String[] asArray(String s) {
+	return new String[] { s };
+    }
+
     protected abstract T getResource();
 
-    protected abstract void setExtraProperties(R model);
+    protected abstract void populateModel(R model);
 }
 

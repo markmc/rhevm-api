@@ -24,7 +24,6 @@ import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 
 import org.junit.Test;
 
-
 public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionResourceTest<Host, PowerShellHostResource, PowerShellHostsResource> {
 
     private static final String ADD_COMMAND_EPILOG =
@@ -60,7 +59,8 @@ public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionRes
     @Test
     public void testGetSubResource() throws Exception {
         verifyResource(
-            (PowerShellHostResource)resource.getHostSubResource(setUpResourceExpectations(null, null), Integer.toString(NEW_NAME.hashCode())),
+            (PowerShellHostResource)resource.getHostSubResource(setUpResourceExpectations(NOTHING, NOTHING, 0),
+        	                                                Integer.toString(NEW_NAME.hashCode())),
             NEW_NAME);
     }
 
@@ -68,7 +68,7 @@ public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionRes
 	return new PowerShellHostsResource();
     }
 
-    protected void setExtraProperties(Host host) {
+    protected void populateModel(Host host) {
         host.setAddress("127.0.0.1");
         host.setRootPassword("celestial");
     }
