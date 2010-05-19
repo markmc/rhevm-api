@@ -25,6 +25,76 @@ import sys
 import getopt
 import time
 
+def makeAction(async, expiry):
+    action = fmt.Action()
+    action.async = async
+    grace = fmt.GracePeriod()
+    grace.expiry = expiry
+    grace.absolute = 'false'
+    action.grace = grace.dump()
+    return action
+
+def expectedStatusCode(code, expected):
+    assert code == expected, "Expected %(e)d status, got %(c)d" % {'e': expected, 'c': code}
+
+def unexpectedActionStatus(status, unexpected):
+    assert status != unexpected, "Unexpected %s action status" % unexpected
+
+def expectedActionStatus(status, expected):
+    assert status == expected, "Expected %(e)s, got %(s)s" % {'e': expected, 's': status}
+
+def testGet(href):
+    ret = http.GET(opts, href, fmt.MEDIA_TYPE)
+    expectedStatusCode(ret['status'], 200)
+    return ret['body']
+
+def testCreate(entity, name, links, parse):
+    entity.name = name
+    ret = http.POST(opts, links, entity.dump(), fmt.MEDIA_TYPE)
+    parsed = parse(ret['body'])
+    expectedStatusCode(ret['status'], 201)
+    return parsed
+
+def testAsyncAction(href, verb):
+    ret = http.POST(opts, href + "/" + verb, makeAction('true', '5000').dump(), fmt.MEDIA_TYPE)
+    print ret['body']
+    expectedStatusCode(ret['status'], 202)
+    resp_action = fmt.parseAction(ret['body'])
+    unexpectedActionStatus(resp_action.status, "COMPLETE")
+    for i in range(1, 3):
+        time.sleep(1)
+        resp = http.GET(opts, resp_action.href, fmt.MEDIA_TYPE)
+        print resp['body']
+        expectedStatusCode(resp['status'], 200)
+        resp_action = fmt.parseAction(resp['body'])
+        unexpectedActionStatus(resp_action.status, "COMPLETE")
+
+    time.sleep(4)
+    resp = http.GET(opts, resp_action.href, fmt.MEDIA_TYPE)
+    print resp['body']
+    expectedStatusCode(resp['status'], 200)
+    resp_action = fmt.parseAction(resp['body'])
+    expectedActionStatus(resp_action.status, "COMPLETE")
+
+def testSyncAction(href, verb):
+    ret = http.POST(opts, href + "/" + verb, makeAction('false', '10').dump(), fmt.MEDIA_TYPE)
+    print ret['body']
+    expectedStatusCode(ret['status'], 200)
+    resp_action = fmt.parseAction(ret['body'])
+    expectedActionStatus(resp_action.status, "COMPLETE")
+
+def testUpdate(name, id, entity, expected):
+    entity.name = name
+    entity.id = id
+    ret = http.PUT(opts, entity.href, entity.dump(), fmt.MEDIA_TYPE)
+    print ret['body']
+    expectedStatusCode(ret['status'], expected)
+
+def testDelete(href):
+    status = http.DELETE(opts, href)
+    print status
+    expectedStatusCode(status, 204)
+
 opts = {
     'host' : 'localhost',
     'port' : 8080,
@@ -49,69 +119,34 @@ links = http.HEAD_for_links(opts)
 for fmt in [xmlfmt]:
     print "=== ", fmt.MEDIA_TYPE, " ==="
 
-    for host in fmt.parseHostCollection(http.GET(opts, links['hosts'], fmt.MEDIA_TYPE)['body']):
-        print fmt.parseHost(http.GET(opts, host.href, fmt.MEDIA_TYPE)['body'])
+    for host in fmt.parseHostCollection(testGet(links['hosts'])):
+        print fmt.parseHost(testGet(host.href))
 
-    for vm in fmt.parseVmCollection(http.GET(opts, links['vms'], fmt.MEDIA_TYPE)['body']):
-        print fmt.parseVM(http.GET(opts, vm.href, fmt.MEDIA_TYPE)['body'])
+    for vm in fmt.parseVmCollection(testGet(links['vms'])):
+        print fmt.parseVM(testGet(vm.href))
 
-    foo_vm = fmt.VM()
-    foo_vm.name = 'foo'
-    ret = http.POST(opts, links['vms'], foo_vm.dump(), fmt.MEDIA_TYPE)
-    foo_vm = fmt.parseVM(ret['body'])
-    assert ret['status'] is 201, "Expected 201 status, got %d" % ret['status']
+    foo_vm = testCreate(fmt.VM(), 'foo', links['vms'], fmt.parseVM)
 
-    bar_host = fmt.Host()
-    bar_host.name = 'bar'
-    ret = http.POST(opts, links['hosts'], bar_host.dump(), fmt.MEDIA_TYPE)
-    bar_host = fmt.parseHost(ret['body'])
-    assert ret['status'] is 201, "Expected 201 status, got %d" % ret['status']
+    testAsyncAction(foo_vm.href, "start")
 
-    foo_action = fmt.Action()
-    foo_action.async = 'true'
-    foo_grace = fmt.GracePeriod()
-    foo_grace.expiry = '5000'
-    foo_grace.absolute = 'false'
-    foo_action.grace = foo_grace.dump()
-    ret = http.POST(opts, foo_vm.href + "/start", foo_action.dump(), fmt.MEDIA_TYPE)
-    print ret['body']
-    assert ret['status'] is 202, "Expected 202 status, got %d" % ret['status']
-    resp_action = fmt.parseAction(ret['body'])
-    assert resp_action.status != "COMPLETE", "Unexpected COMPLETE action status"
-    for i in range(1, 3):
-        time.sleep(1)
-        resp = http.GET(opts, resp_action.href, fmt.MEDIA_TYPE)
-        print resp['body']
-        resp_action = fmt.parseAction(resp['body'])
-        assert resp_action.status != "COMPLETE", "Unexpected COMPLETE action status"
-    time.sleep(4)
-    resp = http.GET(opts, resp_action.href, fmt.MEDIA_TYPE)
-    print resp['body']
-    resp_action = fmt.parseAction(resp['body'])
-    assert resp_action.status == "COMPLETE", "Expected COMPLETE, got %d" % resp_action.status
+    testSyncAction(foo_vm.href, "stop")
 
-    foo_grace.expiry = '10'
-    foo_action.async = 'false'
-    foo_action.grace = foo_grace.dump()
-    ret = http.POST(opts, foo_vm.href + "/start", foo_action.dump(), fmt.MEDIA_TYPE)
-    print ret['body']
-    assert ret['status'] is 200, "Expected 200 status, got %d" % ret['status']
-    resp_action = fmt.parseAction(ret['body'])
-    assert resp_action.status == "COMPLETE", "Expected COMPLETE, got %d" % resp_action.status
+    bar_host = testCreate(fmt.Host(), 'bar', links['hosts'], fmt.parseHost)
 
-    print http.GET(opts, foo_vm.href, type = fmt.MEDIA_TYPE)['body']
+    testAsyncAction(bar_host.href, "fence")
 
-    foo_vm.name = 'bar'
-    print http.PUT(opts, foo_vm.href, foo_vm.dump(), fmt.MEDIA_TYPE)['body']
+    testAsyncAction(bar_host.href, "approve")
 
-    foo_vm.name = 'wonga'
-    foo_vm.id = 'snafu'
-    ret = http.PUT(opts, foo_vm.href, foo_vm.dump(), fmt.MEDIA_TYPE)
-    print ret['body']
-    assert ret['status'] == 409, "Expected 409 status, got %d" % ret['status']
+    print testGet(foo_vm.href)
 
-    bar_host.name = 'foo'
-    print http.PUT(opts, bar_host.href, bar_host.dump(), fmt.MEDIA_TYPE)['body']
+    testUpdate('bar', foo_vm.id, foo_vm, 200)
 
-    print http.DELETE(opts, foo_vm.href)
-    print http.DELETE(opts, bar_host.href)
+    testUpdate('wonga', 'snafu', foo_vm, 409)
+
+    testUpdate('foo', bar_host.id, bar_host, 200)
+
+    testUpdate('ping', 'pong', bar_host, 409)
+
+    testDelete(foo_vm.href)
+
+    testDelete(bar_host.href)
