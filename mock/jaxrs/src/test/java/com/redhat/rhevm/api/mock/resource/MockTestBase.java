@@ -44,6 +44,8 @@ import org.jboss.resteasy.plugins.server.tjws.TJWSEmbeddedJaxrsServer;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
 import com.redhat.rhevm.api.model.Action;
+import com.redhat.rhevm.api.model.Cluster;
+import com.redhat.rhevm.api.model.Clusters;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.Hosts;
 import com.redhat.rhevm.api.model.LinkHeader;
@@ -101,6 +103,18 @@ public class MockTestBase extends Assert {
 
     @Path("/")
     @Produces(MediaType.APPLICATION_XML)
+    protected interface ClustersResource {
+        @GET public Clusters list();
+        @GET @Path("{id}") public Cluster get(@PathParam("id") String id);
+        @PUT @Path("{id}") @Consumes(MediaType.APPLICATION_XML) public Cluster update(@PathParam("id") String id, Cluster cluster);
+    }
+
+    protected ClustersResource createClustersResource(String uri) {
+        return ProxyFactory.create(ClustersResource.class, uri);
+    }
+
+    @Path("/")
+    @Produces(MediaType.APPLICATION_XML)
     protected interface StorageDomainsResource {
         @GET public StorageDomains list();
         @GET @Path("{id}") public StorageDomain get(@PathParam("id") String id);
@@ -148,6 +162,10 @@ public class MockTestBase extends Assert {
         hosts.setExecutor(executor);
         hosts.populate();
         server.getDeployment().getDispatcher().getRegistry().addSingletonResource(hosts);
+        MockClustersResource clusters = new MockClustersResource();
+        clusters.setExecutor(executor);
+        clusters.populate();
+        server.getDeployment().getDispatcher().getRegistry().addSingletonResource(clusters);
         MockStorageDomainsResource storageDomains = new MockStorageDomainsResource();
         storageDomains.setExecutor(executor);
         storageDomains.populate();

@@ -39,8 +39,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 
+import org.easymock.classextension.EasyMock;
 import static org.easymock.classextension.EasyMock.expect;
 import static org.easymock.classextension.EasyMock.isA;
+import static org.easymock.classextension.EasyMock.or;
 
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -101,7 +103,11 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
     }
 
     protected UriInfo setUpResourceExpectations(String command, String ret, String ... names) throws Exception {
-        return setUpResourceExpectations(asArray(command), asArray(ret), 0, names);
+        return setUpResourceExpectations(command, ret, 0, names);
+    }
+
+    protected UriInfo setUpResourceExpectations(String command, String ret, int baseUris, String ... names) throws Exception {
+        return setUpResourceExpectations(asArray(command), asArray(ret), baseUris, names);
     }
 
     protected UriInfo setUpResourceExpectations(String[] commands, String[] rets, int baseUris, String ... names) throws Exception {
@@ -121,6 +127,7 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
         for (int i = 0 ; i < baseUris ; i++) {
             UriBuilder uriBuilder = createMock(UriBuilder.class);
             expect(uriInfo.getBaseUriBuilder()).andReturn(uriBuilder);
+            expect(uriBuilder.clone()).andReturn(uriBuilder).anyTimes();
             expect(uriBuilder.path(isA(String.class))).andReturn(uriBuilder).anyTimes();
             expect(uriBuilder.build()).andReturn(new URI(URI_ROOT + "/foo")).anyTimes();
         }

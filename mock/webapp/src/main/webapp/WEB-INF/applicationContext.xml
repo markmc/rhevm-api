@@ -30,6 +30,11 @@
     <property name="executor"><ref bean="threadPoolExecutor"/></property>
   </bean>
 
+  <bean id="mockClustersResource"
+        class="com.redhat.rhevm.api.mock.resource.MockClustersResource">
+    <property name="executor"><ref bean="threadPoolExecutor"/></property>
+  </bean>
+
   <!-- Shared Executor -->
   <bean id="keepAliveUnit"
         class="java.util.concurrent.TimeUnit"
@@ -52,5 +57,4 @@
   </bean>
 
 </beans>
- 
 
