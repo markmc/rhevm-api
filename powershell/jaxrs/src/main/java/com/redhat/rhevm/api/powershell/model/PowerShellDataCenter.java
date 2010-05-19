@@ -36,6 +36,7 @@ public class PowerShellDataCenter {
             DataCenter dataCenter = new DataCenter();
 
             dataCenter.setId(props.get("datacenterid"));
+            dataCenter.setName(props.get("name"));
             dataCenter.setStorageType(StorageType.fromValue(props.get("type")));
 
             ret.add(dataCenter);

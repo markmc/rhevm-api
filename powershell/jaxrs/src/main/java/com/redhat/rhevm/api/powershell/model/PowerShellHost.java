@@ -35,6 +35,7 @@ public class PowerShellHost {
             Host host = new Host();
 
             host.setId(props.get("hostid"));
+            host.setName(props.get("name"));
 
             ret.add(host);
         }
