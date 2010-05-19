@@ -34,7 +34,6 @@ import com.redhat.rhevm.api.model.VM;
 
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.easymock.classextension.EasyMock.expect;
@@ -44,18 +43,15 @@ import static org.powermock.api.easymock.PowerMock.mockStatic;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 
 
-public class PowerShellVmResourceTest extends BasePowerShellResourceTest {
+public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM, PowerShellVmResource> {
 
     private static final String GET_RETURN = "vmid: 12345 \n name: sedna";
     private static final String ACTION_RETURN = "replace with realistic powershell return";
     private static final String UPDATE_COMMAND = "$v = get-vm 12345\n$v.name = \"eris\"\nupdate-vm -vmobject $v";
     private static final String UPDATE_RETURN = "vmid: 12345 \n name: eris";
 
-    private PowerShellVmResource resource;
-
-    @Before
-    public void setUp() {
-        resource = new PowerShellVmResource("12345", executor);
+    protected PowerShellVmResource getResource() {
+        return new PowerShellVmResource("12345");
     }
 
     @Test

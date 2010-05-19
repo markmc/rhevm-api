@@ -25,11 +25,14 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Action;
+import com.redhat.rhevm.api.model.BaseResource;
 import com.redhat.rhevm.api.model.Status;
+import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Ignore;
 
 import org.junit.runner.RunWith;
@@ -48,10 +51,21 @@ import static org.powermock.api.easymock.PowerMock.verifyAll;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest( { PowerShellCmd.class })
 @Ignore
-public class BasePowerShellResourceTest extends Assert {
+public abstract class AbstractPowerShellResourceTest<R extends BaseResource,
+                                                     A extends AbstractActionableResource<R>>
+    extends Assert {
+
     protected static final String URI_ROOT = "http://localhost:8099";
 
-    protected ControllableExecutor executor = new ControllableExecutor();
+    protected A resource;
+    protected ControllableExecutor executor;
+
+    @Before
+    public void setUp() {
+        executor = new ControllableExecutor();
+        resource = getResource();
+        resource.setExecutor(executor);
+    }
 
     @After
     public void tearDown() {
@@ -110,4 +124,5 @@ public class BasePowerShellResourceTest extends Assert {
         executor.runNext();
     }
 
+    protected abstract A getResource();
 }

@@ -29,7 +29,6 @@ import com.redhat.rhevm.api.model.StorageDomainStatus;
 
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.easymock.classextension.EasyMock.expect;
@@ -40,7 +39,7 @@ import static org.powermock.api.easymock.PowerMock.mockStatic;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 
 
-public class PowerShellAttachmentResourceTest extends BasePowerShellResourceTest {
+public class PowerShellAttachmentResourceTest extends AbstractPowerShellResourceTest<Attachment, PowerShellAttachmentResource> {
 
     private static final String DATA_CENTER_ID = "d12345";
     private static final String STORAGE_DOMAIN_ID = "s98765";
@@ -61,11 +60,8 @@ public class PowerShellAttachmentResourceTest extends BasePowerShellResourceTest
         "nfspath: foo.bar:/blaa/and/butter\n";
     private static final String ACTION_RETURN = "replace with realistic powershell return";
 
-    private PowerShellAttachmentResource resource;
-
-    @Before
-    public void setUp() {
-        resource = new PowerShellAttachmentResource(DATA_CENTER_ID, STORAGE_DOMAIN_ID, executor);
+    protected PowerShellAttachmentResource getResource() {
+        return new PowerShellAttachmentResource(DATA_CENTER_ID, STORAGE_DOMAIN_ID);
     }
 
     @Test
