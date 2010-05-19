@@ -50,6 +50,11 @@ public class PowerShellAttachmentResource extends AbstractActionableResource<Att
         this.storageDomainId = storageDomainId;
     }
 
+    PowerShellAttachmentResource(String dataCenterId, String storageDomainId) {
+        super(dataCenterId);
+        this.storageDomainId = storageDomainId;
+    }
+
     private static void setStorageDomainHref(Attachment attachment, UriBuilder baseUriBuilder) {
         StorageDomain storageDomain = attachment.getStorageDomain();
 

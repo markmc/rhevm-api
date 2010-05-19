@@ -43,6 +43,9 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
         super(id, executor);
     }
 
+    public PowerShellVmResource(String id) {
+        super(id);
+    }
 
     public static ArrayList<VM> runAndParse(String command) {
         return PowerShellVM.parse(PowerShellCmd.runCommand(command));
