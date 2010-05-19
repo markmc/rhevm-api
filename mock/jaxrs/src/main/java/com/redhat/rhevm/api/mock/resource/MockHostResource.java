@@ -21,9 +21,11 @@ package com.redhat.rhevm.api.mock.resource;
 import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.resource.HostResource;
@@ -76,15 +78,18 @@ public class MockHostResource extends AbstractMockResource<Host> implements Host
     }
 
     @Override
-    public void approve() {
+    public Response approve(UriInfo uriInfo, Action action) {
+        return doAction(uriInfo, new DoNothingTask(action));
     }
 
     @Override
-    public void fence() {
+    public Response fence(UriInfo uriInfo, Action action) {
+        return doAction(uriInfo, new DoNothingTask(action));
     }
 
     @Override
-    public void resume() {
+    public Response resume(UriInfo uriInfo, Action action) {
+        return doAction(uriInfo, new DoNothingTask(action));
     }
 
 /*

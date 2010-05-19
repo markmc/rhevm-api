@@ -126,7 +126,7 @@ public abstract class AbstractActionableResource<R extends BaseResource> extends
         task.action.setStatus(com.redhat.rhevm.api.model.Status.COMPLETE);
     }
 
-    protected static abstract class AbstractActionTask implements Runnable {
+    public static abstract class AbstractActionTask implements Runnable {
         protected Action action;
         public AbstractActionTask(Action action) {
             this.action = action;

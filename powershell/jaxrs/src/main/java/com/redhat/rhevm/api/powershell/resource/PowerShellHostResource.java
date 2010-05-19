@@ -22,9 +22,11 @@ import java.util.ArrayList;
 import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.resource.HostResource;
 import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
@@ -76,22 +78,24 @@ public class PowerShellHostResource extends AbstractActionableResource<Host> imp
         }
 
         buf.append("\n");
-        buf.append("update-host -hostobject $v");
+        buf.append("update-host -hostobject $h");
 
         return addLinks(runAndParseSingle(buf.toString()), uriInfo.getRequestUriBuilder());
     }
 
     @Override
-    public void approve() {
-        PowerShellCmd.runCommand("approve-host -hostid " + getId());
+    public Response approve(UriInfo uriInfo, Action action) {
+        return doAction(uriInfo, new CommandRunner(action, "approve-host", "host", getId()));
     }
 
     @Override
-    public void fence() {
+    public Response fence(UriInfo uriInfo, Action action) {
+        return doAction(uriInfo, new CommandRunner(action, "fence-host", "host", getId()));
     }
 
     @Override
-    public void resume() {
+    public Response resume(UriInfo uriInfo, Action action) {
+        return doAction(uriInfo, new CommandRunner(action, "resume-host", "host", getId()));
     }
 
 /*
