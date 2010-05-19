@@ -54,7 +54,7 @@ import static org.powermock.api.easymock.PowerMock.verifyAll;
 
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest( { PowerShellUtils.class, PowerShellCmd.class })
+@PrepareForTest( { PowerShellCmd.class })
 public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseResource,
                                                                U extends AbstractUpdatableResource<R>,
                                                                T extends AbstractPowerShellCollectionResource<R, U>>
@@ -105,10 +105,6 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
             mockStatic(PowerShellCmd.class);
             expect(PowerShellCmd.runCommand(command)).andReturn(ret);
         }
-        if (ret != null) {
-            mockStatic(PowerShellUtils.class);
-            expect(PowerShellUtils.parseProps(ret)).andReturn(getProps(names));
-        }
         UriInfo uriInfo = createMock(UriInfo.class);
         for (String name : names) {
             UriBuilder uriBuilder = createMock(UriBuilder.class);
@@ -139,17 +135,6 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
 
     protected String getRemoveCommand() {
 	return MessageFormat.format(REMOVE_COMMAND, individualName);
-    }
-
-    private ArrayList<HashMap<String,String>> getProps(String ... names) {
-        ArrayList<HashMap<String,String>> parsedProps = new ArrayList<HashMap<String,String>>();
-        for (String name : names) {
-            HashMap<String,String> vmProps = new HashMap<String,String>();
-            vmProps.put(individualName + "id", Integer.toString(name.hashCode()));
-            vmProps.put("name", name);
-            parsedProps.add(vmProps);
-        }
-        return parsedProps;
     }
 
     protected R getModel(String name) {

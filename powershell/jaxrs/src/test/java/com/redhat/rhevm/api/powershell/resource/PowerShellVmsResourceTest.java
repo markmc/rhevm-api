@@ -24,15 +24,8 @@ import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
-
-@RunWith(PowerMockRunner.class)
-@PrepareForTest( { PowerShellUtils.class, PowerShellCmd.class })
 public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResourceTest<VM, PowerShellVmResource, PowerShellVmsResource> {
 
     private static final String ADD_COMMAND_PROLOG =
