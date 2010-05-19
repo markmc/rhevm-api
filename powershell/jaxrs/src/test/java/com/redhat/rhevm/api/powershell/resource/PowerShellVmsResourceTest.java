@@ -27,12 +27,12 @@ import org.junit.Test;
 public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResourceTest<VM, PowerShellVmResource, PowerShellVmsResource> {
 
     private static final String ADD_COMMAND_PROLOG =
-	"$templ = get-template -templateid template_1\n";
+        "$templ = get-template -templateid template_1\n";
     private static final String ADD_COMMAND_EPILOG =
-	"-templateobject $templ -hostclusterid hostcluster_1";
+        "-templateobject $templ -hostclusterid hostcluster_1";
 
     public PowerShellVmsResourceTest() {
-	super(new PowerShellVmResource("0", null), "vms", "vm");
+        super(new PowerShellVmResource("0", null), "vms", "vm");
     }
 
     @Test
@@ -46,15 +46,15 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     public void testAdd() throws Exception {
         verifyResponse(
             resource.add(setUpResourceExpectations(ADD_COMMAND_PROLOG + getAddCommand() + ADD_COMMAND_EPILOG,
-        	                                   getAddReturn(),
-        	                                   NEW_NAME),
-        	         getModel(NEW_NAME)),
+                                                   getAddReturn(),
+                                                   NEW_NAME),
+                         getModel(NEW_NAME)),
             NEW_NAME);
     }
 
     @Test
     public void testRemove() throws Exception {
-	setUpResourceExpectations(getRemoveCommand(), null);
+        setUpResourceExpectations(getRemoveCommand(), null);
         resource.remove(Integer.toString(NAMES[1].hashCode()));
     }
 
@@ -62,12 +62,12 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     public void testGetSubResource() throws Exception {
         verifyResource(
             (PowerShellVmResource)resource.getVmSubResource(setUpResourceExpectations(NOTHING, NOTHING, 0),
-        	                                            Integer.toString(NEW_NAME.hashCode())),
+                                                            Integer.toString(NEW_NAME.hashCode())),
             NEW_NAME);
     }
 
     protected PowerShellVmsResource getResource() {
-	return new PowerShellVmsResource();
+        return new PowerShellVmsResource();
     }
 
     protected void populateModel(VM vm) {

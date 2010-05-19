@@ -64,13 +64,13 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
     protected static final String NEW_NAME = "ceres";
     private static final String SELECT_COMMAND = "select-{0}";
     private static final String SELECT_RETURN =
-	"{0}id: " + "sedna".hashCode() + " \n name: sedna {1}\n\n" +
-	"{0}id: " + "eris".hashCode() + " \n name: eris {1}\n\n" +
-	"{0}id: " + "orcus".hashCode() + " \n name: orcus {1}";
+        "{0}id: " + "sedna".hashCode() + " \n name: sedna {1}\n\n" +
+        "{0}id: " + "eris".hashCode() + " \n name: eris {1}\n\n" +
+        "{0}id: " + "orcus".hashCode() + " \n name: orcus {1}";
 
     private static final String ADD_COMMAND = "add-{0} -name ceres ";
     private static final String ADD_RETURN =
-	"{0}id: " + "ceres".hashCode() + " \n name: ceres {1}\n\n";
+        "{0}id: " + "ceres".hashCode() + " \n name: ceres {1}\n\n";
 
     private static final String REMOVE_COMMAND = "remove-{0} -{0}id " + "eris".hashCode();
 
@@ -83,15 +83,15 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
     protected Executor executor;
 
     protected AbstractPowerShellCollectionResourceTest(U updatable, String collectionName, String individualName) {
-	this.updatable = updatable;
-	this.collectionName = collectionName;
-	this.individualName = individualName;
+        this.updatable = updatable;
+        this.collectionName = collectionName;
+        this.individualName = individualName;
     }
 
     @Before
     public void setUp() {
-	executor = new ControllableExecutor();
-	resource = getResource();
+        executor = new ControllableExecutor();
+        resource = getResource();
         resource.setExecutor(executor);
     }
 
@@ -101,7 +101,7 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
     }
 
     protected UriInfo setUpResourceExpectations(String command, String ret, String ... names) throws Exception {
-	return setUpResourceExpectations(asArray(command), asArray(ret), 0, names);
+        return setUpResourceExpectations(asArray(command), asArray(ret), 0, names);
     }
 
     protected UriInfo setUpResourceExpectations(String[] commands, String[] rets, int baseUris, String ... names) throws Exception {
@@ -130,31 +130,31 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
     }
 
     protected String getSelectCommand() {
-	return MessageFormat.format(SELECT_COMMAND, individualName);
+        return MessageFormat.format(SELECT_COMMAND, individualName);
     }
 
     protected String getSelectReturn() {
-	return getSelectReturn("");
+        return getSelectReturn("");
     }
 
     protected String getSelectReturn(String epilog) {
-	return MessageFormat.format(SELECT_RETURN, individualName, epilog);
+        return MessageFormat.format(SELECT_RETURN, individualName, epilog);
     }
 
     protected String getAddCommand() {
-	return MessageFormat.format(ADD_COMMAND, individualName);
+        return MessageFormat.format(ADD_COMMAND, individualName);
     }
 
     protected String getAddReturn() {
-	return getAddReturn("");
+        return getAddReturn("");
     }
 
     protected String getAddReturn(String epilog) {
-	return MessageFormat.format(ADD_RETURN, individualName, epilog);
+        return MessageFormat.format(ADD_RETURN, individualName, epilog);
     }
 
     protected String getRemoveCommand() {
-	return MessageFormat.format(REMOVE_COMMAND, individualName);
+        return MessageFormat.format(REMOVE_COMMAND, individualName);
     }
 
     protected R getModel(String name) {
@@ -174,10 +174,10 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
         assertEquals(model.getName(), name);
         assertNotNull(r.getMetadata().get("Location"));
         assertTrue("expected location header",
-        	   r.getMetadata().get("Location").size() > 0);
+                   r.getMetadata().get("Location").size() > 0);
         assertEquals("unexpected location header",
-        	     URI_ROOT + collectionName + name.hashCode(),
-        	     r.getMetadata().get("Location").get(0).toString());
+                     URI_ROOT + collectionName + name.hashCode(),
+                     r.getMetadata().get("Location").get(0).toString());
     }
 
     protected void verifyCollection(List<R> collection, String ... names) {
@@ -191,13 +191,13 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
     }
 
     protected void verifyResource(AbstractActionableResource<R> resource, String name) {
-	assertNotNull(resource);
-	assertEquals(resource.getId(), Integer.toString(name.hashCode()));
-	assertSame(resource.getExecutor(), executor);
+        assertNotNull(resource);
+        assertEquals(resource.getId(), Integer.toString(name.hashCode()));
+        assertSame(resource.getExecutor(), executor);
     }
 
     protected static String[] asArray(String s) {
-	return new String[] { s };
+        return new String[] { s };
     }
 
     protected abstract T getResource();

@@ -27,10 +27,10 @@ import org.junit.Test;
 public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionResourceTest<Host, PowerShellHostResource, PowerShellHostsResource> {
 
     private static final String ADD_COMMAND_EPILOG =
-	"-hostname 127.0.0.1 -rootpassword celestial";
+        "-hostname 127.0.0.1 -rootpassword celestial";
 
     public PowerShellHostsResourceTest() {
-	super(new PowerShellHostResource("0", null), "hosts", "host");
+        super(new PowerShellHostResource("0", null), "hosts", "host");
     }
 
     @Test
@@ -44,15 +44,15 @@ public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionRes
     public void testAdd() throws Exception {
         verifyResponse(
             resource.add(setUpResourceExpectations(getAddCommand() + ADD_COMMAND_EPILOG,
-        	                                   getAddReturn(),
-        	                                   NEW_NAME),
-        	         getModel(NEW_NAME)),
+                                                   getAddReturn(),
+                                                   NEW_NAME),
+                         getModel(NEW_NAME)),
             NEW_NAME);
     }
 
     @Test
     public void testRemove() throws Exception {
-	setUpResourceExpectations(getRemoveCommand(), null);
+        setUpResourceExpectations(getRemoveCommand(), null);
         resource.remove(Integer.toString(NAMES[1].hashCode()));
     }
 
@@ -60,12 +60,12 @@ public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionRes
     public void testGetSubResource() throws Exception {
         verifyResource(
             (PowerShellHostResource)resource.getHostSubResource(setUpResourceExpectations(NOTHING, NOTHING, 0),
-        	                                                Integer.toString(NEW_NAME.hashCode())),
+                                                                Integer.toString(NEW_NAME.hashCode())),
             NEW_NAME);
     }
 
     protected PowerShellHostsResource getResource() {
-	return new PowerShellHostsResource();
+        return new PowerShellHostsResource();
     }
 
     protected void populateModel(Host host) {

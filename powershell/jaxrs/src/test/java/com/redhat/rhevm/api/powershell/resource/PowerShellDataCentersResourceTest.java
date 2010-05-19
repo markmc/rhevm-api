@@ -23,54 +23,44 @@ import java.text.MessageFormat;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.StorageType;
 
-import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
-
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
-
-@RunWith(PowerMockRunner.class)
-@PrepareForTest( { PowerShellCmd.class })
 public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollectionResourceTest<DataCenter, PowerShellDataCenterResource, PowerShellDataCentersResource> {
 
     private static final String SELECT_RETURN_EPILOG = "\ntype: ISCSI";
     private static final String ADD_COMMAND_EPILOG =
-	"-type ISCSI";
+        "-type ISCSI";
     private static final String ADD_RETURN_EPILOG = "\ntype: ISCSI";
     private static final String GET_STORAGE_COMMAND =
-	"get-storagedomain -datacenterid ";
+        "get-storagedomain -datacenterid ";
     private static final String GET_STORAGE_RETURN =
-	"storagedomainid: {0} \n name: {1}\ndomaintype: ISO \nstatus: ACTIVE\nsharedstatus: ACTIVE\ntype: ISCSI \n\n";
+        "storagedomainid: {0} \n name: {1}\ndomaintype: ISO \nstatus: ACTIVE\nsharedstatus: ACTIVE\ntype: ISCSI \n\n";
 
     public PowerShellDataCentersResourceTest() {
-	super(new PowerShellDataCenterResource("0", null), "datacenters", "datacenter");
+        super(new PowerShellDataCenterResource("0", null), "datacenters", "datacenter");
     }
 
     @Test
     public void testList() throws Exception {
-	String [] commands = { getSelectCommand(),
-		               GET_STORAGE_COMMAND + NAMES[0].hashCode(),
-		               GET_STORAGE_COMMAND + NAMES[1].hashCode(),
-		               GET_STORAGE_COMMAND + NAMES[2].hashCode() };
-	String [] returns =  { getSelectReturn(SELECT_RETURN_EPILOG),
-		               MessageFormat.format(GET_STORAGE_RETURN, "mimas".hashCode(), "mimas"),
-		               MessageFormat.format(GET_STORAGE_RETURN, "dione".hashCode(), "dione"),
-		               MessageFormat.format(GET_STORAGE_RETURN, "titan".hashCode(), "titan") };
-        verifyCollection(
+        String [] commands = { getSelectCommand(),
+                               GET_STORAGE_COMMAND + NAMES[0].hashCode(),
+                               GET_STORAGE_COMMAND + NAMES[1].hashCode(),
+                               GET_STORAGE_COMMAND + NAMES[2].hashCode() };
+        String [] returns =  { getSelectReturn(SELECT_RETURN_EPILOG),
+                               MessageFormat.format(GET_STORAGE_RETURN, "mimas".hashCode(), "mimas"),
+                               MessageFormat.format(GET_STORAGE_RETURN, "dione".hashCode(), "dione"),
+                               MessageFormat.format(GET_STORAGE_RETURN, "titan".hashCode(), "titan") };
+         verifyCollection(
             resource.list(setUpResourceExpectations(commands, returns, 3, NAMES)).getDataCenters(),
             NAMES);
     }
 
     @Test
     public void testAdd() throws Exception {
-	String [] commands = { getAddCommand() + ADD_COMMAND_EPILOG,
-	                       GET_STORAGE_COMMAND + NEW_NAME.hashCode()};
+    String [] commands = { getAddCommand() + ADD_COMMAND_EPILOG,
+                           GET_STORAGE_COMMAND + NEW_NAME.hashCode()};
         String [] returns =  { getAddReturn(ADD_RETURN_EPILOG),
-        	               MessageFormat.format(GET_STORAGE_RETURN, "rhea".hashCode(), "rhea") };
+                           MessageFormat.format(GET_STORAGE_RETURN, "rhea".hashCode(), "rhea") };
         verifyResponse(
             resource.add(setUpResourceExpectations(commands, returns, 1, NEW_NAME), getModel(NEW_NAME)),
             NEW_NAME);
@@ -78,7 +68,7 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
 
     @Test
     public void testRemove() throws Exception {
-	setUpResourceExpectations(getRemoveCommand(), null);
+    setUpResourceExpectations(getRemoveCommand(), null);
         resource.remove(Integer.toString(NAMES[1].hashCode()));
     }
 
@@ -86,12 +76,12 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
     public void testGetSubResource() throws Exception {
         verifyResource(
             (PowerShellDataCenterResource)resource.getDataCenterSubResource(setUpResourceExpectations(NOTHING, NOTHING, 0),
-        	                                                            Integer.toString(NEW_NAME.hashCode())),
+                                                                        Integer.toString(NEW_NAME.hashCode())),
             NEW_NAME);
     }
 
     protected PowerShellDataCentersResource getResource() {
-	return new PowerShellDataCentersResource();
+        return new PowerShellDataCentersResource();
     }
 
     protected void populateModel(DataCenter dataCenter) {
