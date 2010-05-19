@@ -18,13 +18,10 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import java.util.concurrent.Executor;
-
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.common.util.ReapedMap;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.resource.VmResource;
@@ -32,17 +29,13 @@ import com.redhat.rhevm.api.resource.VmsResource;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 
 
-public class PowerShellVmsResource implements VmsResource {
+public class PowerShellVmsResource 	
+    extends AbstractPowerShellCollectionResource<VM, PowerShellVmResource>
+    implements VmsResource {
+
     /* FIXME: would like to do:
      * private @Context UriInfo uriInfo;
      */
-
-    private ReapedMap<String, PowerShellVmResource> vms;
-    private Executor executor;
-
-    public PowerShellVmsResource() {
-        vms = new ReapedMap<String, PowerShellVmResource>();
-    }
 
     @Override
     public VMs list(UriInfo uriInfo) {
@@ -100,24 +93,11 @@ public class PowerShellVmsResource implements VmsResource {
 
     @Override
     public VmResource getVmSubResource(UriInfo uriInfo, String id) {
-        synchronized (vms) {
-            PowerShellVmResource ret = vms.get(id);
-            if (ret == null) {
-                ret = new PowerShellVmResource(id, executor);
-                vms.put(id, ret);
-                vms.reapable(id);
-            }
-            return ret;
-        }
+        return getSubResource(id);
     }
 
-    protected void removeSubResource(String id) {
-        synchronized (vms) {
-            vms.remove(id);
-        }
-    }
-
-    public void setExecutor(Executor executor) {
-        this.executor = executor;
+    @Override
+    protected PowerShellVmResource createSubResource(String id) {
+        return new PowerShellVmResource(id, getExecutor());
     }
 }
