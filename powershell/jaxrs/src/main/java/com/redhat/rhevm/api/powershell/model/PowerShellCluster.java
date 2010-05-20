@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.redhat.rhevm.api.model.Cluster;
+import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.StorageType;
 import com.redhat.rhevm.api.powershell.model.PowerShellCluster;
@@ -38,7 +39,10 @@ public class PowerShellCluster {
 
             cluster.setId(props.get("clusterid"));
             cluster.setName(props.get("name"));
-            cluster.setCpu(props.get("cpuname"));
+
+            CPU cpu = new CPU();
+            cpu.setId(props.get("cpuname"));
+            cluster.setCpu(cpu);
 
             DataCenter dataCenter = new DataCenter();
             dataCenter.setId(props.get("datacenterid"));

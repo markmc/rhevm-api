@@ -120,6 +120,14 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <!-- CPUs -->
+
+  <xs:element name="cpu" type="CPU"/>
+
+  <xs:complexType name="CPU">
+    <xs:attribute name="id" type="xs:string"/>
+  </xs:complexType>
+
   <!-- Common to all resources -->
 
   <xs:complexType name="BaseResource">
@@ -207,7 +215,7 @@
     <xs:complexContent>
       <xs:extension base="BaseResource">
         <xs:sequence>
-          <xs:element name="cpu" type="xs:string" minOccurs="0"/>
+          <xs:element ref="cpu" minOccurs="0" maxOccurs="1"/>
           <xs:element ref="data_center" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>

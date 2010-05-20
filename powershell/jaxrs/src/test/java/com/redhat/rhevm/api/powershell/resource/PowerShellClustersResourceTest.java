@@ -19,6 +19,7 @@
 package com.redhat.rhevm.api.powershell.resource;
 
 import com.redhat.rhevm.api.model.Cluster;
+import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.DataCenter;
 
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
@@ -78,7 +79,9 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
     }
 
     protected void populateModel(Cluster cluster) {
-        cluster.setCpu(CLUSTER_CPU);
+        CPU cpu = new CPU();
+        cpu.setId(CLUSTER_CPU);
+        cluster.setCpu(cpu);
 
         DataCenter dataCenter = new DataCenter();
         dataCenter.setId(DATA_CENTER_ID);

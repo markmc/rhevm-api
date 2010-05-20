@@ -29,6 +29,7 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.Clusters;
+import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.StorageType;
 import com.redhat.rhevm.api.resource.ClusterResource;
 import com.redhat.rhevm.api.resource.ClustersResource;
@@ -46,7 +47,9 @@ public class MockClustersResource extends AbstractMockCollectionResource impleme
             while (clusters.size() < 2) {
                 MockClusterResource resource = new MockClusterResource(allocateId(Cluster.class), getExecutor());
                 resource.getModel().setName("cluster" + resource.getModel().getId());
-                resource.getModel().setCpu((clusters.size() % 2) == 0 ? "intel-qemu64-nx" : "pentium3");
+                CPU cpu = new CPU();
+                cpu.setId((clusters.size() % 2) == 0 ? "Intel Xeon" : "AMD Opteron G1");
+                resource.getModel().setCpu(cpu);
                 DataCenter dataCenter = new DataCenter();
                 dataCenter.setId(resource.getModel().getId());
                 resource.getModel().setDataCenter(dataCenter);

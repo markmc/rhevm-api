@@ -51,7 +51,7 @@ public class PowerShellClustersResource
         buf.append("add-cluster");
 
         buf.append(" -clustername " + cluster.getName());
-        buf.append(" -clustercpuname " + cluster.getCpu());
+        buf.append(" -clustercpuname " + cluster.getCpu().getId());
         buf.append(" -datacenterid " + cluster.getDataCenter().getId());
         buf.append(" -compatibilityversion $v");
 

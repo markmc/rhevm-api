@@ -27,6 +27,7 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.Cluster;
+import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.resource.ClusterResource;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 
@@ -51,7 +52,9 @@ public class MockClusterResource extends AbstractMockResource<Cluster> implement
         }
 
         if (cluster.getCpu() != null) {
-            getModel().setCpu(cluster.getCpu());
+            CPU cpu = new CPU();
+            cpu.setId(cluster.getCpu().getId());
+            getModel().setCpu(cpu);
         }
 
         if (cluster.getDataCenter() != null) {

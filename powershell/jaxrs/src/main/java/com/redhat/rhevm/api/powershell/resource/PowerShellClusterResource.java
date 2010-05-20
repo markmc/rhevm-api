@@ -90,7 +90,7 @@ public class PowerShellClusterResource extends AbstractActionableResource<Cluste
             buf.append("    $c.name = \"" + cluster.getName() + "\"\n");
         }
         if (cluster.getCpu() != null) {
-            buf.append("    $c.cpuname = \"" + cluster.getCpu() + "\"\n");
+            buf.append("    $c.cpuname = \"" + cluster.getCpu().getId() + "\"\n");
         }
 
         buf.append("    update-datacenter -datacenterobject $v");
