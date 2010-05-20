@@ -46,6 +46,8 @@ import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.Clusters;
+import com.redhat.rhevm.api.model.CPU;
+import com.redhat.rhevm.api.model.CPUs;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.Hosts;
 import com.redhat.rhevm.api.model.LinkHeader;
@@ -55,6 +57,7 @@ import com.redhat.rhevm.api.model.StorageDomains;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.resource.MediaType;
+import com.redhat.rhevm.api.common.resource.DefaultCpusResource;
 
 public class MockTestBase extends Assert {
     private final String host = "localhost";
@@ -115,6 +118,16 @@ public class MockTestBase extends Assert {
 
     @Path("/")
     @Produces(MediaType.APPLICATION_XML)
+    protected interface CpusResource {
+        @GET public CPUs list();
+    }
+
+    protected CpusResource createCpusResource(String uri) {
+        return ProxyFactory.create(CpusResource.class, uri);
+    }
+
+    @Path("/")
+    @Produces(MediaType.APPLICATION_XML)
     protected interface StorageDomainsResource {
         @GET public StorageDomains list();
         @GET @Path("{id}") public StorageDomain get(@PathParam("id") String id);
@@ -166,6 +179,8 @@ public class MockTestBase extends Assert {
         clusters.setExecutor(executor);
         clusters.populate();
         server.getDeployment().getDispatcher().getRegistry().addSingletonResource(clusters);
+        DefaultCpusResource cpus = new DefaultCpusResource();
+        server.getDeployment().getDispatcher().getRegistry().addSingletonResource(cpus);
         MockStorageDomainsResource storageDomains = new MockStorageDomainsResource();
         storageDomains.setExecutor(executor);
         storageDomains.populate();

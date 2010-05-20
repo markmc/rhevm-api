@@ -124,8 +124,36 @@
 
   <xs:element name="cpu" type="CPU"/>
 
+  <xs:element name="cpus" type="CPUs"/>
+
   <xs:complexType name="CPU">
+    <xs:sequence>
+      <xs:element name="level" type="xs:int" minOccurs="0"/>
+      <xs:element name="flags" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:annotation>
+              <xs:appinfo>
+                <jaxb:property name="Flags"/>
+              </xs:appinfo>
+            </xs:annotation>
+            <xs:element name="flag" type="xs:string" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
     <xs:attribute name="id" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="CPUs">
+    <xs:sequence>
+      <xs:annotation>
+        <xs:appinfo>
+            <jaxb:property name="CPUs"/>
+        </xs:appinfo>
+      </xs:annotation>
+      <xs:element ref="cpu" maxOccurs="unbounded"/>
+    </xs:sequence>
   </xs:complexType>
 
   <!-- Common to all resources -->
