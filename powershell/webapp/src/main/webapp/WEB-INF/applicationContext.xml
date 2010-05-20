@@ -30,6 +30,11 @@
     <property name="executor"><ref bean="threadPoolExecutor"/></property>
   </bean>
 
+  <bean id="powerShellClustersResource"
+        class="com.redhat.rhevm.api.powershell.resource.PowerShellClustersResource">
+    <property name="executor"><ref bean="threadPoolExecutor"/></property>
+  </bean>
+
   <!-- Shared Executor -->
   <bean id="keepAliveUnit"
         class="java.util.concurrent.TimeUnit"
