@@ -66,6 +66,10 @@ public class MockClusterResource extends AbstractMockResource<Cluster> implement
 
         cluster.setHref(uriBuilder.build().toString());
 
+        UriBuilder baseUriBuilder = uriInfo.getBaseUriBuilder();
+        DataCenter dataCenter = cluster.getDataCenter();
+        dataCenter.setHref(MockDataCentersResource.getHref(baseUriBuilder, dataCenter.getId()));
+
         ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, ClusterResource.class);
         cluster.setActions(actionsBuilder.build());
 
