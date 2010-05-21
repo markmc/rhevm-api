@@ -67,10 +67,10 @@ public class PowerShellClusterResource extends AbstractActionableResource<Cluste
         StringBuilder buf = new StringBuilder();
 
         buf.append("$l = select-cluster\n");
-        buf.append("foreach ($c in $l) {\n");
-        buf.append("  if ($c.clusterid -eq \"" + getId() + "\") {\n");
-        buf.append("    echo $c\n");
-        buf.append("  }\n");
+        buf.append("foreach ($c in $l) { ");
+        buf.append("  if ($c.clusterid -eq \"" + getId() + "\") { ");
+        buf.append("    echo $c ");
+        buf.append("  } ");
         buf.append("}");
 
         return addLinks(runAndParseSingle(buf.toString()), uriInfo, uriInfo.getRequestUriBuilder());
@@ -83,19 +83,19 @@ public class PowerShellClusterResource extends AbstractActionableResource<Cluste
         StringBuilder buf = new StringBuilder();
 
         buf.append("$l = select-cluster\n");
-        buf.append("foreach ($c in $l) {\n");
-        buf.append("  if ($c.clusterid -eq \"" + getId() + "\") {\n");
+        buf.append("foreach ($c in $l) { ");
+        buf.append("  if ($c.clusterid -eq \"" + getId() + "\") { ");
 
         if (cluster.getName() != null) {
-            buf.append("    $c.name = \"" + cluster.getName() + "\"\n");
+            buf.append("    $c.name = \"" + cluster.getName() + "\" ");
         }
         if (cluster.getCpu() != null) {
-            buf.append("    $c.cpuname = \"" + cluster.getCpu().getId() + "\"\n");
+            buf.append("    $c.cpuname = \"" + cluster.getCpu().getId() + "\" ");
         }
 
         buf.append("    update-datacenter -datacenterobject $v");
 
-        buf.append("  }\n");
+        buf.append("  } ");
         buf.append("}");
 
         return addLinks(runAndParseSingle(buf.toString()), uriInfo, uriInfo.getRequestUriBuilder());
