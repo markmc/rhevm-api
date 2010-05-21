@@ -22,8 +22,6 @@ import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.DataCenter;
 
-import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
-
 import org.junit.Test;
 
 

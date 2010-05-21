@@ -21,7 +21,6 @@ package com.redhat.rhevm.api.resource;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 
-import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.CPUs;
 
 @Path("/cpus")
