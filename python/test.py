@@ -24,6 +24,7 @@ import jsonfmt
 import sys
 import getopt
 import time
+import template_parser
 
 def makeAction(async, expiry):
     action = fmt.Action()
@@ -43,8 +44,18 @@ def unexpectedActionStatus(status, unexpected):
 def expectedActionStatus(status, expected):
     assert status == expected, "Expected %(e)s, got %(s)s" % {'e': expected, 's': status}
 
+def expectedCollectionSize(collection, expected):
+    assert len(collection) == expected, "Expected collection of size %(e)d, got %(s)d" % {'e': expected, 's': len(collection)}
+
 def testGet(href):
     ret = http.GET(opts, href, fmt.MEDIA_TYPE)
+    expectedStatusCode(ret['status'], 200)
+    return ret['body']
+
+def testQuery(href, constraint):
+    t = template_parser.URITemplate(href)
+    qhref = t.sub({"query": constraint})
+    ret = http.GET(opts, qhref, fmt.MEDIA_TYPE)
     expectedStatusCode(ret['status'], 200)
     return ret['body']
 
@@ -124,6 +135,9 @@ for fmt in [xmlfmt]:
 
     for vm in fmt.parseVmCollection(testGet(links['vms'])):
         print fmt.parseVM(testGet(vm.href))
+
+    query_vms = fmt.parseVmCollection(testQuery(links['vms/search'], "name=v*1"))
+    expectedCollectionSize(query_vms, 1)
 
     foo_vm = testCreate(fmt.VM(), 'foo', links['vms'], fmt.parseVM)
 
