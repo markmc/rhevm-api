@@ -51,14 +51,20 @@ public class MockApiResourceTest extends MockTestBase {
             }
         }
 
-        int i = 6;
+        int i = 12;
         assertEquals(i, links.size());
-        assertEquals("vms",            links.get(--i).getRel());
-        assertEquals("storagedomains", links.get(--i).getRel());
-        assertEquals("hosts",          links.get(--i).getRel());
-        assertEquals("datacenters",    links.get(--i).getRel());
-        assertEquals("cpus",           links.get(--i).getRel());
-        assertEquals("clusters",       links.get(--i).getRel());
+        assertEquals("vms/search",            links.get(--i).getRel());
+        assertEquals("vms",                   links.get(--i).getRel());
+        assertEquals("storagedomains/search", links.get(--i).getRel());
+        assertEquals("storagedomains",        links.get(--i).getRel());
+        assertEquals("hosts/search",          links.get(--i).getRel());
+        assertEquals("hosts",                 links.get(--i).getRel());
+        assertEquals("datacenters/search",    links.get(--i).getRel());
+        assertEquals("datacenters",           links.get(--i).getRel());
+        assertEquals("cpus/search",           links.get(--i).getRel());
+        assertEquals("cpus",                  links.get(--i).getRel());
+        assertEquals("clusters/search",       links.get(--i).getRel());
+        assertEquals("clusters",              links.get(--i).getRel());
         assertEquals(0, i);
     }
 }

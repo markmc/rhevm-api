@@ -32,6 +32,9 @@ import com.redhat.rhevm.api.resource.ApiResource;
 
 public class MockApiResource implements ApiResource {
 
+    private static final String SEARCH_RELATION = "/search";
+    private static final String SEARCH_TEMPLATE = "?search={query}";
+
     private void addHeader(Response.ResponseBuilder responseBuilder, UriBuilder uriBuilder, String ... path) {
         // concantenate links in a single header with a comma-separated value,
         // which is the canonical form according to:
@@ -40,11 +43,8 @@ public class MockApiResource implements ApiResource {
         StringBuffer header = new StringBuffer();
 
         for (String p : path) {
-            Link link = new Link();
-            link.setRel(p);
-            link.setHref(uriBuilder.clone().path(p).build().toString());
-
-            header.append(LinkHeader.format(link)).append(",");
+            header.append(addPath(uriBuilder, p, p, "")).append(",");
+            header.append(addPath(uriBuilder, p + SEARCH_RELATION, p, SEARCH_TEMPLATE)).append(",");
         }
 
         header.setLength(header.length() - 1);
@@ -61,5 +61,12 @@ public class MockApiResource implements ApiResource {
         addHeader(responseBuilder, uriBuilder, "clusters", "cpus", "datacenters", "hosts", "storagedomains", "vms");
 
         return responseBuilder.build();
+    }
+
+    private String addPath(UriBuilder uriBuilder, String rel, String path, String query) {
+        Link link = new Link();
+        link.setRel(rel);
+        link.setHref(uriBuilder.clone().path(path).build().toString() + query);
+        return LinkHeader.format(link);
     }
 }
