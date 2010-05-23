@@ -26,6 +26,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.api.mock.util.SimpleQueryEvaluator;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.resource.VmResource;
@@ -34,7 +35,7 @@ import com.redhat.rhevm.api.resource.VmsResource;
 import static com.redhat.rhevm.api.mock.resource.AbstractMockResource.allocateId;
 
 
-public class MockVmsResource extends AbstractMockCollectionResource implements VmsResource {
+public class MockVmsResource extends AbstractMockQueryableResource<VM> implements VmsResource {
     /* REVISIT: Singleton lifecycle probably requires that UriInfo
      * must be modelled as a method parameter, as there would be
      * concurrency issues around injection into a data member
@@ -42,6 +43,10 @@ public class MockVmsResource extends AbstractMockCollectionResource implements V
 
     private static Map<String, MockVmResource> vms =
         Collections.synchronizedMap(new HashMap<String, MockVmResource>());
+
+    public MockVmsResource() {
+        super(new SimpleQueryEvaluator<VM>());
+    }
 
     public void populate() {
         synchronized (vms) {
@@ -58,9 +63,11 @@ public class MockVmsResource extends AbstractMockCollectionResource implements V
         VMs ret = new VMs();
 
         for (MockVmResource vm : vms.values()) {
-            String id = vm.getModel().getId();
-            UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(id);
-            ret.getVMs().add(vm.addLinks(uriBuilder));
+            if (filter(vm.getModel(), uriInfo, VM.class)) {
+                String id = vm.getModel().getId();
+                UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(id);
+                ret.getVMs().add(vm.addLinks(uriBuilder));
+            }
         }
 
         return ret;
@@ -75,7 +82,7 @@ public class MockVmsResource extends AbstractMockCollectionResource implements V
         String id = resource.getId();
         vms.put(id, resource);
 
-        UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(id);
+        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(id);
 
         vm = resource.addLinks(uriBuilder);
 

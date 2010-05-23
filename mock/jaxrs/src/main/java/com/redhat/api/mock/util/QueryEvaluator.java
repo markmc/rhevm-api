@@ -16,20 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api.mock.resource;
 
-import java.util.concurrent.Executor;
+package com.redhat.api.mock.util;
 
-public abstract class AbstractMockCollectionResource {
+import com.redhat.rhevm.api.model.BaseResource;
 
-    private Executor executor;
-
-    public Executor getExecutor() {
-        return executor;
-    }
-
-    public void setExecutor(Executor executor) {
-        this.executor = executor;
-    }
+public interface QueryEvaluator<R extends BaseResource> {
+    /**
+     * Evaluate whether a resource satisfies a given constraint.
+     *
+     * @param resource   the resource under test
+     * @param constraint the constraint being impose
+     * @return true iff the constraint is satisfied
+     */
+    boolean satisfies(R resource, String constraint);
 }
-

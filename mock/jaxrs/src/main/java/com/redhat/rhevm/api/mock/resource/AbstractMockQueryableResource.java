@@ -18,18 +18,21 @@
  */
 package com.redhat.rhevm.api.mock.resource;
 
-import java.util.concurrent.Executor;
+import javax.ws.rs.core.UriInfo;
 
-public abstract class AbstractMockCollectionResource {
+import com.redhat.api.mock.util.QueryEvaluator;
+import com.redhat.rhevm.api.common.util.QueryHelper;
+import com.redhat.rhevm.api.model.BaseResource;
 
-    private Executor executor;
+public class AbstractMockQueryableResource<R extends BaseResource> extends AbstractMockCollectionResource {
+    private QueryEvaluator<R> evaluator;
 
-    public Executor getExecutor() {
-        return executor;
+    protected AbstractMockQueryableResource(QueryEvaluator<R> evaluator) {
+        this.evaluator = evaluator;
     }
 
-    public void setExecutor(Executor executor) {
-        this.executor = executor;
+    protected boolean filter(R resource, UriInfo uriInfo, Class<?> clz) {
+        String constraint = QueryHelper.getConstraint(uriInfo, clz);
+        return constraint != null ? evaluator.satisfies(resource, constraint) : true;
     }
 }
-

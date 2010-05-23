@@ -50,7 +50,7 @@ public class MockAttachmentsResource extends AbstractMockCollectionResource impl
 
         for (String id : attachments.keySet()) {
             MockAttachmentResource attachment = attachments.get(id);
-            UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(id);
+            UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(id);
             ret.getAttachments().add(attachment.addLinks(uriInfo, uriBuilder));
         }
 
@@ -78,7 +78,7 @@ public class MockAttachmentsResource extends AbstractMockCollectionResource impl
         String id = newAttachment.getModel().getDataCenter().getId();
         attachments.put(id, newAttachment);
 
-        UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(id);
+        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(id);
 
         attachment = newAttachment.addLinks(uriInfo, uriBuilder);
 

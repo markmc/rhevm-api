@@ -100,6 +100,23 @@ public class ReflectionHelper {
         return success;
     }
 
+    public static Object get(Object o, String field) {
+        Object ret = null;
+        String name = GET_ROOT + capitalize(field);
+        for (Method m : o.getClass().getMethods()) {
+            if (m.getName().equals(name)) {
+                try {
+                    ret = m.invoke(o);
+                } catch (Exception e) {
+                    // InvocationTargetException etc. should never occur
+                    // as this is a simple getter
+                }
+                break;
+            }
+        }
+        return ret;
+    }
+
     private static boolean isPrimitive(Method m) {
         Class<?>[] params = m.getParameterTypes();
         return params.length == 1

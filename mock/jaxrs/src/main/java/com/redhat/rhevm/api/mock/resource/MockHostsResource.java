@@ -26,6 +26,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.api.mock.util.SimpleQueryEvaluator;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.Hosts;
 import com.redhat.rhevm.api.resource.HostResource;
@@ -34,13 +35,17 @@ import com.redhat.rhevm.api.resource.HostsResource;
 import static com.redhat.rhevm.api.mock.resource.AbstractMockResource.allocateId;
 
 
-public class MockHostsResource extends AbstractMockCollectionResource implements HostsResource {
+public class MockHostsResource extends AbstractMockQueryableResource<Host> implements HostsResource {
     /* FIXME: would like to do:
      * private @Context UriInfo uriInfo;
      */
 
     private static Map<String, MockHostResource> hosts =
         Collections.synchronizedMap(new HashMap<String, MockHostResource>());
+
+    public MockHostsResource() {
+        super(new SimpleQueryEvaluator<Host>());
+    }
 
     public void populate() {
         synchronized (hosts) {
@@ -57,9 +62,11 @@ public class MockHostsResource extends AbstractMockCollectionResource implements
         Hosts ret = new Hosts();
 
         for (MockHostResource host : hosts.values()) {
-            String id = host.getModel().getId();
-            UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(id);
-            ret.getHosts().add(host.addLinks(uriBuilder));
+            if (filter(host.getModel(), uriInfo, Host.class)) {
+                String id = host.getModel().getId();
+                UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(id);
+                ret.getHosts().add(host.addLinks(uriBuilder));
+            }
         }
 
         return ret;
@@ -74,7 +81,7 @@ public class MockHostsResource extends AbstractMockCollectionResource implements
         String id = resource.getId();
         hosts.put(id, resource);
 
-        UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(id);
+        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(id);
 
         host = resource.addLinks(uriBuilder);
 

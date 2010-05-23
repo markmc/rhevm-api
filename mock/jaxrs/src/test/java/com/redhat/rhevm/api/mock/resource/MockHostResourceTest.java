@@ -53,7 +53,7 @@ public class MockHostResourceTest extends MockTestBase {
         MockTestBase.HostsResource service = getService();
         assertNotNull(service);
 
-        Hosts hosts = service.list();
+        Hosts hosts = service.list(null);
         assertNotNull(hosts);
         assertTrue(hosts.getHosts().size() > 0);
 
@@ -64,6 +64,23 @@ public class MockHostResourceTest extends MockTestBase {
             checkHost(t);
             assertEquals(host.getId(), t.getId());
         }
+    }
+
+    @Test
+    public void testGetHostsQuery() throws Exception {
+        MockTestBase.HostsResource service = getService();
+        assertNotNull(service);
+
+        Hosts hosts = service.list("name=*1");
+        assertNotNull(hosts);
+        assertEquals("unepected number of query matches", 1, hosts.getHosts().size());
+
+        Host host = hosts.getHosts().get(0);
+        checkHost(host);
+
+        Host t = service.get(host.getId());
+        checkHost(t);
+        assertEquals(host.getId(), t.getId());
     }
 
     @Test

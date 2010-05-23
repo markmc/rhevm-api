@@ -26,6 +26,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.api.mock.util.SimpleQueryEvaluator;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.Clusters;
@@ -36,10 +37,14 @@ import com.redhat.rhevm.api.resource.ClustersResource;
 import static com.redhat.rhevm.api.mock.resource.AbstractMockResource.allocateId;
 
 
-public class MockClustersResource extends AbstractMockCollectionResource implements ClustersResource {
+public class MockClustersResource extends AbstractMockQueryableResource<Cluster> implements ClustersResource {
 
     private static Map<String, MockClusterResource> clusters =
         Collections.synchronizedMap(new HashMap<String, MockClusterResource>());
+
+    public MockClustersResource() {
+        super(new SimpleQueryEvaluator<Cluster>());
+    }
 
     public void populate() {
         synchronized (clusters) {
@@ -66,9 +71,11 @@ public class MockClustersResource extends AbstractMockCollectionResource impleme
         Clusters ret = new Clusters();
 
         for (MockClusterResource cluster : clusters.values()) {
-            String id = cluster.getModel().getId();
-            UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(id);
-            ret.getClusters().add(cluster.addLinks(uriInfo, uriBuilder));
+            if (filter(cluster.getModel(), uriInfo, Cluster.class)) {
+                String id = cluster.getModel().getId();
+                UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(id);
+                ret.getClusters().add(cluster.addLinks(uriInfo, uriBuilder));
+            }
         }
 
         return ret;
@@ -83,7 +90,7 @@ public class MockClustersResource extends AbstractMockCollectionResource impleme
         String id = resource.getId();
         clusters.put(id, resource);
 
-        UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(id);
+        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(id);
 
         cluster = resource.addLinks(uriInfo, uriBuilder);
 

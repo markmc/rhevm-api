@@ -42,7 +42,7 @@ public class MockClusterResourceTest extends MockTestBase {
         MockTestBase.ClustersResource service = getService();
         assertNotNull(service);
 
-        Clusters clusters = service.list();
+        Clusters clusters = service.list(null);
         assertNotNull(clusters);
         assertTrue(clusters.getClusters().size() > 0);
 
@@ -53,6 +53,23 @@ public class MockClusterResourceTest extends MockTestBase {
             checkCluster(t);
             assertEquals(cluster.getId(), t.getId());
         }
+    }
+
+    @Test
+    public void testGetClustersQuery() throws Exception {
+        MockTestBase.ClustersResource service = getService();
+        assertNotNull(service);
+
+        Clusters clusters = service.list("name=*1");
+        assertNotNull(clusters);
+        assertEquals("unepected number of query matches", 1, clusters.getClusters().size());
+
+        Cluster cluster = clusters.getClusters().get(0);
+        checkCluster(cluster);
+
+        Cluster t = service.get(cluster.getId());
+        checkCluster(t);
+        assertEquals(cluster.getId(), t.getId());
     }
 
     @Test

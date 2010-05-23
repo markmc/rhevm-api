@@ -35,6 +35,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MultivaluedMap;
 
 import org.jboss.resteasy.client.ClientResponse;
@@ -82,7 +83,7 @@ public class MockTestBase extends Assert {
     @Path("/")
     @Produces(MediaType.APPLICATION_XML)
     protected interface VmsResource {
-        @GET public VMs list();
+        @GET public VMs list(@QueryParam("search") String query);
         @GET @Path("{id}") public VM get(@PathParam("id") String id);
         @PUT @Path("{id}") @Consumes(MediaType.APPLICATION_XML) public VM update(@PathParam("id") String id, VM vm);
     }
@@ -94,7 +95,7 @@ public class MockTestBase extends Assert {
     @Path("/")
     @Produces(MediaType.APPLICATION_XML)
     protected interface HostsResource {
-        @GET public Hosts list();
+        @GET public Hosts list(@QueryParam("search") String query);
         @GET @Path("{id}") public Host get(@PathParam("id") String id);
         @PUT @Path("{id}") @Consumes(MediaType.APPLICATION_XML) public Host update(@PathParam("id") String id, Host host);
     }
@@ -106,7 +107,7 @@ public class MockTestBase extends Assert {
     @Path("/")
     @Produces(MediaType.APPLICATION_XML)
     protected interface ClustersResource {
-        @GET public Clusters list();
+        @GET public Clusters list(@QueryParam("search") String query);
         @GET @Path("{id}") public Cluster get(@PathParam("id") String id);
         @PUT @Path("{id}") @Consumes(MediaType.APPLICATION_XML) public Cluster update(@PathParam("id") String id, Cluster cluster);
     }
@@ -128,7 +129,7 @@ public class MockTestBase extends Assert {
     @Path("/")
     @Produces(MediaType.APPLICATION_XML)
     protected interface StorageDomainsResource {
-        @GET public StorageDomains list();
+        @GET public StorageDomains list(@QueryParam("search") String query);
         @GET @Path("{id}") public StorageDomain get(@PathParam("id") String id);
     }
 

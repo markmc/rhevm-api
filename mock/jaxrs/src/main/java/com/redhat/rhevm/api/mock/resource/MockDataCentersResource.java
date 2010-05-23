@@ -26,6 +26,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.api.mock.util.SimpleQueryEvaluator;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.DataCenters;
 import com.redhat.rhevm.api.model.StorageType;
@@ -35,13 +36,17 @@ import com.redhat.rhevm.api.resource.DataCentersResource;
 import static com.redhat.rhevm.api.mock.resource.AbstractMockResource.allocateId;
 
 
-public class MockDataCentersResource extends AbstractMockCollectionResource implements DataCentersResource {
+public class MockDataCentersResource extends AbstractMockQueryableResource<DataCenter> implements DataCentersResource {
     /* FIXME: would like to do:
      * private @Context UriInfo uriInfo;
      */
 
     private static Map<String, MockDataCenterResource> dataCenters =
         Collections.synchronizedMap(new HashMap<String, MockDataCenterResource>());
+
+    public MockDataCentersResource() {
+        super(new SimpleQueryEvaluator<DataCenter>());
+    }
 
     public void populate() {
         synchronized (dataCenters) {
@@ -63,9 +68,11 @@ public class MockDataCentersResource extends AbstractMockCollectionResource impl
         DataCenters ret = new DataCenters();
 
         for (MockDataCenterResource dataCenter : dataCenters.values()) {
-            String id = dataCenter.getModel().getId();
-            UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(id);
-            ret.getDataCenters().add(dataCenter.addLinks(uriInfo, uriBuilder));
+            if (filter(dataCenter.getModel(), uriInfo, DataCenter.class)) {
+                String id = dataCenter.getModel().getId();
+                UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(id);
+                ret.getDataCenters().add(dataCenter.addLinks(uriInfo, uriBuilder));
+            }
         }
 
         return ret;
@@ -80,7 +87,7 @@ public class MockDataCentersResource extends AbstractMockCollectionResource impl
         String id = resource.getId();
         dataCenters.put(id, resource);
 
-        UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(id);
+        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(id);
 
         dataCenter = resource.addLinks(uriInfo, uriBuilder);
 

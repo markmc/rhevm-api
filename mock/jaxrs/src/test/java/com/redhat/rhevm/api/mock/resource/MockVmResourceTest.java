@@ -53,7 +53,7 @@ public class MockVmResourceTest extends MockTestBase {
         MockTestBase.VmsResource service = getService();
         assertNotNull(service);
 
-        VMs vms = service.list();
+        VMs vms = service.list(null);
         assertNotNull(vms);
         assertTrue(vms.getVMs().size() > 0);
 
@@ -64,6 +64,23 @@ public class MockVmResourceTest extends MockTestBase {
             checkVM(t);
             assertEquals(vm.getId(), t.getId());
         }
+    }
+
+    @Test
+    public void testGetVmsQuery() throws Exception {
+        MockTestBase.VmsResource service = getService();
+        assertNotNull(service);
+
+        VMs vms = service.list("name=*1");
+        assertNotNull(vms);
+        assertEquals("unepected number of query matches", 1, vms.getVMs().size());
+
+        VM vm = vms.getVMs().get(0);
+        checkVM(vm);
+
+        VM t = service.get(vm.getId());
+        checkVM(t);
+        assertEquals(vm.getId(), t.getId());
     }
 
     @Test

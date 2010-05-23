@@ -53,7 +53,7 @@ public class MockStorageDomainResourceTest extends MockTestBase {
         MockTestBase.StorageDomainsResource service = getService();
         assertNotNull(service);
 
-        StorageDomains storageDomains = service.list();
+        StorageDomains storageDomains = service.list(null);
         assertNotNull(storageDomains);
         assertTrue(storageDomains.getStorageDomains().size() > 0);
 
@@ -64,6 +64,23 @@ public class MockStorageDomainResourceTest extends MockTestBase {
             checkStorageDomain(d);
             assertEquals(domain.getId(), d.getId());
         }
+    }
+
+    @Test
+    public void testGetStorageDomainsQuery() throws Exception {
+        MockTestBase.StorageDomainsResource service = getService();
+        assertNotNull(service);
+
+        StorageDomains storageDomains = service.list("name=images*");
+        assertNotNull(storageDomains);
+        assertEquals("unepected number of query matches", 1, storageDomains.getStorageDomains().size());
+
+        StorageDomain domain = storageDomains.getStorageDomains().get(0);
+        checkStorageDomain(domain);
+
+        StorageDomain d = service.get(domain.getId());
+        checkStorageDomain(d);
+        assertEquals(domain.getId(), d.getId());
     }
 
     private String getActionUri(StorageDomain domain, String action) {
@@ -86,7 +103,7 @@ public class MockStorageDomainResourceTest extends MockTestBase {
         MockTestBase.StorageDomainsResource service = getService();
         assertNotNull(service);
 
-        StorageDomain domain = service.list().getStorageDomains().get(0);
+        StorageDomain domain = service.list(null).getStorageDomains().get(0);
         assertNotNull(domain);
 
         assertEquals(domain.getStatus(), StorageDomainStatus.UNINITIALIZED);
