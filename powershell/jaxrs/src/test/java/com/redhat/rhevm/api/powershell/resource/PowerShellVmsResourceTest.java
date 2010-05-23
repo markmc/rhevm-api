@@ -19,6 +19,7 @@
 package com.redhat.rhevm.api.powershell.resource;
 
 import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.model.VMs;
 
 import org.junit.Test;
 
@@ -41,6 +42,16 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     }
 
     @Test
+    public void testQuery() throws Exception {
+        verifyCollection(
+            resource.list(setUpResourceExpectations(getQueryCommand(VMs.class), 
+                                                    getQueryReturn(),
+                                                    getQueryParam(),
+                                                    NAMES_SUBSET)).getVMs(),
+            NAMES_SUBSET);
+    }
+
+    @Test
     public void testAdd() throws Exception {
         verifyResponse(
             resource.add(setUpResourceExpectations(ADD_COMMAND_PROLOG + getAddCommand() + ADD_COMMAND_EPILOG,
@@ -59,7 +70,7 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     @Test
     public void testGetSubResource() throws Exception {
         verifyResource(
-            (PowerShellVmResource)resource.getVmSubResource(setUpResourceExpectations(NOTHING, NOTHING, 0),
+            (PowerShellVmResource)resource.getVmSubResource(setUpResourceExpectations(null, null),
                                                             Integer.toString(NEW_NAME.hashCode())),
             NEW_NAME);
     }

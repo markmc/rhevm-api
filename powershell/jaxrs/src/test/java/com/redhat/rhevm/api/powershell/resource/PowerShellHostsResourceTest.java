@@ -19,6 +19,7 @@
 package com.redhat.rhevm.api.powershell.resource;
 
 import com.redhat.rhevm.api.model.Host;
+import com.redhat.rhevm.api.model.Hosts;
 
 import org.junit.Test;
 
@@ -36,6 +37,16 @@ public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionRes
         verifyCollection(
             resource.list(setUpResourceExpectations(getSelectCommand(), getSelectReturn(), NAMES)).getHosts(),
             NAMES);
+    }
+
+    @Test
+    public void testQuery() throws Exception {
+        verifyCollection(
+            resource.list(setUpResourceExpectations(getQueryCommand(Hosts.class),
+                                                    getQueryReturn(),
+                                                    getQueryParam(),
+                                                    NAMES_SUBSET)).getHosts(),
+            NAMES_SUBSET);
     }
 
     @Test
@@ -57,7 +68,7 @@ public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionRes
     @Test
     public void testGetSubResource() throws Exception {
         verifyResource(
-            (PowerShellHostResource)resource.getHostSubResource(setUpResourceExpectations(NOTHING, NOTHING, 0),
+            (PowerShellHostResource)resource.getHostSubResource(setUpResourceExpectations(null, null),
                                                                 Integer.toString(NEW_NAME.hashCode())),
             NEW_NAME);
     }

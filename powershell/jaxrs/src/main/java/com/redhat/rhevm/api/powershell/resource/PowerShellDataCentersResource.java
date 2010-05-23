@@ -39,8 +39,8 @@ public class PowerShellDataCentersResource
     @Override
     public DataCenters list(UriInfo uriInfo) {
         DataCenters ret = new DataCenters();
-        for (DataCenter dataCenter : PowerShellDataCenterResource.runAndParse("select-datacenter")) {
-            UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(dataCenter.getId());
+        for (DataCenter dataCenter : PowerShellDataCenterResource.runAndParse(getSelectCommand("select-datacenter", uriInfo, DataCenters.class))) {
+            UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(dataCenter.getId());
             ret.getDataCenters().add(PowerShellDataCenterResource.addLinks(dataCenter, uriInfo, uriBuilder));
         }
         return ret;
@@ -67,7 +67,7 @@ public class PowerShellDataCentersResource
 
         dataCenter = PowerShellDataCenterResource.runAndParseSingle(buf.toString());
 
-        UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(dataCenter.getId());
+        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(dataCenter.getId());
 
         dataCenter = PowerShellDataCenterResource.addLinks(dataCenter, uriInfo, uriBuilder);
 

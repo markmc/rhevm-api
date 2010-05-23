@@ -83,7 +83,7 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
 
             Attachment attachment = buildAttachment(dataCenter, storageDomain);
 
-            UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(dataCenter.getId());
+            UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(dataCenter.getId());
             ret.getAttachments().add(PowerShellAttachmentResource.addLinks(attachment, uriInfo, uriBuilder));
         }
 
@@ -104,7 +104,7 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
 
         attachment = buildAttachment(dataCenter, storageDomain);
 
-        UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(dataCenter.getId());
+        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(dataCenter.getId());
 
         attachment = PowerShellAttachmentResource.addLinks(attachment, uriInfo, uriBuilder);
 

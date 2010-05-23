@@ -19,6 +19,7 @@
 package com.redhat.rhevm.api.powershell.resource;
 
 import com.redhat.rhevm.api.model.Cluster;
+import com.redhat.rhevm.api.model.Clusters;
 import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.DataCenter;
 
@@ -47,6 +48,18 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
             NAMES);
     }
 
+
+    @Test
+    public void testQuery() throws Exception {
+        verifyCollection(
+            resource.list(setUpResourceExpectations(getQueryCommand(Clusters.class),
+                                                    getQueryReturn(SELECT_RETURN_EPILOG),
+                                                    2,
+                                                    getQueryParam(),
+                                                    NAMES_SUBSET)).getClusters(),
+            NAMES_SUBSET);
+    }
+
     @Test
     public void testAdd() throws Exception {
         verifyResponse(
@@ -67,7 +80,7 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
     @Test
     public void testGetSubResource() throws Exception {
         verifyResource(
-            (PowerShellClusterResource)resource.getClusterSubResource(setUpResourceExpectations(NOTHING, NOTHING, 0),
+            (PowerShellClusterResource)resource.getClusterSubResource(setUpResourceExpectations(null, null),
                                                                       Integer.toString(NEW_NAME.hashCode())),
             NEW_NAME);
     }

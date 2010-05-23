@@ -20,7 +20,10 @@ package com.redhat.rhevm.api.powershell.resource;
 
 import java.util.concurrent.Executor;
 
+import javax.ws.rs.core.UriInfo;
+
 import com.redhat.rhevm.api.common.resource.AbstractUpdatableResource;
+import com.redhat.rhevm.api.common.util.QueryHelper;
 import com.redhat.rhevm.api.common.util.ReapedMap;
 import com.redhat.rhevm.api.model.BaseResource;
 
@@ -28,6 +31,8 @@ public abstract class AbstractPowerShellCollectionResource<R extends BaseResourc
                                                            U extends AbstractUpdatableResource<R>> {
     private ReapedMap<String, U> resources;
     private Executor executor;
+    private final static String SEARCH_TEXT = " -searchtext ";
+    private final static String QUOTE = "\"";
 
     public AbstractPowerShellCollectionResource() {
         resources = new ReapedMap<String, U>();
@@ -49,6 +54,21 @@ public abstract class AbstractPowerShellCollectionResource<R extends BaseResourc
         synchronized (resources) {
             resources.remove(id);
         }
+    }
+
+    protected String getSelectCommand(String root, UriInfo uriInfo, Class<?> collectionType) {
+        String ret = root;
+        String constraint = QueryHelper.getConstraint(uriInfo, collectionType);
+        if (constraint != null) {
+            ret = new StringBuffer(root).append(SEARCH_TEXT)
+                                        .append(quoted(constraint))
+                                        .toString();
+        }
+        return ret;
+    }
+
+    private static StringBuffer quoted(String s) {
+        return new StringBuffer(QUOTE).append(s).append(QUOTE);
     }
 
     public Executor getExecutor() {

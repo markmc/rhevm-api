@@ -18,11 +18,15 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.lang.annotation.Annotation;
 import java.net.URI;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -30,6 +34,7 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.BaseResource;
 import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.common.resource.AbstractUpdatableResource;
+import com.redhat.rhevm.api.common.util.QueryHelper;
 import com.redhat.rhevm.api.common.util.ReflectionHelper;
 
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
@@ -61,10 +66,15 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
     private static final String URI_ROOT = "http://localhost:8099";
 
     protected static final String[] NAMES = {"sedna", "eris", "orcus"};
+    protected static final String[] NAMES_SUBSET = {"eris", "orcus"};
     protected static final String NEW_NAME = "ceres";
     private static final String SELECT_COMMAND = "select-{0}";
     private static final String SELECT_RETURN =
         "{0}id: " + "sedna".hashCode() + " \n name: sedna {1}\n\n" +
+        "{0}id: " + "eris".hashCode() + " \n name: eris {1}\n\n" +
+        "{0}id: " + "orcus".hashCode() + " \n name: orcus {1}";
+
+    private static final String QUERY_RETURN =
         "{0}id: " + "eris".hashCode() + " \n name: eris {1}\n\n" +
         "{0}id: " + "orcus".hashCode() + " \n name: orcus {1}";
 
@@ -74,6 +84,10 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
 
     private static final String REMOVE_COMMAND = "remove-{0} -{0}id " + "eris".hashCode();
 
+    private static final String SEARCH_OPTION = " -searchtext ";
+    private static final String QUERY = "name=*r*s";
+
+    private static final String SLASH = "/";
     protected static final String[] NOTHING = null;
 
     protected T resource;
@@ -104,23 +118,47 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
         return setUpResourceExpectations(command, ret, 0, names);
     }
 
-    protected UriInfo setUpResourceExpectations(String command, String ret, int baseUris, String ... names) throws Exception {
-        return setUpResourceExpectations(asArray(command), asArray(ret), baseUris, names);
+    protected UriInfo setUpResourceExpectations(String command, String ret, QueryParam query, String ... names) throws Exception {
+        return setUpResourceExpectations(asArray(command), asArray(ret), 0, query, names);
     }
 
-    protected UriInfo setUpResourceExpectations(String[] commands, String[] rets, int baseUris, String ... names) throws Exception {
+    protected UriInfo setUpResourceExpectations(String command, String ret, int baseUris, QueryParam query, String ... names) throws Exception {
+        return setUpResourceExpectations(asArray(command), asArray(ret), baseUris, query, names);
+    }
+
+    protected UriInfo setUpResourceExpectations(String command, String ret, int baseUris, String ... names) throws Exception {
+        return setUpResourceExpectations(asArray(command), asArray(ret), baseUris, null, names);
+    }
+
+    protected UriInfo setUpResourceExpectations(String[] command, String[] ret, int baseUris, String ... names) throws Exception {
+        return setUpResourceExpectations(command, ret, baseUris, null, names);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected UriInfo setUpResourceExpectations(String[] commands, String[] rets, int baseUris, QueryParam query, String ... names) throws Exception {
         if (commands != null) {
             mockStatic(PowerShellCmd.class);
             for (int i = 0 ; i < Math.min(commands.length, rets.length) ; i++) {
-                expect(PowerShellCmd.runCommand(commands[i])).andReturn(rets[i]);
+                if (commands[i] != null) {
+                    expect(PowerShellCmd.runCommand(commands[i])).andReturn(rets[i]);
+                }
             }
         }
         UriInfo uriInfo = createMock(UriInfo.class);
+        if (query != null) {
+            MultivaluedMap<String, String> queries = createMock(MultivaluedMap.class);
+            List<String> queryParam = new ArrayList<String>();
+            queryParam.add(query.value());
+            expect(queries.get("search")).andReturn(queryParam).anyTimes();
+            expect(uriInfo.getQueryParameters()).andReturn(queries).anyTimes();
+        } else {
+            expect(uriInfo.getQueryParameters()).andReturn(null).anyTimes();
+        }
         for (String name : names) {
             UriBuilder uriBuilder = createMock(UriBuilder.class);
-            expect(uriInfo.getRequestUriBuilder()).andReturn(uriBuilder);
+            expect(uriInfo.getAbsolutePathBuilder()).andReturn(uriBuilder);
             expect(uriBuilder.path(Integer.toString(name.hashCode()))).andReturn(uriBuilder);
-            expect(uriBuilder.build()).andReturn(new URI(URI_ROOT + collectionName + name.hashCode())).anyTimes();
+            expect(uriBuilder.build()).andReturn(new URI(URI_ROOT + SLASH + collectionName + SLASH + name.hashCode())).anyTimes();
         }
         for (int i = 0 ; i < baseUris ; i++) {
             UriBuilder uriBuilder = createMock(UriBuilder.class);
@@ -144,6 +182,30 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
 
     protected String getSelectReturn(String epilog) {
         return MessageFormat.format(SELECT_RETURN, individualName, epilog);
+    }
+
+    protected String getQueryCommand(Class<?> clz) {
+        return getSelectCommand() + SEARCH_OPTION + "\"" + QueryHelper.RETURN_TYPES.get(clz) + QUERY + "\"";
+    }
+
+    protected QueryParam getQueryParam() {
+        return new QueryParam() {
+            public String value() {
+                return QUERY;
+            }
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return null;
+            }
+        };
+    }
+
+    protected String getQueryReturn() {
+        return getQueryReturn("");
+    }
+
+    protected String getQueryReturn(String epilog) {
+        return MessageFormat.format(QUERY_RETURN, individualName, epilog);
     }
 
     protected String getAddCommand() {
@@ -181,7 +243,7 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
         assertTrue("expected location header",
                    r.getMetadata().get("Location").size() > 0);
         assertEquals("unexpected location header",
-                     URI_ROOT + collectionName + name.hashCode(),
+                     URI_ROOT + SLASH + collectionName + SLASH + name.hashCode(),
                      r.getMetadata().get("Location").get(0).toString());
     }
 
@@ -190,8 +252,8 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
         assertEquals("unexpected collection size", collection.size(), names.length);
         for (String name: names) {
             R model = collection.remove(0);
-            assertEquals(model.getId(), Integer.toString(name.hashCode()));
-            assertEquals(model.getName(), name);
+            assertEquals(Integer.toString(name.hashCode()), model.getId());
+            assertEquals(name, model.getName());
         }
     }
 

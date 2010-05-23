@@ -21,6 +21,7 @@ package com.redhat.rhevm.api.powershell.resource;
 import java.text.MessageFormat;
 
 import com.redhat.rhevm.api.model.DataCenter;
+import com.redhat.rhevm.api.model.DataCenters;
 import com.redhat.rhevm.api.model.StorageType;
 
 import org.junit.Test;
@@ -56,6 +57,19 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
     }
 
     @Test
+    public void testQuery() throws Exception {
+        String [] commands = { getQueryCommand(DataCenters.class),
+                               GET_STORAGE_COMMAND + NAMES[1].hashCode(),
+                               GET_STORAGE_COMMAND + NAMES[2].hashCode() };
+        String [] returns =  { getQueryReturn(SELECT_RETURN_EPILOG),
+                               MessageFormat.format(GET_STORAGE_RETURN, "mimas".hashCode(), "dione"),
+                               MessageFormat.format(GET_STORAGE_RETURN, "dione".hashCode(), "titan") };
+         verifyCollection(
+            resource.list(setUpResourceExpectations(commands, returns, 2, getQueryParam(), NAMES_SUBSET)).getDataCenters(),
+            NAMES_SUBSET);
+    }
+
+    @Test
     public void testAdd() throws Exception {
         String [] commands = { getAddCommand() + ADD_COMMAND_EPILOG,
                            GET_STORAGE_COMMAND + NEW_NAME.hashCode()};
@@ -75,8 +89,8 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
     @Test
     public void testGetSubResource() throws Exception {
         verifyResource(
-            (PowerShellDataCenterResource)resource.getDataCenterSubResource(setUpResourceExpectations(NOTHING, NOTHING, 0),
-                                                                        Integer.toString(NEW_NAME.hashCode())),
+            (PowerShellDataCenterResource)resource.getDataCenterSubResource(setUpResourceExpectations(null, null),
+                                                                            Integer.toString(NEW_NAME.hashCode())),
             NEW_NAME);
     }
 

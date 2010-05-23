@@ -40,8 +40,8 @@ public class PowerShellVmsResource
     @Override
     public VMs list(UriInfo uriInfo) {
         VMs ret = new VMs();
-        for (VM vm : PowerShellVmResource.runAndParse("select-vm")) {
-            UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(vm.getId());
+        for (VM vm : PowerShellVmResource.runAndParse(getSelectCommand("select-vm", uriInfo, VMs.class))) {
+            UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(vm.getId());
             ret.getVMs().add(PowerShellVmResource.addLinks(vm, uriBuilder));
         }
         return ret;
@@ -78,7 +78,7 @@ public class PowerShellVmsResource
 
         vm = PowerShellVmResource.runAndParseSingle(buf.toString());
 
-        UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(vm.getId());
+        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(vm.getId());
 
         vm = PowerShellVmResource.addLinks(vm, uriBuilder);
 

@@ -35,8 +35,8 @@ public class PowerShellClustersResource
     @Override
     public Clusters list(UriInfo uriInfo) {
         Clusters ret = new Clusters();
-        for (Cluster cluster : PowerShellClusterResource.runAndParse("select-cluster")) {
-            UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(cluster.getId());
+        for (Cluster cluster : PowerShellClusterResource.runAndParse(getSelectCommand("select-cluster", uriInfo, Clusters.class))) {
+            UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(cluster.getId());
             ret.getClusters().add(PowerShellClusterResource.addLinks(cluster, uriInfo, uriBuilder));
         }
         return ret;
@@ -59,7 +59,7 @@ public class PowerShellClustersResource
 
         cluster = PowerShellClusterResource.runAndParseSingle(buf.toString());
 
-        UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(cluster.getId());
+        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(cluster.getId());
 
         cluster = PowerShellClusterResource.addLinks(cluster, uriInfo, uriBuilder);
 
