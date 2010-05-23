@@ -1,0 +1,73 @@
+/*
+ * Copyright © 2010 Red Hat, Inc.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+package com.redhat.rhevm.api.common.util;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.UriInfo;
+
+import com.redhat.rhevm.api.model.Cluster;
+import com.redhat.rhevm.api.model.DataCenter;
+import com.redhat.rhevm.api.model.Host;
+import com.redhat.rhevm.api.model.StorageDomain;
+import com.redhat.rhevm.api.model.VM;
+
+/**
+ * A container of static methods related to query resolution.
+ */
+public class QueryHelper {
+
+    public static final String CONSTRAINT_PARAMETER = "search";
+    private static final String RETURN_TYPE_SEPARTOR = " : ";
+
+    private QueryHelper() {}
+
+    /**
+     * Map return types per-collection-class, as there's no logical pattern
+     * REVISIT: can we safely just drop the return type specifier?
+     * (doesn't seem to have any effect in the powershell case)
+     */
+    public static Map<Class<?>, String> RETURN_TYPES;
+
+    static {
+        RETURN_TYPES = new HashMap<Class<?>, String>();
+        /**
+         * REVISIT: RHEVM Admin Guide is not very clear on whether these
+         * return type specifiers should always be pluralized
+         */
+        RETURN_TYPES.put(VM.class, "VMs" + RETURN_TYPE_SEPARTOR);
+        RETURN_TYPES.put(Host.class, "Hosts" + RETURN_TYPE_SEPARTOR);
+        RETURN_TYPES.put(Cluster.class, "Clusters" + RETURN_TYPE_SEPARTOR);
+        RETURN_TYPES.put(DataCenter.class, "Datacenter" + RETURN_TYPE_SEPARTOR);
+        RETURN_TYPES.put(StorageDomain.class, "Storage" + RETURN_TYPE_SEPARTOR);
+    }
+
+    public static String getConstraint(UriInfo uriInfo, Class<?> clz) {
+        MultivaluedMap<String, String> queries = uriInfo.getQueryParameters();
+        String constraint = queries != null
+                            && queries.get(CONSTRAINT_PARAMETER) != null
+                            && queries.get(CONSTRAINT_PARAMETER).size() > 0
+                            ? queries.get(CONSTRAINT_PARAMETER).get(0)
+                            : null;
+        return constraint != null ? RETURN_TYPES.get(clz) + constraint : null;
+    }
+
+}
