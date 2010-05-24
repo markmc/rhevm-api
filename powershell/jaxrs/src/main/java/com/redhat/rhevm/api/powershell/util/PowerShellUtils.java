@@ -41,11 +41,21 @@ public class PowerShellUtils {
             if (parts.length != 2)
                 continue;
 
+            String key = parts[0].trim().toLowerCase();
+            if (key.isEmpty()) {
+                continue;
+            }
+
+            String value = parts[1].trim();
+            if (value.isEmpty()) {
+                value = null;
+            }
+
             if (props == null) {
                 props = new HashMap<String,String>();
             }
 
-            props.put(parts[0].trim().toLowerCase(), parts[1].trim());
+            props.put(key, value);
         }
 
         if (props != null) {
