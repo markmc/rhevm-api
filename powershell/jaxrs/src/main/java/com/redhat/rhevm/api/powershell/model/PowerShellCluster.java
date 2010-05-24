@@ -38,6 +38,7 @@ public class PowerShellCluster {
 
             cluster.setId(props.get("clusterid"));
             cluster.setName(props.get("name"));
+            cluster.setDescription(props.get("description"));
 
             CPU cpu = new CPU();
             cpu.setId(props.get("cpuname"));

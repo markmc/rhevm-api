@@ -50,6 +50,9 @@ public class MockClusterResource extends AbstractMockResource<Cluster> implement
         if (cluster.getName() != null) {
             getModel().setName(cluster.getName());
         }
+        if (cluster.getDescription() != null) {
+            getModel().setDescription(cluster.getDescription());
+        }
 
         if (cluster.getCpu() != null) {
             CPU cpu = new CPU();

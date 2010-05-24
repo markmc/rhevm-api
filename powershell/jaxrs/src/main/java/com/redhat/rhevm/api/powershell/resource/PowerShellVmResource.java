@@ -78,6 +78,9 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
         if (vm.getName() != null) {
             buf.append("$v.name = \"" + vm.getName() + "\"");
         }
+        if (vm.getDescription() != null) {
+            buf.append("$v.description = \"" + vm.getDescription() + "\"");
+        }
 
         buf.append("\n");
         buf.append("update-vm -vmobject $v");

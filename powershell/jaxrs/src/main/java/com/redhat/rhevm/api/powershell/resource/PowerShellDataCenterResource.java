@@ -76,6 +76,9 @@ public class PowerShellDataCenterResource extends AbstractActionableResource<Dat
         if (dataCenter.getName() != null) {
             buf.append("$h.name = \"" + dataCenter.getName() + "\"");
         }
+        if (dataCenter.getDescription() != null) {
+            buf.append("$h.description = \"" + dataCenter.getDescription() + "\"");
+        }
 
         buf.append("\n");
         buf.append("update-datacenter -datacenterobject $v");

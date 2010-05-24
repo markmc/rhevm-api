@@ -36,6 +36,7 @@ public class PowerShellVM {
 
             vm.setId(props.get("vmid"));
             vm.setName(props.get("name"));
+            vm.setDescription(props.get("description"));
 
             ret.add(vm);
         }

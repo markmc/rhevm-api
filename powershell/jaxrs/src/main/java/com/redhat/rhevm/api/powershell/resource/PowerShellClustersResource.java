@@ -53,6 +53,11 @@ public class PowerShellClustersResource
         buf.append(" -clustername " + cluster.getName());
         buf.append(" -clustercpuname " + cluster.getCpu().getId());
         buf.append(" -datacenterid " + cluster.getDataCenter().getId());
+
+        if (cluster.getDescription() != null) {
+            buf.append(" -clusterdescription " + cluster.getDescription());
+        }
+
         buf.append(" -compatibilityversion $v");
 
         // FIXME: this script doesn't actually seem to work

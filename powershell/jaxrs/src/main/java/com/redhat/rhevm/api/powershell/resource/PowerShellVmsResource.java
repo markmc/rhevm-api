@@ -64,8 +64,10 @@ public class PowerShellVmsResource
 
         buf.append("add-vm");
 
-        if (vm.getName() != null) {
-            buf.append(" -name " + vm.getName());
+        buf.append(" -name " + vm.getName());
+
+        if (vm.getDescription() != null) {
+            buf.append(" -description " + vm.getDescription());
         }
 
         if (vm.getTemplateId() != null) {
