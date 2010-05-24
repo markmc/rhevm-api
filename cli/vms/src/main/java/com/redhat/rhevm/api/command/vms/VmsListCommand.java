@@ -34,8 +34,11 @@ public class VmsListCommand extends AbstractListCommand {
     @Option(name = "-b", aliases = {"--bound"}, description="Upper bound on number of VMs to display", required = false, multiValued = false)
     protected int limit = Integer.MAX_VALUE;
 
+    @Option(name = "-s", aliases = {"--search"}, description="Query constraint on VMs", required = false, multiValued = false)
+    protected String constraint;
+
     protected Object doExecute() throws Exception {
-        doList(client.getCollection("vms", VMs.class).getVMs(), limit);
+        doList(client.getCollection("vms", VMs.class, constraint).getVMs(), limit);
         return null;
     }
 }

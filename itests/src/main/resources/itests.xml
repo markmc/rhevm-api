@@ -35,14 +35,32 @@
           <output-has pattern="[ vm8] [ 8]"/>
         </testcase>
 
+        <testcase name="cli.vms.query" owner="eglynn">
+          <rhevm-client command="vms:list --search=name=*1"/>
+          <output-has pattern="[ vm1] [ 1]"/>
+          <output-doesnt-have pattern="[ vm2] [ 2]"/>
+        </testcase>
+
         <testcase name="cli.hosts.list" owner="eglynn">
           <rhevm-client command="hosts:list"/>
           <output-has pattern="[ host2] [ 2]"/>
         </testcase>
 
+        <testcase name="cli.hosts.query" owner="eglynn">
+          <rhevm-client command="hosts:list --search=name=*1"/>
+          <output-has pattern="[ host1] [ 1]"/>
+          <output-doesnt-have pattern="[ host2] [ 2]"/>
+        </testcase>
+
         <testcase name="cli.datacenters.list" owner="eglynn">
           <rhevm-client command="datacenters:list"/>
           <output-has pattern="[ datacenter1] [ 1]"/>
+        </testcase>
+
+        <testcase name="cli.datacenters.query" owner="eglynn">
+          <rhevm-client command="datacenters:list --search=name=*1"/>
+          <output-has pattern="[ datacenter1] [ 1]"/>
+          <output-doesnt-have pattern="[ datacenter2] [ 2]"/>
         </testcase>
 
         <testcase name="cli.vm.update" owner="eglynn">

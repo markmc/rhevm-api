@@ -33,8 +33,11 @@ public class HostsListCommand extends AbstractListCommand {
     @Option(name = "-b", aliases = {"--bound"}, description="Upper bound on number of Hosts to display", required = false, multiValued = false)
     protected int limit = Integer.MAX_VALUE;
 
+    @Option(name = "-s", aliases = {"--search"}, description="Query constraint on Hosts", required = false, multiValued = false)
+    protected String constraint;
+
     protected Object doExecute() throws Exception {
-        doList(client.getCollection("hosts", Hosts.class).getHosts(), limit);
+        doList(client.getCollection("hosts", Hosts.class, constraint).getHosts(), limit);
         return null;
     }
 }

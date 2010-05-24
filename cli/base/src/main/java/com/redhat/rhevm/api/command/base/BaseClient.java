@@ -19,8 +19,9 @@
 package com.redhat.rhevm.api.command.base;
 
 import java.io.InputStream;
-import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -28,6 +29,7 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 import javax.ws.rs.core.Response;
 
+import org.apache.abdera.i18n.templates.Template;
 import org.apache.cxf.BusFactory;
 import org.apache.cxf.binding.BindingFactoryManager;
 import org.apache.cxf.jaxrs.JAXRSBindingFactory;
@@ -47,6 +49,8 @@ import com.redhat.rhevm.api.model.Status;
  */
 public class BaseClient {
 
+    protected static final String SEARCH_RELATION = "/search";
+
     protected String baseUrl;
 
     public String getBaseUrl() {
@@ -58,14 +62,20 @@ public class BaseClient {
     }
 
     public <S> S getCollection(String rel, Class<S> clz) throws Exception {
+        return getCollection(rel, clz, null);
+    }
+
+    public <S> S getCollection(String rel, Class<S> clz, String constraint) throws Exception {
         S ret = clz.newInstance();
         Response r = null;
         Exception failure = null;
-        String top = getTopLink(rel);
+        String top = constraint == null
+                     ? getTopLink(rel)
+                     : getTopLink(rel + SEARCH_RELATION);
 
         if (top != null) {
             try {
-                WebClient get = WebClient.create(top);
+                WebClient get = WebClient.create(getBaseUri(top, constraint));
                 r = get.path("/").accept("application/xml").get();
             } catch (Exception e) {
                 failure = e;
@@ -178,6 +188,17 @@ public class BaseClient {
             if (rel.equals((link.getRel()))) {
                 ret = link.getHref();
             }
+        }
+        return ret;
+    }
+
+    private String getBaseUri(String href, String constraint) {
+        String ret = href;
+        if (constraint != null) {
+            Template t = new Template(href);
+            Map<String, String> m = new HashMap<String, String>();
+            m.put("query", constraint);
+            ret = t.expand(m);
         }
         return ret;
     }
