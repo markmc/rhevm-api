@@ -37,6 +37,7 @@ import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import org.junit.Test;
 
 import static org.easymock.classextension.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.isA;
 
 import static org.powermock.api.easymock.PowerMock.createMock;
 import static org.powermock.api.easymock.PowerMock.mockStatic;
@@ -45,10 +46,10 @@ import static org.powermock.api.easymock.PowerMock.replayAll;
 
 public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM, PowerShellVmResource> {
 
-    private static final String GET_RETURN = "vmid: 12345 \n name: sedna";
+    private static final String GET_RETURN = "vmid: 12345 \nname: sedna\nhostclusterid: 3321\n";
     private static final String ACTION_RETURN = "replace with realistic powershell return";
     private static final String UPDATE_COMMAND = "$v = get-vm 12345\n$v.name = \"eris\"\nupdate-vm -vmobject $v";
-    private static final String UPDATE_RETURN = "vmid: 12345 \n name: eris";
+    private static final String UPDATE_RETURN = "vmid: 12345 \n name: eris\nhostclusterid: 3312\n";
 
     protected PowerShellVmResource getResource() {
         return new PowerShellVmResource("12345");
@@ -160,6 +161,11 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
         UriBuilder uriBuilder = createMock(UriBuilder.class);
         expect(uriInfo.getRequestUriBuilder()).andReturn(uriBuilder).anyTimes();
         expect(uriBuilder.build()).andReturn(new URI(URI_ROOT + "/vms/12345")).anyTimes();
+        UriBuilder baseBuilder = createMock(UriBuilder.class);
+        expect(uriInfo.getBaseUriBuilder()).andReturn(baseBuilder);
+        expect(baseBuilder.clone()).andReturn(baseBuilder).anyTimes();
+        expect(baseBuilder.path(isA(String.class))).andReturn(baseBuilder).anyTimes();
+        expect(baseBuilder.build()).andReturn(new URI(URI_ROOT + "/foo")).anyTimes();
         replayAll();
 
         return uriInfo;

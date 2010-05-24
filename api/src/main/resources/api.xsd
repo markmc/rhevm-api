@@ -360,8 +360,7 @@
       <xs:complexContent>
         <xs:extension base="BaseResource">
           <xs:sequence>
-            <xs:element name="cluster_id" type="xs:string" minOccurs="0"/>
-            <xs:element name="host_id" type="xs:string" minOccurs="0"/>
+            <xs:element ref="cluster" minOccurs="0" maxOccurs="1"/>
             <xs:element name="template_id" type="xs:string" minOccurs="0"/>
           </xs:sequence>
         </xs:extension>

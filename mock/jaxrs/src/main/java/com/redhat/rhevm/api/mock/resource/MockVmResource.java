@@ -27,6 +27,7 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.ActionsBuilder;
+import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
@@ -59,6 +60,11 @@ public class MockVmResource extends AbstractMockResource<VM> implements VmResour
         }
         if (vm.getDescription() != null) {
             getModel().setDescription(vm.getDescription());
+        }
+        if (vm.getCluster() != null) {
+            Cluster cluster = new Cluster();
+            cluster.setId(vm.getCluster().getId());
+            getModel().setCluster(cluster);
         }
     }
 

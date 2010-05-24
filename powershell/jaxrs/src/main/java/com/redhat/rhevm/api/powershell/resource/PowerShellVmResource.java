@@ -27,6 +27,7 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Action;
+import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
@@ -57,14 +58,19 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
         return !vms.isEmpty() ? vms.get(0) : null;
     }
 
-    public static VM addLinks(VM vm, UriBuilder uriBuilder) {
+    public static VM addLinks(VM vm, UriInfo uriInfo, UriBuilder uriBuilder) {
         vm.setHref(uriBuilder.build().toString());
+
+        UriBuilder baseUriBuilder = uriInfo.getBaseUriBuilder();
+        Cluster cluster = vm.getCluster();
+        cluster.setHref(PowerShellClustersResource.getHref(baseUriBuilder, cluster.getId()));
+
         return vm;
     }
 
     @Override
     public VM get(UriInfo uriInfo) {
-        return addLinks(runAndParseSingle("get-vm " + getId()), uriInfo.getRequestUriBuilder());
+        return addLinks(runAndParseSingle("get-vm " + getId()), uriInfo, uriInfo.getRequestUriBuilder());
     }
 
     @Override
@@ -85,7 +91,7 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
         buf.append("\n");
         buf.append("update-vm -vmobject $v");
 
-        return addLinks(runAndParseSingle(buf.toString()), uriInfo.getRequestUriBuilder());
+        return addLinks(runAndParseSingle(buf.toString()), uriInfo, uriInfo.getRequestUriBuilder());
     }
 
     @Override

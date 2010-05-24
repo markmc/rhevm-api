@@ -21,6 +21,7 @@ package com.redhat.rhevm.api.powershell.model;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
@@ -37,6 +38,10 @@ public class PowerShellVM {
             vm.setId(props.get("vmid"));
             vm.setName(props.get("name"));
             vm.setDescription(props.get("description"));
+
+            Cluster cluster = new Cluster();
+            cluster.setId(props.get("hostclusterid"));
+            vm.setCluster(cluster);
 
             ret.add(vm);
         }

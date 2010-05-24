@@ -18,6 +18,7 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
 
@@ -25,10 +26,16 @@ import org.junit.Test;
 
 public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResourceTest<VM, PowerShellVmResource, PowerShellVmsResource> {
 
+    private static String TEMPLATE_ID = "template1";
+    private static String CLUSTER_ID = "cluster1";
+
     private static final String ADD_COMMAND_PROLOG =
-        "$templ = get-template -templateid template_1\n";
+        "$templ = get-template -templateid " + TEMPLATE_ID + "\n";
     private static final String ADD_COMMAND_EPILOG =
-        "-templateobject $templ -hostclusterid hostcluster_1";
+        "-templateobject $templ -hostclusterid " + CLUSTER_ID;
+
+    private static final String SELECT_RETURN_EPILOG = "\nhostclusterid: " + CLUSTER_ID;
+    private static final String ADD_RETURN_EPILOG    = "\nhostclusterid: " + CLUSTER_ID;
 
     public PowerShellVmsResourceTest() {
         super(new PowerShellVmResource("0", null), "vms", "vm");
@@ -37,7 +44,10 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     @Test
     public void testList() throws Exception {
         verifyCollection(
-            resource.list(setUpResourceExpectations(getSelectCommand(), getSelectReturn(), NAMES)).getVMs(),
+            resource.list(setUpResourceExpectations(getSelectCommand(),
+                                                    getSelectReturn(SELECT_RETURN_EPILOG),
+                                                    3,
+                                                    NAMES)).getVMs(),
             NAMES);
     }
 
@@ -45,7 +55,8 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     public void testQuery() throws Exception {
         verifyCollection(
             resource.list(setUpResourceExpectations(getQueryCommand(VMs.class), 
-                                                    getQueryReturn(),
+                                                    getQueryReturn(SELECT_RETURN_EPILOG),
+                                                    2,
                                                     getQueryParam(),
                                                     NAMES_SUBSET)).getVMs(),
             NAMES_SUBSET);
@@ -55,7 +66,8 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     public void testAdd() throws Exception {
         verifyResponse(
             resource.add(setUpResourceExpectations(ADD_COMMAND_PROLOG + getAddCommand() + ADD_COMMAND_EPILOG,
-                                                   getAddReturn(),
+                                                   getAddReturn(ADD_RETURN_EPILOG),
+                                                   1,
                                                    NEW_NAME),
                          getModel(NEW_NAME)),
             NEW_NAME);
@@ -80,7 +92,10 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     }
 
     protected void populateModel(VM vm) {
-        vm.setTemplateId("template_1");
-        vm.setClusterId("hostcluster_1");
+        vm.setTemplateId(TEMPLATE_ID);
+
+        Cluster cluster = new Cluster();
+        cluster.setId(CLUSTER_ID);
+        vm.setCluster(cluster);
     }
 }

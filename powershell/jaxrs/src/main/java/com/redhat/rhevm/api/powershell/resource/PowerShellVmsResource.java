@@ -42,7 +42,7 @@ public class PowerShellVmsResource
         VMs ret = new VMs();
         for (VM vm : PowerShellVmResource.runAndParse(getSelectCommand("select-vm", uriInfo, VMs.class))) {
             UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(vm.getId());
-            ret.getVMs().add(PowerShellVmResource.addLinks(vm, uriBuilder));
+            ret.getVMs().add(PowerShellVmResource.addLinks(vm, uriInfo, uriBuilder));
         }
         return ret;
     }
@@ -74,15 +74,15 @@ public class PowerShellVmsResource
             buf.append(" -templateobject $templ");
         }
 
-        if (vm.getClusterId() != null) {
-            buf.append(" -hostclusterid " + vm.getClusterId());
+        if (vm.getCluster() != null) {
+            buf.append(" -hostclusterid " + vm.getCluster().getId());
         }
 
         vm = PowerShellVmResource.runAndParseSingle(buf.toString());
 
         UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(vm.getId());
 
-        vm = PowerShellVmResource.addLinks(vm, uriBuilder);
+        vm = PowerShellVmResource.addLinks(vm, uriInfo, uriBuilder);
 
         return Response.created(uriBuilder.build()).entity(vm).build();
     }

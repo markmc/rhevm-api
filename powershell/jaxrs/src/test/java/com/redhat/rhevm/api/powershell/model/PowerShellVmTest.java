@@ -27,10 +27,11 @@ import com.redhat.rhevm.api.model.VM;
 
 public class PowerShellVmTest extends PowerShellModelTest {
 
-    private void testVM(VM v, String id, String name, String description) {
+    private void testVM(VM v, String id, String name, String description, String clusterId) {
         assertEquals(v.getId(), id);
         assertEquals(v.getName(), name);
         assertEquals(v.getDescription(), description);
+        assertEquals(v.getCluster().getId(), clusterId);
     }
 
     @Test
@@ -42,6 +43,6 @@ public class PowerShellVmTest extends PowerShellModelTest {
 
         assertEquals(vms.size(), 1);
 
-        testVM(vms.get(0), "439c0c13-3e0a-489e-a514-1b07232ace41", "test_1", null);
+        testVM(vms.get(0), "439c0c13-3e0a-489e-a514-1b07232ace41", "test_1", null, "0");
     }
 }
