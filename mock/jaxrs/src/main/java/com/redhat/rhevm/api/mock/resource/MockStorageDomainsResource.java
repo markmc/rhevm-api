@@ -26,7 +26,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.api.mock.util.SimpleQueryEvaluator;
+import com.redhat.rhevm.api.mock.util.SimpleQueryEvaluator;
 import com.redhat.rhevm.api.model.Attachment;
 import com.redhat.rhevm.api.model.Attachments;
 import com.redhat.rhevm.api.model.Storage;

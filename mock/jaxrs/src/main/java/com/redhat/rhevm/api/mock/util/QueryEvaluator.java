@@ -17,7 +17,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package com.redhat.api.mock.util;
+package com.redhat.rhevm.api.mock.util;
 
 import com.redhat.rhevm.api.model.BaseResource;
 

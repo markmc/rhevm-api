@@ -20,8 +20,8 @@ package com.redhat.rhevm.api.mock.resource;
 
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.api.mock.util.QueryEvaluator;
 import com.redhat.rhevm.api.common.util.QueryHelper;
+import com.redhat.rhevm.api.mock.util.QueryEvaluator;
 import com.redhat.rhevm.api.model.BaseResource;
 
 public class AbstractMockQueryableResource<R extends BaseResource> extends AbstractMockCollectionResource {
