@@ -93,6 +93,40 @@
 
   <!-- Enums -->
 
+  <xs:simpleType name="DiskType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="DATA"/>
+      <xs:enumeration value="SHARED"/>
+      <xs:enumeration value="SWAP"/>
+      <xs:enumeration value="SYSTEM"/>
+      <xs:enumeration value="TEMP"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="DiskFormat">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="COW"/>
+      <xs:enumeration value="RAW"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="DiskInterface">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="IDE"/>
+      <xs:enumeration value="SCSI"/>
+      <xs:enumeration value="VIRTIO"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="DiskStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ILLEGAL"/>
+      <xs:enumeration value="INVALID"/>
+      <xs:enumeration value="LOCKED"/>
+      <xs:enumeration value="OK"/>
+    </xs:restriction>
+  </xs:simpleType>
+
   <xs:simpleType name="StorageDomainType">
     <xs:restriction base="xs:string">
       <xs:enumeration value="DATA"/>
@@ -362,6 +396,7 @@
           <xs:sequence>
             <xs:element ref="cluster" minOccurs="0" maxOccurs="1"/>
             <xs:element name="template_id" type="xs:string" minOccurs="0"/>
+            <xs:element ref="devices" minOccurs="0" maxOccurs="1"/>
           </xs:sequence>
         </xs:extension>
       </xs:complexContent>
@@ -377,6 +412,39 @@
       </xs:annotation>
       <xs:element ref="vm" maxOccurs="unbounded"/>
     </xs:sequence>
+  </xs:complexType>
+
+  <!-- Devices -->
+
+  <xs:element name="disk" type="Disk"/>
+
+  <xs:element name="devices" type="Devices"/>
+
+  <xs:complexType name="Devices">
+    <xs:sequence>
+      <xs:element ref="disk" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <jaxb:property name="Disks"/>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Disk">
+    <xs:sequence>
+      <xs:element name="size" type="xs:int" minOccurs="0"/>
+      <xs:element name="type" type="DiskType" minOccurs="0"/>
+      <xs:element name="status" type="DiskStatus" minOccurs="0"/>
+      <xs:element name="interface" type="DiskInterface" minOccurs="0"/>
+      <xs:element name="format" type="DiskFormat" minOccurs="0"/>
+      <xs:element name="sparse" type="xs:boolean" minOccurs="0"/>
+      <xs:element name="bootable" type="xs:boolean" minOccurs="0"/>
+      <xs:element name="wipe_after_delete" type="xs:boolean" minOccurs="0"/>
+      <xs:element name="propagate_errors" type="xs:boolean" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:string"/>
   </xs:complexType>
 
 </xs:schema>

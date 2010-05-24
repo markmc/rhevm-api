@@ -18,6 +18,8 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.text.MessageFormat;
+
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
@@ -37,38 +39,54 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     private static final String SELECT_RETURN_EPILOG = "\nhostclusterid: " + CLUSTER_ID;
     private static final String ADD_RETURN_EPILOG    = "\nhostclusterid: " + CLUSTER_ID;
 
+    private static final String GET_DISKS_COMMAND = "$v = get-vm {0,number,#}\n$v.GetDiskImages()\n";
+    public static final String GET_DISKS_RETURN = "actualsizeinbytes: 10485760\ndisktype: system\nstatus: ok\ndiskinterface: ide\nvolumeformat: raw\nvolumetype: sparse\nboot: true\nwipeafterdelete: false\npropagateerrors: off\n";
+
     public PowerShellVmsResourceTest() {
         super(new PowerShellVmResource("0", null), "vms", "vm");
     }
 
     @Test
     public void testList() throws Exception {
+        String [] commands = { getSelectCommand(),
+                               MessageFormat.format(GET_DISKS_COMMAND, NAMES[0].hashCode()),
+                               MessageFormat.format(GET_DISKS_COMMAND, NAMES[1].hashCode()),
+                               MessageFormat.format(GET_DISKS_COMMAND, NAMES[2].hashCode()) };
+        String [] returns = { getSelectReturn(SELECT_RETURN_EPILOG),
+                              GET_DISKS_RETURN,
+                              GET_DISKS_RETURN,
+                              GET_DISKS_RETURN };
+
         verifyCollection(
-            resource.list(setUpResourceExpectations(getSelectCommand(),
-                                                    getSelectReturn(SELECT_RETURN_EPILOG),
-                                                    3,
-                                                    NAMES)).getVMs(),
+            resource.list(setUpResourceExpectations(commands, returns, 3, NAMES)).getVMs(),
             NAMES);
     }
 
     @Test
     public void testQuery() throws Exception {
+        String [] commands = { getQueryCommand(VMs.class),
+                               MessageFormat.format(GET_DISKS_COMMAND, NAMES[1].hashCode()),
+                               MessageFormat.format(GET_DISKS_COMMAND, NAMES[2].hashCode()) };
+
+        String [] returns = { getQueryReturn(SELECT_RETURN_EPILOG),
+                              GET_DISKS_RETURN,
+                              GET_DISKS_RETURN };
+
         verifyCollection(
-            resource.list(setUpResourceExpectations(getQueryCommand(VMs.class), 
-                                                    getQueryReturn(SELECT_RETURN_EPILOG),
-                                                    2,
-                                                    getQueryParam(),
-                                                    NAMES_SUBSET)).getVMs(),
+            resource.list(setUpResourceExpectations(commands, returns, 2, getQueryParam(), NAMES_SUBSET)).getVMs(),
             NAMES_SUBSET);
     }
 
     @Test
     public void testAdd() throws Exception {
+        String [] commands = { ADD_COMMAND_PROLOG + getAddCommand() + ADD_COMMAND_EPILOG,
+                               MessageFormat.format(GET_DISKS_COMMAND, NEW_NAME.hashCode()) };
+
+        String [] returns = { getAddReturn(ADD_RETURN_EPILOG),
+                              GET_DISKS_RETURN };
+
         verifyResponse(
-            resource.add(setUpResourceExpectations(ADD_COMMAND_PROLOG + getAddCommand() + ADD_COMMAND_EPILOG,
-                                                   getAddReturn(ADD_RETURN_EPILOG),
-                                                   1,
-                                                   NEW_NAME),
+            resource.add(setUpResourceExpectations(commands, returns, 1, NEW_NAME),
                          getModel(NEW_NAME)),
             NEW_NAME);
     }

@@ -22,6 +22,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.redhat.rhevm.api.model.Cluster;
+import com.redhat.rhevm.api.model.Devices;
+import com.redhat.rhevm.api.model.Disk;
+import com.redhat.rhevm.api.model.DiskFormat;
+import com.redhat.rhevm.api.model.DiskInterface;
+import com.redhat.rhevm.api.model.DiskStatus;
+import com.redhat.rhevm.api.model.DiskType;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
@@ -47,5 +53,40 @@ public class PowerShellVM {
         }
 
         return ret;
+    }
+
+    public static VM parseDisks(VM vm, String output) {
+        ArrayList<HashMap<String,String>> diskProps = PowerShellUtils.parseProps(output);
+
+        for (HashMap<String,String> props : diskProps) {
+            Disk disk = new Disk();
+
+            disk.setSize(Integer.parseInt(props.get("actualsizeinbytes")));
+            disk.setType(DiskType.fromValue(props.get("disktype").toUpperCase()));
+            disk.setStatus(DiskStatus.fromValue(props.get("status").toUpperCase()));
+            disk.setInterface(DiskInterface.fromValue(props.get("diskinterface").toUpperCase()));
+            disk.setFormat(DiskFormat.fromValue(props.get("volumeformat").toUpperCase()));
+            if (props.get("volumetype").toLowerCase() == "sparse") {
+                disk.setSparse(true);
+            }
+            if (props.get("boot").toLowerCase() == "true") {
+                disk.setBootable(true);
+            }
+            if (props.get("wipeafterdelete").toLowerCase() == "true") {
+                disk.setWipeAfterDelete(true);
+            }
+            if (props.get("propagateerrors").toLowerCase() == "on") {
+                disk.setPropagateErrors(true);
+            }
+
+            if (vm.getDevices() == null) {
+                vm.setDevices(new Devices());
+            }
+
+            vm.getDevices().getDisks().add(disk);
+        }
+
+
+        return vm;
     }
 }

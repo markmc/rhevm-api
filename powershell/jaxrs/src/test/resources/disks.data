@@ -1,0 +1,22 @@
+
+
+SnapshotId           : eeca0966-ad77-4a3d-a750-f3ba390446da
+CreationDate         : 22/01/1970 06:28:14
+LastModified         : 22/01/1970 06:28:14
+ActualSizeInBytes    : 683622400
+ActualSizeInMB       : 651.953125
+ActualSizeInGB       : 0.636672973632813
+Description          : _Undefined_Thu May 06 13:08:41 IST 2010
+VmSnapshotId         : 829bc9b7-3b04-4b4d-99dd-42c844f60439
+SizeInGB             : 10
+ParentId             : 00000000-0000-0000-0000-000000000000
+Status               : OK
+AppList              :
+VolumeType           : Sparse
+VolumeFormat         : RAW
+DiskType             : System
+InternalDriveMapping : 1
+Boot                 : True
+DiskInterface        : IDE
+WipeAfterDelete      : False
+PropagateErrors      : Off

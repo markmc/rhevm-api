@@ -21,6 +21,7 @@ package com.redhat.rhevm.api.powershell.resource;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.text.MessageFormat;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.HttpHeaders;
@@ -57,22 +58,31 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     private static final String UPDATE_COMMAND = "$v = get-vm " + VM_ID + "\n$v.name = \"" + NEW_NAME + "\"\nupdate-vm -vmobject $v";
     private static final String UPDATE_RETURN = "vmid: " + VM_ID + "\n name: " + NEW_NAME + "\nhostclusterid: " + CLUSTER_ID + "\n";
 
+    private static final String GET_DISKS_COMMAND = "$v = get-vm {0}\n$v.GetDiskImages()\n";
+    private static final String GET_DISKS_RETURN = PowerShellVmsResourceTest.GET_DISKS_RETURN;
+
     protected PowerShellVmResource getResource() {
         return new PowerShellVmResource(VM_ID);
     }
 
     @Test
     public void testGet() throws Exception {
+        String [] commands = { "get-vm " + VM_ID, MessageFormat.format(GET_DISKS_COMMAND, VM_ID) };
+        String [] returns = { GET_RETURN, GET_DISKS_RETURN };
+
         verifyVM(
-            resource.get(setUpVmExpectations("get-vm " + VM_ID, GET_RETURN, VM_NAME)),
+            resource.get(setUpVmExpectations(commands, returns, VM_NAME)),
             VM_NAME);
     }
 
     @Test
     public void testGoodUpdate() throws Exception {
+        String [] commands = { UPDATE_COMMAND, MessageFormat.format(GET_DISKS_COMMAND, VM_ID) };
+        String [] returns = { UPDATE_RETURN, GET_DISKS_RETURN };
+
         verifyVM(
             resource.update(createMock(HttpHeaders.class),
-                            setUpVmExpectations(UPDATE_COMMAND, UPDATE_RETURN, "eris"),
+                            setUpVmExpectations(commands, returns, NEW_NAME),
                             getVM(NEW_NAME)),
             NEW_NAME);
     }
@@ -160,9 +170,15 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
             true);
     }
 
-    private UriInfo setUpVmExpectations(String command, String ret, String name) throws Exception {
-        mockStatic(PowerShellCmd.class);
-        expect(PowerShellCmd.runCommand(command)).andReturn(ret);
+    private UriInfo setUpVmExpectations(String[] commands, String[] rets, String name) throws Exception {
+        if (commands != null) {
+            mockStatic(PowerShellCmd.class);
+            for (int i = 0 ; i < Math.min(commands.length, rets.length) ; i++) {
+                if (commands[i] != null) {
+                    expect(PowerShellCmd.runCommand(commands[i])).andReturn(rets[i]);
+                }
+            }
+        }
         UriInfo uriInfo = createMock(UriInfo.class);
         UriBuilder uriBuilder = createMock(UriBuilder.class);
         expect(uriInfo.getRequestUriBuilder()).andReturn(uriBuilder).anyTimes();
@@ -217,5 +233,9 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
         assertNotNull(fault);
         assertEquals("Broken immutability constraint", fault.getReason());
         assertEquals("Attempt to set immutable field: id", fault.getDetail());
+    }
+
+    protected static String[] asArray(String s) {
+        return new String[] { s };
     }
 }

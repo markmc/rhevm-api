@@ -68,9 +68,18 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
         return vm;
     }
 
+    public static VM addDisks(VM vm) {
+        StringBuilder buf = new StringBuilder();
+
+        buf.append("$v = get-vm " + vm.getId() + "\n");
+        buf.append("$v.GetDiskImages()\n");
+
+        return PowerShellVM.parseDisks(vm, PowerShellCmd.runCommand(buf.toString()));
+    }
+
     @Override
     public VM get(UriInfo uriInfo) {
-        return addLinks(runAndParseSingle("get-vm " + getId()), uriInfo, uriInfo.getRequestUriBuilder());
+        return addLinks(addDisks(runAndParseSingle("get-vm " + getId())), uriInfo, uriInfo.getRequestUriBuilder());
     }
 
     @Override
@@ -91,7 +100,7 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
         buf.append("\n");
         buf.append("update-vm -vmobject $v");
 
-        return addLinks(runAndParseSingle(buf.toString()), uriInfo, uriInfo.getRequestUriBuilder());
+        return addLinks(addDisks(runAndParseSingle(buf.toString())), uriInfo, uriInfo.getRequestUriBuilder());
     }
 
     @Override
