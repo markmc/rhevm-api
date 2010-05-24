@@ -1,0 +1,42 @@
+
+
+ClusterID                    : 0
+Name                         : Default
+Description                  : The default server cluster
+CpuName                      : Intel Xeon 45nm Core2
+SelectionAlgorithm           : None
+HighUtilization              : 75
+LowUtilization               : 0
+CpuOverCommitDurationMinutes : 2
+HypervisorType               : KVM
+DataCenterId                 : c116abad-99ce-4888-ad7f-5c7f8d7a75f2
+IsInitialized                : True
+MaxHostMemoryOverCommit      : 200
+CompatibilityVersion         : Class Name: CLICompatibilityVersion
+                               MinorRevision                 -1
+                               MajorRevision                 -1
+                               Major                         2
+                               Minor                         2
+                               Build                         -1
+                               Revision                      -1
+
+
+ClusterID                    : 2
+Name                         : foo
+Description                  :
+CpuName                      : Intel Xeon
+SelectionAlgorithm           : None
+HighUtilization              : 0
+LowUtilization               : 0
+CpuOverCommitDurationMinutes : 0
+HypervisorType               : KVM
+DataCenterId                 : c116abad-99ce-4888-ad7f-5c7f8d7a75f2
+IsInitialized                : False
+MaxHostMemoryOverCommit      : 100
+CompatibilityVersion         : Class Name: CLICompatibilityVersion
+                               MinorRevision                 -1
+                               MajorRevision                 -1
+                               Major                         2
+                               Minor                         2
+                               Build                         -1
+                               Revision                      -1

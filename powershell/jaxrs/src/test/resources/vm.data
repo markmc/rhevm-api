@@ -1,0 +1,47 @@
+
+
+VmId                : 439c0c13-3e0a-489e-a514-1b07232ace41
+Name                : test_1
+Description         :
+HostClusterId       : 0
+TemplateId          : 00000000-0000-0000-0000-000000000000
+Session             : Unknown
+MemorySize          : 512
+Priority            : 1
+Domain              :
+OperatingSystem     : WindowsXP
+CreationDate        : 06/05/2010 13:08:00
+NumOfMonitors       : 1
+NumOfSockets        : 1
+NumOfCpusPerSocket  : 1
+DefaultHostId       :
+NiceLevel           : 0
+FailBack            : False
+DefaultBootSequence : C
+VmType              : Server
+HypervisorType      : KVM
+OperationMode       : FullVirtualized
+AutoStartup         : False
+Stateless           : False
+DisplayType         : VNC
+CdIsoPath           :
+FloppyPath          :
+Origin              : RHEV
+KvmEnabled          : True
+RunAndPause         : False
+AcpiEnabled         : True
+Status              : Down
+Ip                  :
+HostName            :
+UpTime              : 00:00:00
+LoginTime           :
+CurrentUserName     :
+LastLogoutTime      :
+ElapsedTime         : 0
+RunningOnHost       : -1
+MigratingToHost     : -1
+ApplicationList     : {}
+DisplayPort         : 5910
+HighlyAvailable     : False
+TimeZone            : GMT Standard Time
+PoolId              : -1

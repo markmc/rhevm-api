@@ -1,0 +1,57 @@
+
+
+StorageDomainId   : 749ce52b-555c-4725-83b9-0cb2cc5303a9
+VGId              :
+DomainType        : Data (Master)
+Name              : images_0
+DataCenterId      : 00000000-0000-0000-0000-000000000000
+DataCenterName    :
+Type              : NFS
+NFSPath           : 172.31.0.6:/exports/RHEVX/images/0
+AvailableDiskSize : 110
+Status            : Unknown
+SharedStatus      : InActive
+UsedDiskSize      : 179
+CommittedDiskSize : 9
+
+StorageDomainId   : 644448c4-4b93-44a5-8295-db6d1bb367d8
+VGId              :
+DomainType        : Data
+Name              : images_1
+DataCenterId      : 00000000-0000-0000-0000-000000000000
+DataCenterName    :
+Type              : NFS
+NFSPath           : 172.31.0.6:/exports/RHEVX/images/1
+AvailableDiskSize : 111
+Status            : Unknown
+SharedStatus      : Unattached
+UsedDiskSize      : 178
+CommittedDiskSize : 0
+
+StorageDomainId   : dcf38312-15d6-4e3f-a5cb-b90a4554b415
+VGId              :
+DomainType        : Data
+Name              : images_8
+DataCenterId      : 00000000-0000-0000-0000-000000000000
+DataCenterName    :
+Type              : NFS
+NFSPath           : 172.31.0.6:/exports/RHEVX/images/8
+AvailableDiskSize : 110
+Status            : Unknown
+SharedStatus      : InActive
+UsedDiskSize      : 179
+CommittedDiskSize : 0
+
+StorageDomainId   : 5db1ae3d-1628-439e-996e-b4ad955b6480
+VGId              :
+DomainType        : ISO
+Name              : iso_0
+DataCenterId      : 00000000-0000-0000-0000-000000000000
+DataCenterName    :
+Type              : NFS
+NFSPath           : 172.31.0.6:/exports/RHEVX/iso/0
+AvailableDiskSize : 110
+Status            : Unknown
+SharedStatus      : InActive
+UsedDiskSize      : 179
+CommittedDiskSize : 0
