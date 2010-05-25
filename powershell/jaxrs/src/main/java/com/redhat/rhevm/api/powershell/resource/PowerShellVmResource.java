@@ -230,8 +230,10 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
 
             buf.append("$v = get-vm " + getId() + "\n");
 
-            // FIXME: add support for the storage domain param
             buf.append("add-disk -diskobject $d -vmobject $v");
+            if (action.getStorageDomain() != null) {
+                buf.append(" -storagedomainid " + action.getStorageDomain().getId());
+            }
 
             PowerShellCmd.runCommand(buf.toString());
         }
