@@ -452,7 +452,7 @@
 
   <xs:complexType name="Disk">
     <xs:sequence>
-      <xs:element name="size" type="xs:int" minOccurs="0"/>
+      <xs:element name="size" type="xs:long" minOccurs="0"/>
       <xs:element name="type" type="DiskType" minOccurs="0"/>
       <xs:element name="status" type="DiskStatus" minOccurs="0"/>
       <xs:element name="interface" type="DiskInterface" minOccurs="0"/>

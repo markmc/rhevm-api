@@ -63,7 +63,7 @@ public class PowerShellVM {
         for (HashMap<String,String> props : diskProps) {
             Disk disk = new Disk();
 
-            disk.setSize(Integer.parseInt(props.get("actualsizeinbytes")));
+            disk.setSize(Long.parseLong(props.get("actualsizeinbytes")));
             disk.setType(DiskType.fromValue(props.get("disktype").toUpperCase()));
             disk.setStatus(DiskStatus.fromValue(props.get("status").toUpperCase()));
             disk.setInterface(DiskInterface.fromValue(props.get("diskinterface").toUpperCase()));
