@@ -57,12 +57,20 @@ public class PowerShellVmTest extends PowerShellModelTest {
         assertEquals(i.getId(), id);
         assertEquals(i.getName(), name);
         assertEquals(i.getType(), type);
-        assertNotNull(i.getMac());
-        assertEquals(i.getMac().getAddress(), macAddress);
-        assertNotNull(i.getIp());
-        assertEquals(i.getIp().getAddress(), ipAddress);
-        assertEquals(i.getIp().getNetmask(), ipNetmask);
-        assertEquals(i.getIp().getGateway(), ipGateway);
+        if (macAddress != null) {
+            assertNotNull(i.getMac());
+            assertEquals(i.getMac().getAddress(), macAddress);
+        } else {
+            assertNull(i.getMac());
+        }
+        if (ipAddress != null || ipNetmask != null || ipGateway != null) {
+            assertNotNull(i.getIp());
+            assertEquals(i.getIp().getAddress(), ipAddress);
+            assertEquals(i.getIp().getNetmask(), ipNetmask);
+            assertEquals(i.getIp().getGateway(), ipGateway);
+        } else {
+            assertNull(i.getIp());
+        }
     }
 
     @Test

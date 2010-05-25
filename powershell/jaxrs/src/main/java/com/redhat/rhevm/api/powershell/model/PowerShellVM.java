@@ -102,15 +102,21 @@ public class PowerShellVM {
             iface.setName(props.get("name"));
             iface.setType(InterfaceType.fromValue(props.get("type").toUpperCase()));
 
-            Interface.Mac mac = new Interface.Mac();
-            mac.setAddress(props.get("macaddress"));
-            iface.setMac(mac);
+            if (props.get("macaddress") != null) {
+                Interface.Mac mac = new Interface.Mac();
+                mac.setAddress(props.get("macaddress"));
+                iface.setMac(mac);
+            }
 
-            Interface.Ip ip = new Interface.Ip();
-            ip.setAddress(props.get("address"));
-            ip.setNetmask(props.get("subnet"));
-            ip.setGateway(props.get("gateway"));
-            iface.setIp(ip);
+            if (props.get("address") != null ||
+                props.get("subnet") != null ||
+                props.get("gateway") != null) {
+                Interface.Ip ip = new Interface.Ip();
+                ip.setAddress(props.get("address"));
+                ip.setNetmask(props.get("subnet"));
+                ip.setGateway(props.get("gateway"));
+                iface.setIp(ip);
+            }
 
             vm.getDevices().getInterfaces().add(iface);
         }
