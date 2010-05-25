@@ -30,6 +30,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.model.Action;
+import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.Fault;
 import com.redhat.rhevm.api.model.VM;
 
@@ -63,6 +65,9 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
 
     private static final String GET_INTERFACES_COMMAND = "$v = get-vm {0}\n$v.GetNetworkAdapters()\n";
     private static final String GET_INTERFACES_RETURN = PowerShellVmsResourceTest.GET_INTERFACES_RETURN;
+
+    private static final long NEW_DISK_SIZE = 10;
+    private static final String ADD_DISK_COMMAND = "$d = new-disk -disksize {0}\n$v = get-vm {1}\nadd-disk -diskobject $d -vmobject $v";
 
     protected PowerShellVmResource getResource() {
         return new PowerShellVmResource(VM_ID);
@@ -177,6 +182,21 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
             true);
     }
 
+    @Test
+    public void testAddDisk() throws Exception {
+        Disk disk = new Disk();
+        disk.setSize(NEW_DISK_SIZE * 1024 * 1024 * 1024);
+
+        Action action = getAction();
+        action.setDisk(disk);
+
+        String command = MessageFormat.format(ADD_DISK_COMMAND, NEW_DISK_SIZE, VM_ID);
+
+        verifyActionResponse(
+            resource.addDevice(setUpActionExpectation("adddevice", command, false), action),
+            false);
+    }
+
     private UriInfo setUpVmExpectations(String[] commands, String[] rets, String name) throws Exception {
         if (commands != null) {
             mockStatic(PowerShellCmd.class);
@@ -200,8 +220,15 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
         return uriInfo;
     }
 
+    private UriInfo setUpActionExpectation(String verb, String command, boolean appendVmId) throws Exception {
+        if (appendVmId) {
+            command += " -vmid " + VM_ID;
+        }
+        return setUpActionExpectation("/vms/" + VM_ID + "/", verb, command, ACTION_RETURN);
+    }
+
     private UriInfo setUpActionExpectation(String verb, String command) throws Exception {
-        return setUpActionExpectation("/vms/" + VM_ID + "/", verb, command + " -vmid " + VM_ID, ACTION_RETURN);
+        return setUpActionExpectation(verb, command, true);
     }
 
     private HttpHeaders setUpHeadersExpectation() {

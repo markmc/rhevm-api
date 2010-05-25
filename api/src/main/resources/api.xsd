@@ -45,6 +45,9 @@
       <xs:element name="grace_period" type="GracePeriod" minOccurs="0"/>
       <!-- for StorageDomain initialize/teardown actions -->
       <xs:element name="host" type="Host" minOccurs="0"/>
+      <!-- for VM adddevice action -->
+      <xs:element ref="disk" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="interface" minOccurs="0" maxOccurs="1"/>
       <!-- ... etc., explicitly enumerate all the parameter types -->
     </xs:sequence>
   </xs:group>

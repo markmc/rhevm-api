@@ -28,9 +28,12 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Cluster;
+import com.redhat.rhevm.api.model.Disk;
+import com.redhat.rhevm.api.model.Interface;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
+import com.redhat.rhevm.api.common.util.ReflectionHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 
@@ -151,6 +154,21 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
     }
 
     @Override
+    public Response addDevice(UriInfo uriInfo, Action action) {
+        AbstractActionTask task;
+
+        if (action.getDisk() != null) {
+            task = new AddDiskTask(action, action.getDisk());
+        } else if (action.getInterface() != null) {
+            task = new AddInterfaceTask(action, action.getInterface());
+        } else {
+            task = new DoNothingTask(action);
+        }
+
+        return doAction(uriInfo, task);
+    }
+
+    @Override
     public Response changeCD(UriInfo uriInfo, Action action) {
         return doAction(uriInfo, new DoNothingTask(action));
     }
@@ -158,5 +176,92 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
     @Override
     public Response ejectCD(UriInfo uriInfo, Action action) {
         return doAction(uriInfo, new DoNothingTask(action));
+    }
+
+    private class AddDiskTask extends AbstractActionTask {
+        private Disk disk;
+
+        AddDiskTask(Action action, Disk disk) {
+            super(action);
+            this.disk = disk;
+        }
+
+        public void run() {
+            StringBuilder buf = new StringBuilder();
+
+            buf.append("$d = new-disk");
+            buf.append(" -disksize " + Math.round((double)disk.getSize()/(1024*1024*1024)));
+            if (disk.getFormat() != null) {
+                buf.append(" -volumeformat " + disk.getFormat().toString());
+            }
+            if (disk.getType() != null) {
+                buf.append(" -disktype " + ReflectionHelper.capitalize(disk.getType().toString()));
+            }
+            if (disk.getInterface() != null) {
+                buf.append(" -diskinterface ");
+                switch (disk.getInterface()) {
+                case IDE:
+                case SCSI:
+                    buf.append(disk.getInterface().toString());
+                    break;
+                case VIRTIO:
+                    buf.append("VirtIO");
+                    break;
+                default:
+                    assert false : disk.getInterface();
+                    break;
+                }
+            }
+            if (disk.isSparse() != null) {
+                buf.append(" -volumetype " + (disk.isSparse() ? "Sparse" : "Preallocated"));
+            }
+            if (disk.isWipeAfterDelete() != null && disk.isWipeAfterDelete()) {
+                buf.append(" -wipeafterdelete");
+            }
+            if (disk.isPropagateErrors() != null) {
+                buf.append(" -propagateerrors ");
+                if (disk.isPropagateErrors()) {
+                    buf.append("on");
+                } else {
+                    buf.append("off");
+                }
+            }
+            buf.append("\n");
+
+            buf.append("$v = get-vm " + getId() + "\n");
+
+            // FIXME: add support for the storage domain param
+            buf.append("add-disk -diskobject $d -vmobject $v");
+
+            PowerShellCmd.runCommand(buf.toString());
+        }
+    }
+
+    private class AddInterfaceTask extends AbstractActionTask {
+        private Interface iface;
+
+        AddInterfaceTask(Action action, Interface iface) {
+            super(action);
+            this.iface = iface;
+        }
+
+        public void run() {
+            StringBuilder buf = new StringBuilder();
+
+            buf.append("$v = get-vm " + getId() + "\n");
+
+            buf.append("add-networkadapter");
+            buf.append(" -vmobject $v");
+            buf.append(" -interfacename " + iface.getName());
+            buf.append(" -networkname " + "rhevm"); // FIXME
+            if (iface.getType() != null) {
+                buf.append(" -interfacetype " + iface.getType().toString().toLowerCase());
+            }
+            if (iface.getMac() != null && iface.getMac().getAddress() != null) {
+                buf.append(" -macaddress " + iface.getMac().getAddress());
+            }
+
+            PowerShellCmd.runCommand(buf.toString());
+        }
     }
 }
