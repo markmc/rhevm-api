@@ -1,0 +1,18 @@
+
+
+Type           : rtl8139_pv
+Id             : 5e8471ec-d8b5-431b-afcb-c74846e0019b
+Gateway        :
+Subnet         :
+Address        :
+Speed          : 0
+VlanId         : 0
+BondType       : 0
+BondName       :
+MacAddress     : 00:1a:4a:16:84:02
+Name           : eth0
+Network        : rhevm
+LineSpeed      : 0
+TxDropped      : 10240
+IsBond         : False
+BondInterfaces :

@@ -22,6 +22,13 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
+import com.redhat.rhevm.api.model.Disk;
+import com.redhat.rhevm.api.model.DiskFormat;
+import com.redhat.rhevm.api.model.DiskInterface;
+import com.redhat.rhevm.api.model.DiskStatus;
+import com.redhat.rhevm.api.model.DiskType;
+import com.redhat.rhevm.api.model.Interface;
+import com.redhat.rhevm.api.model.InterfaceType;
 import com.redhat.rhevm.api.model.VM;
 
 
@@ -34,6 +41,30 @@ public class PowerShellVmTest extends PowerShellModelTest {
         assertEquals(v.getCluster().getId(), clusterId);
     }
 
+    private void testDisk(Disk d, Integer size, DiskType type, DiskStatus status, DiskInterface iface, DiskFormat format, Boolean sparse, Boolean bootable, Boolean wipeAfterDelete, Boolean propagateErrors) {
+        assertEquals(d.getSize(), size);
+        assertEquals(d.getType(), type);
+        assertEquals(d.getStatus(), status);
+        assertEquals(d.getInterface(), iface);
+        assertEquals(d.getFormat(), format);
+        assertEquals(d.isSparse(), sparse);
+        assertEquals(d.isBootable(), bootable);
+        assertEquals(d.isWipeAfterDelete(), wipeAfterDelete);
+        assertEquals(d.isPropagateErrors(), propagateErrors);
+    }
+
+    private void testInterface(Interface i, String id, String name, InterfaceType type, String macAddress, String ipAddress, String ipNetmask, String ipGateway) {
+        assertEquals(i.getId(), id);
+        assertEquals(i.getName(), name);
+        assertEquals(i.getType(), type);
+        assertNotNull(i.getMac());
+        assertEquals(i.getMac().getAddress(), macAddress);
+        assertNotNull(i.getIp());
+        assertEquals(i.getIp().getAddress(), ipAddress);
+        assertEquals(i.getIp().getNetmask(), ipNetmask);
+        assertEquals(i.getIp().getGateway(), ipGateway);
+    }
+
     @Test
     public void testParse() {
         String data = readFileContents("vm.data");
@@ -43,6 +74,28 @@ public class PowerShellVmTest extends PowerShellModelTest {
 
         assertEquals(vms.size(), 1);
 
-        testVM(vms.get(0), "439c0c13-3e0a-489e-a514-1b07232ace41", "test_1", null, "0");
+        VM vm = vms.get(0);
+
+        testVM(vm, "439c0c13-3e0a-489e-a514-1b07232ace41", "test_1", null, "0");
+
+        data = readFileContents("disks.data");
+        assertNotNull(data);
+
+        vm = PowerShellVM.parseDisks(vm, data);
+
+        assertNotNull(vm.getDevices());
+        assertEquals(vm.getDevices().getDisks().size(), 1);
+
+        testDisk(vm.getDevices().getDisks().get(0), 683622400, DiskType.SYSTEM, DiskStatus.OK, DiskInterface.IDE, DiskFormat.RAW, true, true, null, null);
+
+        data = readFileContents("interfaces.data");
+        assertNotNull(data);
+
+        vm = PowerShellVM.parseInterfaces(vm, data);
+
+        assertNotNull(vm.getDevices());
+        assertEquals(vm.getDevices().getInterfaces().size(), 1);
+
+        testInterface(vm.getDevices().getInterfaces().get(0), "5e8471ec-d8b5-431b-afcb-c74846e0019b", "eth0", InterfaceType.RTL_8139_PV, "00:1a:4a:16:84:02", null, null, null);
     }
 }
