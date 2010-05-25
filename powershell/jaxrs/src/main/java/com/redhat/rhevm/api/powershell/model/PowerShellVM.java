@@ -66,16 +66,16 @@ public class PowerShellVM {
             disk.setStatus(DiskStatus.fromValue(props.get("status").toUpperCase()));
             disk.setInterface(DiskInterface.fromValue(props.get("diskinterface").toUpperCase()));
             disk.setFormat(DiskFormat.fromValue(props.get("volumeformat").toUpperCase()));
-            if (props.get("volumetype").toLowerCase() == "sparse") {
+            if (props.get("volumetype").toLowerCase().equals("sparse")) {
                 disk.setSparse(true);
             }
-            if (props.get("boot").toLowerCase() == "true") {
+            if (props.get("boot").toLowerCase().equals("true")) {
                 disk.setBootable(true);
             }
-            if (props.get("wipeafterdelete").toLowerCase() == "true") {
+            if (props.get("wipeafterdelete").toLowerCase().equals("true")) {
                 disk.setWipeAfterDelete(true);
             }
-            if (props.get("propagateerrors").toLowerCase() == "on") {
+            if (props.get("propagateerrors").toLowerCase().equals("on")) {
                 disk.setPropagateErrors(true);
             }
 
