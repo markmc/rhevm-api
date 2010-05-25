@@ -127,6 +127,15 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <xs:simpleType name="InterfaceType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="E1000"/>
+      <xs:enumeration value="PV"/>
+      <xs:enumeration value="RTL8139"/>
+      <xs:enumeration value="RTL8139_PV"/>
+    </xs:restriction>
+  </xs:simpleType>
+
   <xs:simpleType name="StorageDomainType">
     <xs:restriction base="xs:string">
       <xs:enumeration value="DATA"/>
@@ -418,6 +427,8 @@
 
   <xs:element name="disk" type="Disk"/>
 
+  <xs:element name="interface" type="Interface"/>
+
   <xs:element name="devices" type="Devices"/>
 
   <xs:complexType name="Devices">
@@ -426,6 +437,13 @@
         <xs:annotation>
           <xs:appinfo>
             <jaxb:property name="Disks"/>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element ref="interface" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <jaxb:property name="Interfaces"/>
           </xs:appinfo>
         </xs:annotation>
       </xs:element>
@@ -443,6 +461,26 @@
       <xs:element name="bootable" type="xs:boolean" minOccurs="0"/>
       <xs:element name="wipe_after_delete" type="xs:boolean" minOccurs="0"/>
       <xs:element name="propagate_errors" type="xs:boolean" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="Interface">
+    <xs:sequence>
+      <xs:element name="name" type="xs:string" minOccurs="0"/>
+      <xs:element name="type" type="InterfaceType" minOccurs="0"/>
+      <xs:element name="mac" minOccurs="0">
+        <xs:complexType>
+          <xs:attribute name="address" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="ip" minOccurs="0">
+        <xs:complexType>
+          <xs:attribute name="address" type="xs:string"/>
+          <xs:attribute name="netmask" type="xs:string"/>
+          <xs:attribute name="gateway" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
     </xs:sequence>
     <xs:attribute name="id" type="xs:string"/>
   </xs:complexType>

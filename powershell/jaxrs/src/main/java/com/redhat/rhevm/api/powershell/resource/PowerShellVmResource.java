@@ -68,18 +68,25 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
         return vm;
     }
 
-    public static VM addDisks(VM vm) {
+    public static VM addDevices(VM vm) {
         StringBuilder buf = new StringBuilder();
 
         buf.append("$v = get-vm " + vm.getId() + "\n");
         buf.append("$v.GetDiskImages()\n");
 
-        return PowerShellVM.parseDisks(vm, PowerShellCmd.runCommand(buf.toString()));
+        vm = PowerShellVM.parseDisks(vm, PowerShellCmd.runCommand(buf.toString()));
+
+        buf = new StringBuilder();
+
+        buf.append("$v = get-vm " + vm.getId() + "\n");
+        buf.append("$v.GetNetworkAdapters()\n");
+
+        return PowerShellVM.parseInterfaces(vm, PowerShellCmd.runCommand(buf.toString()));
     }
 
     @Override
     public VM get(UriInfo uriInfo) {
-        return addLinks(addDisks(runAndParseSingle("get-vm " + getId())), uriInfo, uriInfo.getRequestUriBuilder());
+        return addLinks(addDevices(runAndParseSingle("get-vm " + getId())), uriInfo, uriInfo.getRequestUriBuilder());
     }
 
     @Override
@@ -100,7 +107,7 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
         buf.append("\n");
         buf.append("update-vm -vmobject $v");
 
-        return addLinks(addDisks(runAndParseSingle(buf.toString())), uriInfo, uriInfo.getRequestUriBuilder());
+        return addLinks(addDevices(runAndParseSingle(buf.toString())), uriInfo, uriInfo.getRequestUriBuilder());
     }
 
     @Override

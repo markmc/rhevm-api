@@ -61,14 +61,19 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     private static final String GET_DISKS_COMMAND = "$v = get-vm {0}\n$v.GetDiskImages()\n";
     private static final String GET_DISKS_RETURN = PowerShellVmsResourceTest.GET_DISKS_RETURN;
 
+    private static final String GET_INTERFACES_COMMAND = "$v = get-vm {0}\n$v.GetNetworkAdapters()\n";
+    private static final String GET_INTERFACES_RETURN = PowerShellVmsResourceTest.GET_INTERFACES_RETURN;
+
     protected PowerShellVmResource getResource() {
         return new PowerShellVmResource(VM_ID);
     }
 
     @Test
     public void testGet() throws Exception {
-        String [] commands = { "get-vm " + VM_ID, MessageFormat.format(GET_DISKS_COMMAND, VM_ID) };
-        String [] returns = { GET_RETURN, GET_DISKS_RETURN };
+        String [] commands = { "get-vm " + VM_ID,
+                               MessageFormat.format(GET_DISKS_COMMAND, VM_ID),
+                               MessageFormat.format(GET_INTERFACES_COMMAND, VM_ID) };
+        String [] returns = { GET_RETURN, GET_DISKS_RETURN, GET_INTERFACES_RETURN };
 
         verifyVM(
             resource.get(setUpVmExpectations(commands, returns, VM_NAME)),
@@ -77,8 +82,10 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
 
     @Test
     public void testGoodUpdate() throws Exception {
-        String [] commands = { UPDATE_COMMAND, MessageFormat.format(GET_DISKS_COMMAND, VM_ID) };
-        String [] returns = { UPDATE_RETURN, GET_DISKS_RETURN };
+        String [] commands = { UPDATE_COMMAND,
+                               MessageFormat.format(GET_DISKS_COMMAND, VM_ID),
+                               MessageFormat.format(GET_INTERFACES_COMMAND, VM_ID) };
+        String [] returns = { UPDATE_RETURN, GET_DISKS_RETURN, GET_INTERFACES_COMMAND };
 
         verifyVM(
             resource.update(createMock(HttpHeaders.class),

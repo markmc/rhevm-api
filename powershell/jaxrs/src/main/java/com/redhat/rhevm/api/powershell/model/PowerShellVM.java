@@ -28,6 +28,8 @@ import com.redhat.rhevm.api.model.DiskFormat;
 import com.redhat.rhevm.api.model.DiskInterface;
 import com.redhat.rhevm.api.model.DiskStatus;
 import com.redhat.rhevm.api.model.DiskType;
+import com.redhat.rhevm.api.model.Interface;
+import com.redhat.rhevm.api.model.InterfaceType;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
@@ -86,6 +88,32 @@ public class PowerShellVM {
             vm.getDevices().getDisks().add(disk);
         }
 
+
+        return vm;
+    }
+
+    public static VM parseInterfaces(VM vm, String output) {
+        ArrayList<HashMap<String,String>> ifaceProps = PowerShellUtils.parseProps(output);
+
+        for (HashMap<String,String> props : ifaceProps) {
+            Interface iface = new Interface();
+
+            iface.setId(props.get("id"));
+            iface.setName(props.get("name"));
+            iface.setType(InterfaceType.fromValue(props.get("type").toUpperCase()));
+
+            Interface.Mac mac = new Interface.Mac();
+            mac.setAddress(props.get("macaddress"));
+            iface.setMac(mac);
+
+            Interface.Ip ip = new Interface.Ip();
+            ip.setAddress(props.get("address"));
+            ip.setNetmask(props.get("subnet"));
+            ip.setGateway(props.get("gateway"));
+            iface.setIp(ip);
+
+            vm.getDevices().getInterfaces().add(iface);
+        }
 
         return vm;
     }

@@ -42,6 +42,9 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     private static final String GET_DISKS_COMMAND = "$v = get-vm {0,number,#}\n$v.GetDiskImages()\n";
     public static final String GET_DISKS_RETURN = "actualsizeinbytes: 10485760\ndisktype: system\nstatus: ok\ndiskinterface: ide\nvolumeformat: raw\nvolumetype: sparse\nboot: true\nwipeafterdelete: false\npropagateerrors: off\n";
 
+    private static final String GET_INTERFACES_COMMAND = "$v = get-vm {0,number,#}\n$v.GetNetworkAdapters()\n";
+    public static final String GET_INTERFACES_RETURN = "id: 1\nname: eth1\ntype: pv\nmacaddress: 00:1a:4a:16:84:02\naddress: 172.31.0.10\nsubnet: 255.255.255.0\ngateway: 172.31.0.1\n";
+
     public PowerShellVmsResourceTest() {
         super(new PowerShellVmResource("0", null), "vms", "vm");
     }
@@ -50,12 +53,18 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     public void testList() throws Exception {
         String [] commands = { getSelectCommand(),
                                MessageFormat.format(GET_DISKS_COMMAND, NAMES[0].hashCode()),
+                               MessageFormat.format(GET_INTERFACES_COMMAND, NAMES[0].hashCode()),
                                MessageFormat.format(GET_DISKS_COMMAND, NAMES[1].hashCode()),
-                               MessageFormat.format(GET_DISKS_COMMAND, NAMES[2].hashCode()) };
+                               MessageFormat.format(GET_INTERFACES_COMMAND, NAMES[1].hashCode()),
+                               MessageFormat.format(GET_DISKS_COMMAND, NAMES[2].hashCode()),
+                               MessageFormat.format(GET_INTERFACES_COMMAND, NAMES[2].hashCode()) };
         String [] returns = { getSelectReturn(SELECT_RETURN_EPILOG),
                               GET_DISKS_RETURN,
+                              GET_INTERFACES_RETURN,
                               GET_DISKS_RETURN,
-                              GET_DISKS_RETURN };
+                              GET_INTERFACES_RETURN,
+                              GET_DISKS_RETURN,
+                              GET_INTERFACES_RETURN };
 
         verifyCollection(
             resource.list(setUpResourceExpectations(commands, returns, 3, NAMES)).getVMs(),
@@ -66,11 +75,15 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     public void testQuery() throws Exception {
         String [] commands = { getQueryCommand(VMs.class),
                                MessageFormat.format(GET_DISKS_COMMAND, NAMES[1].hashCode()),
-                               MessageFormat.format(GET_DISKS_COMMAND, NAMES[2].hashCode()) };
+                               MessageFormat.format(GET_INTERFACES_COMMAND, NAMES[1].hashCode()),
+                               MessageFormat.format(GET_DISKS_COMMAND, NAMES[2].hashCode()),
+                               MessageFormat.format(GET_INTERFACES_COMMAND, NAMES[2].hashCode()) };
 
         String [] returns = { getQueryReturn(SELECT_RETURN_EPILOG),
                               GET_DISKS_RETURN,
-                              GET_DISKS_RETURN };
+                              GET_INTERFACES_RETURN,
+                              GET_DISKS_RETURN,
+                              GET_INTERFACES_RETURN };
 
         verifyCollection(
             resource.list(setUpResourceExpectations(commands, returns, 2, getQueryParam(), NAMES_SUBSET)).getVMs(),
@@ -80,10 +93,12 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     @Test
     public void testAdd() throws Exception {
         String [] commands = { ADD_COMMAND_PROLOG + getAddCommand() + ADD_COMMAND_EPILOG,
-                               MessageFormat.format(GET_DISKS_COMMAND, NEW_NAME.hashCode()) };
+                               MessageFormat.format(GET_DISKS_COMMAND, NEW_NAME.hashCode()),
+                               MessageFormat.format(GET_INTERFACES_COMMAND, NEW_NAME.hashCode()) };
 
         String [] returns = { getAddReturn(ADD_RETURN_EPILOG),
-                              GET_DISKS_RETURN };
+                              GET_DISKS_RETURN,
+                              GET_INTERFACES_RETURN };
 
         verifyResponse(
             resource.add(setUpResourceExpectations(commands, returns, 1, NEW_NAME),
