@@ -40,7 +40,7 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     private static final String ADD_RETURN_EPILOG    = "\nhostclusterid: " + CLUSTER_ID;
 
     private static final String GET_DISKS_COMMAND = "$v = get-vm {0,number,#}\n$v.GetDiskImages()\n";
-    public static final String GET_DISKS_RETURN = "actualsizeinbytes: 10485760\ndisktype: system\nstatus: ok\ndiskinterface: ide\nvolumeformat: raw\nvolumetype: sparse\nboot: true\nwipeafterdelete: false\npropagateerrors: off\n";
+    public static final String GET_DISKS_RETURN = "snapshotid: 0\nactualsizeinbytes: 10485760\ndisktype: system\nstatus: ok\ndiskinterface: ide\nvolumeformat: raw\nvolumetype: sparse\nboot: true\nwipeafterdelete: false\npropagateerrors: off\n";
 
     private static final String GET_INTERFACES_COMMAND = "$v = get-vm {0,number,#}\n$v.GetNetworkAdapters()\n";
     public static final String GET_INTERFACES_RETURN = "id: 1\nname: eth1\ntype: pv\nmacaddress: 00:1a:4a:16:84:02\naddress: 172.31.0.10\nsubnet: 255.255.255.0\ngateway: 172.31.0.1\n";

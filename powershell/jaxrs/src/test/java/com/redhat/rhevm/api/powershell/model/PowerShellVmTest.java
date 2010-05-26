@@ -41,7 +41,8 @@ public class PowerShellVmTest extends PowerShellModelTest {
         assertEquals(v.getCluster().getId(), clusterId);
     }
 
-    private void testDisk(Disk d, Long size, DiskType type, DiskStatus status, DiskInterface iface, DiskFormat format, Boolean sparse, Boolean bootable, Boolean wipeAfterDelete, Boolean propagateErrors) {
+    private void testDisk(Disk d, String id, Long size, DiskType type, DiskStatus status, DiskInterface iface, DiskFormat format, Boolean sparse, Boolean bootable, Boolean wipeAfterDelete, Boolean propagateErrors) {
+        assertEquals(d.getId(), id);
         assertEquals(d.getSize(), size);
         assertEquals(d.getType(), type);
         assertEquals(d.getStatus(), status);
@@ -94,7 +95,7 @@ public class PowerShellVmTest extends PowerShellModelTest {
         assertNotNull(vm.getDevices());
         assertEquals(vm.getDevices().getDisks().size(), 1);
 
-        testDisk(vm.getDevices().getDisks().get(0), 683622400L, DiskType.SYSTEM, DiskStatus.OK, DiskInterface.IDE, DiskFormat.RAW, true, true, null, null);
+        testDisk(vm.getDevices().getDisks().get(0), "eeca0966-ad77-4a3d-a750-f3ba390446da", 683622400L, DiskType.SYSTEM, DiskStatus.OK, DiskInterface.IDE, DiskFormat.RAW, true, true, null, null);
 
         data = readFileContents("interfaces.data");
         assertNotNull(data);
