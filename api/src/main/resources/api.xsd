@@ -141,6 +141,13 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <xs:simpleType name="NetworkStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="OPERATIONAL"/>
+      <xs:enumeration value="NON_OPERATIONAL"/>
+    </xs:restriction>
+  </xs:simpleType>
+
   <xs:simpleType name="StorageDomainType">
     <xs:restriction base="xs:string">
       <xs:enumeration value="DATA"/>
@@ -346,6 +353,39 @@
     <xs:attribute name="address" type="xs:string"/>
     <xs:attribute name="netmask" type="xs:string"/>
     <xs:attribute name="gateway" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:element name="network" type="Network"/>
+
+  <xs:element name="networks" type="Networks"/>
+
+  <xs:complexType name="Network">
+    <xs:complexContent>
+      <xs:extension base="BaseResource">
+        <xs:sequence>
+          <xs:element ref="data_center" minOccurs="0"/>
+          <xs:element ref="ip" minOccurs="0"/>
+          <xs:element name="vlan" minOccurs="0">
+            <xs:complexType>
+              <xs:attribute name="id" type="xs:string"/>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="stp" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="status" type="NetworkStatus" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Networks">
+    <xs:sequence>
+      <xs:annotation>
+        <xs:appinfo>
+            <jaxb:property name="Networks"/>
+        </xs:appinfo>
+      </xs:annotation>
+      <xs:element ref="network" maxOccurs="unbounded"/>
+    </xs:sequence>
   </xs:complexType>
 
   <!-- Storage Domains -->

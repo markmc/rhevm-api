@@ -44,6 +44,12 @@ public class PowerShellApiResource implements ApiResource {
 
         for (String p : path) {
             header.append(addPath(uriBuilder, p, p, "")).append(",");
+            //
+            // FIXME: this sucks, but there's no select-network command
+            //
+            if (p.equals("networks")) {
+                continue;
+            }
             header.append(addPath(uriBuilder, p + SEARCH_RELATION, p, SEARCH_TEMPLATE)).append(",");
         }
 
@@ -58,7 +64,7 @@ public class PowerShellApiResource implements ApiResource {
 
         Response.ResponseBuilder responseBuilder = Response.ok();
 
-        addHeader(responseBuilder, uriBuilder, "clusters", "cpus", "datacenters", "hosts", "storagedomains", "vms");
+        addHeader(responseBuilder, uriBuilder, "clusters", "cpus", "datacenters", "hosts", "networks", "storagedomains", "vms");
 
         return responseBuilder.build();
     }

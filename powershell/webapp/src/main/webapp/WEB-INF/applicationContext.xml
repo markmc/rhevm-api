@@ -20,6 +20,11 @@
     <property name="executor"><ref bean="threadPoolExecutor"/></property>
   </bean>
 
+  <bean id="powerShellNetworksResource"
+        class="com.redhat.rhevm.api.powershell.resource.PowerShellNetworksResource">
+    <property name="executor"><ref bean="threadPoolExecutor"/></property>
+  </bean>
+
   <bean id="powerShellStorageDomainsResource"
         class="com.redhat.rhevm.api.powershell.resource.PowerShellStorageDomainsResource">
     <property name="executor"><ref bean="threadPoolExecutor"/></property>
