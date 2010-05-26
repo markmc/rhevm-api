@@ -24,7 +24,7 @@
 
         <testcase name="python.client" owner="eglynn">
           <xh-exec executable="python">
-            <arg value="../python/test.py"/>
+            <arg value="${rhevm-admin.home}/../python/test.py"/>
             <arg value="--port=${jboss.http}"/>
           </xh-exec>
           <output-has min="2" pattern="204"/>

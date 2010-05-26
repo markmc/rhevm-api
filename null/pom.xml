@@ -12,7 +12,7 @@
   <artifactId>rhevm-api-null</artifactId>
   <packaging>pom</packaging>
 
-  <name>RHEV-M API Null Placeholder for Integration Tests</name>
+  <name>RHEV-M API Null Placeholder for Distribution</name>
   <url>http://fedorahosted.org/rhevm-api/</url>
 
 </project>
