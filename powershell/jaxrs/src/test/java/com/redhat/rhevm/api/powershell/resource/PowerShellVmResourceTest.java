@@ -33,6 +33,7 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.Fault;
+import com.redhat.rhevm.api.model.Interface;
 import com.redhat.rhevm.api.model.VM;
 
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
@@ -69,6 +70,9 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     private static final long NEW_DISK_SIZE = 10;
     private static final String ADD_DISK_COMMAND = "$d = new-disk -disksize {0}\n$v = get-vm {1}\nadd-disk -diskobject $d -vmobject $v";
     private static final String REMOVE_DISK_COMMAND = "remove-disk -vmid {0} -diskids 0";
+
+    private static final String NEW_INTERFACE_NAME = "eth11";
+    private static final String ADD_INTERFACE_COMMAND = "$v = get-vm {1}\nadd-networkadapter -vmobject $v -interfacename {0} -networkname rhevm";
 
     protected PowerShellVmResource getResource() {
         return new PowerShellVmResource(VM_ID);
@@ -210,6 +214,21 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
 
         verifyActionResponse(
             resource.removeDevice(setUpActionExpectation("removedevice", command, false), action),
+            false);
+    }
+
+    @Test
+    public void testAddInterface() throws Exception {
+        Interface iface = new Interface();
+        iface.setName(NEW_INTERFACE_NAME);
+
+        Action action = getAction();
+        action.setInterface(iface);
+
+        String command = MessageFormat.format(ADD_INTERFACE_COMMAND, NEW_INTERFACE_NAME, VM_ID);
+
+        verifyActionResponse(
+            resource.addDevice(setUpActionExpectation("adddevice", command, false), action),
             false);
     }
 
