@@ -73,6 +73,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
 
     private static final String NEW_INTERFACE_NAME = "eth11";
     private static final String ADD_INTERFACE_COMMAND = "$v = get-vm {1}\nadd-networkadapter -vmobject $v -interfacename {0} -networkname rhevm";
+    private static final String REMOVE_INTERFACE_COMMAND = "$v = get-vm {0}\nforeach ($i in $v.GetNetworkAdapters()) '{  if ($i.id -eq \"0\") {    $n = $i  }}'\nremove-interface -vmobject $v -networkadapterobject $n";
 
     protected PowerShellVmResource getResource() {
         return new PowerShellVmResource(VM_ID);
@@ -229,6 +230,21 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
 
         verifyActionResponse(
             resource.addDevice(setUpActionExpectation("adddevice", command, false), action),
+            false);
+    }
+
+    @Test
+    public void testRemoveInterface() throws Exception {
+        Interface iface = new Interface();
+        iface.setId("0");
+
+        Action action = getAction();
+        action.setInterface(iface);
+
+        String command = MessageFormat.format(REMOVE_INTERFACE_COMMAND, VM_ID);
+
+        verifyActionResponse(
+            resource.removeDevice(setUpActionExpectation("removedevice", command, false), action),
             false);
     }
 

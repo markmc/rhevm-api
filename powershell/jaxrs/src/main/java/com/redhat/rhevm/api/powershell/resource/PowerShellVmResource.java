@@ -174,6 +174,8 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
 
         if (action.getDisk() != null) {
             task = new RemoveDiskTask(action, action.getDisk().getId());
+        } else if (action.getInterface() != null) {
+            task = new RemoveInterfaceTask(action, action.getInterface().getId());
         } else {
             task = new DoNothingTask(action);
         }
@@ -294,6 +296,30 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
             if (iface.getMac() != null && iface.getMac().getAddress() != null) {
                 buf.append(" -macaddress " + iface.getMac().getAddress());
             }
+
+            PowerShellCmd.runCommand(buf.toString());
+        }
+    }
+
+    private class RemoveInterfaceTask extends AbstractActionTask {
+        private String interfaceId;
+
+        RemoveInterfaceTask(Action action, String interfaceId) {
+            super(action);
+            this.interfaceId = interfaceId;
+        }
+
+        public void run() {
+            StringBuilder buf = new StringBuilder();
+
+            buf.append("$v = get-vm " + getId() + "\n");
+
+            buf.append("foreach ($i in $v.GetNetworkAdapters()) {");
+            buf.append("  if ($i.id -eq \"" + interfaceId + "\") {");
+            buf.append("    $n = $i");
+            buf.append("  }");
+            buf.append("}\n");
+            buf.append("remove-interface -vmobject $v -networkadapterobject $n");
 
             PowerShellCmd.runCommand(buf.toString());
         }
