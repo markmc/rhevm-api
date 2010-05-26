@@ -169,6 +169,19 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
     }
 
     @Override
+    public Response removeDevice(UriInfo uriInfo, Action action) {
+        AbstractActionTask task;
+
+        if (action.getDisk() != null) {
+            task = new RemoveDiskTask(action, action.getDisk().getId());
+        } else {
+            task = new DoNothingTask(action);
+        }
+
+        return doAction(uriInfo, task);
+    }
+
+    @Override
     public Response changeCD(UriInfo uriInfo, Action action) {
         return doAction(uriInfo, new DoNothingTask(action));
     }
@@ -234,6 +247,25 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
             if (action.getStorageDomain() != null) {
                 buf.append(" -storagedomainid " + action.getStorageDomain().getId());
             }
+
+            PowerShellCmd.runCommand(buf.toString());
+        }
+    }
+
+    private class RemoveDiskTask extends AbstractActionTask {
+        private String diskId;
+
+        RemoveDiskTask(Action action, String diskId) {
+            super(action);
+            this.diskId = diskId;
+        }
+
+        public void run() {
+            StringBuilder buf = new StringBuilder();
+
+            buf.append("remove-disk");
+            buf.append(" -vmid " + getId());
+            buf.append(" -diskids " + diskId);
 
             PowerShellCmd.runCommand(buf.toString());
         }

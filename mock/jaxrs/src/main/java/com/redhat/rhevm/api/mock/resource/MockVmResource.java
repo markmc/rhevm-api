@@ -132,19 +132,21 @@ public class MockVmResource extends AbstractMockResource<VM> implements VmResour
     @Override
     public Response detach(UriInfo uriInfo, Action action) {
         return doAction(uriInfo, new DoNothingTask(action));
-
     }
 
     @Override
     public Response addDevice(UriInfo uriInfo, Action action) {
         return doAction(uriInfo, new DoNothingTask(action));
+    }
 
+    @Override
+    public Response removeDevice(UriInfo uriInfo, Action action) {
+        return doAction(uriInfo, new DoNothingTask(action));
     }
 
     @Override
     public Response changeCD(UriInfo uriInfo, Action action) {
         return doAction(uriInfo, new DoNothingTask(action));
-
     }
 
     @Override

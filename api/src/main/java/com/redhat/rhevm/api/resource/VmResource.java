@@ -107,6 +107,12 @@ public interface VmResource /* extends UpdatableResource<VM> */ {
     @POST
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
     @Actionable
+    @Path("removedevice")
+    public Response removeDevice(@Context UriInfo uriInfo, Action action);
+
+    @POST
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
+    @Actionable
     @Path("changeCD")
     public Response changeCD(@Context UriInfo uriInfo, Action action);
 

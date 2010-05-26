@@ -68,6 +68,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
 
     private static final long NEW_DISK_SIZE = 10;
     private static final String ADD_DISK_COMMAND = "$d = new-disk -disksize {0}\n$v = get-vm {1}\nadd-disk -diskobject $d -vmobject $v";
+    private static final String REMOVE_DISK_COMMAND = "remove-disk -vmid {0} -diskids 0";
 
     protected PowerShellVmResource getResource() {
         return new PowerShellVmResource(VM_ID);
@@ -194,6 +195,21 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
 
         verifyActionResponse(
             resource.addDevice(setUpActionExpectation("adddevice", command, false), action),
+            false);
+    }
+
+    @Test
+    public void testRemoveDisk() throws Exception {
+        Disk disk = new Disk();
+        disk.setId("0");
+
+        Action action = getAction();
+        action.setDisk(disk);
+
+        String command = MessageFormat.format(REMOVE_DISK_COMMAND, VM_ID);
+
+        verifyActionResponse(
+            resource.removeDevice(setUpActionExpectation("removedevice", command, false), action),
             false);
     }
 
