@@ -8,4 +8,4 @@ then
 fi
 
 cd $KARAF_HOME
-java -jar lib/karaf-client.jar -r 10 -d 5 "$@" | tr -d '[:cntrl:]' | sed 's/\[m/\n/'
+java -jar lib/karaf-client.jar -r 10 -d 5 "$@" | tr '[:cntrl:]' '\n' | sed 's/\[m//' | sed '/^$/d'
