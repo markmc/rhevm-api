@@ -39,13 +39,8 @@
         </envset>
         <arg value="server"/>
       </xh-execbg>
-      <sleep seconds="30"/>
+      <sleep seconds="20"/>
     </start>
-
-    <verify>
-      <rhevm-client command="osgi:list | grep RHEV"/>
-      <output-has pattern="RHEV-M API Command Line Interface - Base"/>
-    </verify>
 
     <stop>
       <rhevm-client command="shutdown"/>
