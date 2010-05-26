@@ -30,6 +30,7 @@ import com.redhat.rhevm.api.model.DiskStatus;
 import com.redhat.rhevm.api.model.DiskType;
 import com.redhat.rhevm.api.model.Interface;
 import com.redhat.rhevm.api.model.InterfaceType;
+import com.redhat.rhevm.api.model.IP;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
@@ -112,7 +113,7 @@ public class PowerShellVM {
             if (props.get("address") != null ||
                 props.get("subnet") != null ||
                 props.get("gateway") != null) {
-                Interface.Ip ip = new Interface.Ip();
+                IP ip = new IP();
                 ip.setAddress(props.get("address"));
                 ip.setNetmask(props.get("subnet"));
                 ip.setGateway(props.get("gateway"));

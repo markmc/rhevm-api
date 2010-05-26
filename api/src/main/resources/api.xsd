@@ -338,6 +338,16 @@
     </xs:sequence>
   </xs:complexType>
 
+  <!-- Networks -->
+
+  <xs:element name="ip" type="IP"/>
+
+  <xs:complexType name="IP">
+    <xs:attribute name="address" type="xs:string"/>
+    <xs:attribute name="netmask" type="xs:string"/>
+    <xs:attribute name="gateway" type="xs:string"/>
+  </xs:complexType>
+
   <!-- Storage Domains -->
 
   <xs:element name="storage_domain" type="StorageDomain"/>
@@ -479,13 +489,7 @@
           <xs:attribute name="address" type="xs:string"/>
         </xs:complexType>
       </xs:element>
-      <xs:element name="ip" minOccurs="0">
-        <xs:complexType>
-          <xs:attribute name="address" type="xs:string"/>
-          <xs:attribute name="netmask" type="xs:string"/>
-          <xs:attribute name="gateway" type="xs:string"/>
-        </xs:complexType>
-      </xs:element>
+      <xs:element ref="ip" minOccurs="0"/>
     </xs:sequence>
     <xs:attribute name="id" type="xs:string"/>
   </xs:complexType>
