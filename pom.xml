@@ -16,7 +16,6 @@
     <module>powershell</module>
     <module>mock</module>
     <module>cli</module>
-    <module>distribution</module>
     <module>${extra.module}</module>
   </modules>
 
@@ -24,7 +23,7 @@
     <profile>
       <id>integration</id>
       <properties>
-        <extra.module>itests</extra.module>
+        <extra.module>distribution</extra.module>
       </properties>
     </profile>
   </profiles>

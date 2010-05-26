@@ -5,14 +5,14 @@
 
   <parent>
     <groupId>com.redhat.rhevm.api</groupId>
-    <artifactId>parent</artifactId>
+    <artifactId>distribution-parent</artifactId>
     <version>0.1-SNAPSHOT</version>
   </parent>
 
   <artifactId>rhevm-api-distro</artifactId>
   <packaging>pom</packaging>
 
-  <name>RHEV-M API Distribution</name>
+  <name>RHEV-M API Distribution Assembly</name>
   <url>http://fedorahosted.org/rhevm-api/</url>
 
   <properties>

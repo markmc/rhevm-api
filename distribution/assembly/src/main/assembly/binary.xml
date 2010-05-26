@@ -34,7 +34,7 @@
     </fileSet>
 
     <fileSet>
-      <directory>${basedir}/../python</directory>
+      <directory>${basedir}../../python</directory>
       <outputDirectory>/python</outputDirectory>
       <includes>
         <include>*.py</include>
