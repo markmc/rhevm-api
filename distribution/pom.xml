@@ -1,0 +1,226 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.redhat.rhevm.api</groupId>
+    <artifactId>parent</artifactId>
+    <version>0.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>rhevm-api-distro</artifactId>
+  <packaging>pom</packaging>
+
+  <name>RHEV-M API Distribution</name>
+  <url>http://fedorahosted.org/rhevm-api/</url>
+
+  <properties>
+    <felix.framework.version>2.0.4</felix.framework.version>
+    <equinox.version>3.5.1.v20090827</equinox.version>
+    <servicemix.version>4.2.0</servicemix.version>
+    <abdera.version>0.4.0-incubating_3</abdera.version>
+    <karaf.osgi.version>${felix.karaf.version}</karaf.osgi.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.redhat.rhevm.api</groupId>
+      <artifactId>rhevm-api</artifactId>
+      <version>0.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.redhat.rhevm.api</groupId>
+      <artifactId>rhevm-api-mock-webapp</artifactId>
+      <type>war</type>
+      <version>0.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.redhat.rhevm.api</groupId>
+      <artifactId>rhevm-api-powershell-webapp</artifactId>
+      <type>war</type>
+      <version>0.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.felix.karaf</groupId>
+      <artifactId>apache-felix-karaf</artifactId>
+      <version>${felix.karaf.version}</version>
+      <type>tar.gz</type>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.felix.karaf</groupId>
+      <artifactId>apache-felix-karaf</artifactId>
+      <version>${felix.karaf.version}</version>
+      <type>xml</type>
+      <classifier>features</classifier>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.servicemix</groupId>
+      <artifactId>apache-servicemix</artifactId>
+      <version>${servicemix.version}</version>
+      <type>xml</type>
+      <classifier>features</classifier>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-bundle</artifactId>
+      <version>${cxf.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.servicemix.bundles</groupId>
+      <artifactId>org.apache.servicemix.bundles.abdera</artifactId>
+      <version>${abdera.version}</version>
+    </dependency>
+
+  </dependencies>
+
+
+  <build>
+    <resources>
+      <resource>
+        <directory>${pom.basedir}/src/main/filtered-resources</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>**/*</include>
+        </includes>
+      </resource>
+    </resources>
+
+    <plugins>
+
+      <plugin>
+        <groupId>org.apache.felix.karaf.tooling</groupId>
+        <artifactId>features-maven-plugin</artifactId>
+        <version>${felix.karaf.version}</version>
+        <executions>
+          <execution>
+            <id>add-features-to-repo</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>add-features-to-repo</goal>
+            </goals>
+            <configuration>
+              <descriptors>
+                <descriptor>mvn:org.apache.felix.karaf/apache-felix-karaf/${felix.karaf.version}/xml/features</descriptor>
+                <descriptor>mvn:org.apache.servicemix/apache-servicemix/${servicemix.version}/xml/features</descriptor>
+              </descriptors>
+              <features>
+                <feature>cxf-jaxrs</feature>
+              </features>
+              <repository>target/features-repo</repository>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>filter</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>resources</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>unpack</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.apache.felix.karaf</groupId>
+                  <artifactId>apache-felix-karaf</artifactId>
+                  <version>${felix.karaf.version}</version>
+                  <type>tar.gz</type>
+                  <outputDirectory>target/dependencies/kit</outputDirectory>
+                </artifactItem>
+
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+
+                <artifactItem>
+                  <groupId>com.redhat.rhevm.api</groupId>
+                  <artifactId>rhevm-api-mock-webapp</artifactId>
+                  <version>0.1-SNAPSHOT</version>
+                  <type>war</type>
+                  <destFileName>rhevm-api-mock.war</destFileName>
+                  <outputDirectory>target/dependencies/webapp</outputDirectory>
+                </artifactItem>
+
+                <artifactItem>
+                  <groupId>com.redhat.rhevm.api</groupId>
+                  <artifactId>rhevm-api-powershell-webapp</artifactId>
+                  <version>0.1-SNAPSHOT</version>
+                  <type>war</type>
+                  <destFileName>rhevm-api-powershell.war</destFileName>
+                  <outputDirectory>target/dependencies/webapp</outputDirectory>
+                </artifactItem>
+
+              </artifactItems>
+              <stripVersion>true</stripVersion>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>binary</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <descriptors>
+                <descriptor>src/main/assembly/binary.xml</descriptor>
+              </descriptors>
+              <finalName>${pom.artifactId}-${pom.version}</finalName>
+              <tarLongFileMode>gnu</tarLongFileMode>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
+

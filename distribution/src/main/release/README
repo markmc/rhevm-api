@@ -1,0 +1,66 @@
+= RHEV-M API Definition =
+
+This is the very early stages of a project to define an official
+RESTful API for RHEV-M.
+
+See our wiki for more details:
+
+  https://fedorahosted.org/rhevm-api/
+
+
+== Disclaimers ==
+
+The API definition is in its early stages. It may yet change radically
+and/or never become the official API.
+
+The PowerShell wrapper is for experimentation only and not a supported
+Red Hat solution.
+
+
+== Testing ==
+
+The RHEVM-API can be deployed to any servlet container, for example
+Apache Tomcat or JBoss.
+
+If you take the former option, simply deploy via:
+
+ $> cp webapp/rhevm-api-mock.war $CATALINA_HOME/webapps
+ $> $CATALINA_HOME/bin/startup.sh  # if not already running
+
+If you take the later option, you first need to install JBoss.
+JBoss EAP 5.0 or JBoss AS 5.1.0.GA should work.
+
+ $> wget https://sourceforge.net/projects/jboss/files/JBoss/JBoss-5.1.0.GA/jboss-5.1.0.GA.zip/download
+ $> unzip jboss-5.1.0.GA.zip
+ $> mv jboss-5.1.0.GA /usr/local/jboss-5.1.0.GA
+ $> chown -R markmc:markmc /usr/local/jboss-5.1.0.GA
+
+Install openjdk and make sure it's configured as the default java
+version:
+
+ $> yum install -y java-1.6.0-openjdk-devel
+ $> alternatives --display javac
+
+Then deploy the mock webapp:
+
+ $> cp webapp/rhevm-api-mock.war /usr/local/jboss-5.1.0.GA/server/default/deploy/rhevm-api-mock.war
+
+Run:
+
+ $> /usr/local/jboss-5.1.0.GA/bin/run.sh
+
+
+In either case, the deployment can be tested via:
+
+ $> ./python/test.py
+
+with the --port=nnnn option if your servlet engine is running on a
+port other than 8080.
+
+
+=== Using the Command Line Interface ===
+
+The RHEVM-API project provides a simple CLI with command-completion
+based on the Apache Felix Gogo shell.
+
+For more information, see rhevm-admin/README

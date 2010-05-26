@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Binary Distribution of RHEVM-API -->
+<assembly>
+  <id></id>
+
+  <formats>
+    <format>tar.gz</format>
+  </formats>
+
+
+  <fileSets>
+
+    <fileSet>
+      <directory>${basedir}/src/main/release</directory>
+      <outputDirectory>/</outputDirectory>
+      <includes>
+        <include>README</include>
+        <include>NOTICE</include>
+        <include>LICENSE</include>
+      </includes>
+    </fileSet>
+
+    <fileSet>
+      <directory>${basedir}/target/dependencies/lib</directory>
+      <outputDirectory>/lib</outputDirectory>
+    </fileSet>
+
+    <!-- Use a fileSet instead of a dependencySet for the wars, so as
+         to give better control over naming in the distribution,
+         i.e. remove "webapp" suffix from the artifact -->
+    <fileSet>
+      <directory>${basedir}/target/dependencies/webapp</directory>
+      <outputDirectory>/webapp</outputDirectory>
+    </fileSet>
+
+    <fileSet>
+      <directory>${basedir}/../python</directory>
+      <outputDirectory>/python</outputDirectory>
+      <includes>
+        <include>*.py</include>
+      </includes>
+    </fileSet>
+
+    <fileSet>
+      <directory>${basedir}/target/dependencies/kit/apache-felix-karaf-${felix.karaf.version}</directory>
+      <outputDirectory>/rhevm-admin</outputDirectory>
+      <excludes>
+        <exclude>bin/start</exclude>
+        <exclude>bin/stop</exclude>
+        <exclude>bin/admin</exclude>
+        <exclude>etc/config.properties</exclude>
+        <exclude>etc/org.apache.felix.karaf.features.cfg</exclude>
+        <exclude>karaf-manual*</exclude>
+        <exclude>LICENSE</exclude>
+        <exclude>NOTICE</exclude>
+        <exclude>README</exclude>
+        <exclude>RELEASE-NOTES</exclude>
+        <exclude>deploy/**</exclude>
+        <exclude>demos/**</exclude>
+      </excludes>
+    </fileSet>
+
+    <fileSet>
+      <directory>${basedir}/target/classes/etc</directory>
+      <outputDirectory>/rhevm-admin/etc/</outputDirectory>
+      <lineEnding>unix</lineEnding>
+      <fileMode>0644</fileMode>
+    </fileSet>
+
+    <fileSet>
+      <directory>${basedir}/target/features-repo</directory>
+      <outputDirectory>/rhevm-admin/system</outputDirectory>
+    </fileSet>
+
+  </fileSets>
+
+
+  <files>
+
+    <file>
+      <source>${basedir}/src/main/release/rhevm-admin/bin/rhevm-admin</source>
+      <outputDirectory>/rhevm-admin/bin</outputDirectory>
+      <destName>rhevm-admin</destName>
+      <fileMode>0755</fileMode>
+      <lineEnding>unix</lineEnding>
+    </file>
+
+    <file>
+      <source>${basedir}/src/main/release/rhevm-admin/bin/rhevm-client</source>
+      <outputDirectory>/rhevm-admin/bin</outputDirectory>
+      <destName>rhevm-client</destName>
+      <fileMode>0755</fileMode>
+      <lineEnding>unix</lineEnding>
+    </file>
+
+    <file>
+      <source>${basedir}/src/main/release/rhevm-admin/etc/org.apache.felix.karaf.features.cfg</source>
+      <outputDirectory>/rhevm-admin/etc</outputDirectory>
+      <destName>org.apache.felix.karaf.features.cfg</destName>
+      <fileMode>0644</fileMode>
+      <lineEnding>unix</lineEnding>
+    </file>
+
+    <file>
+      <source>${basedir}/src/main/release/rhevm-admin/README</source>
+      <outputDirectory>/rhevm-admin</outputDirectory>
+      <destName>README</destName>
+      <fileMode>0644</fileMode>
+      <lineEnding>unix</lineEnding>
+    </file>
+
+  </files>
+
+
+  <dependencySets>
+
+    <dependencySet>
+      <outputDirectory>/lib</outputDirectory>
+      <unpack>false</unpack>
+      <useProjectArtifact>false</useProjectArtifact>
+      <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+      <includes>
+        <include>com.redhat.rhevm.api:rhevm-api</include>
+      </includes>
+    </dependencySet>
+
+    <dependencySet>
+      <outputDirectory>/rhevm-admin/system</outputDirectory>
+      <unpack>false</unpack>
+      <useProjectArtifact>false</useProjectArtifact>
+      <outputFileNameMapping>org/springframework/${artifact.artifactId}/${artifact.baseVersion}/${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>
+      <includes>
+        <include>org.springframework:spring-aop</include>
+        <include>org.springframework:spring-beans</include>
+        <include>org.springframework:spring-context</include>
+        <include>org.springframework:spring-core</include>
+        <include>org.springframework:spring-tx</include>
+      </includes>
+    </dependencySet>
+
+    <dependencySet>
+      <outputDirectory>/rhevm-admin/system</outputDirectory>
+      <unpack>false</unpack>
+      <useProjectArtifact>false</useProjectArtifact>
+      <outputFileNameMapping>org/springframework/osgi/${artifact.artifactId}/${artifact.baseVersion}/${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>
+      <includes>
+        <include>org.springframework.osgi:spring-osgi-core</include>
+        <include>org.springframework.osgi:spring-osgi-extender</include>
+        <include>org.springframework.osgi:spring-osgi-io</include>
+      </includes>
+    </dependencySet>
+
+    <dependencySet>
+      <outputDirectory>/rhevm-admin/system</outputDirectory>
+      <unpack>false</unpack>
+      <useProjectArtifact>false</useProjectArtifact>
+      <outputFileNameMapping>org/apache/servicemix/bundles/${artifact.artifactId}/${artifact.baseVersion}/${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>
+      <includes>
+        <include>org.apache.servicemix.bundles:org.apache.servicemix.bundles.aopalliance</include>
+        <include>org.apache.servicemix.bundles:org.apache.servicemix.bundles.commons-codec</include>
+      </includes>
+    </dependencySet>
+
+    <dependencySet>
+      <outputDirectory>/rhevm-admin/system</outputDirectory>
+      <unpack>false</unpack>
+      <useProjectArtifact>false</useProjectArtifact>
+      <outputFileNameMapping>org/apache/servicemix/specs/${artifact.artifactId}/${artifact.baseVersion}/${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>
+      <includes>
+        <include>org.apache.servicemix.specs:org.apache.servicemix.specs.stax-api-1.0</include>
+      </includes>
+    </dependencySet>
+
+  </dependencySets>
+
+</assembly>
