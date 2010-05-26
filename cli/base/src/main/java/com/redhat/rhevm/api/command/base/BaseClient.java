@@ -209,7 +209,7 @@ public class BaseClient {
 
     private void diagnose(String baseError, Exception failure, Response r, int expected, int faultStatus) {
         if (failure != null) {
-            System.err.println(baseError + failure.getMessage());
+            System.err.println(baseError + failure.getClass().getSimpleName() + ":" + failure.getMessage());
         } else if (r.getStatus() != expected) {
             System.err.println(baseError + getStatus(r));
             if (r.getStatus() == faultStatus) {
