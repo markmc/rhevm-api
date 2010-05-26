@@ -20,6 +20,8 @@ package com.redhat.rhevm.api.command.base;
 
 import java.util.List;
 
+import org.apache.felix.gogo.commands.Option;
+
 import com.redhat.rhevm.api.model.BaseResource;
 
 
@@ -28,15 +30,25 @@ import com.redhat.rhevm.api.model.BaseResource;
  */
 public abstract class AbstractListCommand extends AbstractCommand {
 
+    @Option(name = "-c", aliases = { "--concise" }, description = "Limit display to entity names", required = false, multiValued = false)
+    private boolean concise;
+
     protected Object doList(List <? extends BaseResource> collection, int limit) throws Exception {
         int i = 0;
         for (BaseResource resource : collection) {
             if (++i > limit) {
                 break;
             }
-            System.out.println("[ " + resource.getName() + "] ["
-                + (resource.getId().length() < "ID".length() ? " " : "")
-                + resource.getId() + "]" );
+            if (concise) {
+                System.out.print(resource.getName() + " ");
+            } else {
+                System.out.println("[ " + resource.getName() + "] ["
+                                   + (resource.getId().length() < "ID".length() ? " " : "")
+                                   + resource.getId() + "]" );
+            }
+        }
+        if (concise) {
+            System.out.println();
         }
         return null;
     }
