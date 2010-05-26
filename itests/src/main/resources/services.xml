@@ -39,7 +39,7 @@
         </envset>
         <arg value="server"/>
       </xh-execbg>
-      <sleep seconds="20"/>
+      <sleep seconds="30"/>
     </start>
 
     <verify>
