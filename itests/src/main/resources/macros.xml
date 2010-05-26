@@ -3,9 +3,9 @@
   <macrodef name="rhevm-client">
     <attribute name="command"/>
     <sequential>
-      <xh-java jar="${rhevm-admin.home}/lib/karaf-client.jar">
-        <arg line="-r 10 -d 5 -u smx -p smx '@{command}'"/>
-      </xh-java>
+      <xh-exec executable="${rhevm-admin.home}/bin/rhevm-client">
+        <arg line="'@{command}'"/>
+      </xh-exec>
     </sequential>
   </macrodef>
 

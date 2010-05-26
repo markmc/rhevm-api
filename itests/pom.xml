@@ -21,8 +21,7 @@
     <jboss.version>6.0.0.M1</jboss.version>
     <jboss.dir>${kits.dir}/jboss</jboss.dir>
     <jboss.home>${jboss.dir}/jboss-${jboss.version}</jboss.home>
-    <smx.version>4.2.0</smx.version>
-    <rhevm-admin.dir>${kits.dir}/rhevm-admin</rhevm-admin.dir>
+    <rhevm-api.dir>${kits.dir}/rhevm-api</rhevm-api.dir>
   </properties>
 
   <build>
@@ -41,20 +40,20 @@
             <configuration>
               <artifactItems>
                 <artifactItem>
+                  <groupId>com.redhat.rhevm.api</groupId>
+                  <artifactId>rhevm-api-distro</artifactId>
+                  <version>${pom.version}</version>
+                  <type>tar.gz</type>
+                  <overWrite>false</overWrite>
+                  <outputDirectory>${rhevm-api.dir}</outputDirectory>
+                </artifactItem>
+                <artifactItem>
                   <groupId>org.jboss.jbossas</groupId>
                   <artifactId>jboss-as-distribution</artifactId>
                   <version>${jboss.version}</version>
                   <type>zip</type>
                   <overWrite>false</overWrite>
                   <outputDirectory>${jboss.dir}</outputDirectory>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.apache.servicemix</groupId>
-                  <artifactId>apache-servicemix</artifactId>
-                  <version>${smx.version}</version>
-                  <type>tar.gz</type>
-                  <overWrite>false</overWrite>
-                  <outputDirectory>${rhevm-admin.dir}</outputDirectory>
                 </artifactItem>
               </artifactItems>
             </configuration>
@@ -104,7 +103,7 @@
                 <property name="project.name" value="${pom.name}"/>
                 <property name="rhevm.api.version" value="${pom.version}"/>
                 <property name="rhevm.api.impl" value="${rhevm.api.impl}"/>
-                <property name="rhevm-admin.home" value="${rhevm-admin.dir}/apache-servicemix-${smx.version}"/>
+                <property name="rhevm-admin.home" value="${rhevm-api.dir}/rhevm-api-distro-${pom.version}/rhevm-admin/"/>
                 <property name="rhevm-admin.bin" value="${rhevm-admin.home}/bin"/>
                 <property name="jboss.home" value="${jboss.dir}/jboss-${jboss.version}"/>
                 <property name="jboss.bin" value="${jboss.home}/bin"/>

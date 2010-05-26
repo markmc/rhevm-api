@@ -31,16 +31,15 @@
 
   <servicedef name="rhevm-admin">
     <start>
-      <xh-exec executable="${rhevm-admin.bin}/start">
+      <xh-execbg executable="${rhevm-admin.bin}/rhevm-admin"
+                 processname="rhevm-admin">
         <envset>
-          <env key="JAVA_OPTS"
-               value="-Drhevm.base.url=http://localhost:${jboss.http}/${rhevm.api.impl}"/>
+          <env key="RHEVM_API_URL"
+               value="http://localhost:${jboss.http}/${rhevm.api.impl}"/>
         </envset>
-      </xh-exec>
+        <arg value="server"/>
+      </xh-execbg>
       <sleep seconds="20"/>
-      <rhevm-client command="features:addUrl mvn:com.redhat.rhevm.api/rhevm-api-cli/${rhevm.api.version}/xml/features"/>
-
-      <rhevm-client command="features:install rhevm-api-cli"/>
     </start>
 
     <verify>

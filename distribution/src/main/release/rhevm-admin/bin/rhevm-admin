@@ -5,4 +5,4 @@ if [ "x$RHEVM_API_URL" = "x" ]; then
   RHEVM_API_URL=http://localhost:8080/rhevm-api-mock
 fi
 export JAVA_OPTS=-Drhevm.base.url=$RHEVM_API_URL
-$DIRNAME/karaf
+$DIRNAME/karaf $@
