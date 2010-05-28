@@ -19,6 +19,14 @@
     </sequential>
   </macrodef>
 
+  <macrodef name="output-is">
+    <attribute name="pattern"/>
+    <sequential>
+      <assert>
+        <outputis stream="stdout">@{pattern}</outputis>
+      </assert>
+    </sequential>
+  </macrodef>
   <macrodef name="output-matches">
     <attribute name="pattern"/>
     <sequential>
