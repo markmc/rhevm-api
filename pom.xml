@@ -10,6 +10,20 @@
   <name>RHEV-M API Parent POM</name>
   <url>http://fedorahosted.org/rhevm-api/</url>
 
+
+  <distributionManagement>
+    <repository>
+      <id>sonatype.oss.release.repo</id>
+      <name>Sonatype OSS Release Respository</name>
+      <url>http://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+    </repository>
+    <snapshotRepository>
+      <id>sonatype.oss.snapshot.repo</id>
+      <name>Sonatype OSS Snapshot Respository</name>
+      <url>http://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
+
   <modules>
     <module>api</module>
     <module>common</module>
@@ -229,7 +243,7 @@
         <artifactId>spring-test</artifactId>
         <version>${spring.version}</version>
       </dependency>
- 
+
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-webmvc</artifactId>
