@@ -22,6 +22,92 @@ import xml.dom.minidom
 
 MEDIA_TYPE = 'application/xml'
 
+# FIXME: handle links
+
+class Element:
+    ATTRIBUTES = []
+    ELEMENTS = []
+    NAME = None
+    COLLECTION = None
+
+    def __str__(self):
+        dict = {}
+        for key in self.ATTRIBUTES + self.ELEMENTS:
+            if hasattr(self, key):
+                dict[key] = getattr(self, key)
+        return str(dict)
+
+    def dump(self):
+        s = '<' + self.NAME
+        for a in self.ATTRIBUTES:
+            if hasattr(self, a):
+                s += ' ' + a + '=\'' + getattr(self, a) + '\''
+        s += '>'
+        for e in self.ELEMENTS:
+            if hasattr(self, e):
+                obj = getattr(self, e)
+                if isinstance(obj, Element):
+                    s += obj.dump()
+                else:
+                    s += '<' + e + '>' + obj + '</' + e + '>'
+        s += '</' + self.NAME + '>'
+        return s
+
+class Action(Element):
+    NAME = 'action'
+    ATTRIBUTES = Element.ATTRIBUTES + ['id', 'href']
+    ELEMENTS = Element.ELEMENTS + ['async', 'status', 'grace_period']
+
+class CPU(Element):
+    NAME = 'cpu'
+    COLLECTION = 'cpus'
+    ATTRIBUTES = Element.ATTRIBUTES + ["id"]
+    ELEMENTS = Element.ELEMENTS + ["level"] # FIXME: flags
+
+class GracePeriod(Element):
+    NAME = 'grace_period'
+    ELEMENTS = Element.ELEMENTS + ['expiry', 'absolute']
+
+class Base(Element):
+    ATTRIBUTES = Element.ATTRIBUTES + ["id", "href"]
+    ELEMENTS = Element.ELEMENTS + ["name"]
+
+class Cluster(Base):
+    NAME = "cluster"
+    COLLECTION = "clusters"
+    ELEMENTS = Base.ELEMENTS + ["data_center", "cpu"]
+
+class DataCenter(Base):
+    NAME = "data_center"
+    COLLECTION = "data_centers"
+
+class Host(Base):
+    NAME = "host"
+    COLLECTION = "hosts"
+
+class StorageDomain(Base):
+    NAME = "storage_domain"
+    COLLECTION = "storage_domains"
+    ELEMENTS = Base.ELEMENTS + ['type', 'status'] # FIXME: attachments
+
+class VM(Base):
+    NAME = "vm"
+    COLLECTION = "vms"
+
+TYPES = [ Action, Cluster, CPU, DataCenter, GracePeriod, Host, StorageDomain, VM ]
+
+def findEntityType(name):
+    for t in TYPES:
+        if t.NAME == name:
+            return t
+    return None
+
+def findCollectionType(name):
+    for t in TYPES:
+        if t.COLLECTION == name:
+            return t
+    return None
+
 def getText(nodelist):
     rc = ""
     for node in nodelist:
@@ -30,174 +116,61 @@ def getText(nodelist):
     return rc
 
 def parseNode(node):
-    ret = {}
-    for n in node.attributes.keys():
-        n = node.attributes[n]
-        ret[n.nodeName] = n.nodeValue
-    for n in node.childNodes:
-        if n.nodeType != n.ELEMENT_NODE:
-            continue
-        if n.nodeName == 'link':
-            ret[n.attributes['rel'].nodeValue] = n.attributes['href'].nodeValue
-        else:
-            ret[n.nodeName] = getText(n.childNodes)
-    return ret
+    t = findCollectionType(node.nodeName)
+    if not t is None:
+        l = []
+        for n in node.childNodes:
+            if n.nodeType != n.ELEMENT_NODE:
+                continue
+            obj = parseNode(n)
+            if not obj is None:
+                l.append(obj)
+        return l
 
-class Link:
-    def __init__(self, rel, href):
-        self.rel = rel
-        self.href = href
+    t = findEntityType(node.nodeName)
+    if not t is None:
+        obj = t()
+        for n in node.attributes.keys():
+            if n in obj.ATTRIBUTES:
+                setattr(obj, n, node.attributes[n].nodeValue)
+        for n in node.childNodes:
+            if n.nodeType != n.ELEMENT_NODE:
+                continue
+            if n.nodeName in obj.ELEMENTS:
+                e = parseNode(n)
+                if e is None:
+                    e = getText(n.childNodes)
+                setattr(obj, n.nodeName, e)
+        return obj
 
-class Base:
-    def __init__(self, node = None):
-        if node is None:
-            return
+    return None
 
-        dict = parseNode(node)
-        for key in self.KEYS:
-            if key in dict:
-                setattr(self, key, dict[key])
-
-    def __str__(self):
-        dict = {}
-        for key in self.KEYS:
-            if hasattr(self, key):
-                dict[key] = getattr(self, key)
-        return str(dict)
-
-class VM(Base):
-    COLLECTION_ELEMENT = 'vms'
-    ROOT_ELEMENT = 'vm'
-    KEYS = ['id', 'name', 'href']
-
-    def dump(self):
-        s = '<vm'
-        if hasattr(self, 'href'):
-            s += ' href=\'' + getattr(self, 'href') + '\''
-        if hasattr(self, 'id'):
-            s += ' id=\'' + getattr(self, 'id') + '\''
-        s += '>'
-        if hasattr(self, 'name'):
-            s += '<name>' + getattr(self, 'name') + '</name>'
-        s += '</vm>'
-        return s
-
-class Host(Base):
-    COLLECTION_ELEMENT = 'hosts'
-    ROOT_ELEMENT = 'host'
-    KEYS = ['id', 'name', 'href']
-
-    def dump(self):
-        s = '<host'
-        if hasattr(self, 'href'):
-            s += ' href=\'' + getattr(self, 'href') + '\''
-        if hasattr(self, 'id'):
-            s += ' id=\'' + getattr(self, 'id') + '\''
-        s += '>'
-        if hasattr(self, 'name'):
-            s += '<name>' + getattr(self, 'name') + '</name>'
-        s += '</host>'
-        return s
-
-class Cluster(Base):
-    COLLECTION_ELEMENT = 'clusters'
-    ROOT_ELEMENT = 'cluster'
-    KEYS = ['id', 'name', 'href']
-
-    def dump(self):
-        s = '<cluster'
-        if hasattr(self, 'href'):
-            s += ' href=\'' + getattr(self, 'href') + '\''
-        if hasattr(self, 'id'):
-            s += ' id=\'' + getattr(self, 'id') + '\''
-        s += '>'
-        if hasattr(self, 'name'):
-            s += '<name>' + getattr(self, 'name') + '</name>'
-        s += '</cluster>'
-        return s
-
-class StorageDomain(Base):
-    COLLECTION_ELEMENT = 'storage_domains'
-    ROOT_ELEMENT = 'storage_domain'
-    KEYS = ['id', 'name', 'href', 'type', 'status', 'attachments']
-
-    def dump(self):
-        s = '<storage_domain'
-        if hasattr(self, 'href'):
-            s += ' href=\'' + getattr(self, 'href') + '\''
-        if hasattr(self, 'id'):
-            s += ' id=\'' + getattr(self, 'id') + '\''
-        s += '>'
-        if hasattr(self, 'name'):
-            s += '<name>' + getattr(self, 'name') + '</name>'
-        s += '</storage_domain>'
-        return s
-
-class Action(Base):
-    ROOT_ELEMENT = 'action'
-    KEYS = ['id', 'async', 'status', 'href', 'grace']
-
-    def dump(self):
-        s = '<action'
-        if hasattr(self, 'href'):
-            s += ' href=\'' + getattr(self, 'href') + '\''
-        if hasattr(self, 'id'):
-            s += ' id=\'' + getattr(self, 'id') + '\''
-        s += '>'
-        if hasattr(self, 'async'):
-            s += '<async>' + getattr(self, 'async') + '</async>'
-        if hasattr(self, 'grace'):
-            s += getattr(self, 'grace')
-        s += '</action>'
-        return s
-
-class GracePeriod(Base):
-    ROOT_ELEMENT = 'grace_period'
-    KEYS = ['expiry', 'absolute']
-
-    def dump(self):
-        s = '<grace_period>'
-        if hasattr(self, 'expiry'):
-            s += '<expiry>' + getattr(self, 'expiry') + '</expiry>'
-        if hasattr(self, 'absolute'):
-            s += '<absolute>' + getattr(self, 'absolute') + '</absolute>'
-        s += '</grace_period>'
-        return s
+def parse(doc):
+    return parseNode(xml.dom.minidom.parseString(doc).documentElement)
 
 def parseAction(doc):
-    return Action(xml.dom.minidom.parseString(doc).getElementsByTagName(Action.ROOT_ELEMENT)[0])
-
+    return parse(doc)
 def parseVM(doc):
-    return VM(xml.dom.minidom.parseString(doc).getElementsByTagName(VM.ROOT_ELEMENT)[0])
-
+    return parse(doc)
+def parseDataCenter(doc):
+    return parse(doc)
 def parseHost(doc):
-    return Host(xml.dom.minidom.parseString(doc).getElementsByTagName(Host.ROOT_ELEMENT)[0])
-
+    return parse(doc)
 def parseCluster(doc):
-    return Cluster(xml.dom.minidom.parseString(doc).getElementsByTagName(Cluster.ROOT_ELEMENT)[0])
-
+    return parse(doc)
+def parseCPU(doc):
+    return parse(doc)
 def parseStorageDomain(doc):
-    return StorageDomain(xml.dom.minidom.parseString(doc).getElementsByTagName(StorageDomain.ROOT_ELEMENT)[0])
-
-def parseCollection(doc, entityType):
-    collection = xml.dom.minidom.parseString(doc).getElementsByTagName(entityType.COLLECTION_ELEMENT)[0]
-
-    ret = []
-    for n in collection.childNodes:
-        if n.nodeType != n.ELEMENT_NODE or n.nodeName != entityType.ROOT_ELEMENT:
-            continue
-        ret.append(entityType(n))
-
-    return ret
-
+    return parse(doc)
 def parseVmCollection(doc):
-    return parseCollection(doc, VM)
-
+    return parse(doc)
+def parseDataCenterCollection(doc):
+    return parse(doc)
 def parseHostCollection(doc):
-    return parseCollection(doc, Host)
-
+    return parse(doc)
 def parseClusterCollection(doc):
-    return parseCollection(doc, Cluster)
-
+    return parse(doc)
+def parseCpuCollection(doc):
+    return parse(doc)
 def parseStorageDomainCollection(doc):
-    return parseCollection(doc, StorageDomain)
+    return parse(doc)

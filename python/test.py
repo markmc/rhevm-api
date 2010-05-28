@@ -29,10 +29,9 @@ import template_parser
 def makeAction(async, expiry):
     action = fmt.Action()
     action.async = async
-    grace = fmt.GracePeriod()
-    grace.expiry = expiry
-    grace.absolute = 'false'
-    action.grace = grace.dump()
+    action.grace_period = fmt.GracePeriod()
+    action.grace_period.expiry = expiry
+    action.grace_period.absolute = 'false'
     return action
 
 def expectedStatusCode(code, expected):
