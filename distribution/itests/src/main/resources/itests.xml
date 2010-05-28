@@ -35,6 +35,11 @@
           <output-has pattern="[ vm8] [ 8]"/>
         </testcase>
 
+        <testcase name="cli.vms.list.concise" owner="eglynn">
+          <rhevm-client command="vms:list --concise"/>
+          <output-has pattern="vm3 vm2 vm10 vm1 vm7 vm6 vm5 vm4 vm9 vm8"/>
+        </testcase>
+
         <testcase name="cli.vms.query" owner="eglynn">
           <rhevm-client command="vms:list --search=name=*1"/>
           <output-is pattern="[ vm1] [ 1]"/>
@@ -45,6 +50,11 @@
           <output-has pattern="[ host2] [ 2]"/>
         </testcase>
 
+        <testcase name="cli.hosts.list.conicse" owner="eglynn">
+          <rhevm-client command="hosts:list --concise"/>
+          <output-has pattern="host3 host2 host1 host4"/>
+        </testcase>
+
         <testcase name="cli.hosts.query" owner="eglynn">
           <rhevm-client command="hosts:list --search=name=*1"/>
           <output-is pattern="[ host1] [ 1]"/>
@@ -53,6 +63,11 @@
         <testcase name="cli.datacenters.list" owner="eglynn">
           <rhevm-client command="datacenters:list"/>
           <output-has pattern="[ datacenter1] [ 1]"/>
+        </testcase>
+
+        <testcase name="cli.datacenters.list.concise" owner="eglynn">
+          <rhevm-client command="datacenters:list --concise"/>
+          <output-has pattern="datacenter2 datacenter1"/>
         </testcase>
 
         <testcase name="cli.datacenters.query" owner="eglynn">
