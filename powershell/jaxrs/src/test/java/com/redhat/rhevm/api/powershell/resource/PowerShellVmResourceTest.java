@@ -67,6 +67,9 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     private static final String GET_INTERFACES_COMMAND = "$v = get-vm {0}\n$v.GetNetworkAdapters()\n";
     private static final String GET_INTERFACES_RETURN = PowerShellVmsResourceTest.GET_INTERFACES_RETURN;
 
+    private static final String LOOKUP_NETWORK_ID_COMMAND = PowerShellVmsResourceTest.LOOKUP_NETWORK_ID_COMMAND;
+    private static final String LOOKUP_NETWORK_ID_RETURN = PowerShellVmsResourceTest.LOOKUP_NETWORK_ID_RETURN;
+
     private static final long NEW_DISK_SIZE = 10;
     private static final String ADD_DISK_COMMAND = "$d = new-disk -disksize {0}\n$v = get-vm {1}\nadd-disk -diskobject $d -vmobject $v";
     private static final String REMOVE_DISK_COMMAND = "remove-disk -vmid {0} -diskids 0";
@@ -83,8 +86,9 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     public void testGet() throws Exception {
         String [] commands = { "get-vm " + VM_ID,
                                MessageFormat.format(GET_DISKS_COMMAND, VM_ID),
-                               MessageFormat.format(GET_INTERFACES_COMMAND, VM_ID) };
-        String [] returns = { GET_RETURN, GET_DISKS_RETURN, GET_INTERFACES_RETURN };
+                               MessageFormat.format(GET_INTERFACES_COMMAND, VM_ID),
+                               LOOKUP_NETWORK_ID_COMMAND };
+        String [] returns = { GET_RETURN, GET_DISKS_RETURN, GET_INTERFACES_RETURN, LOOKUP_NETWORK_ID_RETURN };
 
         verifyVM(
             resource.get(setUpVmExpectations(commands, returns, VM_NAME)),

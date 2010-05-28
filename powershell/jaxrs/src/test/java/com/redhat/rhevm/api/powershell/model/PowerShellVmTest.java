@@ -54,9 +54,11 @@ public class PowerShellVmTest extends PowerShellModelTest {
         assertEquals(d.isPropagateErrors(), propagateErrors);
     }
 
-    private void testInterface(Interface i, String id, String name, InterfaceType type, String macAddress, String ipAddress, String ipNetmask, String ipGateway) {
+    private void testInterface(Interface i, String id, String name, String network, InterfaceType type, String macAddress, String ipAddress, String ipNetmask, String ipGateway) {
         assertEquals(i.getId(), id);
         assertEquals(i.getName(), name);
+        assertNotNull(i.getNetwork());
+        assertEquals(i.getNetwork().getName(), network);
         assertEquals(i.getType(), type);
         if (macAddress != null) {
             assertNotNull(i.getMac());
@@ -105,6 +107,6 @@ public class PowerShellVmTest extends PowerShellModelTest {
         assertNotNull(vm.getDevices());
         assertEquals(vm.getDevices().getInterfaces().size(), 1);
 
-        testInterface(vm.getDevices().getInterfaces().get(0), "5e8471ec-d8b5-431b-afcb-c74846e0019b", "eth0", InterfaceType.RTL_8139_PV, "00:1a:4a:16:84:02", null, null, null);
+        testInterface(vm.getDevices().getInterfaces().get(0), "5e8471ec-d8b5-431b-afcb-c74846e0019b", "eth0", "rhevm", InterfaceType.RTL_8139_PV, "00:1a:4a:16:84:02", null, null, null);
     }
 }

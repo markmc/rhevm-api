@@ -31,6 +31,7 @@ import com.redhat.rhevm.api.model.DiskType;
 import com.redhat.rhevm.api.model.Interface;
 import com.redhat.rhevm.api.model.InterfaceType;
 import com.redhat.rhevm.api.model.IP;
+import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
@@ -102,6 +103,11 @@ public class PowerShellVM {
 
             iface.setId(props.get("id"));
             iface.setName(props.get("name"));
+
+            Network network = new Network();
+            network.setName(props.get("network"));
+            iface.setNetwork(network);
+
             iface.setType(InterfaceType.fromValue(props.get("type").toUpperCase()));
 
             if (props.get("macaddress") != null) {

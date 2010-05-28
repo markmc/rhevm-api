@@ -30,6 +30,7 @@ import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.Interface;
+import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
@@ -65,8 +66,45 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
         vm.setHref(uriBuilder.build().toString());
 
         UriBuilder baseUriBuilder = uriInfo.getBaseUriBuilder();
+
         Cluster cluster = vm.getCluster();
         cluster.setHref(PowerShellClustersResource.getHref(baseUriBuilder, cluster.getId()));
+
+        if (vm.getDevices() != null) {
+            for (Interface iface : vm.getDevices().getInterfaces()) {
+                Network network = iface.getNetwork();
+                network.setHref(PowerShellNetworksResource.getHref(baseUriBuilder, network.getId()));
+            }
+        }
+
+        return vm;
+    }
+
+    /* Map the network names to network IDs on all the VM's network
+     * interfaces. The powershell output only includes the network name.
+     *
+     * @param vm  the VM to modify
+     * @return  the modified VM
+     */
+    private static VM lookupNetworkIds(VM vm) {
+        if (vm.getDevices() == null) {
+            return vm;
+        }
+
+        for (Interface iface : vm.getDevices().getInterfaces()) {
+            StringBuilder buf = new StringBuilder();
+
+            buf.append("$n = get-networks\n");
+            buf.append("foreach ($i in $n) {");
+            buf.append("  if ($i.name -eq \"" + iface.getNetwork().getName() + "\") {");
+            buf.append("    $i");
+            buf.append("  }");
+            buf.append("}");
+
+            Network network = new Network();
+            network.setId(PowerShellNetworkResource.runAndParseSingle(buf.toString()).getId());
+            iface.setNetwork(network);
+        }
 
         return vm;
     }
@@ -84,7 +122,9 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
         buf.append("$v = get-vm " + vm.getId() + "\n");
         buf.append("$v.GetNetworkAdapters()\n");
 
-        return PowerShellVM.parseInterfaces(vm, PowerShellCmd.runCommand(buf.toString()));
+        vm = PowerShellVM.parseInterfaces(vm, PowerShellCmd.runCommand(buf.toString()));
+
+        return lookupNetworkIds(vm);
     }
 
     @Override

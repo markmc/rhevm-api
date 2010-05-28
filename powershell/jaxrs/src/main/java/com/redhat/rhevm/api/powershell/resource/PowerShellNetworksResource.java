@@ -112,4 +112,15 @@ public class PowerShellNetworksResource
     protected PowerShellNetworkResource createSubResource(String id) {
         return new PowerShellNetworkResource(id, getExecutor());
     }
+
+    /**
+     * Build an absolute URI for a given network
+     *
+     * @param baseUriBuilder a UriBuilder representing the base URI
+     * @param id the network ID
+     * @return an absolute URI
+     */
+    public static String getHref(UriBuilder baseUriBuilder, String id) {
+        return baseUriBuilder.clone().path("networks").path(id).build().toString();
+    }
 }
