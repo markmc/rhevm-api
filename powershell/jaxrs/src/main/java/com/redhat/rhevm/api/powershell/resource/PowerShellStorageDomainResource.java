@@ -170,7 +170,7 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
             buf.append("$h = get-storagedomain " + getId() + "\n");
 
             if (storageDomain.getName() != null) {
-                buf.append("$h.name = \"" + storageDomain.getName() + "\"");
+                buf.append("$h.name = '" + storageDomain.getName() + "'");
             }
 
             buf.append("\n");
@@ -220,7 +220,7 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
             buf.append("add-storagedomain");
 
             if (staged.getName() != null) {
-                buf.append(" -name " + staged.getName());
+                buf.append(" -name '" + staged.getName() + "'");
             }
 
             buf.append(" -hostid " + action.getHost().getId());
@@ -248,7 +248,7 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
 
             switch (storage.getType()) {
             case NFS:
-                buf.append(storage.getHost() + ":" + storage.getPath());
+                buf.append("'" + storage.getHost() + ":" + storage.getPath() + "'");
                 break;
             case ISCSI:
             case FCP:

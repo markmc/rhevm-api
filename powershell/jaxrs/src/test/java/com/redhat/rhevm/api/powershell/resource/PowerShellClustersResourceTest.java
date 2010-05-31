@@ -106,8 +106,8 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
 
         buf.append("add-cluster");
 
-        buf.append(" -clustername " + NEW_NAME);
-        buf.append(" -clustercpuname " + CLUSTER_CPU);
+        buf.append(" -clustername '" + NEW_NAME + "'");
+        buf.append(" -clustercpuname '" + CLUSTER_CPU + "'");
         buf.append(" -datacenterid " + DATA_CENTER_ID);
         buf.append(" -compatibilityversion $v");
 

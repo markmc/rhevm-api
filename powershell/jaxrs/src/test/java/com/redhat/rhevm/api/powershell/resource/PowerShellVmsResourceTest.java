@@ -45,7 +45,7 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     private static final String GET_INTERFACES_COMMAND = "$v = get-vm {0,number,#}\n$v.GetNetworkAdapters()\n";
     public static final String GET_INTERFACES_RETURN = "id: 1\nname: eth1\nnetwork: net1\ntype: pv\nmacaddress: 00:1a:4a:16:84:02\naddress: 172.31.0.10\nsubnet: 255.255.255.0\ngateway: 172.31.0.1\n";
 
-    public static final String LOOKUP_NETWORK_ID_COMMAND = "$n = get-networks\nforeach ($i in $n) {  if ($i.name -eq \"net1\") {    $i  }}";
+    public static final String LOOKUP_NETWORK_ID_COMMAND = "$n = get-networks\nforeach ($i in $n) {  if ($i.name -eq 'net1') {    $i  }}";
     public static final String LOOKUP_NETWORK_ID_RETURN = "networkid: 666\nname: net1\ndatacenterid: 999";
 
     public PowerShellVmsResourceTest() {

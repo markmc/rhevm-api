@@ -68,7 +68,7 @@ public class PowerShellClusterResource extends AbstractActionableResource<Cluste
 
         buf.append("$l = select-cluster\n");
         buf.append("foreach ($c in $l) { ");
-        buf.append("  if ($c.clusterid -eq \"" + getId() + "\") { ");
+        buf.append("  if ($c.clusterid -eq '" + getId() + "') { ");
         buf.append("    echo $c ");
         buf.append("  } ");
         buf.append("}");
@@ -84,16 +84,16 @@ public class PowerShellClusterResource extends AbstractActionableResource<Cluste
 
         buf.append("$l = select-cluster\n");
         buf.append("foreach ($c in $l) { ");
-        buf.append("  if ($c.clusterid -eq \"" + getId() + "\") { ");
+        buf.append("  if ($c.clusterid -eq '" + getId() + "') { ");
 
         if (cluster.getName() != null) {
-            buf.append("    $c.name = \"" + cluster.getName() + "\" ");
+            buf.append("    $c.name = '" + cluster.getName() + "' ");
         }
         if (cluster.getCpu() != null) {
-            buf.append("    $c.cpuname = \"" + cluster.getCpu().getId() + "\" ");
+            buf.append("    $c.cpuname = '" + cluster.getCpu().getId() + "' ");
         }
         if (cluster.getDescription() != null) {
-            buf.append("    $c.description = \"" + cluster.getDescription() + "\" ");
+            buf.append("    $c.description = '" + cluster.getDescription() + "' ");
         }
 
         buf.append("    update-datacenter -datacenterobject $v");

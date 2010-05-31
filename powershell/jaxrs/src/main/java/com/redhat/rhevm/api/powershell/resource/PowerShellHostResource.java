@@ -71,7 +71,7 @@ public class PowerShellHostResource extends AbstractActionableResource<Host> imp
         buf.append("$h = get-host " + getId() + "\n");
 
         if (host.getName() != null) {
-            buf.append("$h.name = \"" + host.getName() + "\"");
+            buf.append("$h.name = '" + host.getName() + "'");
         }
 
         buf.append("\n");

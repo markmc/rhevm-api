@@ -32,7 +32,7 @@ public abstract class AbstractPowerShellCollectionResource<R extends BaseResourc
     private ReapedMap<String, U> resources;
     private Executor executor;
     private final static String SEARCH_TEXT = " -searchtext ";
-    private final static String QUOTE = "\"";
+    private final static String QUOTE = "'";
 
     public AbstractPowerShellCollectionResource() {
         resources = new ReapedMap<String, U>();

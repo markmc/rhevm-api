@@ -48,11 +48,11 @@ public class PowerShellNetworksResource
         StringBuilder buf = new StringBuilder();
 
         buf.append("add-network");
-        buf.append(" -name " + network.getName());
+        buf.append(" -name '" + network.getName() + "'");
         buf.append(" -datacenterid " + network.getDataCenter().getId());
 
         if (network.getDescription() != null) {
-            buf.append(" -description " + network.getDescription());
+            buf.append(" -description '" + network.getDescription() + "'");
         }
 
         if (network.getIp() != null) {
@@ -92,7 +92,7 @@ public class PowerShellNetworksResource
 
         buf.append("$n = get-networks\n");
         buf.append("foreach ($i in $n) {");
-        buf.append("  if ($i -eq \"" + id + "\") {");
+        buf.append("  if ($i -eq '" + id + "') {");
         buf.append("    remove-network");
         buf.append(" -networkobject $i");
         buf.append(" -datacenterid $i.datacenterid");

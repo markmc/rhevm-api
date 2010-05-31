@@ -93,7 +93,7 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
 
             buf.append("$n = get-networks\n");
             buf.append("foreach ($i in $n) {");
-            buf.append("  if ($i.name -eq \"" + iface.getNetwork().getName() + "\") {");
+            buf.append("  if ($i.name -eq '" + iface.getNetwork().getName() + "') {");
             buf.append("    $i");
             buf.append("  }");
             buf.append("}");
@@ -138,10 +138,10 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
         buf.append("$v = get-vm " + getId() + "\n");
 
         if (vm.getName() != null) {
-            buf.append("$v.name = \"" + vm.getName() + "\"");
+            buf.append("$v.name = '" + vm.getName() + "'");
         }
         if (vm.getDescription() != null) {
-            buf.append("$v.description = \"" + vm.getDescription() + "\"");
+            buf.append("$v.description = '" + vm.getDescription() + "'");
         }
 
         buf.append("\n");
@@ -326,7 +326,7 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
             buf.append("add-networkadapter");
             buf.append(" -vmobject $v");
             buf.append(" -interfacename " + iface.getName());
-            buf.append(" -networkname " + iface.getNetwork().getName());
+            buf.append(" -networkname '" + iface.getNetwork().getName() + "'");
             if (iface.getType() != null) {
                 buf.append(" -interfacetype " + iface.getType().toString().toLowerCase());
             }
@@ -352,7 +352,7 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
             buf.append("$v = get-vm " + getId() + "\n");
 
             buf.append("foreach ($i in $v.GetNetworkAdapters()) {");
-            buf.append("  if ($i.id -eq \"" + interfaceId + "\") {");
+            buf.append("  if ($i.id -eq '" + interfaceId + "') {");
             buf.append("    $n = $i");
             buf.append("  }");
             buf.append("}\n");

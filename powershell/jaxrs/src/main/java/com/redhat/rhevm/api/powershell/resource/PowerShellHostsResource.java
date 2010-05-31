@@ -49,7 +49,7 @@ public class PowerShellHostsResource
         buf.append("add-host");
 
         if (host.getName() != null) {
-            buf.append(" -name " + host.getName());
+            buf.append(" -name '" + host.getName() + "'");
         }
 
         if (host.getAddress() != null) {

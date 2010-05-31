@@ -46,9 +46,9 @@ import static org.powermock.api.easymock.PowerMock.replayAll;
 
 public class PowerShellNetworkResourceTest extends AbstractPowerShellResourceTest<Network, PowerShellNetworkResource> {
 
-    private static final String GET_COMMAND = "$n = get-networks\nforeach ($i in $n) {  if ($i -eq \"12345\") {    $i  }}";
+    private static final String GET_COMMAND = "$n = get-networks\nforeach ($i in $n) {  if ($i -eq '12345') {    $i  }}";
     private static final String GET_RETURN = "networkid: 12345 \nname: sedna\ndatacenterid: 54321";
-    private static final String UPDATE_COMMAND = "foreach ($i in $n) {  if ($i -eq \"12345\") {    $i.name = \"eris\"    update-network -networkobject $i -datacenterid \"54321\"  }}\n";
+    private static final String UPDATE_COMMAND = "foreach ($i in $n) {  if ($i -eq '12345') {    $i.name = 'eris'    update-network -networkobject $i -datacenterid 54321  }}\n";
     private static final String UPDATE_RETURN = "networkid: 12345 \nname: eris\ndatacenterid: 54321";
 
     protected PowerShellNetworkResource getResource() {

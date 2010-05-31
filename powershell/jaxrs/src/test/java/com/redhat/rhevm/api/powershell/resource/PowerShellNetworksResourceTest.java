@@ -29,7 +29,7 @@ public class PowerShellNetworksResourceTest extends AbstractPowerShellCollection
     private static final String ADD_COMMAND_EPILOG = "-datacenterid 54321";
     private static final String ADD_RETURN_EPILOG = "\ndatacenterid: 54321";
 
-    private static final String REMOVE_COMMAND = "$n = get-networks\nforeach ($i in $n) {  if ($i -eq \"3121815\") {    remove-network -networkobject $i -datacenterid $i.datacenterid  }}";
+    private static final String REMOVE_COMMAND = "$n = get-networks\nforeach ($i in $n) {  if ($i -eq '3121815') {    remove-network -networkobject $i -datacenterid $i.datacenterid  }}";
 
     public PowerShellNetworksResourceTest() {
         super(new PowerShellNetworkResource("0", null), "networks", "network");

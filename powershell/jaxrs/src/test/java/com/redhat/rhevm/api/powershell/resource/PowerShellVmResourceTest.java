@@ -59,7 +59,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
 
     private static final String GET_RETURN = "vmid: " + VM_ID + "\nname: " + VM_NAME + "\nhostclusterid: " + CLUSTER_ID + "\n";
     private static final String ACTION_RETURN = "replace with realistic powershell return";
-    private static final String UPDATE_COMMAND = "$v = get-vm " + VM_ID + "\n$v.name = \"" + NEW_NAME + "\"\nupdate-vm -vmobject $v";
+    private static final String UPDATE_COMMAND = "$v = get-vm " + VM_ID + "\n$v.name = '" + NEW_NAME + "'\nupdate-vm -vmobject $v";
     private static final String UPDATE_RETURN = "vmid: " + VM_ID + "\n name: " + NEW_NAME + "\nhostclusterid: " + CLUSTER_ID + "\n";
 
     private static final String GET_DISKS_COMMAND = "$v = get-vm {0}\n$v.GetDiskImages()\n";
@@ -77,8 +77,8 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
 
     private static final String NEW_INTERFACE_NAME = "eth11";
     private static final String NEW_INTERFACE_NETWORK = "rhevm";
-    private static final String ADD_INTERFACE_COMMAND = "$v = get-vm {0}\nadd-networkadapter -vmobject $v -interfacename {1} -networkname {2}";
-    private static final String REMOVE_INTERFACE_COMMAND = "$v = get-vm {0}\nforeach ($i in $v.GetNetworkAdapters()) '{  if ($i.id -eq \"0\") {    $n = $i  }}'\nremove-interface -vmobject $v -networkadapterobject $n";
+    private static final String ADD_INTERFACE_COMMAND = "$v = get-vm {0}\nadd-networkadapter -vmobject $v -interfacename {1} -networkname ''{2}''";
+    private static final String REMOVE_INTERFACE_COMMAND = "$v = get-vm {0}\nforeach ($i in $v.GetNetworkAdapters()) '{  if ($i.id -eq ''0'') {    $n = $i  }}'\nremove-interface -vmobject $v -networkadapterobject $n";
 
     protected PowerShellVmResource getResource() {
         return new PowerShellVmResource(VM_ID);
