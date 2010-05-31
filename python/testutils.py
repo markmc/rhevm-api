@@ -20,8 +20,11 @@
 import sys
 import getopt
 import http
+import random
 import template_parser
 import time
+
+random.seed()
 
 def parseOptions():
     opts = {
@@ -43,6 +46,9 @@ def parseOptions():
     opts['uri'] = 'http://%(host)s:%(port)s/rhevm-api-%(impl)s/' % opts
 
     return opts
+
+def randomName(prefix):
+    return prefix + str(random.randint(0, 1000))
 
 def expectedStatusCode(code, expected):
     assert code == expected, "Expected %(e)d status, got %(c)d" % {'e': expected, 'c': code}

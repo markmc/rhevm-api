@@ -38,19 +38,20 @@ for fmt in [xmlfmt]:
     for vm in t.get(links['vms'], fmt.parseVmCollection):
         print t.get(vm.href, fmt.parseVM)
 
-    query_vms = t.query(links['vms/search'], "name=v*1", fmt.parseVmCollection)
-    expectedCollectionSize(query_vms, 1)
-
     foo_vm = fmt.VM()
-    foo_vm.name = 'foo'
+    foo_vm.name = randomName('foo')
     foo_vm = t.create(links['vms'], foo_vm, fmt.parseVM)
+
+    constraint = foo_vm.name.replace('oo', '*')
+    query_vms = t.query(links['vms/search'], "name=" + constraint, fmt.parseVmCollection)
+    expectedCollectionSize(query_vms, 1)
 
     t.asyncAction(foo_vm.href, "start")
 
     t.syncAction(foo_vm.href, "stop")
 
     bar_host = fmt.Host()
-    bar_host.name = 'bar'
+    bar_host.name = randomName('bar')
     bar_host = t.create(links['hosts'], bar_host, fmt.parseHost)
 
     t.asyncAction(bar_host.href, "fence")
@@ -59,14 +60,14 @@ for fmt in [xmlfmt]:
 
     print t.get(foo_vm.href, fmt.parseVM)
 
-    foo_vm.name = 'bar'
+    foo_vm.name = randomName('bar')
     t.update(foo_vm.href, foo_vm, 200)
 
     foo_vm.id = 'snafu'
     foo_vm.name = 'wonga'
     t.update(foo_vm.href, foo_vm, 409)
 
-    bar_host.name = 'foo'
+    bar_host.name = randomName('foo')
     t.update(bar_host.href, bar_host, 200)
 
     bar_host.id = 'pong'
