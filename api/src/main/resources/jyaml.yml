@@ -13,6 +13,8 @@ transfers:
   networks: com.redhat.rhevm.api.model.Networks
   storagedomain: com.redhat.rhevm.api.model.StorageDomain
   storagedomains: com.redhat.rhevm.api.model.StorageDomains
+  template: com.redhat.rhevm.api.model.Template
+  templates: com.redhat.rhevm.api.model.Templates
   vm: com.redhat.rhevm.api.model.VM
   vms: com.redhat.rhevm.api.model.VMs
   grace_period: com.redhat.rhevm.api.model.GracePeriod

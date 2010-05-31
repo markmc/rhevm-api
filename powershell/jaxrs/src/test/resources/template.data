@@ -1,0 +1,30 @@
+
+
+TemplateId          : 00000000-0000-0000-0000-000000000000
+CreationDate        : 01/04/2008 00:00:00
+Description         : Blank template
+MemSizeMb           : 512
+Name                : Blank
+NumOfSockets        : 1
+NumOfCpusPerSocket  : 1
+OperatingSystem     : Unassigned
+HostClusterId       : 0
+Domain              : VirtualMachineDomainName
+ChildCount          : 0
+SizeGB              : 80
+ActualDiskSize      : 0
+NumOfMonitors       : 1
+Status              : OK
+NiceLevel           : 0
+FailBack            : False
+DefaultBootSequence : C
+VmType              : Desktop
+HypervisorType      : KVM
+OperationMode       : FullVirtualized
+USBPolicy           : Enabled
+TimeZone            :
+AutoStartup         : False
+IsStateless         : False
+CdIsoPath           :
+DisplayType         : VNC
+Origin              : RHEVM

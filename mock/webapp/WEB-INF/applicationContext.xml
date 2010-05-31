@@ -30,6 +30,11 @@
     <property name="executor"><ref bean="threadPoolExecutor"/></property>
   </bean>
 
+  <bean id="mockTemplatesResource"
+        class="com.redhat.rhevm.api.mock.resource.MockTemplatesResource">
+    <property name="executor"><ref bean="threadPoolExecutor"/></property>
+  </bean>
+
   <bean id="mockDataCentersResource"
         class="com.redhat.rhevm.api.mock.resource.MockDataCentersResource">
     <property name="executor"><ref bean="threadPoolExecutor"/></property>

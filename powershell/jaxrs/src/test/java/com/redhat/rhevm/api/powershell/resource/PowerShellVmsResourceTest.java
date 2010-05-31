@@ -21,6 +21,7 @@ package com.redhat.rhevm.api.powershell.resource;
 import java.text.MessageFormat;
 
 import com.redhat.rhevm.api.model.Cluster;
+import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
 
@@ -140,7 +141,9 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     }
 
     protected void populateModel(VM vm) {
-        vm.setTemplateId(TEMPLATE_ID);
+        Template template = new Template();
+        template.setId(TEMPLATE_ID);
+        vm.setTemplate(template);
 
         Cluster cluster = new Cluster();
         cluster.setId(CLUSTER_ID);

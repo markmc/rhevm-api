@@ -51,10 +51,12 @@ public class MockApiResourceTest extends MockTestBase {
             }
         }
 
-        int i = 13;
+        int i = 15;
         assertEquals(i, links.size());
         assertEquals("vms/search",            links.get(--i).getRel());
         assertEquals("vms",                   links.get(--i).getRel());
+        assertEquals("templates/search",      links.get(--i).getRel());
+        assertEquals("templates",             links.get(--i).getRel());
         assertEquals("storagedomains/search", links.get(--i).getRel());
         assertEquals("storagedomains",        links.get(--i).getRel());
         assertEquals("networks",              links.get(--i).getRel());

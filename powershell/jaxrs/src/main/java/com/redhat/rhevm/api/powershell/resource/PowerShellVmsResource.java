@@ -47,20 +47,15 @@ public class PowerShellVmsResource
     public Response add(UriInfo uriInfo, VM vm) {
         StringBuilder buf = new StringBuilder();
 
-        if (vm.getTemplateId() != null) {
-            buf.append("$templ = get-template -templateid " + vm.getTemplateId() + "\n");
-        }
+        buf.append("$templ = get-template -templateid " + vm.getTemplate().getId() + "\n");
 
         buf.append("add-vm");
 
         buf.append(" -name '" + vm.getName() + "'");
+        buf.append(" -templateobject $templ");
 
         if (vm.getDescription() != null) {
             buf.append(" -description '" + vm.getDescription() + "'");
-        }
-
-        if (vm.getTemplateId() != null) {
-            buf.append(" -templateobject $templ");
         }
 
         if (vm.getCluster() != null) {

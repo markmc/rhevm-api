@@ -28,6 +28,7 @@ import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.StorageDomain;
+import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VM;
 
 /**
@@ -58,6 +59,7 @@ public class QueryHelper {
         RETURN_TYPES.put(Cluster.class, "Clusters" + RETURN_TYPE_SEPARTOR);
         RETURN_TYPES.put(DataCenter.class, "Datacenter" + RETURN_TYPE_SEPARTOR);
         RETURN_TYPES.put(StorageDomain.class, "Storage" + RETURN_TYPE_SEPARTOR);
+        RETURN_TYPES.put(Template.class, "Template" + RETURN_TYPE_SEPARTOR);
     }
 
     public static String getConstraint(UriInfo uriInfo, Class<?> clz) {

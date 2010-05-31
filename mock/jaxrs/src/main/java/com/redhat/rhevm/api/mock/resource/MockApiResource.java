@@ -64,7 +64,7 @@ public class MockApiResource implements ApiResource {
 
         Response.ResponseBuilder responseBuilder = Response.ok();
 
-        addHeader(responseBuilder, uriBuilder, "clusters", "cpus", "datacenters", "hosts", "networks", "storagedomains", "vms");
+        addHeader(responseBuilder, uriBuilder, "clusters", "cpus", "datacenters", "hosts", "networks", "storagedomains", "templates", "vms");
 
         return responseBuilder.build();
     }

@@ -446,6 +446,33 @@
 
   <!-- Virtual Machines -->
 
+  <xs:element name="templates" type="Templates"/>
+
+  <xs:element name="template">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="BaseResource">
+          <xs:sequence>
+            <xs:element ref="devices" minOccurs="0" maxOccurs="1"/>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="Templates">
+    <xs:sequence>
+      <xs:annotation>
+        <xs:appinfo>
+            <jaxb:property name="Templates"/>
+        </xs:appinfo>
+      </xs:annotation>
+      <xs:element ref="template" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Virtual Machines -->
+
   <xs:element name="vms" type="VMs"/>
 
   <xs:element name="vm">
@@ -459,7 +486,7 @@
         <xs:extension base="BaseResource">
           <xs:sequence>
             <xs:element ref="cluster" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="template_id" type="xs:string" minOccurs="0"/>
+            <xs:element ref="template" minOccurs="0" maxOccurs="1"/>
             <xs:element ref="devices" minOccurs="0" maxOccurs="1"/>
           </xs:sequence>
         </xs:extension>
