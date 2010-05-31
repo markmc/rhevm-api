@@ -33,10 +33,6 @@ public class PowerShellVmsResource
     extends AbstractPowerShellCollectionResource<VM, PowerShellVmResource>
     implements VmsResource {
 
-    /* FIXME: would like to do:
-     * private @Context UriInfo uriInfo;
-     */
-
     @Override
     public VMs list(UriInfo uriInfo) {
         VMs ret = new VMs();
@@ -46,13 +42,6 @@ public class PowerShellVmsResource
         }
         return ret;
     }
-
-/* FIXME: move this
-    @Override
-    public VMs search(String criteria) {
-        return runAndParse("select-vm " + criteria);
-    }
-*/
 
     @Override
     public Response add(UriInfo uriInfo, VM vm) {

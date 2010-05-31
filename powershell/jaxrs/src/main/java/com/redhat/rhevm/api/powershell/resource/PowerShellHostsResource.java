@@ -32,10 +32,6 @@ public class PowerShellHostsResource
     extends AbstractPowerShellCollectionResource<Host, PowerShellHostResource>
     implements HostsResource {
 
-    /* FIXME: would like to do:
-     * private @Context UriInfo uriInfo;
-     */
-
     @Override
     public Hosts list(UriInfo uriInfo) {
         Hosts ret = new Hosts();
@@ -45,13 +41,6 @@ public class PowerShellHostsResource
         }
         return ret;
     }
-
-/* FIXME: move this
-   @Override
-   public VMs search(String criteria) {
-   return runAndParse("select-host " + criteria);
-   }
-*/
 
     @Override
     public Response add(UriInfo uriInfo, Host host) {
@@ -94,10 +83,4 @@ public class PowerShellHostsResource
     protected PowerShellHostResource createSubResource(String id) {
         return new PowerShellHostResource(id, getExecutor());
     }
-
-/*
-    @Override
-    public void connectStorage(String id, String storageDevice) {
-    }
-*/
 }

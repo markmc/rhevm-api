@@ -40,9 +40,6 @@ import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 
 
 public class PowerShellVmResource extends AbstractActionableResource<VM> implements VmResource {
-    /*
-     * FIXME: would like to do: private @Context UriInfo uriInfo;
-     */
 
     public PowerShellVmResource(String id, Executor executor) {
         super(id, executor);

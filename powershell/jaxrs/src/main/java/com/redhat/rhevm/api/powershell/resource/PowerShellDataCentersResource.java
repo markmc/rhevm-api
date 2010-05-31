@@ -32,10 +32,6 @@ public class PowerShellDataCentersResource
     extends AbstractPowerShellCollectionResource<DataCenter, PowerShellDataCenterResource>
     implements DataCentersResource {
 
-    /* FIXME: would like to do:
-     * private @Context UriInfo uriInfo;
-     */
-
     @Override
     public DataCenters list(UriInfo uriInfo) {
         DataCenters ret = new DataCenters();
@@ -45,13 +41,6 @@ public class PowerShellDataCentersResource
         }
         return ret;
     }
-
-/* FIXME: move this
-   @Override
-   public VMs search(String criteria) {
-   return runAndParse("select-datacenter " + criteria);
-   }
-*/
 
     @Override
     public Response add(UriInfo uriInfo, DataCenter dataCenter) {

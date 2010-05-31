@@ -60,8 +60,6 @@ public class PowerShellClustersResource
 
         buf.append(" -compatibilityversion $v");
 
-        // FIXME: this script doesn't actually seem to work
-
         cluster = PowerShellClusterResource.runAndParseSingle(buf.toString());
 
         UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(cluster.getId());
@@ -73,7 +71,6 @@ public class PowerShellClustersResource
 
     @Override
     public void remove(String id) {
-        // FIXME: this command seems broken too
         PowerShellCmd.runCommand("remove-cluster -clusterid " + id);
         removeSubResource(id);
     }

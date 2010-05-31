@@ -33,9 +33,6 @@ import com.redhat.rhevm.api.powershell.model.PowerShellDataCenter;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 
 public class PowerShellDataCenterResource extends AbstractActionableResource<DataCenter> implements DataCenterResource {
-    /* FIXME: would like to do:
-     * private @Context UriInfo uriInfo;
-     */
 
     public PowerShellDataCenterResource(String id, Executor executor) {
         super(id, executor);

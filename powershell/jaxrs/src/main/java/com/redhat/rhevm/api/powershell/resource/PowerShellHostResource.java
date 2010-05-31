@@ -34,9 +34,6 @@ import com.redhat.rhevm.api.powershell.model.PowerShellHost;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 
 public class PowerShellHostResource extends AbstractActionableResource<Host> implements HostResource {
-    /* FIXME: would like to do:
-     * private @Context UriInfo uriInfo;
-     */
 
     public PowerShellHostResource(String id, Executor executor) {
         super(id, executor);
@@ -97,10 +94,4 @@ public class PowerShellHostResource extends AbstractActionableResource<Host> imp
     public Response resume(UriInfo uriInfo, Action action) {
         return doAction(uriInfo, new CommandRunner(action, "resume-host", "host", getId()));
     }
-
-/*
-    @Override
-    public void connectStorage(String id, String storageDevice) {
-    }
-*/
 }
