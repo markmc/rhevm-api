@@ -34,6 +34,7 @@ import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.Fault;
 import com.redhat.rhevm.api.model.Interface;
+import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.VM;
 
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
@@ -75,7 +76,8 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     private static final String REMOVE_DISK_COMMAND = "remove-disk -vmid {0} -diskids 0";
 
     private static final String NEW_INTERFACE_NAME = "eth11";
-    private static final String ADD_INTERFACE_COMMAND = "$v = get-vm {1}\nadd-networkadapter -vmobject $v -interfacename {0} -networkname rhevm";
+    private static final String NEW_INTERFACE_NETWORK = "rhevm";
+    private static final String ADD_INTERFACE_COMMAND = "$v = get-vm {0}\nadd-networkadapter -vmobject $v -interfacename {1} -networkname {2}";
     private static final String REMOVE_INTERFACE_COMMAND = "$v = get-vm {0}\nforeach ($i in $v.GetNetworkAdapters()) '{  if ($i.id -eq \"0\") {    $n = $i  }}'\nremove-interface -vmobject $v -networkadapterobject $n";
 
     protected PowerShellVmResource getResource() {
@@ -227,10 +229,14 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
         Interface iface = new Interface();
         iface.setName(NEW_INTERFACE_NAME);
 
+        Network network = new Network();
+        network.setName(NEW_INTERFACE_NETWORK);
+        iface.setNetwork(network);
+
         Action action = getAction();
         action.setInterface(iface);
 
-        String command = MessageFormat.format(ADD_INTERFACE_COMMAND, NEW_INTERFACE_NAME, VM_ID);
+        String command = MessageFormat.format(ADD_INTERFACE_COMMAND, VM_ID, NEW_INTERFACE_NAME, NEW_INTERFACE_NETWORK);
 
         verifyActionResponse(
             resource.addDevice(setUpActionExpectation("adddevice", command, false), action),

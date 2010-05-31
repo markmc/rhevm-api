@@ -329,7 +329,7 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
             buf.append("add-networkadapter");
             buf.append(" -vmobject $v");
             buf.append(" -interfacename " + iface.getName());
-            buf.append(" -networkname " + "rhevm"); // FIXME
+            buf.append(" -networkname " + iface.getNetwork().getName());
             if (iface.getType() != null) {
                 buf.append(" -interfacetype " + iface.getType().toString().toLowerCase());
             }
