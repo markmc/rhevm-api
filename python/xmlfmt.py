@@ -93,6 +93,7 @@ class StorageDomain(Base):
 class VM(Base):
     NAME = "vm"
     COLLECTION = "vms"
+    ELEMENTS = Base.ELEMENTS + ['cluster', 'template']
 
 class Template(Base):
     NAME = "template"

@@ -38,8 +38,18 @@ for fmt in [xmlfmt]:
     for vm in t.get(links['vms'], fmt.parseVmCollection):
         print t.get(vm.href, fmt.parseVM)
 
+    template = t.get(links['templates'], fmt.parseTemplateCollection)[0]
+    print template
+
+    cluster = t.get(links['clusters'], fmt.parseClusterCollection)[0]
+    print cluster
+
     foo_vm = fmt.VM()
     foo_vm.name = randomName('foo')
+    foo_vm.template = fmt.Template()
+    foo_vm.template.id = template.id
+    foo_vm.cluster = fmt.Cluster()
+    foo_vm.cluster.id = cluster.id
     foo_vm = t.create(links['vms'], foo_vm, fmt.parseVM)
 
     constraint = foo_vm.name.replace('oo', '*')
