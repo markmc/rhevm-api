@@ -276,9 +276,9 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
 
             StringBuilder buf = new StringBuilder();
 
-            buf.append("remove-storagedomain --force");
+            buf.append("remove-storagedomain -force");
 
-            buf.append(" --storagedomainid " + storageDomain.getId());
+            buf.append(" -storagedomainid " + storageDomain.getId());
 
             buf.append(" -hostid " + action.getHost().getId());
 
