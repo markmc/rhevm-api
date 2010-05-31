@@ -21,145 +21,58 @@ import http
 import xmlfmt
 import yamlfmt
 import jsonfmt
-import sys
-import getopt
-import time
-import template_parser
+from testutils import *
 
-def makeAction(async, expiry):
-    action = fmt.Action()
-    action.async = async
-    action.grace_period = fmt.GracePeriod()
-    action.grace_period.expiry = expiry
-    action.grace_period.absolute = 'false'
-    return action
-
-def expectedStatusCode(code, expected):
-    assert code == expected, "Expected %(e)d status, got %(c)d" % {'e': expected, 'c': code}
-
-def unexpectedActionStatus(status, unexpected):
-    assert status != unexpected, "Unexpected %s action status" % unexpected
-
-def expectedActionStatus(status, expected):
-    assert status == expected, "Expected %(e)s, got %(s)s" % {'e': expected, 's': status}
-
-def expectedCollectionSize(collection, expected):
-    assert len(collection) == expected, "Expected collection of size %(e)d, got %(s)d" % {'e': expected, 's': len(collection)}
-
-def testGet(href):
-    ret = http.GET(opts, href, fmt.MEDIA_TYPE)
-    expectedStatusCode(ret['status'], 200)
-    return ret['body']
-
-def testQuery(href, constraint):
-    t = template_parser.URITemplate(href)
-    qhref = t.sub({"query": constraint})
-    ret = http.GET(opts, qhref, fmt.MEDIA_TYPE)
-    expectedStatusCode(ret['status'], 200)
-    return ret['body']
-
-def testCreate(entity, name, links, parse):
-    entity.name = name
-    ret = http.POST(opts, links, entity.dump(), fmt.MEDIA_TYPE)
-    parsed = parse(ret['body'])
-    expectedStatusCode(ret['status'], 201)
-    return parsed
-
-def testAsyncAction(href, verb):
-    ret = http.POST(opts, href + "/" + verb, makeAction('true', '5000').dump(), fmt.MEDIA_TYPE)
-    print ret['body']
-    expectedStatusCode(ret['status'], 202)
-    resp_action = fmt.parseAction(ret['body'])
-    unexpectedActionStatus(resp_action.status, "COMPLETE")
-    for i in range(1, 3):
-        time.sleep(1)
-        resp = http.GET(opts, resp_action.href, fmt.MEDIA_TYPE)
-        print resp['body']
-        expectedStatusCode(resp['status'], 200)
-        resp_action = fmt.parseAction(resp['body'])
-        unexpectedActionStatus(resp_action.status, "COMPLETE")
-
-    time.sleep(4)
-    resp = http.GET(opts, resp_action.href, fmt.MEDIA_TYPE)
-    print resp['body']
-    expectedStatusCode(resp['status'], 200)
-    resp_action = fmt.parseAction(resp['body'])
-    expectedActionStatus(resp_action.status, "COMPLETE")
-
-def testSyncAction(href, verb):
-    ret = http.POST(opts, href + "/" + verb, makeAction('false', '10').dump(), fmt.MEDIA_TYPE)
-    print ret['body']
-    expectedStatusCode(ret['status'], 200)
-    resp_action = fmt.parseAction(ret['body'])
-    expectedActionStatus(resp_action.status, "COMPLETE")
-
-def testUpdate(name, id, entity, expected):
-    entity.name = name
-    entity.id = id
-    ret = http.PUT(opts, entity.href, entity.dump(), fmt.MEDIA_TYPE)
-    print ret['body']
-    expectedStatusCode(ret['status'], expected)
-
-def testDelete(href):
-    status = http.DELETE(opts, href)
-    print status
-    expectedStatusCode(status, 204)
-
-opts = {
-    'host' : 'localhost',
-    'port' : 8080,
-    'impl' : "mock",
-}
-
-if len(sys.argv) > 1:
-   options, oargs = getopt.getopt(sys.argv[1:], "h:p:i:", ["host=", "port=", "impl="])
-   for opt, a in options:
-       if opt in ("-h", "--host"):
-           opts['host'] = a
-       if opt in ("-p", "--port"):
-           opts['port'] = a
-       if opt in ("-i", "--impl"):
-           opts['impl'] = a
-
-
-opts['uri'] = 'http://%(host)s:%(port)s/rhevm-api-%(impl)s/' % opts
+opts = parseOptions()
 
 links = http.HEAD_for_links(opts)
 
 for fmt in [xmlfmt]:
     print "=== ", fmt.MEDIA_TYPE, " ==="
 
-    for host in fmt.parseHostCollection(testGet(links['hosts'])):
-        print fmt.parseHost(testGet(host.href))
+    t = TestUtils(opts, fmt)
 
-    for vm in fmt.parseVmCollection(testGet(links['vms'])):
-        print fmt.parseVM(testGet(vm.href))
+    for host in t.get(links['hosts'], fmt.parseHostCollection):
+        print t.get(host.href, fmt.parseHost)
 
-    query_vms = fmt.parseVmCollection(testQuery(links['vms/search'], "name=v*1"))
+    for vm in t.get(links['vms'], fmt.parseVmCollection):
+        print t.get(vm.href, fmt.parseVM)
+
+    query_vms = t.query(links['vms/search'], "name=v*1", fmt.parseVmCollection)
     expectedCollectionSize(query_vms, 1)
 
-    foo_vm = testCreate(fmt.VM(), 'foo', links['vms'], fmt.parseVM)
+    foo_vm = fmt.VM()
+    foo_vm.name = 'foo'
+    foo_vm = t.create(links['vms'], foo_vm, fmt.parseVM)
 
-    testAsyncAction(foo_vm.href, "start")
+    t.asyncAction(foo_vm.href, "start")
 
-    testSyncAction(foo_vm.href, "stop")
+    t.syncAction(foo_vm.href, "stop")
 
-    bar_host = testCreate(fmt.Host(), 'bar', links['hosts'], fmt.parseHost)
+    bar_host = fmt.Host()
+    bar_host.name = 'bar'
+    bar_host = t.create(links['hosts'], bar_host, fmt.parseHost)
 
-    testAsyncAction(bar_host.href, "fence")
+    t.asyncAction(bar_host.href, "fence")
 
-    testAsyncAction(bar_host.href, "approve")
+    t.asyncAction(bar_host.href, "approve")
 
-    print testGet(foo_vm.href)
+    print t.get(foo_vm.href, fmt.parseVM)
 
-    testUpdate('bar', foo_vm.id, foo_vm, 200)
+    foo_vm.name = 'bar'
+    t.update(foo_vm.href, foo_vm, 200)
 
-    testUpdate('wonga', 'snafu', foo_vm, 409)
+    foo_vm.id = 'snafu'
+    foo_vm.name = 'wonga'
+    t.update(foo_vm.href, foo_vm, 409)
 
-    testUpdate('foo', bar_host.id, bar_host, 200)
+    bar_host.name = 'foo'
+    t.update(bar_host.href, bar_host, 200)
 
-    testUpdate('ping', 'pong', bar_host, 409)
+    bar_host.id = 'pong'
+    bar_host.name = 'ping'
+    t.update(bar_host.href, bar_host, 409)
 
-    testDelete(foo_vm.href)
+    t.delete(foo_vm.href)
 
-    testDelete(bar_host.href)
+    t.delete(bar_host.href)
