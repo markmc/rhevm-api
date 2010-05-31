@@ -29,7 +29,7 @@ import com.redhat.rhevm.api.resource.VmsResource;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 
 
-public class PowerShellVmsResource 	
+public class PowerShellVmsResource
     extends AbstractPowerShellCollectionResource<VM, PowerShellVmResource>
     implements VmsResource {
 
