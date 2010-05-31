@@ -94,7 +94,11 @@ class VM(Base):
     NAME = "vm"
     COLLECTION = "vms"
 
-TYPES = [ Action, Cluster, CPU, DataCenter, GracePeriod, Host, StorageDomain, VM ]
+class Template(Base):
+    NAME = "template"
+    COLLECTION = "templates"
+
+TYPES = [ Action, Cluster, CPU, DataCenter, GracePeriod, Host, StorageDomain, Template, VM ]
 
 def findEntityType(name):
     for t in TYPES:
@@ -162,6 +166,8 @@ def parseCPU(doc):
     return parse(doc)
 def parseStorageDomain(doc):
     return parse(doc)
+def parseTemplate(doc):
+    return parse(doc)
 def parseVmCollection(doc):
     return parse(doc)
 def parseDataCenterCollection(doc):
@@ -173,4 +179,6 @@ def parseClusterCollection(doc):
 def parseCpuCollection(doc):
     return parse(doc)
 def parseStorageDomainCollection(doc):
+    return parse(doc)
+def parseTemplateCollection(doc):
     return parse(doc)
