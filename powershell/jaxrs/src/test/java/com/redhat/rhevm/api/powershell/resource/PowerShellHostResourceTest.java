@@ -100,9 +100,16 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
     }
 
     @Test
-    public void testResume() throws Exception {
+    public void testActivate() throws Exception {
         verifyActionResponse(
-            resource.resume(setUpActionExpectation("resume", "resume-host"), getAction()),
+            resource.activate(setUpActionExpectation("activate", "resume-host"), getAction()),
+            false);
+    }
+
+    @Test
+    public void testDeactivate() throws Exception {
+        verifyActionResponse(
+            resource.deactivate(setUpActionExpectation("deactivate", "suspend-host"), getAction()),
             false);
     }
 
@@ -121,9 +128,16 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
     }
 
     @Test
-    public void testResumeAsync() throws Exception {
+    public void testActivateAsync() throws Exception {
         verifyActionResponse(
-            resource.resume(setUpActionExpectation("resume", "resume-host"), getAction(true)),
+            resource.activate(setUpActionExpectation("activate", "resume-host"), getAction(true)),
+            true);
+    }
+
+    @Test
+    public void testDeactivateAsync() throws Exception {
+        verifyActionResponse(
+            resource.deactivate(setUpActionExpectation("deactivate", "suspend-host"), getAction(true)),
             true);
     }
 

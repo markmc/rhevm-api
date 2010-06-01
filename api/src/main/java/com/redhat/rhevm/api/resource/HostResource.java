@@ -61,8 +61,11 @@ public interface HostResource /* extends UpdatableResource<Host> */ {
 
     @POST
     @Actionable
-    @Path("resume")
-    public Response resume(@Context UriInfo uriInfo, Action action);
+    @Path("activate")
+    public Response activate(@Context UriInfo uriInfo, Action action);
 
-    //@WebMethod public void connectStorage(String id, String storageDevice);
+    @POST
+    @Actionable
+    @Path("deactivate")
+    public Response deactivate(@Context UriInfo uriInfo, Action action);
 }

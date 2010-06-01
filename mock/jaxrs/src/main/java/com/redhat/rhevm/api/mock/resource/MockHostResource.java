@@ -88,13 +88,12 @@ public class MockHostResource extends AbstractMockResource<Host> implements Host
     }
 
     @Override
-    public Response resume(UriInfo uriInfo, Action action) {
+    public Response activate(UriInfo uriInfo, Action action) {
         return doAction(uriInfo, new DoNothingTask(action));
     }
 
-/*
     @Override
-    public void connectStorage(String id, String storageDevice) {
+    public Response deactivate(UriInfo uriInfo, Action action) {
+        return doAction(uriInfo, new DoNothingTask(action));
     }
-*/
 }

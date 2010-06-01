@@ -96,7 +96,12 @@ public class PowerShellHostResource extends AbstractActionableResource<Host> imp
     }
 
     @Override
-    public Response resume(UriInfo uriInfo, Action action) {
+    public Response activate(UriInfo uriInfo, Action action) {
         return doAction(uriInfo, new CommandRunner(action, "resume-host", "host", getId()));
+    }
+
+    @Override
+    public Response deactivate(UriInfo uriInfo, Action action) {
+        return doAction(uriInfo, new CommandRunner(action, "suspend-host", "host", getId()));
     }
 }
