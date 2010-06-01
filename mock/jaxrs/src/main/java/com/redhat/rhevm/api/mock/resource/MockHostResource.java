@@ -28,6 +28,7 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.Host;
+import com.redhat.rhevm.api.model.HostStatus;
 import com.redhat.rhevm.api.resource.HostResource;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 
@@ -89,11 +90,22 @@ public class MockHostResource extends AbstractMockResource<Host> implements Host
 
     @Override
     public Response activate(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new DoNothingTask(action));
+        return doAction(uriInfo, new HostStatusSetter(action, HostStatus.UP));
     }
 
     @Override
     public Response deactivate(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new DoNothingTask(action));
+        return doAction(uriInfo, new HostStatusSetter(action, HostStatus.MAINTENANCE));
+    }
+
+    private class HostStatusSetter extends AbstractActionTask {
+        private HostStatus status;
+        HostStatusSetter(Action action, HostStatus status) {
+            super(action);
+            this.status = status;
+        }
+        public void run() {
+            MockHostResource.this.getModel().setStatus(status);
+        }
     }
 }
