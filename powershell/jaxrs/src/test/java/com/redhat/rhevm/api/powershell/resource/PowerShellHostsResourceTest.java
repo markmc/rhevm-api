@@ -25,8 +25,11 @@ import org.junit.Test;
 
 public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionResourceTest<Host, PowerShellHostResource, PowerShellHostsResource> {
 
-    private static final String ADD_COMMAND_EPILOG =
-        "-address 127.0.0.1 -rootpassword notneeded";
+    private static final String ADD_COMMAND_EPILOG = "-address 127.0.0.1 -rootpassword notneeded";
+    private static final String ADD_RETURN_EPILOG = "\nstatus: up";
+
+    private static final String SELECT_RETURN_EPILOG = ADD_RETURN_EPILOG;
+
 
     public PowerShellHostsResourceTest() {
         super(new PowerShellHostResource("0", null), "hosts", "host");
@@ -35,7 +38,9 @@ public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionRes
     @Test
     public void testList() throws Exception {
         verifyCollection(
-            resource.list(setUpResourceExpectations(getSelectCommand(), getSelectReturn(), NAMES)).getHosts(),
+            resource.list(setUpResourceExpectations(getSelectCommand(),
+                                                    getSelectReturn(SELECT_RETURN_EPILOG),
+                                                    NAMES)).getHosts(),
             NAMES);
     }
 
@@ -43,7 +48,7 @@ public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionRes
     public void testQuery() throws Exception {
         verifyCollection(
             resource.list(setUpResourceExpectations(getQueryCommand(Hosts.class),
-                                                    getQueryReturn(),
+                                                    getQueryReturn(SELECT_RETURN_EPILOG),
                                                     getQueryParam(),
                                                     NAMES_SUBSET)).getHosts(),
             NAMES_SUBSET);
@@ -53,7 +58,7 @@ public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionRes
     public void testAdd() throws Exception {
         verifyResponse(
             resource.add(setUpResourceExpectations(getAddCommand() + ADD_COMMAND_EPILOG,
-                                                   getAddReturn(),
+                                                   getAddReturn(ADD_RETURN_EPILOG),
                                                    NEW_NAME),
                          getModel(NEW_NAME)),
             NEW_NAME);

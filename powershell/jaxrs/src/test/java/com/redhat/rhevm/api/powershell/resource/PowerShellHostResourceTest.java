@@ -47,10 +47,10 @@ import static org.powermock.api.easymock.PowerMock.replayAll;
 public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<Host, PowerShellHostResource> {
 
     private static final String GET_COMMAND = "rhevmpssnapin\\get-host 12345";
-    private static final String GET_RETURN = "hostid: 12345 \n name: sedna";
+    private static final String GET_RETURN = "hostid: 12345 \n name: sedna\nstatus: up";
     private static final String ACTION_RETURN = "replace with realistic powershell return";
     private static final String UPDATE_COMMAND = "$h = get-host 12345\n$h.name = 'eris'\nupdate-host -hostobject $h";
-    private static final String UPDATE_RETURN = "hostid: 12345 \n name: eris";
+    private static final String UPDATE_RETURN = "hostid: 12345 \n name: eris\nstatus: up";
 
     protected PowerShellHostResource getResource() {
         return new PowerShellHostResource("12345", executor);

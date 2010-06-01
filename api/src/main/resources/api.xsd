@@ -132,6 +132,25 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <xs:simpleType name="HostStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="DOWN"/>
+      <xs:enumeration value="ERROR"/>
+      <xs:enumeration value="INITIALIZING"/>
+      <xs:enumeration value="INSTALLING"/>
+      <xs:enumeration value="INSTALL_FAILED"/>
+      <xs:enumeration value="MAINTENANCE"/>
+      <xs:enumeration value="NON_OPERATIONAL"/>
+      <xs:enumeration value="NON_RESPONSIVE"/>
+      <xs:enumeration value="PENDING_APPROVAL"/>
+      <xs:enumeration value="PREPARING_FOR_MAINTENANCE"/>
+      <xs:enumeration value="PROBLEMATIC"/>
+      <xs:enumeration value="REBOOT"/>
+      <xs:enumeration value="UNASSIGNED"/>
+      <xs:enumeration value="UP"/>
+    </xs:restriction>
+  </xs:simpleType>
+
   <xs:simpleType name="InterfaceType">
     <xs:restriction base="xs:string">
       <xs:enumeration value="E1000"/>
@@ -328,6 +347,7 @@
       <xs:extension base="BaseResource">
         <xs:sequence>
           <xs:element name="address" type="xs:string" minOccurs="0"/>
+          <xs:element name="status" type="HostStatus" minOccurs="0"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>

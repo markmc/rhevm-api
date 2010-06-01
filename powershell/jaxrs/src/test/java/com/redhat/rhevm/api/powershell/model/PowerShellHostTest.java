@@ -23,13 +23,15 @@ import org.junit.Test;
 import java.util.ArrayList;
 
 import com.redhat.rhevm.api.model.Host;
+import com.redhat.rhevm.api.model.HostStatus;
 
 
 public class PowerShellHostTest extends PowerShellModelTest {
 
-    private void testHost(Host h, String id, String name) {
+    private void testHost(Host h, String id, String name, HostStatus status) {
         assertEquals(h.getId(), id);
         assertEquals(h.getName(), name);
+        assertEquals(h.getStatus(), status);
     }
 
     @Test
@@ -41,6 +43,6 @@ public class PowerShellHostTest extends PowerShellModelTest {
 
         assertEquals(hosts.size(), 1);
 
-        testHost(hosts.get(0), "0", "zig");
+        testHost(hosts.get(0), "0", "zig", HostStatus.UP);
     }
 }

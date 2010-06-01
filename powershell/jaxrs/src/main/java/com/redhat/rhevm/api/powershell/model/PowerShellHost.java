@@ -22,10 +22,31 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.redhat.rhevm.api.model.Host;
+import com.redhat.rhevm.api.model.HostStatus;
 import com.redhat.rhevm.api.powershell.model.PowerShellHost;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 public class PowerShellHost {
+
+    private static HostStatus parseStatus(HashMap<String,String> props, String key) {
+        String s = props.get(key);
+        if (s.equals("Down"))                      return HostStatus.DOWN;
+        if (s.equals("Error"))                     return HostStatus.ERROR;
+        if (s.equals("Initializing"))              return HostStatus.INITIALIZING;
+        if (s.equals("Installing"))                return HostStatus.INSTALLING;
+        if (s.equals("Install Failed"))            return HostStatus.INSTALL_FAILED;
+        if (s.equals("Maintenance"))               return HostStatus.MAINTENANCE;
+        if (s.equals("Non Operational"))           return HostStatus.NON_OPERATIONAL;
+        if (s.equals("Non Responsive"))            return HostStatus.NON_RESPONSIVE;
+        if (s.equals("Pending Approval"))          return HostStatus.PENDING_APPROVAL;
+        if (s.equals("Preparing For Maintenance")) return HostStatus.PREPARING_FOR_MAINTENANCE;
+        if (s.equals("Non-Responsive"))            return HostStatus.PROBLEMATIC;
+        if (s.equals("Reboot"))                    return HostStatus.REBOOT;
+        if (s.equals("Unassigned"))                return HostStatus.UNASSIGNED;
+        if (s.equals("Up"))                        return HostStatus.UP;
+        else assert false : s;
+        return null;
+    }
 
     public static ArrayList<Host> parse(String output) {
         ArrayList<HashMap<String,String>> hostsProps = PowerShellUtils.parseProps(output);
@@ -36,6 +57,7 @@ public class PowerShellHost {
 
             host.setId(props.get("hostid"));
             host.setName(props.get("name"));
+            host.setStatus(parseStatus(props, "status"));
 
             ret.add(host);
         }
