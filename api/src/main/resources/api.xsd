@@ -50,6 +50,8 @@
       <xs:element ref="interface" minOccurs="0" maxOccurs="1"/>
       <!-- when adding a disk device, a storage domain may be specified -->
       <xs:element ref="storage_domain" minOccurs="0" maxOccurs="1"/>
+      <!-- when installing a host, a root password is required -->
+      <xs:element name="root_password" type="xs:string" minOccurs="0" maxOccurs="1"/>
       <!-- ... etc., explicitly enumerate all the parameter types -->
     </xs:sequence>
   </xs:group>

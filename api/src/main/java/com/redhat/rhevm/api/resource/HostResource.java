@@ -56,8 +56,8 @@ public interface HostResource /* extends UpdatableResource<Host> */ {
 
     @POST
     @Actionable
-    @Path("fence")
-    public Response fence(@Context UriInfo uriInfo, Action action);
+    @Path("install")
+    public Response install(@Context UriInfo uriInfo, Action action);
 
     @POST
     @Actionable

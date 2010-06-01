@@ -26,16 +26,16 @@ from testutils import *
 
 opts = parseOptions()
 
-name = None
+(name, address, root_password) = (None, None, None)
 if len(opts['oargs']) >= 3:
-   (name, address, rootPassword) = opts['oargs'][0:3]
+   (name, address, root_password) = opts['oargs'][0:3]
 
 links = http.HEAD_for_links(opts)
 
 print links
 
 for fmt in [xmlfmt]:
-   t = TestUtils(opts, fmt)
+   t = TestUtils(opts, fmt, root_password)
 
    print "=== ", fmt.MEDIA_TYPE, " ==="
 
@@ -59,6 +59,8 @@ for fmt in [xmlfmt]:
          continue
 
    t.syncAction(host.actions, "deactivate")
+   waitFor(host, "MAINTENANCE")
+   t.syncAction(host.actions, "install");
    waitFor(host, "MAINTENANCE")
    t.syncAction(host.actions, "activate")
    waitFor(host, "UP")

@@ -29,6 +29,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Fault;
 import com.redhat.rhevm.api.model.Host;
 
@@ -49,8 +50,10 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
     private static final String GET_COMMAND = "rhevmpssnapin\\get-host 12345";
     private static final String GET_RETURN = "hostid: 12345 \n name: sedna\nstatus: up";
     private static final String ACTION_RETURN = "replace with realistic powershell return";
-    private static final String UPDATE_COMMAND = "$h = get-host 12345\n$h.name = 'eris'\nupdate-host -hostobject $h";
+    private static final String UPDATE_COMMAND = "$h = rhevmpssnapin\\get-host 12345\n$h.name = 'eris'\nupdate-host -hostobject $h";
     private static final String UPDATE_RETURN = "hostid: 12345 \n name: eris\nstatus: up";
+    private static final String INSTALL_PASSWORD = "boldlygoingnowhere";
+    private static final String INSTALL_COMMAND = "$h = rhevmpssnapin\\get-host 12345\nupdate-host -hostobject $h -install -rootpassword '" + INSTALL_PASSWORD + "'";
 
     protected PowerShellHostResource getResource() {
         return new PowerShellHostResource("12345", executor);
@@ -93,9 +96,11 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
     }
 
     @Test
-    public void testFence() throws Exception {
+    public void testInstall() throws Exception {
+        Action action = getAction();
+        action.setRootPassword(INSTALL_PASSWORD);
         verifyActionResponse(
-            resource.fence(setUpActionExpectation("fence", "fence-host"), getAction()),
+            resource.install(setUpActionExpectation("/hosts/12345/", "install", INSTALL_COMMAND, ACTION_RETURN), action),
             false);
     }
 
@@ -121,9 +126,11 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
     }
 
     @Test
-    public void testFenceAsync() throws Exception {
+    public void testInstallAsync() throws Exception {
+        Action action = getAction(true);
+        action.setRootPassword(INSTALL_PASSWORD);
         verifyActionResponse(
-            resource.fence(setUpActionExpectation("fence", "fence-host"), getAction(true)),
+            resource.install(setUpActionExpectation("/hosts/12345/", "install", INSTALL_COMMAND, ACTION_RETURN), action),
             true);
     }
 

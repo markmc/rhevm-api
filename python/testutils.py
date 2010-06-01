@@ -68,9 +68,10 @@ def expectedActionLink(actions, verb):
     assert verb in actions, "Expected action verb %s, got %s" % (verb, actions.keys())
 
 class TestUtils:
-    def __init__(self, opts, fmt):
+    def __init__(self, opts, fmt, root_password = None):
         self.opts = opts
         self.fmt = fmt
+        self.root_password = root_password
 
     def get(self, href, parse):
         ret = http.GET(self.opts, href, self.fmt.MEDIA_TYPE)
@@ -107,6 +108,7 @@ class TestUtils:
         action.grace_period = self.fmt.GracePeriod()
         action.grace_period.expiry = expiry
         action.grace_period.absolute = 'false'
+        action.root_password = self.root_password
         return action
 
     def asyncAction(self, actions, verb):

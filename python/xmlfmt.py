@@ -72,7 +72,7 @@ class Actions(Element):
 class Action(Element):
     NAME = 'action'
     ATTRIBUTES = Element.ATTRIBUTES + ['id', 'href']
-    ELEMENTS = Element.ELEMENTS + ['async', 'status', 'grace_period']
+    ELEMENTS = Element.ELEMENTS + ['async', 'status', 'grace_period', 'root_password']
 
 class CPU(Element):
     NAME = 'cpu'

@@ -73,7 +73,7 @@ public class PowerShellHostResource extends AbstractActionableResource<Host> imp
 
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$h = get-host " + getId() + "\n");
+        buf.append("$h = " + CMD_PREFIX + "get-host " + getId() + "\n");
 
         if (host.getName() != null) {
             buf.append("$h.name = '" + host.getName() + "'");
@@ -91,8 +91,8 @@ public class PowerShellHostResource extends AbstractActionableResource<Host> imp
     }
 
     @Override
-    public Response fence(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new CommandRunner(action, "fence-host", "host", getId()));
+    public Response install(UriInfo uriInfo, Action action) {
+        return doAction(uriInfo, new HostInstaller(action, action.getRootPassword()));
     }
 
     @Override
@@ -103,5 +103,28 @@ public class PowerShellHostResource extends AbstractActionableResource<Host> imp
     @Override
     public Response deactivate(UriInfo uriInfo, Action action) {
         return doAction(uriInfo, new CommandRunner(action, "suspend-host", "host", getId()));
+    }
+
+    class HostInstaller extends AbstractActionTask {
+
+        private String rootPassword;
+
+        HostInstaller(Action action, String rootPassword) {
+            super(action);
+            this.rootPassword = rootPassword;
+        }
+
+        public void run() {
+            StringBuilder buf = new StringBuilder();
+
+            buf.append("$h = " + CMD_PREFIX + "get-host " + PowerShellHostResource.this.getId() + "\n");
+
+            buf.append("update-host");
+            buf.append(" -hostobject $h");
+            buf.append(" -install");
+            buf.append(" -rootpassword '" + rootPassword + "'");
+
+            PowerShellCmd.runCommand(buf.toString());
+        }
     }
 }
