@@ -27,6 +27,7 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Action;
+import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.Interface;
@@ -73,6 +74,9 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
                 network.setHref(PowerShellNetworksResource.getHref(baseUriBuilder, network.getId()));
             }
         }
+
+        ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, VmResource.class);
+        vm.setActions(actionsBuilder.build());
 
         return vm;
     }

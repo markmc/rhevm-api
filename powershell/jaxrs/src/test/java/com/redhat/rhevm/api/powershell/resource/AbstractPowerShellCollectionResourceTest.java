@@ -155,10 +155,15 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
             expect(uriInfo.getQueryParameters()).andReturn(null).anyTimes();
         }
         for (String name : names) {
+            String href = URI_ROOT + SLASH + collectionName + SLASH + name.hashCode();
             UriBuilder uriBuilder = createMock(UriBuilder.class);
             expect(uriInfo.getAbsolutePathBuilder()).andReturn(uriBuilder);
             expect(uriBuilder.path(Integer.toString(name.hashCode()))).andReturn(uriBuilder);
-            expect(uriBuilder.build()).andReturn(new URI(URI_ROOT + SLASH + collectionName + SLASH + name.hashCode())).anyTimes();
+            expect(uriBuilder.build()).andReturn(new URI(href)).anyTimes();
+            UriBuilder actionUriBuilder = createMock(UriBuilder.class);
+            expect(uriBuilder.clone()).andReturn(actionUriBuilder).anyTimes();
+            expect(actionUriBuilder.path(isA(String.class))).andReturn(uriBuilder).anyTimes();
+            expect(actionUriBuilder.build()).andReturn(new URI(href + SLASH + "action")).anyTimes();
         }
         for (int i = 0 ; i < baseUris ; i++) {
             UriBuilder uriBuilder = createMock(UriBuilder.class);

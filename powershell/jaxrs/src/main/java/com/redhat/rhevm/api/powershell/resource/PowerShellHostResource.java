@@ -27,6 +27,7 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Action;
+import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.resource.HostResource;
 import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
@@ -54,6 +55,10 @@ public class PowerShellHostResource extends AbstractActionableResource<Host> imp
 
     public static Host addLinks(Host host, UriBuilder uriBuilder) {
         host.setHref(uriBuilder.build().toString());
+
+        ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, HostResource.class);
+        host.setActions(actionsBuilder.build());
+
         return host;
     }
 

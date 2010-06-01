@@ -37,6 +37,7 @@ import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import org.junit.Test;
 
 import static org.easymock.classextension.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.isA;
 
 import static org.powermock.api.easymock.PowerMock.createMock;
 import static org.powermock.api.easymock.PowerMock.mockStatic;
@@ -129,10 +130,15 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
     private UriInfo setUpHostExpectations(String command, String ret, String name) throws Exception {
         mockStatic(PowerShellCmd.class);
         expect(PowerShellCmd.runCommand(command)).andReturn(ret);
+        String href = URI_ROOT + "/hosts/12345";
         UriInfo uriInfo = createMock(UriInfo.class);
         UriBuilder uriBuilder = createMock(UriBuilder.class);
         expect(uriInfo.getRequestUriBuilder()).andReturn(uriBuilder).anyTimes();
-        expect(uriBuilder.build()).andReturn(new URI(URI_ROOT + "/hosts/12345")).anyTimes();
+        expect(uriBuilder.build()).andReturn(new URI(href)).anyTimes();
+        UriBuilder actionUriBuilder = createMock(UriBuilder.class);
+        expect(uriBuilder.clone()).andReturn(actionUriBuilder).anyTimes();
+        expect(actionUriBuilder.path(isA(String.class))).andReturn(uriBuilder).anyTimes();
+        expect(actionUriBuilder.build()).andReturn(new URI(href + "/action")).anyTimes();
         replayAll();
 
         return uriInfo;

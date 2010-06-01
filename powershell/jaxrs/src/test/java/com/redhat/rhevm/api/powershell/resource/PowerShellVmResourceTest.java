@@ -267,10 +267,15 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
                 }
             }
         }
+        String href = URI_ROOT + "/vms/" + VM_ID;
         UriInfo uriInfo = createMock(UriInfo.class);
         UriBuilder uriBuilder = createMock(UriBuilder.class);
         expect(uriInfo.getRequestUriBuilder()).andReturn(uriBuilder).anyTimes();
-        expect(uriBuilder.build()).andReturn(new URI(URI_ROOT + "/vms/" + VM_ID)).anyTimes();
+        expect(uriBuilder.build()).andReturn(new URI(href)).anyTimes();
+        UriBuilder actionUriBuilder = createMock(UriBuilder.class);
+        expect(uriBuilder.clone()).andReturn(actionUriBuilder).anyTimes();
+        expect(actionUriBuilder.path(isA(String.class))).andReturn(uriBuilder).anyTimes();
+        expect(actionUriBuilder.build()).andReturn(new URI(href + "/action")).anyTimes();
         UriBuilder baseBuilder = createMock(UriBuilder.class);
         expect(uriInfo.getBaseUriBuilder()).andReturn(baseBuilder);
         expect(baseBuilder.clone()).andReturn(baseBuilder).anyTimes();
