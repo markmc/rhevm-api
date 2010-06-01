@@ -48,17 +48,11 @@ public class PowerShellHostsResource
 
         buf.append("add-host");
 
-        if (host.getName() != null) {
-            buf.append(" -name '" + host.getName() + "'");
-        }
+        buf.append(" -name '" + host.getName() + "'");
+        buf.append(" -address " + host.getAddress());
 
-        if (host.getAddress() != null) {
-            buf.append(" -hostname " + host.getAddress());
-        }
-
-        if (host.getRootPassword() != null) {
-            buf.append(" -rootpassword " + host.getRootPassword());
-        }
+        // It appears that the root password is not really needed here
+        buf.append(" -rootpassword notneeded");
 
         host = PowerShellHostResource.runAndParseSingle(buf.toString());
 

@@ -26,7 +26,7 @@ import org.junit.Test;
 public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionResourceTest<Host, PowerShellHostResource, PowerShellHostsResource> {
 
     private static final String ADD_COMMAND_EPILOG =
-        "-hostname 127.0.0.1 -rootpassword celestial";
+        "-address 127.0.0.1 -rootpassword notneeded";
 
     public PowerShellHostsResourceTest() {
         super(new PowerShellHostResource("0", null), "hosts", "host");
@@ -79,6 +79,5 @@ public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionRes
 
     protected void populateModel(Host host) {
         host.setAddress("127.0.0.1");
-        host.setRootPassword("celestial");
     }
 }
