@@ -22,8 +22,6 @@ import xml.dom.minidom
 
 MEDIA_TYPE = 'application/xml'
 
-# FIXME: handle links
-
 class Element:
     ATTRIBUTES = []
     ELEMENTS = []
@@ -45,13 +43,31 @@ class Element:
         s += '>'
         for e in self.ELEMENTS:
             if hasattr(self, e):
-                obj = getattr(self, e)
-                if isinstance(obj, Element):
-                    s += obj.dump()
-                else:
-                    s += '<' + e + '>' + obj + '</' + e + '>'
+                l = getattr(self, e)
+                if not isinstance(l, list):
+                    l = [l]
+                for obj in l:
+                    if isinstance(obj, Element):
+                        s += obj.dump()
+                    else:
+                        s += '<' + e + '>' + obj + '</' + e + '>'
         s += '</' + self.NAME + '>'
         return s
+
+class Link(Element):
+    NAME = 'link'
+    ATTRIBUTES = Element.ATTRIBUTES + ['rel', 'href']
+
+class Actions(Element):
+    NAME = 'actions'
+    ELEMENTS = Element.ELEMENTS + ['link']
+    def asDict(self):
+        ret = {}
+        if not hasattr(self, 'link'):
+            return {}
+        for l in self.link:
+            ret[l.rel] = l.href
+        return ret
 
 class Action(Element):
     NAME = 'action'
@@ -70,7 +86,7 @@ class GracePeriod(Element):
 
 class Base(Element):
     ATTRIBUTES = Element.ATTRIBUTES + ["id", "href"]
-    ELEMENTS = Element.ELEMENTS + ["name"]
+    ELEMENTS = Element.ELEMENTS + ["name", "actions"]
 
 class Cluster(Base):
     NAME = "cluster"
@@ -99,7 +115,7 @@ class Template(Base):
     NAME = "template"
     COLLECTION = "templates"
 
-TYPES = [ Action, Cluster, CPU, DataCenter, GracePeriod, Host, StorageDomain, Template, VM ]
+TYPES = [ Action, Actions, Cluster, CPU, DataCenter, GracePeriod, Host, Link, StorageDomain, Template, VM ]
 
 def findEntityType(name):
     for t in TYPES:
@@ -145,7 +161,14 @@ def parseNode(node):
                 e = parseNode(n)
                 if e is None:
                     e = getText(n.childNodes)
-                setattr(obj, n.nodeName, e)
+                if not hasattr(obj, n.nodeName):
+                    setattr(obj, n.nodeName, e)
+                else:
+                    l = getattr(obj, n.nodeName)
+                    if not type(l) is list:
+                        l = [l]
+                    l.append(e)
+                    setattr(obj, n.nodeName, l)
         return obj
 
     return None

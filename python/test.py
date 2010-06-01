@@ -56,17 +56,17 @@ for fmt in [xmlfmt]:
     query_vms = t.query(links['vms/search'], "name=" + constraint, fmt.parseVmCollection)
     expectedCollectionSize(query_vms, 1)
 
-    t.asyncAction(foo_vm.href, "start")
+    t.asyncAction(foo_vm.actions, "start")
 
-    t.syncAction(foo_vm.href, "stop")
+    t.syncAction(foo_vm.actions, "stop")
 
     bar_host = fmt.Host()
     bar_host.name = randomName('bar')
     bar_host = t.create(links['hosts'], bar_host, fmt.parseHost)
 
-    t.asyncAction(bar_host.href, "fence")
+    t.asyncAction(bar_host.actions, "fence")
 
-    t.asyncAction(bar_host.href, "approve")
+    t.asyncAction(bar_host.actions, "approve")
 
     print t.get(foo_vm.href, fmt.parseVM)
 
