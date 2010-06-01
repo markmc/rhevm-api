@@ -100,6 +100,7 @@ class DataCenter(Base):
 class Host(Base):
     NAME = "host"
     COLLECTION = "hosts"
+    ELEMENTS = Base.ELEMENTS + ["address", "status"]
 
 class StorageDomain(Base):
     NAME = "storage_domain"
@@ -183,6 +184,7 @@ def parseVM(doc):
 def parseDataCenter(doc):
     return parse(doc)
 def parseHost(doc):
+    print doc
     return parse(doc)
 def parseCluster(doc):
     return parse(doc)

@@ -33,6 +33,7 @@ def parseOptions():
         'impl' : "mock",
         }
 
+    oargs = []
     if len(sys.argv) > 1:
         options, oargs = getopt.getopt(sys.argv[1:], "h:p:i:", ["host=", "port=", "impl="])
         for opt, a in options:
@@ -44,6 +45,7 @@ def parseOptions():
                 opts['impl'] = a
 
     opts['uri'] = 'http://%(host)s:%(port)s/rhevm-api-%(impl)s/' % opts
+    opts['oargs'] = oargs
 
     return opts
 
