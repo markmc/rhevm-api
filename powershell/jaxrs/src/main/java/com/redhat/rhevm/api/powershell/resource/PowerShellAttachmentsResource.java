@@ -18,6 +18,7 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.util.ArrayList;
 import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.Response;
@@ -72,7 +73,16 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
 
         buf.append("get-datacenter -storagedomainid " + storageDomainId);
 
-        for (DataCenter dataCenter : PowerShellDataCenterResource.runAndParse(buf.toString())) {
+        ArrayList<DataCenter> dataCenters;
+        try {
+            dataCenters = PowerShellDataCenterResource.runAndParse(buf.toString());
+        } catch (PowerShellException e) {
+            // Ignore 'Can not find any DataCenter by StorageDomainId' error
+            // i.e. the storage domain isn't attached to any data center
+            return ret;
+        }
+
+        for (DataCenter dataCenter : dataCenters) {
             buf = new StringBuilder();
 
             buf.append("get-storagedomain");
@@ -153,7 +163,16 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
         buf.append("get-storagedomain");
         buf.append(" -datacenterid " + dataCenterId);
 
-        for (StorageDomain storageDomain : PowerShellStorageDomainResource.runAndParse(buf.toString())) {
+        ArrayList<StorageDomain> storageDomains;
+        try {
+            storageDomains = PowerShellStorageDomainResource.runAndParse(buf.toString());
+        } catch (PowerShellException e) {
+            // Ignore 'There is no Storage Domains in DataCenter' error
+            // i.e. no storage domains are attached to this data center
+            return attachments;
+        }
+
+        for (StorageDomain storageDomain : storageDomains) {
             UriBuilder uriBuilder =
                 uriInfo.getBaseUriBuilder().path("storagedomains").path(storageDomain.getId())
                                            .path("attachments").path(dataCenterId);
