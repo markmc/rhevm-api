@@ -34,6 +34,7 @@ import com.redhat.rhevm.api.model.ActionValidator;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.Storage;
 import com.redhat.rhevm.api.model.StorageDomain;
+import com.redhat.rhevm.api.model.StorageDomainStatus;
 import com.redhat.rhevm.api.resource.AttachmentsResource;
 import com.redhat.rhevm.api.resource.StorageDomainResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellStorageDomain;
@@ -261,6 +262,7 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
             StorageDomain storageDomain = PowerShellStorageDomainResource.runAndParseSingle(buf.toString(), true);
 
             parent.unstageDomain(id, storageDomain.getId());
+            PowerShellStorageDomainResource.this.staged = null;
         }
     }
 
@@ -285,7 +287,8 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
 
             PowerShellCmd.runCommand(buf.toString());
 
-            staged = parent.mapFromRhevmId(storageDomain);
+            storageDomain.setStatus(StorageDomainStatus.UNINITIALIZED);
+            PowerShellStorageDomainResource.this.staged = parent.mapFromRhevmId(storageDomain);
             parent.stageDomain(id, PowerShellStorageDomainResource.this);
         }
     }
