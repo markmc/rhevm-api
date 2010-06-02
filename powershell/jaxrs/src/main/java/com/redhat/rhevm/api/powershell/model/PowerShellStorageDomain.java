@@ -76,7 +76,7 @@ public class PowerShellStorageDomain extends StorageDomain {
             switch (storage.getType()) {
             case NFS:
                 String[] parts = props.get("nfspath").split(":");
-                storage.setHost(parts[0]);
+                storage.setAddress(parts[0]);
                 storage.setPath(parts[1]);
                 break;
             case ISCSI:

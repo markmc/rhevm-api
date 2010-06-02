@@ -40,14 +40,14 @@ public class PowerShellStorageDomainTest extends PowerShellModelTest {
         assertEquals(s.getSharedStatus(), sharedStatus);
     }
 
-    private void testNfsStorageDomain(PowerShellStorageDomain s, String id, String name, StorageDomainType type, Boolean isMaster, StorageDomainStatus status, StorageDomainStatus sharedStatus, String host, String path) {
+    private void testNfsStorageDomain(PowerShellStorageDomain s, String id, String name, StorageDomainType type, Boolean isMaster, StorageDomainStatus status, StorageDomainStatus sharedStatus, String address, String path) {
         testStorageDomain(s, id, name, type, isMaster, status, sharedStatus);
 
         Storage storage = s.getStorage();
         assertNotNull(storage);
 
         assertEquals(storage.getType(), StorageType.NFS);
-        assertEquals(storage.getHost(), host);
+        assertEquals(storage.getAddress(), address);
         assertEquals(storage.getPath(), path);
     }
 

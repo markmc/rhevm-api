@@ -49,7 +49,7 @@ public class MockStorageDomainsResource extends AbstractMockQueryableResource<St
         super(new SimpleQueryEvaluator<StorageDomain>());
     }
 
-    private void addStorageDomain(StorageDomainType domainType, String name, StorageType storageType, String host, String path) {
+    private void addStorageDomain(StorageDomainType domainType, String name, StorageType storageType, String address, String path) {
         MockStorageDomainResource resource = new MockStorageDomainResource(allocateId(StorageDomain.class), getExecutor());
 
         resource.getModel().setName(name);
@@ -57,7 +57,7 @@ public class MockStorageDomainsResource extends AbstractMockQueryableResource<St
 
         Storage storage = new Storage();
         storage.setType(storageType);
-        storage.setHost(host);
+        storage.setAddress(address);
         storage.setPath(path);
         resource.getModel().setStorage(storage);
 

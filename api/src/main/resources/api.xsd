@@ -417,7 +417,7 @@
 
   <xs:group name="NfsStorage">
     <xs:sequence>
-      <xs:element name="host" type="xs:string"/>
+      <xs:element name="address" type="xs:string"/>
       <xs:element name="path" type="xs:string"/>
     </xs:sequence>
   </xs:group>

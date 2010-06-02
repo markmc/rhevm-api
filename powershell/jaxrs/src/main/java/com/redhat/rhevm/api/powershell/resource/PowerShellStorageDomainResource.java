@@ -248,7 +248,7 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
 
             switch (storage.getType()) {
             case NFS:
-                buf.append("'" + storage.getHost() + ":" + storage.getPath() + "'");
+                buf.append("'" + storage.getAddress() + ":" + storage.getPath() + "'");
                 break;
             case ISCSI:
             case FCP:
