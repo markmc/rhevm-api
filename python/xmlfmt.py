@@ -27,6 +27,7 @@ class Element:
     ELEMENTS = []
     NAME = None
     COLLECTION = None
+    KEY = None
 
     def __str__(self):
         dict = {}
@@ -44,6 +45,8 @@ class Element:
         for e in self.ELEMENTS:
             if hasattr(self, e):
                 l = getattr(self, e)
+                if isinstance(l, dict):
+                    l = l.values()
                 if not isinstance(l, list):
                     l = [l]
                 for obj in l:
@@ -57,19 +60,11 @@ class Element:
 class Link(Element):
     NAME = 'link'
     ATTRIBUTES = Element.ATTRIBUTES + ['rel', 'href']
+    KEY = 'rel'
 
 class Actions(Element):
     NAME = 'actions'
     ELEMENTS = Element.ELEMENTS + ['link']
-    def asDict(self):
-        ret = {}
-        if not hasattr(self, 'link'):
-            return {}
-        if not isinstance(self.link, list):
-            return {self.link.rel: self.link.href}
-        for l in self.link:
-            ret[l.rel] = l.href
-        return ret
 
 class Action(Element):
     NAME = 'action'
@@ -168,14 +163,12 @@ def parseNode(node):
                 e = parseNode(n)
                 if e is None:
                     e = getText(n.childNodes)
-                if not hasattr(obj, n.nodeName):
-                    setattr(obj, n.nodeName, e)
+                if isinstance(e, Element) and not e.KEY is None:
+                    if not hasattr(obj, n.nodeName):
+                        setattr(obj, n.nodeName, {})
+                    getattr(obj, n.nodeName)[getattr(e, e.KEY)] = e
                 else:
-                    l = getattr(obj, n.nodeName)
-                    if not type(l) is list:
-                        l = [l]
-                    l.append(e)
-                    setattr(obj, n.nodeName, l)
+                    setattr(obj, n.nodeName, e)
         return obj
 
     return None

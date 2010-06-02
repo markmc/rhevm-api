@@ -65,7 +65,7 @@ def expectedCollectionSize(collection, expected):
     assert len(collection) == expected, "Expected collection of size %(e)d, got %(s)d" % {'e': expected, 's': len(collection)}
 
 def expectedActionLink(actions, verb):
-    assert verb in actions, "Expected action verb %s, got %s" % (verb, actions.keys())
+    assert verb in actions.link, "Expected action verb %s, got %s" % (verb, actions.link.keys())
 
 class TestUtils:
     def __init__(self, opts, fmt):
@@ -112,10 +112,9 @@ class TestUtils:
         return action
 
     def asyncAction(self, actions, verb, **params):
-        actionsDict = actions.asDict()
-        expectedActionLink(actionsDict, verb)
+        expectedActionLink(actions, verb)
         ret = http.POST(self.opts,
-                        actionsDict[verb],
+                        actions.link[verb].href,
                         self.makeAction('true', '5000', **params).dump(),
                         self.fmt.MEDIA_TYPE)
         print ret['body']
@@ -138,10 +137,9 @@ class TestUtils:
         expectedActionStatus(resp_action.status, "COMPLETE")
 
     def syncAction(self, actions, verb, **params):
-        actionsDict = actions.asDict()
-        expectedActionLink(actionsDict, verb)
+        expectedActionLink(actions, verb)
         ret = http.POST(self.opts,
-                        actionsDict[verb],
+                        actions.link[verb].href,
                         self.makeAction('false', '10', **params).dump(),
                         self.fmt.MEDIA_TYPE)
         print ret['body']
