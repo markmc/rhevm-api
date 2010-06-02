@@ -64,8 +64,6 @@ for fmt in [xmlfmt]:
     bar_host.name = randomName('bar')
     bar_host = t.create(links['hosts'], bar_host, fmt.parseHost)
 
-    t.asyncAction(bar_host.actions, "fence")
-
     t.asyncAction(bar_host.actions, "approve")
 
     print t.get(foo_vm.href, fmt.parseVM)
