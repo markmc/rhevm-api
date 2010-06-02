@@ -149,10 +149,11 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
     public StorageDomain get(UriInfo uriInfo) {
         StorageDomain storageDomain;
         if (staged != null) {
-            storageDomain = JAXBHelper.clone(OBJECT_FACTORY.createStorageDomain(staged));
+            storageDomain = staged;
         } else {
             storageDomain = parent.mapFromRhevmId(runAndParseSingle("get-storagedomain " + getId(), true));
         }
+        storageDomain = JAXBHelper.clone(OBJECT_FACTORY.createStorageDomain(storageDomain));
         return addLinks(storageDomain, uriInfo.getRequestUriBuilder());
     }
 
@@ -165,7 +166,7 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
             // update writable fields only
             staged.setName(storageDomain.getName());
 
-            storageDomain = JAXBHelper.clone(OBJECT_FACTORY.createStorageDomain(staged));
+            storageDomain = staged;
         } else {
             buf.append("$h = get-storagedomain " + getId() + "\n");
 
@@ -178,7 +179,7 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
 
             storageDomain = parent.mapFromRhevmId(runAndParseSingle(buf.toString(), true));
         }
-
+        storageDomain = JAXBHelper.clone(OBJECT_FACTORY.createStorageDomain(storageDomain));
         return addLinks(storageDomain, uriInfo.getRequestUriBuilder());
     }
 
