@@ -35,7 +35,7 @@ links = http.HEAD_for_links(opts)
 print links
 
 for fmt in [xmlfmt]:
-   t = TestUtils(opts, fmt, root_password)
+   t = TestUtils(opts, fmt)
 
    print "=== ", fmt.MEDIA_TYPE, " ==="
 
@@ -60,7 +60,7 @@ for fmt in [xmlfmt]:
 
    t.syncAction(host.actions, "deactivate")
    waitFor(host, "MAINTENANCE")
-   t.syncAction(host.actions, "install");
+   t.syncAction(host.actions, "install", root_password=root_password);
    waitFor(host, "MAINTENANCE")
    t.syncAction(host.actions, "activate")
    waitFor(host, "UP")

@@ -68,10 +68,9 @@ def expectedActionLink(actions, verb):
     assert verb in actions, "Expected action verb %s, got %s" % (verb, actions.keys())
 
 class TestUtils:
-    def __init__(self, opts, fmt, root_password = None):
+    def __init__(self, opts, fmt):
         self.opts = opts
         self.fmt = fmt
-        self.root_password = root_password
 
     def get(self, href, parse):
         ret = http.GET(self.opts, href, self.fmt.MEDIA_TYPE)
@@ -102,21 +101,22 @@ class TestUtils:
         status = http.DELETE(self.opts, href)
         expectedStatusCode(status, 204)
 
-    def makeAction(self, async, expiry):
+    def makeAction(self, async, expiry, **params):
         action = self.fmt.Action()
         action.async = async
         action.grace_period = self.fmt.GracePeriod()
         action.grace_period.expiry = expiry
         action.grace_period.absolute = 'false'
-        action.root_password = self.root_password
+        for p in params:
+            setattr(action, p, params[p])
         return action
 
-    def asyncAction(self, actions, verb):
+    def asyncAction(self, actions, verb, **params):
         actionsDict = actions.asDict()
         expectedActionLink(actionsDict, verb)
         ret = http.POST(self.opts,
                         actionsDict[verb],
-                        self.makeAction('true', '5000').dump(),
+                        self.makeAction('true', '5000', **params).dump(),
                         self.fmt.MEDIA_TYPE)
         print ret['body']
         expectedStatusCode(ret['status'], 202)
@@ -137,12 +137,12 @@ class TestUtils:
         resp_action = self.fmt.parseAction(resp['body'])
         expectedActionStatus(resp_action.status, "COMPLETE")
 
-    def syncAction(self, actions, verb):
+    def syncAction(self, actions, verb, **params):
         actionsDict = actions.asDict()
         expectedActionLink(actionsDict, verb)
         ret = http.POST(self.opts,
                         actionsDict[verb],
-                        self.makeAction('false', '10').dump(),
+                        self.makeAction('false', '10', **params).dump(),
                         self.fmt.MEDIA_TYPE)
         print ret['body']
         expectedStatusCode(ret['status'], 200)
