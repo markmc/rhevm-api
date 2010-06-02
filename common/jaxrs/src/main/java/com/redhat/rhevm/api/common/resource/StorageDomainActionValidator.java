@@ -30,6 +30,9 @@ public class StorageDomainActionValidator implements ActionValidator {
 
     @Override
     public boolean validateAction(String action) {
+        if (storageDomain.getStatus() == null) {
+            return false;
+        }
         switch (storageDomain.getStatus()) {
         case UNINITIALIZED:
             return action.equals("initialize");
@@ -37,9 +40,9 @@ public class StorageDomainActionValidator implements ActionValidator {
             return action.equals("teardown");
         case ACTIVE:
         case INACTIVE:
-            return false;
         case LOCKED:
         case MIXED:
+            return false;
         default:
             assert false : storageDomain.getStatus();
             return false;
