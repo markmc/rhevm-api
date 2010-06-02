@@ -62,14 +62,37 @@ public class QueryHelper {
         RETURN_TYPES.put(Template.class, "Template" + RETURN_TYPE_SEPARTOR);
     }
 
+    /**
+     * Extract constraint from query parameters.
+     *
+     * @param uriInfo  contains query parameters if set
+     * @param clz      the individual return type expected from the query
+     * @return         constraint in correct format
+     */
     public static String getConstraint(UriInfo uriInfo, Class<?> clz) {
+        return getConstraint(uriInfo, null, clz);
+    }
+
+    /**
+     * Extract constraint from query parameters.
+     *
+     * @param uriInfo       contains query parameters if set
+     * @param defaultQuery  raw query to use if not present in URI parameters
+     * @param clz           the individual return type expected from the query
+     * @return              constraint in correct format
+     */
+    public static String getConstraint(UriInfo uriInfo, String defaultQuery, Class<?> clz) {
         MultivaluedMap<String, String> queries = uriInfo.getQueryParameters();
         String constraint = queries != null
                             && queries.get(CONSTRAINT_PARAMETER) != null
                             && queries.get(CONSTRAINT_PARAMETER).size() > 0
                             ? queries.get(CONSTRAINT_PARAMETER).get(0)
                             : null;
-        return constraint != null ? RETURN_TYPES.get(clz) + constraint : null;
+        return constraint != null
+               ? RETURN_TYPES.get(clz) + constraint
+               : defaultQuery != null
+                 ? RETURN_TYPES.get(clz) + defaultQuery
+                 : null;
     }
 
 }
