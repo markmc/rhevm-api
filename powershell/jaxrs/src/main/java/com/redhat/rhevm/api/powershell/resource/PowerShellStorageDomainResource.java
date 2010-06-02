@@ -82,7 +82,7 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
         ArrayList<StorageDomain> ret = new ArrayList<StorageDomain>();
 
         for (PowerShellStorageDomain storageDomain : storageDomains) {
-            if (!sharedStatus) {
+            if (sharedStatus) {
                 storageDomain.setStatus(storageDomain.getSharedStatus());
             }
             ret.add(storageDomain);
