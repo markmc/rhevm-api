@@ -65,6 +65,8 @@ class Actions(Element):
         ret = {}
         if not hasattr(self, 'link'):
             return {}
+        if not isinstance(self.link, list):
+            return {self.link.rel: self.link.href}
         for l in self.link:
             ret[l.rel] = l.href
         return ret
@@ -72,7 +74,7 @@ class Actions(Element):
 class Action(Element):
     NAME = 'action'
     ATTRIBUTES = Element.ATTRIBUTES + ['id', 'href']
-    ELEMENTS = Element.ELEMENTS + ['async', 'status', 'grace_period', 'root_password']
+    ELEMENTS = Element.ELEMENTS + ['async', 'status', 'grace_period', 'root_password', 'host']
 
 class CPU(Element):
     NAME = 'cpu'
@@ -102,10 +104,14 @@ class Host(Base):
     COLLECTION = "hosts"
     ELEMENTS = Base.ELEMENTS + ["address", "status"]
 
+class Storage(Element):
+    NAME = 'storage'
+    ELEMENTS = Element.ELEMENTS + ['type', 'address', 'path']
+
 class StorageDomain(Base):
     NAME = "storage_domain"
     COLLECTION = "storage_domains"
-    ELEMENTS = Base.ELEMENTS + ['type', 'status'] # FIXME: attachments
+    ELEMENTS = Base.ELEMENTS + ['type', 'status', 'master', 'storage'] # FIXME: attachments
 
 class VM(Base):
     NAME = "vm"
@@ -116,7 +122,7 @@ class Template(Base):
     NAME = "template"
     COLLECTION = "templates"
 
-TYPES = [ Action, Actions, Cluster, CPU, DataCenter, GracePeriod, Host, Link, StorageDomain, Template, VM ]
+TYPES = [ Action, Actions, Cluster, CPU, DataCenter, GracePeriod, Host, Link, Storage, StorageDomain, Template, VM ]
 
 def findEntityType(name):
     for t in TYPES:
