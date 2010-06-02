@@ -83,7 +83,12 @@ class GracePeriod(Element):
 
 class Base(Element):
     ATTRIBUTES = Element.ATTRIBUTES + ["id", "href"]
-    ELEMENTS = Element.ELEMENTS + ["name", "actions"]
+    ELEMENTS = Element.ELEMENTS + ["name", "actions", "link"]
+
+class Attachment(Base):
+    NAME = 'attachment'
+    COLLECTION = 'attachments'
+    ELEMENTS = Base.ELEMENTS + ['data_center', 'storage_domain', 'status', 'master']
 
 class Cluster(Base):
     NAME = "cluster"
@@ -117,7 +122,7 @@ class Template(Base):
     NAME = "template"
     COLLECTION = "templates"
 
-TYPES = [ Action, Actions, Cluster, CPU, DataCenter, GracePeriod, Host, Link, Storage, StorageDomain, Template, VM ]
+TYPES = [ Action, Actions, Attachment, Cluster, CPU, DataCenter, GracePeriod, Host, Link, Storage, StorageDomain, Template, VM ]
 
 def findEntityType(name):
     for t in TYPES:
@@ -183,11 +188,12 @@ def parseVM(doc):
 def parseDataCenter(doc):
     return parse(doc)
 def parseHost(doc):
-    print doc
     return parse(doc)
 def parseCluster(doc):
     return parse(doc)
 def parseCPU(doc):
+    return parse(doc)
+def parseAttachment(doc):
     return parse(doc)
 def parseStorageDomain(doc):
     return parse(doc)
@@ -202,6 +208,8 @@ def parseHostCollection(doc):
 def parseClusterCollection(doc):
     return parse(doc)
 def parseCpuCollection(doc):
+    return parse(doc)
+def parseAttachmentCollection(doc):
     return parse(doc)
 def parseStorageDomainCollection(doc):
     return parse(doc)
