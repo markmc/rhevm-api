@@ -65,7 +65,7 @@ public class PowerShellNetworkResource extends AbstractActionableResource<Networ
 
         buf.append("$n = get-networks\n");
         buf.append("foreach ($i in $n) {");
-        buf.append("  if ($i -eq '" + getId() + "') {");
+        buf.append("  if ($i.networkid -eq '" + getId() + "') {");
         buf.append("    $i");
         buf.append("  }");
         buf.append("}");
@@ -80,7 +80,7 @@ public class PowerShellNetworkResource extends AbstractActionableResource<Networ
         StringBuilder buf = new StringBuilder();
 
         buf.append("foreach ($i in $n) {");
-        buf.append("  if ($i -eq '" + getId() + "') {");
+        buf.append("  if ($i.networkid -eq '" + getId() + "') {");
 
         if (network.getName() != null) {
             buf.append("    $i.name = '" + network.getName() + "'");

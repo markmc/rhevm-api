@@ -92,7 +92,7 @@ public class PowerShellNetworksResource
 
         buf.append("$n = get-networks\n");
         buf.append("foreach ($i in $n) {");
-        buf.append("  if ($i -eq '" + id + "') {");
+        buf.append("  if ($i.networkid -eq '" + id + "') {");
         buf.append("    remove-network");
         buf.append(" -networkobject $i");
         buf.append(" -datacenterid $i.datacenterid");
