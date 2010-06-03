@@ -147,3 +147,10 @@ class TestUtils:
         expectedStatusCode(ret['status'], 200)
         resp_action = self.fmt.parse(ret['body'])
         expectedActionStatus(resp_action.status, "COMPLETE")
+
+    def find(self, href, name):
+        results = filter(lambda r: r.name == name,
+                         self.get(href))
+        if len(results) == 0:
+            raise RuntimeError("'%s' not found" % name)
+        return results[0]
