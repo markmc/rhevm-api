@@ -76,8 +76,8 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     private static final String REMOVE_DISK_COMMAND = "remove-disk -vmid {0} -diskids 0";
 
     private static final String NEW_INTERFACE_NAME = "eth11";
-    private static final String NEW_INTERFACE_NETWORK = "rhevm";
-    private static final String ADD_INTERFACE_COMMAND = "$v = get-vm {0}\nadd-networkadapter -vmobject $v -interfacename {1} -networkname ''{2}''";
+    private static final String NEW_INTERFACE_NETWORK = "b4fb4d54-ca44-444c-ba26-d51f18c91998";
+    private static final String ADD_INTERFACE_COMMAND = "$v = get-vm {0}\nforeach ($i in get-networks) '{' if ($i.networkid -eq ''{1}'') '{ $n = $i } }'\nadd-networkadapter -vmobject $v -interfacename {2} -networkname $n.name";
     private static final String REMOVE_INTERFACE_COMMAND = "$v = get-vm {0}\nforeach ($i in $v.GetNetworkAdapters()) '{  if ($i.id -eq ''0'') {    $n = $i  }}'\nremove-interface -vmobject $v -networkadapterobject $n";
 
     protected PowerShellVmResource getResource() {
@@ -230,13 +230,13 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
         iface.setName(NEW_INTERFACE_NAME);
 
         Network network = new Network();
-        network.setName(NEW_INTERFACE_NETWORK);
+        network.setId(NEW_INTERFACE_NETWORK);
         iface.setNetwork(network);
 
         Action action = getAction();
         action.setInterface(iface);
 
-        String command = MessageFormat.format(ADD_INTERFACE_COMMAND, VM_ID, NEW_INTERFACE_NAME, NEW_INTERFACE_NETWORK);
+        String command = MessageFormat.format(ADD_INTERFACE_COMMAND, VM_ID, NEW_INTERFACE_NETWORK, NEW_INTERFACE_NAME);
 
         verifyActionResponse(
             resource.addDevice(setUpActionExpectation("adddevice", command, false), action),

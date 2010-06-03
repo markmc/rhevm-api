@@ -326,11 +326,12 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
             StringBuilder buf = new StringBuilder();
 
             buf.append("$v = get-vm " + getId() + "\n");
+            buf.append("foreach ($i in get-networks) { if ($i.networkid -eq '" + iface.getNetwork().getId() + "') { $n = $i } }\n");
 
             buf.append("add-networkadapter");
             buf.append(" -vmobject $v");
             buf.append(" -interfacename " + iface.getName());
-            buf.append(" -networkname '" + iface.getNetwork().getName() + "'");
+            buf.append(" -networkname $n.name");
             if (iface.getType() != null) {
                 buf.append(" -interfacetype " + iface.getType().toString().toLowerCase());
             }
