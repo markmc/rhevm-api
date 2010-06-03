@@ -32,6 +32,7 @@ import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.Interface;
 import com.redhat.rhevm.api.model.Network;
+import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
@@ -67,6 +68,9 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
 
         Cluster cluster = vm.getCluster();
         cluster.setHref(PowerShellClustersResource.getHref(baseUriBuilder, cluster.getId()));
+
+        Template template = vm.getTemplate();
+        template.setHref(PowerShellTemplatesResource.getHref(baseUriBuilder, template.getId()));
 
         if (vm.getDevices() != null) {
             for (Interface iface : vm.getDevices().getInterfaces()) {
