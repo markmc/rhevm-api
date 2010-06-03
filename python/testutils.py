@@ -52,8 +52,8 @@ def parseOptions():
 def randomName(prefix):
     return prefix + str(random.randint(0, 1000))
 
-def expectedStatusCode(code, expected):
-    assert code == expected, "Expected %(e)d status, got %(c)d" % {'e': expected, 'c': code}
+def expectedStatusCode(resp, expected):
+    assert resp['status'] == expected, "Expected %d status, got %d; body is '%s'" % (expected, resp['status'], resp['body'])
 
 def unexpectedActionStatus(status, unexpected):
     assert status != unexpected, "Unexpected %s action status" % unexpected
@@ -74,33 +74,29 @@ class TestUtils:
 
     def get(self, href):
         ret = http.GET(self.opts, href, self.fmt.MEDIA_TYPE)
-        parsed = self.fmt.parse(ret['body'])
-        expectedStatusCode(ret['status'], 200)
-        return parsed
+        expectedStatusCode(ret, 200)
+        return self.fmt.parse(ret['body'])
 
     def query(self, href, constraint):
         t = template_parser.URITemplate(href)
         qhref = t.sub({"query": constraint})
         ret = http.GET(self.opts, qhref, self.fmt.MEDIA_TYPE)
-        parsed = self.fmt.parse(ret['body'])
-        expectedStatusCode(ret['status'], 200)
-        return parsed
+        expectedStatusCode(ret, 200)
+        return self.fmt.parse(ret['body'])
 
     def create(self, href, entity):
         ret = http.POST(self.opts, href, entity.dump(), self.fmt.MEDIA_TYPE)
-        parsed = self.fmt.parse(ret['body'])
-        expectedStatusCode(ret['status'], 201)
-        return parsed
+        expectedStatusCode(ret, 201)
+        return self.fmt.parse(ret['body'])
 
     def update(self, href, entity, expected):
         ret = http.PUT(self.opts, href, entity.dump(), self.fmt.MEDIA_TYPE)
-        parsed = self.fmt.parse(ret['body'])
-        expectedStatusCode(ret['status'], expected)
-        return parsed
+        expectedStatusCode(ret, expected)
+        return self.fmt.parse(ret['body'])
 
     def delete(self, href):
-        status = http.DELETE(self.opts, href)
-        expectedStatusCode(status, 204)
+        ret = http.DELETE(self.opts, href)
+        expectedStatusCode(ret, 204)
 
     def makeAction(self, async, expiry, **params):
         action = self.fmt.Action()
@@ -118,22 +114,19 @@ class TestUtils:
                         actions.link[verb].href,
                         self.makeAction('true', '5000', **params).dump(),
                         self.fmt.MEDIA_TYPE)
-        print ret['body']
-        expectedStatusCode(ret['status'], 202)
+        expectedStatusCode(ret, 202)
         resp_action = self.fmt.parse(ret['body'])
         unexpectedActionStatus(resp_action.status, "COMPLETE")
         for i in range(1, 3):
             time.sleep(1)
             resp = http.GET(self.opts, resp_action.href, self.fmt.MEDIA_TYPE)
-            print resp['body']
-            expectedStatusCode(resp['status'], 200)
+            expectedStatusCode(resp, 200)
             resp_action = self.fmt.parse(resp['body'])
             unexpectedActionStatus(resp_action.status, "COMPLETE")
 
         time.sleep(4)
         resp = http.GET(self.opts, resp_action.href, self.fmt.MEDIA_TYPE)
-        print resp['body']
-        expectedStatusCode(resp['status'], 200)
+        expectedStatusCode(resp, 200)
         resp_action = self.fmt.parse(resp['body'])
         expectedActionStatus(resp_action.status, "COMPLETE")
 
@@ -143,8 +136,7 @@ class TestUtils:
                         actions.link[verb].href,
                         self.makeAction('false', '10', **params).dump(),
                         self.fmt.MEDIA_TYPE)
-        print ret['body']
-        expectedStatusCode(ret['status'], 200)
+        expectedStatusCode(ret, 200)
         resp_action = self.fmt.parse(ret['body'])
         expectedActionStatus(resp_action.status, "COMPLETE")
 

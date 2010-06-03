@@ -93,6 +93,9 @@ def DELETE(opts, uri):
     cnx = httplib.HTTPConnection(opts['host'], opts['port'])
     try:
         cnx.request('DELETE', uri)
-        return cnx.getresponse().status
+        ret = { 'status' : 0, 'body' : None }
+        resp = cnx.getresponse()
+        ret['status'] = resp.status
+        return ret
     finally:
         cnx.close()
