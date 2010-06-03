@@ -41,9 +41,12 @@ class Element:
         for a in self.ATTRIBUTES:
             if hasattr(self, a):
                 s += ' ' + a + '=\'' + getattr(self, a) + '\''
-        s += '>'
+        close_tag = True
         for e in self.ELEMENTS:
             if hasattr(self, e):
+                if close_tag:
+                    s += '>'
+                    close_tag = False
                 l = getattr(self, e)
                 if isinstance(l, dict):
                     l = l.values()
@@ -54,7 +57,10 @@ class Element:
                         s += obj.dump()
                     else:
                         s += '<' + e + '>' + obj + '</' + e + '>'
-        s += '</' + self.NAME + '>'
+        if close_tag:
+            s += '/>'
+        else:
+            s += '</' + self.NAME + '>'
         return s
 
 class Link(Element):
