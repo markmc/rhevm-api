@@ -21,6 +21,7 @@ package com.redhat.rhevm.api.model;
 import java.net.URI;
 import java.lang.reflect.Method;
 
+import javax.ws.rs.Path;
 import javax.ws.rs.core.UriBuilder;
 
 import com.redhat.rhevm.api.model.Actions;
@@ -46,12 +47,15 @@ public class ActionsBuilder {
         Actions actions = new Actions();
 
         for (Method method : service.getMethods()) {
-            if (method.getAnnotation(Actionable.class) != null &&
-                (validator == null || validator.validateAction(method.getName()))) {
-                URI uri = uriBuilder.clone().path(method.getName()).build();
+            Path path = method.getAnnotation(Path.class);
+            Actionable actionable = method.getAnnotation(Actionable.class);
+
+            if (actionable != null && path != null &&
+                (validator == null || validator.validateAction(path.value()))) {
+                URI uri = uriBuilder.clone().path(path.value()).build();
 
                 Link link = new Link();
-                link.setRel(method.getName());
+                link.setRel(path.value());
                 link.setHref(uri.toString());
 
                 actions.getLinks().add(link);
