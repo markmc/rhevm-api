@@ -67,6 +67,10 @@ public class PowerShellVM {
     public static VM parseDisks(VM vm, String output) {
         ArrayList<HashMap<String,String>> diskProps = PowerShellUtils.parseProps(output);
 
+        if (vm.getDevices() == null) {
+            vm.setDevices(new Devices());
+        }
+
         for (HashMap<String,String> props : diskProps) {
             Disk disk = new Disk();
 
@@ -89,10 +93,6 @@ public class PowerShellVM {
                 disk.setPropagateErrors(true);
             }
 
-            if (vm.getDevices() == null) {
-                vm.setDevices(new Devices());
-            }
-
             vm.getDevices().getDisks().add(disk);
         }
 
@@ -102,6 +102,10 @@ public class PowerShellVM {
 
     public static VM parseInterfaces(VM vm, String output) {
         ArrayList<HashMap<String,String>> ifaceProps = PowerShellUtils.parseProps(output);
+
+        if (vm.getDevices() == null) {
+            vm.setDevices(new Devices());
+        }
 
         for (HashMap<String,String> props : ifaceProps) {
             Interface iface = new Interface();
