@@ -32,16 +32,16 @@ for fmt in [xmlfmt]:
 
     t = TestUtils(opts, fmt)
 
-    for host in t.get(links['hosts'], fmt.parseHostCollection):
-        print t.get(host.href, fmt.parseHost)
+    for host in t.get(links['hosts']):
+        print t.get(host.href)
 
-    for vm in t.get(links['vms'], fmt.parseVmCollection):
-        print t.get(vm.href, fmt.parseVM)
+    for vm in t.get(links['vms']):
+        print t.get(vm.href)
 
-    template = t.get(links['templates'], fmt.parseTemplateCollection)[0]
+    template = t.get(links['templates'])[0]
     print template
 
-    cluster = t.get(links['clusters'], fmt.parseClusterCollection)[0]
+    cluster = t.get(links['clusters'])[0]
     print cluster
 
     foo_vm = fmt.VM()
@@ -50,10 +50,10 @@ for fmt in [xmlfmt]:
     foo_vm.template.id = template.id
     foo_vm.cluster = fmt.Cluster()
     foo_vm.cluster.id = cluster.id
-    foo_vm = t.create(links['vms'], foo_vm, fmt.parseVM)
+    foo_vm = t.create(links['vms'], foo_vm)
 
     constraint = foo_vm.name.replace('oo', '*')
-    query_vms = t.query(links['vms/search'], "name=" + constraint, fmt.parseVmCollection)
+    query_vms = t.query(links['vms/search'], "name=" + constraint)
     expectedCollectionSize(query_vms, 1)
 
     t.asyncAction(foo_vm.actions, "start")
@@ -62,11 +62,11 @@ for fmt in [xmlfmt]:
 
     bar_host = fmt.Host()
     bar_host.name = randomName('bar')
-    bar_host = t.create(links['hosts'], bar_host, fmt.parseHost)
+    bar_host = t.create(links['hosts'], bar_host)
 
     t.asyncAction(bar_host.actions, "approve")
 
-    print t.get(foo_vm.href, fmt.parseVM)
+    print t.get(foo_vm.href)
 
     foo_vm.name = randomName('bar')
     t.update(foo_vm.href, foo_vm, 200)

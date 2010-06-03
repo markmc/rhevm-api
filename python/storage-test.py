@@ -38,14 +38,14 @@ print links
 
 def find_host(t, name):
    hosts = filter(lambda h: h.name == name,
-                  t.get(links['hosts'], t.fmt.parseHostCollection))
+                  t.get(links['hosts'], t.fmt.parse))
    if len(hosts) == 0:
       raise RuntimeError("host '%s' not found" % name)
    return hosts[0]
 
 def find_data_center(t, name):
    datacenters = filter(lambda d: d.name == name,
-                        t.get(links['datacenters'], t.fmt.parseDataCenterCollection))
+                        t.get(links['datacenters'], t.fmt.parse))
    if len(datacenters) == 0:
       raise RuntimeError("data center '%s' not found" % name)
    return datacenters[0]
@@ -55,10 +55,10 @@ for fmt in [xmlfmt]:
 
     print "=== ", fmt.MEDIA_TYPE, " ==="
 
-    for dom in t.get(links['storagedomains'], fmt.parseStorageDomainCollection):
-        print t.get(dom.href, fmt.parseStorageDomain)
-        for att in t.get(dom.link['attachments'].href, fmt.parseAttachmentCollection):
-            print t.get(att.href, fmt.parseAttachment)
+    for dom in t.get(links['storagedomains']):
+        print t.get(dom.href)
+        for att in t.get(dom.link['attachments'].href):
+            print t.get(att.href)
 
     if name is None:
         continue
@@ -70,7 +70,7 @@ for fmt in [xmlfmt]:
     dom.storage.type = 'NFS'
     dom.storage.address = address
     dom.storage.path = path
-    dom = t.create(links['storagedomains'], dom, fmt.parseStorageDomain)
+    dom = t.create(links['storagedomains'], dom)
 
     h = fmt.Host()
     h.id = find_host(t, host).id
@@ -80,17 +80,17 @@ for fmt in [xmlfmt]:
     attachment = fmt.Attachment()
     attachment.data_center = fmt.DataCenter()
     attachment.data_center.id = find_data_center(t, 'Default').id
-    attachment = t.create(dom.link['attachments'].href, attachment, fmt.parseAttachment)
+    attachment = t.create(dom.link['attachments'].href, attachment)
 
     t.syncAction(attachment.actions, "activate")
 
-    attachment = t.get(attachment.href, fmt.parseAttachment)
+    attachment = t.get(attachment.href)
 
     t.syncAction(attachment.actions, "deactivate")
 
     t.delete(attachment.href)
 
-    dom = t.get(dom.href, fmt.parseStorageDomain)
+    dom = t.get(dom.href)
 
     t.syncAction(dom.actions, "teardown", host=h)
 

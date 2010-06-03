@@ -34,5 +34,5 @@ for fmt in [xmlfmt]:
 
    print "=== ", fmt.MEDIA_TYPE, " ==="
 
-   for template in t.get(links['templates'], fmt.parseTemplateCollection):
-      print t.get(template.href, fmt.parseTemplate)
+   for template in t.get(links['templates']):
+      print t.get(template.href)

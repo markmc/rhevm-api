@@ -72,30 +72,31 @@ class TestUtils:
         self.opts = opts
         self.fmt = fmt
 
-    def get(self, href, parse):
+    def get(self, href):
         ret = http.GET(self.opts, href, self.fmt.MEDIA_TYPE)
-        parsed = parse(ret['body'])
+        parsed = self.fmt.parse(ret['body'])
         expectedStatusCode(ret['status'], 200)
         return parsed
 
-    def query(self, href, constraint, parse):
+    def query(self, href, constraint):
         t = template_parser.URITemplate(href)
         qhref = t.sub({"query": constraint})
         ret = http.GET(self.opts, qhref, self.fmt.MEDIA_TYPE)
-        parsed = parse(ret['body'])
+        parsed = self.fmt.parse(ret['body'])
         expectedStatusCode(ret['status'], 200)
         return parsed
 
-    def create(self, href, entity, parse):
+    def create(self, href, entity):
         ret = http.POST(self.opts, href, entity.dump(), self.fmt.MEDIA_TYPE)
-        parsed = parse(ret['body'])
+        parsed = self.fmt.parse(ret['body'])
         expectedStatusCode(ret['status'], 201)
         return parsed
 
     def update(self, href, entity, expected):
         ret = http.PUT(self.opts, href, entity.dump(), self.fmt.MEDIA_TYPE)
-        print ret['body']
+        parsed = self.fmt.parse(ret['body'])
         expectedStatusCode(ret['status'], expected)
+        return parsed
 
     def delete(self, href):
         status = http.DELETE(self.opts, href)
@@ -119,21 +120,21 @@ class TestUtils:
                         self.fmt.MEDIA_TYPE)
         print ret['body']
         expectedStatusCode(ret['status'], 202)
-        resp_action = self.fmt.parseAction(ret['body'])
+        resp_action = self.fmt.parse(ret['body'])
         unexpectedActionStatus(resp_action.status, "COMPLETE")
         for i in range(1, 3):
             time.sleep(1)
             resp = http.GET(self.opts, resp_action.href, self.fmt.MEDIA_TYPE)
             print resp['body']
             expectedStatusCode(resp['status'], 200)
-            resp_action = self.fmt.parseAction(resp['body'])
+            resp_action = self.fmt.parse(resp['body'])
             unexpectedActionStatus(resp_action.status, "COMPLETE")
 
         time.sleep(4)
         resp = http.GET(self.opts, resp_action.href, self.fmt.MEDIA_TYPE)
         print resp['body']
         expectedStatusCode(resp['status'], 200)
-        resp_action = self.fmt.parseAction(resp['body'])
+        resp_action = self.fmt.parse(resp['body'])
         expectedActionStatus(resp_action.status, "COMPLETE")
 
     def syncAction(self, actions, verb, **params):
@@ -144,5 +145,5 @@ class TestUtils:
                         self.fmt.MEDIA_TYPE)
         print ret['body']
         expectedStatusCode(ret['status'], 200)
-        resp_action = self.fmt.parseAction(ret['body'])
+        resp_action = self.fmt.parse(ret['body'])
         expectedActionStatus(resp_action.status, "COMPLETE")

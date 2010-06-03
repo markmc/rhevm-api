@@ -39,8 +39,8 @@ for fmt in [xmlfmt]:
 
    print "=== ", fmt.MEDIA_TYPE, " ==="
 
-   for host in t.get(links['hosts'], fmt.parseHostCollection):
-      print t.get(host.href, fmt.parseHost)
+   for host in t.get(links['hosts']):
+      print t.get(host.href)
 
    if name is None:
       continue
@@ -48,14 +48,14 @@ for fmt in [xmlfmt]:
    host = fmt.Host()
    host.name = name
    host.address = address
-   host = t.create(links['hosts'], host, fmt.parseHost)
+   host = t.create(links['hosts'], host)
 
    def waitFor(host, status):
-      host = t.get(host.href, fmt.parseHost)
+      host = t.get(host.href)
       while host.status != status:
          print "waiting to go to " + status + " currently " + host.status
          time.sleep(1)
-         host = t.get(host.href, fmt.parseHost)
+         host = t.get(host.href)
          continue
 
    t.syncAction(host.actions, "deactivate")

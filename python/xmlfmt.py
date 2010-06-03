@@ -180,38 +180,3 @@ def parseNode(node):
 
 def parse(doc):
     return parseNode(xml.dom.minidom.parseString(doc).documentElement)
-
-def parseAction(doc):
-    return parse(doc)
-def parseVM(doc):
-    return parse(doc)
-def parseDataCenter(doc):
-    return parse(doc)
-def parseHost(doc):
-    return parse(doc)
-def parseCluster(doc):
-    return parse(doc)
-def parseCPU(doc):
-    return parse(doc)
-def parseAttachment(doc):
-    return parse(doc)
-def parseStorageDomain(doc):
-    return parse(doc)
-def parseTemplate(doc):
-    return parse(doc)
-def parseVmCollection(doc):
-    return parse(doc)
-def parseDataCenterCollection(doc):
-    return parse(doc)
-def parseHostCollection(doc):
-    return parse(doc)
-def parseClusterCollection(doc):
-    return parse(doc)
-def parseCpuCollection(doc):
-    return parse(doc)
-def parseAttachmentCollection(doc):
-    return parse(doc)
-def parseStorageDomainCollection(doc):
-    return parse(doc)
-def parseTemplateCollection(doc):
-    return parse(doc)

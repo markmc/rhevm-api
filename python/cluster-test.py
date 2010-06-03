@@ -34,13 +34,13 @@ for fmt in [xmlfmt]:
 
    print "=== ", fmt.MEDIA_TYPE, " ==="
 
-   for cluster in t.get(links['clusters'], fmt.parseClusterCollection):
-      print t.get(cluster.href, fmt.parseCluster)
+   for cluster in t.get(links['clusters']):
+      print t.get(cluster.href)
 
-   dc = t.get(links['datacenters'], fmt.parseDataCenterCollection)[0]
+   dc = t.get(links['datacenters'])[0]
    print dc
 
-   for cpu in t.get(links['cpus'], fmt.parseCpuCollection):
+   for cpu in t.get(links['cpus']):
       print cpu
 
       c = fmt.Cluster()
@@ -51,6 +51,6 @@ for fmt in [xmlfmt]:
       c.data_center.id = dc.id
       print c
 
-      c = t.create(links['clusters'], c, fmt.parseCluster)
+      c = t.create(links['clusters'], c)
 
       t.delete(c.href)
