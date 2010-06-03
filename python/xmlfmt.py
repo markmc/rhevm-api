@@ -75,7 +75,7 @@ class Actions(Element):
 class Action(Element):
     NAME = 'action'
     ATTRIBUTES = Element.ATTRIBUTES + ['id', 'href']
-    ELEMENTS = Element.ELEMENTS + ['async', 'status', 'grace_period', 'root_password', 'host']
+    ELEMENTS = Element.ELEMENTS + ['async', 'status', 'grace_period', 'root_password', 'host', 'disk', 'interface']
 
 class CPU(Element):
     NAME = 'cpu'
@@ -83,9 +83,35 @@ class CPU(Element):
     ATTRIBUTES = Element.ATTRIBUTES + ["id"]
     ELEMENTS = Element.ELEMENTS + ["level"] # FIXME: flags
 
+class Devices(Element):
+    NAME = 'devices'
+    ELEMENTS = Element.ELEMENTS + ['disk', 'interface']
+
+class Disk(Element):
+    NAME = 'disk'
+    ATTRIBUTES = Element.ATTRIBUTES + ['id']
+    ELEMENTS = Element.ELEMENTS + ['size', 'type', 'status', 'interface', 'format', 'sparse', 'bootable', 'wipe_after_delete', 'propagate_errors']
+
 class GracePeriod(Element):
     NAME = 'grace_period'
     ELEMENTS = Element.ELEMENTS + ['expiry', 'absolute']
+
+class MAC(Element):
+    NAME = 'mac'
+    ATTRIBUTES = Element.ATTRIBUTES + ['address']
+
+class IP(Element):
+    NAME = 'ip'
+    ATTRIBUTES = Element.ATTRIBUTES + ['address', 'netmask', 'gateway']
+
+class VLAN(Element):
+    NAME = 'vlan'
+    ATTRIBUTES = Element.ATTRIBUTES + ['id']
+
+class Interface(Element):
+    NAME = 'interface'
+    ATTRIBUTES = Element.ATTRIBUTES + ['id']
+    ELEMENTS = Element.ELEMENTS + ['name', 'network', 'type', 'mac', 'ip']
 
 class Base(Element):
     ATTRIBUTES = Element.ATTRIBUTES + ["id", "href"]
@@ -110,6 +136,11 @@ class Host(Base):
     COLLECTION = "hosts"
     ELEMENTS = Base.ELEMENTS + ["address", "status"]
 
+class Network(Base):
+    NAME = "network"
+    COLLECTION = "networks"
+    ELEMENTS = Base.ELEMENTS + ['data_center', 'ip', 'vlan', 'stp', 'status']
+
 class Storage(Element):
     NAME = 'storage'
     ELEMENTS = Element.ELEMENTS + ['type', 'address', 'path']
@@ -122,13 +153,13 @@ class StorageDomain(Base):
 class VM(Base):
     NAME = "vm"
     COLLECTION = "vms"
-    ELEMENTS = Base.ELEMENTS + ['cluster', 'template']
+    ELEMENTS = Base.ELEMENTS + ['cluster', 'template', 'devices']
 
 class Template(Base):
     NAME = "template"
     COLLECTION = "templates"
 
-TYPES = [ Action, Actions, Attachment, Cluster, CPU, DataCenter, GracePeriod, Host, Link, Storage, StorageDomain, Template, VM ]
+TYPES = [ Action, Actions, Attachment, Cluster, CPU, DataCenter, Devices, Disk, GracePeriod, Host, Interface, IP, Link, MAC, Network, Storage, StorageDomain, Template, VLAN, VM ]
 
 def findEntityType(name):
     for t in TYPES:
