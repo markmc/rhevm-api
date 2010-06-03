@@ -365,7 +365,7 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
             buf.append("    $n = $i");
             buf.append("  }");
             buf.append("}\n");
-            buf.append("remove-interface -vmobject $v -networkadapterobject $n");
+            buf.append("remove-networkadapter -vmobject $v -networkadapterobject $n");
 
             PowerShellCmd.runCommand(buf.toString());
         }

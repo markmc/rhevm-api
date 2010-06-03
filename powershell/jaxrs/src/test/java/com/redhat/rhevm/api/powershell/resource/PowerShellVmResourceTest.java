@@ -79,7 +79,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     private static final String NEW_INTERFACE_NAME = "eth11";
     private static final String NEW_INTERFACE_NETWORK = "b4fb4d54-ca44-444c-ba26-d51f18c91998";
     private static final String ADD_INTERFACE_COMMAND = "$v = get-vm {0}\nforeach ($i in get-networks) '{' if ($i.networkid -eq ''{1}'') '{ $n = $i } }'\nadd-networkadapter -vmobject $v -interfacename {2} -networkname $n.name";
-    private static final String REMOVE_INTERFACE_COMMAND = "$v = get-vm {0}\nforeach ($i in $v.GetNetworkAdapters()) '{  if ($i.id -eq ''0'') {    $n = $i  }}'\nremove-interface -vmobject $v -networkadapterobject $n";
+    private static final String REMOVE_INTERFACE_COMMAND = "$v = get-vm {0}\nforeach ($i in $v.GetNetworkAdapters()) '{  if ($i.id -eq ''0'') {    $n = $i  }}'\nremove-networkadapter -vmobject $v -networkadapterobject $n";
 
     protected PowerShellVmResource getResource() {
         return new PowerShellVmResource(VM_ID);
