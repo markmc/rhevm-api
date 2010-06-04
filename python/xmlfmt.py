@@ -165,7 +165,7 @@ class StorageDomain(Base):
 class VM(Base):
     NAME = "vm"
     COLLECTION = "vms"
-    ELEMENTS = Base.ELEMENTS + ['memory', 'os', 'cpu', 'cluster', 'template', 'devices']
+    ELEMENTS = Base.ELEMENTS + ['status', 'memory', 'os', 'cpu', 'cluster', 'template', 'devices']
 
 class Template(Base):
     NAME = "template"

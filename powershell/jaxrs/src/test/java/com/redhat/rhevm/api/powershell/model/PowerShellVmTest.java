@@ -31,14 +31,16 @@ import com.redhat.rhevm.api.model.DiskType;
 import com.redhat.rhevm.api.model.Interface;
 import com.redhat.rhevm.api.model.InterfaceType;
 import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.model.VmStatus;
 
 
 public class PowerShellVmTest extends PowerShellModelTest {
 
-    private void testVM(VM v, String id, String name, String description, Long memory, int sockets, int cores, String clusterId, String templateId) {
+    private void testVM(VM v, String id, String name, String description, VmStatus status, Long memory, int sockets, int cores, String clusterId, String templateId) {
         assertEquals(v.getId(), id);
         assertEquals(v.getName(), name);
         assertEquals(v.getDescription(), description);
+        assertEquals(v.getStatus(), status);
         assertEquals(v.getMemory(), memory);
         assertNotNull(v.getCpu());
         assertNotNull(v.getCpu().getTopology());
@@ -107,7 +109,7 @@ public class PowerShellVmTest extends PowerShellModelTest {
 
         VM vm = vms.get(0);
 
-        testVM(vm, "439c0c13-3e0a-489e-a514-1b07232ace41", "test_1", null, 536870912L, 1, 1, "0", "00000000-0000-0000-0000-000000000000");
+        testVM(vm, "439c0c13-3e0a-489e-a514-1b07232ace41", "test_1", null, VmStatus.SHUTOFF, 536870912L, 1, 1, "0", "00000000-0000-0000-0000-000000000000");
         testBootDevices(vm, BootDevice.HD);
 
         data = readFileContents("disks.data");

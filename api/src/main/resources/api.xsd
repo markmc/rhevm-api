@@ -204,6 +204,15 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <xs:simpleType name="VmStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="PAUSED"/>
+      <xs:enumeration value="RUNNING"/>
+      <xs:enumeration value="SHUTDOWN"/>
+      <xs:enumeration value="SHUTOFF"/>
+    </xs:restriction>
+  </xs:simpleType>
+
   <!-- CPUs -->
 
   <xs:element name="cpu" type="CPU"/>
@@ -530,6 +539,7 @@
       <xs:complexContent>
         <xs:extension base="BaseResource">
           <xs:sequence>
+            <xs:element name="status" type="VmStatus" minOccurs="0"/>
             <xs:element name="memory" type="xs:long" minOccurs="0"/>
             <xs:element name="cpu" type="CPU" minOccurs="0"/>
             <xs:element name="os" type="OperatingSystem" minOccurs="0"/>

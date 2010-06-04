@@ -38,6 +38,7 @@ import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.OperatingSystem;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.model.VmStatus;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
@@ -94,6 +95,16 @@ public class PowerShellVM {
         }
     }
 
+    private static VmStatus parseStatus(HashMap<String,String> props, String key) {
+        String s = props.get(key);
+        if (s == null) return null;
+        else if (s.equals("Down"))         return VmStatus.SHUTOFF;
+        else if (s.equals("Paused"))       return VmStatus.PAUSED;
+        else if (s.equals("PoweringDown")) return VmStatus.SHUTDOWN;
+        else if (s.equals("Up"))           return VmStatus.RUNNING;
+        else return null;
+    }
+
     public static ArrayList<VM> parse(String output) {
         ArrayList<HashMap<String,String>> vmsProps = PowerShellUtils.parseProps(output);
         ArrayList<VM> ret = new ArrayList<VM>();
@@ -105,6 +116,11 @@ public class PowerShellVM {
             vm.setName(props.get("name"));
             vm.setDescription(props.get("description"));
             vm.setMemory(Long.parseLong(props.get("memorysize")) * 1024 * 1024);
+
+            VmStatus status = parseStatus(props, "status");
+            if (status != null) {
+                vm.setStatus(status);
+            }
 
             CpuTopology topo = new CpuTopology();
             topo.setSockets(Integer.parseInt(props.get("numofsockets")));
