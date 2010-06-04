@@ -40,7 +40,7 @@ class Element:
         s = '<' + self.NAME
         for a in self.ATTRIBUTES:
             if hasattr(self, a):
-                s += ' ' + a + '=\'' + getattr(self, a) + '\''
+                s += ' ' + a + '=\'' + str(getattr(self, a)) + '\''
         close_tag = True
         for e in self.ELEMENTS:
             if hasattr(self, e):
@@ -56,7 +56,7 @@ class Element:
                     if isinstance(obj, Element):
                         s += obj.dump()
                     else:
-                        s += '<' + e + '>' + obj + '</' + e + '>'
+                        s += '<' + e + '>' + str(obj) + '</' + e + '>'
         if close_tag:
             s += '/>'
         else:
