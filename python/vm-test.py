@@ -50,7 +50,15 @@ for fmt in [xmlfmt]:
    interface.network.id = t.find(links['networks'], 'rhevm').id
    t.syncAction(vm.actions, "adddevice", interface=interface)
 
+   disk = fmt.Disk()
+   disk.size = 10737418240
+   t.syncAction(vm.actions, "adddevice", disk=disk)
+
    vm = t.get(vm.href)
+
+   disk = fmt.Disk()
+   disk.id = vm.devices.disk.id
+   t.syncAction(vm.actions, "removedevice", disk=disk)
 
    interface = fmt.Interface()
    interface.id = vm.devices.interface.id
