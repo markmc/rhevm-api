@@ -69,7 +69,22 @@ for fmt in [xmlfmt]:
    vm.os.boot.dev = 'hd'
    t.update(vm.href, vm, 200)
 
-   break
+   t.syncAction(vm.actions, "start")
+
+   def waitFor(vm, status):
+      vm = t.get(vm.href)
+      while not hasattr(vm, 'status') or vm.status != status:
+         debug(opts, "waiting to go to %s", status)
+         time.sleep(1)
+         vm = t.get(vm.href)
+         continue
+      return vm
+
+   vm = waitFor(vm, 'RUNNING')
+
+   t.syncAction(vm.actions, "stop")
+
+   vm = waitFor(vm, 'SHUTOFF')
 
    disk = fmt.Disk()
    disk.id = vm.devices.disk.id
