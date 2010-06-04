@@ -34,8 +34,6 @@ if len(opts['oargs']) >= 3:
 
 links = http.HEAD_for_links(opts)
 
-print links
-
 def find_host(t, name):
    hosts = filter(lambda h: h.name == name,
                   t.get(links['hosts'], t.fmt.parse))
@@ -56,9 +54,9 @@ for fmt in [xmlfmt]:
     print "=== ", fmt.MEDIA_TYPE, " ==="
 
     for dom in t.get(links['storagedomains']):
-        print t.get(dom.href)
+        t.get(dom.href)
         for att in t.get(dom.link['attachments'].href):
-            print t.get(att.href)
+            t.get(att.href)
 
     if name is None:
         continue

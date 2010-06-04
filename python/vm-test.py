@@ -28,15 +28,13 @@ opts = parseOptions()
 
 links = http.HEAD_for_links(opts)
 
-print links
-
 for fmt in [xmlfmt]:
    t = TestUtils(opts, fmt)
 
    print "=== ", fmt.MEDIA_TYPE, " ==="
 
    for vm in t.get(links['vms']):
-      print t.get(vm.href)
+      t.get(vm.href)
 
    vm = fmt.VM()
    vm.name = randomName('foo')

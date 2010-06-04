@@ -28,12 +28,10 @@ opts = parseOptions()
 
 links = http.HEAD_for_links(opts)
 
-print links
-
 for fmt in [xmlfmt]:
    t = TestUtils(opts, fmt)
 
    print "=== ", fmt.MEDIA_TYPE, " ==="
 
    for net in t.get(links['networks']):
-      print t.get(net.href)
+      t.get(net.href)

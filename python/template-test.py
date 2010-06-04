@@ -27,12 +27,10 @@ opts = parseOptions()
 
 links = http.HEAD_for_links(opts)
 
-print links
-
 for fmt in [xmlfmt]:
    t = TestUtils(opts, fmt)
 
    print "=== ", fmt.MEDIA_TYPE, " ==="
 
    for template in t.get(links['templates']):
-      print t.get(template.href)
+      t.get(template.href)

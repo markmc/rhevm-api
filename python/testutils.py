@@ -31,11 +31,12 @@ def parseOptions():
         'host' : 'localhost',
         'port' : 8080,
         'impl' : "mock",
+        'debug' : False,
         }
 
     oargs = []
     if len(sys.argv) > 1:
-        options, oargs = getopt.getopt(sys.argv[1:], "h:p:i:", ["host=", "port=", "impl="])
+        options, oargs = getopt.getopt(sys.argv[1:], "h:p:i:d", ["host=", "port=", "impl=", "debug"])
         for opt, a in options:
             if opt in ("-h", "--host"):
                 opts['host'] = a
@@ -43,11 +44,17 @@ def parseOptions():
                 opts['port'] = a
             if opt in ("-i", "--impl"):
                 opts['impl'] = a
+            if opt in ("-d", "--debug"):
+                opts['debug'] = True
 
     opts['uri'] = 'http://%(host)s:%(port)s/rhevm-api-%(impl)s/' % opts
     opts['oargs'] = oargs
 
     return opts
+
+def debug(opts, fmt, *args):
+    if opts['debug']:
+        print fmt % args
 
 def randomName(prefix):
     return prefix + str(random.randint(0, 1000))

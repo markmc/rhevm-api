@@ -27,29 +27,23 @@ opts = parseOptions()
 
 links = http.HEAD_for_links(opts)
 
-print links
-
 for fmt in [xmlfmt]:
    t = TestUtils(opts, fmt)
 
    print "=== ", fmt.MEDIA_TYPE, " ==="
 
    for cluster in t.get(links['clusters']):
-      print t.get(cluster.href)
+      t.get(cluster.href)
 
    dc = t.get(links['datacenters'])[0]
-   print dc
 
    for cpu in t.get(links['cpus']):
-      print cpu
-
       c = fmt.Cluster()
       c.name = "foo"
       c.cpu = fmt.CPU()
       c.cpu.id = cpu.id
       c.data_center = fmt.DataCenter()
       c.data_center.id = dc.id
-      print c
 
       c = t.create(links['clusters'], c)
 

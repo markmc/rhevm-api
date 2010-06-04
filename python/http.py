@@ -18,6 +18,13 @@
 # 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 
 import httplib
+from testutils import debug
+
+def open_connection(opts):
+    cnx = httplib.HTTPConnection(opts['host'], opts['port'])
+    if opts['debug']:
+        cnx.set_debuglevel(1)
+    return cnx
 
 #
 # Dumb attempt to parse e.g. <http://foo/>; rel=bar; type=text/plain
@@ -32,7 +39,7 @@ def parse_link(s, links):
     return links
 
 def HEAD_for_links(opts):
-    cnx = httplib.HTTPConnection(opts['host'], opts['port'])
+    cnx = open_connection(opts)
     try:
         cnx.request('HEAD', opts['uri'])
         links = {}
@@ -43,7 +50,7 @@ def HEAD_for_links(opts):
         cnx.close()
 
 def GET(opts, uri, type = None):
-    cnx = httplib.HTTPConnection(opts['host'], opts['port'])
+    cnx = open_connection(opts)
     try:
         headers = {}
         if not type is None:
@@ -53,12 +60,13 @@ def GET(opts, uri, type = None):
         resp = cnx.getresponse()
         ret['status'] = resp.status
         ret['body'] = resp.read()
+        debug(opts, "body: %s", ret['body'])
         return ret
     finally:
         cnx.close()
 
 def POST(opts, uri, body = None, type = None):
-    cnx = httplib.HTTPConnection(opts['host'], opts['port'])
+    cnx = open_connection(opts)
     try:
         headers = {}
         if not type is None:
@@ -69,12 +77,13 @@ def POST(opts, uri, body = None, type = None):
         resp = cnx.getresponse()
         ret['status'] = resp.status
         ret['body'] = resp.read()
+        debug(opts, "body: %s", ret['body'])
         return ret
     finally:
         cnx.close()
 
 def PUT(opts, uri, body, type = None):
-    cnx = httplib.HTTPConnection(opts['host'], opts['port'])
+    cnx = open_connection(opts)
     try:
         headers = {}
         if not type is None:
@@ -85,12 +94,13 @@ def PUT(opts, uri, body, type = None):
         resp = cnx.getresponse()
         ret['status'] = resp.status
         ret['body'] = resp.read()
+        debug(opts, "body: %s", ret['body'])
         return ret
     finally:
         cnx.close()
 
 def DELETE(opts, uri):
-    cnx = httplib.HTTPConnection(opts['host'], opts['port'])
+    cnx = open_connection(opts)
     try:
         cnx.request('DELETE', uri)
         ret = { 'status' : 0, 'body' : None }

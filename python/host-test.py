@@ -32,15 +32,13 @@ if len(opts['oargs']) >= 3:
 
 links = http.HEAD_for_links(opts)
 
-print links
-
 for fmt in [xmlfmt]:
    t = TestUtils(opts, fmt)
 
    print "=== ", fmt.MEDIA_TYPE, " ==="
 
    for host in t.get(links['hosts']):
-      print t.get(host.href)
+      t.get(host.href)
 
    if name is None:
       continue
@@ -53,7 +51,7 @@ for fmt in [xmlfmt]:
    def waitFor(host, status):
       host = t.get(host.href)
       while host.status != status:
-         print "waiting to go to " + status + " currently " + host.status
+         debug(opts, "waiting to go to %s currently %s", status, host.status)
          time.sleep(1)
          host = t.get(host.href)
          continue
