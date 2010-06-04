@@ -22,6 +22,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
+import com.redhat.rhevm.api.model.BootDevice;
 import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.DiskFormat;
 import com.redhat.rhevm.api.model.DiskInterface;
@@ -34,14 +35,30 @@ import com.redhat.rhevm.api.model.VM;
 
 public class PowerShellVmTest extends PowerShellModelTest {
 
-    private void testVM(VM v, String id, String name, String description, String clusterId, String templateId) {
+    private void testVM(VM v, String id, String name, String description, Long memory, int sockets, int cores, String clusterId, String templateId) {
         assertEquals(v.getId(), id);
         assertEquals(v.getName(), name);
         assertEquals(v.getDescription(), description);
+        assertEquals(v.getMemory(), memory);
+        assertNotNull(v.getCpu());
+        assertNotNull(v.getCpu().getTopology());
+        assertEquals(v.getCpu().getTopology().getSockets(), sockets);
+        assertEquals(v.getCpu().getTopology().getCores(), cores);
         assertNotNull(v.getCluster());
         assertEquals(v.getCluster().getId(), clusterId);
         assertNotNull(v.getTemplate());
         assertEquals(v.getTemplate().getId(), templateId);
+    }
+
+    private void testBootDevices(VM vm, BootDevice ... bootDevices) {
+        if (bootDevices.length == 0) {
+            return;
+        }
+        assertNotNull(vm.getOs());
+        assertEquals(vm.getOs().getBoot().size(), bootDevices.length);
+        for (int i = 0; i < bootDevices.length; i++) {
+            assertEquals(vm.getOs().getBoot().get(i).getDev(), bootDevices[i]);
+        }
     }
 
     private void testDisk(Disk d, String id, Long size, DiskType type, DiskStatus status, DiskInterface iface, DiskFormat format, Boolean sparse, Boolean bootable, Boolean wipeAfterDelete, Boolean propagateErrors) {
@@ -90,7 +107,8 @@ public class PowerShellVmTest extends PowerShellModelTest {
 
         VM vm = vms.get(0);
 
-        testVM(vm, "439c0c13-3e0a-489e-a514-1b07232ace41", "test_1", null, "0", "00000000-0000-0000-0000-000000000000");
+        testVM(vm, "439c0c13-3e0a-489e-a514-1b07232ace41", "test_1", null, 536870912L, 1, 1, "0", "00000000-0000-0000-0000-000000000000");
+        testBootDevices(vm, BootDevice.HD);
 
         data = readFileContents("disks.data");
         assertNotNull(data);

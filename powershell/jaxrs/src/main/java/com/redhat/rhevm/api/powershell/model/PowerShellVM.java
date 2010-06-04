@@ -21,7 +21,10 @@ package com.redhat.rhevm.api.powershell.model;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.redhat.rhevm.api.model.BootDevice;
 import com.redhat.rhevm.api.model.Cluster;
+import com.redhat.rhevm.api.model.CPU;
+import com.redhat.rhevm.api.model.CpuTopology;
 import com.redhat.rhevm.api.model.Devices;
 import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.DiskFormat;
@@ -32,12 +35,64 @@ import com.redhat.rhevm.api.model.Interface;
 import com.redhat.rhevm.api.model.InterfaceType;
 import com.redhat.rhevm.api.model.IP;
 import com.redhat.rhevm.api.model.Network;
+import com.redhat.rhevm.api.model.OperatingSystem;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 public class PowerShellVM {
+
+    public static String buildBootSequence(VM vm) {
+        if (vm.getOs() == null || vm.getOs().getBoot().size() <= 0) {
+            return null;
+        }
+        String bootSequence = "";
+        for (OperatingSystem.Boot boot : vm.getOs().getBoot()) {
+            if (boot.getDev() == null) {
+                continue;
+            }
+            switch (boot.getDev()) {
+            case HD:
+                bootSequence += "C";
+                break;
+            case CDROM:
+                bootSequence += "D";
+                break;
+            case NETWORK:
+                bootSequence += "N";
+                break;
+            default:
+                break;
+            }
+        }
+        return !bootSequence.isEmpty() ? bootSequence : null;
+    }
+
+    private static void parseBootDevices(VM vm, String bootSequence) {
+        for (int i = 0; i < bootSequence.length(); i++) {
+            char c = bootSequence.charAt(i);
+            OperatingSystem.Boot boot = new OperatingSystem.Boot();
+
+            switch (c) {
+            case 'C':
+                boot.setDev(BootDevice.HD);
+                break;
+            case 'D':
+                boot.setDev(BootDevice.CDROM);
+                break;
+            case 'N':
+                boot.setDev(BootDevice.NETWORK);
+                break;
+            default:
+                break;
+            }
+
+            if (boot.isSetDev()) {
+                vm.getOs().getBoot().add(boot);
+            }
+        }
+    }
 
     public static ArrayList<VM> parse(String output) {
         ArrayList<HashMap<String,String>> vmsProps = PowerShellUtils.parseProps(output);
@@ -49,6 +104,18 @@ public class PowerShellVM {
             vm.setId(props.get("vmid"));
             vm.setName(props.get("name"));
             vm.setDescription(props.get("description"));
+            vm.setMemory(Long.parseLong(props.get("memorysize")) * 1024 * 1024);
+
+            CpuTopology topo = new CpuTopology();
+            topo.setSockets(Integer.parseInt(props.get("numofsockets")));
+            topo.setCores(Integer.parseInt(props.get("numofcpuspersocket")));
+            CPU cpu = new CPU();
+            cpu.setTopology(topo);
+            vm.setCpu(cpu);
+
+            OperatingSystem os = new OperatingSystem();
+            vm.setOs(os);
+            parseBootDevices(vm, props.get("defaultbootsequence"));
 
             Cluster cluster = new Cluster();
             cluster.setId(props.get("hostclusterid"));

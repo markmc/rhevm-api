@@ -22,10 +22,12 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.model.CpuTopology;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.resource.VmsResource;
+import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 
 
@@ -57,7 +59,18 @@ public class PowerShellVmsResource
         if (vm.getDescription() != null) {
             buf.append(" -description '" + vm.getDescription() + "'");
         }
-
+        if (vm.isSetMemory()) {
+            buf.append(" -memorysize " + Math.round((double)vm.getMemory()/(1024*1024)));
+        }
+        if (vm.getCpu() != null && vm.getCpu().getTopology() != null) {
+            CpuTopology topology = vm.getCpu().getTopology();
+            buf.append(" -numofsockets " + topology.getSockets());
+            buf.append(" -numofcpuspersocket " + topology.getCores());
+        }
+        String bootSequence = PowerShellVM.buildBootSequence(vm);
+        if (bootSequence != null) {
+            buf.append(" -defaultbootsequence " + bootSequence);
+        }
         if (vm.getCluster() != null) {
             buf.append(" -hostclusterid " + vm.getCluster().getId());
         }

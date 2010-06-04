@@ -29,6 +29,7 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.Cluster;
+import com.redhat.rhevm.api.model.CpuTopology;
 import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.Interface;
 import com.redhat.rhevm.api.model.Network;
@@ -146,13 +147,24 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
         buf.append("$v = get-vm " + getId() + "\n");
 
         if (vm.getName() != null) {
-            buf.append("$v.name = '" + vm.getName() + "'");
+            buf.append("$v.name = '" + vm.getName() + "'\n");
         }
         if (vm.getDescription() != null) {
-            buf.append("$v.description = '" + vm.getDescription() + "'");
+            buf.append("$v.description = '" + vm.getDescription() + "'\n");
+        }
+        if (vm.isSetMemory()) {
+            buf.append(" $v.memorysize = " + Math.round((double)vm.getMemory()/(1024*1024)) + "\n");
+        }
+        if (vm.getCpu() != null && vm.getCpu().getTopology() != null) {
+            CpuTopology topology = vm.getCpu().getTopology();
+            buf.append(" $v.numofsockets = " + topology.getSockets() + "\n");
+            buf.append(" $v.numofcpuspersocket = " + topology.getCores() + "\n");
+        }
+        String bootSequence = PowerShellVM.buildBootSequence(vm);
+        if (bootSequence != null) {
+            buf.append(" $v.defaultbootsequence = '" + bootSequence + "'\n");
         }
 
-        buf.append("\n");
         buf.append("update-vm -vmobject $v");
 
         return addLinks(addDevices(runAndParseSingle(buf.toString())), uriInfo, uriInfo.getRequestUriBuilder());

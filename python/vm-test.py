@@ -38,6 +38,14 @@ for fmt in [xmlfmt]:
 
    vm = fmt.VM()
    vm.name = randomName('foo')
+   vm.memory = 2 * 1024 * 1024 * 1024
+   vm.cpu = fmt.CPU()
+   vm.cpu.topology = fmt.Topology()
+   vm.cpu.topology.sockets = 1
+   vm.cpu.topology.cores = 4
+   vm.os = fmt.OS()
+   vm.os.boot = fmt.Boot()
+   vm.os.boot.dev = 'cdrom'
    vm.template = fmt.Template()
    vm.template.id = t.find(links['templates'], 'Blank').id
    vm.cluster = fmt.Cluster()
@@ -55,6 +63,13 @@ for fmt in [xmlfmt]:
    t.syncAction(vm.actions, "adddevice", disk=disk)
 
    vm = t.get(vm.href)
+   vm.memory = 2 * 1024 * 1024 * 1024
+   vm.cpu.topology.sockets = 2
+   vm.cpu.topology.cores = 2
+   vm.os.boot.dev = 'hd'
+   t.update(vm.href, vm, 200)
+
+   break
 
    disk = fmt.Disk()
    disk.id = vm.devices.disk.id

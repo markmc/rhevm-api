@@ -37,8 +37,10 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     private static final String ADD_COMMAND_EPILOG =
         "-templateobject $templ -hostclusterid " + CLUSTER_ID;
 
-    private static final String SELECT_RETURN_EPILOG = "\nhostclusterid: " + CLUSTER_ID + "\ntemplateid: " + TEMPLATE_ID;
-    private static final String ADD_RETURN_EPILOG    = "\nhostclusterid: " + CLUSTER_ID + "\ntemplateid: " + TEMPLATE_ID;
+    private static final String OTHER_PROPS = "memorysize: 1024\ndefaultbootsequence: CDN\nnumofsockets: 2\nnumofcpuspersocket: 4\n";
+
+    private static final String SELECT_RETURN_EPILOG = "\nhostclusterid: " + CLUSTER_ID + "\ntemplateid: " + TEMPLATE_ID + "\n" + OTHER_PROPS;
+    private static final String ADD_RETURN_EPILOG    = "\nhostclusterid: " + CLUSTER_ID + "\ntemplateid: " + TEMPLATE_ID + "\n" + OTHER_PROPS;
 
     private static final String GET_DISKS_COMMAND = "$v = get-vm {0,number,#}\n$v.GetDiskImages()\n";
     public static final String GET_DISKS_RETURN = "snapshotid: 0\nactualsizeinbytes: 10485760\ndisktype: system\nstatus: ok\ndiskinterface: ide\nvolumeformat: raw\nvolumetype: sparse\nboot: true\nwipeafterdelete: false\npropagateerrors: off\n";

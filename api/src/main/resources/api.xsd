@@ -100,6 +100,14 @@
 
   <!-- Enums -->
 
+  <xs:simpleType name="BootDevice">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="cdrom"/>
+      <xs:enumeration value="hd"/>
+      <xs:enumeration value="network"/>
+    </xs:restriction>
+  </xs:simpleType>
+
   <xs:simpleType name="DiskType">
     <xs:restriction base="xs:string">
       <xs:enumeration value="DATA"/>
@@ -202,8 +210,14 @@
 
   <xs:element name="cpus" type="CPUs"/>
 
+  <xs:complexType name="CpuTopology">
+    <xs:attribute name="sockets" type="xs:int"/>
+    <xs:attribute name="cores" type="xs:int"/>
+  </xs:complexType>
+
   <xs:complexType name="CPU">
     <xs:sequence>
+      <xs:element name="topology" type="CpuTopology" minOccurs="0"/>
       <xs:element name="level" type="xs:int" minOccurs="0"/>
       <xs:element name="flags" minOccurs="0">
         <xs:complexType>
@@ -494,6 +508,16 @@
 
   <!-- Virtual Machines -->
 
+  <xs:complexType name="OperatingSystem">
+    <xs:sequence>
+      <xs:element name="boot" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:attribute name="dev" type="BootDevice"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:element name="vms" type="VMs"/>
 
   <xs:element name="vm">
@@ -506,6 +530,9 @@
       <xs:complexContent>
         <xs:extension base="BaseResource">
           <xs:sequence>
+            <xs:element name="memory" type="xs:long" minOccurs="0"/>
+            <xs:element name="cpu" type="CPU" minOccurs="0"/>
+            <xs:element name="os" type="OperatingSystem" minOccurs="0"/>
             <xs:element ref="cluster" minOccurs="0" maxOccurs="1"/>
             <xs:element ref="template" minOccurs="0" maxOccurs="1"/>
             <xs:element ref="devices" minOccurs="0" maxOccurs="1"/>

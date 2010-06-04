@@ -77,11 +77,15 @@ class Action(Element):
     ATTRIBUTES = Element.ATTRIBUTES + ['id', 'href']
     ELEMENTS = Element.ELEMENTS + ['async', 'status', 'grace_period', 'root_password', 'host', 'disk', 'interface']
 
+class Boot(Element):
+    NAME = 'boot'
+    ATTRIBUTES = Element.ATTRIBUTES + ['dev']
+
 class CPU(Element):
     NAME = 'cpu'
     COLLECTION = 'cpus'
     ATTRIBUTES = Element.ATTRIBUTES + ["id"]
-    ELEMENTS = Element.ELEMENTS + ["level"] # FIXME: flags
+    ELEMENTS = Element.ELEMENTS + ["level", "topology"] # FIXME: flags
 
 class Devices(Element):
     NAME = 'devices'
@@ -95,6 +99,14 @@ class Disk(Element):
 class GracePeriod(Element):
     NAME = 'grace_period'
     ELEMENTS = Element.ELEMENTS + ['expiry', 'absolute']
+
+class OS(Element):
+    NAME = 'os'
+    ELEMENTS = Element.ELEMENTS + ['boot']
+
+class Topology(Element):
+    NAME = 'topology'
+    ATTRIBUTES = Element.ATTRIBUTES + ['sockets', 'cores']
 
 class MAC(Element):
     NAME = 'mac'
@@ -153,13 +165,13 @@ class StorageDomain(Base):
 class VM(Base):
     NAME = "vm"
     COLLECTION = "vms"
-    ELEMENTS = Base.ELEMENTS + ['cluster', 'template', 'devices']
+    ELEMENTS = Base.ELEMENTS + ['memory', 'os', 'cpu', 'cluster', 'template', 'devices']
 
 class Template(Base):
     NAME = "template"
     COLLECTION = "templates"
 
-TYPES = [ Action, Actions, Attachment, Cluster, CPU, DataCenter, Devices, Disk, GracePeriod, Host, Interface, IP, Link, MAC, Network, Storage, StorageDomain, Template, VLAN, VM ]
+TYPES = [ Action, Actions, Attachment, Boot, Cluster, CPU, DataCenter, Devices, Disk, GracePeriod, Host, Interface, IP, Link, MAC, Network, OS, Storage, StorageDomain, Template, Topology, VLAN, VM ]
 
 def findEntityType(name):
     for t in TYPES:
