@@ -34,7 +34,15 @@ public abstract class AbstractListCommand extends AbstractCommand {
     private boolean concise;
 
     protected Object doList(List <? extends BaseResource> collection, int limit) throws Exception {
-        int i = 0;
+        int i = 0, widestName = 0, widestId = 0;
+        for (BaseResource resource : collection) {
+            if (resource.getName() != null && resource.getName().length() > widestName) {
+                widestName = resource.getName().length();
+            }
+            if (resource.getId() != null && resource.getId().length() > widestId) {
+                widestId = resource.getId().length();
+            }
+        }
         for (BaseResource resource : collection) {
             if (++i > limit) {
                 break;
@@ -42,14 +50,26 @@ public abstract class AbstractListCommand extends AbstractCommand {
             if (concise) {
                 System.out.print(resource.getName() + " ");
             } else {
-                System.out.println("[ " + resource.getName() + "] ["
-                                   + (resource.getId().length() < "ID".length() ? " " : "")
-                                   + resource.getId() + "]" );
+                System.out.println(pad(resource.getName(), widestName)
+                                   + pad(resource.getId(), widestId)
+                                   + value(resource.getDescription()));
             }
         }
         if (concise) {
             System.out.println();
         }
         return null;
+    }
+
+    private String value(String f) {
+        return f != null ? f : "empty";
+    }
+
+    private String pad(String f, int width) {
+        StringBuffer field = new StringBuffer("[").append(f); 
+        for (int i = 0 ; i < width - value(f).length() ; i++) {
+            field.append(" ");
+        } 
+        return field.append("] ").toString();
     }
 }
