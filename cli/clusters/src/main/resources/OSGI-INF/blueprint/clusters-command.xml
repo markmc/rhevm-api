@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:ext="http://geronimo.apache.org/blueprint/xmlns/blueprint-ext/v1.0.0">
+
+  <ext:property-placeholder placeholder-prefix="$[" placeholder-suffix="]">
+    <ext:default-properties>
+      <ext:property name="rhevm.base.url" value="http://localhost:8099/rhevm-api-mock"/>
+    </ext:default-properties>
+  </ext:property-placeholder>
+
+  <command-bundle xmlns="http://felix.apache.org/karaf/xmlns/shell/v1.0.0">
+    <command name="clusters/list">
+      <action class="com.redhat.rhevm.api.command.clusters.ClustersListCommand">
+        <property name="client" ref="baseClient" />
+      </action>
+    </command>
+
+    <command name="clusters/remove">
+      <action class="com.redhat.rhevm.api.command.clusters.ClustersRemoveCommand">
+        <property name="client" ref="baseClient" />
+      </action>
+      <completers>
+        <ref component-id="clusterNameCompleter" />
+      </completers>
+    </command>
+    <!--command name="clusters/approve">
+      <action class="com.redhat.rhevm.api.command.clusters.ClustersApproveCommand">
+        <property name="client" ref="baseClient" />
+      </action>
+      <completers>
+        <ref component-id="clusterNameCompleter" />
+      </completers>
+    </command-->
+  </command-bundle>
+
+
+  <bean id="clusterNameCompleter" class="com.redhat.rhevm.api.command.clusters.ClusterNameCompleter">
+    <property name="client" ref="baseClient" />
+  </bean>
+
+  <bean id="baseClient" class="com.redhat.rhevm.api.command.base.BaseClient"  activation="eager">
+    <property name="baseUrl" value="$[rhevm.base.url]"/>
+  </bean>
+
+</blueprint>
+
