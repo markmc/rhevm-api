@@ -62,7 +62,7 @@ public abstract class AbstractListCommand extends AbstractCommand {
     }
 
     private String value(String f) {
-        return f != null ? f : "empty";
+        return f != null ? f : "";
     }
 
     private String pad(String f, int width) {
