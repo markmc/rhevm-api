@@ -134,6 +134,25 @@ public class BaseClient {
         return ret;
     }
 
+    public void doRemove(BaseResource resource) throws Exception {
+        Response r = null;
+        Exception failure = null;
+
+        try {
+            WebClient delete = WebClient.create(resource.getHref());
+            r = delete.path("/").delete();
+        } catch (Exception e) {
+            failure = e;
+        }
+
+        int expectedStatus = 204;
+        if (failure != null || r.getStatus() != expectedStatus) {
+            diagnose("remove failed with ", failure, r, expectedStatus);
+        } else {
+            System.out.println("remove succeeded");
+        }
+    }
+
     protected String getTopLink(String rel) {
         String ret = null;
         Response links = null;

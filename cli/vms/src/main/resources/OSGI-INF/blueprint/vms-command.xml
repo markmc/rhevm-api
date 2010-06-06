@@ -14,6 +14,14 @@
         <property name="client" ref="baseClient" />
       </action>
     </command>
+    <command name="vms/remove">
+      <action class="com.redhat.rhevm.api.command.vms.VmsRemoveCommand">
+        <property name="client" ref="baseClient" />
+      </action>
+      <completers>
+        <ref component-id="vmNameCompleter" />
+      </completers>
+    </command>
     <command name="vms/shutdown">
       <action class="com.redhat.rhevm.api.command.vms.VmsShutdownCommand">
         <property name="client" ref="baseClient" />

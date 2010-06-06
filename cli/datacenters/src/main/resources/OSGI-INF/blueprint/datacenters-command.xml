@@ -15,6 +15,14 @@
       </action>
     </command>
 
+    <command name="datacenters/remove">
+      <action class="com.redhat.rhevm.api.command.datacenters.DataCentersRemoveCommand">
+        <property name="client" ref="baseClient" />
+      </action>
+      <completers>
+        <ref component-id="dataCenterNameCompleter" />
+      </completers>
+    </command>
     <!--command name="datacenters/approve">
       <action class="com.redhat.rhevm.api.command.datacenters.DataCentersApproveCommand">
         <property name="client" ref="baseClient" />
