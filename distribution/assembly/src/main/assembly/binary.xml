@@ -50,6 +50,7 @@
         <exclude>bin/admin</exclude>
         <exclude>etc/config.properties</exclude>
         <exclude>etc/org.apache.felix.karaf.features.cfg</exclude>
+        <exclude>etc/org.apache.felix.karaf.management.cfg</exclude>
         <exclude>karaf-manual*</exclude>
         <exclude>LICENSE</exclude>
         <exclude>NOTICE</exclude>
