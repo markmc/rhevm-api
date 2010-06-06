@@ -86,6 +86,16 @@
           <output-doesnt-have pattern="[vm8 ] [8 ]"/>
         </testcase>
 
+        <testcase name="cli.vms.remove" owner="eglynn">
+          <rhevm-client command="vms:remove boo"/>
+          <output-is pattern="remove succeeded"/>
+        </testcase>
+
+        <testcase name="cli.confirm.vm.remove" owner="eglynn">
+          <rhevm-client command="vms:list"/>
+          <output-doesnt-have pattern="boo"/>
+        </testcase>
+
         <testcase name="cli.vm.start.sync" owner="eglynn">
           <rhevm-client command="vms:start vm5"/>
           <output-has pattern="start COMPLETE"/>
