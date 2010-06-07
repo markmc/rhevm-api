@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "REST_API_Guide.ent">
+%BOOK_ENTITIES;
+]>
+<chapter id="chap-REST_API_Guide-Introduction_Chapter">
+  <title>Introduction</title>
+  <para>
+    The <emphasis role="bold">Red Hat Enterprise Virtualization</emphasis> REST API provides a RESTful interface to the the functionality of <emphasis role="bold">Red Hat Enterprise Virtualization Manager</emphasis>. The API allows software developers and system administrators write code to control Red Hat Enterprise Virtualization using a wide variety of programming languages and operating systems.
+  </para>
+</chapter>
