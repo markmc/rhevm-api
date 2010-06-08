@@ -64,7 +64,7 @@ public class PowerShellApiResource implements ApiResource {
 
         Response.ResponseBuilder responseBuilder = Response.ok();
 
-        addHeader(responseBuilder, uriBuilder, "clusters", "cpus", "datacenters", "hosts", "networks", "storagedomains", "templates", "vms");
+        addHeader(responseBuilder, uriBuilder, "clusters", "cpus", "datacenters", "hosts", "networks", "storagedomains", "templates", "vmpools", "vms");
 
         return responseBuilder.build();
     }

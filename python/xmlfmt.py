@@ -167,11 +167,16 @@ class VM(Base):
     COLLECTION = "vms"
     ELEMENTS = Base.ELEMENTS + ['status', 'memory', 'os', 'cpu', 'cluster', 'template', 'devices']
 
+class VmPool(Base):
+    NAME = "vmpool"
+    COLLECTION = "vmpools"
+    ELEMENTS = Base.ELEMENTS + ['cluster', 'template']
+
 class Template(Base):
     NAME = "template"
     COLLECTION = "templates"
 
-TYPES = [ Action, Actions, Attachment, Boot, Cluster, CPU, DataCenter, Devices, Disk, GracePeriod, Host, Interface, IP, Link, MAC, Network, OS, Storage, StorageDomain, Template, Topology, VLAN, VM ]
+TYPES = [ Action, Actions, Attachment, Boot, Cluster, CPU, DataCenter, Devices, Disk, GracePeriod, Host, Interface, IP, Link, MAC, Network, OS, Storage, StorageDomain, Template, Topology, VLAN, VM, VmPool ]
 
 def findEntityType(name):
     for t in TYPES:

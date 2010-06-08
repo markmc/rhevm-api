@@ -45,6 +45,11 @@
     <property name="executor"><ref bean="threadPoolExecutor"/></property>
   </bean>
 
+  <bean id="powerShellVmPoolsResource"
+        class="com.redhat.rhevm.api.powershell.resource.PowerShellVmPoolsResource">
+    <property name="executor"><ref bean="threadPoolExecutor"/></property>
+  </bean>
+
   <bean id="powerShellCpusResource" class="com.redhat.rhevm.api.common.resource.DefaultCpusResource"/>
 
   <!-- Shared Executor -->
