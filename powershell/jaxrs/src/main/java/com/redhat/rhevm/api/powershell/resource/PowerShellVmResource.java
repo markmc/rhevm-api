@@ -38,6 +38,7 @@ import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VmPool;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
+import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.ReflectionHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
@@ -53,17 +54,17 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
         super(id);
     }
 
-    public static ArrayList<VM> runAndParse(String command) {
+    public static ArrayList<PowerShellVM> runAndParse(String command) {
         return PowerShellVM.parse(PowerShellCmd.runCommand(command));
     }
 
-    public static VM runAndParseSingle(String command) {
-        ArrayList<VM> vms = runAndParse(command);
+    public static PowerShellVM runAndParseSingle(String command) {
+        ArrayList<PowerShellVM> vms = runAndParse(command);
 
         return !vms.isEmpty() ? vms.get(0) : null;
     }
 
-    public static VM addLinks(VM vm, UriInfo uriInfo, UriBuilder uriBuilder) {
+    public static VM addLinks(PowerShellVM vm, UriInfo uriInfo, UriBuilder uriBuilder) {
         vm.setHref(uriBuilder.build().toString());
 
         UriBuilder baseUriBuilder = uriInfo.getBaseUriBuilder();
@@ -89,7 +90,7 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
         ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, VmResource.class);
         vm.setActions(actionsBuilder.build());
 
-        return vm;
+        return JAXBHelper.clone("vm", VM.class, vm);
     }
 
     /* Map the network names to network IDs on all the VM's network
@@ -98,7 +99,7 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
      * @param vm  the VM to modify
      * @return  the modified VM
      */
-    private static VM lookupNetworkIds(VM vm) {
+    private static PowerShellVM lookupNetworkIds(PowerShellVM vm) {
         if (vm.getDevices() == null) {
             return vm;
         }
@@ -121,7 +122,7 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
         return vm;
     }
 
-    public static VM addDevices(VM vm) {
+    public static PowerShellVM addDevices(PowerShellVM vm) {
         StringBuilder buf = new StringBuilder();
 
         buf.append("$v = get-vm " + vm.getId() + "\n");

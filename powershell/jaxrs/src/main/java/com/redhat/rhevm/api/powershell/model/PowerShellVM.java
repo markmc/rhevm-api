@@ -43,7 +43,7 @@ import com.redhat.rhevm.api.model.VmStatus;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
-public class PowerShellVM {
+public class PowerShellVM extends VM {
 
     public static String buildBootSequence(VM vm) {
         if (vm.getOs() == null || vm.getOs().getBoot().size() <= 0) {
@@ -71,7 +71,7 @@ public class PowerShellVM {
         return !bootSequence.isEmpty() ? bootSequence : null;
     }
 
-    private static void parseBootDevices(VM vm, String bootSequence) {
+    private static void parseBootDevices(PowerShellVM vm, String bootSequence) {
         for (int i = 0; i < bootSequence.length(); i++) {
             char c = bootSequence.charAt(i);
             OperatingSystem.Boot boot = new OperatingSystem.Boot();
@@ -106,12 +106,12 @@ public class PowerShellVM {
         else return null;
     }
 
-    public static ArrayList<VM> parse(String output) {
+    public static ArrayList<PowerShellVM> parse(String output) {
         ArrayList<HashMap<String,String>> vmsProps = PowerShellUtils.parseProps(output);
-        ArrayList<VM> ret = new ArrayList<VM>();
+        ArrayList<PowerShellVM> ret = new ArrayList<PowerShellVM>();
 
         for (HashMap<String,String> props : vmsProps) {
-            VM vm = new VM();
+            PowerShellVM vm = new PowerShellVM();
 
             vm.setId(props.get("vmid"));
             vm.setName(props.get("name"));
@@ -154,7 +154,7 @@ public class PowerShellVM {
         return ret;
     }
 
-    public static VM parseDisks(VM vm, String output) {
+    public static PowerShellVM parseDisks(PowerShellVM vm, String output) {
         ArrayList<HashMap<String,String>> diskProps = PowerShellUtils.parseProps(output);
 
         if (vm.getDevices() == null) {
@@ -190,7 +190,7 @@ public class PowerShellVM {
         return vm;
     }
 
-    public static VM parseInterfaces(VM vm, String output) {
+    public static PowerShellVM parseInterfaces(PowerShellVM vm, String output) {
         ArrayList<HashMap<String,String>> ifaceProps = PowerShellUtils.parseProps(output);
 
         if (vm.getDevices() == null) {

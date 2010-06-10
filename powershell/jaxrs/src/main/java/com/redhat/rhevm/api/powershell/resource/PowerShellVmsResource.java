@@ -38,7 +38,7 @@ public class PowerShellVmsResource
     @Override
     public VMs list(UriInfo uriInfo) {
         VMs ret = new VMs();
-        for (VM vm : PowerShellVmResource.runAndParse(getSelectCommand("select-vm", uriInfo, VMs.class))) {
+        for (PowerShellVM vm : PowerShellVmResource.runAndParse(getSelectCommand("select-vm", uriInfo, VMs.class))) {
             UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(vm.getId());
             ret.getVMs().add(PowerShellVmResource.addLinks(PowerShellVmResource.addDevices(vm), uriInfo, uriBuilder));
         }
@@ -75,11 +75,11 @@ public class PowerShellVmsResource
             buf.append(" -hostclusterid " + vm.getCluster().getId());
         }
 
-        vm = PowerShellVmResource.runAndParseSingle(buf.toString());
+        PowerShellVM ret = PowerShellVmResource.runAndParseSingle(buf.toString());
 
-        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(vm.getId());
+        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(ret.getId());
 
-        vm = PowerShellVmResource.addLinks(PowerShellVmResource.addDevices(vm), uriInfo, uriBuilder);
+        vm = PowerShellVmResource.addLinks(PowerShellVmResource.addDevices(ret), uriInfo, uriBuilder);
 
         return Response.created(uriBuilder.build()).entity(vm).build();
     }
