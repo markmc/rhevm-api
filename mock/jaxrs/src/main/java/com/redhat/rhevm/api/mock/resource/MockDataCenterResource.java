@@ -28,6 +28,7 @@ import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.Attachments;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.resource.DataCenterResource;
+import com.redhat.rhevm.api.resource.IsosResource;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 
 
@@ -85,5 +86,9 @@ public class MockDataCenterResource extends AbstractMockResource<DataCenter> imp
         validateUpdate(dataCenter, headers);
         updateModel(dataCenter);
         return addLinks(uriInfo, uriInfo.getRequestUriBuilder());
+    }
+
+    public IsosResource getIsosResource() {
+        return null;
     }
 }

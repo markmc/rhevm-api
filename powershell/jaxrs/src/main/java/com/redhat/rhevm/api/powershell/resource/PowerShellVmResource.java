@@ -85,6 +85,10 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
         }
 
         if (vm.getDevices() != null) {
+            for (CdRom cdrom : vm.getDevices().getCdRoms()) {
+                Iso iso = cdrom.getIso();
+                iso.setHref(PowerShellIsosResource.getHref(baseUriBuilder, iso.getId()));
+            }
             for (Interface iface : vm.getDevices().getInterfaces()) {
                 Network network = iface.getNetwork();
                 network.setHref(PowerShellNetworksResource.getHref(baseUriBuilder, network.getId()));

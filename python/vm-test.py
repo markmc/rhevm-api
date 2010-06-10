@@ -64,7 +64,7 @@ for fmt in [xmlfmt]:
 
    cdrom = fmt.CdRom()
    cdrom.iso = fmt.Iso()
-   cdrom.iso.id = 'en_winxp_pro_with_sp2.iso'
+   cdrom.iso.id = t.get(t.find(links['datacenters'], 'Default').link['isos'].href)[0].id
    t.syncAction(vm.actions, "adddevice", cdrom=cdrom)
 
    vm = t.get(vm.href)

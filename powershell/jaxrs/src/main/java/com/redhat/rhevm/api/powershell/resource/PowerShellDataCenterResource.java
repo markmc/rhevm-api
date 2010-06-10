@@ -27,7 +27,9 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Attachments;
 import com.redhat.rhevm.api.model.DataCenter;
+import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.resource.DataCenterResource;
+import com.redhat.rhevm.api.resource.IsosResource;
 import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellDataCenter;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
@@ -53,6 +55,12 @@ public class PowerShellDataCenterResource extends AbstractActionableResource<Dat
 
         Attachments attachments = PowerShellAttachmentsResource.getAttachmentsForDataCenter(uriInfo, dataCenter.getId());
         dataCenter.setAttachments(attachments);
+
+        Link link = new Link();
+        link.setRel("isos");
+        link.setHref(uriBuilder.clone().path("isos").build().toString());
+        dataCenter.getLinks().clear();
+        dataCenter.getLinks().add(link);
 
         return dataCenter;
     }
@@ -81,5 +89,9 @@ public class PowerShellDataCenterResource extends AbstractActionableResource<Dat
         buf.append("update-datacenter -datacenterobject $v");
 
         return addLinks(runAndParseSingle(buf.toString()), uriInfo, uriInfo.getRequestUriBuilder());
+    }
+
+    public IsosResource getIsosResource() {
+        return new PowerShellIsosResource(getId());
     }
 }
