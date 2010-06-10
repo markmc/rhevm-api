@@ -45,6 +45,14 @@ import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 public class PowerShellVM extends VM {
 
+    private String cdIsoPath;
+    public String getCdIsoPath() {
+        return cdIsoPath;
+    }
+    public void setCdIsoPath(String cdIsoPath) {
+        this.cdIsoPath = cdIsoPath;
+    }
+
     public static String buildBootSequence(VM vm) {
         if (vm.getOs() == null || vm.getOs().getBoot().size() <= 0) {
             return null;
@@ -117,6 +125,7 @@ public class PowerShellVM extends VM {
             vm.setName(props.get("name"));
             vm.setDescription(props.get("description"));
             vm.setMemory(Long.parseLong(props.get("memorysize")) * 1024 * 1024);
+            vm.setCdIsoPath(props.get("cdisopath"));
 
             VmStatus status = parseStatus(props, "status");
             if (status != null) {

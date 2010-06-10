@@ -28,10 +28,12 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.ActionsBuilder;
+import com.redhat.rhevm.api.model.CdRom;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.CpuTopology;
 import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.Interface;
+import com.redhat.rhevm.api.model.Iso;
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VM;
@@ -45,6 +47,8 @@ import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 
 
 public class PowerShellVmResource extends AbstractActionableResource<VM> implements VmResource {
+
+    private static final String CDROM_ID = Integer.toString("cdrom".hashCode());
 
     public PowerShellVmResource(String id, Executor executor) {
         super(id, executor);
@@ -137,6 +141,14 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
 
         vm = PowerShellVM.parseInterfaces(vm, PowerShellCmd.runCommand(buf.toString()));
 
+        if (vm.getCdIsoPath() != null) {
+            CdRom cdrom = new CdRom();
+            cdrom.setId(CDROM_ID);
+            cdrom.setIso(new Iso());
+            cdrom.getIso().setId(vm.getCdIsoPath());
+            vm.getDevices().getCdRoms().add(cdrom);
+        }
+
         return lookupNetworkIds(vm);
     }
 
@@ -221,7 +233,9 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
     public Response addDevice(UriInfo uriInfo, Action action) {
         AbstractActionTask task;
 
-        if (action.getDisk() != null) {
+        if (action.getCdRom() != null) {
+            task = new UpdateCdRomTask(action, action.getCdRom(), UpdateCdRomTask.ADD);
+        } else if (action.getDisk() != null) {
             task = new AddDiskTask(action, action.getDisk());
         } else if (action.getInterface() != null) {
             task = new AddInterfaceTask(action, action.getInterface());
@@ -236,7 +250,9 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
     public Response removeDevice(UriInfo uriInfo, Action action) {
         AbstractActionTask task;
 
-        if (action.getDisk() != null) {
+        if (action.getCdRom() != null) {
+            task = new UpdateCdRomTask(action, action.getCdRom(), UpdateCdRomTask.REMOVE);
+        } else if (action.getDisk() != null) {
             task = new RemoveDiskTask(action, action.getDisk().getId());
         } else if (action.getInterface() != null) {
             task = new RemoveInterfaceTask(action, action.getInterface().getId());
@@ -255,6 +271,38 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
     @Override
     public Response ejectCD(UriInfo uriInfo, Action action) {
         return doAction(uriInfo, new DoNothingTask(action));
+    }
+
+    private class UpdateCdRomTask extends AbstractActionTask {
+        public static final boolean ADD    = true;
+        public static final boolean REMOVE = false;
+
+        private CdRom cdrom;
+        private boolean add;
+
+        UpdateCdRomTask(Action action, CdRom cdrom, boolean add) {
+            super(action);
+            this.cdrom = cdrom;
+            this.add = add;
+        }
+
+        public void run() {
+            StringBuilder buf = new StringBuilder();
+
+            String cdIsoPath;
+            if (add) {
+                cdIsoPath = cdrom.getIso().getId();
+            } else {
+                cdIsoPath = "";
+                assert cdrom.getId().equals(CDROM_ID);
+            }
+
+            buf.append("$v = get-vm " + getId() + "\n");
+            buf.append("$v.cdisopath = '" + cdIsoPath + "'\n");
+            buf.append("update-vm -vmobject $v");
+
+            PowerShellCmd.runCommand(buf.toString());
+        }
     }
 
     private class AddDiskTask extends AbstractActionTask {

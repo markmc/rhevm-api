@@ -75,7 +75,7 @@ class Actions(Element):
 class Action(Element):
     NAME = 'action'
     ATTRIBUTES = Element.ATTRIBUTES + ['id', 'href']
-    ELEMENTS = Element.ELEMENTS + ['async', 'status', 'grace_period', 'root_password', 'host', 'disk', 'interface']
+    ELEMENTS = Element.ELEMENTS + ['async', 'status', 'grace_period', 'root_password', 'host', 'cdrom', 'disk', 'interface']
 
 class Boot(Element):
     NAME = 'boot'
@@ -89,7 +89,12 @@ class CPU(Element):
 
 class Devices(Element):
     NAME = 'devices'
-    ELEMENTS = Element.ELEMENTS + ['disk', 'interface']
+    ELEMENTS = Element.ELEMENTS + ['cdrom', 'disk', 'interface']
+
+class CdRom(Element):
+    NAME = 'cdrom'
+    ATTRIBUTES = Element.ATTRIBUTES + ['id']
+    ELEMENTS = Element.ELEMENTS + ['iso']
 
 class Disk(Element):
     NAME = 'disk'
@@ -148,6 +153,10 @@ class Host(Base):
     COLLECTION = "hosts"
     ELEMENTS = Base.ELEMENTS + ["address", "status"]
 
+class Iso(Base):
+    NAME = 'iso'
+    COLLECTION = 'isos'
+
 class Network(Base):
     NAME = "network"
     COLLECTION = "networks"
@@ -176,7 +185,7 @@ class Template(Base):
     NAME = "template"
     COLLECTION = "templates"
 
-TYPES = [ Action, Actions, Attachment, Boot, Cluster, CPU, DataCenter, Devices, Disk, GracePeriod, Host, Interface, IP, Link, MAC, Network, OS, Storage, StorageDomain, Template, Topology, VLAN, VM, VmPool ]
+TYPES = [ Action, Actions, Attachment, Boot, CdRom, Cluster, CPU, DataCenter, Devices, Disk, GracePeriod, Host, Interface, IP, Iso, Link, MAC, Network, OS, Storage, StorageDomain, Template, Topology, VLAN, VM, VmPool ]
 
 def findEntityType(name):
     for t in TYPES:

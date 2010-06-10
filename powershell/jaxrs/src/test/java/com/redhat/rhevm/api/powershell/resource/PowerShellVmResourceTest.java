@@ -31,9 +31,11 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Action;
+import com.redhat.rhevm.api.model.CdRom;
 import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.Fault;
 import com.redhat.rhevm.api.model.Interface;
+import com.redhat.rhevm.api.model.Iso;
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.VM;
 
@@ -74,6 +76,10 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     private static final String LOOKUP_NETWORK_ID_COMMAND = PowerShellVmsResourceTest.LOOKUP_NETWORK_ID_COMMAND;
     private static final String LOOKUP_NETWORK_ID_RETURN = PowerShellVmsResourceTest.LOOKUP_NETWORK_ID_RETURN;
 
+    private static final String ISO_NAME = "foo.iso";
+    private static final String ISO_ID = Integer.toString("cdrom".hashCode());
+    private static final String UPDATE_CDROM_COMMAND = "$v = get-vm {1}\n$v.cdisopath = ''{0}''\nupdate-vm -vmobject $v";
+;
     private static final long NEW_DISK_SIZE = 10;
     private static final String ADD_DISK_COMMAND = "$d = new-disk -disksize {0}\n$v = get-vm {1}\nadd-disk -diskobject $d -vmobject $v";
     private static final String REMOVE_DISK_COMMAND = "remove-disk -vmid {0} -diskids 0";
@@ -209,6 +215,37 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
         verifyActionResponse(
             resource.detach(setUpActionExpectation("detach", "detach-vm"), getAction(true)),
             true);
+    }
+
+    @Test
+    public void testAddCdRom() throws Exception {
+        CdRom cdrom = new CdRom();
+        cdrom.setIso(new Iso());
+        cdrom.getIso().setId(ISO_NAME);
+
+        Action action = getAction();
+        action.setCdRom(cdrom);
+
+        String command = MessageFormat.format(UPDATE_CDROM_COMMAND, ISO_NAME, VM_ID);
+
+        verifyActionResponse(
+            resource.addDevice(setUpActionExpectation("adddevice", command, false), action),
+            false);
+    }
+
+    @Test
+    public void testRemoveCdRom() throws Exception {
+        CdRom cdrom = new CdRom();
+        cdrom.setId(ISO_ID);
+
+        Action action = getAction();
+        action.setCdRom(cdrom);
+
+        String command = MessageFormat.format(UPDATE_CDROM_COMMAND, "", VM_ID);
+
+        verifyActionResponse(
+            resource.removeDevice(setUpActionExpectation("removedevice", command, false), action),
+            false);
     }
 
     @Test

@@ -46,6 +46,13 @@
       <!-- for StorageDomain initialize/teardown actions -->
       <xs:element name="host" type="Host" minOccurs="0"/>
       <!-- for VM adddevice action -->
+      <xs:element ref="cdrom" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:appinfo>
+            <jaxb:property name="CdRom"/>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
       <xs:element ref="disk" minOccurs="0" maxOccurs="1"/>
       <xs:element ref="interface" minOccurs="0" maxOccurs="1"/>
       <!-- when adding a disk device, a storage domain may be specified -->
@@ -389,6 +396,30 @@
     </xs:sequence>
   </xs:complexType>
 
+  <!-- ISOs -->
+
+  <xs:element name="iso" type="Iso"/>
+
+  <xs:element name="isos" type="Isos"/>
+
+  <xs:complexType name="Iso">
+    <xs:complexContent>
+      <xs:extension base="BaseResource">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Isos">
+    <xs:sequence>
+      <xs:annotation>
+        <xs:appinfo>
+            <jaxb:property name="Isos"/>
+        </xs:appinfo>
+      </xs:annotation>
+      <xs:element ref="iso" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <!-- Networks -->
 
   <xs:element name="ip" type="IP"/>
@@ -601,6 +632,8 @@
 
   <!-- Devices -->
 
+  <xs:element name="cdrom" type="CdRom"/>
+
   <xs:element name="disk" type="Disk"/>
 
   <xs:element name="interface" type="Interface"/>
@@ -609,6 +642,13 @@
 
   <xs:complexType name="Devices">
     <xs:sequence>
+      <xs:element ref="cdrom" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <jaxb:property name="CdRoms"/>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
       <xs:element ref="disk" maxOccurs="unbounded">
         <xs:annotation>
           <xs:appinfo>
@@ -624,6 +664,13 @@
         </xs:annotation>
       </xs:element>
     </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="CdRom">
+    <xs:sequence>
+      <xs:element ref="iso"/>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:string"/>
   </xs:complexType>
 
   <xs:complexType name="Disk">

@@ -36,7 +36,7 @@ import com.redhat.rhevm.api.model.VmStatus;
 
 public class PowerShellVmTest extends PowerShellModelTest {
 
-    private void testVM(VM v, String id, String name, String description, VmStatus status, Long memory, int sockets, int cores, String clusterId, String templateId) {
+    private void testVM(PowerShellVM v, String id, String name, String description, VmStatus status, Long memory, int sockets, int cores, String cdIsoPath, String clusterId, String templateId) {
         assertEquals(v.getId(), id);
         assertEquals(v.getName(), name);
         assertEquals(v.getDescription(), description);
@@ -46,6 +46,7 @@ public class PowerShellVmTest extends PowerShellModelTest {
         assertNotNull(v.getCpu().getTopology());
         assertEquals(v.getCpu().getTopology().getSockets(), sockets);
         assertEquals(v.getCpu().getTopology().getCores(), cores);
+        assertEquals(v.getCdIsoPath(), cdIsoPath);
         assertNotNull(v.getCluster());
         assertEquals(v.getCluster().getId(), clusterId);
         assertNotNull(v.getTemplate());
@@ -103,13 +104,13 @@ public class PowerShellVmTest extends PowerShellModelTest {
         String data = readFileContents("vm.data");
         assertNotNull(data);
 
-        ArrayList<VM> vms = PowerShellVM.parse(data);
+        ArrayList<PowerShellVM> vms = PowerShellVM.parse(data);
 
         assertEquals(vms.size(), 1);
 
-        VM vm = vms.get(0);
+        PowerShellVM vm = vms.get(0);
 
-        testVM(vm, "439c0c13-3e0a-489e-a514-1b07232ace41", "test_1", null, VmStatus.SHUTOFF, 536870912L, 1, 1, "0", "00000000-0000-0000-0000-000000000000");
+        testVM(vm, "439c0c13-3e0a-489e-a514-1b07232ace41", "test_1", null, VmStatus.SHUTOFF, 536870912L, 1, 1, "foo.iso", "0", "00000000-0000-0000-0000-000000000000");
         testBootDevices(vm, BootDevice.HD);
 
         data = readFileContents("disks.data");

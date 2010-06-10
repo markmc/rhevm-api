@@ -24,7 +24,7 @@ OperationMode       : FullVirtualized
 AutoStartup         : False
 Stateless           : False
 DisplayType         : VNC
-CdIsoPath           :
+CdIsoPath           : foo.iso
 FloppyPath          :
 Origin              : RHEV
 KvmEnabled          : True

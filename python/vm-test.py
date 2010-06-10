@@ -62,6 +62,11 @@ for fmt in [xmlfmt]:
    disk.size = 10737418240
    t.syncAction(vm.actions, "adddevice", disk=disk)
 
+   cdrom = fmt.CdRom()
+   cdrom.iso = fmt.Iso()
+   cdrom.iso.id = 'en_winxp_pro_with_sp2.iso'
+   t.syncAction(vm.actions, "adddevice", cdrom=cdrom)
+
    vm = t.get(vm.href)
    vm.memory = 2 * 1024 * 1024 * 1024
    vm.cpu.topology.sockets = 2
@@ -85,6 +90,10 @@ for fmt in [xmlfmt]:
    t.syncAction(vm.actions, "stop")
 
    vm = waitFor(vm, 'SHUTOFF')
+
+   cdrom = fmt.CdRom()
+   cdrom.id = vm.devices.cdrom.id
+   t.syncAction(vm.actions, "removedevice", cdrom=cdrom)
 
    disk = fmt.Disk()
    disk.id = vm.devices.disk.id
