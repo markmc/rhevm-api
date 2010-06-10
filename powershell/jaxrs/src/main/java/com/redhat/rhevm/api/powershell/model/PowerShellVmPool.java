@@ -44,9 +44,11 @@ public class PowerShellVmPool {
             cluster.setName(props.get("cluster"));
             pool.setCluster(cluster);
 
-            Template template = new Template();
-            template.setName(props.get("template"));
-            pool.setTemplate(template);
+            if (props.get("template") != null) {
+                Template template = new Template();
+                template.setName(props.get("template"));
+                pool.setTemplate(template);
+            }
 
             ret.add(pool);
         }

@@ -99,9 +99,11 @@ public class PowerShellVmPoolResource extends AbstractActionableResource<VmPool>
         Cluster cluster = pool.getCluster();
         cluster.setHref(PowerShellClustersResource.getHref(baseUriBuilder, cluster.getId()));
 
-        pool = lookupTemplateId(pool);
-        Template template = pool.getTemplate();
-        template.setHref(PowerShellTemplatesResource.getHref(baseUriBuilder, template.getId()));
+        if (pool.getTemplate() != null) {
+            pool = lookupTemplateId(pool);
+            Template template = pool.getTemplate();
+            template.setHref(PowerShellTemplatesResource.getHref(baseUriBuilder, template.getId()));
+        }
 
         return pool;
     }
