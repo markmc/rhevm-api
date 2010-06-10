@@ -27,10 +27,11 @@ import com.redhat.rhevm.api.model.VmPool;
 
 public class PowerShellVmPoolTest extends PowerShellModelTest {
 
-    private void testVmPool(VmPool v, String id, String name, String description, String clusterName, String templateName) {
+    private void testVmPool(VmPool v, String id, String name, String description, Integer size, String clusterName, String templateName) {
         assertEquals(v.getId(), id);
         assertEquals(v.getName(), name);
         assertEquals(v.getDescription(), description);
+        assertEquals(v.getSize(), size);
         assertNotNull(v.getCluster());
         assertEquals(v.getCluster().getName(), clusterName);
         assertNotNull(v.getTemplate());
@@ -48,6 +49,6 @@ public class PowerShellVmPoolTest extends PowerShellModelTest {
 
         VmPool pool = pools.get(0);
 
-        testVmPool(pool, "0", "test", "Testing, Testing", "Default", "foo");
+        testVmPool(pool, "0", "test", "Testing, Testing", 1, "Default", "foo");
     }
 }

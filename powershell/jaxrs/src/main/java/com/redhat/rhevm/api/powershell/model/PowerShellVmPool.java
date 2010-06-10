@@ -38,6 +38,7 @@ public class PowerShellVmPool {
             pool.setId(props.get("vmpoolid"));
             pool.setName(props.get("name"));
             pool.setDescription(props.get("description"));
+            pool.setSize(Integer.parseInt(props.get("vmcount")));
 
             Cluster cluster = new Cluster();
             cluster.setName(props.get("cluster"));

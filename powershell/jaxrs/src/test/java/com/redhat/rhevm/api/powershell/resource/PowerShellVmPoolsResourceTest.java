@@ -33,7 +33,7 @@ public class PowerShellVmPoolsResourceTest extends AbstractPowerShellCollectionR
     public static final String TEMPLATE_NAME = "foo";
     public static final String TEMPLATE_ID = "12345";
 
-    public static final String GET_RETURN_EPILOG = "\ncluster: " + CLUSTER_NAME + "\ntemplate: " + TEMPLATE_NAME + "\n";
+    public static final String GET_RETURN_EPILOG = "\nvmcount: 15\ncluster: " + CLUSTER_NAME + "\ntemplate: " + TEMPLATE_NAME + "\n";
 
     private static final String ADD_COMMAND = "add-vmpool " + "-vmpoolname '" + NEW_NAME + "' -templateid " + TEMPLATE_ID + " -hostclusterid " + CLUSTER_ID + " -pooltype Automatic";
     private static final String REMOVE_COMMAND = "$p = get-vmpool -vmpoolid " + NAMES[1].hashCode() + "\nremove-vmpool -name $p.name";

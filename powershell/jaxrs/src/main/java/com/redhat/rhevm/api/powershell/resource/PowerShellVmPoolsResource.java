@@ -58,6 +58,9 @@ public class PowerShellVmPoolsResource
         if (pool.getDescription() != null) {
             buf.append(" -vmpooldescription '" + pool.getDescription() + "'");
         }
+        if (pool.getSize() != null) {
+            buf.append(" -numofvms " + pool.getSize());
+        }
 
         pool = PowerShellVmPoolResource.runAndParseSingle(buf.toString());
 

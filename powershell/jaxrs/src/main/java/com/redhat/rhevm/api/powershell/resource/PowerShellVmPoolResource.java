@@ -112,18 +112,21 @@ public class PowerShellVmPoolResource extends AbstractActionableResource<VmPool>
     }
 
     @Override
-    public VmPool update(HttpHeaders headers, UriInfo uriInfo, VmPool vm) {
-        validateUpdate(vm, headers);
+    public VmPool update(HttpHeaders headers, UriInfo uriInfo, VmPool pool) {
+        validateUpdate(pool, headers);
 
         StringBuilder buf = new StringBuilder();
 
         buf.append("$v = get-vmpool " + getId() + "\n");
 
-        if (vm.getName() != null) {
-            buf.append("$v.name = '" + vm.getName() + "'\n");
+        if (pool.getName() != null) {
+            buf.append("$v.name = '" + pool.getName() + "'\n");
         }
-        if (vm.getDescription() != null) {
-            buf.append("$v.description = '" + vm.getDescription() + "'\n");
+        if (pool.getDescription() != null) {
+            buf.append("$v.description = '" + pool.getDescription() + "'\n");
+        }
+        if (pool.getSize() != null) {
+            buf.append("$v.vmcount = " + pool.getSize() + "\n");
         }
 
         buf.append("update-vmpool -vmpoolobject $v");
