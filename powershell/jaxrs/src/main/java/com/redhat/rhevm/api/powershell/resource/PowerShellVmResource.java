@@ -35,6 +35,7 @@ import com.redhat.rhevm.api.model.Interface;
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.model.VmPool;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.common.util.ReflectionHelper;
@@ -72,6 +73,11 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
 
         Template template = vm.getTemplate();
         template.setHref(PowerShellTemplatesResource.getHref(baseUriBuilder, template.getId()));
+
+        VmPool pool = vm.getVmPool();
+        if (pool != null) {
+            pool.setHref(PowerShellVmPoolsResource.getHref(baseUriBuilder, pool.getId()));
+        }
 
         if (vm.getDevices() != null) {
             for (Interface iface : vm.getDevices().getInterfaces()) {

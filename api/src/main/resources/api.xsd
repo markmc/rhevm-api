@@ -545,6 +545,13 @@
             <xs:element name="os" type="OperatingSystem" minOccurs="0"/>
             <xs:element ref="cluster" minOccurs="0" maxOccurs="1"/>
             <xs:element ref="template" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="vmpool" minOccurs="0" maxOccurs="1">
+              <xs:annotation>
+                <xs:appinfo>
+                  <jaxb:property name="VmPool"/>
+                </xs:appinfo>
+              </xs:annotation>
+            </xs:element>
             <xs:element ref="devices" minOccurs="0" maxOccurs="1"/>
           </xs:sequence>
         </xs:extension>

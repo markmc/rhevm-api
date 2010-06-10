@@ -92,4 +92,15 @@ public class PowerShellVmPoolsResource
     protected PowerShellVmPoolResource createSubResource(String id) {
         return new PowerShellVmPoolResource(id, getExecutor());
     }
+
+    /**
+     * Build an absolute URI for a given VM pool
+     *
+     * @param baseUriBuilder a UriBuilder representing the base URI
+     * @param id             the VM pool ID
+     * @return               an absolute URI
+     */
+    public static String getHref(UriBuilder baseUriBuilder, String id) {
+        return baseUriBuilder.clone().path("vmpools").path(id).build().toString();
+    }
 }

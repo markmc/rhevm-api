@@ -38,6 +38,7 @@ import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.OperatingSystem;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.model.VmPool;
 import com.redhat.rhevm.api.model.VmStatus;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
@@ -140,6 +141,12 @@ public class PowerShellVM {
             Template template = new Template();
             template.setId(props.get("templateid"));
             vm.setTemplate(template);
+
+            if (!props.get("poolid").equals("-1")) {
+                VmPool pool = new VmPool();
+                pool.setId(props.get("poolid"));
+                vm.setVmPool(pool);
+            }
 
             ret.add(vm);
         }
