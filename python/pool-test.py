@@ -44,10 +44,24 @@ for fmt in [xmlfmt]:
 
    pool = fmt.VmPool()
    pool.name = randomName('foo')
+   pool.size = "2"
    pool.cluster = fmt.Cluster()
    pool.cluster.id = t.find(links['clusters'], cluster).id
    pool.template = fmt.Template()
    pool.template.id = t.find(links['templates'], template).id
    pool = t.create(links['vmpools'], pool)
+
+   vms_in_pool = []
+   for vm in t.get(links['vms']):
+      if not hasattr(vm, "vmpool"):
+         continue
+      if vm.vmpool.id == pool.id:
+         vms_in_pool.append(vm)
+
+   assert len(vms_in_pool) == 2, "Expected 2 VMs with pool ID '" + pool.id + "', got " + str(len(vms_in_pool))
+
+   for vm in vms_in_pool:
+      t.syncAction(vm.actions, "detach")
+      t.delete(vm.href)
 
    t.delete(pool.href)

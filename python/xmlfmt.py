@@ -165,12 +165,12 @@ class StorageDomain(Base):
 class VM(Base):
     NAME = "vm"
     COLLECTION = "vms"
-    ELEMENTS = Base.ELEMENTS + ['status', 'memory', 'os', 'cpu', 'cluster', 'template', 'devices']
+    ELEMENTS = Base.ELEMENTS + ['status', 'memory', 'os', 'cpu', 'cluster', 'template', 'devices', 'vmpool']
 
 class VmPool(Base):
     NAME = "vmpool"
     COLLECTION = "vmpools"
-    ELEMENTS = Base.ELEMENTS + ['cluster', 'template']
+    ELEMENTS = Base.ELEMENTS + ['size', 'cluster', 'template']
 
 class Template(Base):
     NAME = "template"
