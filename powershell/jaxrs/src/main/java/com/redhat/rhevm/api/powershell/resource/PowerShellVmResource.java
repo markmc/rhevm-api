@@ -213,7 +213,7 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
 
     @Override
     public Response detach(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new DoNothingTask(action));
+        return doAction(uriInfo, new CommandRunner(action, "detach-vm", "vm", getId()));
     }
 
     @Override
