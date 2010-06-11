@@ -6,5 +6,71 @@
 <chapter id="chap-REST_API_Guide-Data_Centers">
   <title>Data Centers</title>
   <para>
+    The data center specific elements which may be contained in the data center description are as follows:
+
+    <informaltable frame="none">
+      <tgroup cols="2">
+        <colspec colwidth="2*"/>
+        <colspec colwidth="5*"/>
+        <tbody>
+          <row>
+            <entry><literal>storage_type</literal></entry>
+            <entry>Describes which storage type is allowed in this datacenter. Either <literal>ISCSI</literal>, <literal>NFS</literal> or <literal>FCP</literal></entry>
+          </row>
+          <row>
+            <entry><literal>attachments</literal></entry>
+            <entry>A collection of partial representations of the storage domains which are attached to this data center. See <xref linkend="chap-REST_API_Guide-Storage_Domains"/></entry>
+          </row>
+          <row>
+            <entry><literal>link rel="isos"</literal></entry>
+            <entry>A link to a description of the ISO images available in this data center</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+
+    For example:
   </para>
+
+  <screen>
+&lt;data_center id="d70d5e2d-b8ad-494a-a4d2-c7a5631073c4" href="datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4"&gt;
+  &lt;name&gt;Default&lt;/name&gt;
+  &lt;description&gt;The default Data Center&lt;/description&gt;
+  &lt;storage_type&gt;NFS&lt;/storage_type&gt;
+  &lt;attachments&gt;
+    &lt;attachment href="storagedomains/80abb8b2-0cd8-4ddb-9949-1839e181105a/attachments/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4"/&gt;
+    &lt;attachment href="storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/attachments/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4"/&gt;
+  &lt;/attachments&gt;
+  &lt;link rel="isos" href="datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/isos"/&gt;
+&lt;/data_center&gt;
+  </screen>
+
+  <para>
+    When creating a new data center, the <literal>name</literal> and <literal>storage_type</literal> elements are required. Only the <literal>name</literal> and <literal>description</literal> elements may be updated post-creation.
+  </para>
+
+  <section id="sect-REST_API_Guide-Data_Centers-ISO_Images">
+    <title>
+      ISO Images
+    </title>
+    <para>
+      When adding a CD-ROM device to a VM, an ISO image needs to be supplied. See <xref linkend="chap-REST_API_Guide-VMs"/>. The ISOs collection under each data center provides a way for clients to list the available ISO images.
+    </para>
+
+    <screen>
+GET /datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/isos HTTP/1.1
+Accept: application/xml
+
+&lt;isos&gt;
+  &lt;iso id="en_winxp_pro_with_sp2.iso" href="datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/isos/en_winxp_pro_with_sp2.iso"&gt;
+    &lt;name&gt;en_winxp_pro_with_sp2.iso&lt;/name&gt;
+  &lt;/iso&gt;
+&lt;/isos&gt;
+    </screen>
+
+    <para>
+      Like other resources, ISOs have opaque <literal>id</literal> and <literal>href</literal> attributes. The <literal>name</literal> element actually contains the filename of the ISO.
+    </para>
+  </section>
+
 </chapter>
