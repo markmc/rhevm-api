@@ -4,7 +4,7 @@
   <id></id>
 
   <formats>
-    <format>tar.gz</format>
+    <format>${package.format}</format>
   </formats>
 
 
@@ -42,12 +42,12 @@
     </fileSet>
 
     <fileSet>
-      <directory>${basedir}/target/dependencies/kit/apache-felix-karaf-${felix.karaf.version}</directory>
+      <directory>${basedir}/target/dependencies/kit/${platform}/apache-felix-karaf-${felix.karaf.version}</directory>
       <outputDirectory>/rhevm-admin</outputDirectory>
       <excludes>
-        <exclude>bin/start</exclude>
-        <exclude>bin/stop</exclude>
-        <exclude>bin/admin</exclude>
+        <exclude>bin/start*</exclude>
+        <exclude>bin/stop*</exclude>
+        <exclude>bin/admin*</exclude>
         <exclude>etc/config.properties</exclude>
         <exclude>etc/org.apache.felix.karaf.features.cfg</exclude>
         <exclude>etc/org.apache.felix.karaf.management.cfg</exclude>
@@ -64,7 +64,7 @@
     <fileSet>
       <directory>${basedir}/target/classes/etc</directory>
       <outputDirectory>/rhevm-admin/etc/</outputDirectory>
-      <lineEnding>unix</lineEnding>
+      <lineEnding>${line.ending}</lineEnding>
       <fileMode>0644</fileMode>
     </fileSet>
 
@@ -79,19 +79,19 @@
   <files>
 
     <file>
-      <source>${basedir}/src/main/release/rhevm-admin/bin/rhevm-admin</source>
+      <source>${basedir}/src/main/release/rhevm-admin/bin/rhevm-admin${extension}</source>
       <outputDirectory>/rhevm-admin/bin</outputDirectory>
-      <destName>rhevm-admin</destName>
+      <destName>rhevm-admin${extension}</destName>
       <fileMode>0755</fileMode>
-      <lineEnding>unix</lineEnding>
+      <lineEnding>${line.ending}</lineEnding>
     </file>
 
     <file>
-      <source>${basedir}/src/main/release/rhevm-admin/bin/rhevm-client</source>
+      <source>${basedir}/src/main/release/rhevm-admin/bin/rhevm-client${extension}</source>
       <outputDirectory>/rhevm-admin/bin</outputDirectory>
-      <destName>rhevm-client</destName>
+      <destName>rhevm-client${extension}</destName>
       <fileMode>0755</fileMode>
-      <lineEnding>unix</lineEnding>
+      <lineEnding>${line.ending}</lineEnding>
     </file>
 
     <file>
@@ -99,7 +99,7 @@
       <outputDirectory>/rhevm-admin/etc</outputDirectory>
       <destName>org.apache.felix.karaf.features.cfg</destName>
       <fileMode>0644</fileMode>
-      <lineEnding>unix</lineEnding>
+      <lineEnding>${line.ending}</lineEnding>
     </file>
 
     <file>
@@ -107,7 +107,7 @@
       <outputDirectory>/rhevm-admin</outputDirectory>
       <destName>README</destName>
       <fileMode>0644</fileMode>
-      <lineEnding>unix</lineEnding>
+      <lineEnding>${line.ending}</lineEnding>
     </file>
 
   </files>

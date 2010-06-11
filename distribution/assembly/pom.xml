@@ -154,6 +154,58 @@
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.4.3</version>
+        <executions>
+          <execution>
+            <id>parametrize-descriptor-unix</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <filters>
+                <filter>src/main/assembly/unix.properties</filter>
+              </filters>
+              <outputDirectory>${basedir}/target/assembly/unix</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/assembly</directory>
+                  <filtering>true</filtering>
+                  <includes>
+                    <include>binary.xml</include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+          <execution>
+            <id>parametrize-descriptor-win</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <filters>
+                <filter>src/main/assembly/win.properties</filter>
+              </filters>
+              <outputDirectory>${basedir}/target/assembly/win</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/assembly</directory>
+                  <filtering>true</filtering>
+                  <includes>
+                    <include>binary.xml</include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <executions>
           <execution>
@@ -170,7 +222,15 @@
                   <artifactId>apache-felix-karaf</artifactId>
                   <version>${felix.karaf.version}</version>
                   <type>tar.gz</type>
-                  <outputDirectory>target/dependencies/kit</outputDirectory>
+                  <outputDirectory>target/dependencies/kit/unix</outputDirectory>
+                </artifactItem>
+
+                <artifactItem>
+                  <groupId>org.apache.felix.karaf</groupId>
+                  <artifactId>apache-felix-karaf</artifactId>
+                  <version>${felix.karaf.version}</version>
+                  <type>zip</type>
+                  <outputDirectory>target/dependencies/kit/win</outputDirectory>
                 </artifactItem>
 
               </artifactItems>
@@ -222,17 +282,30 @@
         <artifactId>maven-assembly-plugin</artifactId>
         <executions>
           <execution>
-            <id>binary</id>
+            <id>binary-unix</id>
             <phase>package</phase>
             <goals>
               <goal>single</goal>
             </goals>
             <configuration>
               <descriptors>
-                <descriptor>src/main/assembly/binary.xml</descriptor>
+                <descriptor>target/assembly/unix/binary.xml</descriptor>
               </descriptors>
               <finalName>${pom.artifactId}-${pom.version}</finalName>
               <tarLongFileMode>gnu</tarLongFileMode>
+            </configuration>
+          </execution>
+          <execution>
+            <id>binary-win</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <descriptors>
+                <descriptor>target/assembly/win/binary.xml</descriptor>
+              </descriptors>
+              <finalName>${pom.artifactId}-${pom.version}</finalName>
             </configuration>
           </execution>
         </executions>
