@@ -6,5 +6,238 @@
 <chapter id="chap-REST_API_Guide-Common_Idioms">
   <title>Common Idioms For All Resource</title>
   <para>
+    Resources are represented by XML documents e.g.
+    </para>
+
+  <screen>
+&lt;resource id="d9a0e106-9273-4812-bb05-ed75fe1ac652" href="resources/d9a0e106-9273-4812-bb05-ed75fe1ac652"&gt;
+  &lt;name&gt;foo&lt;/name&gt;
+  &lt;description&gt;This is the foo resource&lt;/description&gt;
+&lt;/resource&gt;
+  </screen>
+
+  <para>
+    The following attributes are common to all resource descriptions:
+
+    <informaltable frame="none">
+      <tgroup cols="2">
+        <colspec colwidth="2*"/>
+        <colspec colwidth="5*"/>
+        <tbody>
+          <row>
+            <entry><literal>id</literal></entry>
+            <entry>An opaque server-generated identifier for the resource which is guaranteed to be unique across all resources in this RHEV-M instance</entry>
+          </row>
+          <row>
+            <entry><literal>href</literal></entry>
+            <entry>The canonical location of the resource</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+
+    and the common elements:
+
+    <informaltable frame="none">
+      <tgroup cols="2">
+        <colspec colwidth="2*"/>
+        <colspec colwidth="5*"/>
+        <tbody>
+          <row>
+            <entry><literal>name</literal></entry>
+            <entry>A user-supplied human readable name for the resource which also must be unique across all resources</entry>
+          </row>
+          <row>
+            <entry><literal>description</literal></entry>
+            <entry>A free-form user-supplied human readable description of the resource</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+
   </para>
+
+  <section id="sect-REST_API_Guide-Common_Idioms-Listing_Resources">
+    <title>
+      Listing Resources
+    </title>
+
+    <para>
+      A listing of the resources in a collection is obtained by issuing a <literal>GET</literal> request on the collection URI obtained from the entry point.
+    </para>
+
+    <screen>
+GET /resources/ HTTP/1.1
+Accept: application/xml
+
+HTTP/1.1 200 OK
+Content-Type: application/xml
+
+&lt;resources&gt;
+  &lt;resource id="{id}" href="resources/{id}"&gt;
+    &lt;name&gt;foo&lt;/name&gt;
+    &lt;description&gt;The Foo Resource&lt;/description&gt;
+    ...
+  &lt;/resource&gt;
+  &lt;resource ...&gt;
+    ...
+  &lt;/resource&gt;
+&lt;/resources&gt;
+    </screen>
+
+  </section>
+
+  <section id="sect-REST_API_Guide-Common_Idioms-Querying_Resources">
+    <title>
+      Querying a Resource
+    </title>
+
+    <para>
+      The state of a resource can be queried using <literal>GET</literal> request on a URI obtained from the listing above.
+    </para>
+
+    <screen>
+GET /resources/{id} HTTP/1.1
+Accept: application/xml
+
+HTTP/1.1 200 OK
+Content-Type: application/xml
+
+&lt;resource id="{id}" href="resources/{id}"&gt;
+  ...
+&lt;/resource&gt;
+    </screen>
+
+  </section>
+
+  <section id="sect-REST_API_Guide-Common_Idioms-Creating_Resources">
+    <title>
+      Creating a Resource
+    </title>
+
+    <para>
+      A new resource may be created by issueing a <literal>POST</literal> request to collection URI containing a representation of the new resource.
+    </para>
+
+    <para>
+      Each resource type has its own specific required properties which the client must supply when creating a new resource. Refer to the indiviual resource type documentation for more details.
+    </para>
+
+    <screen>
+POST /resources HTTP/1.1
+Accept: application/xml
+Content-Type: application/xml
+
+&lt;resource&gt;
+  &lt;name&gt;foo&lt;/name&gt;
+&lt;/resource&gt;
+
+HTTP/1.1 201 Created
+Location: http://{host}/resources/1234-abcd-6789-ef00
+Content-Type: application/xml
+
+&lt;resource id="1234-abcd-6789-ef00" href="resources/1234-abcd-6789-ef00"&gt;
+  &lt;name&gt;foo&lt;/name&gt;
+  ...
+&lt;/resource&gt;
+    </screen>
+
+    <para>
+      The <literal>Location</literal> header in the response gives the URI from which the resource may be queried. The response body can contain a complete representation, partial representation or no representation of the resource, so clients should rely only on fetching the representation via the URI in the response header.
+    </para>
+
+  </section>
+
+  <section id="sect-REST_API_Guide-Common_Idioms-Updating_Resources">
+    <title>
+      Updating a Resource
+    </title>
+
+    <para>
+      Some resource properties can be modified by <literal>PUT</literal>ing an updated description to the resource URI. Details on which properties are modifiable can be found in the individual resource type documentation.
+    </para>
+
+    <screen>
+PUT /resources/{id} HTTP/1.1
+Accept: application/xml
+Content-Type: application/xml
+
+&lt;resource&gt;
+  &lt;name&gt;foo&lt;/name&gt;
+&lt;/resource&gt;
+
+HTTP/1.1 200 OK
+Content-Type: application/xml
+
+&lt;resource id="..." href="..."&gt;
+  &lt;name&gt;foo&lt;/name&gt;
+  ...
+&lt;/resource&gt;
+    </screen>
+
+    <para>
+      Again, the server may or may not return the updated resource description in the response body.
+    </para>
+
+  </section>
+
+  <section id="sect-REST_API_Guide-Common_Idioms-Deleting_Resources">
+    <title>
+      Deleting a Resource
+    </title>
+
+    <para>
+      A resource is deleted by issuing a <literal>DELETE</literal> request to its URI.
+    </para>
+
+    <screen>
+DELETE /resources/{id} HTTP/1.1
+
+HTTP/1.1 204 No Content
+    </screen>
+
+  </section>
+
+  <section id="sect-REST_API_Guide-Common_Idioms-Actions">
+    <title>
+      Actions
+    </title>
+
+    <para>
+      Each resource description includes a list of action links describing operations which may be invoked on the resource.
+    </para>
+
+    <screen>
+&lt;resource&gt;
+  ...
+  &lt;actions&gt;
+    &lt;link rel="frob" href="resources/{id}/frob"/&gt;
+    &lt;link rel="twiddle" href="resources/{id}/twiddle/"/&gt;
+    ...
+  &lt;/actions&gt;
+  ...
+&lt;/resource&gt;
+    </screen>
+
+    <para>
+      An action may be invoked by <literal>POST</literal>ing to the supplied URI. The body of the POST may be empty if no parameters are required or, in the case of parameters being required, the body must contain an action description. Common action parameters include:
+
+      <informaltable frame="none">
+        <tgroup cols="2">
+          <colspec colwidth="2*"/>
+          <colspec colwidth="5*"/>
+          <tbody>
+            <row>
+              <entry><literal>async</literal></entry>
+              <entry>true if the server should respond immediately with <literal>202 Accepted</literal> and an action description containing a <literal>self</literal> link which may be polled for completion.</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+
+      Individual actions and their parameters are documented in inidivual resource type's documentation.
+    </para>
+
+  </section>
+
 </chapter>
