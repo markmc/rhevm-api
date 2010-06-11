@@ -6,5 +6,114 @@
 <chapter id="chap-REST_API_Guide-Hosts">
   <title>Hosts</title>
   <para>
+    The host specific elements which may be contained in the host description are as follows:
+
+    <informaltable frame="none">
+      <tgroup cols="2">
+        <colspec colwidth="2*"/>
+        <colspec colwidth="5*"/>
+        <tbody>
+          <row>
+            <entry><literal>status</literal></entry>
+            <entry>One of DOWN, ERROR, INITIALIZING, INSTALLING, INSTALL_FAILED, MAINTENANCE, NON_OPERATIONAL, NON_RESPONSIVE, PENDING_APPROVAL, PREPARING_FOR_MAINTENANCE, PROBLEMATIC, REBOOT, UNASSIGNED or UP</entry>
+          </row>
+          <row>
+            <entry><literal>address</literal></entry>
+            <entry>The IP address or hostname of the host</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+
+    For example:
   </para>
+
+  <screen>
+&lt;host id="0" href="hosts/0"&gt;
+  &lt;name&gt;zig&lt;/name&gt;
+  &lt;status&gt;UP&lt;/status&gt;
+  &lt;actions&gt;
+    &lt;link rel="install" href="hosts/0/install"/&gt;
+    &lt;link rel="approve" href="hosts/0/approve"/&gt;
+    &lt;link rel="activate" href="hosts/0/activate"/&gt;
+    &lt;link rel="deactivate" href="hosts/0/deactivate"/&gt;
+  &lt;/actions&gt;
+&lt;/host&gt;
+  </screen>
+
+  <para>
+    When creating a new host, the <literal>name</literal> and <literal>address</literal> elements are required. Only the <literal>name</literal> element may be updated post-creation.
+  </para>
+
+  <para>
+    There are four possible actions for hosts - <literal>install</literal>, <literal>approve</literal>, <literal>activate</literal> and <literal>deactivate</literal>.
+  </para>
+
+  <section id="sect-REST_API_Guide-Hosts-Install">
+    <title>
+      Install Action
+    </title>
+
+    <para>
+      Install VDSM and related software on the host. This requires the root password for the host to be supplied using the <literal>root_password</literal> element.
+    </para>
+
+    <screen>
+POST /hosts/0/install HTTP/1.1
+Content-type: application/xml
+
+&lt;action&gt;
+  &lt;root_password&gt;p@55w0Rd!&lt;/root_password&gt;
+&lt;/action&gt;
+    </screen>
+
+  </section>
+
+  <section id="sect-REST_API_Guide-Hosts-Approve">
+    <title>
+      Approve Action
+    </title>
+
+    <para>
+    </para>
+
+    <screen>
+POST /hosts/0/approve HTTP/1.1
+Content-type: application/xml
+    </screen>
+
+  </section>
+
+  <section id="sect-REST_API_Guide-Hosts-Activate">
+    <title>
+      Activate Action
+    </title>
+
+    <para>
+      Activate the host, allowing it to be used for e.g. running VMs.
+    </para>
+
+    <screen>
+POST /hosts/0/activate HTTP/1.1
+Content-type: application/xml
+    </screen>
+
+  </section>
+
+  <section id="sect-REST_API_Guide-Hosts-Deactivate">
+    <title>
+      Deactivate Action
+    </title>
+
+    <para>
+      Deactivate the host, allowing maintenance tasks to be performed.
+    </para>
+
+    <screen>
+POST /hosts/0/deactivate HTTP/1.1
+Content-type: application/xml
+    </screen>
+
+  </section>
+
 </chapter>
