@@ -6,5 +6,245 @@
 <chapter id="chap-REST_API_Guide-Storage_Domains">
   <title>Storage Domains</title>
   <para>
+    The storage domain specific elements which may be contained in the storage domain description are as follows:
+
+    <informaltable frame="none">
+      <tgroup cols="2">
+        <colspec colwidth="2*"/>
+        <colspec colwidth="5*"/>
+        <tbody>
+          <row>
+            <entry><literal>type</literal></entry>
+            <entry>One of <literal>DATA</literal>, <literal>ISO</literal> or <literal>EXPORT</literal></entry>
+          </row>
+          <row>
+            <entry><literal>status</literal></entry>
+            <entry>One of <literal>ACTIVE</literal>, <literal>INACTIVE</literal>, <literal>LOCKED</literal>, <literal>MIXED</literal>, <literal>UNATTACHED</literal> and <literal>UNINITIALIZED</literal></entry>
+          </row>
+          <row>
+            <entry><literal>storage</literal></entry>
+            <entry>Describes the underlying storage of the storage domain. See below.</entry>
+          </row>
+          <row>
+            <entry><literal>master</literal></entry>
+            <entry><literal>true</literal> if this is the master storage domain of a data center</entry>
+          </row>
+          <row>
+            <entry><literal>link rel="attachments"</literal></entry>
+            <entry>A link to the attachments collection representing which data centers the storage domain is attached to. See <xref linkend="sect-REST_API_Guide-Storage_Domains-Attachments"/></entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+
+    The <literal>storage</literal> element has a <literal>type</literal> element with the physical storage type and a number of elements specific to that storage type. The <literal>NFS</literal> specific elements are:
+
+    <informaltable frame="none">
+      <tgroup cols="2">
+        <colspec colwidth="2*"/>
+        <colspec colwidth="5*"/>
+        <tbody>
+          <row>
+            <entry><literal>address</literal></entry>
+            <entry>The host name or IP address of the NFS server</entry>
+          </row>
+          <row>
+            <entry><literal>path</literal></entry>
+            <entry>The path of NFS mountable directory on the server</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+
+    For example:
   </para>
+
+  <screen>
+&lt;storage_domain id="fabe0451-701f-4235-8f7e-e20e458819ed" href="storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed"&gt;
+  &lt;name&gt;images0&lt;/name&gt;
+  &lt;type&gt;DATA&lt;/type&gt;
+  &lt;status&gt;ACTIVE&lt;/status&gt;
+  &lt;storage&gt;
+    &lt;type&gt;NFS&lt;/type&gt;
+    &lt;address&gt;172.31.0.6&lt;/address&gt;
+    &lt;path&gt;/exports/RHEVX/images/0&lt;/path&gt;
+  &lt;/storage&gt;
+  &lt;master&gt;true&lt;/master&gt;
+  &lt;link rel="attachments" href="storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/attachments"/&gt;
+&lt;/storage_domain&gt;
+  </screen>
+
+  <para>
+    When creating a new storage domain, the <literal>name</literal>, <literal>type</literal> and <literal>storage</literal> elements are required. Only the <literal>name</literal> element may be updated post-creation.
+  </para>
+
+  <para>
+    The storage domain actions block may report the availability of two actions - <literal>initialize</literal> and <literal>teardown</literal>.
+  </para>
+
+  <section id="sect-REST_API_Guide-Storage_Domains-Initialize">
+    <title>Initialize Action</title>
+
+    <para>
+      A storage domain's initialize action physically initializes the underlying physical storage of the domain.
+    </para>
+
+    <para>
+      A <literal>host id</literal> reference is required. This host must have access to the storage and it is on this host the initialization will be performed.
+    </para>
+
+    <screen>
+POST /storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/initialize HTTP/1.1
+Content-type: application/xml
+
+&lt;action&gt;
+  &lt;host id="0"/&gt;
+&lt;/action&gt;
+    </screen>
+
+    <para>
+      Once a storage domain has been initialized it can be attached to a data center. See <xref linkend="sect-REST_API_Guide-Storage_Domains-Attachments"/>.
+    </para>
+
+  </section>
+
+  <section id="sect-REST_API_Guide-Storage_Domains-Teardown">
+    <title>
+      Teardown Action
+    </title>
+
+    <para>
+      The teardown is the opposite to initialize, again using a specified host which has physical access to the storage.
+    </para>
+
+    <screen>
+POST /storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/teardown HTTP/1.1
+Content-type: application/xml
+
+&lt;action&gt;
+  &lt;host id="0"/&gt;
+&lt;/action&gt;
+    </screen>
+
+    <para>
+      A storage domain must be detached from all data centers before it can be torn down. See <xref linkend="sect-REST_API_Guide-Storage_Domains-Attachments"/>.
+    </para>
+
+  </section>
+
+  <section id="sect-REST_API_Guide-Storage_Domains-Attachments">
+    <title>
+      Storage Domain Attachments
+    </title>
+
+    <para>
+      A storage domain must be attached to a data center before it can be used. This is done by posting a representation of the attachment to the storage domain's attachments collection.
+    </para>
+
+    <para>
+      Attachments are similar to other resources, with the exception that they have no <literal>name</literal> element and cannot be modified using <literal>PUT</literal>. The attachment specific properties include:
+
+      <informaltable frame="none">
+        <tgroup cols="2">
+          <colspec colwidth="2*"/>
+          <colspec colwidth="5*"/>
+          <tbody>
+            <row>
+              <entry><literal>data_center</literal></entry>
+              <entry>A reference to the data center which this storage domain is attached. See <xref linkend="chap-REST_API_Guide-Data_Centers"/></entry>
+            </row>
+            <row>
+              <entry><literal>storage_domain</literal></entry>
+              <entry>A reference to the storage domain</entry>
+            </row>
+            <row>
+              <entry><literal>status</literal></entry>
+              <entry>Either <literal>ACTIVE</literal> or <literal>INACTIVE</literal></entry>
+            </row>
+            <row>
+              <entry><literal>master</literal></entry>
+              <entry><literal>true</literal> if this is the master storage domain of the data center</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+
+      For example:
+    </para>
+
+    <screen>
+&lt;attachment id="d70d5e2d-b8ad-494a-a4d2-c7a5631073c4" href="storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/attachments/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4"&gt;
+  &lt;data_center id="d70d5e2d-b8ad-494a-a4d2-c7a5631073c4" href="datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4"/&gt;
+  &lt;status&gt;ACTIVE&lt;/status&gt;
+  &lt;master&gt;true&lt;/master&gt;
+  &lt;actions&gt;
+    &lt;link rel="deactivate" href="/storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/attachments/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/deactivate"/&gt;
+  &lt;actions&gt;
+&lt;/attachment&gt;
+
+    </screen>
+
+    <para>
+      When creating a new attachment, a <literal>data_center id</literal> must be supplied. An example of attaching a storage domain to a data center:
+    </para>
+
+    <screen>
+POST /storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/attachments HTTP/1.1
+Content-type: application/xml
+
+&lt;attachment&gt;
+  &lt;data_center id="d70d5e2d-b8ad-494a-a4d2-c7a5631073c4"/&gt;
+&lt;attachment&gt;
+
+HTTP/1.1 201 Created
+Location: /storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/attachments/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4
+Content-Type: application/xml
+
+&lt;attachment id="d70d5e2d-b8ad-494a-a4d2-c7a5631073c4" href="storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/attachments/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4"&gt;
+  &lt;data_center id="d70d5e2d-b8ad-494a-a4d2-c7a5631073c4" href="datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4"/&gt;
+  &lt;status&gt;INACTIVE&lt;/status&gt;
+  &lt;actions&gt;
+    &lt;link rel="activate" href="storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/attachments/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/activate"/&gt;
+  &lt;actions&gt;
+&lt;/attachment&gt;
+    </screen>
+
+    <para>
+      There are two possible actions for storage domain attachments - <literal>activate</literal> and <literal>deactivate</literal>.
+    </para>
+
+  </section>
+
+  <section id="sect-REST_API_Guide-Storage_Domains-Activate">
+    <title>
+      Activate Action
+    </title>
+
+    <para>
+      A storage domain attachment must be activated before it the storage domain may be used. The activate action does not take any action specific parameters.
+    </para>
+
+    <screen>
+POST /storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/attachments/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/activate HTTP/1.1
+Content-type: application/xml
+    </screen>
+
+  </section>
+
+  <section id="sect-REST_API_Guide-Storage_Domains-Deactivate">
+    <title>
+      Deactivate Action
+    </title>
+
+    <para>
+      A storage domain attachment must be deactivated before it can be removed. The deactivate action does not take any action specific parameters.
+    </para>
+
+    <screen>
+POST /storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/attachments/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/deactivate HTTP/1.1
+Content-type: application/xml
+    </screen>
+
+  </section>
+
 </chapter>
