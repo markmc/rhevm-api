@@ -3,7 +3,7 @@
 <!ENTITY % BOOK_ENTITIES SYSTEM "REST_API_Guide.ent">
 %BOOK_ENTITIES;
 ]>
-<chapter id="chap-REST_API_Guide-Introduction_Chapter">
+<chapter id="chap-REST_API_Guide-Introduction">
   <title>Introduction</title>
   <para>
     The <emphasis role="bold">Red Hat Enterprise Virtualization</emphasis> REST API provides a RESTful interface to the the functionality of <emphasis role="bold">Red Hat Enterprise Virtualization Manager</emphasis>. The API allows software developers and system administrators write code to control Red Hat Enterprise Virtualization using a wide variety of programming languages and operating systems.
