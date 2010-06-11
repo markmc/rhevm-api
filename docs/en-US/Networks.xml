@@ -6,5 +6,47 @@
 <chapter id="chap-REST_API_Guide-Networks">
   <title>Networks</title>
   <para>
+    The network specific elements which may be contained in the network description are as follows:
+
+    <informaltable frame="none">
+      <tgroup cols="2">
+        <colspec colwidth="2*"/>
+        <colspec colwidth="5*"/>
+        <tbody>
+          <row>
+            <entry><literal>status</literal></entry>
+            <entry>Either <literal>OPERATIONAL</literal> or <literal>NON_OPERATIONAL</literal></entry>
+          </row>
+          <row>
+            <entry><literal>datacenter</literal></entry>
+            <entry>A reference to the data center of which this cluster is a member. See <xref linkend="chap-REST_API_Guide-Data_Centers"/>></entry>
+          </row>
+          <row>
+            <entry><literal>ip address= netmask= gateway=</literal></entry>
+            <entry>FIXME</entry>
+          </row>
+          <row>
+            <entry><literal>vlan id=</literal></entry>
+            <entry>FIXME</entry>
+          </row>
+          <row>
+            <entry><literal>stp</literal></entry>
+            <entry><literal>true</literal> if Spanning Tree Protocol is enabled on this network</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+
+    For example:
   </para>
+
+  <screen>
+&lt;network id="00000000-0000-0000-0000-000000000009" href="networks/00000000-0000-0000-0000-000000000009"&gt;
+  &lt;name&gt;rhevm&lt;/name&gt;
+  &lt;status&gt;OPERATIONAL&lt;/status&gt;
+  &lt;description&gt;Management Network&lt;/description&gt;
+  &lt;data_center id="d70d5e2d-b8ad-494a-a4d2-c7a5631073c4" href="datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4"/&gt;
+&lt;/network&gt;
+  </screen>
+
 </chapter>
