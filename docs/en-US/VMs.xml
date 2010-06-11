@@ -4,7 +4,232 @@
 %BOOK_ENTITIES;
 ]>
 <chapter id="chap-REST_API_Guide-VMs">
-  <title>VMs</title>
+  <title>Virtual Machines</title>
   <para>
+    The VM specific elements which may be contained in the virtual machine description are as follows:
+
+    <informaltable frame="none">
+      <tgroup cols="2">
+        <colspec colwidth="2*"/>
+        <colspec colwidth="5*"/>
+        <tbody>
+          <row>
+            <entry><literal>status</literal></entry>
+            <entry>One of PAUSED, RUNNING, SHUTDOWN or SHUTOFF</entry>
+          </row>
+          <row>
+            <entry><literal>memory</literal></entry>
+            <entry>The amount of memory allocated to the guest, in bytes</entry>
+          </row>
+          <row>
+            <entry><literal>cpu</literal></entry>
+            <entry>The CPU <literal>topology</literal> (i.e. number of <literal>sockets</literal> and <literal>cores</literal> available to the guest)</entry>
+          </row>
+          <row>
+            <entry><literal>os</literal></entry>
+            <entry>A list of boot devices (using <literal>boot dev</literal>) - either <literal>cdrom</literal>, <literal>hd</literal> or <literal>network</literal></entry>
+          </row>
+          <row>
+            <entry><literal>cluster</literal></entry>
+            <entry>A reference to the cluster on which this VM will run. See <xref linkend="chap-REST_API_Guide-Clusters"/></entry>
+          </row>
+          <row>
+            <entry><literal>template</literal></entry>
+            <entry>A reference to the template on which this VM is based. See <xref linkend="chap-REST_API_Guide-Templates"/></entry>
+          </row>
+          <row>
+            <entry><literal>vmpool</literal></entry>
+            <entry>A reference to the VM pool which this VM is a member of. See <xref linkend="chap-REST_API_Guide-VM_Pools"/></entry>
+          </row>
+          <row>
+            <entry><literal>devices</literal></entry>
+            <entry>A collection of <literal>cdrom</literal>, <literal>disk</literal> or <literal>interface</literal> elements</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+
+    For example:
   </para>
+
+  <screen>
+&lt;vm id="082c794b-771f-452f-83c9-b2b5a19c0399" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399"&gt;
+  &lt;name&gt;vm1&lt;/name&gt;
+  &lt;status&gt;SHUTOFF&lt;/status&gt;
+  &lt;memory&gt;536870912&lt;/memory&gt;
+  &lt;cpu&gt;
+    &lt;topology cores="1" sockets="1"/&gt;
+  &lt;/cpu&gt;
+  &lt;os&gt;
+    &lt;boot dev="hd"/&gt;
+  &lt;/os&gt;
+  &lt;cluster id="0" href="clusters/0"/&gt;
+  &lt;template id="00000000-0000-0000-0000-000000000000" href="templates/00000000-0000-0000-0000-000000000000"/&gt;
+  &lt;devices&gt;
+    &lt;disk id="ed7feafe-9aaf-458c-809a-ed789cdbd5b4"&gt;
+      &lt;size&gt;10737418240&lt;/size&gt;
+      &lt;type&gt;SYSTEM&lt;/type&gt;
+      &lt;status&gt;OK&lt;/status&gt;
+      &lt;interface&gt;VIRTIO&lt;/interface&gt;
+      &lt;format&gt;RAW&lt;/format&gt;
+      &lt;bootable&gt;true&lt;/bootable&gt;
+    &lt;/disk&gt;
+    &lt;interface id="7a3cff5e-3cc4-47c2-8388-9adf16341f5e"&gt;
+      &lt;name&gt;nic1&lt;/name&gt;
+      &lt;network id="00000000-0000-0000-0000-000000000009" href="networks/00000000-0000-0000-0000-000000000009"/&gt;
+      &lt;type&gt;PV&lt;/type&gt;
+      &lt;mac address="00:1a:4a:16:84:07"/&gt;
+    &lt;/interface&gt;
+  &lt;/devices&gt;
+  &lt;actions&gt;
+    &lt;link rel="shutdown" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/shutdown"/&gt;
+    &lt;link rel="start" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/start"/&gt;
+    &lt;link rel="stop" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/stop"/&gt;
+    &lt;link rel="suspend" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/suspend"/&gt;
+    &lt;link rel="restore" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/restore"/&gt;
+    &lt;link rel="migrate" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/migrate"/&gt;
+    &lt;link rel="move" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/move"/&gt;
+    &lt;link rel="detach" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/detach"/&gt;
+    &lt;link rel="adddevice" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/adddevice"/&gt;
+    &lt;link rel="removedevice" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/removedevice"/&gt;
+    &lt;link rel="changeCD" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/changeCD"/&gt;
+    &lt;link rel="ejectCD" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/ejectCD"/&gt;
+  &lt;/actions&gt;
+&lt;/vm&gt;
+  </screen>
+
+  <para>
+    When creating a new VM, the <literal>name</literal>, <literal>template id</literal> elements are required. The <literal>name</literal>, <literal>description</literal>, <literal>memory</literal>, <literal>cpu topology</literal> and <literal>os boot dev</literal> properties may be updated post-creation.
+  </para>
+
+  <para>
+    There are twelve possible actions for hosts - <literal>shutdown</literal>, <literal>start</literal>, <literal>stop</literal>, <literal>suspend</literal>, <literal>restore</literal>, <literal>migrate</literal>, <literal>move</literal>, <literal>detach</literal>, <literal>adddevice</literal> and <literal>removedevice</literal>.
+  </para>
+
+  <section id="sect-REST_API_Guide-VMs-CDROMs">
+    <title>
+      CD-ROM Devices
+    </title>
+
+    <para>
+      CD-ROM devices are represented by a <literal>cdrom</literal> element containing the following properties:
+
+      <informaltable frame="none">
+        <tgroup cols="2">
+          <colspec colwidth="2*"/>
+          <colspec colwidth="5*"/>
+          <tbody>
+            <row>
+              <entry><literal>iso id</literal></entry>
+              <entry>A reference to an ISO image. See <xref linkend="sect-REST_API_Guide-Data_Centers-ISO_Images"/></entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+    </para>
+    <para>
+      When adding a new CD-ROM, the <literal>iso id</literal> property is required.
+    </para>
+  </section>
+
+  <section id="sect-REST_API_Guide-VMs-Disks">
+    <title>
+      Disk Devices
+    </title>
+
+    <para>
+      Disk devices are represented by a <literal>disk</literal> element containing the following properties:
+
+      <informaltable frame="none">
+        <tgroup cols="2">
+          <colspec colwidth="2*"/>
+          <colspec colwidth="5*"/>
+          <tbody>
+            <row>
+              <entry><literal>size</literal></entry>
+              <entry></entry>
+            </row>
+            <row>
+              <entry><literal>type</literal></entry>
+              <entry></entry>
+            </row>
+            <row>
+              <entry><literal>status</literal></entry>
+              <entry></entry>
+            </row>
+            <row>
+              <entry><literal>interface</literal></entry>
+              <entry></entry>
+            </row>
+            <row>
+              <entry><literal>format</literal></entry>
+              <entry></entry>
+            </row>
+            <row>
+              <entry><literal>sparse</literal></entry>
+              <entry></entry>
+            </row>
+            <row>
+              <entry><literal>bootable</literal></entry>
+              <entry></entry>
+            </row>
+            <row>
+              <entry><literal>wipe_after_delete</literal></entry>
+              <entry></entry>
+            </row>
+            <row>
+              <entry><literal>propagate_errors</literal></entry>
+              <entry></entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+    </para>
+    <para>
+      When adding a new disk, the <literal>size</literal> property is required.
+    </para>
+  </section>
+
+  <section id="sect-REST_API_Guide-VMs-NICs">
+    <title>
+      Network Interface Devices
+    </title>
+
+    <para>
+      Network interface devices are represented by a <literal>interface</literal> element containing the following properties:
+      <informaltable frame="none">
+        <tgroup cols="2">
+          <colspec colwidth="2*"/>
+          <colspec colwidth="5*"/>
+          <tbody>
+            <row>
+              <entry><literal>name</literal></entry>
+              <entry></entry>
+            </row>
+            <row>
+              <entry><literal>network id</literal></entry>
+              <entry></entry>
+            </row>
+            <row>
+              <entry><literal>type</literal></entry>
+              <entry></entry>
+            </row>
+            <row>
+              <entry><literal>mac address</literal></entry>
+              <entry></entry>
+            </row>
+            <row>
+              <entry><literal>ip address/netmask/gateway</literal></entry>
+              <entry></entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+    </para>
+
+    <para>
+      When adding a new interface, the <literal>name</literal> and <literal>network id</literal> properties are required.
+    </para>
+  </section>
+
 </chapter>
