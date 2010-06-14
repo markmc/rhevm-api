@@ -79,17 +79,17 @@
   <files>
 
     <file>
-      <source>${basedir}/src/main/release/rhevm-admin/bin/rhevm-admin${extension}</source>
+      <source>${basedir}/src/main/release/rhevm-admin/bin/rhevm-admin${shell.extension}</source>
       <outputDirectory>/rhevm-admin/bin</outputDirectory>
-      <destName>rhevm-admin${extension}</destName>
+      <destName>rhevm-admin${shell.extension}</destName>
       <fileMode>0755</fileMode>
       <lineEnding>${line.ending}</lineEnding>
     </file>
 
     <file>
-      <source>${basedir}/src/main/release/rhevm-admin/bin/rhevm-client${extension}</source>
+      <source>${basedir}/src/main/release/rhevm-admin/bin/rhevm-client${shell.extension}</source>
       <outputDirectory>/rhevm-admin/bin</outputDirectory>
-      <destName>rhevm-client${extension}</destName>
+      <destName>rhevm-client${shell.extension}</destName>
       <fileMode>0755</fileMode>
       <lineEnding>${line.ending}</lineEnding>
     </file>
@@ -103,7 +103,7 @@
     </file>
 
     <file>
-      <source>${basedir}/src/main/release/rhevm-admin/README</source>
+      <source>${basedir}/src/main/release/rhevm-admin/README${text.extension}</source>
       <outputDirectory>/rhevm-admin</outputDirectory>
       <destName>README</destName>
       <fileMode>0644</fileMode>
