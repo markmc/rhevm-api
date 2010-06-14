@@ -26,6 +26,7 @@ import com.redhat.rhevm.api.model.Attachments;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.Host;
+import com.redhat.rhevm.api.model.Iso;
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.Template;
@@ -43,6 +44,7 @@ public class LinkHelperTest extends Assert {
     private static final String HOST_ID = "magnificent";
     private static final String DATA_CENTER_ID = "majestic";
     private static final String NETWORK_ID = "stupendous";
+    private static final String ISO_ID = "faroutdude";
 
     private static final String VM_HREF = "vms/" + VM_ID;
     private static final String CLUSTER_HREF = "clusters/" + CLUSTER_ID;
@@ -52,6 +54,7 @@ public class LinkHelperTest extends Assert {
     private static final String HOST_HREF = "hosts/" + HOST_ID;
     private static final String DATA_CENTER_HREF = "datacenters/" + DATA_CENTER_ID;
     private static final String NETWORK_HREF = "networks/" + NETWORK_ID;
+    private static final String ISO_HREF = "datacenters/" + DATA_CENTER_ID + "/isos/" + ISO_ID;
     private static final String ATTACHMENT_HREF = STORAGE_DOMAIN_HREF + "/attachments/" + DATA_CENTER_ID;
 
     @Test
@@ -124,6 +127,19 @@ public class LinkHelperTest extends Assert {
         LinkHelper.addLinks(network);
 
         assertEquals(network.getHref(), NETWORK_HREF);
+    }
+
+    @Test
+    public void testIsoLinks() throws Exception {
+        Iso iso = new Iso();
+        iso.setId(ISO_ID);
+
+        iso.setDataCenter(new DataCenter());
+        iso.getDataCenter().setId(DATA_CENTER_ID);
+
+        LinkHelper.addLinks(iso);
+
+        assertEquals(iso.getHref(), ISO_HREF);
     }
 
     @Test

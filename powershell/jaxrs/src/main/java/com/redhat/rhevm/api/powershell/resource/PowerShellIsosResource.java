@@ -41,14 +41,14 @@ public class PowerShellIsosResource implements IsosResource {
         Isos ret = new Isos();
         for (Iso iso : PowerShellIso.parse(PowerShellCmd.runCommand("get-isoimages -datacenterid " + dataCenterId))) {
             UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(iso.getId());
-            ret.getIsos().add(PowerShellIsoResource.addLinks(iso, uriInfo, uriBuilder));
+            ret.getIsos().add(PowerShellIsoResource.addLinks(iso, dataCenterId, uriInfo, uriBuilder));
         }
         return ret;
     }
 
     @Override
     public IsoResource getIsoSubResource(UriInfo uriInfo, String id) {
-        return new PowerShellIsoResource(id);
+        return new PowerShellIsoResource(id, dataCenterId);
     }
 
     /**

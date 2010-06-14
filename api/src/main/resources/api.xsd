@@ -406,6 +406,9 @@
   <xs:complexType name="Iso">
     <xs:complexContent>
       <xs:extension base="BaseResource">
+        <xs:sequence>
+          <xs:element ref="data_center" minOccurs="0"/>
+        </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.Iso;
 import com.redhat.rhevm.api.resource.IsoResource;
 
@@ -30,13 +31,18 @@ import com.redhat.rhevm.api.resource.IsoResource;
 public class PowerShellIsoResource implements IsoResource {
 
     private static String id;
+    private static String dataCenterId;
 
-    public PowerShellIsoResource(String id) {
+    public PowerShellIsoResource(String id, String dataCenterId) {
         this.id = id;
+        this.dataCenterId = dataCenterId;
     }
 
-    public static Iso addLinks(Iso iso, UriInfo uriInfo, UriBuilder uriBuilder) {
+    public static Iso addLinks(Iso iso, String dataCenterId, UriInfo uriInfo, UriBuilder uriBuilder) {
         iso.setHref(uriBuilder.build().toString());
+        iso.setDataCenter(new DataCenter());
+        iso.getDataCenter().setId(dataCenterId);
+        iso.getDataCenter().setHref(PowerShellDataCentersResource.getHref(uriInfo.getBaseUriBuilder(), dataCenterId));
         return iso;
     }
 
@@ -46,6 +52,6 @@ public class PowerShellIsoResource implements IsoResource {
         iso.setId(id);
         iso.setName(id);
 
-        return addLinks(iso, uriInfo, uriInfo.getRequestUriBuilder());
+        return addLinks(iso, dataCenterId, uriInfo, uriInfo.getRequestUriBuilder());
     }
 }
