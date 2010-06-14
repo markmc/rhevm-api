@@ -34,7 +34,7 @@ public class MockNetworkResourceTest extends MockTestBase {
         assertNotNull(network.getName());
         assertNotNull(network.getId());
         assertNotNull(network.getHref());
-        assertTrue(network.getHref().endsWith("/networks/" + network.getId()));
+        assertTrue(network.getHref().endsWith("networks/" + network.getId()));
         assertNotNull(network.getDataCenter());
         assertNotNull(network.getDataCenter().getId());
         assertNotNull(network.getDataCenter().getHref());

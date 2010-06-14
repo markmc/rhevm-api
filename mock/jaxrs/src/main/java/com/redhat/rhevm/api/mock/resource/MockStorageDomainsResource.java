@@ -73,19 +73,13 @@ public class MockStorageDomainsResource extends AbstractMockQueryableResource<St
         }
     }
 
-    public static String getHref(UriBuilder baseUriBuilder, String id) {
-        return baseUriBuilder.clone().path("storagedomains").path(id).build().toString();
-    }
-
     @Override
     public StorageDomains list(UriInfo uriInfo) {
         StorageDomains ret = new StorageDomains();
 
         for (MockStorageDomainResource storageDomain : storageDomains.values()) {
             if (filter(storageDomain.getModel(), uriInfo, StorageDomain.class)) {
-                String id = storageDomain.getModel().getId();
-                UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(id);
-                ret.getStorageDomains().add(storageDomain.addLinks(uriBuilder));
+                ret.getStorageDomains().add(storageDomain.addLinks());
             }
         }
 
@@ -103,7 +97,7 @@ public class MockStorageDomainsResource extends AbstractMockQueryableResource<St
 
         UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(id);
 
-        storageDomain = resource.addLinks(uriBuilder);
+        storageDomain = resource.addLinks();
 
         return Response.created(uriBuilder.build()).entity(storageDomain).build();
     }
@@ -122,24 +116,17 @@ public class MockStorageDomainsResource extends AbstractMockQueryableResource<St
     /**
      * Build a list of storage domains attached to a data center
      *
-     * @param uriInfo  the URI context of the current request
      * @param dataCenterId  the ID of the data center
      * @return  an encapsulation of the attachments
      */
-    public static Attachments getAttachmentsForDataCenter(UriInfo uriInfo, String dataCenterId) {
+    public static Attachments getAttachmentsForDataCenter(String dataCenterId) {
         Attachments attachments = new Attachments();
 
         for (MockStorageDomainResource storageDomain : storageDomains.values()) {
-            String href = storageDomain.getAttachmentHref(uriInfo, dataCenterId);
-
-            if (href == null) {
-                continue;
+            Attachment attachment = storageDomain.getAttachment(dataCenterId);
+            if (attachment != null) {
+                attachments.getAttachments().add(attachment);
             }
-
-            Attachment attachment = new Attachment();
-            attachment.setHref(href);
-
-            attachments.getAttachments().add(attachment);
         }
 
         return attachments;

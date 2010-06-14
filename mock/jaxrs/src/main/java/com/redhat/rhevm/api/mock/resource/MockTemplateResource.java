@@ -27,6 +27,7 @@ import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.resource.TemplateResource;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
+import com.redhat.rhevm.api.common.util.LinkHelper;
 
 
 public class MockTemplateResource extends AbstractMockResource<Template> implements TemplateResource {
@@ -41,19 +42,12 @@ public class MockTemplateResource extends AbstractMockResource<Template> impleme
         super(id, executor);
     }
 
-    public Template addLinks(UriInfo uriInfo, UriBuilder uriBuilder) {
-        Template template = JAXBHelper.clone("template", Template.class, getModel());
-
-        template.setHref(uriBuilder.build().toString());
-
-        ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, TemplateResource.class);
-        template.setActions(actionsBuilder.build());
-
-        return template;
+    public Template addLinks() {
+        return LinkHelper.addLinks(JAXBHelper.clone("template", Template.class, getModel()));
     }
 
     @Override
     public Template get(UriInfo uriInfo) {
-        return addLinks(uriInfo, uriInfo.getRequestUriBuilder());
+        return addLinks();
     }
 }

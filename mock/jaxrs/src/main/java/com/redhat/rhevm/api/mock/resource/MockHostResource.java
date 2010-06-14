@@ -31,6 +31,7 @@ import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.HostStatus;
 import com.redhat.rhevm.api.resource.HostResource;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
+import com.redhat.rhevm.api.common.util.LinkHelper;
 
 
 public class MockHostResource extends AbstractMockResource<Host> implements HostResource {
@@ -54,28 +55,21 @@ public class MockHostResource extends AbstractMockResource<Host> implements Host
         getModel().setName(host.getName());
     }
 
-    public Host addLinks(UriBuilder uriBuilder) {
-        Host host = JAXBHelper.clone(OBJECT_FACTORY.createHost(getModel()));
-
-        host.setHref(uriBuilder.build().toString());
-
-        ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, HostResource.class);
-        host.setActions(actionsBuilder.build());
-
-        return host;
+    public Host addLinks() {
+        return LinkHelper.addLinks(JAXBHelper.clone(OBJECT_FACTORY.createHost(getModel())));
     }
 
     /* FIXME: kill uriInfo param, make href auto-generated? */
     @Override
     public Host get(UriInfo uriInfo) {
-        return addLinks(uriInfo.getRequestUriBuilder());
+        return addLinks();
     }
 
     @Override
     public Host update(HttpHeaders headers, UriInfo uriInfo, Host host) {
         validateUpdate(host, headers);
         updateModel(host);
-        return addLinks(uriInfo.getRequestUriBuilder());
+        return addLinks();
     }
 
     @Override

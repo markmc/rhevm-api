@@ -30,6 +30,7 @@ import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.resource.DataCenterResource;
 import com.redhat.rhevm.api.resource.IsosResource;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
+import com.redhat.rhevm.api.common.util.LinkHelper;
 
 
 public class MockDataCenterResource extends AbstractMockResource<DataCenter> implements DataCenterResource {
@@ -61,31 +62,26 @@ public class MockDataCenterResource extends AbstractMockResource<DataCenter> imp
         }
     }
 
-    public DataCenter addLinks(UriInfo uriInfo, UriBuilder uriBuilder) {
+    public DataCenter addLinks() {
         DataCenter dataCenter = JAXBHelper.clone(OBJECT_FACTORY.createDataCenter(getModel()));
 
-        dataCenter.setHref(uriBuilder.build().toString());
-
-        ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, DataCenterResource.class);
-        dataCenter.setActions(actionsBuilder.build());
-
-        Attachments attachments = MockStorageDomainsResource.getAttachmentsForDataCenter(uriInfo, dataCenter.getId());
+        Attachments attachments = MockStorageDomainsResource.getAttachmentsForDataCenter(dataCenter.getId());
         dataCenter.setAttachments(attachments);
 
-        return dataCenter;
+        return LinkHelper.addLinks(dataCenter);
     }
 
     /* FIXME: kill uriInfo param, make href auto-generated? */
     @Override
     public DataCenter get(UriInfo uriInfo) {
-        return addLinks(uriInfo, uriInfo.getRequestUriBuilder());
+        return addLinks();
     }
 
     @Override
     public DataCenter update(HttpHeaders headers, UriInfo uriInfo, DataCenter dataCenter) {
         validateUpdate(dataCenter, headers);
         updateModel(dataCenter);
-        return addLinks(uriInfo, uriInfo.getRequestUriBuilder());
+        return addLinks();
     }
 
     public IsosResource getIsosResource() {

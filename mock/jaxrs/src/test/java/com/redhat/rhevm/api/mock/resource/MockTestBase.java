@@ -66,7 +66,7 @@ import com.redhat.rhevm.api.common.resource.DefaultCpusResource;
 public class MockTestBase extends Assert {
     private final String host = "localhost";
     private final int port = 8989;
-    private final String uri = String.format("http://%s:%d/", host, port);
+    protected final String API_URI = String.format("http://%s:%d/", host, port);
 
     private TJWSEmbeddedJaxrsServer server = new TJWSEmbeddedJaxrsServer();
 
@@ -223,7 +223,7 @@ public class MockTestBase extends Assert {
 
         RegisterBuiltin.register(ResteasyProviderFactory.getInstance());
 
-        api = ProxyFactory.create(ApiResource.class, uri.toString());
+        api = ProxyFactory.create(ApiResource.class, API_URI);
     }
 
     @After

@@ -21,7 +21,6 @@ package com.redhat.rhevm.api.mock.resource;
 import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.ActionsBuilder;
@@ -29,7 +28,9 @@ import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.resource.ClusterResource;
+import com.redhat.rhevm.api.resource.ClustersResource;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
+import com.redhat.rhevm.api.common.util.LinkHelper;
 
 
 public class MockClusterResource extends AbstractMockResource<Cluster> implements ClusterResource {
@@ -67,30 +68,19 @@ public class MockClusterResource extends AbstractMockResource<Cluster> implement
         }
     }
 
-    public Cluster addLinks(UriInfo uriInfo, UriBuilder uriBuilder) {
-        Cluster cluster = JAXBHelper.clone(OBJECT_FACTORY.createCluster(getModel()));
-
-        cluster.setHref(uriBuilder.build().toString());
-
-        UriBuilder baseUriBuilder = uriInfo.getBaseUriBuilder();
-        DataCenter dataCenter = cluster.getDataCenter();
-        dataCenter.setHref(MockDataCentersResource.getHref(baseUriBuilder, dataCenter.getId()));
-
-        ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, ClusterResource.class);
-        cluster.setActions(actionsBuilder.build());
-
-        return cluster;
+    public Cluster addLinks() {
+        return LinkHelper.addLinks(JAXBHelper.clone(OBJECT_FACTORY.createCluster(getModel())));
     }
 
     @Override
     public Cluster get(UriInfo uriInfo) {
-        return addLinks(uriInfo, uriInfo.getRequestUriBuilder());
+        return addLinks();
     }
 
     @Override
     public Cluster update(HttpHeaders headers, UriInfo uriInfo, Cluster cluster) {
         validateUpdate(cluster, headers);
         updateModel(cluster);
-        return addLinks(uriInfo, uriInfo.getRequestUriBuilder());
+        return addLinks();
     }
 }

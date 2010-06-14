@@ -64,9 +64,7 @@ public class MockVmsResource extends AbstractMockQueryableResource<VM> implement
 
         for (MockVmResource vm : vms.values()) {
             if (filter(vm.getModel(), uriInfo, VM.class)) {
-                String id = vm.getModel().getId();
-                UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(id);
-                ret.getVMs().add(vm.addLinks(uriBuilder));
+                ret.getVMs().add(vm.addLinks());
             }
         }
 
@@ -84,7 +82,7 @@ public class MockVmsResource extends AbstractMockQueryableResource<VM> implement
 
         UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(id);
 
-        vm = resource.addLinks(uriBuilder);
+        vm = resource.addLinks();
 
         return Response.created(uriBuilder.build()).entity(vm).build();
     }

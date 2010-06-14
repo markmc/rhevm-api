@@ -35,12 +35,12 @@ public class MockVmResourceTest extends MockTestBase {
         assertNotNull(vm.getName());
         assertNotNull(vm.getId());
         assertNotNull(vm.getHref());
-        assertTrue(vm.getHref().endsWith("/vms/" + vm.getId()));
+        assertTrue(vm.getHref().endsWith("vms/" + vm.getId()));
         assertNotNull(vm.getActions());
         assertTrue(vm.getActions().getLinks().size() > 0);
         boolean includesStartLink = false;
         for (Link actionLink : vm.getActions().getLinks()) {
-            includesStartLink = actionLink.getHref().endsWith("/vms/" + vm.getId() + "/start");
+            includesStartLink = actionLink.getHref().endsWith("vms/" + vm.getId() + "/start");
             if (includesStartLink) {
                 break;
             }

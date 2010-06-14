@@ -27,9 +27,11 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.common.resource.StorageDomainActionValidator;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
+import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.ActionValidator;
+import com.redhat.rhevm.api.model.Attachment;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.StorageDomainStatus;
@@ -58,9 +60,12 @@ public class MockStorageDomainResource extends AbstractMockResource<StorageDomai
         getModel().setName(storageDomain.getName());
     }
 
-    public StorageDomain addLinks(UriBuilder uriBuilder) {
+    public StorageDomain addLinks() {
         StorageDomain storageDomain = JAXBHelper.clone(OBJECT_FACTORY.createStorageDomain(getModel()));
-        storageDomain.setHref(uriBuilder.build().toString());
+
+        storageDomain = LinkHelper.addLinks(storageDomain);
+
+        UriBuilder uriBuilder = LinkHelper.getUriBuilder(storageDomain);
 
         ActionValidator actionValidator = new StorageDomainActionValidator(storageDomain);
         ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, StorageDomainResource.class, actionValidator);
@@ -71,19 +76,20 @@ public class MockStorageDomainResource extends AbstractMockResource<StorageDomai
         link.setHref(uriBuilder.clone().path("attachments").build().toString());
         storageDomain.getLinks().clear();
         storageDomain.getLinks().add(link);
+
         return storageDomain;
     }
 
     @Override
     public StorageDomain get(UriInfo uriInfo) {
-        return addLinks(uriInfo.getRequestUriBuilder());
+        return addLinks();
     }
 
     @Override
     public StorageDomain update(HttpHeaders headers, UriInfo uriInfo, StorageDomain storageDomain) {
         validateUpdate(storageDomain, headers);
         updateModel(storageDomain);
-        return addLinks(uriInfo.getRequestUriBuilder());
+        return addLinks();
     }
 
     @Override
@@ -103,14 +109,14 @@ public class MockStorageDomainResource extends AbstractMockResource<StorageDomai
     }
 
     /**
-     * Build a URI for any existing attachment to the given data center
+     * Build a attachment representation for any existing attachment to
+     * the given data center
      *
-     * @param uriInfo  URI context of the current request
      * @param dataCenterId  the ID of the data center
-     * @return  a URI representing the attachment
+     * @return  a representation of the attachment
      */
-    public String getAttachmentHref(UriInfo uriInfo, String dataCenterId) {
-        return attachments.getAttachmentHref(uriInfo, dataCenterId);
+    public Attachment getAttachment(String dataCenterId) {
+        return attachments.getAttachment(dataCenterId);
     }
 
     private class StorageDomainStatusSetter extends AbstractActionTask {

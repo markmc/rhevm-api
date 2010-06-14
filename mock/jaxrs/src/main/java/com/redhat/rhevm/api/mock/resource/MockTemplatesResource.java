@@ -59,9 +59,7 @@ public class MockTemplatesResource extends AbstractMockQueryableResource<Templat
 
         for (MockTemplateResource template : templates.values()) {
             if (filter(template.getModel(), uriInfo, Template.class)) {
-                String id = template.getModel().getId();
-                UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(id);
-                ret.getTemplates().add(template.addLinks(uriInfo, uriBuilder));
+                ret.getTemplates().add(template.addLinks());
             }
         }
 

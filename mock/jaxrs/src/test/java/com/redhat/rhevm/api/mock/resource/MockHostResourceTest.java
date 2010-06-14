@@ -35,12 +35,12 @@ public class MockHostResourceTest extends MockTestBase {
         assertNotNull(host.getName());
         assertNotNull(host.getId());
         assertNotNull(host.getHref());
-        assertTrue(host.getHref().endsWith("/hosts/" + host.getId()));
+        assertTrue(host.getHref().endsWith("hosts/" + host.getId()));
         assertNotNull(host.getActions());
         assertTrue(host.getActions().getLinks().size() > 0);
         boolean includesApproveLink = false;
         for (Link actionLink : host.getActions().getLinks()) {
-            includesApproveLink = actionLink.getHref().endsWith("/hosts/" + host.getId() + "/approve");
+            includesApproveLink = actionLink.getHref().endsWith("hosts/" + host.getId() + "/approve");
             if (includesApproveLink) {
                 break;
             }

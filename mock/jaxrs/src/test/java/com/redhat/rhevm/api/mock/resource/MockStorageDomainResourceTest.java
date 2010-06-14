@@ -35,12 +35,12 @@ public class MockStorageDomainResourceTest extends MockTestBase {
         assertNotNull(domain.getName());
         assertNotNull(domain.getId());
         assertNotNull(domain.getHref());
-        assertTrue(domain.getHref().endsWith("/storagedomains/" + domain.getId()));
+        assertTrue(domain.getHref().endsWith("storagedomains/" + domain.getId()));
         assertNotNull(domain.getActions());
         assertTrue(domain.getActions().getLinks().size() > 0);
         boolean includesInitLink = false;
         for (Link actionLink : domain.getActions().getLinks()) {
-            includesInitLink = actionLink.getHref().endsWith("/storagedomains/" + domain.getId() + "/initialize");
+            includesInitLink = actionLink.getHref().endsWith("storagedomains/" + domain.getId() + "/initialize");
             if (includesInitLink) {
                 break;
             }
@@ -88,7 +88,8 @@ public class MockStorageDomainResourceTest extends MockTestBase {
 
         for (Link actionLink : domain.getActions().getLinks()) {
             if (actionLink.getRel().equals(action)) {
-                uri = actionLink.getHref();
+                uri = API_URI + actionLink.getHref();
+                System.out.println("URI for " + action + " is " + uri);
                 break;
             }
         }

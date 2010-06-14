@@ -31,6 +31,7 @@ import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
+import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.mock.model.MockVmStatus;
 
 
@@ -68,28 +69,21 @@ public class MockVmResource extends AbstractMockResource<VM> implements VmResour
         }
     }
 
-    public VM addLinks(UriBuilder uriBuilder) {
-        VM vm = JAXBHelper.clone("vm", VM.class, getModel());
-
-        vm.setHref(uriBuilder.build().toString());
-
-        ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, VmResource.class);
-        vm.setActions(actionsBuilder.build());
-
-        return vm;
+    public VM addLinks() {
+        return LinkHelper.addLinks(JAXBHelper.clone("vm", VM.class, getModel()));
     }
 
     /* FIXME: kill uriInfo param, make href auto-generated? */
     @Override
     public VM get(UriInfo uriInfo) {
-        return addLinks(uriInfo.getRequestUriBuilder());
+        return addLinks();
     }
 
     @Override
     public VM update(HttpHeaders headers, UriInfo uriInfo, VM vm) {
         validateUpdate(vm, headers);
         updateModel(vm);
-        return addLinks(uriInfo.getRequestUriBuilder());
+        return addLinks();
     }
 
     @Override

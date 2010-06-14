@@ -63,9 +63,7 @@ public class MockHostsResource extends AbstractMockQueryableResource<Host> imple
 
         for (MockHostResource host : hosts.values()) {
             if (filter(host.getModel(), uriInfo, Host.class)) {
-                String id = host.getModel().getId();
-                UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(id);
-                ret.getHosts().add(host.addLinks(uriBuilder));
+                ret.getHosts().add(host.addLinks());
             }
         }
 
@@ -83,7 +81,7 @@ public class MockHostsResource extends AbstractMockQueryableResource<Host> imple
 
         UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(id);
 
-        host = resource.addLinks(uriBuilder);
+        host = resource.addLinks();
 
         return Response.created(uriBuilder.build()).entity(host).build();
     }

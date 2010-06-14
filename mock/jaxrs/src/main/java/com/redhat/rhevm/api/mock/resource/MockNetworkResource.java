@@ -29,6 +29,7 @@ import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.resource.NetworkResource;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
+import com.redhat.rhevm.api.common.util.LinkHelper;
 
 
 public class MockNetworkResource extends AbstractMockResource<Network> implements NetworkResource {
@@ -49,30 +50,19 @@ public class MockNetworkResource extends AbstractMockResource<Network> implement
         getModel().setName(network.getName());
     }
 
-    public Network addLinks(UriInfo uriInfo, UriBuilder uriBuilder) {
-        Network network = JAXBHelper.clone(OBJECT_FACTORY.createNetwork(getModel()));
-
-        network.setHref(uriBuilder.build().toString());
-
-        UriBuilder baseUriBuilder = uriInfo.getBaseUriBuilder();
-        DataCenter dataCenter = network.getDataCenter();
-        dataCenter.setHref(MockDataCentersResource.getHref(baseUriBuilder, dataCenter.getId()));
-
-        ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, NetworkResource.class);
-        network.setActions(actionsBuilder.build());
-
-        return network;
+    public Network addLinks() {
+        return LinkHelper.addLinks(JAXBHelper.clone(OBJECT_FACTORY.createNetwork(getModel())));
     }
 
     @Override
     public Network get(UriInfo uriInfo) {
-        return addLinks(uriInfo, uriInfo.getRequestUriBuilder());
+        return addLinks();
     }
 
     @Override
     public Network update(HttpHeaders headers, UriInfo uriInfo, Network network) {
         validateUpdate(network, headers);
         updateModel(network);
-        return addLinks(uriInfo, uriInfo.getRequestUriBuilder());
+        return addLinks();
     }
 }

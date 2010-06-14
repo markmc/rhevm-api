@@ -59,19 +59,13 @@ public class MockDataCentersResource extends AbstractMockQueryableResource<DataC
         }
     }
 
-    public static String getHref(UriBuilder baseUriBuilder, String id) {
-        return baseUriBuilder.clone().path("datacenters").path(id).build().toString();
-    }
-
     @Override
     public DataCenters list(UriInfo uriInfo) {
         DataCenters ret = new DataCenters();
 
         for (MockDataCenterResource dataCenter : dataCenters.values()) {
             if (filter(dataCenter.getModel(), uriInfo, DataCenter.class)) {
-                String id = dataCenter.getModel().getId();
-                UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(id);
-                ret.getDataCenters().add(dataCenter.addLinks(uriInfo, uriBuilder));
+                ret.getDataCenters().add(dataCenter.addLinks());
             }
         }
 
@@ -89,7 +83,7 @@ public class MockDataCentersResource extends AbstractMockQueryableResource<DataC
 
         UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(id);
 
-        dataCenter = resource.addLinks(uriInfo, uriBuilder);
+        dataCenter = resource.addLinks();
 
         return Response.created(uriBuilder.build()).entity(dataCenter).build();
     }

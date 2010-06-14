@@ -34,7 +34,7 @@ public class MockClusterResourceTest extends MockTestBase {
         assertNotNull(cluster.getName());
         assertNotNull(cluster.getId());
         assertNotNull(cluster.getHref());
-        assertTrue(cluster.getHref().endsWith("/clusters/" + cluster.getId()));
+        assertTrue(cluster.getHref().endsWith("clusters/" + cluster.getId()));
     }
 
     @Test

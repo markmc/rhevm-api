@@ -62,19 +62,13 @@ public class MockClustersResource extends AbstractMockQueryableResource<Cluster>
         }
     }
 
-    public static String getHref(UriBuilder baseUriBuilder, String id) {
-        return baseUriBuilder.clone().path("clusters").path(id).build().toString();
-    }
-
     @Override
     public Clusters list(UriInfo uriInfo) {
         Clusters ret = new Clusters();
 
         for (MockClusterResource cluster : clusters.values()) {
             if (filter(cluster.getModel(), uriInfo, Cluster.class)) {
-                String id = cluster.getModel().getId();
-                UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(id);
-                ret.getClusters().add(cluster.addLinks(uriInfo, uriBuilder));
+                ret.getClusters().add(cluster.addLinks());
             }
         }
 
@@ -92,7 +86,7 @@ public class MockClustersResource extends AbstractMockQueryableResource<Cluster>
 
         UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(id);
 
-        cluster = resource.addLinks(uriInfo, uriBuilder);
+        cluster = resource.addLinks();
 
         return Response.created(uriBuilder.build()).entity(cluster).build();
     }

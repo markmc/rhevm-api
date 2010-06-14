@@ -31,6 +31,7 @@ import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.resource.AttachmentResource;
 import com.redhat.rhevm.api.resource.AttachmentsResource;
+import com.redhat.rhevm.api.common.util.LinkHelper;
 
 
 public class MockAttachmentsResource extends AbstractMockCollectionResource implements AttachmentsResource {
@@ -51,7 +52,7 @@ public class MockAttachmentsResource extends AbstractMockCollectionResource impl
         for (String id : attachments.keySet()) {
             MockAttachmentResource attachment = attachments.get(id);
             UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(id);
-            ret.getAttachments().add(attachment.addLinks(uriInfo, uriBuilder));
+            ret.getAttachments().add(attachment.addLinks(uriBuilder));
         }
 
         return ret;
@@ -80,7 +81,7 @@ public class MockAttachmentsResource extends AbstractMockCollectionResource impl
 
         UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(id);
 
-        attachment = newAttachment.addLinks(uriInfo, uriBuilder);
+        attachment = newAttachment.addLinks(uriBuilder);
 
         return Response.created(uriBuilder.build()).entity(attachment).build();
     }
@@ -96,21 +97,22 @@ public class MockAttachmentsResource extends AbstractMockCollectionResource impl
     }
 
     /**
-     * Build a URI for any existing attachment to the given data center
+     * Build a attachment representation for any existing attachment to
+     * the given data center
      *
-     * @param uriInfo  URI context of the current request
      * @param dataCenterId  the ID of the data center
-     * @return  a URI representing the attachment
+     * @return  a representation of the attachment
      */
-    public String getAttachmentHref(UriInfo uriInfo, String dataCenterId) {
+    public Attachment getAttachment(String dataCenterId) {
         if (attachments.get(dataCenterId) == null) {
             return null;
         }
 
-        UriBuilder uriBuilder =
-            uriInfo.getBaseUriBuilder().path("storagedomains").path(storageDomainId)
-                                       .path("attachments").path(dataCenterId);
+        Attachment attachment = new Attachment();
+        attachment.setId(dataCenterId);
+        attachment.setStorageDomain(new StorageDomain());
+        attachment.getStorageDomain().setId(storageDomainId);
 
-        return uriBuilder.build().toString();
+        return LinkHelper.addLinks(attachment);
     }
 }

@@ -25,6 +25,7 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.common.resource.AttachmentActionValidator;
+import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.ActionValidator;
@@ -64,29 +65,8 @@ public class MockAttachmentResource extends AbstractMockResource<Attachment> imp
         getModel().setMaster(attachment.isMaster());
     }
 
-    private void setStorageDomainHref(UriBuilder baseUriBuilder) {
-        StorageDomain storageDomain = getModel().getStorageDomain();
-
-        String href = MockStorageDomainsResource.getHref(baseUriBuilder, storageDomain.getId());
-
-        storageDomain.setHref(href);
-    }
-
-    private void setDataCenterHref(UriBuilder baseUriBuilder) {
-        DataCenter dataCenter = getModel().getDataCenter();
-
-        String href = MockDataCentersResource.getHref(baseUriBuilder, dataCenter.getId());
-
-        dataCenter.setHref(href);
-    }
-
-    public Attachment addLinks(UriInfo uriInfo, UriBuilder uriBuilder) {
-        UriBuilder baseUriBuilder = uriInfo.getBaseUriBuilder();
-
-        getModel().setHref(uriBuilder.build().toString());
-
-        setStorageDomainHref(baseUriBuilder);
-        setDataCenterHref(baseUriBuilder);
+    public Attachment addLinks(UriBuilder uriBuilder) {
+        LinkHelper.addLinks(getModel());
 
         ActionValidator actionValidator = new AttachmentActionValidator(getModel());
         ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, AttachmentResource.class, actionValidator);
@@ -97,7 +77,7 @@ public class MockAttachmentResource extends AbstractMockResource<Attachment> imp
 
     @Override
     public Attachment get(UriInfo uriInfo) {
-        return addLinks(uriInfo, uriInfo.getRequestUriBuilder());
+        return addLinks(uriInfo.getRequestUriBuilder());
     }
 
     @Override

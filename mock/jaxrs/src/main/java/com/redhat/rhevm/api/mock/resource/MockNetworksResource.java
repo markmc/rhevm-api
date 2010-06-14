@@ -66,9 +66,7 @@ public class MockNetworksResource extends AbstractMockQueryableResource<Network>
 
         for (MockNetworkResource network : networks.values()) {
             if (filter(network.getModel(), uriInfo, Network.class)) {
-                String id = network.getModel().getId();
-                UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(id);
-                ret.getNetworks().add(network.addLinks(uriInfo, uriBuilder));
+                ret.getNetworks().add(network.addLinks());
             }
         }
 
@@ -86,7 +84,7 @@ public class MockNetworksResource extends AbstractMockQueryableResource<Network>
 
         UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(id);
 
-        network = resource.addLinks(uriInfo, uriBuilder);
+        network = resource.addLinks();
 
         return Response.created(uriBuilder.build()).entity(network).build();
     }
