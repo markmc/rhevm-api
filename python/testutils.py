@@ -23,6 +23,7 @@ import http
 import random
 import template_parser
 import time
+import urlparse
 
 random.seed()
 
@@ -79,30 +80,33 @@ class TestUtils:
         self.opts = opts
         self.fmt = fmt
 
+    def abs(self, href):
+        return urlparse.urljoin(self.opts['uri'], href);
+
     def get(self, href):
-        ret = http.GET(self.opts, href, self.fmt.MEDIA_TYPE)
+        ret = http.GET(self.opts, self.abs(href), self.fmt.MEDIA_TYPE)
         expectedStatusCode(ret, 200)
         return self.fmt.parse(ret['body'])
 
     def query(self, href, constraint):
-        t = template_parser.URITemplate(href)
+        t = template_parser.URITemplate(self.abs(href))
         qhref = t.sub({"query": constraint})
         ret = http.GET(self.opts, qhref, self.fmt.MEDIA_TYPE)
         expectedStatusCode(ret, 200)
         return self.fmt.parse(ret['body'])
 
     def create(self, href, entity):
-        ret = http.POST(self.opts, href, entity.dump(), self.fmt.MEDIA_TYPE)
+        ret = http.POST(self.opts, self.abs(href), entity.dump(), self.fmt.MEDIA_TYPE)
         expectedStatusCode(ret, 201)
         return self.fmt.parse(ret['body'])
 
     def update(self, href, entity, expected):
-        ret = http.PUT(self.opts, href, entity.dump(), self.fmt.MEDIA_TYPE)
+        ret = http.PUT(self.opts, self.abs(href), entity.dump(), self.fmt.MEDIA_TYPE)
         expectedStatusCode(ret, expected)
         return self.fmt.parse(ret['body'])
 
     def delete(self, href):
-        ret = http.DELETE(self.opts, href)
+        ret = http.DELETE(self.opts, self.abs(href))
         expectedStatusCode(ret, 204)
 
     def makeAction(self, async, expiry, **params):
@@ -118,7 +122,7 @@ class TestUtils:
     def asyncAction(self, actions, verb, **params):
         expectedActionLink(actions, verb)
         ret = http.POST(self.opts,
-                        actions.link[verb].href,
+                        self.abs(actions.link[verb].href),
                         self.makeAction('true', '5000', **params).dump(),
                         self.fmt.MEDIA_TYPE)
         expectedStatusCode(ret, 202)
@@ -126,13 +130,13 @@ class TestUtils:
         unexpectedActionStatus(resp_action.status, "COMPLETE")
         for i in range(1, 3):
             time.sleep(1)
-            resp = http.GET(self.opts, resp_action.href, self.fmt.MEDIA_TYPE)
+            resp = http.GET(self.opts, self.abs(resp_action.href), self.fmt.MEDIA_TYPE)
             expectedStatusCode(resp, 200)
             resp_action = self.fmt.parse(resp['body'])
             unexpectedActionStatus(resp_action.status, "COMPLETE")
 
         time.sleep(4)
-        resp = http.GET(self.opts, resp_action.href, self.fmt.MEDIA_TYPE)
+        resp = http.GET(self.opts, self.abs(resp_action.href), self.fmt.MEDIA_TYPE)
         expectedStatusCode(resp, 200)
         resp_action = self.fmt.parse(resp['body'])
         expectedActionStatus(resp_action.status, "COMPLETE")
@@ -140,7 +144,7 @@ class TestUtils:
     def syncAction(self, actions, verb, **params):
         expectedActionLink(actions, verb)
         ret = http.POST(self.opts,
-                        actions.link[verb].href,
+                        self.abs(actions.link[verb].href),
                         self.makeAction('false', '10', **params).dump(),
                         self.fmt.MEDIA_TYPE)
         expectedStatusCode(ret, 200)
@@ -149,7 +153,7 @@ class TestUtils:
 
     def find(self, href, name):
         results = filter(lambda r: r.name == name,
-                         self.get(href))
+                         self.get(self.abs(href)))
         if len(results) == 0:
             raise RuntimeError("'%s' not found" % name)
         return results[0]
