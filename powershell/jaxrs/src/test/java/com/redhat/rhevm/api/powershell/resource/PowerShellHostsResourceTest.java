@@ -57,9 +57,9 @@ public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionRes
     @Test
     public void testAdd() throws Exception {
         verifyResponse(
-            resource.add(setUpResourceExpectations(getAddCommand() + ADD_COMMAND_EPILOG,
-                                                   getAddReturn(ADD_RETURN_EPILOG),
-                                                   NEW_NAME),
+            resource.add(setUpAddResourceExpectations(getAddCommand() + ADD_COMMAND_EPILOG,
+                                                      getAddReturn(ADD_RETURN_EPILOG),
+                                                      NEW_NAME),
                          getModel(NEW_NAME)),
             NEW_NAME);
     }

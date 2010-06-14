@@ -21,11 +21,11 @@ package com.redhat.rhevm.api.powershell.resource;
 import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.common.resource.AttachmentActionValidator;
+import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.ActionValidator;
@@ -55,32 +55,13 @@ public class PowerShellAttachmentResource extends AbstractActionableResource<Att
         this.storageDomainId = storageDomainId;
     }
 
-    private static void setStorageDomainHref(Attachment attachment, UriBuilder baseUriBuilder) {
-        StorageDomain storageDomain = attachment.getStorageDomain();
-
-        String href = PowerShellStorageDomainsResource.getHref(baseUriBuilder, storageDomain.getId());
-
-        storageDomain.setHref(href);
-    }
-
-    private static void setDataCenterHref(Attachment attachment, UriBuilder baseUriBuilder) {
-        DataCenter dataCenter = attachment.getDataCenter();
-
-        String href = PowerShellDataCentersResource.getHref(baseUriBuilder, dataCenter.getId());
-
-        dataCenter.setHref(href);
-    }
-
-    public static Attachment addLinks(Attachment attachment, UriInfo uriInfo, UriBuilder uriBuilder) {
-        UriBuilder baseUriBuilder = uriInfo.getBaseUriBuilder();
-
-        attachment.setHref(uriBuilder.build().toString());
-
-        setStorageDomainHref(attachment, baseUriBuilder);
-        setDataCenterHref(attachment, baseUriBuilder);
+    public static Attachment addLinks(Attachment attachment) {
+        attachment = LinkHelper.addLinks(attachment);
 
         ActionValidator actionValidator = new AttachmentActionValidator(attachment);
-        ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, AttachmentResource.class, actionValidator);
+        ActionsBuilder actionsBuilder = new ActionsBuilder(LinkHelper.getUriBuilder(attachment),
+                                                           AttachmentResource.class,
+                                                           actionValidator);
         attachment.setActions(actionsBuilder.build());
 
         return attachment;
@@ -101,7 +82,7 @@ public class PowerShellAttachmentResource extends AbstractActionableResource<Att
 
         Attachment attachment = PowerShellAttachmentsResource.buildAttachment(dataCenter, storageDomain);
 
-        return addLinks(attachment, uriInfo, uriInfo.getRequestUriBuilder());
+        return addLinks(attachment);
     }
 
     @Override

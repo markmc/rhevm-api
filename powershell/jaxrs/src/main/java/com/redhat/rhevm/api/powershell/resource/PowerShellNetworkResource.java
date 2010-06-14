@@ -30,6 +30,7 @@ import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.resource.NetworkResource;
 import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
+import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellNetwork;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 
@@ -49,16 +50,6 @@ public class PowerShellNetworkResource extends AbstractActionableResource<Networ
         return !networks.isEmpty() ? networks.get(0) : null;
     }
 
-    public static Network addLinks(Network network, UriInfo uriInfo, UriBuilder uriBuilder) {
-        network.setHref(uriBuilder.build().toString());
-
-        UriBuilder baseUriBuilder = uriInfo.getBaseUriBuilder();
-        DataCenter dataCenter = network.getDataCenter();
-        dataCenter.setHref(PowerShellDataCentersResource.getHref(baseUriBuilder, dataCenter.getId()));
-
-        return network;
-    }
-
     @Override
     public Network get(UriInfo uriInfo) {
         StringBuilder buf = new StringBuilder();
@@ -70,7 +61,7 @@ public class PowerShellNetworkResource extends AbstractActionableResource<Networ
         buf.append("  }");
         buf.append("}");
 
-        return addLinks(runAndParseSingle(buf.toString()), uriInfo, uriInfo.getRequestUriBuilder());
+        return LinkHelper.addLinks(runAndParseSingle(buf.toString()));
     }
 
     @Override
@@ -93,6 +84,6 @@ public class PowerShellNetworkResource extends AbstractActionableResource<Networ
         buf.append("  }");
         buf.append("}\n");
 
-        return addLinks(runAndParseSingle(buf.toString()), uriInfo, uriInfo.getRequestUriBuilder());
+        return LinkHelper.addLinks(runAndParseSingle(buf.toString()));
     }
 }

@@ -28,6 +28,7 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.common.resource.StorageDomainActionValidator;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
+import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.ActionValidator;
@@ -130,16 +131,18 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
         return runAndParseSingle(command, false);
     }
 
-    public StorageDomain addLinks(StorageDomain storageDomain, UriBuilder uriBuilder) {
-        storageDomain.setHref(uriBuilder.build().toString());
+    public StorageDomain addLinks(StorageDomain storageDomain) {
+        storageDomain = LinkHelper.addLinks(storageDomain);
 
         ActionValidator actionValidator = new StorageDomainActionValidator(storageDomain);
-        ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, StorageDomainResource.class, actionValidator);
+        ActionsBuilder actionsBuilder = new ActionsBuilder(LinkHelper.getUriBuilder(storageDomain),
+                                                           StorageDomainResource.class,
+                                                           actionValidator);
         storageDomain.setActions(actionsBuilder.build());
 
         Link link = new Link();
         link.setRel("attachments");
-        link.setHref(uriBuilder.clone().path("attachments").build().toString());
+        link.setHref(LinkHelper.getUriBuilder(storageDomain).path("attachments").build().toString());
         storageDomain.getLinks().clear();
         storageDomain.getLinks().add(link);
 
@@ -155,7 +158,7 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
             storageDomain = parent.mapFromRhevmId(runAndParseSingle("get-storagedomain " + getId(), true));
         }
         storageDomain = JAXBHelper.clone(OBJECT_FACTORY.createStorageDomain(storageDomain));
-        return addLinks(storageDomain, uriInfo.getRequestUriBuilder());
+        return addLinks(storageDomain);
     }
 
     @Override
@@ -181,7 +184,7 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
             storageDomain = parent.mapFromRhevmId(runAndParseSingle(buf.toString(), true));
         }
         storageDomain = JAXBHelper.clone(OBJECT_FACTORY.createStorageDomain(storageDomain));
-        return addLinks(storageDomain, uriInfo.getRequestUriBuilder());
+        return addLinks(storageDomain);
     }
 
     @Override

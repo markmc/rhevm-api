@@ -26,6 +26,7 @@ import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.Clusters;
 import com.redhat.rhevm.api.resource.ClusterResource;
 import com.redhat.rhevm.api.resource.ClustersResource;
+import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 
 public class PowerShellClustersResource
@@ -36,8 +37,7 @@ public class PowerShellClustersResource
     public Clusters list(UriInfo uriInfo) {
         Clusters ret = new Clusters();
         for (Cluster cluster : PowerShellClusterResource.runAndParse(getSelectCommand("select-cluster", uriInfo, Clusters.class))) {
-            UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(cluster.getId());
-            ret.getClusters().add(PowerShellClusterResource.addLinks(cluster, uriInfo, uriBuilder));
+            ret.getClusters().add(LinkHelper.addLinks(cluster));
         }
         return ret;
     }
@@ -60,11 +60,9 @@ public class PowerShellClustersResource
 
         buf.append(" -compatibilityversion $v");
 
-        cluster = PowerShellClusterResource.runAndParseSingle(buf.toString());
+        cluster = LinkHelper.addLinks(PowerShellClusterResource.runAndParseSingle(buf.toString()));
 
         UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(cluster.getId());
-
-        cluster = PowerShellClusterResource.addLinks(cluster, uriInfo, uriBuilder);
 
         return Response.created(uriBuilder.build()).entity(cluster).build();
     }
@@ -82,16 +80,5 @@ public class PowerShellClustersResource
 
     protected PowerShellClusterResource createSubResource(String id) {
         return new PowerShellClusterResource(id, getExecutor());
-    }
-
-    /**
-     * Build an absolute URI for a given data center
-     *
-     * @param baseUriBuilder a UriBuilder representing the base URI
-     * @param id the data center ID
-     * @return an absolute URI
-     */
-    public static String getHref(UriBuilder baseUriBuilder, String id) {
-        return baseUriBuilder.clone().path("clusters").path(id).build().toString();
     }
 }

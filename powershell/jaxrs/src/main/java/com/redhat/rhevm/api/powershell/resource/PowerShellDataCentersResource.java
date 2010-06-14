@@ -36,8 +36,7 @@ public class PowerShellDataCentersResource
     public DataCenters list(UriInfo uriInfo) {
         DataCenters ret = new DataCenters();
         for (DataCenter dataCenter : PowerShellDataCenterResource.runAndParse(getSelectCommand("select-datacenter", uriInfo, DataCenters.class))) {
-            UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(dataCenter.getId());
-            ret.getDataCenters().add(PowerShellDataCenterResource.addLinks(dataCenter, uriInfo, uriBuilder));
+            ret.getDataCenters().add(PowerShellDataCenterResource.addLinks(dataCenter));
         }
         return ret;
     }
@@ -56,10 +55,9 @@ public class PowerShellDataCentersResource
         }
 
         dataCenter = PowerShellDataCenterResource.runAndParseSingle(buf.toString());
+        dataCenter = PowerShellDataCenterResource.addLinks(dataCenter);
 
         UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(dataCenter.getId());
-
-        dataCenter = PowerShellDataCenterResource.addLinks(dataCenter, uriInfo, uriBuilder);
 
         return Response.created(uriBuilder.build()).entity(dataCenter).build();
     }
@@ -77,16 +75,5 @@ public class PowerShellDataCentersResource
 
     protected PowerShellDataCenterResource createSubResource(String id) {
         return new PowerShellDataCenterResource(id, getExecutor());
-    }
-
-    /**
-     * Build an absolute URI for a given data center
-     *
-     * @param baseUriBuilder a UriBuilder representing the base URI
-     * @param id the data center ID
-     * @return an absolute URI
-     */
-    public static String getHref(UriBuilder baseUriBuilder, String id) {
-        return baseUriBuilder.clone().path("datacenters").path(id).build().toString();
     }
 }

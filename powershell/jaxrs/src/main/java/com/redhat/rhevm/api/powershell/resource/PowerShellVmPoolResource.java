@@ -30,6 +30,7 @@ import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VmPool;
 import com.redhat.rhevm.api.resource.VmPoolResource;
 import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
+import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellVmPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 
@@ -90,27 +91,19 @@ public class PowerShellVmPoolResource extends AbstractActionableResource<VmPool>
         return pool;
     }
 
-    public static VmPool addLinks(VmPool pool, UriInfo uriInfo, UriBuilder uriBuilder) {
-        pool.setHref(uriBuilder.build().toString());
-
-        UriBuilder baseUriBuilder = uriInfo.getBaseUriBuilder();
-
+    public static VmPool addLinks(VmPool pool) {
         pool = lookupClusterId(pool);
-        Cluster cluster = pool.getCluster();
-        cluster.setHref(PowerShellClustersResource.getHref(baseUriBuilder, cluster.getId()));
 
         if (pool.getTemplate() != null) {
             pool = lookupTemplateId(pool);
-            Template template = pool.getTemplate();
-            template.setHref(PowerShellTemplatesResource.getHref(baseUriBuilder, template.getId()));
         }
 
-        return pool;
+        return LinkHelper.addLinks(pool);
     }
 
     @Override
     public VmPool get(UriInfo uriInfo) {
-        return addLinks(runAndParseSingle("get-vmpool -vmpoolid " + getId()), uriInfo, uriInfo.getRequestUriBuilder());
+        return addLinks(runAndParseSingle("get-vmpool -vmpoolid " + getId()));
     }
 
     @Override
@@ -133,6 +126,6 @@ public class PowerShellVmPoolResource extends AbstractActionableResource<VmPool>
 
         buf.append("update-vmpool -vmpoolobject $v");
 
-        return addLinks(runAndParseSingle(buf.toString()), uriInfo, uriInfo.getRequestUriBuilder());
+        return addLinks(runAndParseSingle(buf.toString()));
     }
 }

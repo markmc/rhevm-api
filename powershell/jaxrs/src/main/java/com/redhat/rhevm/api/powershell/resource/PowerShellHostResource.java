@@ -31,6 +31,7 @@ import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.resource.HostResource;
 import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
+import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellHost;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 
@@ -53,18 +54,9 @@ public class PowerShellHostResource extends AbstractActionableResource<Host> imp
         return !hosts.isEmpty() ? hosts.get(0) : null;
     }
 
-    public static Host addLinks(Host host, UriBuilder uriBuilder) {
-        host.setHref(uriBuilder.build().toString());
-
-        ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, HostResource.class);
-        host.setActions(actionsBuilder.build());
-
-        return host;
-    }
-
     @Override
     public Host get(UriInfo uriInfo) {
-        return addLinks(runAndParseSingle(CMD_PREFIX + "get-host " + getId()), uriInfo.getRequestUriBuilder());
+        return LinkHelper.addLinks(runAndParseSingle(CMD_PREFIX + "get-host " + getId()));
     }
 
     @Override
@@ -82,7 +74,7 @@ public class PowerShellHostResource extends AbstractActionableResource<Host> imp
         buf.append("\n");
         buf.append("update-host -hostobject $h");
 
-        return addLinks(runAndParseSingle(buf.toString()), uriInfo.getRequestUriBuilder());
+        return LinkHelper.addLinks(runAndParseSingle(buf.toString()));
     }
 
     @Override

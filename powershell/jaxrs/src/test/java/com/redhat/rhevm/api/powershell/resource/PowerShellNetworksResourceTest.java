@@ -40,7 +40,6 @@ public class PowerShellNetworksResourceTest extends AbstractPowerShellCollection
         verifyCollection(
             resource.list(setUpResourceExpectations("get-networks",
                                                     getSelectReturn(ADD_RETURN_EPILOG),
-                                                    3,
                                                     NAMES)).getNetworks(),
             NAMES);
     }
@@ -48,10 +47,9 @@ public class PowerShellNetworksResourceTest extends AbstractPowerShellCollection
     @Test
     public void testAdd() throws Exception {
         verifyResponse(
-            resource.add(setUpResourceExpectations(getAddCommand() + ADD_COMMAND_EPILOG,
-                                                   getAddReturn(ADD_RETURN_EPILOG),
-                                                   1,
-                                                   NEW_NAME),
+            resource.add(setUpAddResourceExpectations(getAddCommand() + ADD_COMMAND_EPILOG,
+                                                      getAddReturn(ADD_RETURN_EPILOG),
+                                                      NEW_NAME),
                          getModel(NEW_NAME)),
             NEW_NAME);
     }

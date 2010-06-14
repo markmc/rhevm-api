@@ -22,13 +22,13 @@ import java.util.ArrayList;
 import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.resource.ClusterResource;
 import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
+import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellCluster;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 
@@ -52,16 +52,6 @@ public class PowerShellClusterResource extends AbstractActionableResource<Cluste
         return !clusters.isEmpty() ? clusters.get(0) : null;
     }
 
-    public static Cluster addLinks(Cluster cluster, UriInfo uriInfo, UriBuilder uriBuilder) {
-        cluster.setHref(uriBuilder.build().toString());
-
-        UriBuilder baseUriBuilder = uriInfo.getBaseUriBuilder();
-        DataCenter dataCenter = cluster.getDataCenter();
-        dataCenter.setHref(PowerShellDataCentersResource.getHref(baseUriBuilder, dataCenter.getId()));
-
-        return cluster;
-    }
-
     @Override
     public Cluster get(UriInfo uriInfo) {
         StringBuilder buf = new StringBuilder();
@@ -73,7 +63,7 @@ public class PowerShellClusterResource extends AbstractActionableResource<Cluste
         buf.append("  } ");
         buf.append("}");
 
-        return addLinks(runAndParseSingle(buf.toString()), uriInfo, uriInfo.getRequestUriBuilder());
+        return LinkHelper.addLinks(runAndParseSingle(buf.toString()));
     }
 
     @Override
@@ -101,6 +91,6 @@ public class PowerShellClusterResource extends AbstractActionableResource<Cluste
         buf.append("  } ");
         buf.append("}");
 
-        return addLinks(runAndParseSingle(buf.toString()), uriInfo, uriInfo.getRequestUriBuilder());
+        return LinkHelper.addLinks(runAndParseSingle(buf.toString()));
     }
 }

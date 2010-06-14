@@ -26,6 +26,7 @@ import com.redhat.rhevm.api.model.Templates;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.resource.TemplateResource;
 import com.redhat.rhevm.api.resource.TemplatesResource;
+import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 
 public class PowerShellTemplatesResource
@@ -36,8 +37,7 @@ public class PowerShellTemplatesResource
     public Templates list(UriInfo uriInfo) {
         Templates ret = new Templates();
         for (Template template : PowerShellTemplateResource.runAndParse(getSelectCommand("select-template", uriInfo, Template.class))) {
-            UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(template.getId());
-            ret.getTemplates().add(PowerShellTemplateResource.addLinks(template, uriInfo, uriBuilder));
+            ret.getTemplates().add(LinkHelper.addLinks(template));
         }
         return ret;
     }
@@ -49,16 +49,5 @@ public class PowerShellTemplatesResource
 
     protected PowerShellTemplateResource createSubResource(String id) {
         return new PowerShellTemplateResource(id, getExecutor());
-    }
-
-    /**
-     * Build an absolute URI for a given template
-     *
-     * @param baseUriBuilder a UriBuilder representing the base URI
-     * @param id the template ID
-     * @return an absolute URI
-     */
-    public static String getHref(UriBuilder baseUriBuilder, String id) {
-        return baseUriBuilder.clone().path("templates").path(id).build().toString();
     }
 }

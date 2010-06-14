@@ -28,8 +28,8 @@ import java.util.concurrent.Executor;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.UriBuilder;
 
 import com.redhat.rhevm.api.model.BaseResource;
 import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
@@ -114,28 +114,28 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
         verifyAll();
     }
 
-    protected UriInfo setUpResourceExpectations(String command, String ret, String ... names) throws Exception {
-        return setUpResourceExpectations(command, ret, 0, names);
-    }
-
     protected UriInfo setUpResourceExpectations(String command, String ret, QueryParam query, String ... names) throws Exception {
-        return setUpResourceExpectations(asArray(command), asArray(ret), 0, query, names);
+        return setUpResourceExpectations(asArray(command), asArray(ret), false, query, names);
     }
 
-    protected UriInfo setUpResourceExpectations(String command, String ret, int baseUris, QueryParam query, String ... names) throws Exception {
-        return setUpResourceExpectations(asArray(command), asArray(ret), baseUris, query, names);
+    protected UriInfo setUpResourceExpectations(String command, String ret, String ... names) throws Exception {
+        return setUpResourceExpectations(asArray(command), asArray(ret), false, null, names);
     }
 
-    protected UriInfo setUpResourceExpectations(String command, String ret, int baseUris, String ... names) throws Exception {
-        return setUpResourceExpectations(asArray(command), asArray(ret), baseUris, null, names);
+    protected UriInfo setUpAddResourceExpectations(String command, String ret, String name) throws Exception {
+        return setUpAddResourceExpectations(asArray(command), asArray(ret), name);
     }
 
-    protected UriInfo setUpResourceExpectations(String[] command, String[] ret, int baseUris, String ... names) throws Exception {
-        return setUpResourceExpectations(command, ret, baseUris, null, names);
+    protected UriInfo setUpAddResourceExpectations(String[] commands, String[] rets, String name) throws Exception {
+        return setUpResourceExpectations(commands, rets, true, null, name);
+    }
+
+    protected UriInfo setUpResourceExpectations(String[] commands, String[] rets, QueryParam query, String ... names) throws Exception {
+        return setUpResourceExpectations(commands, rets, false, query, names);
     }
 
     @SuppressWarnings("unchecked")
-    protected UriInfo setUpResourceExpectations(String[] commands, String[] rets, int baseUris, QueryParam query, String ... names) throws Exception {
+    protected UriInfo setUpResourceExpectations(String[] commands, String[] rets, boolean add, QueryParam query, String ... names) throws Exception {
         if (commands != null) {
             mockStatic(PowerShellCmd.class);
             for (int i = 0 ; i < Math.min(commands.length, rets.length) ; i++) {
@@ -154,26 +154,14 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
         } else {
             expect(uriInfo.getQueryParameters()).andReturn(null).anyTimes();
         }
-        for (String name : names) {
-            String href = URI_ROOT + SLASH + collectionName + SLASH + name.hashCode();
+        if (add) {
+            String href = URI_ROOT + SLASH + collectionName + SLASH + names[0].hashCode();
             UriBuilder uriBuilder = createMock(UriBuilder.class);
             expect(uriInfo.getAbsolutePathBuilder()).andReturn(uriBuilder);
-            expect(uriBuilder.path(Integer.toString(name.hashCode()))).andReturn(uriBuilder);
+            expect(uriBuilder.path(Integer.toString(names[0].hashCode()))).andReturn(uriBuilder);
             expect(uriBuilder.build()).andReturn(new URI(href)).anyTimes();
-            UriBuilder actionUriBuilder = createMock(UriBuilder.class);
-            expect(uriBuilder.clone()).andReturn(actionUriBuilder).anyTimes();
-            expect(actionUriBuilder.path(isA(String.class))).andReturn(uriBuilder).anyTimes();
-            expect(actionUriBuilder.build()).andReturn(new URI(href + SLASH + "action")).anyTimes();
-        }
-        for (int i = 0 ; i < baseUris ; i++) {
-            UriBuilder uriBuilder = createMock(UriBuilder.class);
-            expect(uriInfo.getBaseUriBuilder()).andReturn(uriBuilder);
-            expect(uriBuilder.clone()).andReturn(uriBuilder).anyTimes();
-            expect(uriBuilder.path(isA(String.class))).andReturn(uriBuilder).anyTimes();
-            expect(uriBuilder.build()).andReturn(new URI(URI_ROOT + "/foo")).anyTimes();
         }
         replayAll();
-
         return uriInfo;
     }
 

@@ -38,8 +38,7 @@ public class PowerShellVmPoolsResource
     public VmPools list(UriInfo uriInfo) {
         VmPools ret = new VmPools();
         for (VmPool pool : PowerShellVmPoolResource.runAndParse(getSelectCommand("select-vmpool", uriInfo, VmPools.class))) {
-            UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(pool.getId());
-            ret.getVmPools().add(PowerShellVmPoolResource.addLinks(pool, uriInfo, uriBuilder));
+            ret.getVmPools().add(PowerShellVmPoolResource.addLinks(pool));
         }
         return ret;
     }
@@ -63,10 +62,9 @@ public class PowerShellVmPoolsResource
         }
 
         pool = PowerShellVmPoolResource.runAndParseSingle(buf.toString());
+        pool = PowerShellVmPoolResource.addLinks(pool);
 
         UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(pool.getId());
-
-        pool = PowerShellVmPoolResource.addLinks(pool, uriInfo, uriBuilder);
 
         return Response.created(uriBuilder.build()).entity(pool).build();
     }
@@ -91,16 +89,5 @@ public class PowerShellVmPoolsResource
     @Override
     protected PowerShellVmPoolResource createSubResource(String id) {
         return new PowerShellVmPoolResource(id, getExecutor());
-    }
-
-    /**
-     * Build an absolute URI for a given VM pool
-     *
-     * @param baseUriBuilder a UriBuilder representing the base URI
-     * @param id             the VM pool ID
-     * @return               an absolute URI
-     */
-    public static String getHref(UriBuilder baseUriBuilder, String id) {
-        return baseUriBuilder.clone().path("vmpools").path(id).build().toString();
     }
 }

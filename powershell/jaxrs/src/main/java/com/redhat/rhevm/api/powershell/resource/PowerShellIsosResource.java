@@ -40,8 +40,7 @@ public class PowerShellIsosResource implements IsosResource {
     public Isos list(UriInfo uriInfo) {
         Isos ret = new Isos();
         for (Iso iso : PowerShellIso.parse(PowerShellCmd.runCommand("get-isoimages -datacenterid " + dataCenterId))) {
-            UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(iso.getId());
-            ret.getIsos().add(PowerShellIsoResource.addLinks(iso, dataCenterId, uriInfo, uriBuilder));
+            ret.getIsos().add(PowerShellIsoResource.addLinks(iso, dataCenterId));
         }
         return ret;
     }
@@ -49,16 +48,5 @@ public class PowerShellIsosResource implements IsosResource {
     @Override
     public IsoResource getIsoSubResource(UriInfo uriInfo, String id) {
         return new PowerShellIsoResource(id, dataCenterId);
-    }
-
-    /**
-     * Build an absolute URI for a given iso
-     *
-     * @param baseUriBuilder a UriBuilder representing the base URI
-     * @param id the iso ID
-     * @return an absolute URI
-     */
-    public static String getHref(UriBuilder baseUriBuilder, String id) {
-        return baseUriBuilder.clone().path("isos").path(id).build().toString();
     }
 }

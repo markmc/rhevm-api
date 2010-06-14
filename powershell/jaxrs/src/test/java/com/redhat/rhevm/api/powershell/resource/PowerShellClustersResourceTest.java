@@ -43,7 +43,6 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
         verifyCollection(
             resource.list(setUpResourceExpectations(getSelectCommand(),
                                                     getSelectReturn(SELECT_RETURN_EPILOG),
-                                                    3,
                                                     NAMES)).getClusters(),
             NAMES);
     }
@@ -54,7 +53,6 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
         verifyCollection(
             resource.list(setUpResourceExpectations(getQueryCommand(Clusters.class),
                                                     getQueryReturn(SELECT_RETURN_EPILOG),
-                                                    2,
                                                     getQueryParam(),
                                                     NAMES_SUBSET)).getClusters(),
             NAMES_SUBSET);
@@ -63,10 +61,9 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
     @Test
     public void testAdd() throws Exception {
         verifyResponse(
-            resource.add(setUpResourceExpectations(getAddCommand(),
-                                                   getAddReturn(ADD_RETURN_EPILOG),
-                                                   1,
-                                                   NEW_NAME),
+            resource.add(setUpAddResourceExpectations(getAddCommand(),
+                                                      getAddReturn(ADD_RETURN_EPILOG),
+                                                      NEW_NAME),
                          getModel(NEW_NAME)),
             NEW_NAME);
     }

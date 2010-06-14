@@ -52,8 +52,8 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
                                MessageFormat.format(GET_STORAGE_RETURN, "dione".hashCode(), "dione"),
                                MessageFormat.format(GET_STORAGE_RETURN, "titan".hashCode(), "titan") };
          verifyCollection(
-            resource.list(setUpResourceExpectations(commands, returns, 3, NAMES)).getDataCenters(),
-            NAMES);
+             resource.list(setUpResourceExpectations(commands, returns, null, NAMES)).getDataCenters(),
+             NAMES);
     }
 
     @Test
@@ -65,8 +65,8 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
                                MessageFormat.format(GET_STORAGE_RETURN, "mimas".hashCode(), "dione"),
                                MessageFormat.format(GET_STORAGE_RETURN, "dione".hashCode(), "titan") };
          verifyCollection(
-            resource.list(setUpResourceExpectations(commands, returns, 2, getQueryParam(), NAMES_SUBSET)).getDataCenters(),
-            NAMES_SUBSET);
+             resource.list(setUpResourceExpectations(commands, returns, getQueryParam(), NAMES_SUBSET)).getDataCenters(),
+             NAMES_SUBSET);
     }
 
     @Test
@@ -76,7 +76,7 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
         String [] returns =  { getAddReturn(ADD_RETURN_EPILOG),
                            MessageFormat.format(GET_STORAGE_RETURN, "rhea".hashCode(), "rhea") };
         verifyResponse(
-            resource.add(setUpResourceExpectations(commands, returns, 1, NEW_NAME), getModel(NEW_NAME)),
+            resource.add(setUpAddResourceExpectations(commands, returns, NEW_NAME), getModel(NEW_NAME)),
             NEW_NAME);
     }
 

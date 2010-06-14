@@ -31,6 +31,7 @@ import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.resource.DataCenterResource;
 import com.redhat.rhevm.api.resource.IsosResource;
 import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
+import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellDataCenter;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 
@@ -50,15 +51,15 @@ public class PowerShellDataCenterResource extends AbstractActionableResource<Dat
         return !dataCenters.isEmpty() ? dataCenters.get(0) : null;
     }
 
-    public static DataCenter addLinks(DataCenter dataCenter, UriInfo uriInfo, UriBuilder uriBuilder) {
-        dataCenter.setHref(uriBuilder.build().toString());
+    public static DataCenter addLinks(DataCenter dataCenter) {
+        dataCenter = LinkHelper.addLinks(dataCenter);
 
-        Attachments attachments = PowerShellAttachmentsResource.getAttachmentsForDataCenter(uriInfo, dataCenter.getId());
+        Attachments attachments = PowerShellAttachmentsResource.getAttachmentsForDataCenter(dataCenter.getId());
         dataCenter.setAttachments(attachments);
 
         Link link = new Link();
         link.setRel("isos");
-        link.setHref(uriBuilder.clone().path("isos").build().toString());
+        link.setHref(LinkHelper.getUriBuilder(dataCenter).path("isos").build().toString());
         dataCenter.getLinks().clear();
         dataCenter.getLinks().add(link);
 
@@ -67,7 +68,7 @@ public class PowerShellDataCenterResource extends AbstractActionableResource<Dat
 
     @Override
     public DataCenter get(UriInfo uriInfo) {
-        return addLinks(runAndParseSingle("get-datacenter " + getId()), uriInfo, uriInfo.getRequestUriBuilder());
+        return addLinks(runAndParseSingle("get-datacenter " + getId()));
     }
 
     @Override
@@ -88,7 +89,7 @@ public class PowerShellDataCenterResource extends AbstractActionableResource<Dat
         buf.append("\n");
         buf.append("update-datacenter -datacenterobject $v");
 
-        return addLinks(runAndParseSingle(buf.toString()), uriInfo, uriInfo.getRequestUriBuilder());
+        return addLinks(runAndParseSingle(buf.toString()));
     }
 
     public IsosResource getIsosResource() {

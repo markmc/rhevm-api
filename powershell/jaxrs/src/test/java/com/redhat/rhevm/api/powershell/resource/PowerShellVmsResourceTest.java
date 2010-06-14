@@ -79,7 +79,7 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
                               LOOKUP_NETWORK_ID_RETURN };
 
         verifyCollection(
-            resource.list(setUpResourceExpectations(commands, returns, 3, NAMES)).getVMs(),
+            resource.list(setUpResourceExpectations(commands, returns, null, NAMES)).getVMs(),
             NAMES);
     }
 
@@ -102,7 +102,7 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
                               LOOKUP_NETWORK_ID_RETURN };
 
         verifyCollection(
-            resource.list(setUpResourceExpectations(commands, returns, 2, getQueryParam(), NAMES_SUBSET)).getVMs(),
+            resource.list(setUpResourceExpectations(commands, returns, getQueryParam(), NAMES_SUBSET)).getVMs(),
             NAMES_SUBSET);
     }
 
@@ -119,7 +119,7 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
                               LOOKUP_NETWORK_ID_RETURN };
 
         verifyResponse(
-            resource.add(setUpResourceExpectations(commands, returns, 1, NEW_NAME),
+            resource.add(setUpAddResourceExpectations(commands, returns, NEW_NAME),
                          getModel(NEW_NAME)),
             NEW_NAME);
     }

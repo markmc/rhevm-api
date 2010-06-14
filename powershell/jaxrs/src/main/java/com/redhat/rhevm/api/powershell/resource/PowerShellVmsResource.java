@@ -39,8 +39,7 @@ public class PowerShellVmsResource
     public VMs list(UriInfo uriInfo) {
         VMs ret = new VMs();
         for (PowerShellVM vm : PowerShellVmResource.runAndParse(getSelectCommand("select-vm", uriInfo, VMs.class))) {
-            UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(vm.getId());
-            ret.getVMs().add(PowerShellVmResource.addLinks(PowerShellVmResource.addDevices(vm), uriInfo, uriBuilder));
+            ret.getVMs().add(PowerShellVmResource.addLinks(PowerShellVmResource.addDevices(vm)));
         }
         return ret;
     }
@@ -77,9 +76,9 @@ public class PowerShellVmsResource
 
         PowerShellVM ret = PowerShellVmResource.runAndParseSingle(buf.toString());
 
-        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(ret.getId());
+        vm = PowerShellVmResource.addLinks(PowerShellVmResource.addDevices(ret));
 
-        vm = PowerShellVmResource.addLinks(PowerShellVmResource.addDevices(ret), uriInfo, uriBuilder);
+        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(ret.getId());
 
         return Response.created(uriBuilder.build()).entity(vm).build();
     }

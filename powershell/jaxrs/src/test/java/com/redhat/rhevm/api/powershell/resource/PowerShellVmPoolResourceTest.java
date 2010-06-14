@@ -113,19 +113,8 @@ public class PowerShellVmPoolResourceTest extends AbstractPowerShellResourceTest
                 }
             }
         }
-        String href = URI_ROOT + "/vmpools/" + POOL_ID;
-        UriInfo uriInfo = createMock(UriInfo.class);
-        UriBuilder uriBuilder = createMock(UriBuilder.class);
-        expect(uriInfo.getRequestUriBuilder()).andReturn(uriBuilder).anyTimes();
-        expect(uriBuilder.build()).andReturn(new URI(href)).anyTimes();
-        UriBuilder baseBuilder = createMock(UriBuilder.class);
-        expect(uriInfo.getBaseUriBuilder()).andReturn(baseBuilder);
-        expect(baseBuilder.clone()).andReturn(baseBuilder).anyTimes();
-        expect(baseBuilder.path(isA(String.class))).andReturn(baseBuilder).anyTimes();
-        expect(baseBuilder.build()).andReturn(new URI(URI_ROOT + "/foo")).anyTimes();
         replayAll();
-
-        return uriInfo;
+        return null;
     }
 
     private HttpHeaders setUpHeadersExpectation() {

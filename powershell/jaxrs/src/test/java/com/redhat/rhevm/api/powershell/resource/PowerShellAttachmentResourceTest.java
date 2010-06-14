@@ -21,7 +21,6 @@ package com.redhat.rhevm.api.powershell.resource;
 import java.net.URI;
 
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Attachment;
@@ -100,19 +99,8 @@ public class PowerShellAttachmentResourceTest extends AbstractPowerShellResource
     private UriInfo setUpAttachmentExpectations() throws Exception {
         mockStatic(PowerShellCmd.class);
         expect(PowerShellCmd.runCommand(GET_COMMAND)).andReturn(GET_RETURN);
-        UriInfo uriInfo = createMock(UriInfo.class);
-        UriBuilder uriBuilder = createMock(UriBuilder.class);
-        expect(uriInfo.getRequestUriBuilder()).andReturn(uriBuilder).anyTimes();
-        expect(uriInfo.getBaseUriBuilder()).andReturn(uriBuilder).anyTimes();
-        expect(uriBuilder.clone()).andReturn(uriBuilder).anyTimes();
-        expect(uriBuilder.path(isA(String.class))).andReturn(uriBuilder).anyTimes();
-        expect(uriBuilder.build()).andReturn(new URI(ATTACHMENT_URI));
-        expect(uriBuilder.build()).andReturn(new URI(STORAGE_DOMAIN_URI));
-        expect(uriBuilder.build()).andReturn(new URI(DATA_CENTER_URI));
-        expect(uriBuilder.build()).andReturn(new URI(DEACTIVATE_ACTION_URI));
         replayAll();
-
-        return uriInfo;
+        return null;
     }
 
     private UriInfo setUpActionExpectation(String verb, String command) throws Exception {

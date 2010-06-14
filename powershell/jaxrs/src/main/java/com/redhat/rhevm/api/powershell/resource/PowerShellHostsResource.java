@@ -26,6 +26,7 @@ import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.Hosts;
 import com.redhat.rhevm.api.resource.HostResource;
 import com.redhat.rhevm.api.resource.HostsResource;
+import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 
 public class PowerShellHostsResource
@@ -36,8 +37,7 @@ public class PowerShellHostsResource
     public Hosts list(UriInfo uriInfo) {
         Hosts ret = new Hosts();
         for (Host host : PowerShellHostResource.runAndParse(getSelectCommand("select-host", uriInfo, Hosts.class))) {
-            UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(host.getId());
-            ret.getHosts().add(PowerShellHostResource.addLinks(host, uriBuilder));
+            ret.getHosts().add(LinkHelper.addLinks(host));
         }
         return ret;
     }
@@ -55,10 +55,9 @@ public class PowerShellHostsResource
         buf.append(" -rootpassword notneeded");
 
         host = PowerShellHostResource.runAndParseSingle(buf.toString());
+        host = LinkHelper.addLinks(host);
 
         UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(host.getId());
-
-        host = PowerShellHostResource.addLinks(host, uriBuilder);
 
         return Response.created(uriBuilder.build()).entity(host).build();
     }

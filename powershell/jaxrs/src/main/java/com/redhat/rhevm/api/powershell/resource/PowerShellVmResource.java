@@ -41,6 +41,7 @@ import com.redhat.rhevm.api.model.VmPool;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
+import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.common.util.ReflectionHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
@@ -68,37 +69,17 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
         return !vms.isEmpty() ? vms.get(0) : null;
     }
 
-    public static VM addLinks(PowerShellVM vm, UriInfo uriInfo, UriBuilder uriBuilder) {
-        vm.setHref(uriBuilder.build().toString());
-
-        UriBuilder baseUriBuilder = uriInfo.getBaseUriBuilder();
-
-        Cluster cluster = vm.getCluster();
-        cluster.setHref(PowerShellClustersResource.getHref(baseUriBuilder, cluster.getId()));
-
-        Template template = vm.getTemplate();
-        template.setHref(PowerShellTemplatesResource.getHref(baseUriBuilder, template.getId()));
-
-        VmPool pool = vm.getVmPool();
-        if (pool != null) {
-            pool.setHref(PowerShellVmPoolsResource.getHref(baseUriBuilder, pool.getId()));
-        }
-
+    public static VM addLinks(PowerShellVM vm) {
         if (vm.getDevices() != null) {
             for (CdRom cdrom : vm.getDevices().getCdRoms()) {
-                Iso iso = cdrom.getIso();
-                iso.setHref(PowerShellIsosResource.getHref(baseUriBuilder, iso.getId()));
+                LinkHelper.addLinks(cdrom.getIso());
             }
             for (Interface iface : vm.getDevices().getInterfaces()) {
-                Network network = iface.getNetwork();
-                network.setHref(PowerShellNetworksResource.getHref(baseUriBuilder, network.getId()));
+                LinkHelper.addLinks(iface.getNetwork());
             }
         }
 
-        ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, VmResource.class);
-        vm.setActions(actionsBuilder.build());
-
-        return JAXBHelper.clone("vm", VM.class, vm);
+        return LinkHelper.addLinks(JAXBHelper.clone("vm", VM.class, vm));
     }
 
     /* Map the network names to network IDs on all the VM's network
@@ -158,7 +139,7 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
 
     @Override
     public VM get(UriInfo uriInfo) {
-        return addLinks(addDevices(runAndParseSingle("get-vm " + getId())), uriInfo, uriInfo.getRequestUriBuilder());
+        return addLinks(addDevices(runAndParseSingle("get-vm " + getId())));
     }
 
     @Override
@@ -190,7 +171,7 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
 
         buf.append("update-vm -vmobject $v");
 
-        return addLinks(addDevices(runAndParseSingle(buf.toString())), uriInfo, uriInfo.getRequestUriBuilder());
+        return addLinks(addDevices(runAndParseSingle(buf.toString())));
     }
 
     @Override

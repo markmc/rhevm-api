@@ -61,14 +61,12 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
                 storageDomain.setId(fromRhevmIdMapping.get(storageDomain.getId()));
             }
             PowerShellStorageDomainResource resource = new PowerShellStorageDomainResource(storageDomain.getId(), this);
-            UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(storageDomain.getId());
-            ret.getStorageDomains().add(resource.addLinks(storageDomain, uriBuilder));
+            ret.getStorageDomains().add(resource.addLinks(storageDomain));
         }
 
         for (String id : stagedDomains.keySet()) {
             PowerShellStorageDomainResource resource = stagedDomains.get(id);
-            UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(id);
-            ret.getStorageDomains().add(resource.addLinks(resource.getStaged(), uriBuilder));
+            ret.getStorageDomains().add(resource.addLinks(resource.getStaged()));
         }
 
         return ret;
@@ -86,7 +84,7 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
 
         UriBuilder uriBuilder = uriInfo.getRequestUriBuilder().path(storageDomain.getId());
 
-        return Response.created(uriBuilder.build()).entity(resource.addLinks(storageDomain, uriBuilder)).build();
+        return Response.created(uriBuilder.build()).entity(resource.addLinks(storageDomain)).build();
     }
 
     @Override

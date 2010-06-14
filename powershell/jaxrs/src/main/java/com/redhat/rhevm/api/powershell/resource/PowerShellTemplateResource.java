@@ -27,6 +27,7 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.resource.TemplateResource;
 import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
+import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellTemplate;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 
@@ -46,17 +47,12 @@ public class PowerShellTemplateResource extends AbstractActionableResource<Templ
         return !templates.isEmpty() ? templates.get(0) : null;
     }
 
-    public static Template addLinks(Template template, UriInfo uriInfo, UriBuilder uriBuilder) {
-        template.setHref(uriBuilder.build().toString());
-        return template;
-    }
-
     @Override
     public Template get(UriInfo uriInfo) {
         StringBuilder buf = new StringBuilder();
 
         buf.append("get-template -templateid " + getId());
 
-        return addLinks(runAndParseSingle(buf.toString()), uriInfo, uriInfo.getRequestUriBuilder());
+        return LinkHelper.addLinks(runAndParseSingle(buf.toString()));
     }
 }

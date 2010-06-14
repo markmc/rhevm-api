@@ -27,6 +27,7 @@ import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.Networks;
 import com.redhat.rhevm.api.resource.NetworkResource;
 import com.redhat.rhevm.api.resource.NetworksResource;
+import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 
 public class PowerShellNetworksResource
@@ -37,8 +38,7 @@ public class PowerShellNetworksResource
     public Networks list(UriInfo uriInfo) {
         Networks ret = new Networks();
         for (Network network : PowerShellNetworkResource.runAndParse("get-networks")) {
-            UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(network.getId());
-            ret.getNetworks().add(PowerShellNetworkResource.addLinks(network, uriInfo, uriBuilder));
+            ret.getNetworks().add(LinkHelper.addLinks(network));
         }
         return ret;
     }
@@ -77,11 +77,9 @@ public class PowerShellNetworksResource
             buf.append(" -stp");
         }
 
-        network = PowerShellNetworkResource.runAndParseSingle(buf.toString());
+        network = LinkHelper.addLinks(PowerShellNetworkResource.runAndParseSingle(buf.toString()));
 
         UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(network.getId());
-
-        network = PowerShellNetworkResource.addLinks(network, uriInfo, uriBuilder);
 
         return Response.created(uriBuilder.build()).entity(network).build();
     }
@@ -111,16 +109,5 @@ public class PowerShellNetworksResource
 
     protected PowerShellNetworkResource createSubResource(String id) {
         return new PowerShellNetworkResource(id, getExecutor());
-    }
-
-    /**
-     * Build an absolute URI for a given network
-     *
-     * @param baseUriBuilder a UriBuilder representing the base URI
-     * @param id the network ID
-     * @return an absolute URI
-     */
-    public static String getHref(UriBuilder baseUriBuilder, String id) {
-        return baseUriBuilder.clone().path("networks").path(id).build().toString();
     }
 }

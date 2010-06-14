@@ -31,6 +31,7 @@ import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.resource.AttachmentResource;
 import com.redhat.rhevm.api.resource.AttachmentsResource;
+import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.util.PowerShellException;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 
@@ -93,8 +94,7 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
 
             Attachment attachment = buildAttachment(dataCenter, storageDomain);
 
-            UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(dataCenter.getId());
-            ret.getAttachments().add(PowerShellAttachmentResource.addLinks(attachment, uriInfo, uriBuilder));
+            ret.getAttachments().add(PowerShellAttachmentResource.addLinks(attachment));
         }
 
         return ret;
@@ -113,10 +113,9 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
         StorageDomain storageDomain = PowerShellStorageDomainResource.runAndParseSingle(buf.toString());
 
         attachment = buildAttachment(dataCenter, storageDomain);
+        attachment = PowerShellAttachmentResource.addLinks(attachment);
 
         UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(dataCenter.getId());
-
-        attachment = PowerShellAttachmentResource.addLinks(attachment, uriInfo, uriBuilder);
 
         return Response.created(uriBuilder.build()).entity(attachment).build();
     }
@@ -151,11 +150,10 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
     /**
      * Build a list of storage domains attached to a data center
      *
-     * @param uriInfo  the URI context of the current request
      * @param dataCenterId  the ID of the data center
      * @return  an encapsulation of the attachments
      */
-    public static Attachments getAttachmentsForDataCenter(UriInfo uriInfo, String dataCenterId) {
+    public static Attachments getAttachmentsForDataCenter(String dataCenterId) {
         Attachments attachments = new Attachments();
 
         StringBuilder buf = new StringBuilder();
@@ -173,14 +171,11 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
         }
 
         for (StorageDomain storageDomain : storageDomains) {
-            UriBuilder uriBuilder =
-                uriInfo.getBaseUriBuilder().path("storagedomains").path(storageDomain.getId())
-                                           .path("attachments").path(dataCenterId);
-
             Attachment attachment = new Attachment();
-            attachment.setHref(uriBuilder.build().toString());
-
-            attachments.getAttachments().add(attachment);
+            attachment.setId(dataCenterId);
+            attachment.setStorageDomain(new StorageDomain());
+            attachment.getStorageDomain().setId(storageDomain.getId());
+            attachments.getAttachments().add(LinkHelper.addLinks(attachment));
 
         }
 
