@@ -47,13 +47,13 @@ import static org.powermock.api.easymock.PowerMock.replayAll;
 
 public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<Host, PowerShellHostResource> {
 
-    private static final String GET_COMMAND = "rhevmpssnapin\\get-host 12345";
+    private static final String GET_COMMAND = "rhevmpssnapin\\get-host '12345'";
     private static final String GET_RETURN = "hostid: 12345 \n name: sedna\nstatus: up";
     private static final String ACTION_RETURN = "replace with realistic powershell return";
-    private static final String UPDATE_COMMAND = "$h = rhevmpssnapin\\get-host 12345\n$h.name = 'eris'\nupdate-host -hostobject $h";
+    private static final String UPDATE_COMMAND = "$h = rhevmpssnapin\\get-host '12345'\n$h.name = 'eris'\nupdate-host -hostobject $h";
     private static final String UPDATE_RETURN = "hostid: 12345 \n name: eris\nstatus: up";
     private static final String INSTALL_PASSWORD = "boldlygoingnowhere";
-    private static final String INSTALL_COMMAND = "$h = rhevmpssnapin\\get-host 12345\nupdate-host -hostobject $h -install -rootpassword '" + INSTALL_PASSWORD + "'";
+    private static final String INSTALL_COMMAND = "$h = rhevmpssnapin\\get-host '12345'\nupdate-host -hostobject $h -install -rootpassword '" + INSTALL_PASSWORD + "'";
 
     protected PowerShellHostResource getResource() {
         return new PowerShellHostResource("12345", executor);
@@ -166,7 +166,7 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
     }
 
     private UriInfo setUpActionExpectation(String verb, String command) throws Exception {
-        return setUpActionExpectation("/hosts/12345/", verb, command + " -hostid 12345", ACTION_RETURN);
+        return setUpActionExpectation("/hosts/12345/", verb, command + " -hostid '12345'", ACTION_RETURN);
     }
 
     private HttpHeaders setUpHeadersExpectation() {

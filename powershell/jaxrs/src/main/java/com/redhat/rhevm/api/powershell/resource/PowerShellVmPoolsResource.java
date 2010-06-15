@@ -28,6 +28,7 @@ import com.redhat.rhevm.api.resource.VmPoolResource;
 import com.redhat.rhevm.api.resource.VmPoolsResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellVmPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
 public class PowerShellVmPoolsResource
@@ -49,13 +50,13 @@ public class PowerShellVmPoolsResource
 
         buf.append("add-vmpool");
 
-        buf.append(" -vmpoolname '" + pool.getName() + "'");
-        buf.append(" -templateid " + pool.getTemplate().getId());
-        buf.append(" -hostclusterid " + pool.getCluster().getId());
+        buf.append(" -vmpoolname " + PowerShellUtils.escape(pool.getName()));
+        buf.append(" -templateid " + PowerShellUtils.escape(pool.getTemplate().getId()));
+        buf.append(" -hostclusterid " + PowerShellUtils.escape(pool.getCluster().getId()));
         buf.append(" -pooltype Automatic");
 
         if (pool.getDescription() != null) {
-            buf.append(" -vmpooldescription '" + pool.getDescription() + "'");
+            buf.append(" -vmpooldescription '" + PowerShellUtils.escape(pool.getDescription()) + "'");
         }
         if (pool.getSize() != null) {
             buf.append(" -numofvms " + pool.getSize());
@@ -73,7 +74,7 @@ public class PowerShellVmPoolsResource
     public void remove(String id) {
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$p = get-vmpool -vmpoolid " + id + "\n");
+        buf.append("$p = get-vmpool -vmpoolid " + PowerShellUtils.escape(id) + "\n");
         buf.append("remove-vmpool -name $p.name");
 
         PowerShellCmd.runCommand(buf.toString());

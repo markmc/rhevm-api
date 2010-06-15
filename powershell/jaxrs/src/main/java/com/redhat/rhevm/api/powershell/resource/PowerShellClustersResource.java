@@ -28,6 +28,8 @@ import com.redhat.rhevm.api.resource.ClusterResource;
 import com.redhat.rhevm.api.resource.ClustersResource;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+
 
 public class PowerShellClustersResource
     extends AbstractPowerShellCollectionResource<Cluster, PowerShellClusterResource>
@@ -46,16 +48,17 @@ public class PowerShellClustersResource
     public Response add(UriInfo uriInfo, Cluster cluster) {
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$v = get-clustercompatibilityversions -datacenterid " + cluster.getDataCenter().getId() + "\n");
+        buf.append("$v = get-clustercompatibilityversions");
+        buf.append(" -datacenterid " + PowerShellUtils.escape(cluster.getDataCenter().getId()) + "\n");
 
         buf.append("add-cluster");
 
-        buf.append(" -clustername '" + cluster.getName() + "'");
-        buf.append(" -clustercpuname '" + cluster.getCpu().getId() + "'");
-        buf.append(" -datacenterid " + cluster.getDataCenter().getId());
+        buf.append(" -clustername " + PowerShellUtils.escape(cluster.getName()));
+        buf.append(" -clustercpuname " + PowerShellUtils.escape(cluster.getCpu().getId()));
+        buf.append(" -datacenterid " + PowerShellUtils.escape(cluster.getDataCenter().getId()));
 
         if (cluster.getDescription() != null) {
-            buf.append(" -clusterdescription '" + cluster.getDescription() + "'");
+            buf.append(" -clusterdescription " + PowerShellUtils.escape(cluster.getDescription()));
         }
 
         buf.append(" -compatibilityversion $v");
@@ -69,7 +72,7 @@ public class PowerShellClustersResource
 
     @Override
     public void remove(String id) {
-        PowerShellCmd.runCommand("remove-cluster -clusterid " + id);
+        PowerShellCmd.runCommand("remove-cluster -clusterid " + PowerShellUtils.escape(id));
         removeSubResource(id);
     }
 

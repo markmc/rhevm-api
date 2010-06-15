@@ -27,6 +27,8 @@ import com.redhat.rhevm.api.resource.IsoResource;
 import com.redhat.rhevm.api.resource.IsosResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellIso;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+
 
 public class PowerShellIsosResource implements IsosResource {
 
@@ -38,8 +40,11 @@ public class PowerShellIsosResource implements IsosResource {
 
     @Override
     public Isos list(UriInfo uriInfo) {
+        StringBuilder buf = new StringBuilder();
+        buf.append("get-isoimages");
+        buf.append(" -datacenterid " + PowerShellUtils.escape(dataCenterId));
         Isos ret = new Isos();
-        for (Iso iso : PowerShellIso.parse(PowerShellCmd.runCommand("get-isoimages -datacenterid " + dataCenterId))) {
+        for (Iso iso : PowerShellIso.parse(PowerShellCmd.runCommand(buf.toString()))) {
             ret.getIsos().add(PowerShellIsoResource.addLinks(iso, dataCenterId));
         }
         return ret;

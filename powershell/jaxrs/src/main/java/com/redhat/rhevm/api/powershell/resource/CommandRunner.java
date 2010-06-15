@@ -5,6 +5,7 @@ import java.text.MessageFormat;
 import com.redhat.rhevm.api.common.resource.AbstractActionableResource.AbstractActionTask;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
 class CommandRunner extends AbstractActionTask {
@@ -15,7 +16,7 @@ class CommandRunner extends AbstractActionTask {
 
     CommandRunner(Action action, String command, String type, String id) {
         super(action);
-        this.command = MessageFormat.format(COMMAND, command, type, id);
+        this.command = MessageFormat.format(COMMAND, command, type, PowerShellUtils.escape(id));
     }
 
     public void run() {

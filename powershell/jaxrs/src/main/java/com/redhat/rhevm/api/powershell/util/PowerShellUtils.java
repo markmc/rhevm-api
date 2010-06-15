@@ -27,6 +27,8 @@ import org.apache.commons.logging.LogFactory;
 public class PowerShellUtils {
     private static final Log log = LogFactory.getLog(PowerShellUtils.class);
 
+    private static final String QUOTE = "'";
+
     public static ArrayList<HashMap<String,String>> parseProps(String str) {
         ArrayList<HashMap<String,String>> ret = new ArrayList<HashMap<String,String>>();
         HashMap<String,String> props = null;
@@ -63,5 +65,9 @@ public class PowerShellUtils {
         }
 
         return ret;
+    }
+
+    public static String escape(String arg) {
+        return new StringBuffer(QUOTE).append(arg.replace("`", "``")).append(QUOTE).toString();
     }
 }

@@ -25,7 +25,7 @@ import org.junit.Test;
 
 public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionResourceTest<Host, PowerShellHostResource, PowerShellHostsResource> {
 
-    private static final String ADD_COMMAND_EPILOG = "-address 127.0.0.1 -rootpassword notneeded";
+    private static final String ADD_COMMAND_EPILOG = "-address '127.0.0.1' -rootpassword notneeded";
     private static final String ADD_RETURN_EPILOG = "\nstatus: up";
 
     private static final String SELECT_RETURN_EPILOG = ADD_RETURN_EPILOG;

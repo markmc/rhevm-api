@@ -27,6 +27,8 @@ import com.redhat.rhevm.api.model.DataCenters;
 import com.redhat.rhevm.api.resource.DataCenterResource;
 import com.redhat.rhevm.api.resource.DataCentersResource;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+
 
 public class PowerShellDataCentersResource
     extends AbstractPowerShellCollectionResource<DataCenter, PowerShellDataCenterResource>
@@ -47,11 +49,11 @@ public class PowerShellDataCentersResource
 
         buf.append("add-datacenter");
 
-        buf.append(" -name '" + dataCenter.getName() + "'");
+        buf.append(" -name " + PowerShellUtils.escape(dataCenter.getName()));
         buf.append(" -type " + dataCenter.getStorageType().toString());
 
         if (dataCenter.getDescription() != null) {
-            buf.append(" -description '" + dataCenter.getDescription() + "'");
+            buf.append(" -description " + PowerShellUtils.escape(dataCenter.getDescription()));
         }
 
         dataCenter = PowerShellDataCenterResource.runAndParseSingle(buf.toString());
@@ -64,7 +66,7 @@ public class PowerShellDataCentersResource
 
     @Override
     public void remove(String id) {
-        PowerShellCmd.runCommand("remove-datacenter -datacenterid " + id);
+        PowerShellCmd.runCommand("remove-datacenter -datacenterid " + PowerShellUtils.escape(id));
         removeSubResource(id);
     }
 

@@ -33,19 +33,19 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     private static String CLUSTER_ID = "cluster1";
 
     private static final String ADD_COMMAND_PROLOG =
-        "$templ = get-template -templateid " + TEMPLATE_ID + "\n";
+        "$templ = get-template -templateid '" + TEMPLATE_ID + "'\n";
     private static final String ADD_COMMAND_EPILOG =
-        "-templateobject $templ -hostclusterid " + CLUSTER_ID;
+        "-templateobject $templ -hostclusterid '" + CLUSTER_ID + "'";
 
     private static final String OTHER_PROPS = "memorysize: 1024\ndefaultbootsequence: CDN\nnumofsockets: 2\nnumofcpuspersocket: 4\npoolid: -1\n";
 
     private static final String SELECT_RETURN_EPILOG = "\nhostclusterid: " + CLUSTER_ID + "\ntemplateid: " + TEMPLATE_ID + "\n" + OTHER_PROPS;
     private static final String ADD_RETURN_EPILOG    = "\nhostclusterid: " + CLUSTER_ID + "\ntemplateid: " + TEMPLATE_ID + "\n" + OTHER_PROPS;
 
-    private static final String GET_DISKS_COMMAND = "$v = get-vm {0,number,#}\n$v.GetDiskImages()\n";
+    private static final String GET_DISKS_COMMAND = "$v = get-vm ''{0,number,#}''\n$v.GetDiskImages()\n";
     public static final String GET_DISKS_RETURN = "snapshotid: 0\nactualsizeinbytes: 10485760\ndisktype: system\nstatus: ok\ndiskinterface: ide\nvolumeformat: raw\nvolumetype: sparse\nboot: true\nwipeafterdelete: false\npropagateerrors: off\n";
 
-    private static final String GET_INTERFACES_COMMAND = "$v = get-vm {0,number,#}\n$v.GetNetworkAdapters()\n";
+    private static final String GET_INTERFACES_COMMAND = "$v = get-vm ''{0,number,#}''\n$v.GetNetworkAdapters()\n";
     public static final String GET_INTERFACES_RETURN = "id: 1\nname: eth1\nnetwork: net1\ntype: pv\nmacaddress: 00:1a:4a:16:84:02\naddress: 172.31.0.10\nsubnet: 255.255.255.0\ngateway: 172.31.0.1\n";
 
     public static final String LOOKUP_NETWORK_ID_COMMAND = "$n = get-networks\nforeach ($i in $n) {  if ($i.name -eq 'net1') {    $i  }}";

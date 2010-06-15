@@ -30,6 +30,8 @@ import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellTemplate;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+
 
 public class PowerShellTemplateResource extends AbstractActionableResource<Template> implements TemplateResource {
 
@@ -51,7 +53,7 @@ public class PowerShellTemplateResource extends AbstractActionableResource<Templ
     public Template get(UriInfo uriInfo) {
         StringBuilder buf = new StringBuilder();
 
-        buf.append("get-template -templateid " + getId());
+        buf.append("get-template -templateid " + PowerShellUtils.escape(getId()));
 
         return LinkHelper.addLinks(runAndParseSingle(buf.toString()));
     }

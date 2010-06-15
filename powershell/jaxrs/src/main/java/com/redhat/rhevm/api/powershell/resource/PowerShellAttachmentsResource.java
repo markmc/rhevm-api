@@ -34,6 +34,7 @@ import com.redhat.rhevm.api.resource.AttachmentsResource;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.util.PowerShellException;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
 public class PowerShellAttachmentsResource implements AttachmentsResource {
@@ -72,7 +73,7 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
 
         StringBuilder buf = new StringBuilder();
 
-        buf.append("get-datacenter -storagedomainid " + storageDomainId);
+        buf.append("get-datacenter -storagedomainid " + PowerShellUtils.escape(storageDomainId));
 
         ArrayList<DataCenter> dataCenters;
         try {
@@ -87,8 +88,8 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
             buf = new StringBuilder();
 
             buf.append("get-storagedomain");
-            buf.append(" -datacenterid " + dataCenter.getId());
-            buf.append(" -storagedomainid " + storageDomainId);
+            buf.append(" -datacenterid " + PowerShellUtils.escape(dataCenter.getId()));
+            buf.append(" -storagedomainid " + PowerShellUtils.escape(storageDomainId));
 
             StorageDomain storageDomain = PowerShellStorageDomainResource.runAndParseSingle(buf.toString());
 
@@ -107,8 +108,8 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
         StringBuilder buf = new StringBuilder();
 
         buf.append("attach-storagedomain");
-        buf.append(" -datacenterid " + dataCenter.getId());
-        buf.append(" -storagedomainid " + storageDomainId);
+        buf.append(" -datacenterid " + PowerShellUtils.escape(dataCenter.getId()));
+        buf.append(" -storagedomainid " + PowerShellUtils.escape(storageDomainId));
 
         StorageDomain storageDomain = PowerShellStorageDomainResource.runAndParseSingle(buf.toString());
 
@@ -125,8 +126,8 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
         StringBuilder buf = new StringBuilder();
 
         buf.append("detach-storagedomain");
-        buf.append(" -datacenterid " + id);
-        buf.append(" -storagedomainid " + storageDomainId);
+        buf.append(" -datacenterid " + PowerShellUtils.escape(id));
+        buf.append(" -storagedomainid " + PowerShellUtils.escape(storageDomainId));
 
         PowerShellCmd.runCommand(buf.toString());
     }
@@ -137,8 +138,8 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
             StringBuilder buf = new StringBuilder();
 
             buf.append("get-storagedomain");
-            buf.append(" -datacenterid " + id);
-            buf.append(" -storagedomainid " + storageDomainId);
+            buf.append(" -datacenterid " + PowerShellUtils.escape(id));
+            buf.append(" -storagedomainid " + PowerShellUtils.escape(storageDomainId));
             PowerShellCmd.runCommand(buf.toString());
 
             return new PowerShellAttachmentResource(id, storageDomainId, executor);
@@ -159,7 +160,7 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
         StringBuilder buf = new StringBuilder();
 
         buf.append("get-storagedomain");
-        buf.append(" -datacenterid " + dataCenterId);
+        buf.append(" -datacenterid " + PowerShellUtils.escape(dataCenterId));
 
         ArrayList<StorageDomain> storageDomains;
         try {

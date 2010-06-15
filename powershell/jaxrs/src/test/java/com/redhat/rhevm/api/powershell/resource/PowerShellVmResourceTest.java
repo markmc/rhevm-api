@@ -64,13 +64,13 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
 
     private static final String GET_RETURN = "vmid: " + VM_ID + "\nname: " + VM_NAME + "\nhostclusterid: " + CLUSTER_ID + "\n" + "templateid: " + TEMPLATE_ID + "\n" + OTHER_PROPS;
     private static final String ACTION_RETURN = "replace with realistic powershell return";
-    private static final String UPDATE_COMMAND = "$v = get-vm " + VM_ID + "\n$v.name = '" + NEW_NAME + "'\nupdate-vm -vmobject $v";
+    private static final String UPDATE_COMMAND = "$v = get-vm '" + VM_ID + "'\n$v.name = '" + NEW_NAME + "'\nupdate-vm -vmobject $v";
     private static final String UPDATE_RETURN = "vmid: " + VM_ID + "\n name: " + NEW_NAME + "\nhostclusterid: " + CLUSTER_ID + "\n" + "templateid: " + TEMPLATE_ID + "\n" + OTHER_PROPS;
 
-    private static final String GET_DISKS_COMMAND = "$v = get-vm {0}\n$v.GetDiskImages()\n";
+    private static final String GET_DISKS_COMMAND = "$v = get-vm ''{0}''\n$v.GetDiskImages()\n";
     private static final String GET_DISKS_RETURN = PowerShellVmsResourceTest.GET_DISKS_RETURN;
 
-    private static final String GET_INTERFACES_COMMAND = "$v = get-vm {0}\n$v.GetNetworkAdapters()\n";
+    private static final String GET_INTERFACES_COMMAND = "$v = get-vm ''{0}''\n$v.GetNetworkAdapters()\n";
     private static final String GET_INTERFACES_RETURN = PowerShellVmsResourceTest.GET_INTERFACES_RETURN;
 
     private static final String LOOKUP_NETWORK_ID_COMMAND = PowerShellVmsResourceTest.LOOKUP_NETWORK_ID_COMMAND;
@@ -78,16 +78,16 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
 
     private static final String ISO_NAME = "foo.iso";
     private static final String ISO_ID = Integer.toString("cdrom".hashCode());
-    private static final String UPDATE_CDROM_COMMAND = "$v = get-vm {1}\n$v.cdisopath = ''{0}''\nupdate-vm -vmobject $v";
+    private static final String UPDATE_CDROM_COMMAND = "$v = get-vm ''{1}''\n$v.cdisopath = ''{0}''\nupdate-vm -vmobject $v";
 ;
     private static final long NEW_DISK_SIZE = 10;
-    private static final String ADD_DISK_COMMAND = "$d = new-disk -disksize {0}\n$v = get-vm {1}\nadd-disk -diskobject $d -vmobject $v";
-    private static final String REMOVE_DISK_COMMAND = "remove-disk -vmid {0} -diskids 0";
+    private static final String ADD_DISK_COMMAND = "$d = new-disk -disksize {0}\n$v = get-vm ''{1}''\nadd-disk -diskobject $d -vmobject $v";
+    private static final String REMOVE_DISK_COMMAND = "remove-disk -vmid ''{0}'' -diskids ''0''";
 
     private static final String NEW_INTERFACE_NAME = "eth11";
     private static final String NEW_INTERFACE_NETWORK = "b4fb4d54-ca44-444c-ba26-d51f18c91998";
-    private static final String ADD_INTERFACE_COMMAND = "$v = get-vm {0}\nforeach ($i in get-networks) '{' if ($i.networkid -eq ''{1}'') '{ $n = $i } }'\nadd-networkadapter -vmobject $v -interfacename {2} -networkname $n.name";
-    private static final String REMOVE_INTERFACE_COMMAND = "$v = get-vm {0}\nforeach ($i in $v.GetNetworkAdapters()) '{  if ($i.id -eq ''0'') {    $n = $i  }}'\nremove-networkadapter -vmobject $v -networkadapterobject $n";
+    private static final String ADD_INTERFACE_COMMAND = "$v = get-vm ''{0}''\nforeach ($i in get-networks) '{'  if ($i.networkid -eq ''{1}'') '{    $n = $i  }}'\nadd-networkadapter -vmobject $v -interfacename ''{2}'' -networkname $n.name";
+    private static final String REMOVE_INTERFACE_COMMAND = "$v = get-vm ''{0}''\nforeach ($i in $v.GetNetworkAdapters()) '{  if ($i.id -eq ''0'') {    $n = $i  }}'\nremove-networkadapter -vmobject $v -networkadapterobject $n";
 
     protected PowerShellVmResource getResource() {
         return new PowerShellVmResource(VM_ID);
@@ -95,7 +95,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
 
     @Test
     public void testGet() throws Exception {
-        String [] commands = { "get-vm " + VM_ID,
+        String [] commands = { "get-vm '" + VM_ID + "'",
                                MessageFormat.format(GET_DISKS_COMMAND, VM_ID),
                                MessageFormat.format(GET_INTERFACES_COMMAND, VM_ID),
                                LOOKUP_NETWORK_ID_COMMAND };
@@ -327,7 +327,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
 
     private UriInfo setUpActionExpectation(String verb, String command, boolean appendVmId) throws Exception {
         if (appendVmId) {
-            command += " -vmid " + VM_ID;
+            command += " -vmid '" + VM_ID + "'";
         }
         return setUpActionExpectation("/vms/" + VM_ID + "/", verb, command, ACTION_RETURN);
     }

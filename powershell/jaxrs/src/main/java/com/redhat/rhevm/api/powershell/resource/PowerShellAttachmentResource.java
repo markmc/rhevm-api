@@ -34,6 +34,7 @@ import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.resource.AttachmentResource;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
 public class PowerShellAttachmentResource extends AbstractActionableResource<Attachment> implements AttachmentResource {
@@ -72,8 +73,8 @@ public class PowerShellAttachmentResource extends AbstractActionableResource<Att
         StringBuilder buf = new StringBuilder();
 
         buf.append("get-storagedomain");
-        buf.append(" -datacenterid " + getId());
-        buf.append(" -storagedomainid " + storageDomainId);
+        buf.append(" -datacenterid " + PowerShellUtils.escape(getId()));
+        buf.append(" -storagedomainid " + PowerShellUtils.escape(storageDomainId));
 
         StorageDomain storageDomain = PowerShellStorageDomainResource.runAndParseSingle(buf.toString());
 
@@ -105,8 +106,8 @@ public class PowerShellAttachmentResource extends AbstractActionableResource<Att
             StringBuilder buf = new StringBuilder();
 
             buf.append(command);
-            buf.append(" -datacenterid " + getId());
-            buf.append(" -storagedomainid " + storageDomainId);
+            buf.append(" -datacenterid " + PowerShellUtils.escape(getId()));
+            buf.append(" -storagedomainid " + PowerShellUtils.escape(storageDomainId));
 
             PowerShellCmd.runCommand(buf.toString());
         }

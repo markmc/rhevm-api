@@ -29,6 +29,8 @@ import com.redhat.rhevm.api.resource.NetworkResource;
 import com.redhat.rhevm.api.resource.NetworksResource;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+
 
 public class PowerShellNetworksResource
     extends AbstractPowerShellCollectionResource<Network, PowerShellNetworkResource>
@@ -48,29 +50,29 @@ public class PowerShellNetworksResource
         StringBuilder buf = new StringBuilder();
 
         buf.append("add-network");
-        buf.append(" -name '" + network.getName() + "'");
-        buf.append(" -datacenterid " + network.getDataCenter().getId());
+        buf.append(" -name " + PowerShellUtils.escape(network.getName()) + "");
+        buf.append(" -datacenterid " + PowerShellUtils.escape(network.getDataCenter().getId()));
 
         if (network.getDescription() != null) {
-            buf.append(" -description '" + network.getDescription() + "'");
+            buf.append(" -description " + PowerShellUtils.escape(network.getDescription()));
         }
 
         if (network.getIp() != null) {
             IP ip = network.getIp();
 
             if (ip.getAddress() != null) {
-                buf.append(" -address " + ip.getAddress());
+                buf.append(" -address " + PowerShellUtils.escape(ip.getAddress()));
             }
             if (ip.getNetmask() != null) {
-                buf.append(" -netmask " + ip.getNetmask());
+                buf.append(" -netmask " + PowerShellUtils.escape(ip.getNetmask()));
             }
             if (ip.getGateway() != null) {
-                buf.append(" -gateway " + ip.getGateway());
+                buf.append(" -gateway " + PowerShellUtils.escape(ip.getGateway()));
             }
         }
 
         if (network.getVlan() != null) {
-            buf.append(" -vlanid " + network.getVlan().getId());
+            buf.append(" -vlanid " + PowerShellUtils.escape(network.getVlan().getId()));
         }
 
         if (network.isStp() != null && network.isStp()) {
@@ -90,7 +92,7 @@ public class PowerShellNetworksResource
 
         buf.append("$n = get-networks\n");
         buf.append("foreach ($i in $n) {");
-        buf.append("  if ($i.networkid -eq '" + id + "') {");
+        buf.append("  if ($i.networkid -eq " + PowerShellUtils.escape(id) + ") {");
         buf.append("    remove-network");
         buf.append(" -networkobject $i");
         buf.append(" -datacenterid $i.datacenterid");

@@ -82,7 +82,7 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
     private static final String ADD_RETURN =
         "{0}id: " + "ceres".hashCode() + " \n name: ceres {1}\n\n";
 
-    private static final String REMOVE_COMMAND = "remove-{0} -{0}id " + "eris".hashCode();
+    private static final String REMOVE_COMMAND = "remove-{0} -{0}id ''" + "eris".hashCode() + "''";
 
     private static final String SEARCH_OPTION = " -searchtext ";
     private static final String QUERY = "name=*r*s";

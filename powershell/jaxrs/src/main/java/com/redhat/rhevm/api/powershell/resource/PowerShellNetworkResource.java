@@ -33,6 +33,8 @@ import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellNetwork;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+
 
 public class PowerShellNetworkResource extends AbstractActionableResource<Network> implements NetworkResource {
 
@@ -56,7 +58,7 @@ public class PowerShellNetworkResource extends AbstractActionableResource<Networ
 
         buf.append("$n = get-networks\n");
         buf.append("foreach ($i in $n) {");
-        buf.append("  if ($i.networkid -eq '" + getId() + "') {");
+        buf.append("  if ($i.networkid -eq " + PowerShellUtils.escape(getId()) + ") {");
         buf.append("    $i");
         buf.append("  }");
         buf.append("}");
@@ -71,15 +73,15 @@ public class PowerShellNetworkResource extends AbstractActionableResource<Networ
         StringBuilder buf = new StringBuilder();
 
         buf.append("foreach ($i in $n) {");
-        buf.append("  if ($i.networkid -eq '" + getId() + "') {");
+        buf.append("  if ($i.networkid -eq " + PowerShellUtils.escape(getId()) + ") {");
 
         if (network.getName() != null) {
-            buf.append("    $i.name = '" + network.getName() + "'");
+            buf.append("    $i.name = " + PowerShellUtils.escape(network.getName()) + "\n");
         }
 
         buf.append("    update-network");
         buf.append(" -networkobject $i");
-        buf.append(" -datacenterid " + network.getDataCenter().getId());
+        buf.append(" -datacenterid " + PowerShellUtils.escape(network.getDataCenter().getId()));
 
         buf.append("  }");
         buf.append("}\n");

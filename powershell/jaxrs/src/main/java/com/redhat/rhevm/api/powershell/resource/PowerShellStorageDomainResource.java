@@ -40,6 +40,8 @@ import com.redhat.rhevm.api.resource.AttachmentsResource;
 import com.redhat.rhevm.api.resource.StorageDomainResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellStorageDomain;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+
 
 public class PowerShellStorageDomainResource extends AbstractActionableResource<StorageDomain> implements StorageDomainResource {
 
@@ -155,7 +157,8 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
         if (staged != null) {
             storageDomain = staged;
         } else {
-            storageDomain = parent.mapFromRhevmId(runAndParseSingle("get-storagedomain " + getId(), true));
+            storageDomain = runAndParseSingle("get-storagedomain " + PowerShellUtils.escape(getId()), true);
+            storageDomain = parent.mapFromRhevmId(storageDomain);
         }
         storageDomain = JAXBHelper.clone(OBJECT_FACTORY.createStorageDomain(storageDomain));
         return addLinks(storageDomain);
@@ -172,10 +175,10 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
 
             storageDomain = staged;
         } else {
-            buf.append("$h = get-storagedomain " + getId() + "\n");
+            buf.append("$h = get-storagedomain " + PowerShellUtils.escape(getId()) + "\n");
 
             if (storageDomain.getName() != null) {
-                buf.append("$h.name = '" + storageDomain.getName() + "'");
+                buf.append("$h.name = " + PowerShellUtils.escape(storageDomain.getName()) + "\n");
             }
 
             buf.append("\n");
@@ -225,10 +228,10 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
             buf.append("add-storagedomain");
 
             if (staged.getName() != null) {
-                buf.append(" -name '" + staged.getName() + "'");
+                buf.append(" -name " + PowerShellUtils.escape(staged.getName()));
             }
 
-            buf.append(" -hostid " + action.getHost().getId());
+            buf.append(" -hostid " + PowerShellUtils.escape(action.getHost().getId()));
 
             buf.append(" -domaintype ");
             switch (staged.getType()) {
@@ -253,7 +256,7 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
 
             switch (storage.getType()) {
             case NFS:
-                buf.append("'" + storage.getAddress() + ":" + storage.getPath() + "'");
+                buf.append(PowerShellUtils.escape(storage.getAddress() + ":" + storage.getPath()));
                 break;
             case ISCSI:
             case FCP:
@@ -278,15 +281,15 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
             storageDomain.setId(id);
             parent.mapToRhevmId(storageDomain);
 
-            storageDomain = runAndParseSingle("get-storagedomain " + storageDomain.getId(), true);
+            storageDomain = runAndParseSingle("get-storagedomain " + PowerShellUtils.escape(storageDomain.getId()), true);
 
             StringBuilder buf = new StringBuilder();
 
             buf.append("remove-storagedomain -force");
 
-            buf.append(" -storagedomainid " + storageDomain.getId());
+            buf.append(" -storagedomainid " + PowerShellUtils.escape(storageDomain.getId()));
 
-            buf.append(" -hostid " + action.getHost().getId());
+            buf.append(" -hostid " + PowerShellUtils.escape(action.getHost().getId()));
 
             PowerShellCmd.runCommand(buf.toString());
 

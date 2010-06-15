@@ -51,10 +51,10 @@ public class PowerShellVmPoolResourceTest extends AbstractPowerShellResourceTest
     private static final String BAD_ID = "98765";
     private static final String NEW_NAME = "fidelma";
 
-    private static final String GET_COMMAND = "get-vmpool -vmpoolid " + POOL_ID;
+    private static final String GET_COMMAND = "get-vmpool -vmpoolid '" + POOL_ID + "'";
     private static final String GET_RETURN = "vmpoolid: " + POOL_ID + "\nname: " + POOL_NAME + PowerShellVmPoolsResourceTest.GET_RETURN_EPILOG;
 
-    private static final String UPDATE_COMMAND = "$v = get-vmpool " + POOL_ID + "\n$v.name = '" + NEW_NAME + "'\nupdate-vmpool -vmpoolobject $v";
+    private static final String UPDATE_COMMAND = "$v = get-vmpool '" + POOL_ID + "'\n$v.name = '" + NEW_NAME + "'\nupdate-vmpool -vmpoolobject $v";
     private static final String UPDATE_RETURN = "vmpoolid: " + POOL_ID + "\nname: " + NEW_NAME + PowerShellVmPoolsResourceTest.GET_RETURN_EPILOG;
 
     protected PowerShellVmPoolResource getResource() {

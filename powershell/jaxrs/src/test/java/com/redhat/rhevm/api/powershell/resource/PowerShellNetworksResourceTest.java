@@ -26,7 +26,7 @@ import org.junit.Test;
 
 public class PowerShellNetworksResourceTest extends AbstractPowerShellCollectionResourceTest<Network, PowerShellNetworkResource, PowerShellNetworksResource> {
 
-    private static final String ADD_COMMAND_EPILOG = "-datacenterid 54321";
+    private static final String ADD_COMMAND_EPILOG = "-datacenterid '54321'";
     private static final String ADD_RETURN_EPILOG = "\ndatacenterid: 54321";
 
     private static final String REMOVE_COMMAND = "$n = get-networks\nforeach ($i in $n) {  if ($i.networkid -eq '3121815') {    remove-network -networkobject $i -datacenterid $i.datacenterid  }}";

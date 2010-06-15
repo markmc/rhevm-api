@@ -28,6 +28,8 @@ import com.redhat.rhevm.api.resource.HostResource;
 import com.redhat.rhevm.api.resource.HostsResource;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+
 
 public class PowerShellHostsResource
     extends AbstractPowerShellCollectionResource<Host, PowerShellHostResource>
@@ -48,8 +50,8 @@ public class PowerShellHostsResource
 
         buf.append("add-host");
 
-        buf.append(" -name '" + host.getName() + "'");
-        buf.append(" -address " + host.getAddress());
+        buf.append(" -name " + PowerShellUtils.escape(host.getName()));
+        buf.append(" -address " + PowerShellUtils.escape(host.getAddress()));
 
         // It appears that the root password is not really needed here
         buf.append(" -rootpassword notneeded");
@@ -64,7 +66,7 @@ public class PowerShellHostsResource
 
     @Override
     public void remove(String id) {
-        PowerShellCmd.runCommand("remove-host -hostid " + id);
+        PowerShellCmd.runCommand("remove-host -hostid " + PowerShellUtils.escape(id));
         removeSubResource(id);
     }
 

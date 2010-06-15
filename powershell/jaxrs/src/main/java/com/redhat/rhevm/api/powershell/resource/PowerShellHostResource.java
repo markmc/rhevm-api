@@ -34,6 +34,8 @@ import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellHost;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+
 
 public class PowerShellHostResource extends AbstractActionableResource<Host> implements HostResource {
 
@@ -56,7 +58,7 @@ public class PowerShellHostResource extends AbstractActionableResource<Host> imp
 
     @Override
     public Host get(UriInfo uriInfo) {
-        return LinkHelper.addLinks(runAndParseSingle(CMD_PREFIX + "get-host " + getId()));
+        return LinkHelper.addLinks(runAndParseSingle(CMD_PREFIX + "get-host " + PowerShellUtils.escape(getId())));
     }
 
     @Override
@@ -65,13 +67,12 @@ public class PowerShellHostResource extends AbstractActionableResource<Host> imp
 
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$h = " + CMD_PREFIX + "get-host " + getId() + "\n");
+        buf.append("$h = " + CMD_PREFIX + "get-host " + PowerShellUtils.escape(getId()) + "\n");
 
         if (host.getName() != null) {
-            buf.append("$h.name = '" + host.getName() + "'");
+            buf.append("$h.name = " + PowerShellUtils.escape(host.getName()) + "\n");
         }
 
-        buf.append("\n");
         buf.append("update-host -hostobject $h");
 
         return LinkHelper.addLinks(runAndParseSingle(buf.toString()));
@@ -107,14 +108,15 @@ public class PowerShellHostResource extends AbstractActionableResource<Host> imp
         }
 
         public void run() {
+            String id = PowerShellHostResource.this.getId();
             StringBuilder buf = new StringBuilder();
 
-            buf.append("$h = " + CMD_PREFIX + "get-host " + PowerShellHostResource.this.getId() + "\n");
+            buf.append("$h = " + CMD_PREFIX + "get-host " + PowerShellUtils.escape(id) + "\n");
 
             buf.append("update-host");
             buf.append(" -hostobject $h");
             buf.append(" -install");
-            buf.append(" -rootpassword '" + rootPassword + "'");
+            buf.append(" -rootpassword " + PowerShellUtils.escape(rootPassword));
 
             PowerShellCmd.runCommand(buf.toString());
         }

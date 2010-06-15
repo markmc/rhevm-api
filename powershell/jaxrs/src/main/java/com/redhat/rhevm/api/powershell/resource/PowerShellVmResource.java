@@ -45,6 +45,7 @@ import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.common.util.ReflectionHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
 public class PowerShellVmResource extends AbstractActionableResource<VM> implements VmResource {
@@ -98,7 +99,7 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
 
             buf.append("$n = get-networks\n");
             buf.append("foreach ($i in $n) {");
-            buf.append("  if ($i.name -eq '" + iface.getNetwork().getName() + "') {");
+            buf.append("  if ($i.name -eq " + PowerShellUtils.escape(iface.getNetwork().getName()) + ") {");
             buf.append("    $i");
             buf.append("  }");
             buf.append("}");
@@ -114,14 +115,14 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
     public static PowerShellVM addDevices(PowerShellVM vm) {
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$v = get-vm " + vm.getId() + "\n");
+        buf.append("$v = get-vm " + PowerShellUtils.escape(vm.getId()) + "\n");
         buf.append("$v.GetDiskImages()\n");
 
         vm = PowerShellVM.parseDisks(vm, PowerShellCmd.runCommand(buf.toString()));
 
         buf = new StringBuilder();
 
-        buf.append("$v = get-vm " + vm.getId() + "\n");
+        buf.append("$v = get-vm " + PowerShellUtils.escape(vm.getId()) + "\n");
         buf.append("$v.GetNetworkAdapters()\n");
 
         vm = PowerShellVM.parseInterfaces(vm, PowerShellCmd.runCommand(buf.toString()));
@@ -139,7 +140,7 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
 
     @Override
     public VM get(UriInfo uriInfo) {
-        return addLinks(addDevices(runAndParseSingle("get-vm " + getId())));
+        return addLinks(addDevices(runAndParseSingle("get-vm " + PowerShellUtils.escape(getId()))));
     }
 
     @Override
@@ -148,13 +149,13 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
 
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$v = get-vm " + getId() + "\n");
+        buf.append("$v = get-vm " + PowerShellUtils.escape(getId()) + "\n");
 
         if (vm.getName() != null) {
-            buf.append("$v.name = '" + vm.getName() + "'\n");
+            buf.append("$v.name = " + PowerShellUtils.escape(vm.getName()) + "\n");
         }
         if (vm.getDescription() != null) {
-            buf.append("$v.description = '" + vm.getDescription() + "'\n");
+            buf.append("$v.description = " + PowerShellUtils.escape(vm.getDescription()) + "\n");
         }
         if (vm.isSetMemory()) {
             buf.append(" $v.memorysize = " + Math.round((double)vm.getMemory()/(1024*1024)) + "\n");
@@ -282,8 +283,8 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
                 assert cdrom.getId().equals(CDROM_ID);
             }
 
-            buf.append("$v = get-vm " + getId() + "\n");
-            buf.append("$v.cdisopath = '" + cdIsoPath + "'\n");
+            buf.append("$v = get-vm " + PowerShellUtils.escape(getId()) + "\n");
+            buf.append("$v.cdisopath = " + PowerShellUtils.escape(cdIsoPath) + "\n");
             buf.append("update-vm -vmobject $v");
 
             PowerShellCmd.runCommand(buf.toString());
@@ -340,7 +341,7 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
             }
             buf.append("\n");
 
-            buf.append("$v = get-vm " + getId() + "\n");
+            buf.append("$v = get-vm " + PowerShellUtils.escape(getId()) + "\n");
 
             buf.append("add-disk -diskobject $d -vmobject $v");
             if (action.getStorageDomain() != null) {
@@ -363,8 +364,8 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
             StringBuilder buf = new StringBuilder();
 
             buf.append("remove-disk");
-            buf.append(" -vmid " + getId());
-            buf.append(" -diskids " + diskId);
+            buf.append(" -vmid " + PowerShellUtils.escape(getId()));
+            buf.append(" -diskids " + PowerShellUtils.escape(diskId));
 
             PowerShellCmd.runCommand(buf.toString());
         }
@@ -381,18 +382,22 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
         public void run() {
             StringBuilder buf = new StringBuilder();
 
-            buf.append("$v = get-vm " + getId() + "\n");
-            buf.append("foreach ($i in get-networks) { if ($i.networkid -eq '" + iface.getNetwork().getId() + "') { $n = $i } }\n");
+            buf.append("$v = get-vm " + PowerShellUtils.escape(getId()) + "\n");
+            buf.append("foreach ($i in get-networks) {");
+            buf.append("  if ($i.networkid -eq " + PowerShellUtils.escape(iface.getNetwork().getId()) + ") {");
+            buf.append("    $n = $i");
+            buf.append("  }");
+            buf.append("}\n");
 
             buf.append("add-networkadapter");
             buf.append(" -vmobject $v");
-            buf.append(" -interfacename " + iface.getName());
+            buf.append(" -interfacename " + PowerShellUtils.escape(iface.getName()));
             buf.append(" -networkname $n.name");
             if (iface.getType() != null) {
                 buf.append(" -interfacetype " + iface.getType().toString().toLowerCase());
             }
             if (iface.getMac() != null && iface.getMac().getAddress() != null) {
-                buf.append(" -macaddress " + iface.getMac().getAddress());
+                buf.append(" -macaddress " + PowerShellUtils.escape(iface.getMac().getAddress()));
             }
 
             PowerShellCmd.runCommand(buf.toString());
@@ -410,10 +415,10 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
         public void run() {
             StringBuilder buf = new StringBuilder();
 
-            buf.append("$v = get-vm " + getId() + "\n");
+            buf.append("$v = get-vm " + PowerShellUtils.escape(getId()) + "\n");
 
             buf.append("foreach ($i in $v.GetNetworkAdapters()) {");
-            buf.append("  if ($i.id -eq '" + interfaceId + "') {");
+            buf.append("  if ($i.id -eq " + PowerShellUtils.escape(interfaceId) + ") {");
             buf.append("    $n = $i");
             buf.append("  }");
             buf.append("}\n");

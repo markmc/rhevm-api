@@ -41,7 +41,7 @@ public class PowerShellTemplateResourceTest extends AbstractPowerShellResourceTe
     private static final String TEMPLATE_ID = "12345";
     private static final String TEMPLATE_NAME = "sedna";
     private static final String TEMPLATE_DESCRIPTION = "this is a template";
-    private static final String GET_COMMAND = "get-template -templateid " + TEMPLATE_ID;
+    private static final String GET_COMMAND = "get-template -templateid '" + TEMPLATE_ID + "'";
     private static final String GET_RETURN = "templateid: " + TEMPLATE_ID + "\nname: " + TEMPLATE_NAME + "\ndescription: " + TEMPLATE_DESCRIPTION;
 
     protected PowerShellTemplateResource getResource() {

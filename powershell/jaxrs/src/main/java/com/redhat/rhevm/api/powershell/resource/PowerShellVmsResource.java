@@ -29,6 +29,7 @@ import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.resource.VmsResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
 public class PowerShellVmsResource
@@ -48,15 +49,15 @@ public class PowerShellVmsResource
     public Response add(UriInfo uriInfo, VM vm) {
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$templ = get-template -templateid " + vm.getTemplate().getId() + "\n");
+        buf.append("$templ = get-template -templateid " + PowerShellUtils.escape(vm.getTemplate().getId()) + "\n");
 
         buf.append("add-vm");
 
-        buf.append(" -name '" + vm.getName() + "'");
+        buf.append(" -name " + PowerShellUtils.escape(vm.getName()) + "");
         buf.append(" -templateobject $templ");
 
         if (vm.getDescription() != null) {
-            buf.append(" -description '" + vm.getDescription() + "'");
+            buf.append(" -description " + PowerShellUtils.escape(vm.getDescription()));
         }
         if (vm.isSetMemory()) {
             buf.append(" -memorysize " + Math.round((double)vm.getMemory()/(1024*1024)));
@@ -71,7 +72,7 @@ public class PowerShellVmsResource
             buf.append(" -defaultbootsequence " + bootSequence);
         }
         if (vm.getCluster() != null) {
-            buf.append(" -hostclusterid " + vm.getCluster().getId());
+            buf.append(" -hostclusterid " + PowerShellUtils.escape(vm.getCluster().getId()));
         }
 
         PowerShellVM ret = PowerShellVmResource.runAndParseSingle(buf.toString());
@@ -85,7 +86,7 @@ public class PowerShellVmsResource
 
     @Override
     public void remove(String id) {
-        PowerShellCmd.runCommand("remove-vm -vmid " + id);
+        PowerShellCmd.runCommand("remove-vm -vmid " + PowerShellUtils.escape(id));
         removeSubResource(id);
     }
 

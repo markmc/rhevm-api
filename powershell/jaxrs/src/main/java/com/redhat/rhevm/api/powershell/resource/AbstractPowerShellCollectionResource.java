@@ -26,13 +26,14 @@ import com.redhat.rhevm.api.common.resource.AbstractUpdatableResource;
 import com.redhat.rhevm.api.common.util.QueryHelper;
 import com.redhat.rhevm.api.common.util.ReapedMap;
 import com.redhat.rhevm.api.model.BaseResource;
+import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+
 
 public abstract class AbstractPowerShellCollectionResource<R extends BaseResource,
                                                            U extends AbstractUpdatableResource<R>> {
     private ReapedMap<String, U> resources;
     private Executor executor;
     private final static String SEARCH_TEXT = " -searchtext ";
-    private final static String QUOTE = "'";
 
     public AbstractPowerShellCollectionResource() {
         resources = new ReapedMap<String, U>();
@@ -61,14 +62,10 @@ public abstract class AbstractPowerShellCollectionResource<R extends BaseResourc
         String constraint = QueryHelper.getConstraint(uriInfo, collectionType);
         if (constraint != null) {
             ret = new StringBuffer(root).append(SEARCH_TEXT)
-                                        .append(quoted(constraint))
+                                        .append(PowerShellUtils.escape(constraint))
                                         .toString();
         }
         return ret;
-    }
-
-    private static StringBuffer quoted(String s) {
-        return new StringBuffer(QUOTE).append(s).append(QUOTE);
     }
 
     public Executor getExecutor() {

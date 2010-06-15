@@ -31,6 +31,8 @@ import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellCluster;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+
 
 public class PowerShellClusterResource extends AbstractActionableResource<Cluster> implements ClusterResource {
 
@@ -58,7 +60,7 @@ public class PowerShellClusterResource extends AbstractActionableResource<Cluste
 
         buf.append("$l = select-cluster\n");
         buf.append("foreach ($c in $l) { ");
-        buf.append("  if ($c.clusterid -eq '" + getId() + "') { ");
+        buf.append("  if ($c.clusterid -eq " + PowerShellUtils.escape(getId()) + ") { ");
         buf.append("    echo $c ");
         buf.append("  } ");
         buf.append("}");
@@ -74,16 +76,16 @@ public class PowerShellClusterResource extends AbstractActionableResource<Cluste
 
         buf.append("$l = select-cluster\n");
         buf.append("foreach ($c in $l) { ");
-        buf.append("  if ($c.clusterid -eq '" + getId() + "') { ");
+        buf.append("  if ($c.clusterid -eq " + PowerShellUtils.escape(getId()) + ") { ");
 
         if (cluster.getName() != null) {
-            buf.append("    $c.name = '" + cluster.getName() + "' ");
+            buf.append("    $c.name = " + PowerShellUtils.escape(cluster.getName()) + "\n");
         }
         if (cluster.getCpu() != null) {
-            buf.append("    $c.cpuname = '" + cluster.getCpu().getId() + "' ");
+            buf.append("    $c.cpuname = " + PowerShellUtils.escape(cluster.getCpu().getId()) + "\n");
         }
         if (cluster.getDescription() != null) {
-            buf.append("    $c.description = '" + cluster.getDescription() + "' ");
+            buf.append("    $c.description = " + PowerShellUtils.escape(cluster.getDescription()) + "\n");
         }
 
         buf.append("    update-datacenter -datacenterobject $v");

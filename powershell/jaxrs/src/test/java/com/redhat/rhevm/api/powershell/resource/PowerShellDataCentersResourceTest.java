@@ -44,9 +44,9 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
     @Test
     public void testList() throws Exception {
         String [] commands = { getSelectCommand(),
-                               GET_STORAGE_COMMAND + NAMES[0].hashCode(),
-                               GET_STORAGE_COMMAND + NAMES[1].hashCode(),
-                               GET_STORAGE_COMMAND + NAMES[2].hashCode() };
+                               GET_STORAGE_COMMAND + "'" + NAMES[0].hashCode() + "'",
+                               GET_STORAGE_COMMAND + "'" + NAMES[1].hashCode() + "'",
+                               GET_STORAGE_COMMAND + "'" + NAMES[2].hashCode() + "'" };
         String [] returns =  { getSelectReturn(SELECT_RETURN_EPILOG),
                                MessageFormat.format(GET_STORAGE_RETURN, "mimas".hashCode(), "mimas"),
                                MessageFormat.format(GET_STORAGE_RETURN, "dione".hashCode(), "dione"),
@@ -59,8 +59,8 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
     @Test
     public void testQuery() throws Exception {
         String [] commands = { getQueryCommand(DataCenters.class),
-                               GET_STORAGE_COMMAND + NAMES[1].hashCode(),
-                               GET_STORAGE_COMMAND + NAMES[2].hashCode() };
+                               GET_STORAGE_COMMAND + "'" + NAMES[1].hashCode() + "'",
+                               GET_STORAGE_COMMAND + "'" + NAMES[2].hashCode() + "'"};
         String [] returns =  { getQueryReturn(SELECT_RETURN_EPILOG),
                                MessageFormat.format(GET_STORAGE_RETURN, "mimas".hashCode(), "dione"),
                                MessageFormat.format(GET_STORAGE_RETURN, "dione".hashCode(), "titan") };
@@ -72,7 +72,7 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
     @Test
     public void testAdd() throws Exception {
         String [] commands = { getAddCommand() + ADD_COMMAND_EPILOG,
-                           GET_STORAGE_COMMAND + NEW_NAME.hashCode()};
+                           GET_STORAGE_COMMAND + "'" + NEW_NAME.hashCode() + "'"};
         String [] returns =  { getAddReturn(ADD_RETURN_EPILOG),
                            MessageFormat.format(GET_STORAGE_RETURN, "rhea".hashCode(), "rhea") };
         verifyResponse(

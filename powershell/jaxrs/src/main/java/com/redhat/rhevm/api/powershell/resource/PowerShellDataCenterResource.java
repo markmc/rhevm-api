@@ -34,6 +34,8 @@ import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellDataCenter;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+
 
 public class PowerShellDataCenterResource extends AbstractActionableResource<DataCenter> implements DataCenterResource {
 
@@ -68,7 +70,7 @@ public class PowerShellDataCenterResource extends AbstractActionableResource<Dat
 
     @Override
     public DataCenter get(UriInfo uriInfo) {
-        return addLinks(runAndParseSingle("get-datacenter " + getId()));
+        return addLinks(runAndParseSingle("get-datacenter " + PowerShellUtils.escape(getId())));
     }
 
     @Override
@@ -77,13 +79,13 @@ public class PowerShellDataCenterResource extends AbstractActionableResource<Dat
 
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$h = get-datacenter " + getId() + "\n");
+        buf.append("$h = get-datacenter " + PowerShellUtils.escape(getId()) + "\n");
 
         if (dataCenter.getName() != null) {
-            buf.append("$h.name = '" + dataCenter.getName() + "'");
+            buf.append("$h.name = " + PowerShellUtils.escape(dataCenter.getName()) + "\n");
         }
         if (dataCenter.getDescription() != null) {
-            buf.append("$h.description = '" + dataCenter.getDescription() + "'");
+            buf.append("$h.description = " + PowerShellUtils.escape(dataCenter.getDescription()) + "\n");
         }
 
         buf.append("\n");

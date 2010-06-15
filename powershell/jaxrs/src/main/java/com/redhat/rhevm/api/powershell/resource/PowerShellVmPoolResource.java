@@ -33,6 +33,7 @@ import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellVmPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
 public class PowerShellVmPoolResource extends AbstractActionableResource<VmPool> implements VmPoolResource {
@@ -103,7 +104,7 @@ public class PowerShellVmPoolResource extends AbstractActionableResource<VmPool>
 
     @Override
     public VmPool get(UriInfo uriInfo) {
-        return addLinks(runAndParseSingle("get-vmpool -vmpoolid " + getId()));
+        return addLinks(runAndParseSingle("get-vmpool -vmpoolid " + PowerShellUtils.escape(getId())));
     }
 
     @Override
@@ -112,13 +113,13 @@ public class PowerShellVmPoolResource extends AbstractActionableResource<VmPool>
 
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$v = get-vmpool " + getId() + "\n");
+        buf.append("$v = get-vmpool " + PowerShellUtils.escape(getId()) + "\n");
 
         if (pool.getName() != null) {
-            buf.append("$v.name = '" + pool.getName() + "'\n");
+            buf.append("$v.name = " + PowerShellUtils.escape(pool.getName()) + "\n");
         }
         if (pool.getDescription() != null) {
-            buf.append("$v.description = '" + pool.getDescription() + "'\n");
+            buf.append("$v.description = " + PowerShellUtils.escape(pool.getDescription()) + "\n");
         }
         if (pool.getSize() != null) {
             buf.append("$v.vmcount = " + pool.getSize() + "\n");
