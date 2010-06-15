@@ -43,7 +43,7 @@
           </row>
           <row>
             <entry><literal>devices</literal></entry>
-            <entry>A collection of <literal>cdrom</literal>, <literal>disk</literal> or <literal>interface</literal> elements</entry>
+            <entry>A collection of <literal>cdrom</literal>, <literal>disk</literal> or <literal>nic</literal> elements</entry>
           </row>
         </tbody>
       </tgroup>
@@ -74,12 +74,12 @@
       &lt;format&gt;RAW&lt;/format&gt;
       &lt;bootable&gt;true&lt;/bootable&gt;
     &lt;/disk&gt;
-    &lt;interface id="7a3cff5e-3cc4-47c2-8388-9adf16341f5e"&gt;
+    &lt;nic id="7a3cff5e-3cc4-47c2-8388-9adf16341f5e"&gt;
       &lt;name&gt;nic1&lt;/name&gt;
       &lt;network id="00000000-0000-0000-0000-000000000009" href="networks/00000000-0000-0000-0000-000000000009"/&gt;
       &lt;type&gt;PV&lt;/type&gt;
       &lt;mac address="00:1a:4a:16:84:07"/&gt;
-    &lt;/interface&gt;
+    &lt;/nic&gt;
   &lt;/devices&gt;
   &lt;actions&gt;
     &lt;link rel="shutdown" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/shutdown"/&gt;
@@ -196,7 +196,7 @@
     </title>
 
     <para>
-      Network interface devices are represented by a <literal>interface</literal> element containing the following properties:
+      Network interface devices are represented by a <literal>nic</literal> element containing the following properties:
       <informaltable frame="none">
         <tgroup cols="2">
           <colspec colwidth="2*"/>
@@ -228,7 +228,7 @@
     </para>
 
     <para>
-      When adding a new interface, the <literal>name</literal> and <literal>network id</literal> properties are required.
+      When adding a new network interface, the <literal>name</literal> and <literal>network id</literal> properties are required.
     </para>
   </section>
 

@@ -32,7 +32,7 @@ import com.redhat.rhevm.api.model.CdRom;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.CpuTopology;
 import com.redhat.rhevm.api.model.Disk;
-import com.redhat.rhevm.api.model.Interface;
+import com.redhat.rhevm.api.model.NIC;
 import com.redhat.rhevm.api.model.Iso;
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.Template;
@@ -75,8 +75,8 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
             for (CdRom cdrom : vm.getDevices().getCdRoms()) {
                 LinkHelper.addLinks(cdrom.getIso());
             }
-            for (Interface iface : vm.getDevices().getInterfaces()) {
-                LinkHelper.addLinks(iface.getNetwork());
+            for (NIC nic : vm.getDevices().getNics()) {
+                LinkHelper.addLinks(nic.getNetwork());
             }
         }
 
@@ -94,19 +94,19 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
             return vm;
         }
 
-        for (Interface iface : vm.getDevices().getInterfaces()) {
+        for (NIC nic : vm.getDevices().getNics()) {
             StringBuilder buf = new StringBuilder();
 
             buf.append("$n = get-networks\n");
             buf.append("foreach ($i in $n) {");
-            buf.append("  if ($i.name -eq " + PowerShellUtils.escape(iface.getNetwork().getName()) + ") {");
+            buf.append("  if ($i.name -eq " + PowerShellUtils.escape(nic.getNetwork().getName()) + ") {");
             buf.append("    $i");
             buf.append("  }");
             buf.append("}");
 
             Network network = new Network();
             network.setId(PowerShellNetworkResource.runAndParseSingle(buf.toString()).getId());
-            iface.setNetwork(network);
+            nic.setNetwork(network);
         }
 
         return vm;
@@ -125,7 +125,7 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
         buf.append("$v = get-vm " + PowerShellUtils.escape(vm.getId()) + "\n");
         buf.append("$v.GetNetworkAdapters()\n");
 
-        vm = PowerShellVM.parseInterfaces(vm, PowerShellCmd.runCommand(buf.toString()));
+        vm = PowerShellVM.parseNics(vm, PowerShellCmd.runCommand(buf.toString()));
 
         if (vm.getCdIsoPath() != null) {
             CdRom cdrom = new CdRom();
@@ -223,8 +223,8 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
             task = new UpdateCdRomTask(action, action.getCdRom(), UpdateCdRomTask.ADD);
         } else if (action.getDisk() != null) {
             task = new AddDiskTask(action, action.getDisk());
-        } else if (action.getInterface() != null) {
-            task = new AddInterfaceTask(action, action.getInterface());
+        } else if (action.getNic() != null) {
+            task = new AddNicTask(action, action.getNic());
         } else {
             task = new DoNothingTask(action);
         }
@@ -240,8 +240,8 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
             task = new UpdateCdRomTask(action, action.getCdRom(), UpdateCdRomTask.REMOVE);
         } else if (action.getDisk() != null) {
             task = new RemoveDiskTask(action, action.getDisk().getId());
-        } else if (action.getInterface() != null) {
-            task = new RemoveInterfaceTask(action, action.getInterface().getId());
+        } else if (action.getNic() != null) {
+            task = new RemoveNicTask(action, action.getNic().getId());
         } else {
             task = new DoNothingTask(action);
         }
@@ -371,12 +371,12 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
         }
     }
 
-    private class AddInterfaceTask extends AbstractActionTask {
-        private Interface iface;
+    private class AddNicTask extends AbstractActionTask {
+        private NIC nic;
 
-        AddInterfaceTask(Action action, Interface iface) {
+        AddNicTask(Action action, NIC nic) {
             super(action);
-            this.iface = iface;
+            this.nic = nic;
         }
 
         public void run() {
@@ -384,32 +384,32 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
 
             buf.append("$v = get-vm " + PowerShellUtils.escape(getId()) + "\n");
             buf.append("foreach ($i in get-networks) {");
-            buf.append("  if ($i.networkid -eq " + PowerShellUtils.escape(iface.getNetwork().getId()) + ") {");
+            buf.append("  if ($i.networkid -eq " + PowerShellUtils.escape(nic.getNetwork().getId()) + ") {");
             buf.append("    $n = $i");
             buf.append("  }");
             buf.append("}\n");
 
             buf.append("add-networkadapter");
             buf.append(" -vmobject $v");
-            buf.append(" -interfacename " + PowerShellUtils.escape(iface.getName()));
+            buf.append(" -interfacename " + PowerShellUtils.escape(nic.getName()));
             buf.append(" -networkname $n.name");
-            if (iface.getType() != null) {
-                buf.append(" -interfacetype " + iface.getType().toString().toLowerCase());
+            if (nic.getType() != null) {
+                buf.append(" -interfacetype " + nic.getType().toString().toLowerCase());
             }
-            if (iface.getMac() != null && iface.getMac().getAddress() != null) {
-                buf.append(" -macaddress " + PowerShellUtils.escape(iface.getMac().getAddress()));
+            if (nic.getMac() != null && nic.getMac().getAddress() != null) {
+                buf.append(" -macaddress " + PowerShellUtils.escape(nic.getMac().getAddress()));
             }
 
             PowerShellCmd.runCommand(buf.toString());
         }
     }
 
-    private class RemoveInterfaceTask extends AbstractActionTask {
-        private String interfaceId;
+    private class RemoveNicTask extends AbstractActionTask {
+        private String nicId;
 
-        RemoveInterfaceTask(Action action, String interfaceId) {
+        RemoveNicTask(Action action, String nicId) {
             super(action);
-            this.interfaceId = interfaceId;
+            this.nicId = nicId;
         }
 
         public void run() {
@@ -418,7 +418,7 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
             buf.append("$v = get-vm " + PowerShellUtils.escape(getId()) + "\n");
 
             buf.append("foreach ($i in $v.GetNetworkAdapters()) {");
-            buf.append("  if ($i.id -eq " + PowerShellUtils.escape(interfaceId) + ") {");
+            buf.append("  if ($i.id -eq " + PowerShellUtils.escape(nicId) + ") {");
             buf.append("    $n = $i");
             buf.append("  }");
             buf.append("}\n");

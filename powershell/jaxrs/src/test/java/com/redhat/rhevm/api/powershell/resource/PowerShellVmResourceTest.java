@@ -34,7 +34,7 @@ import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.CdRom;
 import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.Fault;
-import com.redhat.rhevm.api.model.Interface;
+import com.redhat.rhevm.api.model.NIC;
 import com.redhat.rhevm.api.model.Iso;
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.VM;
@@ -70,8 +70,8 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     private static final String GET_DISKS_COMMAND = "$v = get-vm ''{0}''\n$v.GetDiskImages()\n";
     private static final String GET_DISKS_RETURN = PowerShellVmsResourceTest.GET_DISKS_RETURN;
 
-    private static final String GET_INTERFACES_COMMAND = "$v = get-vm ''{0}''\n$v.GetNetworkAdapters()\n";
-    private static final String GET_INTERFACES_RETURN = PowerShellVmsResourceTest.GET_INTERFACES_RETURN;
+    private static final String GET_NICS_COMMAND = "$v = get-vm ''{0}''\n$v.GetNetworkAdapters()\n";
+    private static final String GET_NICS_RETURN = PowerShellVmsResourceTest.GET_NICS_RETURN;
 
     private static final String LOOKUP_NETWORK_ID_COMMAND = PowerShellVmsResourceTest.LOOKUP_NETWORK_ID_COMMAND;
     private static final String LOOKUP_NETWORK_ID_RETURN = PowerShellVmsResourceTest.LOOKUP_NETWORK_ID_RETURN;
@@ -84,10 +84,10 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     private static final String ADD_DISK_COMMAND = "$d = new-disk -disksize {0}\n$v = get-vm ''{1}''\nadd-disk -diskobject $d -vmobject $v";
     private static final String REMOVE_DISK_COMMAND = "remove-disk -vmid ''{0}'' -diskids ''0''";
 
-    private static final String NEW_INTERFACE_NAME = "eth11";
-    private static final String NEW_INTERFACE_NETWORK = "b4fb4d54-ca44-444c-ba26-d51f18c91998";
-    private static final String ADD_INTERFACE_COMMAND = "$v = get-vm ''{0}''\nforeach ($i in get-networks) '{'  if ($i.networkid -eq ''{1}'') '{    $n = $i  }}'\nadd-networkadapter -vmobject $v -interfacename ''{2}'' -networkname $n.name";
-    private static final String REMOVE_INTERFACE_COMMAND = "$v = get-vm ''{0}''\nforeach ($i in $v.GetNetworkAdapters()) '{  if ($i.id -eq ''0'') {    $n = $i  }}'\nremove-networkadapter -vmobject $v -networkadapterobject $n";
+    private static final String NEW_NIC_NAME = "eth11";
+    private static final String NEW_NIC_NETWORK = "b4fb4d54-ca44-444c-ba26-d51f18c91998";
+    private static final String ADD_NIC_COMMAND = "$v = get-vm ''{0}''\nforeach ($i in get-networks) '{'  if ($i.networkid -eq ''{1}'') '{    $n = $i  }}'\nadd-networkadapter -vmobject $v -interfacename ''{2}'' -networkname $n.name";
+    private static final String REMOVE_NIC_COMMAND = "$v = get-vm ''{0}''\nforeach ($i in $v.GetNetworkAdapters()) '{  if ($i.id -eq ''0'') {    $n = $i  }}'\nremove-networkadapter -vmobject $v -networkadapterobject $n";
 
     protected PowerShellVmResource getResource() {
         return new PowerShellVmResource(VM_ID);
@@ -97,9 +97,9 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     public void testGet() throws Exception {
         String [] commands = { "get-vm '" + VM_ID + "'",
                                MessageFormat.format(GET_DISKS_COMMAND, VM_ID),
-                               MessageFormat.format(GET_INTERFACES_COMMAND, VM_ID),
+                               MessageFormat.format(GET_NICS_COMMAND, VM_ID),
                                LOOKUP_NETWORK_ID_COMMAND };
-        String [] returns = { GET_RETURN, GET_DISKS_RETURN, GET_INTERFACES_RETURN, LOOKUP_NETWORK_ID_RETURN };
+        String [] returns = { GET_RETURN, GET_DISKS_RETURN, GET_NICS_RETURN, LOOKUP_NETWORK_ID_RETURN };
 
         verifyVM(
             resource.get(setUpVmExpectations(commands, returns, VM_NAME)),
@@ -110,8 +110,8 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     public void testGoodUpdate() throws Exception {
         String [] commands = { UPDATE_COMMAND,
                                MessageFormat.format(GET_DISKS_COMMAND, VM_ID),
-                               MessageFormat.format(GET_INTERFACES_COMMAND, VM_ID) };
-        String [] returns = { UPDATE_RETURN, GET_DISKS_RETURN, GET_INTERFACES_COMMAND };
+                               MessageFormat.format(GET_NICS_COMMAND, VM_ID) };
+        String [] returns = { UPDATE_RETURN, GET_DISKS_RETURN, GET_NICS_COMMAND };
 
         verifyVM(
             resource.update(createMock(HttpHeaders.class),
@@ -279,18 +279,18 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     }
 
     @Test
-    public void testAddInterface() throws Exception {
-        Interface iface = new Interface();
-        iface.setName(NEW_INTERFACE_NAME);
+    public void testAddNic() throws Exception {
+        NIC nic = new NIC();
+        nic.setName(NEW_NIC_NAME);
 
         Network network = new Network();
-        network.setId(NEW_INTERFACE_NETWORK);
-        iface.setNetwork(network);
+        network.setId(NEW_NIC_NETWORK);
+        nic.setNetwork(network);
 
         Action action = getAction();
-        action.setInterface(iface);
+        action.setNic(nic);
 
-        String command = MessageFormat.format(ADD_INTERFACE_COMMAND, VM_ID, NEW_INTERFACE_NETWORK, NEW_INTERFACE_NAME);
+        String command = MessageFormat.format(ADD_NIC_COMMAND, VM_ID, NEW_NIC_NETWORK, NEW_NIC_NAME);
 
         verifyActionResponse(
             resource.addDevice(setUpActionExpectation("adddevice", command, false), action),
@@ -298,14 +298,14 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     }
 
     @Test
-    public void testRemoveInterface() throws Exception {
-        Interface iface = new Interface();
-        iface.setId("0");
+    public void testRemoveNic() throws Exception {
+        NIC nic = new NIC();
+        nic.setId("0");
 
         Action action = getAction();
-        action.setInterface(iface);
+        action.setNic(nic);
 
-        String command = MessageFormat.format(REMOVE_INTERFACE_COMMAND, VM_ID);
+        String command = MessageFormat.format(REMOVE_NIC_COMMAND, VM_ID);
 
         verifyActionResponse(
             resource.removeDevice(setUpActionExpectation("removedevice", command, false), action),

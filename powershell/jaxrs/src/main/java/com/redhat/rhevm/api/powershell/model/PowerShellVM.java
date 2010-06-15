@@ -31,8 +31,8 @@ import com.redhat.rhevm.api.model.DiskFormat;
 import com.redhat.rhevm.api.model.DiskInterface;
 import com.redhat.rhevm.api.model.DiskStatus;
 import com.redhat.rhevm.api.model.DiskType;
-import com.redhat.rhevm.api.model.Interface;
-import com.redhat.rhevm.api.model.InterfaceType;
+import com.redhat.rhevm.api.model.NIC;
+import com.redhat.rhevm.api.model.NicType;
 import com.redhat.rhevm.api.model.IP;
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.OperatingSystem;
@@ -199,7 +199,7 @@ public class PowerShellVM extends VM {
         return vm;
     }
 
-    public static PowerShellVM parseInterfaces(PowerShellVM vm, String output) {
+    public static PowerShellVM parseNics(PowerShellVM vm, String output) {
         ArrayList<HashMap<String,String>> ifaceProps = PowerShellUtils.parseProps(output);
 
         if (vm.getDevices() == null) {
@@ -207,21 +207,21 @@ public class PowerShellVM extends VM {
         }
 
         for (HashMap<String,String> props : ifaceProps) {
-            Interface iface = new Interface();
+            NIC nic = new NIC();
 
-            iface.setId(props.get("id"));
-            iface.setName(props.get("name"));
+            nic.setId(props.get("id"));
+            nic.setName(props.get("name"));
 
             Network network = new Network();
             network.setName(props.get("network"));
-            iface.setNetwork(network);
+            nic.setNetwork(network);
 
-            iface.setType(InterfaceType.fromValue(props.get("type").toUpperCase()));
+            nic.setType(NicType.fromValue(props.get("type").toUpperCase()));
 
             if (props.get("macaddress") != null) {
-                Interface.Mac mac = new Interface.Mac();
+                NIC.Mac mac = new NIC.Mac();
                 mac.setAddress(props.get("macaddress"));
-                iface.setMac(mac);
+                nic.setMac(mac);
             }
 
             if (props.get("address") != null ||
@@ -231,10 +231,10 @@ public class PowerShellVM extends VM {
                 ip.setAddress(props.get("address"));
                 ip.setNetmask(props.get("subnet"));
                 ip.setGateway(props.get("gateway"));
-                iface.setIp(ip);
+                nic.setIp(ip);
             }
 
-            vm.getDevices().getInterfaces().add(iface);
+            vm.getDevices().getNics().add(nic);
         }
 
         return vm;

@@ -52,11 +52,11 @@ for fmt in [xmlfmt]:
    vm.cluster.id = t.find(links['clusters'], 'Default').id
    vm = t.create(links['vms'], vm)
 
-   interface = fmt.Interface()
-   interface.name = 'eth0'
-   interface.network = fmt.Network()
-   interface.network.id = t.find(links['networks'], 'rhevm').id
-   t.syncAction(vm.actions, "adddevice", interface=interface)
+   nic = fmt.NIC()
+   nic.name = 'eth0'
+   nic.network = fmt.Network()
+   nic.network.id = t.find(links['networks'], 'rhevm').id
+   t.syncAction(vm.actions, "adddevice", nic=nic)
 
    disk = fmt.Disk()
    disk.size = 10737418240
@@ -99,8 +99,8 @@ for fmt in [xmlfmt]:
    disk.id = vm.devices.disk.id
    t.syncAction(vm.actions, "removedevice", disk=disk)
 
-   interface = fmt.Interface()
-   interface.id = vm.devices.interface.id
-   t.syncAction(vm.actions, "removedevice", interface=interface)
+   nic = fmt.NIC()
+   nic.id = vm.devices.nic.id
+   t.syncAction(vm.actions, "removedevice", nic=nic)
 
    t.delete(vm.href)

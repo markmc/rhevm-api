@@ -28,8 +28,8 @@ import com.redhat.rhevm.api.model.DiskFormat;
 import com.redhat.rhevm.api.model.DiskInterface;
 import com.redhat.rhevm.api.model.DiskStatus;
 import com.redhat.rhevm.api.model.DiskType;
-import com.redhat.rhevm.api.model.Interface;
-import com.redhat.rhevm.api.model.InterfaceType;
+import com.redhat.rhevm.api.model.NIC;
+import com.redhat.rhevm.api.model.NicType;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VmStatus;
 
@@ -77,25 +77,25 @@ public class PowerShellVmTest extends PowerShellModelTest {
         assertEquals(d.isPropagateErrors(), propagateErrors);
     }
 
-    private void testInterface(Interface i, String id, String name, String network, InterfaceType type, String macAddress, String ipAddress, String ipNetmask, String ipGateway) {
-        assertEquals(i.getId(), id);
-        assertEquals(i.getName(), name);
-        assertNotNull(i.getNetwork());
-        assertEquals(i.getNetwork().getName(), network);
-        assertEquals(i.getType(), type);
+    private void testNic(NIC n, String id, String name, String network, NicType type, String macAddress, String ipAddress, String ipNetmask, String ipGateway) {
+        assertEquals(n.getId(), id);
+        assertEquals(n.getName(), name);
+        assertNotNull(n.getNetwork());
+        assertEquals(n.getNetwork().getName(), network);
+        assertEquals(n.getType(), type);
         if (macAddress != null) {
-            assertNotNull(i.getMac());
-            assertEquals(i.getMac().getAddress(), macAddress);
+            assertNotNull(n.getMac());
+            assertEquals(n.getMac().getAddress(), macAddress);
         } else {
-            assertNull(i.getMac());
+            assertNull(n.getMac());
         }
         if (ipAddress != null || ipNetmask != null || ipGateway != null) {
-            assertNotNull(i.getIp());
-            assertEquals(i.getIp().getAddress(), ipAddress);
-            assertEquals(i.getIp().getNetmask(), ipNetmask);
-            assertEquals(i.getIp().getGateway(), ipGateway);
+            assertNotNull(n.getIp());
+            assertEquals(n.getIp().getAddress(), ipAddress);
+            assertEquals(n.getIp().getNetmask(), ipNetmask);
+            assertEquals(n.getIp().getGateway(), ipGateway);
         } else {
-            assertNull(i.getIp());
+            assertNull(n.getIp());
         }
     }
 
@@ -123,14 +123,14 @@ public class PowerShellVmTest extends PowerShellModelTest {
 
         testDisk(vm.getDevices().getDisks().get(0), "eeca0966-ad77-4a3d-a750-f3ba390446da", 683622400L, DiskType.SYSTEM, DiskStatus.OK, DiskInterface.IDE, DiskFormat.RAW, true, true, null, null);
 
-        data = readFileContents("interfaces.data");
+        data = readFileContents("nics.data");
         assertNotNull(data);
 
-        vm = PowerShellVM.parseInterfaces(vm, data);
+        vm = PowerShellVM.parseNics(vm, data);
 
         assertNotNull(vm.getDevices());
-        assertEquals(vm.getDevices().getInterfaces().size(), 1);
+        assertEquals(vm.getDevices().getNics().size(), 1);
 
-        testInterface(vm.getDevices().getInterfaces().get(0), "5e8471ec-d8b5-431b-afcb-c74846e0019b", "eth0", "rhevm", InterfaceType.RTL_8139_PV, "00:1a:4a:16:84:02", null, null, null);
+        testNic(vm.getDevices().getNics().get(0), "5e8471ec-d8b5-431b-afcb-c74846e0019b", "eth0", "rhevm", NicType.RTL_8139_PV, "00:1a:4a:16:84:02", null, null, null);
     }
 }

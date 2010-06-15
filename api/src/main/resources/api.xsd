@@ -70,7 +70,13 @@
         </xs:annotation>
       </xs:element>
       <xs:element ref="disk" minOccurs="0" maxOccurs="1"/>
-      <xs:element ref="interface" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="nic" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:appinfo>
+            <jaxb:property name="Nic"/>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
       <!-- when adding a disk device, a storage domain may be specified -->
       <xs:element ref="storage_domain" minOccurs="0" maxOccurs="1"/>
       <!-- when installing a host, a root password is required -->
@@ -184,7 +190,7 @@
     </xs:restriction>
   </xs:simpleType>
 
-  <xs:simpleType name="InterfaceType">
+  <xs:simpleType name="NicType">
     <xs:restriction base="xs:string">
       <xs:enumeration value="E1000"/>
       <xs:enumeration value="PV"/>
@@ -656,7 +662,7 @@
 
   <xs:element name="disk" type="Disk"/>
 
-  <xs:element name="interface" type="Interface"/>
+  <xs:element name="nic" type="NIC"/>
 
   <xs:element name="devices" type="Devices"/>
 
@@ -676,10 +682,10 @@
           </xs:appinfo>
         </xs:annotation>
       </xs:element>
-      <xs:element ref="interface" maxOccurs="unbounded">
+      <xs:element ref="nic" maxOccurs="unbounded">
         <xs:annotation>
           <xs:appinfo>
-            <jaxb:property name="Interfaces"/>
+            <jaxb:property name="Nics"/>
           </xs:appinfo>
         </xs:annotation>
       </xs:element>
@@ -708,11 +714,11 @@
     <xs:attribute name="id" type="xs:string"/>
   </xs:complexType>
 
-  <xs:complexType name="Interface">
+  <xs:complexType name="NIC">
     <xs:sequence>
       <xs:element name="name" type="xs:string" minOccurs="0"/>
       <xs:element ref="network" minOccurs="0" maxOccurs="1"/>
-      <xs:element name="type" type="InterfaceType" minOccurs="0"/>
+      <xs:element name="type" type="NicType" minOccurs="0"/>
       <xs:element name="mac" minOccurs="0">
         <xs:complexType>
           <xs:attribute name="address" type="xs:string"/>
