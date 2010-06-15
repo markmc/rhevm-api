@@ -50,6 +50,7 @@ import com.redhat.rhevm.api.model.Status;
 public class BaseClient {
 
     protected static final String SEARCH_RELATION = "/search";
+    protected static final String HTTP_SCHEME = "http://";
 
     protected String baseUrl;
 
@@ -96,7 +97,7 @@ public class BaseClient {
         Exception failure = null;
 
         try {
-            WebClient post = WebClient.create(link.getHref());
+            WebClient post = WebClient.create(absolute(link.getHref()));
             r = post.path("/").post(action);
         } catch (Exception e) {
             failure = e;
@@ -110,7 +111,7 @@ public class BaseClient {
             String monitor =
                 Status.COMPLETE.equals(reaction.getStatus())
                 ? ""
-                : ", monitor @ " + reaction.getHref();
+                : ", monitor @ " + absolute(reaction.getHref());
             System.out.println(verb + " " + reaction.getStatus() + monitor);
         }
     }
@@ -121,11 +122,11 @@ public class BaseClient {
         T ret = null;
 
         try {
-             WebClient post = WebClient.create(href);
-             r = post.path("/").put(resource);
-             ret = unmarshall(r, clz);
+            WebClient post = WebClient.create(absolute(href));
+            r = post.path("/").put(resource);
+            ret = unmarshall(r, clz);
         } catch (Exception e) {
-             failure = e;
+            failure = e;
         }
 
         if (failure != null || r.getStatus() != 200) {
@@ -140,11 +141,11 @@ public class BaseClient {
         T ret = null;
 
         try {
-             WebClient post = WebClient.create(href);
-             r = post.path("/").post(resource);
-             ret = unmarshall(r, clz);
+            WebClient post = WebClient.create(absolute(href));
+            r = post.path("/").post(resource);
+            ret = unmarshall(r, clz);
         } catch (Exception e) {
-             failure = e;
+            failure = e;
         }
 
         if (failure != null || r.getStatus() != 201) {
@@ -158,7 +159,7 @@ public class BaseClient {
         Exception failure = null;
 
         try {
-            WebClient delete = WebClient.create(resource.getHref());
+            WebClient delete = WebClient.create(absolute(resource.getHref()));
             r = delete.path("/").delete();
         } catch (Exception e) {
             failure = e;
@@ -213,7 +214,7 @@ public class BaseClient {
             for (String l : ((String)o).split(",")) {
                 Link link = LinkHeader.parse(l);
                 if (rel.equals((link.getRel()))) {
-                    ret = link.getHref();
+                    ret = absolute(link.getHref());
                 }
             }
         }
@@ -224,14 +225,14 @@ public class BaseClient {
         String ret = null;
         for (Link link : links) {
             if (rel.equals((link.getRel()))) {
-                ret = link.getHref();
+                ret = absolute(link.getHref());
             }
         }
         return ret;
     }
 
     private String getBaseUri(String href, String constraint) {
-        String ret = href;
+        String ret = absolute(href);
         if (constraint != null) {
             Template t = new Template(href);
             Map<String, String> m = new HashMap<String, String>();
@@ -239,6 +240,14 @@ public class BaseClient {
             ret = t.expand(m);
         }
         return ret;
+    }
+
+    private String absolute(String href) {
+        return href.startsWith(HTTP_SCHEME)
+               ? href
+               : href.startsWith("/")
+                 ? getBaseUrl() + href
+                 : getBaseUrl() + "/" + href;
     }
 
     private void diagnose(String baseError, Exception failure, Response r, int expected) {
