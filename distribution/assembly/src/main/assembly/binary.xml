@@ -118,7 +118,7 @@
     <dependencySet>
       <outputDirectory>/lib</outputDirectory>
       <unpack>false</unpack>
-      <useProjectArtifact>false</useProjectArtifact>
+      <useProjectArtifact>true</useProjectArtifact>
       <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
       <includes>
         <include>com.redhat.rhevm.api:rhevm-api</include>
