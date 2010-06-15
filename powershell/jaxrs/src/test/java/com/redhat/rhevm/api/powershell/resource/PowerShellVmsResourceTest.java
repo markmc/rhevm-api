@@ -142,12 +142,12 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     public void testAddWithTemplateName() throws Exception {
         String [] commands = { TEMPLATE_BY_NAME_ADD_COMMAND_PROLOG + getAddCommand() + ADD_COMMAND_EPILOG,
                                MessageFormat.format(GET_DISKS_COMMAND, NEW_NAME.hashCode()),
-                               MessageFormat.format(GET_INTERFACES_COMMAND, NEW_NAME.hashCode()),
+                               MessageFormat.format(GET_NICS_COMMAND, NEW_NAME.hashCode()),
                                LOOKUP_NETWORK_ID_COMMAND };
 
         String [] returns = { getAddReturn(ADD_RETURN_EPILOG),
                               GET_DISKS_RETURN,
-                              GET_INTERFACES_RETURN,
+                              GET_NICS_RETURN,
                               LOOKUP_NETWORK_ID_RETURN };
 
         VM model = getModel(NEW_NAME);
@@ -155,7 +155,7 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
         model.getTemplate().setName(TEMPLATE_NAME);
 
         verifyResponse(
-            resource.add(setUpResourceExpectations(commands, returns, 1, NEW_NAME),
+            resource.add(setUpAddResourceExpectations(commands, returns, NEW_NAME),
                          model),
             NEW_NAME);
     }
@@ -166,12 +166,12 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
                                + getAddCommand()
                                + CLUSTER_BY_NAME_ADD_COMMAND_EPILOG,
                                MessageFormat.format(GET_DISKS_COMMAND, NEW_NAME.hashCode()),
-                               MessageFormat.format(GET_INTERFACES_COMMAND, NEW_NAME.hashCode()),
+                               MessageFormat.format(GET_NICS_COMMAND, NEW_NAME.hashCode()),
                                LOOKUP_NETWORK_ID_COMMAND };
 
         String [] returns = { getAddReturn(ADD_RETURN_EPILOG),
                               GET_DISKS_RETURN,
-                              GET_INTERFACES_RETURN,
+                              GET_NICS_RETURN,
                               LOOKUP_NETWORK_ID_RETURN };
 
         VM model = getModel(NEW_NAME);
@@ -181,7 +181,7 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
         model.getCluster().setName(CLUSTER_NAME);
 
         verifyResponse(
-            resource.add(setUpResourceExpectations(commands, returns, 1, NEW_NAME),
+            resource.add(setUpAddResourceExpectations(commands, returns, NEW_NAME),
                          model),
             NEW_NAME);
     }
