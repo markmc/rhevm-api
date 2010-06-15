@@ -8,7 +8,7 @@
 
   <!-- Top-level Resources -->
   <bean id="mockApiResource"
-        class="com.redhat.rhevm.api.mock.resource.MockApiResource"/>
+        class="com.redhat.rhevm.api.common.resource.DefaultApiResource"/>
 
   <bean id="mockVmsResource"
         class="com.redhat.rhevm.api.mock.resource.MockVmsResource">

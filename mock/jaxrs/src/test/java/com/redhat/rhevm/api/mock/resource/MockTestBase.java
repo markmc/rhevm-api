@@ -45,6 +45,7 @@ import org.jboss.resteasy.plugins.server.tjws.TJWSEmbeddedJaxrsServer;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
 import com.redhat.rhevm.api.model.Action;
+import com.redhat.rhevm.api.model.API;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.Clusters;
 import com.redhat.rhevm.api.model.CPUs;
@@ -61,6 +62,7 @@ import com.redhat.rhevm.api.model.Templates;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.resource.MediaType;
+import com.redhat.rhevm.api.common.resource.DefaultApiResource;
 import com.redhat.rhevm.api.common.resource.DefaultCpusResource;
 
 public class MockTestBase extends Assert {
@@ -79,8 +81,10 @@ public class MockTestBase extends Assert {
      */
 
     @Path("/")
+    @Produces(MediaType.APPLICATION_XML)
     protected interface ApiResource {
         @HEAD public ClientResponse<Object> head();
+        @GET public ClientResponse<API> get();
     }
     protected static ApiResource api;
 
@@ -193,7 +197,7 @@ public class MockTestBase extends Assert {
             new ThreadPoolExecutor(5, 100, 3600, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
         server.setPort(port);
         server.start();
-        server.getDeployment().getDispatcher().getRegistry().addSingletonResource(new MockApiResource());
+        server.getDeployment().getDispatcher().getRegistry().addSingletonResource(new DefaultApiResource());
         MockVmsResource vms = new MockVmsResource();
         vms.setExecutor(executor);
         vms.populate();

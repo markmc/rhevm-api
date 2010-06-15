@@ -18,6 +18,7 @@
  */
 package com.redhat.rhevm.api.resource;
 
+import javax.ws.rs.GET;
 import javax.ws.rs.HEAD;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -25,19 +26,13 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-/* FIXME:
- * different backends shouldn't need to specialize this,
- * we should make this a concrete implementation instead
- * of an interface
- */
-
 @Path("/")
 @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
 public interface ApiResource {
-    /* FIXME: use @Context on a private field instead of
-     *        having it passed as a parameter
-     */
 
     @HEAD
     public Response head(@Context UriInfo uriInfo);
+
+    @GET
+    public Response get(@Context UriInfo uriInfo);
 }

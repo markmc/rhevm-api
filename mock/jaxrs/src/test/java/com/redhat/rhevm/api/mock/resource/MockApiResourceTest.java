@@ -24,14 +24,33 @@ import org.junit.Test;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import org.jboss.resteasy.client.ClientResponse;
+import com.redhat.rhevm.api.model.API;
 import com.redhat.rhevm.api.model.LinkHeader;
 import com.redhat.rhevm.api.model.Link;
 
 public class MockApiResourceTest extends MockTestBase {
-    @Test
-    public void testEntryPoint() throws Exception {
-        ClientResponse<Object> response = api.head();
 
+    private static final String[] relationships = {
+        "clusters",
+        "clusters/search",
+        "cpus",
+        "cpus/search",
+        "datacenters",
+        "datacenters/search",
+        "hosts",
+        "hosts/search",
+        "networks",
+        "storagedomains",
+        "storagedomains/search",
+        "templates",
+        "templates/search",
+        "vmpools",
+        "vmpools/search",
+        "vms",
+        "vms/search",
+    };
+
+    private void testResponse(ClientResponse<? extends Object> response) {
         assertEquals(Response.Status.Family.SUCCESSFUL, response.getResponseStatus().getFamily());
         assertEquals(Response.Status.OK, response.getResponseStatus());
 
@@ -51,23 +70,30 @@ public class MockApiResourceTest extends MockTestBase {
             }
         }
 
-        int i = 15;
-        assertEquals(i, links.size());
-        assertEquals("vms/search",            links.get(--i).getRel());
-        assertEquals("vms",                   links.get(--i).getRel());
-        assertEquals("templates/search",      links.get(--i).getRel());
-        assertEquals("templates",             links.get(--i).getRel());
-        assertEquals("storagedomains/search", links.get(--i).getRel());
-        assertEquals("storagedomains",        links.get(--i).getRel());
-        assertEquals("networks",              links.get(--i).getRel());
-        assertEquals("hosts/search",          links.get(--i).getRel());
-        assertEquals("hosts",                 links.get(--i).getRel());
-        assertEquals("datacenters/search",    links.get(--i).getRel());
-        assertEquals("datacenters",           links.get(--i).getRel());
-        assertEquals("cpus/search",           links.get(--i).getRel());
-        assertEquals("cpus",                  links.get(--i).getRel());
-        assertEquals("clusters/search",       links.get(--i).getRel());
-        assertEquals("clusters",              links.get(--i).getRel());
-        assertEquals(0, i);
+        assertEquals(relationships.length, links.size());
+        for (int i = 0; i < relationships.length; i++) {
+            assertEquals(relationships[i], links.get(i).getRel());
+        }
+    }
+
+    @Test
+    public void testEntryPointHead() throws Exception {
+        ClientResponse<Object> response = api.head();
+
+        testResponse(response);
+    }
+
+    @Test
+    public void testEntryPointGet() throws Exception {
+        ClientResponse<API> response = api.get();
+
+        testResponse(response);
+
+        API api = response.getEntity();
+
+        assertEquals(relationships.length, api.getLinks().size());
+        for (int i = 0; i < relationships.length; i++) {
+            assertEquals(relationships[i], api.getLinks().get(i).getRel());
+        }
     }
 }

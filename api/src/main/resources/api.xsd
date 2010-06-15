@@ -20,6 +20,22 @@
     <xs:attribute name="rel" type="xs:string"/>
   </xs:complexType>
 
+  <!-- API -->
+
+  <xs:element name="api" type="API"/>
+
+  <xs:complexType name="API">
+    <xs:sequence>
+      <xs:element ref="link" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <jaxb:property name="Links"/>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
   <!-- Faults -->
 
   <xs:element name="fault" type="Fault"/>
