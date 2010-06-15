@@ -86,6 +86,11 @@
         <ref component-id="vmNameCompleter" />
       </completers>
     </command>
+    <command name="vms/add">
+      <action class="com.redhat.rhevm.api.command.vms.VmsAddCommand">
+        <property name="client" ref="baseClient" />
+      </action>
+    </command>
   </command-bundle>
 
 

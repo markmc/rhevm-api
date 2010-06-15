@@ -134,6 +134,25 @@ public class BaseClient {
         return ret;
     }
 
+    public <T extends BaseResource> T doAdd(T resource, Class<T> clz, String href) throws Exception {
+        Response r = null;
+        Exception failure = null;
+        T ret = null;
+
+        try {
+             WebClient post = WebClient.create(href);
+             r = post.path("/").post(resource);
+             ret = unmarshall(r, clz);
+        } catch (Exception e) {
+             failure = e;
+        }
+
+        if (failure != null || r.getStatus() != 201) {
+            diagnose("addition of " + resource.getName() + " failed with ", failure, r, 201);
+        }
+        return ret;
+    }
+
     public void doRemove(BaseResource resource) throws Exception {
         Response r = null;
         Exception failure = null;
