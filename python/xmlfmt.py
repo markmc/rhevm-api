@@ -75,7 +75,7 @@ class Actions(Element):
 class Action(Element):
     NAME = 'action'
     ATTRIBUTES = Element.ATTRIBUTES + ['id', 'href']
-    ELEMENTS = Element.ELEMENTS + ['async', 'status', 'grace_period', 'root_password', 'host', 'cdrom', 'disk', 'nic']
+    ELEMENTS = Element.ELEMENTS + ['async', 'status', 'grace_period', 'root_password', 'host']
 
 class Boot(Element):
     NAME = 'boot'
@@ -87,19 +87,17 @@ class CPU(Element):
     ATTRIBUTES = Element.ATTRIBUTES + ["id"]
     ELEMENTS = Element.ELEMENTS + ["level", "topology"] # FIXME: flags
 
-class Devices(Element):
-    NAME = 'devices'
-    ELEMENTS = Element.ELEMENTS + ['cdrom', 'disk', 'nic']
-
 class CdRom(Element):
     NAME = 'cdrom'
+    COLLECTION = 'cdroms'
     ATTRIBUTES = Element.ATTRIBUTES + ['id']
-    ELEMENTS = Element.ELEMENTS + ['iso']
+    ELEMENTS = Element.ELEMENTS + ['iso', 'vm']
 
 class Disk(Element):
     NAME = 'disk'
+    COLLECTION = 'disks'
     ATTRIBUTES = Element.ATTRIBUTES + ['id']
-    ELEMENTS = Element.ELEMENTS + ['size', 'type', 'status', 'interface', 'format', 'sparse', 'bootable', 'wipe_after_delete', 'propagate_errors']
+    ELEMENTS = Element.ELEMENTS + ['size', 'type', 'status', 'interface', 'format', 'sparse', 'bootable', 'wipe_after_delete', 'propagate_errors', 'vm']
 
 class GracePeriod(Element):
     NAME = 'grace_period'
@@ -127,8 +125,9 @@ class VLAN(Element):
 
 class NIC(Element):
     NAME = 'nic'
+    COLLECTION = 'nics'
     ATTRIBUTES = Element.ATTRIBUTES + ['id']
-    ELEMENTS = Element.ELEMENTS + ['name', 'network', 'type', 'mac', 'ip']
+    ELEMENTS = Element.ELEMENTS + ['name', 'network', 'type', 'mac', 'ip', 'vm']
 
 class Base(Element):
     ATTRIBUTES = Element.ATTRIBUTES + ["id", "href"]
@@ -185,7 +184,7 @@ class Template(Base):
     NAME = "template"
     COLLECTION = "templates"
 
-TYPES = [ Action, Actions, Attachment, Boot, CdRom, Cluster, CPU, DataCenter, Devices, Disk, GracePeriod, Host, IP, Iso, Link, MAC, Network, NIC, OS, Storage, StorageDomain, Template, Topology, VLAN, VM, VmPool ]
+TYPES = [ Action, Actions, Attachment, Boot, CdRom, Cluster, CPU, DataCenter, Disk, GracePeriod, Host, IP, Iso, Link, MAC, Network, NIC, OS, Storage, StorageDomain, Template, Topology, VLAN, VM, VmPool ]
 
 def findEntityType(name):
     for t in TYPES:

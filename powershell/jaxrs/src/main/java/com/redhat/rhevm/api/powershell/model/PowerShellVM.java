@@ -25,13 +25,14 @@ import com.redhat.rhevm.api.model.BootDevice;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.CpuTopology;
-import com.redhat.rhevm.api.model.Devices;
 import com.redhat.rhevm.api.model.Disk;
+import com.redhat.rhevm.api.model.Disks;
 import com.redhat.rhevm.api.model.DiskFormat;
 import com.redhat.rhevm.api.model.DiskInterface;
 import com.redhat.rhevm.api.model.DiskStatus;
 import com.redhat.rhevm.api.model.DiskType;
 import com.redhat.rhevm.api.model.NIC;
+import com.redhat.rhevm.api.model.Nics;
 import com.redhat.rhevm.api.model.NicType;
 import com.redhat.rhevm.api.model.IP;
 import com.redhat.rhevm.api.model.Network;
@@ -163,17 +164,19 @@ public class PowerShellVM extends VM {
         return ret;
     }
 
-    public static PowerShellVM parseDisks(PowerShellVM vm, String output) {
+    public static Disks parseDisks(String vmId, String output) {
         ArrayList<HashMap<String,String>> diskProps = PowerShellUtils.parseProps(output);
 
-        if (vm.getDevices() == null) {
-            vm.setDevices(new Devices());
-        }
+        Disks disks = new Disks();
 
         for (HashMap<String,String> props : diskProps) {
             Disk disk = new Disk();
 
             disk.setId(props.get("snapshotid"));
+
+            disk.setVm(new VM());
+            disk.getVm().setId(vmId);
+
             disk.setSize(Long.parseLong(props.get("actualsizeinbytes")));
             disk.setType(DiskType.fromValue(props.get("disktype").toUpperCase()));
             disk.setStatus(DiskStatus.fromValue(props.get("status").toUpperCase()));
@@ -192,25 +195,25 @@ public class PowerShellVM extends VM {
                 disk.setPropagateErrors(true);
             }
 
-            vm.getDevices().getDisks().add(disk);
+            disks.getDisks().add(disk);
         }
 
-
-        return vm;
+        return disks;
     }
 
-    public static PowerShellVM parseNics(PowerShellVM vm, String output) {
+    public static Nics parseNics(String vmId, String output) {
         ArrayList<HashMap<String,String>> ifaceProps = PowerShellUtils.parseProps(output);
 
-        if (vm.getDevices() == null) {
-            vm.setDevices(new Devices());
-        }
+        Nics nics = new Nics();
 
         for (HashMap<String,String> props : ifaceProps) {
             NIC nic = new NIC();
 
             nic.setId(props.get("id"));
             nic.setName(props.get("name"));
+
+            nic.setVm(new VM());
+            nic.getVm().setId(vmId);
 
             Network network = new Network();
             network.setName(props.get("network"));
@@ -234,9 +237,9 @@ public class PowerShellVM extends VM {
                 nic.setIp(ip);
             }
 
-            vm.getDevices().getNics().add(nic);
+            nics.getNics().add(nic);
         }
 
-        return vm;
+        return nics;
     }
 }

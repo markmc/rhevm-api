@@ -56,124 +56,56 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     private static final String SELECT_RETURN_EPILOG = "\nhostclusterid: " + CLUSTER_ID + "\ntemplateid: " + TEMPLATE_ID + "\n" + OTHER_PROPS;
     private static final String ADD_RETURN_EPILOG    = "\nhostclusterid: " + CLUSTER_ID + "\ntemplateid: " + TEMPLATE_ID + "\n" + OTHER_PROPS;
 
-    private static final String GET_DISKS_COMMAND = "$v = get-vm ''{0,number,#}''\n$v.GetDiskImages()\n";
-    public static final String GET_DISKS_RETURN = "snapshotid: 0\nactualsizeinbytes: 10485760\ndisktype: system\nstatus: ok\ndiskinterface: ide\nvolumeformat: raw\nvolumetype: sparse\nboot: true\nwipeafterdelete: false\npropagateerrors: off\n";
-
-    private static final String GET_NICS_COMMAND = "$v = get-vm ''{0,number,#}''\n$v.GetNetworkAdapters()\n";
-    public static final String GET_NICS_RETURN = "id: 1\nname: eth1\nnetwork: net1\ntype: pv\nmacaddress: 00:1a:4a:16:84:02\naddress: 172.31.0.10\nsubnet: 255.255.255.0\ngateway: 172.31.0.1\n";
-
-    public static final String LOOKUP_NETWORK_ID_COMMAND = "$n = get-networks\nforeach ($i in $n) {  if ($i.name -eq 'net1') {    $i  }}";
-    public static final String LOOKUP_NETWORK_ID_RETURN = "networkid: 666\nname: net1\ndatacenterid: 999";
-
     public PowerShellVmsResourceTest() {
         super(new PowerShellVmResource("0", null), "vms", "vm");
     }
 
     @Test
     public void testList() throws Exception {
-        String [] commands = { getSelectCommand(),
-                               MessageFormat.format(GET_DISKS_COMMAND, NAMES[0].hashCode()),
-                               MessageFormat.format(GET_NICS_COMMAND, NAMES[0].hashCode()),
-                               LOOKUP_NETWORK_ID_COMMAND,
-                               MessageFormat.format(GET_DISKS_COMMAND, NAMES[1].hashCode()),
-                               MessageFormat.format(GET_NICS_COMMAND, NAMES[1].hashCode()),
-                               LOOKUP_NETWORK_ID_COMMAND,
-                               MessageFormat.format(GET_DISKS_COMMAND, NAMES[2].hashCode()),
-                               MessageFormat.format(GET_NICS_COMMAND, NAMES[2].hashCode()),
-                               LOOKUP_NETWORK_ID_COMMAND };
-        String [] returns = { getSelectReturn(SELECT_RETURN_EPILOG),
-                              GET_DISKS_RETURN,
-                              GET_NICS_RETURN,
-                              LOOKUP_NETWORK_ID_RETURN,
-                              GET_DISKS_RETURN,
-                              GET_NICS_RETURN,
-                              LOOKUP_NETWORK_ID_RETURN,
-                              GET_DISKS_RETURN,
-                              GET_NICS_RETURN,
-                              LOOKUP_NETWORK_ID_RETURN };
-
         verifyCollection(
-            resource.list(setUpResourceExpectations(commands, returns, null, NAMES)).getVMs(),
+            resource.list(setUpResourceExpectations(getSelectCommand(),
+                                                    getSelectReturn(SELECT_RETURN_EPILOG),
+                                                    null,
+                                                    NAMES)).getVMs(),
             NAMES);
     }
 
     @Test
     public void testQuery() throws Exception {
-        String [] commands = { getQueryCommand(VMs.class),
-                               MessageFormat.format(GET_DISKS_COMMAND, NAMES[1].hashCode()),
-                               MessageFormat.format(GET_NICS_COMMAND, NAMES[1].hashCode()),
-                               LOOKUP_NETWORK_ID_COMMAND,
-                               MessageFormat.format(GET_DISKS_COMMAND, NAMES[2].hashCode()),
-                               MessageFormat.format(GET_NICS_COMMAND, NAMES[2].hashCode()),
-                               LOOKUP_NETWORK_ID_COMMAND };
-
-        String [] returns = { getQueryReturn(SELECT_RETURN_EPILOG),
-                              GET_DISKS_RETURN,
-                              GET_NICS_RETURN,
-                              LOOKUP_NETWORK_ID_RETURN,
-                              GET_DISKS_RETURN,
-                              GET_NICS_RETURN,
-                              LOOKUP_NETWORK_ID_RETURN };
-
         verifyCollection(
-            resource.list(setUpResourceExpectations(commands, returns, getQueryParam(), NAMES_SUBSET)).getVMs(),
+            resource.list(setUpResourceExpectations(getQueryCommand(VMs.class),
+                                                    getQueryReturn(SELECT_RETURN_EPILOG),
+                                                    getQueryParam(),
+                                                    NAMES_SUBSET)).getVMs(),
             NAMES_SUBSET);
     }
 
     @Test
     public void testAddWithTemplateId() throws Exception {
-        String [] commands = { ADD_COMMAND_PROLOG + getAddCommand() + ADD_COMMAND_EPILOG,
-                               MessageFormat.format(GET_DISKS_COMMAND, NEW_NAME.hashCode()),
-                               MessageFormat.format(GET_NICS_COMMAND, NEW_NAME.hashCode()),
-                               LOOKUP_NETWORK_ID_COMMAND };
-
-        String [] returns = { getAddReturn(ADD_RETURN_EPILOG),
-                              GET_DISKS_RETURN,
-                              GET_NICS_RETURN,
-                              LOOKUP_NETWORK_ID_RETURN };
-
         verifyResponse(
-            resource.add(setUpAddResourceExpectations(commands, returns, NEW_NAME),
+            resource.add(setUpAddResourceExpectations(ADD_COMMAND_PROLOG + getAddCommand() + ADD_COMMAND_EPILOG,
+                                                      getAddReturn(ADD_RETURN_EPILOG),
+                                                      NEW_NAME),
                          getModel(NEW_NAME)),
             NEW_NAME);
     }
 
     @Test
     public void testAddWithTemplateName() throws Exception {
-        String [] commands = { TEMPLATE_BY_NAME_ADD_COMMAND_PROLOG + getAddCommand() + ADD_COMMAND_EPILOG,
-                               MessageFormat.format(GET_DISKS_COMMAND, NEW_NAME.hashCode()),
-                               MessageFormat.format(GET_NICS_COMMAND, NEW_NAME.hashCode()),
-                               LOOKUP_NETWORK_ID_COMMAND };
-
-        String [] returns = { getAddReturn(ADD_RETURN_EPILOG),
-                              GET_DISKS_RETURN,
-                              GET_NICS_RETURN,
-                              LOOKUP_NETWORK_ID_RETURN };
-
         VM model = getModel(NEW_NAME);
         model.getTemplate().setId(null);
         model.getTemplate().setName(TEMPLATE_NAME);
 
         verifyResponse(
-            resource.add(setUpAddResourceExpectations(commands, returns, NEW_NAME),
+            resource.add(setUpAddResourceExpectations(TEMPLATE_BY_NAME_ADD_COMMAND_PROLOG + getAddCommand() + ADD_COMMAND_EPILOG,
+                                                      getAddReturn(ADD_RETURN_EPILOG),
+                                                      NEW_NAME),
                          model),
             NEW_NAME);
     }
 
     @Test
     public void testAddWithClusterName() throws Exception {
-        String [] commands = { CLUSTER_BY_NAME_ADD_COMMAND_PROLOG
-                               + getAddCommand()
-                               + CLUSTER_BY_NAME_ADD_COMMAND_EPILOG,
-                               MessageFormat.format(GET_DISKS_COMMAND, NEW_NAME.hashCode()),
-                               MessageFormat.format(GET_NICS_COMMAND, NEW_NAME.hashCode()),
-                               LOOKUP_NETWORK_ID_COMMAND };
-
-        String [] returns = { getAddReturn(ADD_RETURN_EPILOG),
-                              GET_DISKS_RETURN,
-                              GET_NICS_RETURN,
-                              LOOKUP_NETWORK_ID_RETURN };
-
         VM model = getModel(NEW_NAME);
         model.getTemplate().setId(null);
         model.getTemplate().setName(TEMPLATE_NAME);
@@ -181,7 +113,9 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
         model.getCluster().setName(CLUSTER_NAME);
 
         verifyResponse(
-            resource.add(setUpAddResourceExpectations(commands, returns, NEW_NAME),
+            resource.add(setUpAddResourceExpectations(CLUSTER_BY_NAME_ADD_COMMAND_PROLOG + getAddCommand() + CLUSTER_BY_NAME_ADD_COMMAND_EPILOG,
+                                                      getAddReturn(ADD_RETURN_EPILOG),
+                                                      NEW_NAME),
                          model),
             NEW_NAME);
     }

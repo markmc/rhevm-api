@@ -31,6 +31,12 @@ import javax.ws.rs.core.Response;
 
 import com.redhat.rhevm.api.model.Actionable;
 import com.redhat.rhevm.api.model.Action;
+import com.redhat.rhevm.api.model.CdRom;
+import com.redhat.rhevm.api.model.CdRoms;
+import com.redhat.rhevm.api.model.Disk;
+import com.redhat.rhevm.api.model.Disks;
+import com.redhat.rhevm.api.model.NIC;
+import com.redhat.rhevm.api.model.Nics;
 import com.redhat.rhevm.api.model.VM;
 
 public interface VmResource /* extends UpdatableResource<VM> */ {
@@ -80,15 +86,12 @@ public interface VmResource /* extends UpdatableResource<VM> */ {
     @Path("detach")
     public Response detach(@Context UriInfo uriInfo, Action action);
 
-    @POST
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
-    @Actionable
-    @Path("adddevice")
-    public Response addDevice(@Context UriInfo uriInfo, Action action);
+    @Path("cdroms")
+    public CdRomsResource getCdRomsResource();
 
-    @POST
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
-    @Actionable
-    @Path("removedevice")
-    public Response removeDevice(@Context UriInfo uriInfo, Action action);
+    @Path("disks")
+    public DisksResource getDisksResource();
+
+    @Path("nics")
+    public NicsResource getNicsResource();
 }

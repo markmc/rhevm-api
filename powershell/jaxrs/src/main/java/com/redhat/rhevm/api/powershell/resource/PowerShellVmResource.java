@@ -34,6 +34,7 @@ import com.redhat.rhevm.api.model.CpuTopology;
 import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.NIC;
 import com.redhat.rhevm.api.model.Iso;
+import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VM;
@@ -42,15 +43,12 @@ import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
-import com.redhat.rhevm.api.common.util.ReflectionHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
 public class PowerShellVmResource extends AbstractActionableResource<VM> implements VmResource {
-
-    private static final String CDROM_ID = Integer.toString("cdrom".hashCode());
 
     public PowerShellVmResource(String id, Executor executor) {
         super(id, executor);
@@ -71,76 +69,25 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
     }
 
     public static VM addLinks(PowerShellVM vm) {
-        if (vm.getDevices() != null) {
-            for (CdRom cdrom : vm.getDevices().getCdRoms()) {
-                LinkHelper.addLinks(cdrom.getIso());
-            }
-            for (NIC nic : vm.getDevices().getNics()) {
-                LinkHelper.addLinks(nic.getNetwork());
-            }
+        VM ret = JAXBHelper.clone("vm", VM.class, vm);
+
+        String [] deviceCollections = { "cdroms", "disks", "nics" };
+
+        ret.getLinks().clear();
+
+        for (String collection : deviceCollections) {
+            Link link = new Link();
+            link.setRel(collection);
+            link.setHref(LinkHelper.getUriBuilder(ret).path(collection).build().toString());
+            ret.getLinks().add(link);
         }
 
-        return LinkHelper.addLinks(JAXBHelper.clone("vm", VM.class, vm));
-    }
-
-    /* Map the network names to network IDs on all the VM's network
-     * interfaces. The powershell output only includes the network name.
-     *
-     * @param vm  the VM to modify
-     * @return  the modified VM
-     */
-    private static PowerShellVM lookupNetworkIds(PowerShellVM vm) {
-        if (vm.getDevices() == null) {
-            return vm;
-        }
-
-        for (NIC nic : vm.getDevices().getNics()) {
-            StringBuilder buf = new StringBuilder();
-
-            buf.append("$n = get-networks\n");
-            buf.append("foreach ($i in $n) {");
-            buf.append("  if ($i.name -eq " + PowerShellUtils.escape(nic.getNetwork().getName()) + ") {");
-            buf.append("    $i");
-            buf.append("  }");
-            buf.append("}");
-
-            Network network = new Network();
-            network.setId(PowerShellNetworkResource.runAndParseSingle(buf.toString()).getId());
-            nic.setNetwork(network);
-        }
-
-        return vm;
-    }
-
-    public static PowerShellVM addDevices(PowerShellVM vm) {
-        StringBuilder buf = new StringBuilder();
-
-        buf.append("$v = get-vm " + PowerShellUtils.escape(vm.getId()) + "\n");
-        buf.append("$v.GetDiskImages()\n");
-
-        vm = PowerShellVM.parseDisks(vm, PowerShellCmd.runCommand(buf.toString()));
-
-        buf = new StringBuilder();
-
-        buf.append("$v = get-vm " + PowerShellUtils.escape(vm.getId()) + "\n");
-        buf.append("$v.GetNetworkAdapters()\n");
-
-        vm = PowerShellVM.parseNics(vm, PowerShellCmd.runCommand(buf.toString()));
-
-        if (vm.getCdIsoPath() != null) {
-            CdRom cdrom = new CdRom();
-            cdrom.setId(CDROM_ID);
-            cdrom.setIso(new Iso());
-            cdrom.getIso().setId(vm.getCdIsoPath());
-            vm.getDevices().getCdRoms().add(cdrom);
-        }
-
-        return lookupNetworkIds(vm);
+        return LinkHelper.addLinks(ret);
     }
 
     @Override
     public VM get(UriInfo uriInfo) {
-        return addLinks(addDevices(runAndParseSingle("get-vm " + PowerShellUtils.escape(getId()))));
+        return addLinks(runAndParseSingle("get-vm " + PowerShellUtils.escape(getId())));
     }
 
     @Override
@@ -172,7 +119,7 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
 
         buf.append("update-vm -vmobject $v");
 
-        return addLinks(addDevices(runAndParseSingle(buf.toString())));
+        return addLinks(runAndParseSingle(buf.toString()));
     }
 
     @Override
@@ -201,205 +148,17 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
     }
 
     @Override
-    public Response addDevice(UriInfo uriInfo, Action action) {
-        AbstractActionTask task;
-
-        if (action.getCdRom() != null) {
-            task = new UpdateCdRomTask(action, action.getCdRom(), UpdateCdRomTask.ADD);
-        } else if (action.getDisk() != null) {
-            task = new AddDiskTask(action, action.getDisk());
-        } else if (action.getNic() != null) {
-            task = new AddNicTask(action, action.getNic());
-        } else {
-            task = new DoNothingTask(action);
-        }
-
-        return doAction(uriInfo, task);
+    public PowerShellCdRomsResource getCdRomsResource() {
+        return new PowerShellCdRomsResource(getId());
     }
 
     @Override
-    public Response removeDevice(UriInfo uriInfo, Action action) {
-        AbstractActionTask task;
-
-        if (action.getCdRom() != null) {
-            task = new UpdateCdRomTask(action, action.getCdRom(), UpdateCdRomTask.REMOVE);
-        } else if (action.getDisk() != null) {
-            task = new RemoveDiskTask(action, action.getDisk().getId());
-        } else if (action.getNic() != null) {
-            task = new RemoveNicTask(action, action.getNic().getId());
-        } else {
-            task = new DoNothingTask(action);
-        }
-
-        return doAction(uriInfo, task);
+    public PowerShellDisksResource getDisksResource() {
+        return new PowerShellDisksResource(getId());
     }
 
-    private class UpdateCdRomTask extends AbstractActionTask {
-        public static final boolean ADD    = true;
-        public static final boolean REMOVE = false;
-
-        private CdRom cdrom;
-        private boolean add;
-
-        UpdateCdRomTask(Action action, CdRom cdrom, boolean add) {
-            super(action);
-            this.cdrom = cdrom;
-            this.add = add;
-        }
-
-        public void run() {
-            StringBuilder buf = new StringBuilder();
-
-            String cdIsoPath;
-            if (add) {
-                cdIsoPath = cdrom.getIso().getId();
-            } else {
-                cdIsoPath = "";
-                assert cdrom.getId().equals(CDROM_ID);
-            }
-
-            buf.append("$v = get-vm " + PowerShellUtils.escape(getId()) + "\n");
-            buf.append("$v.cdisopath = " + PowerShellUtils.escape(cdIsoPath) + "\n");
-            buf.append("update-vm -vmobject $v");
-
-            PowerShellCmd.runCommand(buf.toString());
-        }
-    }
-
-    private class AddDiskTask extends AbstractActionTask {
-        private Disk disk;
-
-        AddDiskTask(Action action, Disk disk) {
-            super(action);
-            this.disk = disk;
-        }
-
-        public void run() {
-            StringBuilder buf = new StringBuilder();
-
-            buf.append("$d = new-disk");
-            buf.append(" -disksize " + Math.round((double)disk.getSize()/(1024*1024*1024)));
-            if (disk.getFormat() != null) {
-                buf.append(" -volumeformat " + disk.getFormat().toString());
-            }
-            if (disk.getType() != null) {
-                buf.append(" -disktype " + ReflectionHelper.capitalize(disk.getType().toString()));
-            }
-            if (disk.getInterface() != null) {
-                buf.append(" -diskinterface ");
-                switch (disk.getInterface()) {
-                case IDE:
-                case SCSI:
-                    buf.append(disk.getInterface().toString());
-                    break;
-                case VIRTIO:
-                    buf.append("VirtIO");
-                    break;
-                default:
-                    assert false : disk.getInterface();
-                    break;
-                }
-            }
-            if (disk.isSparse() != null) {
-                buf.append(" -volumetype " + (disk.isSparse() ? "Sparse" : "Preallocated"));
-            }
-            if (disk.isWipeAfterDelete() != null && disk.isWipeAfterDelete()) {
-                buf.append(" -wipeafterdelete");
-            }
-            if (disk.isPropagateErrors() != null) {
-                buf.append(" -propagateerrors ");
-                if (disk.isPropagateErrors()) {
-                    buf.append("on");
-                } else {
-                    buf.append("off");
-                }
-            }
-            buf.append("\n");
-
-            buf.append("$v = get-vm " + PowerShellUtils.escape(getId()) + "\n");
-
-            buf.append("add-disk -diskobject $d -vmobject $v");
-            if (action.getStorageDomain() != null) {
-                buf.append(" -storagedomainid " + action.getStorageDomain().getId());
-            }
-
-            PowerShellCmd.runCommand(buf.toString());
-        }
-    }
-
-    private class RemoveDiskTask extends AbstractActionTask {
-        private String diskId;
-
-        RemoveDiskTask(Action action, String diskId) {
-            super(action);
-            this.diskId = diskId;
-        }
-
-        public void run() {
-            StringBuilder buf = new StringBuilder();
-
-            buf.append("remove-disk");
-            buf.append(" -vmid " + PowerShellUtils.escape(getId()));
-            buf.append(" -diskids " + PowerShellUtils.escape(diskId));
-
-            PowerShellCmd.runCommand(buf.toString());
-        }
-    }
-
-    private class AddNicTask extends AbstractActionTask {
-        private NIC nic;
-
-        AddNicTask(Action action, NIC nic) {
-            super(action);
-            this.nic = nic;
-        }
-
-        public void run() {
-            StringBuilder buf = new StringBuilder();
-
-            buf.append("$v = get-vm " + PowerShellUtils.escape(getId()) + "\n");
-            buf.append("foreach ($i in get-networks) {");
-            buf.append("  if ($i.networkid -eq " + PowerShellUtils.escape(nic.getNetwork().getId()) + ") {");
-            buf.append("    $n = $i");
-            buf.append("  }");
-            buf.append("}\n");
-
-            buf.append("add-networkadapter");
-            buf.append(" -vmobject $v");
-            buf.append(" -interfacename " + PowerShellUtils.escape(nic.getName()));
-            buf.append(" -networkname $n.name");
-            if (nic.getType() != null) {
-                buf.append(" -interfacetype " + nic.getType().toString().toLowerCase());
-            }
-            if (nic.getMac() != null && nic.getMac().getAddress() != null) {
-                buf.append(" -macaddress " + PowerShellUtils.escape(nic.getMac().getAddress()));
-            }
-
-            PowerShellCmd.runCommand(buf.toString());
-        }
-    }
-
-    private class RemoveNicTask extends AbstractActionTask {
-        private String nicId;
-
-        RemoveNicTask(Action action, String nicId) {
-            super(action);
-            this.nicId = nicId;
-        }
-
-        public void run() {
-            StringBuilder buf = new StringBuilder();
-
-            buf.append("$v = get-vm " + PowerShellUtils.escape(getId()) + "\n");
-
-            buf.append("foreach ($i in $v.GetNetworkAdapters()) {");
-            buf.append("  if ($i.id -eq " + PowerShellUtils.escape(nicId) + ") {");
-            buf.append("    $n = $i");
-            buf.append("  }");
-            buf.append("}\n");
-            buf.append("remove-networkadapter -vmobject $v -networkadapterobject $n");
-
-            PowerShellCmd.runCommand(buf.toString());
-        }
+    @Override
+    public PowerShellNicsResource getNicsResource() {
+        return new PowerShellNicsResource(getId());
     }
 }

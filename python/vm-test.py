@@ -56,16 +56,16 @@ for fmt in [xmlfmt]:
    nic.name = 'eth0'
    nic.network = fmt.Network()
    nic.network.id = t.find(links['networks'], 'rhevm').id
-   t.syncAction(vm.actions, "adddevice", nic=nic)
+   nic = t.create(vm.link['nics'].href, nic)
 
    disk = fmt.Disk()
    disk.size = 10737418240
-   t.syncAction(vm.actions, "adddevice", disk=disk)
+   disk = t.create(vm.link['disks'].href, disk)
 
    cdrom = fmt.CdRom()
    cdrom.iso = fmt.Iso()
    cdrom.iso.id = t.get(t.find(links['datacenters'], 'Default').link['isos'].href)[0].id
-   t.syncAction(vm.actions, "adddevice", cdrom=cdrom)
+   cdrom = t.create(vm.link['cdroms'].href, cdrom)
 
    vm = t.get(vm.href)
    vm.memory = 2 * 1024 * 1024 * 1024
@@ -91,16 +91,8 @@ for fmt in [xmlfmt]:
 
    vm = waitFor(vm, 'SHUTOFF')
 
-   cdrom = fmt.CdRom()
-   cdrom.id = vm.devices.cdrom.id
-   t.syncAction(vm.actions, "removedevice", cdrom=cdrom)
-
-   disk = fmt.Disk()
-   disk.id = vm.devices.disk.id
-   t.syncAction(vm.actions, "removedevice", disk=disk)
-
-   nic = fmt.NIC()
-   nic.id = vm.devices.nic.id
-   t.syncAction(vm.actions, "removedevice", nic=nic)
+   t.delete(cdrom.href)
+   t.delete(disk.href)
+   t.delete(nic.href)
 
    t.delete(vm.href)

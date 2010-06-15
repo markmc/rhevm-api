@@ -61,24 +61,6 @@
       <xs:element name="grace_period" type="GracePeriod" minOccurs="0"/>
       <!-- for StorageDomain initialize/teardown actions -->
       <xs:element name="host" type="Host" minOccurs="0"/>
-      <!-- for VM adddevice action -->
-      <xs:element ref="cdrom" minOccurs="0" maxOccurs="1">
-        <xs:annotation>
-          <xs:appinfo>
-            <jaxb:property name="CdRom"/>
-          </xs:appinfo>
-        </xs:annotation>
-      </xs:element>
-      <xs:element ref="disk" minOccurs="0" maxOccurs="1"/>
-      <xs:element ref="nic" minOccurs="0" maxOccurs="1">
-        <xs:annotation>
-          <xs:appinfo>
-            <jaxb:property name="Nic"/>
-          </xs:appinfo>
-        </xs:annotation>
-      </xs:element>
-      <!-- when adding a disk device, a storage domain may be specified -->
-      <xs:element ref="storage_domain" minOccurs="0" maxOccurs="1"/>
       <!-- when installing a host, a root password is required -->
       <xs:element name="root_password" type="xs:string" minOccurs="0" maxOccurs="1"/>
       <!-- ... etc., explicitly enumerate all the parameter types -->
@@ -553,9 +535,8 @@
     <xs:complexType>
       <xs:complexContent>
         <xs:extension base="BaseResource">
-          <xs:sequence>
-            <xs:element ref="devices" minOccurs="0" maxOccurs="1"/>
-          </xs:sequence>
+          <xs:sequence/>
+          <!-- also rel="cdroms/disks/nics" links, see Devices below -->
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
@@ -609,7 +590,7 @@
                 </xs:appinfo>
               </xs:annotation>
             </xs:element>
-            <xs:element ref="devices" minOccurs="0" maxOccurs="1"/>
+            <!-- also rel="cdroms/disks/nics" links, see Devices below -->
           </xs:sequence>
         </xs:extension>
       </xs:complexContent>
@@ -658,75 +639,124 @@
 
   <!-- Devices -->
 
+  <xs:complexType name="BaseDevice">
+    <xs:complexContent>
+      <xs:extension base="BaseResource">
+        <xs:sequence>
+          <xs:element ref="vm" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="BaseDevices">
+    <xs:sequence/>
+  </xs:complexType>
+
   <xs:element name="cdrom" type="CdRom"/>
+
+  <xs:element name="cdroms" type="CdRoms"/>
 
   <xs:element name="disk" type="Disk"/>
 
+  <xs:element name="disks" type="Disks"/>
+
   <xs:element name="nic" type="NIC"/>
 
-  <xs:element name="devices" type="Devices"/>
-
-  <xs:complexType name="Devices">
-    <xs:sequence>
-      <xs:element ref="cdrom" maxOccurs="unbounded">
-        <xs:annotation>
-          <xs:appinfo>
-            <jaxb:property name="CdRoms"/>
-          </xs:appinfo>
-        </xs:annotation>
-      </xs:element>
-      <xs:element ref="disk" maxOccurs="unbounded">
-        <xs:annotation>
-          <xs:appinfo>
-            <jaxb:property name="Disks"/>
-          </xs:appinfo>
-        </xs:annotation>
-      </xs:element>
-      <xs:element ref="nic" maxOccurs="unbounded">
-        <xs:annotation>
-          <xs:appinfo>
-            <jaxb:property name="Nics"/>
-          </xs:appinfo>
-        </xs:annotation>
-      </xs:element>
-    </xs:sequence>
-  </xs:complexType>
+  <xs:element name="nics" type="Nics"/>
 
   <xs:complexType name="CdRom">
-    <xs:sequence>
-      <xs:element ref="iso"/>
-    </xs:sequence>
-    <xs:attribute name="id" type="xs:string"/>
+    <xs:complexContent>
+      <xs:extension base="BaseDevice">
+        <xs:sequence>
+          <xs:element ref="iso"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="CdRoms">
+    <xs:complexContent>
+      <xs:extension base="BaseDevices">
+        <xs:sequence>
+          <xs:element ref="cdrom" maxOccurs="unbounded">
+            <xs:annotation>
+              <xs:appinfo>
+                <jaxb:property name="CdRoms"/>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <xs:complexType name="Disk">
-    <xs:sequence>
-      <xs:element name="size" type="xs:long" minOccurs="0"/>
-      <xs:element name="type" type="DiskType" minOccurs="0"/>
-      <xs:element name="status" type="DiskStatus" minOccurs="0"/>
-      <xs:element name="interface" type="DiskInterface" minOccurs="0"/>
-      <xs:element name="format" type="DiskFormat" minOccurs="0"/>
-      <xs:element name="sparse" type="xs:boolean" minOccurs="0"/>
-      <xs:element name="bootable" type="xs:boolean" minOccurs="0"/>
-      <xs:element name="wipe_after_delete" type="xs:boolean" minOccurs="0"/>
-      <xs:element name="propagate_errors" type="xs:boolean" minOccurs="0"/>
-    </xs:sequence>
-    <xs:attribute name="id" type="xs:string"/>
+    <xs:complexContent>
+      <xs:extension base="BaseDevice">
+        <xs:sequence>
+          <xs:element ref="storage_domain" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="size" type="xs:long" minOccurs="0"/>
+          <xs:element name="type" type="DiskType" minOccurs="0"/>
+          <xs:element name="status" type="DiskStatus" minOccurs="0"/>
+          <xs:element name="interface" type="DiskInterface" minOccurs="0"/>
+          <xs:element name="format" type="DiskFormat" minOccurs="0"/>
+          <xs:element name="sparse" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="bootable" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="wipe_after_delete" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="propagate_errors" type="xs:boolean" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Disks">
+    <xs:complexContent>
+      <xs:extension base="BaseDevices">
+        <xs:sequence>
+          <xs:element ref="disk" maxOccurs="unbounded">
+            <xs:annotation>
+              <xs:appinfo>
+                <jaxb:property name="Disks"/>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <xs:complexType name="NIC">
-    <xs:sequence>
-      <xs:element name="name" type="xs:string" minOccurs="0"/>
-      <xs:element ref="network" minOccurs="0" maxOccurs="1"/>
-      <xs:element name="type" type="NicType" minOccurs="0"/>
-      <xs:element name="mac" minOccurs="0">
-        <xs:complexType>
-          <xs:attribute name="address" type="xs:string"/>
-        </xs:complexType>
-      </xs:element>
-      <xs:element ref="ip" minOccurs="0"/>
-    </xs:sequence>
-    <xs:attribute name="id" type="xs:string"/>
+    <xs:complexContent>
+      <xs:extension base="BaseDevice">
+        <xs:sequence>
+          <xs:element ref="network" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="type" type="NicType" minOccurs="0"/>
+          <xs:element name="mac" minOccurs="0">
+            <xs:complexType>
+              <xs:attribute name="address" type="xs:string"/>
+            </xs:complexType>
+          </xs:element>
+          <xs:element ref="ip" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Nics">
+    <xs:complexContent>
+      <xs:extension base="BaseDevices">
+        <xs:sequence>
+          <xs:element ref="nic" maxOccurs="unbounded">
+            <xs:annotation>
+              <xs:appinfo>
+                <jaxb:property name="Nics"/>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
 </xs:schema>

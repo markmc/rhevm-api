@@ -29,6 +29,9 @@ import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.resource.CdRomsResource;
+import com.redhat.rhevm.api.resource.DisksResource;
+import com.redhat.rhevm.api.resource.NicsResource;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
@@ -113,16 +116,6 @@ public class MockVmResource extends AbstractMockResource<VM> implements VmResour
         return doAction(uriInfo, new DoNothingTask(action));
     }
 
-    @Override
-    public Response addDevice(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new DoNothingTask(action));
-    }
-
-    @Override
-    public Response removeDevice(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new DoNothingTask(action));
-    }
-
     private class VmStatusSetter extends AbstractActionTask {
         private MockVmStatus status;
         VmStatusSetter(Action action, MockVmStatus status) {
@@ -133,4 +126,8 @@ public class MockVmResource extends AbstractMockResource<VM> implements VmResour
             MockVmResource.this.status = status;
         }
     }
+
+    @Override public CdRomsResource getCdRomsResource() { return null; }
+    @Override public DisksResource getDisksResource()   { return null; }
+    @Override public NicsResource getNicsResource()     { return null; }
 }

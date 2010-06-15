@@ -67,55 +67,22 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     private static final String UPDATE_COMMAND = "$v = get-vm '" + VM_ID + "'\n$v.name = '" + NEW_NAME + "'\nupdate-vm -vmobject $v";
     private static final String UPDATE_RETURN = "vmid: " + VM_ID + "\n name: " + NEW_NAME + "\nhostclusterid: " + CLUSTER_ID + "\n" + "templateid: " + TEMPLATE_ID + "\n" + OTHER_PROPS;
 
-    private static final String GET_DISKS_COMMAND = "$v = get-vm ''{0}''\n$v.GetDiskImages()\n";
-    private static final String GET_DISKS_RETURN = PowerShellVmsResourceTest.GET_DISKS_RETURN;
-
-    private static final String GET_NICS_COMMAND = "$v = get-vm ''{0}''\n$v.GetNetworkAdapters()\n";
-    private static final String GET_NICS_RETURN = PowerShellVmsResourceTest.GET_NICS_RETURN;
-
-    private static final String LOOKUP_NETWORK_ID_COMMAND = PowerShellVmsResourceTest.LOOKUP_NETWORK_ID_COMMAND;
-    private static final String LOOKUP_NETWORK_ID_RETURN = PowerShellVmsResourceTest.LOOKUP_NETWORK_ID_RETURN;
-
-    private static final String ISO_NAME = "foo.iso";
-    private static final String ISO_ID = Integer.toString("cdrom".hashCode());
-    private static final String UPDATE_CDROM_COMMAND = "$v = get-vm ''{1}''\n$v.cdisopath = ''{0}''\nupdate-vm -vmobject $v";
-;
-    private static final long NEW_DISK_SIZE = 10;
-    private static final String ADD_DISK_COMMAND = "$d = new-disk -disksize {0}\n$v = get-vm ''{1}''\nadd-disk -diskobject $d -vmobject $v";
-    private static final String REMOVE_DISK_COMMAND = "remove-disk -vmid ''{0}'' -diskids ''0''";
-
-    private static final String NEW_NIC_NAME = "eth11";
-    private static final String NEW_NIC_NETWORK = "b4fb4d54-ca44-444c-ba26-d51f18c91998";
-    private static final String ADD_NIC_COMMAND = "$v = get-vm ''{0}''\nforeach ($i in get-networks) '{'  if ($i.networkid -eq ''{1}'') '{    $n = $i  }}'\nadd-networkadapter -vmobject $v -interfacename ''{2}'' -networkname $n.name";
-    private static final String REMOVE_NIC_COMMAND = "$v = get-vm ''{0}''\nforeach ($i in $v.GetNetworkAdapters()) '{  if ($i.id -eq ''0'') {    $n = $i  }}'\nremove-networkadapter -vmobject $v -networkadapterobject $n";
-
     protected PowerShellVmResource getResource() {
         return new PowerShellVmResource(VM_ID);
     }
 
     @Test
     public void testGet() throws Exception {
-        String [] commands = { "get-vm '" + VM_ID + "'",
-                               MessageFormat.format(GET_DISKS_COMMAND, VM_ID),
-                               MessageFormat.format(GET_NICS_COMMAND, VM_ID),
-                               LOOKUP_NETWORK_ID_COMMAND };
-        String [] returns = { GET_RETURN, GET_DISKS_RETURN, GET_NICS_RETURN, LOOKUP_NETWORK_ID_RETURN };
-
         verifyVM(
-            resource.get(setUpVmExpectations(commands, returns, VM_NAME)),
+            resource.get(setUpVmExpectations("get-vm '" + VM_ID + "'", GET_RETURN, VM_NAME)),
             VM_NAME);
     }
 
     @Test
     public void testGoodUpdate() throws Exception {
-        String [] commands = { UPDATE_COMMAND,
-                               MessageFormat.format(GET_DISKS_COMMAND, VM_ID),
-                               MessageFormat.format(GET_NICS_COMMAND, VM_ID) };
-        String [] returns = { UPDATE_RETURN, GET_DISKS_RETURN, GET_NICS_COMMAND };
-
         verifyVM(
             resource.update(createMock(HttpHeaders.class),
-                            setUpVmExpectations(commands, returns, NEW_NAME),
+                            setUpVmExpectations(UPDATE_COMMAND, UPDATE_RETURN, NEW_NAME),
                             getVM(NEW_NAME)),
             NEW_NAME);
     }
@@ -203,110 +170,9 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
             true);
     }
 
-    @Test
-    public void testAddCdRom() throws Exception {
-        CdRom cdrom = new CdRom();
-        cdrom.setIso(new Iso());
-        cdrom.getIso().setId(ISO_NAME);
-
-        Action action = getAction();
-        action.setCdRom(cdrom);
-
-        String command = MessageFormat.format(UPDATE_CDROM_COMMAND, ISO_NAME, VM_ID);
-
-        verifyActionResponse(
-            resource.addDevice(setUpActionExpectation("adddevice", command, false), action),
-            false);
-    }
-
-    @Test
-    public void testRemoveCdRom() throws Exception {
-        CdRom cdrom = new CdRom();
-        cdrom.setId(ISO_ID);
-
-        Action action = getAction();
-        action.setCdRom(cdrom);
-
-        String command = MessageFormat.format(UPDATE_CDROM_COMMAND, "", VM_ID);
-
-        verifyActionResponse(
-            resource.removeDevice(setUpActionExpectation("removedevice", command, false), action),
-            false);
-    }
-
-    @Test
-    public void testAddDisk() throws Exception {
-        Disk disk = new Disk();
-        disk.setSize(NEW_DISK_SIZE * 1024 * 1024 * 1024);
-
-        Action action = getAction();
-        action.setDisk(disk);
-
-        String command = MessageFormat.format(ADD_DISK_COMMAND, NEW_DISK_SIZE, VM_ID);
-
-        verifyActionResponse(
-            resource.addDevice(setUpActionExpectation("adddevice", command, false), action),
-            false);
-    }
-
-    @Test
-    public void testRemoveDisk() throws Exception {
-        Disk disk = new Disk();
-        disk.setId("0");
-
-        Action action = getAction();
-        action.setDisk(disk);
-
-        String command = MessageFormat.format(REMOVE_DISK_COMMAND, VM_ID);
-
-        verifyActionResponse(
-            resource.removeDevice(setUpActionExpectation("removedevice", command, false), action),
-            false);
-    }
-
-    @Test
-    public void testAddNic() throws Exception {
-        NIC nic = new NIC();
-        nic.setName(NEW_NIC_NAME);
-
-        Network network = new Network();
-        network.setId(NEW_NIC_NETWORK);
-        nic.setNetwork(network);
-
-        Action action = getAction();
-        action.setNic(nic);
-
-        String command = MessageFormat.format(ADD_NIC_COMMAND, VM_ID, NEW_NIC_NETWORK, NEW_NIC_NAME);
-
-        verifyActionResponse(
-            resource.addDevice(setUpActionExpectation("adddevice", command, false), action),
-            false);
-    }
-
-    @Test
-    public void testRemoveNic() throws Exception {
-        NIC nic = new NIC();
-        nic.setId("0");
-
-        Action action = getAction();
-        action.setNic(nic);
-
-        String command = MessageFormat.format(REMOVE_NIC_COMMAND, VM_ID);
-
-        verifyActionResponse(
-            resource.removeDevice(setUpActionExpectation("removedevice", command, false), action),
-            false);
-    }
-
-    private UriInfo setUpVmExpectations(String[] commands, String[] rets, String name) throws Exception {
-        if (commands != null) {
-            mockStatic(PowerShellCmd.class);
-            for (int i = 0 ; i < Math.min(commands.length, rets.length) ; i++) {
-                if (commands[i] != null) {
-                    expect(PowerShellCmd.runCommand(commands[i])).andReturn(rets[i]);
-                }
-            }
-        }
+    private UriInfo setUpVmExpectations(String command, String ret, String name) throws Exception {
+        mockStatic(PowerShellCmd.class);
+        expect(PowerShellCmd.runCommand(command)).andReturn(ret);
         replayAll();
         return null;
     }
