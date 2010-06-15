@@ -49,12 +49,29 @@ public class PowerShellVmsResource
     public Response add(UriInfo uriInfo, VM vm) {
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$templ = get-template -templateid " + PowerShellUtils.escape(vm.getTemplate().getId()) + "\n");
+        String templateArg = null;
+        if (vm.getTemplate().isSetId()) {
+            templateArg = PowerShellUtils.escape(vm.getTemplate().getId());
+        } else {
+            buf.append("$t = select-template -searchtext name=" + vm.getTemplate().getName() + "\n");
+            templateArg = "$t.TemplateId";
+        }
+
+        String clusterArg = null;
+        if (vm.getCluster().isSetId()) {
+            clusterArg = PowerShellUtils.escape(vm.getCluster().getId());
+        } else {
+            buf.append("$c = select-cluster -searchtext name=" +  vm.getCluster().getName() + "\n");
+            clusterArg = "$c.ClusterId";
+        }
+
+        buf.append("$templ = get-template -templateid " + templateArg + "\n");
 
         buf.append("add-vm");
 
         buf.append(" -name " + PowerShellUtils.escape(vm.getName()) + "");
         buf.append(" -templateobject $templ");
+        buf.append(" -hostclusterid " + clusterArg);
 
         if (vm.getDescription() != null) {
             buf.append(" -description " + PowerShellUtils.escape(vm.getDescription()));
@@ -70,9 +87,6 @@ public class PowerShellVmsResource
         String bootSequence = PowerShellVM.buildBootSequence(vm);
         if (bootSequence != null) {
             buf.append(" -defaultbootsequence " + bootSequence);
-        }
-        if (vm.getCluster() != null) {
-            buf.append(" -hostclusterid " + PowerShellUtils.escape(vm.getCluster().getId()));
         }
 
         PowerShellVM ret = PowerShellVmResource.runAndParseSingle(buf.toString());

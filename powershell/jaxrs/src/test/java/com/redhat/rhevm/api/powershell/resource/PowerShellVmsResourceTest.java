@@ -30,12 +30,26 @@ import org.junit.Test;
 public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResourceTest<VM, PowerShellVmResource, PowerShellVmsResource> {
 
     private static String TEMPLATE_ID = "template1";
+    private static String TEMPLATE_NAME = "cookiecutter";
     private static String CLUSTER_ID = "cluster1";
+    private static String CLUSTER_NAME = "pleiades";
 
     private static final String ADD_COMMAND_PROLOG =
         "$templ = get-template -templateid '" + TEMPLATE_ID + "'\n";
     private static final String ADD_COMMAND_EPILOG =
         "-templateobject $templ -hostclusterid '" + CLUSTER_ID + "'";
+
+    private static final String TEMPLATE_BY_NAME_ADD_COMMAND_PROLOG =
+        "$t = select-template -searchtext name=" + TEMPLATE_NAME + "\n" +
+        "$templ = get-template -templateid $t.TemplateId\n";
+
+    private static final String CLUSTER_BY_NAME_ADD_COMMAND_PROLOG =
+        "$t = select-template -searchtext name=" + TEMPLATE_NAME + "\n" +
+         "$c = select-cluster -searchtext name=" + CLUSTER_NAME + "\n" +
+        "$templ = get-template -templateid $t.TemplateId\n";
+
+    private static final String CLUSTER_BY_NAME_ADD_COMMAND_EPILOG =
+        "-templateobject $templ -hostclusterid $c.ClusterId";
 
     private static final String OTHER_PROPS = "memorysize: 1024\ndefaultbootsequence: CDN\nnumofsockets: 2\nnumofcpuspersocket: 4\npoolid: -1\n";
 
@@ -107,7 +121,7 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     }
 
     @Test
-    public void testAdd() throws Exception {
+    public void testAddWithTemplateId() throws Exception {
         String [] commands = { ADD_COMMAND_PROLOG + getAddCommand() + ADD_COMMAND_EPILOG,
                                MessageFormat.format(GET_DISKS_COMMAND, NEW_NAME.hashCode()),
                                MessageFormat.format(GET_NICS_COMMAND, NEW_NAME.hashCode()),
@@ -121,6 +135,54 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
         verifyResponse(
             resource.add(setUpAddResourceExpectations(commands, returns, NEW_NAME),
                          getModel(NEW_NAME)),
+            NEW_NAME);
+    }
+
+    @Test
+    public void testAddWithTemplateName() throws Exception {
+        String [] commands = { TEMPLATE_BY_NAME_ADD_COMMAND_PROLOG + getAddCommand() + ADD_COMMAND_EPILOG,
+                               MessageFormat.format(GET_DISKS_COMMAND, NEW_NAME.hashCode()),
+                               MessageFormat.format(GET_INTERFACES_COMMAND, NEW_NAME.hashCode()),
+                               LOOKUP_NETWORK_ID_COMMAND };
+
+        String [] returns = { getAddReturn(ADD_RETURN_EPILOG),
+                              GET_DISKS_RETURN,
+                              GET_INTERFACES_RETURN,
+                              LOOKUP_NETWORK_ID_RETURN };
+
+        VM model = getModel(NEW_NAME);
+        model.getTemplate().setId(null);
+        model.getTemplate().setName(TEMPLATE_NAME);
+
+        verifyResponse(
+            resource.add(setUpResourceExpectations(commands, returns, 1, NEW_NAME),
+                         model),
+            NEW_NAME);
+    }
+
+    @Test
+    public void testAddWithClusterName() throws Exception {
+        String [] commands = { CLUSTER_BY_NAME_ADD_COMMAND_PROLOG
+                               + getAddCommand()
+                               + CLUSTER_BY_NAME_ADD_COMMAND_EPILOG,
+                               MessageFormat.format(GET_DISKS_COMMAND, NEW_NAME.hashCode()),
+                               MessageFormat.format(GET_INTERFACES_COMMAND, NEW_NAME.hashCode()),
+                               LOOKUP_NETWORK_ID_COMMAND };
+
+        String [] returns = { getAddReturn(ADD_RETURN_EPILOG),
+                              GET_DISKS_RETURN,
+                              GET_INTERFACES_RETURN,
+                              LOOKUP_NETWORK_ID_RETURN };
+
+        VM model = getModel(NEW_NAME);
+        model.getTemplate().setId(null);
+        model.getTemplate().setName(TEMPLATE_NAME);
+        model.getCluster().setId(null);
+        model.getCluster().setName(CLUSTER_NAME);
+
+        verifyResponse(
+            resource.add(setUpResourceExpectations(commands, returns, 1, NEW_NAME),
+                         model),
             NEW_NAME);
     }
 
