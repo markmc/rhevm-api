@@ -204,7 +204,7 @@
             </goals>
             <configuration>
               <filters>
-                <filter>src/main/assembly/unix.properties</filter>
+                <filter>${basedir}/src/main/assembly/unix.properties</filter>
               </filters>
               <outputDirectory>${basedir}/target/assembly/unix</outputDirectory>
               <resources>
@@ -226,7 +226,7 @@
             </goals>
             <configuration>
               <filters>
-                <filter>src/main/assembly/win.properties</filter>
+                <filter>${basedir}/src/main/assembly/win.properties</filter>
               </filters>
               <outputDirectory>${basedir}/target/assembly/win</outputDirectory>
               <resources>

@@ -34,12 +34,50 @@
   </modules>
 
   <profiles>
+
     <profile>
       <id>integration</id>
       <properties>
         <extra.module>distribution</extra.module>
       </properties>
     </profile>
+
+    <profile>
+      <id>all</id>
+      <modules>
+        <module>distribution/assembly</module>
+      </modules>
+      <build>
+        <defaultGoal>install</defaultGoal>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
   </profiles>
 
   <properties>
@@ -53,6 +91,8 @@
     <bundle.plugin.version>2.0.0</bundle.plugin.version>
     <assembly.plugin.version>2.2-beta-4</assembly.plugin.version>
     <resources.plugin.version>2.4.3</resources.plugin.version>
+    <source.plugin.version>2.1.2</source.plugin.version>
+    <javadoc.plugin.version>2.7</javadoc.plugin.version>
     <felix.karaf.version>1.4.0</felix.karaf.version>
     <felix.compendium.version>1.2.0</felix.compendium.version>
     <felix.osgi.version>1.4.0</felix.osgi.version>
@@ -286,9 +326,36 @@
         </plugin>
 
         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-assembly-plugin</artifactId>
-            <version>${assembly.plugin.version}</version>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>${assembly.plugin.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>${source.plugin.version}</version>
+          <executions>
+            <execution>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>${javadoc.plugin.version}</version>
+          <configuration>
+            <show>public</show>
+            <source>1.6</source>
+            <quiet>true</quiet>
+            <bottom>Copyright © 2010 Red Hat, Inc - released under the GNU Lesser General Public License</bottom>
+            <javadocVersion>1.6</javadocVersion>
+            <encoding>UTF-8</encoding>
+          </configuration>
         </plugin>
 
       </plugins>
