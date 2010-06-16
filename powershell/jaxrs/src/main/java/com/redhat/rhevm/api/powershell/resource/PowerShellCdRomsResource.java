@@ -26,21 +26,18 @@ import com.redhat.rhevm.api.model.CdRom;
 import com.redhat.rhevm.api.model.CdRoms;
 import com.redhat.rhevm.api.model.Iso;
 import com.redhat.rhevm.api.model.VM;
-import com.redhat.rhevm.api.resource.CdRomsResource;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
-public class PowerShellCdRomsResource implements CdRomsResource {
+public class PowerShellCdRomsResource extends AbstractPowerShellDevicesResource<CdRom, CdRoms> {
 
     private static final String CDROM_ID = Integer.toString("cdrom".hashCode());
 
-    private String vmId;
-
     public PowerShellCdRomsResource(String vmId) {
-        this.vmId = vmId;
+        super(vmId);
     }
 
     private CdRom buildCdRom(String cdIsoPath) {
@@ -53,6 +50,7 @@ public class PowerShellCdRomsResource implements CdRomsResource {
         return cdrom;
     }
 
+    @Override
     public CdRoms getDevices() {
         CdRoms cdroms = new CdRoms();
 
@@ -65,6 +63,7 @@ public class PowerShellCdRomsResource implements CdRomsResource {
         return cdroms;
     }
 
+    @Override
     public CdRom addLinks(CdRom cdrom) {
         return LinkHelper.addLinks(cdrom);
     }
@@ -109,7 +108,7 @@ public class PowerShellCdRomsResource implements CdRomsResource {
     }
 
     @Override
-    public PowerShellCdRomResource getDeviceSubResource(String id) {
-        return new PowerShellCdRomResource(this, id);
+    public PowerShellDeviceResource<CdRom, CdRoms> getDeviceSubResource(String id) {
+        return new PowerShellDeviceResource<CdRom, CdRoms>(this, id);
     }
 }

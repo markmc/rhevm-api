@@ -18,30 +18,25 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import java.util.List;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.model.NIC;
-import com.redhat.rhevm.api.model.Nics;
-import com.redhat.rhevm.api.resource.NicResource;
+import com.redhat.rhevm.api.model.BaseDevice;
+import com.redhat.rhevm.api.model.BaseDevices;
+import com.redhat.rhevm.api.resource.DeviceResource;
+import com.redhat.rhevm.api.resource.DevicesResource;
 
 
-public class PowerShellNicResource implements NicResource {
+public abstract class AbstractPowerShellDevicesResource<D extends BaseDevice, C extends BaseDevices>
+    implements DevicesResource<D, C> {
 
-    protected PowerShellNicsResource parent;
-    protected String nicId;
+    protected String vmId;
 
-    public PowerShellNicResource(PowerShellNicsResource parent, String nicId) {
-        this.parent = parent;
-        this.nicId = nicId;
+    public AbstractPowerShellDevicesResource(String vmId) {
+        this.vmId = vmId;
     }
 
-    @Override
-    public NIC get() {
-        for (NIC nic : parent.getDevices().getNics()) {
-            if (nicId.equals(nic.getId())) {
-                return parent.addLinks(nic);
-            }
-        }
-        return null;
-    }
+    public abstract D addLinks(D device);
+
+    public abstract C getDevices();
 }

@@ -28,29 +28,29 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.model.Disk;
-import com.redhat.rhevm.api.model.Disks;
+import com.redhat.rhevm.api.model.BaseDevice;
+import com.redhat.rhevm.api.model.BaseDevices;
 
-public interface DisksResource {
+public interface DevicesResource<D extends BaseDevice, C extends BaseDevices> {
 
     @GET
-    public Disks list();
+    public C list();
 
     @POST
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
-    public Response add(@Context UriInfo uriInfo, Disk disk);
+    public Response add(@Context UriInfo uriInfo, D device);
 
     @DELETE
     @Path("{id}")
     public void remove(@PathParam("id") String id);
 
     /**
-     * Sub-resource locator method, returns individual DiskResource on which the
+     * Sub-resource locator method, returns individual DeviceResource on which the
      * remainder of the URI is dispatched.
      *
-     * @param id  the disk ID
+     * @param id  the Device ID
      * @return    matching subresource if found
      */
     @Path("{id}")
-    public DiskResource getDeviceSubResource(@PathParam("id") String id);
+    public DeviceResource<D> getDeviceSubResource(@PathParam("id") String id);
 }

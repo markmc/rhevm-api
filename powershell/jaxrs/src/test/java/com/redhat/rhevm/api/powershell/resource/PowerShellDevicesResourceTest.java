@@ -94,7 +94,8 @@ public class PowerShellDevicesResourceTest extends Assert {
     @Test
     public void testCdRomGet() throws Exception {
         PowerShellCdRomsResource parent = new PowerShellCdRomsResource(VM_ID);
-        PowerShellCdRomResource resource = new PowerShellCdRomResource(parent, CDROM_ID);
+        PowerShellDeviceResource<CdRom, CdRoms> resource =
+            new PowerShellDeviceResource<CdRom, CdRoms>(parent, CDROM_ID);
 
         setUpCmdExpectations(GET_CDROMS_CMD, GET_CDROMS_RETURN);
         verifyCdRom(resource.get());
@@ -138,7 +139,8 @@ public class PowerShellDevicesResourceTest extends Assert {
     @Test
     public void testDiskGet() throws Exception {
         PowerShellDisksResource parent = new PowerShellDisksResource(VM_ID);
-        PowerShellDiskResource resource = new PowerShellDiskResource(parent, DISK_ID);
+        PowerShellDeviceResource<Disk, Disks> resource =
+            new PowerShellDeviceResource<Disk, Disks>(parent, DISK_ID);
 
         setUpCmdExpectations(GET_DISKS_CMD, GET_DISKS_RETURN);
         verifyDisk(resource.get());
@@ -181,7 +183,8 @@ public class PowerShellDevicesResourceTest extends Assert {
     @Test
     public void testNicGet() throws Exception {
         PowerShellNicsResource parent = new PowerShellNicsResource(VM_ID);
-        PowerShellNicResource resource = new PowerShellNicResource(parent, NIC_ID);
+        PowerShellDeviceResource<NIC, Nics> resource =
+            new PowerShellDeviceResource<NIC, Nics>(parent, NIC_ID);
 
         String [] commands = { GET_NICS_CMD, LOOKUP_NETWORK_ID_COMMAND };
         String [] returns = { GET_NICS_RETURN, LOOKUP_NETWORK_ID_RETURN };

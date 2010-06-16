@@ -87,11 +87,11 @@ public interface VmResource /* extends UpdatableResource<VM> */ {
     public Response detach(@Context UriInfo uriInfo, Action action);
 
     @Path("cdroms")
-    public CdRomsResource getCdRomsResource();
+    public DevicesResource<CdRom, CdRoms> getCdRomsResource();
 
     @Path("disks")
-    public DisksResource getDisksResource();
+    public DevicesResource<Disk, Disks> getDisksResource();
 
     @Path("nics")
-    public NicsResource getNicsResource();
+    public DevicesResource<NIC, Nics> getNicsResource();
 }

@@ -20,11 +20,11 @@ package com.redhat.rhevm.api.resource;
 
 import javax.ws.rs.GET;
 
-import com.redhat.rhevm.api.model.Disk;
+import com.redhat.rhevm.api.model.BaseDevice;
 
 
-public interface DiskResource {
+public interface DeviceResource<D extends BaseDevice> {
 
     @GET
-    public Disk get();
+    public D get();
 }

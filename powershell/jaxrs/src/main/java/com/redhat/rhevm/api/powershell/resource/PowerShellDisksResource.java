@@ -25,7 +25,6 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.Disks;
 import com.redhat.rhevm.api.model.Network;
-import com.redhat.rhevm.api.resource.DisksResource;
 
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.common.util.ReflectionHelper;
@@ -34,12 +33,10 @@ import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
-public class PowerShellDisksResource implements DisksResource {
-
-    private String vmId;
+public class PowerShellDisksResource extends AbstractPowerShellDevicesResource<Disk, Disks> {
 
     public PowerShellDisksResource(String vmId) {
-        this.vmId = vmId;
+        super(vmId);
     }
 
     public Disks runAndParse(String command) {
@@ -52,6 +49,7 @@ public class PowerShellDisksResource implements DisksResource {
         return (disks != null && !disks.getDisks().isEmpty()) ? disks.getDisks().get(0) : null;
     }
 
+    @Override
     public Disks getDevices() {
         StringBuilder buf = new StringBuilder();
 
@@ -61,6 +59,7 @@ public class PowerShellDisksResource implements DisksResource {
         return runAndParse(buf.toString());
     }
 
+    @Override
     public Disk addLinks(Disk disk) {
         return LinkHelper.addLinks(disk);
     }
@@ -143,7 +142,7 @@ public class PowerShellDisksResource implements DisksResource {
     }
 
     @Override
-    public PowerShellDiskResource getDeviceSubResource(String id) {
-        return new PowerShellDiskResource(this, id);
+    public PowerShellDeviceResource<Disk, Disks> getDeviceSubResource(String id) {
+        return new PowerShellDeviceResource<Disk, Disks>(this, id);
     }
 }

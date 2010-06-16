@@ -29,9 +29,7 @@ import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.VM;
-import com.redhat.rhevm.api.resource.CdRomsResource;
-import com.redhat.rhevm.api.resource.DisksResource;
-import com.redhat.rhevm.api.resource.NicsResource;
+import com.redhat.rhevm.api.resource.DevicesResource;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
@@ -127,7 +125,7 @@ public class MockVmResource extends AbstractMockResource<VM> implements VmResour
         }
     }
 
-    @Override public CdRomsResource getCdRomsResource() { return null; }
-    @Override public DisksResource getDisksResource()   { return null; }
-    @Override public NicsResource getNicsResource()     { return null; }
+    @Override public DevicesResource getCdRomsResource() { return null; }
+    @Override public DevicesResource getDisksResource()  { return null; }
+    @Override public DevicesResource getNicsResource()   { return null; }
 }

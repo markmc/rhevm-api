@@ -25,7 +25,6 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.NIC;
 import com.redhat.rhevm.api.model.Nics;
 import com.redhat.rhevm.api.model.Network;
-import com.redhat.rhevm.api.resource.NicsResource;
 
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
@@ -33,12 +32,10 @@ import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
-public class PowerShellNicsResource implements NicsResource {
-
-    protected String vmId;
+public class PowerShellNicsResource extends AbstractPowerShellDevicesResource<NIC, Nics> {
 
     public PowerShellNicsResource(String vmId) {
-        this.vmId = vmId;
+        super(vmId);
     }
 
     public Nics runAndParse(String command) {
@@ -51,6 +48,7 @@ public class PowerShellNicsResource implements NicsResource {
         return (nics != null && !nics.getNics().isEmpty()) ? nics.getNics().get(0) : null;
     }
 
+    @Override
     public Nics getDevices() {
         StringBuilder buf = new StringBuilder();
 
@@ -83,6 +81,7 @@ public class PowerShellNicsResource implements NicsResource {
         return nic;
     }
 
+    @Override
     public NIC addLinks(NIC nic) {
         return LinkHelper.addLinks(lookupNetworkId(nic));
     }
@@ -142,7 +141,7 @@ public class PowerShellNicsResource implements NicsResource {
     }
 
     @Override
-    public PowerShellNicResource getDeviceSubResource(String id) {
-        return new PowerShellNicResource(this, id);
+    public PowerShellDeviceResource<NIC, Nics> getDeviceSubResource(String id) {
+        return new PowerShellDeviceResource<NIC, Nics>(this, id);
     }
 }
