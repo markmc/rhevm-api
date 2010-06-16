@@ -78,6 +78,29 @@
       </build>
     </profile>
 
+    <profile>
+      <id>sign</id>
+      <build>
+        <defaultGoal>install</defaultGoal>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>${gpg.plugin.version}</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
   </profiles>
 
   <properties>
@@ -93,6 +116,7 @@
     <resources.plugin.version>2.4.3</resources.plugin.version>
     <source.plugin.version>2.1.2</source.plugin.version>
     <javadoc.plugin.version>2.7</javadoc.plugin.version>
+    <gpg.plugin.version>1.1</gpg.plugin.version>
     <felix.karaf.version>1.4.0</felix.karaf.version>
     <felix.compendium.version>1.2.0</felix.compendium.version>
     <felix.osgi.version>1.4.0</felix.osgi.version>
