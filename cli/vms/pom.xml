@@ -19,13 +19,13 @@
     <dependency>
       <groupId>com.redhat.rhevm.api</groupId>
       <artifactId>rhevm-api-mock-jaxrs</artifactId>
-      <version>${pom.version}</version>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>com.redhat.rhevm.api</groupId>
       <artifactId>rhevm-api-cli-base</artifactId>
-      <version>${pom.version}</version>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>

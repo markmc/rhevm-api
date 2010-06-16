@@ -20,13 +20,13 @@
     <dependency>
       <groupId>com.redhat.rhevm.api</groupId>
       <artifactId>rhevm-api</artifactId>
-      <version>0.1-SNAPSHOT</version>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>com.redhat.rhevm.api</groupId>
       <artifactId>rhevm-api-common-jaxrs</artifactId>
-      <version>0.1-SNAPSHOT</version>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>

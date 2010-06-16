@@ -42,7 +42,7 @@
                 <artifactItem>
                   <groupId>com.redhat.rhevm.api</groupId>
                   <artifactId>rhevm-api-distro</artifactId>
-                  <version>${pom.version}</version>
+                  <version>${project.version}</version>
                   <type>tar.gz</type>
                   <overWrite>false</overWrite>
                   <outputDirectory>${rhevm-api.dir}</outputDirectory>
@@ -76,7 +76,7 @@
                 <artifactItem>
                   <groupId>com.redhat.rhevm.api</groupId>
                   <artifactId>${rhevm.api.impl}-webapp</artifactId>
-                  <version>${pom.version}</version>
+                  <version>${project.version}</version>
                   <type>war</type>
                   <overWrite>true</overWrite>
                   <outputDirectory>${jboss.home}/server/default/deploy</outputDirectory>

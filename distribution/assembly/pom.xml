@@ -27,13 +27,13 @@
     <dependency>
       <groupId>com.redhat.rhevm.api</groupId>
       <artifactId>rhevm-api</artifactId>
-      <version>0.1-SNAPSHOT</version>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>com.redhat.rhevm.api</groupId>
       <artifactId>rhevm-api</artifactId>
-      <version>0.1-SNAPSHOT</version>
+      <version>${project.version}</version>
       <type>jar</type>
       <classifier>sources</classifier>
     </dependency>
@@ -41,7 +41,7 @@
     <dependency>
       <groupId>com.redhat.rhevm.api</groupId>
       <artifactId>rhevm-api</artifactId>
-      <version>0.1-SNAPSHOT</version>
+      <version>${project.version}</version>
       <type>jar</type>
       <classifier>javadoc</classifier>
     </dependency>
@@ -49,7 +49,7 @@
     <dependency>
       <groupId>com.redhat.rhevm.api</groupId>
       <artifactId>rhevm-api-cli</artifactId>
-      <version>0.1-SNAPSHOT</version>
+      <version>${project.version}</version>
       <type>xml</type>
       <classifier>features</classifier>
     </dependency>
@@ -57,45 +57,45 @@
     <dependency>
       <groupId>com.redhat.rhevm.api</groupId>
       <artifactId>rhevm-api-cli-base</artifactId>
-      <version>0.1-SNAPSHOT</version>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>com.redhat.rhevm.api</groupId>
       <artifactId>rhevm-api-cli-vms</artifactId>
-      <version>0.1-SNAPSHOT</version>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>com.redhat.rhevm.api</groupId>
       <artifactId>rhevm-api-cli-hosts</artifactId>
-      <version>0.1-SNAPSHOT</version>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>com.redhat.rhevm.api</groupId>
       <artifactId>rhevm-api-cli-clusters</artifactId>
-      <version>0.1-SNAPSHOT</version>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>com.redhat.rhevm.api</groupId>
       <artifactId>rhevm-api-cli-datacenters</artifactId>
-      <version>0.1-SNAPSHOT</version>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>com.redhat.rhevm.api</groupId>
       <artifactId>rhevm-api-mock-webapp</artifactId>
       <type>war</type>
-      <version>0.1-SNAPSHOT</version>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>com.redhat.rhevm.api</groupId>
       <artifactId>rhevm-api-powershell-webapp</artifactId>
       <type>war</type>
-      <version>0.1-SNAPSHOT</version>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>
@@ -310,7 +310,7 @@
                 <artifactItem>
                   <groupId>com.redhat.rhevm.api</groupId>
                   <artifactId>rhevm-api-mock-webapp</artifactId>
-                  <version>0.1-SNAPSHOT</version>
+                  <version>${project.version}</version>
                   <type>war</type>
                   <destFileName>rhevm-api-mock.war</destFileName>
                   <outputDirectory>target/dependencies/webapp</outputDirectory>
@@ -319,7 +319,7 @@
                 <artifactItem>
                   <groupId>com.redhat.rhevm.api</groupId>
                   <artifactId>rhevm-api-powershell-webapp</artifactId>
-                  <version>0.1-SNAPSHOT</version>
+                  <version>${project.version}</version>
                   <type>war</type>
                   <destFileName>rhevm-api-powershell.war</destFileName>
                   <outputDirectory>target/dependencies/webapp</outputDirectory>
