@@ -86,14 +86,7 @@
     &lt;link rel="start" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/start"/&gt;
     &lt;link rel="stop" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/stop"/&gt;
     &lt;link rel="suspend" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/suspend"/&gt;
-    &lt;link rel="restore" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/restore"/&gt;
-    &lt;link rel="migrate" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/migrate"/&gt;
-    &lt;link rel="move" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/move"/&gt;
     &lt;link rel="detach" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/detach"/&gt;
-    &lt;link rel="adddevice" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/adddevice"/&gt;
-    &lt;link rel="removedevice" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/removedevice"/&gt;
-    &lt;link rel="changeCD" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/changeCD"/&gt;
-    &lt;link rel="ejectCD" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/ejectCD"/&gt;
   &lt;/actions&gt;
 &lt;/vm&gt;
   </screen>
@@ -103,7 +96,7 @@
   </para>
 
   <para>
-    There are twelve possible actions for hosts - <literal>shutdown</literal>, <literal>start</literal>, <literal>stop</literal>, <literal>suspend</literal>, <literal>restore</literal>, <literal>migrate</literal>, <literal>move</literal>, <literal>detach</literal>, <literal>adddevice</literal> and <literal>removedevice</literal>.
+    There are five possible actions for hosts - <literal>shutdown</literal>, <literal>start</literal>, <literal>stop</literal>, <literal>suspend</literal> and <literal>detach</literal>.
   </para>
 
   <section id="sect-REST_API_Guide-VMs-CDROMs">

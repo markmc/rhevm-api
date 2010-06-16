@@ -196,21 +196,6 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
     }
 
     @Override
-    public Response restore(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new CommandRunner(action, "restore-vm", "vm", getId()));
-    }
-
-    @Override
-    public Response migrate(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new DoNothingTask(action));
-    }
-
-    @Override
-    public Response move(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new DoNothingTask(action));
-    }
-
-    @Override
     public Response detach(UriInfo uriInfo, Action action) {
         return doAction(uriInfo, new CommandRunner(action, "detach-vm", "vm", getId()));
     }
@@ -247,16 +232,6 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
         }
 
         return doAction(uriInfo, task);
-    }
-
-    @Override
-    public Response changeCD(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new DoNothingTask(action));
-    }
-
-    @Override
-    public Response ejectCD(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new DoNothingTask(action));
     }
 
     private class UpdateCdRomTask extends AbstractActionTask {

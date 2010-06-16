@@ -47,7 +47,7 @@ public interface VmResource /* extends UpdatableResource<VM> */ {
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
     public VM update(@Context HttpHeaders headers, @Context UriInfo uriInfo, VM vm);
 
-    @Path("{action: (start|stop|shutdown|suspend|restore|migrate|move|detach|changeCD|ejectCD)}/{oid}")
+    @Path("{action: (start|stop|shutdown|suspend|detach)}/{oid}")
     public ActionResource getActionSubresource(@PathParam("action")String action, @PathParam("oid")String oid);
 
     @POST
@@ -77,24 +77,6 @@ public interface VmResource /* extends UpdatableResource<VM> */ {
     @POST
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
     @Actionable
-    @Path("restore")
-    public Response restore(@Context UriInfo uriInfo, Action action);
-
-    @POST
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
-    @Actionable
-    @Path("migrate")
-    public Response migrate(@Context UriInfo uriInfo, Action action);
-
-    @POST
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
-    @Actionable
-    @Path("move")
-    public Response move(@Context UriInfo uriInfo, Action action);
-
-    @POST
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
-    @Actionable
     @Path("detach")
     public Response detach(@Context UriInfo uriInfo, Action action);
 
@@ -109,16 +91,4 @@ public interface VmResource /* extends UpdatableResource<VM> */ {
     @Actionable
     @Path("removedevice")
     public Response removeDevice(@Context UriInfo uriInfo, Action action);
-
-    @POST
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
-    @Actionable
-    @Path("changeCD")
-    public Response changeCD(@Context UriInfo uriInfo, Action action);
-
-    @POST
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
-    @Actionable
-    @Path("ejectCD")
-    public Response ejectCD(@Context UriInfo uriInfo, Action action);
 }

@@ -162,13 +162,6 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     }
 
     @Test
-    public void testRestore() throws Exception {
-        verifyActionResponse(
-            resource.restore(setUpActionExpectation("restore", "restore-vm"), getAction()),
-            false);
-    }
-
-    @Test
     public void testDetach() throws Exception {
         verifyActionResponse(
             resource.detach(setUpActionExpectation("detach", "detach-vm"), getAction()),
@@ -200,13 +193,6 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     public void testSuspendAsync() throws Exception {
         verifyActionResponse(
             resource.suspend(setUpActionExpectation("suspend", "suspend-vm"), getAction(true)),
-            true);
-    }
-
-    @Test
-    public void testRestoreAsync() throws Exception {
-        verifyActionResponse(
-            resource.restore(setUpActionExpectation("restore", "restore-vm"), getAction(true)),
             true);
     }
 

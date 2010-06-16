@@ -30,14 +30,6 @@
         <ref component-id="vmNameCompleter" />
       </completers>
     </command>
-    <command name="vms/migrate">
-      <action class="com.redhat.rhevm.api.command.vms.VmsMigrateCommand">
-        <property name="client" ref="baseClient" />
-      </action>
-      <completers>
-        <ref component-id="vmNameCompleter" />
-      </completers>
-    </command>
     <command name="vms/stop">
       <action class="com.redhat.rhevm.api.command.vms.VmsStopCommand">
         <property name="client" ref="baseClient" />
@@ -64,14 +56,6 @@
     </command>
     <command name="vms/suspend">
       <action class="com.redhat.rhevm.api.command.vms.VmsSuspendCommand">
-        <property name="client" ref="baseClient" />
-      </action>
-      <completers>
-        <ref component-id="vmNameCompleter" />
-      </completers>
-    </command>
-    <command name="vms/restore">
-      <action class="com.redhat.rhevm.api.command.vms.VmsRestoreCommand">
         <property name="client" ref="baseClient" />
       </action>
       <completers>

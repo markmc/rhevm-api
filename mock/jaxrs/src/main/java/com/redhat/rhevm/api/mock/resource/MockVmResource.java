@@ -109,21 +109,6 @@ public class MockVmResource extends AbstractMockResource<VM> implements VmResour
     }
 
     @Override
-    public Response restore(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new DoNothingTask(action));
-    }
-
-    @Override
-    public Response migrate(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new DoNothingTask(action));
-    }
-
-    @Override
-    public Response move(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new DoNothingTask(action));
-    }
-
-    @Override
     public Response detach(UriInfo uriInfo, Action action) {
         return doAction(uriInfo, new DoNothingTask(action));
     }
@@ -135,16 +120,6 @@ public class MockVmResource extends AbstractMockResource<VM> implements VmResour
 
     @Override
     public Response removeDevice(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new DoNothingTask(action));
-    }
-
-    @Override
-    public Response changeCD(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new DoNothingTask(action));
-    }
-
-    @Override
-    public Response ejectCD(UriInfo uriInfo, Action action) {
         return doAction(uriInfo, new DoNothingTask(action));
     }
 
