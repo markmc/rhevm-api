@@ -119,9 +119,10 @@
       <outputDirectory>/lib</outputDirectory>
       <unpack>false</unpack>
       <useProjectArtifact>true</useProjectArtifact>
-      <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
       <includes>
         <include>com.redhat.rhevm.api:rhevm-api</include>
+        <include>com.redhat.rhevm.api:rhevm-api:jar:sources</include>
+        <include>com.redhat.rhevm.api:rhevm-api:jar:javadoc</include>
       </includes>
     </dependencySet>
 

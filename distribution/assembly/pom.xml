@@ -32,6 +32,22 @@
 
     <dependency>
       <groupId>com.redhat.rhevm.api</groupId>
+      <artifactId>rhevm-api</artifactId>
+      <version>0.1-SNAPSHOT</version>
+      <type>jar</type>
+      <classifier>sources</classifier>
+    </dependency>
+
+    <dependency>
+      <groupId>com.redhat.rhevm.api</groupId>
+      <artifactId>rhevm-api</artifactId>
+      <version>0.1-SNAPSHOT</version>
+      <type>jar</type>
+      <classifier>javadoc</classifier>
+    </dependency>
+
+    <dependency>
+      <groupId>com.redhat.rhevm.api</groupId>
       <artifactId>rhevm-api-cli</artifactId>
       <version>0.1-SNAPSHOT</version>
       <type>xml</type>
