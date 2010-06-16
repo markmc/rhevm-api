@@ -87,18 +87,6 @@ class CPU(Element):
     ATTRIBUTES = Element.ATTRIBUTES + ["id"]
     ELEMENTS = Element.ELEMENTS + ["level", "topology"] # FIXME: flags
 
-class CdRom(Element):
-    NAME = 'cdrom'
-    COLLECTION = 'cdroms'
-    ATTRIBUTES = Element.ATTRIBUTES + ['id']
-    ELEMENTS = Element.ELEMENTS + ['iso', 'vm']
-
-class Disk(Element):
-    NAME = 'disk'
-    COLLECTION = 'disks'
-    ATTRIBUTES = Element.ATTRIBUTES + ['id']
-    ELEMENTS = Element.ELEMENTS + ['size', 'type', 'status', 'interface', 'format', 'sparse', 'bootable', 'wipe_after_delete', 'propagate_errors', 'vm']
-
 class GracePeriod(Element):
     NAME = 'grace_period'
     ELEMENTS = Element.ELEMENTS + ['expiry', 'absolute']
@@ -123,12 +111,6 @@ class VLAN(Element):
     NAME = 'vlan'
     ATTRIBUTES = Element.ATTRIBUTES + ['id']
 
-class NIC(Element):
-    NAME = 'nic'
-    COLLECTION = 'nics'
-    ATTRIBUTES = Element.ATTRIBUTES + ['id']
-    ELEMENTS = Element.ELEMENTS + ['name', 'network', 'type', 'mac', 'ip', 'vm']
-
 class Base(Element):
     ATTRIBUTES = Element.ATTRIBUTES + ["id", "href"]
     ELEMENTS = Element.ELEMENTS + ["name", "actions", "link"]
@@ -138,6 +120,11 @@ class Attachment(Base):
     COLLECTION = 'attachments'
     ELEMENTS = Base.ELEMENTS + ['data_center', 'storage_domain', 'status', 'master']
 
+class CdRom(Base):
+    NAME = 'cdrom'
+    COLLECTION = 'cdroms'
+    ELEMENTS = Base.ELEMENTS + ['iso', 'vm']
+
 class Cluster(Base):
     NAME = "cluster"
     COLLECTION = "clusters"
@@ -146,6 +133,11 @@ class Cluster(Base):
 class DataCenter(Base):
     NAME = "data_center"
     COLLECTION = "data_centers"
+
+class Disk(Base):
+    NAME = 'disk'
+    COLLECTION = 'disks'
+    ELEMENTS = Base.ELEMENTS + ['size', 'type', 'status', 'interface', 'format', 'sparse', 'bootable', 'wipe_after_delete', 'propagate_errors', 'vm']
 
 class Host(Base):
     NAME = "host"
@@ -160,6 +152,11 @@ class Network(Base):
     NAME = "network"
     COLLECTION = "networks"
     ELEMENTS = Base.ELEMENTS + ['data_center', 'ip', 'vlan', 'stp', 'status']
+
+class NIC(Base):
+    NAME = 'nic'
+    COLLECTION = 'nics'
+    ELEMENTS = Base.ELEMENTS + ['network', 'type', 'mac', 'ip', 'vm']
 
 class Storage(Element):
     NAME = 'storage'
