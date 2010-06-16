@@ -10,6 +10,11 @@
   <name>RHEV-M API Parent POM</name>
   <url>http://fedorahosted.org/rhevm-api/</url>
 
+  <scm>
+    <connection>scm:git:git://git.fedorahosted.org/rhevm-api.git</connection>
+    <developerConnection>scm:git:ssh://git.fedorahosted.org/git/rhevm-api.git</developerConnection>
+    <url>http://git.fedoraproject.org/git/?p=rhevm-api.git</url>
+  </scm>
 
   <distributionManagement>
     <repository>
@@ -117,6 +122,8 @@
     <source.plugin.version>2.1.2</source.plugin.version>
     <javadoc.plugin.version>2.7</javadoc.plugin.version>
     <gpg.plugin.version>1.1</gpg.plugin.version>
+    <scm.plugin.version>1.2</scm.plugin.version>
+    <release.plugin.version>2.0</release.plugin.version>
     <felix.karaf.version>1.4.0</felix.karaf.version>
     <felix.compendium.version>1.2.0</felix.compendium.version>
     <felix.osgi.version>1.4.0</felix.osgi.version>
@@ -379,6 +386,32 @@
             <bottom>Copyright © 2010 Red Hat, Inc - released under the GNU Lesser General Public License</bottom>
             <javadocVersion>1.6</javadocVersion>
             <encoding>UTF-8</encoding>
+          </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-scm-plugin</artifactId>
+          <version>${scm.plugin.version}</version>
+          <dependencies>
+            <dependency>
+              <groupId>org.apache.maven.scm</groupId>
+              <artifactId>maven-scm-provider-gitexe</artifactId>
+              <version>${scm.plugin.version}</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>${release.plugin.version}</version>
+          <configuration>
+            <useReleaseProfile>false</useReleaseProfile>
+            <preparationGoals>clean install</preparationGoals>
+            <goals>deploy</goals>
+            <arguments>-Pall,sign</arguments>
+            <autoVersionSubmodules>true</autoVersionSubmodules>
           </configuration>
         </plugin>
 
