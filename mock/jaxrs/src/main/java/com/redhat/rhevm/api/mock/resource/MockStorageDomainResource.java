@@ -20,7 +20,6 @@ package com.redhat.rhevm.api.mock.resource;
 
 import java.util.concurrent.Executor;
 
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -86,8 +85,8 @@ public class MockStorageDomainResource extends AbstractMockResource<StorageDomai
     }
 
     @Override
-    public StorageDomain update(HttpHeaders headers, UriInfo uriInfo, StorageDomain storageDomain) {
-        validateUpdate(storageDomain, headers);
+    public StorageDomain update(UriInfo uriInfo, StorageDomain storageDomain) {
+        validateUpdate(storageDomain);
         updateModel(storageDomain);
         return addLinks();
     }

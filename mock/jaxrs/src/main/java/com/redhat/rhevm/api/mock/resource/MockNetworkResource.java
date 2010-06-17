@@ -20,7 +20,6 @@ package com.redhat.rhevm.api.mock.resource;
 
 import java.util.concurrent.Executor;
 
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
@@ -60,8 +59,8 @@ public class MockNetworkResource extends AbstractMockResource<Network> implement
     }
 
     @Override
-    public Network update(HttpHeaders headers, UriInfo uriInfo, Network network) {
-        validateUpdate(network, headers);
+    public Network update(UriInfo uriInfo, Network network) {
+        validateUpdate(network);
         updateModel(network);
         return addLinks();
     }

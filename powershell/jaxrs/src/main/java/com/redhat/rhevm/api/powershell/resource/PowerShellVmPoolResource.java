@@ -21,7 +21,6 @@ package com.redhat.rhevm.api.powershell.resource;
 import java.util.ArrayList;
 import java.util.concurrent.Executor;
 
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
@@ -108,8 +107,8 @@ public class PowerShellVmPoolResource extends AbstractActionableResource<VmPool>
     }
 
     @Override
-    public VmPool update(HttpHeaders headers, UriInfo uriInfo, VmPool pool) {
-        validateUpdate(pool, headers);
+    public VmPool update(UriInfo uriInfo, VmPool pool) {
+        validateUpdate(pool);
 
         StringBuilder buf = new StringBuilder();
 

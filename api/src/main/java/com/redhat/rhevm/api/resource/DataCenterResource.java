@@ -24,7 +24,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.DataCenter;
@@ -40,7 +39,7 @@ public interface DataCenterResource extends UpdatableResource<DataCenter> {
 
     @PUT
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
-    public DataCenter update(@Context HttpHeaders headers, @Context UriInfo uriInfo, DataCenter dataCenter);
+    public DataCenter update(@Context UriInfo uriInfo, DataCenter dataCenter);
 
     @Path("isos")
     public IsosResource getIsosResource();

@@ -20,7 +20,6 @@ package com.redhat.rhevm.api.mock.resource;
 
 import java.util.concurrent.Executor;
 
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -66,8 +65,8 @@ public class MockHostResource extends AbstractMockResource<Host> implements Host
     }
 
     @Override
-    public Host update(HttpHeaders headers, UriInfo uriInfo, Host host) {
-        validateUpdate(host, headers);
+    public Host update(UriInfo uriInfo, Host host) {
+        validateUpdate(host);
         updateModel(host);
         return addLinks();
     }

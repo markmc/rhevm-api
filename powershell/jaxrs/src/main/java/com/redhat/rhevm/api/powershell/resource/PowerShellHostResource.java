@@ -21,7 +21,6 @@ package com.redhat.rhevm.api.powershell.resource;
 import java.util.ArrayList;
 import java.util.concurrent.Executor;
 
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -62,8 +61,8 @@ public class PowerShellHostResource extends AbstractActionableResource<Host> imp
     }
 
     @Override
-    public Host update(HttpHeaders headers, UriInfo uriInfo, Host host) {
-        validateUpdate(host, headers);
+    public Host update(UriInfo uriInfo, Host host) {
+        validateUpdate(host);
 
         StringBuilder buf = new StringBuilder();
 

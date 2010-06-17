@@ -20,7 +20,6 @@ package com.redhat.rhevm.api.mock.resource;
 
 import java.util.concurrent.Executor;
 
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.ActionsBuilder;
@@ -78,8 +77,8 @@ public class MockClusterResource extends AbstractMockResource<Cluster> implement
     }
 
     @Override
-    public Cluster update(HttpHeaders headers, UriInfo uriInfo, Cluster cluster) {
-        validateUpdate(cluster, headers);
+    public Cluster update(UriInfo uriInfo, Cluster cluster) {
+        validateUpdate(cluster);
         updateModel(cluster);
         return addLinks();
     }

@@ -18,7 +18,6 @@
  */
 package com.redhat.rhevm.api.common.resource;
 
-import javax.ws.rs.core.HttpHeaders;
 
 import com.redhat.rhevm.api.model.BaseResource;
 import com.redhat.rhevm.api.model.ObjectFactory;
@@ -53,13 +52,12 @@ public abstract class AbstractUpdatableResource<R extends BaseResource> {
      *
      * @param incoming  the incoming resource representation
      * @param existing  the existing resource representation
-     * @param headers   the incoming HTTP headers
      * @throws WebApplicationException wrapping an appropriate response
      * iff an immutability constraint has been broken
      */
-    protected void validateUpdate(R incoming, HttpHeaders headers) {
+    protected void validateUpdate(R incoming) {
         refresh();
-        MutabilityAssertor.validateUpdate(getStrictlyImmutable(), incoming, model, headers);
+        MutabilityAssertor.validateUpdate(getStrictlyImmutable(), incoming, model);
     }
 
     public void setId(String id) {

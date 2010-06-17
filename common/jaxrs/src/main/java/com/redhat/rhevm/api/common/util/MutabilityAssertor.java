@@ -22,8 +22,6 @@ package com.redhat.rhevm.api.common.util;
 import java.text.MessageFormat;
 
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.redhat.rhevm.api.model.BaseResource;
@@ -56,12 +54,11 @@ public class MutabilityAssertor {
      * @param strict    array of strictly immutable field names
      * @param incoming  the incoming Host representation
      * @param existing  the existing Host representation
-     * @param headers   the incoming HTTP headers
      * @throws WebApplicationException wrapping an appropriate response
      * iff an immutability constraint has been broken
      */
-    public static <T extends BaseResource> void validateUpdate(String[] strict, T incoming, T existing, HttpHeaders headers) {
-        Response error = MutabilityAssertor.imposeConstraints(strict, incoming, existing, headers);
+    public static <T extends BaseResource> void validateUpdate(String[] strict, T incoming, T existing) {
+        Response error = imposeConstraints(strict, incoming, existing);
         if (error != null) {
             throw new WebApplicationException(error);
         }
@@ -77,35 +74,18 @@ public class MutabilityAssertor {
      * @param headers   the incoming HTTP headers
      * @return          error Response if appropriate
      */
-    public static <T extends BaseResource> Response imposeConstraints(String[] strict, T incoming, T existing, HttpHeaders headers) {
+    public static <T extends BaseResource> Response imposeConstraints(String[] strict, T incoming, T existing) {
         for (String s: strict) {
             String field = capitalize(s);
             if (isSet(incoming, field) && different(incoming, existing, field)) {
                 Fault fault = new Fault();
                 fault.setReason(BROKEN_CONSTRAINT_REASON);
                 fault.setDetail(MessageFormat.format(BROKEN_CONSTRAINT_DETAIL, s));
-                return buildFaultResponse(headers, fault);
+                return Response.status(BROKEN_CONSTRAINT_STATUS)
+                               .entity(fault)
+                               .build();
             }
         }
         return null;
-    }
-
-    private static Response buildFaultResponse(HttpHeaders headers, Fault fault) {
-        // an apparent bug in RESTeasy results in the entity being marshalled
-        // as yaml regardless of the normal content negotiation rules, hence
-        // the explicit setting of the Content-Type header on the response
-        //
-        return Response.status(BROKEN_CONSTRAINT_STATUS)
-                       .header("Content-Type", getContentType(headers))
-                       .entity(fault)
-                       .build();
-    }
-
-    private static String getContentType(HttpHeaders headers) {
-        return headers.getAcceptableMediaTypes() != null && headers.getAcceptableMediaTypes().size() > 0
-              ? headers.getAcceptableMediaTypes().get(0).toString()
-              : headers.getMediaType() != null
-                ? headers.getMediaType().toString()
-                : MediaType.APPLICATION_XML;
     }
 }

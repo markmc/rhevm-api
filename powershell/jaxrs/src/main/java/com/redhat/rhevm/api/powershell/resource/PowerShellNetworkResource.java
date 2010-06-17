@@ -21,7 +21,6 @@ package com.redhat.rhevm.api.powershell.resource;
 import java.util.ArrayList;
 import java.util.concurrent.Executor;
 
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -67,8 +66,8 @@ public class PowerShellNetworkResource extends AbstractActionableResource<Networ
     }
 
     @Override
-    public Network update(HttpHeaders headers, UriInfo uriInfo, Network network) {
-        validateUpdate(network, headers);
+    public Network update(UriInfo uriInfo, Network network) {
+        validateUpdate(network);
 
         StringBuilder buf = new StringBuilder();
 

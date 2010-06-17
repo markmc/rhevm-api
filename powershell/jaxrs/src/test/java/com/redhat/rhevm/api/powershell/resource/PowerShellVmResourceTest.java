@@ -18,16 +18,10 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 import java.text.MessageFormat;
 
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Action;
@@ -44,7 +38,6 @@ import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import org.junit.Test;
 
 import static org.easymock.classextension.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.isA;
 
 import static org.powermock.api.easymock.PowerMock.createMock;
 import static org.powermock.api.easymock.PowerMock.mockStatic;
@@ -81,8 +74,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     @Test
     public void testGoodUpdate() throws Exception {
         verifyVM(
-            resource.update(createMock(HttpHeaders.class),
-                            setUpVmExpectations(UPDATE_COMMAND, UPDATE_RETURN, NEW_NAME),
+            resource.update(setUpVmExpectations(UPDATE_COMMAND, UPDATE_RETURN, NEW_NAME),
                             getVM(NEW_NAME)),
             NEW_NAME);
     }
@@ -91,8 +83,8 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     public void testBadUpdate() throws Exception {
         try {
             UriInfo uriInfo = createMock(UriInfo.class);
-            resource.update(setUpHeadersExpectation(),
-                            uriInfo,
+            replayAll();
+            resource.update(uriInfo,
                             getVM(BAD_ID, NEW_NAME));
             fail("expected WebApplicationException on bad update");
         } catch (WebApplicationException wae) {
@@ -186,15 +178,6 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
 
     private UriInfo setUpActionExpectation(String verb, String command) throws Exception {
         return setUpActionExpectation(verb, command, true);
-    }
-
-    private HttpHeaders setUpHeadersExpectation() {
-        HttpHeaders headers = createMock(HttpHeaders.class);
-        List<MediaType> mediaTypes = new ArrayList<MediaType>();
-        mediaTypes.add(MediaType.APPLICATION_XML_TYPE);
-        expect(headers.getAcceptableMediaTypes()).andReturn(mediaTypes).anyTimes();
-        replayAll();
-        return headers;
     }
 
     private VM getVM(String name) {

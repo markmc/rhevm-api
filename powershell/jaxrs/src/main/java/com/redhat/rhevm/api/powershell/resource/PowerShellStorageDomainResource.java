@@ -20,7 +20,6 @@ package com.redhat.rhevm.api.powershell.resource;
 
 import java.util.ArrayList;
 
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -165,8 +164,8 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
     }
 
     @Override
-    public StorageDomain update(HttpHeaders headers, final UriInfo uriInfo, StorageDomain storageDomain) {
-        validateUpdate(storageDomain, headers);
+    public StorageDomain update(final UriInfo uriInfo, StorageDomain storageDomain) {
+        validateUpdate(storageDomain);
 
         StringBuilder buf = new StringBuilder();
         if (staged != null) {

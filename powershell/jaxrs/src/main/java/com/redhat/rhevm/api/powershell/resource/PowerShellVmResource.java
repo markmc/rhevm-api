@@ -21,7 +21,6 @@ package com.redhat.rhevm.api.powershell.resource;
 import java.util.ArrayList;
 import java.util.concurrent.Executor;
 
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -91,8 +90,8 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
     }
 
     @Override
-    public VM update(HttpHeaders headers, UriInfo uriInfo, VM vm) {
-        validateUpdate(vm, headers);
+    public VM update(UriInfo uriInfo, VM vm) {
+        validateUpdate(vm);
 
         StringBuilder buf = new StringBuilder();
 

@@ -18,14 +18,7 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.DataCenter;
@@ -37,7 +30,6 @@ import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import org.junit.Test;
 
 import static org.easymock.classextension.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.isA;
 
 import static org.powermock.api.easymock.PowerMock.createMock;
 import static org.powermock.api.easymock.PowerMock.mockStatic;
@@ -65,8 +57,7 @@ public class PowerShellNetworkResourceTest extends AbstractPowerShellResourceTes
     @Test
     public void testGoodUpdate() throws Exception {
         verifyNetwork(
-            resource.update(createMock(HttpHeaders.class),
-                            setUpNetworkExpectations(UPDATE_COMMAND, UPDATE_RETURN, "eris"),
+            resource.update(setUpNetworkExpectations(UPDATE_COMMAND, UPDATE_RETURN, "eris"),
                             getNetwork("eris")),
             "eris");
     }
@@ -75,8 +66,8 @@ public class PowerShellNetworkResourceTest extends AbstractPowerShellResourceTes
     public void testBadUpdate() throws Exception {
         try {
             UriInfo uriInfo = createMock(UriInfo.class);
-            resource.update(setUpHeadersExpectation(),
-                            uriInfo,
+            replayAll();
+            resource.update(uriInfo,
                             getNetwork("98765", "eris"));
             fail("expected WebApplicationException on bad update");
         } catch (WebApplicationException wae) {
@@ -89,15 +80,6 @@ public class PowerShellNetworkResourceTest extends AbstractPowerShellResourceTes
         expect(PowerShellCmd.runCommand(command)).andReturn(ret);
         replayAll();
         return null;
-    }
-
-    private HttpHeaders setUpHeadersExpectation() {
-        HttpHeaders headers = createMock(HttpHeaders.class);
-        List<MediaType> mediaTypes = new ArrayList<MediaType>();
-        mediaTypes.add(MediaType.APPLICATION_XML_TYPE);
-        expect(headers.getAcceptableMediaTypes()).andReturn(mediaTypes).anyTimes();
-        replayAll();
-        return headers;
     }
 
     private Network getNetwork(String name) {

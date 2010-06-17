@@ -20,7 +20,6 @@ package com.redhat.rhevm.api.mock.resource;
 
 import java.util.concurrent.Executor;
 
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -81,8 +80,8 @@ public class MockVmResource extends AbstractMockResource<VM> implements VmResour
     }
 
     @Override
-    public VM update(HttpHeaders headers, UriInfo uriInfo, VM vm) {
-        validateUpdate(vm, headers);
+    public VM update(UriInfo uriInfo, VM vm) {
+        validateUpdate(vm);
         updateModel(vm);
         return addLinks();
     }

@@ -21,7 +21,6 @@ package com.redhat.rhevm.api.powershell.resource;
 import java.util.ArrayList;
 import java.util.concurrent.Executor;
 
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Cluster;
@@ -69,8 +68,8 @@ public class PowerShellClusterResource extends AbstractActionableResource<Cluste
     }
 
     @Override
-    public Cluster update(HttpHeaders headers, UriInfo uriInfo, Cluster cluster) {
-        validateUpdate(cluster, headers);
+    public Cluster update(UriInfo uriInfo, Cluster cluster) {
+        validateUpdate(cluster);
 
         StringBuilder buf = new StringBuilder();
 

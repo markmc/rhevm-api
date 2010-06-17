@@ -19,12 +19,8 @@
 package com.redhat.rhevm.api.powershell.resource;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -69,8 +65,7 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
     @Test
     public void testGoodUpdate() throws Exception {
         verifyHost(
-            resource.update(createMock(HttpHeaders.class),
-                            setUpHostExpectations(UPDATE_COMMAND, UPDATE_RETURN, "eris"),
+            resource.update(setUpHostExpectations(UPDATE_COMMAND, UPDATE_RETURN, "eris"),
                             getHost("eris")),
             "eris");
     }
@@ -79,8 +74,8 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
     public void testBadUpdate() throws Exception {
         try {
             UriInfo uriInfo = createMock(UriInfo.class);
-            resource.update(setUpHeadersExpectation(),
-                            uriInfo,
+            replayAll();
+            resource.update(uriInfo,
                             getHost("98765", "eris"));
             fail("expected WebApplicationException on bad update");
         } catch (WebApplicationException wae) {
@@ -167,15 +162,6 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
 
     private UriInfo setUpActionExpectation(String verb, String command) throws Exception {
         return setUpActionExpectation("/hosts/12345/", verb, command + " -hostid '12345'", ACTION_RETURN);
-    }
-
-    private HttpHeaders setUpHeadersExpectation() {
-        HttpHeaders headers = createMock(HttpHeaders.class);
-        List<MediaType> mediaTypes = new ArrayList<MediaType>();
-        mediaTypes.add(MediaType.APPLICATION_XML_TYPE);
-        expect(headers.getAcceptableMediaTypes()).andReturn(mediaTypes).anyTimes();
-        replayAll();
-        return headers;
     }
 
     private Host getHost(String name) {

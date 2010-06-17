@@ -18,21 +18,7 @@
  */
 package com.redhat.rhevm.api.resource;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.UriInfo;
-
 import com.redhat.rhevm.api.model.Network;
 
-public interface NetworkResource /* extends UpdatableResource<Network> */ {
-
-    @GET
-    public Network get(@Context UriInfo uriInfo);
-
-    @PUT
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
-    public Network update(@Context HttpHeaders headers, @Context UriInfo uriInfo, Network network);
+public interface NetworkResource extends UpdatableResource<Network> {
 }
