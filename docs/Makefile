@@ -12,3 +12,6 @@ pdf:
 
 clean:
 	publican clean
+
+upload:
+	rsync -e ssh -vaPz --del --exclude=xml* tmp/en-US fedorapeople.org:./public_html/rhevm-api/
