@@ -11,16 +11,6 @@
   <fileSets>
 
     <fileSet>
-      <directory>${basedir}/src/main/release</directory>
-      <outputDirectory>/</outputDirectory>
-      <includes>
-        <include>README</include>
-        <include>NOTICE</include>
-        <include>LICENSE</include>
-      </includes>
-    </fileSet>
-
-    <fileSet>
       <directory>${basedir}/target/dependencies/lib</directory>
       <outputDirectory>/lib</outputDirectory>
     </fileSet>
@@ -79,6 +69,30 @@
   <files>
 
     <file>
+      <source>${basedir}/src/main/release/README</source>
+      <outputDirectory>/</outputDirectory>
+      <destName>README${text.extension}</destName>
+      <fileMode>0644</fileMode>
+      <lineEnding>${line.ending}</lineEnding>
+    </file>
+
+    <file>
+      <source>${basedir}/src/main/release/NOTICE</source>
+      <outputDirectory>/</outputDirectory>
+      <destName>NOTICE${text.extension}</destName>
+      <fileMode>0644</fileMode>
+      <lineEnding>${line.ending}</lineEnding>
+    </file>
+
+    <file>
+      <source>${basedir}/src/main/release/LICENSE</source>
+      <outputDirectory>/</outputDirectory>
+      <destName>LICENSE${text.extension}</destName>
+      <fileMode>0644</fileMode>
+      <lineEnding>${line.ending}</lineEnding>
+    </file>
+
+    <file>
       <source>${basedir}/src/main/release/rhevm-admin/bin/rhevm-admin${shell.extension}</source>
       <outputDirectory>/rhevm-admin/bin</outputDirectory>
       <destName>rhevm-admin${shell.extension}</destName>
@@ -105,7 +119,7 @@
     <file>
       <source>${basedir}/src/main/release/rhevm-admin/README${text.extension}</source>
       <outputDirectory>/rhevm-admin</outputDirectory>
-      <destName>README</destName>
+      <destName>README${text.extension}</destName>
       <fileMode>0644</fileMode>
       <lineEnding>${line.ending}</lineEnding>
     </file>
