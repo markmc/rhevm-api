@@ -20,23 +20,34 @@ package com.redhat.rhevm.api.command.datacenters;
 
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
+import org.apache.felix.gogo.commands.Option;
 
-import com.redhat.rhevm.api.command.base.AbstractRemoveCommand;
-import com.redhat.rhevm.api.model.BaseResource;
+import com.redhat.rhevm.api.command.base.AbstractAddCommand;
+
 import com.redhat.rhevm.api.model.DataCenter;
-import com.redhat.rhevm.api.model.DataCenters;
+import com.redhat.rhevm.api.model.StorageType;
 
 /**
- * Removes a Data Center
+ * Add a new Data Center.
  */
-@Command(scope = "datacenters", name = "remove", description = "Removes a Data Center.")
-public class DataCentersRemoveCommand extends AbstractRemoveCommand {
+@Command(scope = "datacenters", name = "add", description = "Add a new Data Center")
+public class DataCentersAddCommand extends AbstractAddCommand<DataCenter> {
 
-    @Argument(index = 0, name = "name", description = "The name of the Data Center", required = true, multiValued = false)
+    @Argument(index = 0, name = "name", description = "Name of the Data Center to add", required = true, multiValued = false)
     protected String name;
 
+    @Option(name = "-t", aliases = { "--type" }, description = "Storage type (ISCSI, FCP, or NFS)", required = true, multiValued = false)
+    private String type;
+
     protected Object doExecute() throws Exception {
-        doRemove(client.getCollection("datacenters", DataCenters.class).getDataCenters(), DataCenter.class, name);
+        display(doAdd(getModel(), DataCenter.class, "datacenters", "data_center"));
         return null;
+    }
+
+    protected DataCenter getModel() {
+        DataCenter model = new DataCenter();
+        model.setName(name);
+        model.setStorageType(StorageType.valueOf(type));
+        return model;
     }
 }

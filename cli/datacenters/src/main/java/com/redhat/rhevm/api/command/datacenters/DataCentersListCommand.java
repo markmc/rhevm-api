@@ -27,13 +27,13 @@ import com.redhat.rhevm.api.model.DataCenters;
 /**
  * Displays the DataCenters
  */
-@Command(scope = "datacenters", name = "list", description = "Lists DataCenters.")
+@Command(scope = "datacenters", name = "list", description = "Lists Data Centers.")
 public class DataCentersListCommand extends AbstractListCommand {
 
-    @Option(name = "-b", aliases = {"--bound"}, description="Upper bound on number of DataCenters to display", required = false, multiValued = false)
+    @Option(name = "-b", aliases = {"--bound"}, description="Upper bound on number of Data Centers to display", required = false, multiValued = false)
     protected int limit = Integer.MAX_VALUE;
 
-    @Option(name = "-s", aliases = {"--search"}, description="Query constraint on DataCenters", required = false, multiValued = false)
+    @Option(name = "-s", aliases = {"--search"}, description="Query constraint on Data Centers", required = false, multiValued = false)
     protected String constraint;
 
     protected Object doExecute() throws Exception {

@@ -14,7 +14,11 @@
         <property name="client" ref="baseClient" />
       </action>
     </command>
-
+    <command name="datacenters/add">
+      <action class="com.redhat.rhevm.api.command.datacenters.DataCentersAddCommand">
+        <property name="client" ref="baseClient" />
+      </action>
+    </command>
     <command name="datacenters/remove">
       <action class="com.redhat.rhevm.api.command.datacenters.DataCentersRemoveCommand">
         <property name="client" ref="baseClient" />
