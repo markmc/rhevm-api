@@ -14,7 +14,11 @@
         <property name="client" ref="baseClient" />
       </action>
     </command>
-
+    <command name="hosts/add">
+      <action class="com.redhat.rhevm.api.command.hosts.HostsAddCommand">
+        <property name="client" ref="baseClient" />
+      </action>
+    </command>
     <command name="hosts/remove">
       <action class="com.redhat.rhevm.api.command.hosts.HostsRemoveCommand">
         <property name="client" ref="baseClient" />
