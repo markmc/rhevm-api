@@ -19,13 +19,10 @@
 package com.redhat.rhevm.api.resource;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.POST;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response;
 
@@ -39,19 +36,12 @@ import com.redhat.rhevm.api.model.NIC;
 import com.redhat.rhevm.api.model.Nics;
 import com.redhat.rhevm.api.model.VM;
 
-public interface VmResource /* extends UpdatableResource<VM> */ {
+public interface VmResource extends UpdatableResource<VM> {
 
     /* FIXME: can we make uriInfo a field instead of a parameter to
      *        each method? Adding @Context to the implementation
      *        class doesn't seem to work.
      */
-
-    @GET
-    public VM get(@Context UriInfo uriInfo);
-
-    @PUT
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
-    public VM update(@Context HttpHeaders headers, @Context UriInfo uriInfo, VM vm);
 
     @Path("{action: (start|stop|shutdown|suspend|detach)}/{oid}")
     public ActionResource getActionSubresource(@PathParam("action")String action, @PathParam("oid")String oid);

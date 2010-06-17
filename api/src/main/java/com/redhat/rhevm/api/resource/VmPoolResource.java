@@ -18,21 +18,7 @@
  */
 package com.redhat.rhevm.api.resource;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.UriInfo;
-
 import com.redhat.rhevm.api.model.VmPool;
 
-public interface VmPoolResource /* extends UpdatableResource<VM> */ {
-
-    @GET
-    public VmPool get(@Context UriInfo uriInfo);
-
-    @PUT
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
-    public VmPool update(@Context HttpHeaders headers, @Context UriInfo uriInfo, VmPool pool);
+public interface VmPoolResource extends UpdatableResource<VmPool> {
 }

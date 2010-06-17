@@ -18,22 +18,8 @@
  */
 package com.redhat.rhevm.api.resource;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.UriInfo;
-
 import com.redhat.rhevm.api.model.Cluster;
 
 
-public interface ClusterResource /* extends UpdatableResource<Cluster> */ {
-
-    @GET
-    public Cluster get(@Context UriInfo uriInfo);
-
-    @PUT
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
-    public Cluster update(@Context HttpHeaders headers, @Context UriInfo uriInfo, Cluster cluster);
+public interface ClusterResource extends UpdatableResource<Cluster> {
 }

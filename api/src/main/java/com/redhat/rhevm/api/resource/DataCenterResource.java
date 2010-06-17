@@ -29,7 +29,7 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.DataCenter;
 
-public interface DataCenterResource /* extends UpdatableResource<DataCenter> */ {
+public interface DataCenterResource extends UpdatableResource<DataCenter> {
     /* FIXME: can we make uriInfo a field instead of a parameter to
      *        each method? Adding @Context to the implementation
      *        class doesn't seem to work.

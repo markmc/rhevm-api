@@ -24,7 +24,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.Templates;
 
 @Path("/templates")
