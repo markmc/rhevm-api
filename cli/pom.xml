@@ -19,6 +19,7 @@
     <module>hosts</module>
     <module>datacenters</module>
     <module>clusters</module>
+    <module>storagedomains</module>
     <module>feature</module>
   </modules>
 
