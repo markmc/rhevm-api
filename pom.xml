@@ -34,23 +34,19 @@
     <module>powershell</module>
     <module>mock</module>
     <module>cli</module>
-    <module>${extra.module}</module>
   </modules>
 
   <profiles>
 
     <profile>
-      <id>integration</id>
-      <properties>
-        <extra.module>distribution</extra.module>
-      </properties>
+      <id>all</id>
+      <modules>
+        <module>distribution</module>
+      </modules>
     </profile>
 
     <profile>
-      <id>all</id>
-      <modules>
-        <module>distribution/assembly</module>
-      </modules>
+      <id>sources</id>
       <build>
         <defaultGoal>install</defaultGoal>
         <plugins>
@@ -83,10 +79,19 @@
     </profile>
 
     <profile>
-      <id>sign</id>
+      <id>release</id>
       <build>
-        <defaultGoal>install</defaultGoal>
         <plugins>
+
+          <plugin>
+            <inherited>true</inherited>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <version>2.4</version>
+            <configuration>
+              <updateReleaseInfo>true</updateReleaseInfo>
+            </configuration>
+          </plugin>
+
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
@@ -108,7 +113,6 @@
   </profiles>
 
   <properties>
-    <extra.module>null</extra.module>
     <junit.version>4.8.1</junit.version>
     <javax.servlet.api.version>2.5</javax.servlet.api.version>
     <commons-logging.version>1.1.1</commons-logging.version>
@@ -403,13 +407,19 @@
 
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>2.4</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-release-plugin</artifactId>
           <version>${release.plugin.version}</version>
           <configuration>
             <useReleaseProfile>false</useReleaseProfile>
             <preparationGoals>clean install</preparationGoals>
             <goals>deploy</goals>
-            <arguments>-Pall,sign</arguments>
+            <arguments>-Psources,release</arguments>
             <autoVersionSubmodules>true</autoVersionSubmodules>
           </configuration>
         </plugin>
