@@ -5,6 +5,38 @@
 ]>
 <chapter id="chap-REST_API_Guide-Templates">
   <title>Templates</title>
+
   <para>
+    The template specific elements which may be contained in the template description are as follows:
+
+    <informaltable frame="none">
+      <tgroup cols="2">
+        <colspec colwidth="2*"/>
+        <colspec colwidth="5*"/>
+        <tbody>
+          <row>
+            <entry><literal></literal></entry>
+            <entry></entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+
+    For example:
   </para>
+
+  <screen>
+&lt;template id="00000000-0000-0000-0000-000000000000" href="templates/00000000-0000-0000-0000-000000000000"&gt;
+  &lt;name&gt;Blank&lt;/name&gt;
+  &lt;description&gt;Blank template&lt;/description&gt;
+  &lt;actions/&gt;
+&lt;/template&gt;
+  </screen>
+
+  <note>
+    <para>
+      Templates are a read-only resource. Creating new templates and updating or deleting existing templates is not yet supported.
+    </para>
+  </note>
+
 </chapter>

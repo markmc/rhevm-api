@@ -5,6 +5,47 @@
 ]>
 <chapter id="chap-REST_API_Guide-VM_Pools">
   <title>VM Pools</title>
+
   <para>
+    The VM pool specific elements which may be contained in the VM pool description are as follows:
+
+    <informaltable frame="none">
+      <tgroup cols="2">
+        <colspec colwidth="2*"/>
+        <colspec colwidth="5*"/>
+        <tbody>
+          <row>
+            <entry><literal>size</literal></entry>
+            <entry>The number of VMs in the pool</entry>
+          </row>
+          <row>
+            <entry><literal>cluster</literal></entry>
+            <entry>A reference to the cluster which VMs in this pool run on</entry>
+          </row>
+          <row>
+            <entry><literal>template</literal></entry>
+            <entry>A reference to the template which VMs in this pool are based on</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+
+    For example:
   </para>
+
+  <screen>
+&lt;vmpool id="0" href="vmpools/0"&gt;
+  &lt;name&gt;test&lt;/name&gt;
+  &lt;description&gt;Testing, Testing&lt;/description&gt;
+  &lt;size&gt;0&lt;/size&gt;
+  &lt;cluster id="0" href="clusters/0"/&gt;
+  &lt;template id="00000000-0000-0000-0000-000000000000" href="templates/00000000-0000-0000-0000-000000000000"/&gt;
+  &lt;actions/&gt;
+&lt;/vmpool&gt;
+  </screen>
+
+  <para>
+    When creating a new VM pool, the <literal>name</literal>, <literal>template id</literal> and <literal>cluster id</literal> properties are required. Only the <literal>name</literal>, <literal>description</literal> and <literal>size</literal> elements may be updated post-creation.
+  </para>
+
 </chapter>
