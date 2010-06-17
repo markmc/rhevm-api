@@ -26,6 +26,7 @@ import java.util.Map;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.namespace.QName;
 import javax.xml.transform.stream.StreamSource;
 import javax.ws.rs.core.Response;
 
@@ -135,14 +136,14 @@ public class BaseClient {
         return ret;
     }
 
-    public <T extends BaseResource> T doAdd(T resource, Class<T> clz, String href) throws Exception {
+    public <T extends BaseResource> T doAdd(T resource, Class<T> clz, String href, String localName) throws Exception {
         Response r = null;
         Exception failure = null;
         T ret = null;
 
         try {
             WebClient post = WebClient.create(absolute(href));
-            r = post.path("/").post(resource);
+            r = post.path("/").post(new JAXBElement<T>(new QName("", localName), clz, null, resource));
             ret = unmarshall(r, clz);
         } catch (Exception e) {
             failure = e;

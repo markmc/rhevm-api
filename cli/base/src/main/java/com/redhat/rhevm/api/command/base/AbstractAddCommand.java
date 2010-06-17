@@ -31,9 +31,9 @@ public abstract class AbstractAddCommand<T extends BaseResource> extends Abstrac
     @Option(name = "-d", aliases = { "--description" }, description = "Description of the new entity", required = false, multiValued = false)
     private String description;
 
-    protected T doAdd(T addition, Class<T> clz) throws Exception {
+    protected T doAdd(T addition, Class<T> clz, String rel, String localName) throws Exception {
         addition.setDescription(description);
-        return client.doAdd(addition, clz, client.getTopLink("vms"));
+        return client.doAdd(addition, clz, client.getTopLink(rel), localName);
     }
 
     protected void display(T model) {

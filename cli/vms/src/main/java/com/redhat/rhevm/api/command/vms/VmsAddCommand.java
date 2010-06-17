@@ -59,36 +59,34 @@ public class VmsAddCommand extends AbstractAddCommand<VM> {
     private String boot;
 
     protected Object doExecute() throws Exception {
-        VM vm = getModel();
-        vm = doAdd(vm, VM.class);
-        display(vm);
+        display(doAdd(getModel(), VM.class, "vms", "vm"));
         return null;
     }
 
     protected VM getModel() {
-        VM vm = new VM();
-        vm.setName(name);
-        vm.setTemplate(new Template());
-        vm.getTemplate().setName(template);
-        vm.setCluster(new Cluster());
-        vm.getCluster().setName(cluster);
+        VM model = new VM();
+        model.setName(name);
+        model.setTemplate(new Template());
+        model.getTemplate().setName(template);
+        model.setCluster(new Cluster());
+        model.getCluster().setName(cluster);
         if (memory != -1) {
-            vm.setMemory(memory * 1024 * 1024L);
+            model.setMemory(memory * 1024 * 1024L);
         }
         if (sockets != -1 || cores != -1) {
-            vm.setCpu(new CPU());
-            vm.getCpu().setTopology(new CpuTopology());
+            model.setCpu(new CPU());
+            model.getCpu().setTopology(new CpuTopology());
             if (sockets != -1) {
-                vm.getCpu().getTopology().setSockets(sockets);
+                model.getCpu().getTopology().setSockets(sockets);
             }
             if (cores != -1) {
-                vm.getCpu().getTopology().setCores(cores);
+                model.getCpu().getTopology().setCores(cores);
             }
         }
         if (boot != null) {
-            vm.setOs(getOs());
+            model.setOs(getOs());
         }
-        return vm;
+        return model;
     }
 
     private OperatingSystem getOs() {
