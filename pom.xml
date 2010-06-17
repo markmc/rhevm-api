@@ -9,6 +9,18 @@
   <name>RHEV-M API Parent POM</name>
   <url>http://fedorahosted.org/rhevm-api/</url>
 
+  <description>
+    RESTful API for Red Hat Enterprise Virtualization Manager
+  </description>
+
+  <licenses>
+    <license>
+      <name>GNU Lesser General Public License, Version 2.1, February 1999</name>
+      <url>${basedir}/distribution/assembly/src/main/release/LICENSE</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
   <scm>
     <connection>scm:git:git://git.fedorahosted.org/rhevm-api.git</connection>
     <developerConnection>scm:git:ssh://git.fedorahosted.org/git/rhevm-api.git</developerConnection>
