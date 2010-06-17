@@ -21,6 +21,21 @@
     </license>
   </licenses>
 
+  <developers>
+    <developer>
+      <id>markmc</id>
+      <name>Mark McLoughlin</name>
+      <email>markmc@redhat.com</email>
+      <organization>Red Hat</organization>
+    </developer>
+    <developer>
+      <id>eglynn</id>
+      <name>Eoghan Glynn</name>
+      <email>eglynn@redhat.com</email>
+      <organization>Red Hat</organization>
+    </developer>
+  </developers>
+
   <scm>
     <connection>scm:git:git://git.fedorahosted.org/rhevm-api.git</connection>
     <developerConnection>scm:git:ssh://git.fedorahosted.org/git/rhevm-api.git</developerConnection>
