@@ -112,7 +112,7 @@
     <junit.version>4.8.1</junit.version>
     <javax.servlet.api.version>2.5</javax.servlet.api.version>
     <commons-logging.version>1.1.1</commons-logging.version>
-    <resteasy.version>2.0-beta-3</resteasy.version>
+    <resteasy.version>2.0-beta-4</resteasy.version>
     <httpunit.version>1.7</httpunit.version>
     <jaxb.plugin.version>1.1.1</jaxb.plugin.version>
     <bundle.plugin.version>2.0.0</bundle.plugin.version>
