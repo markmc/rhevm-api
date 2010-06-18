@@ -18,6 +18,7 @@
  */
 package com.redhat.rhevm.api.powershell.util;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.Scanner;
 
@@ -70,10 +71,23 @@ public class PowerShellCmd {
         return p.exitValue();
     }
 
+    /* On Windows 2008 R2, which is always 64-bit, the PowerShell bindings
+     * are only installed in the  32-bit "Windows on Windows" environment.
+     */
+    private static final String SYSWOW64_PATH = "C:\\Windows\\SysWOW64\\WindowsPowerShell\\v1.0\\powershell.exe";
+
+    private String findPowerShell() {
+        if (new File(SYSWOW64_PATH).exists()) {
+            return SYSWOW64_PATH;
+        } else {
+            return "powershell.exe";
+        }
+    }
+
     public int run() {
         log.debug("Running '" + script + "'");
 
-        ProcessBuilder pb = new ProcessBuilder("powershell", "-command", "-");
+        ProcessBuilder pb = new ProcessBuilder(findPowerShell(), "-command", "-");
 
         Process p;
 
