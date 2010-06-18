@@ -19,6 +19,12 @@
     <felix.framework.version>2.0.4</felix.framework.version>
     <equinox.version>3.5.1.v20090827</equinox.version>
     <servicemix.version>4.2.0</servicemix.version>
+    <servicemix.nmr.version>1.2.0</servicemix.nmr.version>
+    <spring.bundle.version>2.5.6.SEC01</spring.bundle.version>
+    <spring.osgi.version>1.2.0</spring.osgi.version>
+    <aopalliance.version>1.0_3</aopalliance.version>
+    <commons.codec.version>1.3_2</commons.codec.version>
+    <stax.api.version>1.4.0</stax.api.version>
     <abdera.version>0.4.0-incubating_3</abdera.version>
     <karaf.osgi.version>${felix.karaf.version}</karaf.osgi.version>
   </properties>

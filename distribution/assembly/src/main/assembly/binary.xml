@@ -144,12 +144,48 @@
       <outputDirectory>/rhevm-admin/system</outputDirectory>
       <unpack>false</unpack>
       <useProjectArtifact>false</useProjectArtifact>
-      <outputFileNameMapping>org/springframework/${artifact.artifactId}/${artifact.baseVersion}/${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>
+      <outputFileNameMapping>org/springframework/spring-aop/${spring.bundle.version}/spring-aop-${spring.bundle.version}.jar</outputFileNameMapping>
       <includes>
         <include>org.springframework:spring-aop</include>
+      </includes>
+    </dependencySet>
+
+    <dependencySet>
+      <outputDirectory>/rhevm-admin/system</outputDirectory>
+      <unpack>false</unpack>
+      <useProjectArtifact>false</useProjectArtifact>
+      <outputFileNameMapping>org/springframework/spring-beans/${spring.bundle.version}/spring-beans-${spring.bundle.version}.jar</outputFileNameMapping>
+      <includes>
         <include>org.springframework:spring-beans</include>
+      </includes>
+    </dependencySet>
+
+    <dependencySet>
+      <outputDirectory>/rhevm-admin/system</outputDirectory>
+      <unpack>false</unpack>
+      <useProjectArtifact>false</useProjectArtifact>
+      <outputFileNameMapping>org/springframework/spring-context/${spring.bundle.version}/spring-context-${spring.bundle.version}.jar</outputFileNameMapping>
+      <includes>
         <include>org.springframework:spring-context</include>
+      </includes>
+    </dependencySet>
+
+    <dependencySet>
+      <outputDirectory>/rhevm-admin/system</outputDirectory>
+      <unpack>false</unpack>
+      <useProjectArtifact>false</useProjectArtifact>
+      <outputFileNameMapping>org/springframework/spring-core/${spring.bundle.version}/spring-core-${spring.bundle.version}.jar</outputFileNameMapping>
+      <includes>
         <include>org.springframework:spring-core</include>
+      </includes>
+    </dependencySet>
+
+    <dependencySet>
+      <outputDirectory>/rhevm-admin/system</outputDirectory>
+      <unpack>false</unpack>
+      <useProjectArtifact>false</useProjectArtifact>
+      <outputFileNameMapping>org/springframework/spring-tx/${spring.bundle.version}/spring-tx-${spring.bundle.version}.jar</outputFileNameMapping>
+      <includes>
         <include>org.springframework:spring-tx</include>
       </includes>
     </dependencySet>
@@ -158,10 +194,28 @@
       <outputDirectory>/rhevm-admin/system</outputDirectory>
       <unpack>false</unpack>
       <useProjectArtifact>false</useProjectArtifact>
-      <outputFileNameMapping>org/springframework/osgi/${artifact.artifactId}/${artifact.baseVersion}/${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>
+      <outputFileNameMapping>org/springframework/osgi/spring-osgi-core/${spring.osgi.version}/spring-osgi-core-${spring.osgi.version}.jar</outputFileNameMapping>
       <includes>
         <include>org.springframework.osgi:spring-osgi-core</include>
+      </includes>
+    </dependencySet>
+
+    <dependencySet>
+      <outputDirectory>/rhevm-admin/system</outputDirectory>
+      <unpack>false</unpack>
+      <useProjectArtifact>false</useProjectArtifact>
+      <outputFileNameMapping>org/springframework/osgi/spring-osgi-extender/${spring.osgi.version}/spring-osgi-extender-${spring.osgi.version}.jar</outputFileNameMapping>
+      <includes>
         <include>org.springframework.osgi:spring-osgi-extender</include>
+      </includes>
+    </dependencySet>
+
+    <dependencySet>
+      <outputDirectory>/rhevm-admin/system</outputDirectory>
+      <unpack>false</unpack>
+      <useProjectArtifact>false</useProjectArtifact>
+      <outputFileNameMapping>org/springframework/osgi/spring-osgi-io/${spring.osgi.version}/spring-osgi-io-${spring.osgi.version}.jar</outputFileNameMapping>
+      <includes>
         <include>org.springframework.osgi:spring-osgi-io</include>
       </includes>
     </dependencySet>
@@ -170,9 +224,18 @@
       <outputDirectory>/rhevm-admin/system</outputDirectory>
       <unpack>false</unpack>
       <useProjectArtifact>false</useProjectArtifact>
-      <outputFileNameMapping>org/apache/servicemix/bundles/${artifact.artifactId}/${artifact.baseVersion}/${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>
+      <outputFileNameMapping>org/apache/servicemix/bundles/org.apache.servicemix.bundles.aopalliance/${aopalliance.version}/org.apache.servicemix.bundles.aopalliance-${aopalliance.version}.jar</outputFileNameMapping>
       <includes>
         <include>org.apache.servicemix.bundles:org.apache.servicemix.bundles.aopalliance</include>
+      </includes>
+    </dependencySet>
+
+    <dependencySet>
+      <outputDirectory>/rhevm-admin/system</outputDirectory>
+      <unpack>false</unpack>
+      <useProjectArtifact>false</useProjectArtifact>
+      <outputFileNameMapping>org/apache/servicemix/bundles/org.apache.servicemix.bundles.commons-codec/${1.3_2}/org.apache.servicemix.bundles.commons-codec-${1.3_2}.jar</outputFileNameMapping>
+      <includes>
         <include>org.apache.servicemix.bundles:org.apache.servicemix.bundles.commons-codec</include>
       </includes>
     </dependencySet>
@@ -181,9 +244,36 @@
       <outputDirectory>/rhevm-admin/system</outputDirectory>
       <unpack>false</unpack>
       <useProjectArtifact>false</useProjectArtifact>
-      <outputFileNameMapping>org/apache/servicemix/specs/${artifact.artifactId}/${artifact.baseVersion}/${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}</outputFileNameMapping>
+      <outputFileNameMapping>org/apache/servicemix/specs/org.apache.servicemix.specs.stax-api-1.0/${stax.api.version}/org.apache.servicemix.specs.stax-api-1.0-${stax.api.version}.jar</outputFileNameMapping>
       <includes>
         <include>org.apache.servicemix.specs:org.apache.servicemix.specs.stax-api-1.0</include>
+      </includes>
+    </dependencySet>
+
+    <dependencySet>
+      <outputDirectory>/rhevm-admin/system</outputDirectory>
+      <outputFileNameMapping>org/apache/servicemix/nmr/apache-servicemix-nmr/${servicemix.nmr.version}/apache-servicemix-nmr-${servicemix.nmr.version}-features.xml</outputFileNameMapping>
+      <unpack>false</unpack>
+      <includes>
+        <include>org.apache.servicemix.nmr:apache-servicemix-nmr:xml:features</include>
+      </includes>
+    </dependencySet>
+
+    <dependencySet>
+      <outputDirectory>/rhevm-admin/system</outputDirectory>
+      <outputFileNameMapping>org/apache/servicemix/apache-servicemix/${servicemix.version}/apache-servicemix-${servicemix.version}-features.xml</outputFileNameMapping>
+      <unpack>false</unpack>
+      <includes>
+        <include>org.apache.servicemix:apache-servicemix:xml:features</include>
+      </includes>
+    </dependencySet>
+
+    <dependencySet>
+      <outputDirectory>/rhevm-admin/system</outputDirectory>
+      <outputFileNameMapping>com/redhat/rhevm/api/rhevm-api-cli/${project.version}/rhevm-api-cli-${project.version}-features.xml</outputFileNameMapping>
+      <unpack>false</unpack>
+      <includes>
+        <include>com.redhat.rhevm.api:rhevm-api-cli:xml:features</include>
       </includes>
     </dependencySet>
 
