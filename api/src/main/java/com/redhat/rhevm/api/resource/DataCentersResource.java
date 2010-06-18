@@ -24,14 +24,18 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.DataCenters;
 
+
 @Path("/datacenters")
+@Produces(MediaType.APPLICATION_XML)
 public interface DataCentersResource {
     /* FIXME: can we make uriInfo a field instead of a parameter to
      *        each method? Adding @Context to the implementation
@@ -39,6 +43,7 @@ public interface DataCentersResource {
      */
 
     @GET
+    @Formatted
     public DataCenters list(@Context UriInfo uriInfo);
 
     /* FIXME: need to move this to e.g. a top-level /search
@@ -47,7 +52,8 @@ public interface DataCentersResource {
      */
 
     @POST
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
+    @Formatted
+    @Consumes(MediaType.APPLICATION_XML)
     public Response add(@Context UriInfo uriInfo, DataCenter dataCenter);
 
     @DELETE

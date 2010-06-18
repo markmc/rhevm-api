@@ -22,8 +22,10 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;
 import javax.ws.rs.POST;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
+import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 import javax.ws.rs.core.Response;
 
 import com.redhat.rhevm.api.model.Actionable;
@@ -36,6 +38,8 @@ import com.redhat.rhevm.api.model.NIC;
 import com.redhat.rhevm.api.model.Nics;
 import com.redhat.rhevm.api.model.VM;
 
+
+@Produces(MediaType.APPLICATION_XML)
 public interface VmResource extends UpdatableResource<VM> {
 
     /* FIXME: can we make uriInfo a field instead of a parameter to
@@ -47,31 +51,36 @@ public interface VmResource extends UpdatableResource<VM> {
     public ActionResource getActionSubresource(@PathParam("action")String action, @PathParam("oid")String oid);
 
     @POST
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
+    @Formatted
+    @Consumes(MediaType.APPLICATION_XML)
     @Actionable
     @Path("start")
     public Response start(@Context UriInfo uriInfo, Action action);
 
     @POST
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
+    @Formatted
+    @Consumes(MediaType.APPLICATION_XML)
     @Actionable
     @Path("stop")
     public Response stop(@Context UriInfo uriInfo, Action action);
 
     @POST
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
+    @Formatted
+    @Consumes(MediaType.APPLICATION_XML)
     @Actionable
     @Path("shutdown")
     public Response shutdown(@Context UriInfo uriInfo, Action action);
 
     @POST
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
+    @Formatted
+    @Consumes(MediaType.APPLICATION_XML)
     @Actionable
     @Path("suspend")
     public Response suspend(@Context UriInfo uriInfo, Action action);
 
     @POST
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
+    @Formatted
+    @Consumes(MediaType.APPLICATION_XML)
     @Actionable
     @Path("detach")
     public Response detach(@Context UriInfo uriInfo, Action action);

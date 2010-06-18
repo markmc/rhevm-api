@@ -19,12 +19,16 @@
 package com.redhat.rhevm.api.resource;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.Produces;
+import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 import com.redhat.rhevm.api.model.BaseDevice;
 
 
+@Produces(MediaType.APPLICATION_XML)
 public interface DeviceResource<D extends BaseDevice> {
 
     @GET
+    @Formatted
     public D get();
 }

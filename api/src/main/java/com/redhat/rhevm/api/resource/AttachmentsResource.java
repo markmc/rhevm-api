@@ -24,19 +24,26 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 import com.redhat.rhevm.api.model.Attachment;
 import com.redhat.rhevm.api.model.Attachments;
 
+
+@Produces(MediaType.APPLICATION_XML)
 public interface AttachmentsResource {
+
     @GET
+    @Formatted
     public Attachments list(@Context UriInfo uriInfo);
 
     @POST
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
+    @Formatted
+    @Consumes(MediaType.APPLICATION_XML)
     public Response add(@Context UriInfo uriInfo, Attachment attachment);
 
     @DELETE

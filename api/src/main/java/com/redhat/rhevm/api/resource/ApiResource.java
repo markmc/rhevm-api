@@ -25,14 +25,17 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
+
 
 @Path("/")
-@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
+@Produces(MediaType.APPLICATION_XML)
 public interface ApiResource {
 
     @HEAD
     public Response head(@Context UriInfo uriInfo);
 
     @GET
+    @Formatted
     public Response get(@Context UriInfo uriInfo);
 }

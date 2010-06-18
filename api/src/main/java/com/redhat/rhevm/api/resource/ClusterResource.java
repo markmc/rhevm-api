@@ -18,8 +18,11 @@
  */
 package com.redhat.rhevm.api.resource;
 
+import javax.ws.rs.Produces;
+import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 import com.redhat.rhevm.api.model.Cluster;
 
 
+@Produces(MediaType.APPLICATION_XML)
 public interface ClusterResource extends UpdatableResource<Cluster> {
 }

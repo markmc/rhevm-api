@@ -21,14 +21,18 @@ package com.redhat.rhevm.api.resource;
 import javax.ws.rs.Path;
 import javax.ws.rs.POST;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Actionable;
 import com.redhat.rhevm.api.model.Host;
 
+
+@Produces(MediaType.APPLICATION_XML)
 public interface HostResource extends UpdatableResource<Host> {
     /* FIXME: can we make uriInfo a field instead of a parameter to
      *        each method? Adding @Context to the implementation
@@ -39,21 +43,25 @@ public interface HostResource extends UpdatableResource<Host> {
     public ActionResource getActionSubresource(@PathParam("action")String action, @PathParam("oid")String oid);
 
     @POST
+    @Formatted
     @Actionable
     @Path("approve")
     public Response approve(@Context UriInfo uriInfo, Action action);
 
     @POST
+    @Formatted
     @Actionable
     @Path("install")
     public Response install(@Context UriInfo uriInfo, Action action);
 
     @POST
+    @Formatted
     @Actionable
     @Path("activate")
     public Response activate(@Context UriInfo uriInfo, Action action);
 
     @POST
+    @Formatted
     @Actionable
     @Path("deactivate")
     public Response deactivate(@Context UriInfo uriInfo, Action action);

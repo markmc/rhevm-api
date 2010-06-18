@@ -24,14 +24,18 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.Hosts;
 
+
 @Path("/hosts")
+@Produces(MediaType.APPLICATION_XML)
 public interface HostsResource {
     /* FIXME: can we make uriInfo a field instead of a parameter to
      *        each method? Adding @Context to the implementation
@@ -39,6 +43,7 @@ public interface HostsResource {
      */
 
     @GET
+    @Formatted
     public Hosts list(@Context UriInfo uriInfo);
 
     /* FIXME: need to move this to e.g. a top-level /search
@@ -58,7 +63,8 @@ public interface HostsResource {
      * @return      the new newly created Host
      */
     @POST
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
+    @Formatted
+    @Consumes(MediaType.APPLICATION_XML)
     public Response add(@Context UriInfo uriInfo, Host host);
 
     @DELETE

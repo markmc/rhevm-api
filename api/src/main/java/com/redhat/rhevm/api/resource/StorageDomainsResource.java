@@ -24,21 +24,27 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.StorageDomains;
 
+
 @Path("/storagedomains")
+@Produces(MediaType.APPLICATION_XML)
 public interface StorageDomainsResource {
 
     @GET
+    @Formatted
     public StorageDomains list(@Context UriInfo uriInfo);
 
     @POST
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
+    @Formatted
+    @Consumes(MediaType.APPLICATION_XML)
     public Response add(@Context UriInfo uriInfo, StorageDomain storageDomains);
 
     @DELETE

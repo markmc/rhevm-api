@@ -22,14 +22,18 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Actionable;
 import com.redhat.rhevm.api.model.StorageDomain;
 
+
+@Produces(MediaType.APPLICATION_XML)
 public interface StorageDomainResource extends UpdatableResource<StorageDomain> {
 
     /* FIXME: can we make uriInfo a field instead of a parameter to
@@ -41,13 +45,15 @@ public interface StorageDomainResource extends UpdatableResource<StorageDomain> 
     public ActionResource getActionSubresource(@PathParam("action") String action, @PathParam("oid") String oid);
 
     @POST
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
+    @Formatted
+    @Consumes(MediaType.APPLICATION_XML)
     @Actionable
     @Path("initialize")
     public Response initialize(@Context UriInfo uriInfo, Action action);
 
     @POST
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_X_YAML, MediaType.APPLICATION_JSON})
+    @Formatted
+    @Consumes(MediaType.APPLICATION_XML)
     @Actionable
     @Path("teardown")
     public Response teardown(@Context UriInfo uriInfo, Action action);

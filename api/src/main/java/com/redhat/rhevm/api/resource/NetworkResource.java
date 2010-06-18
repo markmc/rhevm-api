@@ -18,7 +18,10 @@
  */
 package com.redhat.rhevm.api.resource;
 
+import javax.ws.rs.Produces;
 import com.redhat.rhevm.api.model.Network;
 
+
+@Produces(MediaType.APPLICATION_XML)
 public interface NetworkResource extends UpdatableResource<Network> {
 }
