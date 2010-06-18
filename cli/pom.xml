@@ -21,6 +21,7 @@
     <module>clusters</module>
     <module>storagedomains</module>
     <module>cpus</module>
+    <module>actions</module>
     <module>feature</module>
   </modules>
 

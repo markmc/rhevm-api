@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:ext="http://geronimo.apache.org/blueprint/xmlns/blueprint-ext/v1.0.0">
+
+  <ext:property-placeholder placeholder-prefix="$[" placeholder-suffix="]">
+    <ext:default-properties>
+      <ext:property name="rhevm.base.url" value="http://localhost:8099/rhevm-api-mock"/>
+    </ext:default-properties>
+  </ext:property-placeholder>
+
+  <command-bundle xmlns="http://felix.apache.org/karaf/xmlns/shell/v1.0.0">
+    <command name="actions/monitor">
+      <action class="com.redhat.rhevm.api.command.actions.ActionsMonitorCommand">
+        <property name="client" ref="baseClient" />
+      </action>
+    </command>
+    <command name="actions/wait">
+      <action class="com.redhat.rhevm.api.command.actions.ActionsWaitCommand">
+        <property name="client" ref="baseClient" />
+      </action>
+    </command>
+  </command-bundle>
+
+  <bean id="baseClient" class="com.redhat.rhevm.api.command.base.BaseClient"  activation="eager">
+    <property name="baseUrl" value="$[rhevm.base.url]"/>
+  </bean>
+
+</blueprint>
+

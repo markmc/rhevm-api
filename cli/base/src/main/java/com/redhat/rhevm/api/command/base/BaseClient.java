@@ -63,6 +63,26 @@ public class BaseClient {
         this.baseUrl = baseUrl;
     }
 
+    public <S> S get(String href, Class<S> clz) throws Exception {
+        S ret = clz.newInstance();
+        Response r = null;
+        Exception failure = null;
+        try {
+            WebClient get = WebClient.create(absolute(href));
+            r = get.path("/").accept("application/xml").get();
+        } catch (Exception e) {
+           failure = e;
+        }
+
+        if (failure != null || r.getStatus() != 200) {
+            String baseError = "cannot follow " + href + ", failed with ";
+            diagnose(baseError, failure, r, 200);
+        } else {
+            ret = unmarshall(r, clz);
+        }
+        return ret;
+    }
+
     public <S> S getCollection(String rel, Class<S> clz) throws Exception {
         return getCollection(rel, clz, null);
     }
@@ -222,7 +242,7 @@ public class BaseClient {
         return ret;
     }
 
-    private String getLink(List<Link> links, String rel) {
+    public String getLink(List<Link> links, String rel) {
         String ret = null;
         for (Link link : links) {
             if (rel.equals((link.getRel()))) {
