@@ -11,6 +11,14 @@
   <fileSets>
 
     <fileSet>
+      <directory>${basedir}/target/dependencies/docs</directory>
+      <outputDirectory>/docs</outputDirectory>
+      <includes>
+        <include>*.pdf</include>
+      </includes>
+    </fileSet>
+
+    <fileSet>
       <directory>${basedir}/target/dependencies/lib</directory>
       <outputDirectory>/lib</outputDirectory>
     </fileSet>
