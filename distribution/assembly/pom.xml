@@ -68,6 +68,12 @@
 
     <dependency>
       <groupId>com.redhat.rhevm.api</groupId>
+      <artifactId>rhevm-api-cli-branding</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.redhat.rhevm.api</groupId>
       <artifactId>rhevm-api-cli-vms</artifactId>
       <version>${project.version}</version>
     </dependency>

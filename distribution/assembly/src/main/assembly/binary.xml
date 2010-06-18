@@ -137,6 +137,15 @@
     </dependencySet>
 
     <dependencySet>
+      <outputDirectory>/rhevm-admin/lib</outputDirectory>
+      <unpack>false</unpack>
+      <useProjectArtifact>true</useProjectArtifact>
+      <includes>
+        <include>com.redhat.rhevm.api:rhevm-api-cli-branding</include>
+      </includes>
+    </dependencySet>
+
+    <dependencySet>
       <outputDirectory>/rhevm-admin/system</outputDirectory>
       <unpack>false</unpack>
       <useProjectArtifact>false</useProjectArtifact>
