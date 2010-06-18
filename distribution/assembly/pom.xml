@@ -104,6 +104,12 @@
 
     <dependency>
       <groupId>com.redhat.rhevm.api</groupId>
+      <artifactId>rhevm-api-cli-cpus</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.redhat.rhevm.api</groupId>
       <artifactId>rhevm-api-mock-webapp</artifactId>
       <type>war</type>
       <version>${project.version}</version>

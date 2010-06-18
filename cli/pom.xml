@@ -20,6 +20,7 @@
     <module>datacenters</module>
     <module>clusters</module>
     <module>storagedomains</module>
+    <module>cpus</module>
     <module>feature</module>
   </modules>
 
