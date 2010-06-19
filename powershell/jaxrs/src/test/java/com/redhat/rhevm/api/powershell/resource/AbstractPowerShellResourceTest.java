@@ -91,15 +91,8 @@ public abstract class AbstractPowerShellResourceTest<R extends BaseResource,
             expect(PowerShellCmd.runCommand(command)).andReturn((String)ret);
         }
 
-        URI replayUri = new URI(baseUri + verb);
-        URI actionUri = new URI(baseUri + verb + "/56789");
-
         UriInfo uriInfo = createMock(UriInfo.class);
-        UriBuilder uriBuilder = createMock(UriBuilder.class);
-        expect(uriInfo.getRequestUriBuilder()).andReturn(uriBuilder);
-        expect(uriBuilder.path(isA(String.class))).andReturn(uriBuilder);
-        expect(uriBuilder.build()).andReturn(actionUri);
-        expect(uriInfo.getRequestUri()).andReturn(replayUri);
+        expect(uriInfo.getPath()).andReturn(baseUri).times(2);
 
         replayAll();
 

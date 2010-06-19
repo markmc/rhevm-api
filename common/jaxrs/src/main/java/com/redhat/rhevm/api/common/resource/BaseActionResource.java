@@ -21,6 +21,7 @@ package com.redhat.rhevm.api.common.resource;
 import java.util.UUID;
 
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Action;
@@ -49,11 +50,11 @@ public class BaseActionResource implements ActionResource {
     }
 
     private void addLinks(UriInfo uriInfo) {
-        action.setHref(uriInfo.getRequestUriBuilder().path(action.getId()).build().toString());
+        action.setHref(UriBuilder.fromPath(uriInfo.getPath()).path(action.getId()).build().toString());
 
         Link replay = new Link();
         replay.setRel("replay");
-        replay.setHref(uriInfo.getRequestUri().toString());
+        replay.setHref(uriInfo.getPath().toString());
         action.getLink().add(replay);
     }
 }
