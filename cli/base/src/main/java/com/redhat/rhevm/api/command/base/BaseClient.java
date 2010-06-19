@@ -113,7 +113,7 @@ public class BaseClient {
         return ret;
     }
 
-    public void doAction(String verb, Action action, Link link) throws Exception {
+    public void doAction(String verb, Action action, Link link, boolean detail) throws Exception {
         Response r = null;
         Exception failure = null;
 
@@ -131,9 +131,16 @@ public class BaseClient {
             Action reaction = unmarshall(r, Action.class);
             String monitor =
                 Status.COMPLETE.equals(reaction.getStatus())
+                || Status.FAILED.equals(reaction.getStatus())
                 ? ""
-                : ", monitor @ " + absolute(reaction.getHref());
+                : ", monitor @ " + reaction.getHref();
             System.out.println(verb + " " + reaction.getStatus() + monitor);
+            if (Status.FAILED.equals(reaction.getStatus()) && reaction.isSetFault()) {
+                System.out.println("reason: [" + action.getFault().getReason() + "]");
+                if (detail) {
+                    System.out.println("detail: [" + action.getFault().getDetail() + "]");
+                }
+            }
         }
     }
 

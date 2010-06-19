@@ -38,13 +38,16 @@ public abstract class AbstractActionCommand extends AbstractCommand {
     @Option(name = "-g", aliases = {"--grace"}, description="Grace period to wait before initiating action", required = false, multiValued = false)
     protected long grace = -1L;
 
+    @Option(name = "-d", aliases = { "--detail" }, description = "Display Fault detail", required = false, multiValued = false)
+    protected boolean detail;
+
     protected void doAction(List<? extends BaseResource> collection, String verb, Action action, String name) throws Exception {
         applyOptions(action);
         BaseResource resource = getResource(collection, name);
         if (resource != null) {
             Link link = getLink(resource, verb);
             if (link != null) {
-                client.doAction(verb, action, link);
+                client.doAction(verb, action, link, detail);
                 return;
             }
         }
