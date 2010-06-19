@@ -340,4 +340,33 @@ Content-Type: application/xml
 
   </section>
 
+  <section id="sect-REST_API_Guide-Common_Idioms-Handling_Errors">
+    <title>
+      Handling Errors
+    </title>
+
+    <para>
+      Some errors require further explanation beyond that provided by a standard HTTP status code. For example, an unsuccessful resource state update or action is reported with a <literal>Fault</literal> representation in the response entity-body. The fault contains reason and detail strings, which may be localized for the client's locale as specified via the <literal>Accept-Language</literal> HTTP header. Clients initiating a request which may fail in this way must be prepared to unmarshal either a <literal>Fault</literal> <italics>or</italics> the expected resource representation, depending on the response status code. Such cases are clearly indicated in the individual resource documentation.
+    </para>
+
+    <screen>
+PUT /resources/{id} HTTP/1.1
+Accept: application/xml
+Content-Type: application/xml
+
+&lt;resource&gt;
+  &lt;id&gt;bar&lt;/id&gt;
+&lt;/resource&gt;
+
+HTTP/1.1 409 Conflict
+Content-Type: application/xml
+
+&lt;fault&gt;
+  &lt;reason&gt;Broken immutability constraint&lt;/reason&gt;
+  &lt;detail&gt;Attempt to set immutable field: id&lt;/detail&gt;
+&lt;/fault&gt;
+    </screen>
+
+  </section>
+
 </chapter>
