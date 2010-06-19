@@ -47,7 +47,8 @@ public class ActionsWaitCommand extends AbstractActionsCommand {
     }
 
     private boolean ongoing(Action action) {
-        return !Status.COMPLETE.equals(action.getStatus());
+        return !(Status.COMPLETE.equals(action.getStatus())
+                 || Status.FAILED.equals(action.getStatus()));
     }
 
     private boolean moreTime(long start) {
