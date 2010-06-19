@@ -246,7 +246,7 @@ HTTP/1.1 204 No Content
     </screen>
 
     <para>
-      An action may be invoked by <literal>POST</literal>ing to the supplied URI. The body of the POST may be empty if no parameters are required or, in the case of parameters being required, the body must contain an action description. Common action parameters include:
+      An action may be invoked by <literal>POST</literal>ing to the supplied URI. The body of the POST must contain an <literal>Action</literal> representation encapsulating common and/or task-specific parameters. Common action parameters include:
 
       <informaltable frame="none">
         <tgroup cols="2">
@@ -255,14 +255,84 @@ HTTP/1.1 204 No Content
           <tbody>
             <row>
               <entry><literal>async</literal></entry>
-              <entry>true if the server should respond immediately with <literal>202 Accepted</literal> and an action description containing a <literal>self</literal> link which may be polled for completion.</entry>
+              <entry>true if the server should respond immediately with <literal>202 Accepted</literal> and an action representation containing a <literal>href</literal> link which may be polled for completion.</entry>
+            </row>
+            <row>
+              <entry><literal>grace_period</literal></entry>
+              <entry>a grace period in milliseconds, which must expire before the action is initiated.</entry>
             </row>
           </tbody>
         </tgroup>
       </informaltable>
 
-      Individual actions and their parameters are documented in inidivual resource type's documentation.
+      Individual actions and their parameters are documented in the individual resource type's documentation.
     </para>
+
+
+    <para>
+      When the action is initiated asychronously, the immediate <literal>202 Accepted</literal> response provides a link that may be polled to monitor the status of the task:
+    </para>
+
+    <screen>
+POST /resources/{id}/{verb} HTTP/1.1
+Content-Type: application/xml
+Accept: application/xml
+
+&lt;action&gt;
+  &lt;async&gt;true&lt;/async&gt;
+&lt;/action&gt;
+
+HTTP/1.1 202 Accept
+Content-Type: application/xml
+
+&lt;action id="{action_id}" href="/resources/{id}/{verb}/{action_id}"&gt;
+  &lt;async&gt;true&lt;/async&gt;
+  ...
+&lt;action&gt;
+    <screen>
+
+    <para>
+      A subsequent <literal>GET</literal> on the action URI provides an indication of the status of the asynchronous task:
+
+      <informaltable frame="none">
+        <tgroup cols="2">
+          <colspec colwidth="2*"/>
+          <colspec colwidth="5*"/>
+          <tbody>
+            <row>
+              <entry><literal>PENDING</literal></entry>
+              <entry>task has not yet started.</entry>
+            </row>
+            <row>
+              <entry><literal>IN_PROGRESS</literal></entry>
+              <entry>task is in flight.</entry>
+            </row>
+            <row>
+              <entry><literal>COMPLETE</literal></entry>
+              <entry>task has completed successfully.</entry>
+            </row>
+            <row>
+              <entry><literal>FAILED</literal></entry>
+              <entry>task has failed, in which case the returned <literal>Action</literal> representation would contain a <literal>Fault</literal> describing the failure.</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+
+      Once the task has completed, the Action is retained for an interminate period. Once this has expired, subsequent <literal>GET</literal>s are <literal>301 Moved Permanently</literal> redirected back to the target resource.
+    </para>
+
+    <screen>
+GET /resources/{id}/{verb}/{action_id} HTTP/1.1
+Accept: application/xml
+
+HTTP/1.1 200 OK
+Content-Type: application/xml
+
+&lt;action id="{action_id}" href="/resources/{id}/{verb}/{action_id}"&gt;
+  &lt;status&gt;{PENDING|IN_PROGRESS|COMPLETE|FAILED}&lt;/status&gt;
+&lt;action&gt;
+    </screen>
 
   </section>
 
