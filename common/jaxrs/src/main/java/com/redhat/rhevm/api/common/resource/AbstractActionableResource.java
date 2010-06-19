@@ -127,7 +127,6 @@ public abstract class AbstractActionableResource<R extends BaseResource> extends
             }
         }
         task.run();
-        task.action.setStatus(com.redhat.rhevm.api.model.Status.COMPLETE);
     }
 
     public static abstract class AbstractActionTask implements Runnable {
@@ -146,6 +145,7 @@ public abstract class AbstractActionableResource<R extends BaseResource> extends
         public void run() {
             try {
                 execute();
+                action.setStatus(com.redhat.rhevm.api.model.Status.COMPLETE);
             } catch (Throwable t) {
                 String message = t.getMessage() != null ? t.getMessage() : t.getClass().getName();
                 setFault(MessageFormat.format(reason, message), t);
