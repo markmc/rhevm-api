@@ -87,13 +87,39 @@ Content-Type: application/xml
 
   </section>
 
-  <section id="sect-REST_API_Guide-Common_Idioms-Querying_Resources">
+  <section id="sect-REST_API_Guide-Common_Idioms-Querying_Collections">
     <title>
-      Querying a Resource
+      Querying a Collection
     </title>
 
     <para>
-      The state of a resource can be queried using <literal>GET</literal> request on a URI obtained from the listing above.
+      A collection may be queried using a <literal>GET</literal> request on an appropropriate <literal>"collection/search"</literal> URI template, instanitated with a query constraint expressed in the RHEV-M query language. Only those resources in the collection satisfying the constraint will be returned.
+    </para>
+
+    <screen>
+GET /resources?search={query} HTTP/1.1
+Accept: application/xml
+
+HTTP/1.1 200 OK
+Content-Type: application/xml
+
+&lt;resources&gt;
+  &lt;resource id="{id}" href="resources/{id}"&gt;
+    ...
+  &lt;/resource&gt;
+  ...
+&lt;/resources&gt;
+    </screen>
+
+  </section>
+
+  <section id="sect-REST_API_Guide-Common_Idioms-Retrieving_Resources">
+    <title>
+      Retrieving a Resource
+    </title>
+
+    <para>
+      The state of a resource can be retrieved using <literal>GET</literal> request on a URI obtained from the listing above.
     </para>
 
     <screen>

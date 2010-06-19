@@ -91,4 +91,63 @@ Content-Length: 0
     </para>
   </note>
 
+  <para>
+    In addition to the literal URIs described above, the <literal>Link</literal> header also contains a set of URI templates
+    <footnote>
+      <para>
+        The Internet-Draft describing the format of a URI Template is available at <ulink url="http://tools.ietf.org/html/draft-gregorio-uritemplate-03">http://tools.ietf.org/html/draft-gregorio-uritemplate-03</ulink>.
+      </para>
+    </footnote>
+    which describe the form of URI to be used for querying the collections. Each URI template is identified by a relation type, named according to the convention <literal>"collection/search"</literal>.
+
+  <note>
+    <title>URI Templates</title>
+    <para>
+      The purpose of the URI template is allow a search be expressed using the natural HTTP idiom of a query parameter, but without requiring that the client is aware <italics>a priori</italics> of the URI structure. Thus clients should treat these templates as being opaque, and instantiate them via a URI template library such as the Google Code <ulink url="http://code.google.com/p/uri-templates/">uri-templates</ulink> Python package or the Apache Abdera <ulink url="https://cwiki.apache.org/ABDERA/uri-templates.html">support for Java templates</ulink>.
+    </para>
+  </note>
+
+  <para>
+    The following relation types are associated with query URI templates:
+
+    <informaltable frame="none">
+      <tgroup cols="2">
+        <colspec colwidth="2*"/>
+        <colspec colwidth="5*"/>
+        <tbody>
+          <row>
+            <entry><literal>clusters/search</literal></entry>
+            <entry>Query host clusters</entry>
+          </row>
+          <row>
+            <entry><literal>datacenters/search</literal></entry>
+            <entry>Query data centers</entry>
+          </row>
+          <row>
+            <entry><literal>hosts/search</literal></entry>
+            <entry>Query hosts</entry>
+          </row>
+          <row>
+          <row>
+            <entry><literal>storagedomains/search</literal></entry>
+            <entry>Query storage domains</entry>
+          </row>
+          <row>
+            <entry><literal>templates/search</literal></entry>
+            <entry>Query templates</entry>
+          </row>
+          <row>
+            <entry><literal>vmpools/search</literal></entry>
+            <entry>Query virtual machine pools</entry>
+          </row>
+          <row>
+            <entry><literal>vms/search</literal></entry>
+            <entry>Query virtual machines</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+
+  </para>
+
 </chapter>
