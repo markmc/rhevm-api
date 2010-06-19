@@ -205,6 +205,10 @@ Content-Type: application/xml
       Again, the server may or may not return the updated resource description in the response body.
     </para>
 
+    <para>
+      If an attempt is made to modify a <italics>strictly<italics> immutable resource property, this is reported as <literal>409 Conflict<literal> error with a <literal>Fault</literal> representation in the response body. Other non-modifiable properties specified in the request entity-body may be silently ignored.
+    </para>
+
   </section>
 
   <section id="sect-REST_API_Guide-Common_Idioms-Deleting_Resources">
