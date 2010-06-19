@@ -125,6 +125,9 @@ public class MockStorageDomainResource extends AbstractMockResource<StorageDomai
             this.status = status;
         }
         public void execute() {
+            if (status.equals(MockStorageDomainResource.this.getModel().getStatus())) {
+                throw new IllegalStateException("StorageDomain status already: " + status);
+            }
             MockStorageDomainResource.this.getModel().setStatus(status);
         }
     }

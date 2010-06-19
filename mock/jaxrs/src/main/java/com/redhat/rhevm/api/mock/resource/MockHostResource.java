@@ -98,6 +98,9 @@ public class MockHostResource extends AbstractMockResource<Host> implements Host
             this.status = status;
         }
         public void execute() {
+            if (status.equals(MockHostResource.this.getModel().getStatus())) {
+                throw new IllegalStateException("Host status already: " + status);
+            }
             MockHostResource.this.getModel().setStatus(status);
         }
     }

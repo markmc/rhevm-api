@@ -120,6 +120,9 @@ public class MockVmResource extends AbstractMockResource<VM> implements VmResour
             this.status = status;
         }
         public void execute() {
+            if (status.equals(MockVmResource.this.status)) {
+                throw new IllegalStateException("VM status already: " + status);
+            }
             MockVmResource.this.status = status;
         }
     }

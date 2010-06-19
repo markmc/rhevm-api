@@ -99,6 +99,9 @@ public class MockAttachmentResource extends AbstractMockResource<Attachment> imp
             this.status = status;
         }
         public void execute() {
+            if (status.equals(MockAttachmentResource.this.getModel().getStorageDomain().getStatus())) {
+                throw new IllegalStateException("Attachment status already: " + status);
+            }
             MockAttachmentResource.this.getModel().getStorageDomain().setStatus(status);
         }
     }
