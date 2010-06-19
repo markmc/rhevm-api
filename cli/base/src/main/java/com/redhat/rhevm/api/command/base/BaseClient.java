@@ -144,14 +144,14 @@ public class BaseClient {
         }
     }
 
-    public <T extends BaseResource> T doUpdate(T resource, Class<T> clz, String field, String href) throws Exception {
+    public <T extends BaseResource> T doUpdate(T resource, Class<T> clz, String field, String href, String localName) throws Exception {
         Response r = null;
         Exception failure = null;
         T ret = null;
 
         try {
             WebClient put = WebClient.create(absolute(href));
-            r = put.path("/").put(resource);
+            r = put.path("/").put(new JAXBElement<T>(new QName("", localName), clz, null, resource));
             if (r.getStatus() == 200) {
                 ret = unmarshall(r, clz);
             }
@@ -259,6 +259,18 @@ public class BaseClient {
             }
         }
         return ret;
+    }
+
+    public static String pad(String f, int width) {
+        StringBuffer field = new StringBuffer("[").append(f);
+        for (int i = 0 ; i < width - value(f).length() ; i++) {
+            field.append(" ");
+        }
+        return field.append("] ").toString();
+    }
+
+    public static String value(String f) {
+        return f != null ? f : "";
     }
 
     private String getBaseUri(String href, String constraint) {

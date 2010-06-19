@@ -24,6 +24,8 @@ import org.apache.felix.gogo.commands.Option;
 
 import com.redhat.rhevm.api.model.BaseResource;
 
+import static com.redhat.rhevm.api.command.base.BaseClient.pad;
+import static com.redhat.rhevm.api.command.base.BaseClient.value;
 
 /**
  * Displays the resources
@@ -59,17 +61,5 @@ public abstract class AbstractListCommand extends AbstractCommand {
             System.out.println();
         }
         return null;
-    }
-
-    private String value(String f) {
-        return f != null ? f : "";
-    }
-
-    private String pad(String f, int width) {
-        StringBuffer field = new StringBuffer("[").append(f); 
-        for (int i = 0 ; i < width - value(f).length() ; i++) {
-            field.append(" ");
-        } 
-        return field.append("] ").toString();
     }
 }

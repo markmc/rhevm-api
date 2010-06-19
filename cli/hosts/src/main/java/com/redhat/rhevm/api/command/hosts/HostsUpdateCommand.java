@@ -16,26 +16,26 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api.command.vms;
+package com.redhat.rhevm.api.command.hosts;
 
 import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 
 import com.redhat.rhevm.api.command.base.AbstractUpdateCommand;
-import com.redhat.rhevm.api.model.VM;
-import com.redhat.rhevm.api.model.VMs;
+import com.redhat.rhevm.api.model.Host;
+import com.redhat.rhevm.api.model.Hosts;
 
 /**
- * Update a VM
+ * Update a Host
  */
-@Command(scope = "vms", name = "update", description = "Update Virtual Machine state")
-public class VmsUpdateCommand extends AbstractUpdateCommand<VM> {
+@Command(scope = "hosts", name = "update", description = "Update Host state")
+public class HostsUpdateCommand extends AbstractUpdateCommand<Host> {
 
-    @Argument(index = 0, name = "name", description = "The name of the VM", required = true, multiValued = false)
+    @Argument(index = 0, name = "name", description = "The name of the Host", required = true, multiValued = false)
     protected String name;
 
     protected Object doExecute() throws Exception {
-        doUpdate(client.getCollection("vms", VMs.class).getVMs(), VM.class, "vm", name);
+        doUpdate(client.getCollection("hosts", Hosts.class).getHosts(), Host.class, "host", name);
         return null;
     }
 }

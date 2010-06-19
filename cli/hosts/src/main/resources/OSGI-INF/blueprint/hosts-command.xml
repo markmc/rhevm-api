@@ -27,6 +27,14 @@
         <ref component-id="hostNameCompleter" />
       </completers>
     </command>
+    <command name="hosts/update">
+      <action class="com.redhat.rhevm.api.command.hosts.HostsUpdateCommand">
+        <property name="client" ref="baseClient" />
+      </action>
+      <completers>
+        <ref component-id="hostNameCompleter" />
+      </completers>
+    </command>
     <command name="hosts/approve">
       <action class="com.redhat.rhevm.api.command.hosts.HostsApproveCommand">
         <property name="client" ref="baseClient" />
