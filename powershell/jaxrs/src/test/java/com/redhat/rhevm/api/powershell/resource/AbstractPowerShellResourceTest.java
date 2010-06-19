@@ -82,7 +82,7 @@ public abstract class AbstractPowerShellResourceTest<R extends BaseResource,
         action.setAsync(async);
         return action;
     }
-    
+
     protected UriInfo setUpActionExpectation(String baseUri, String verb, String command, Object ret) throws Exception {
         mockStatic(PowerShellCmd.class);
         if (ret instanceof Throwable) {
@@ -124,7 +124,7 @@ public abstract class AbstractPowerShellResourceTest<R extends BaseResource,
                    ? action.getStatus().equals(Status.PENDING)
                      || action.getStatus().equals(Status.IN_PROGRESS)
                      || action.getStatus().equals(Status.COMPLETE)
-                   : reason == null 
+                   : reason == null
                      ? action.getStatus().equals(Status.COMPLETE)
                      : action.getStatus().equals(Status.FAILED));
         assertEquals(1, action.getLink().size());

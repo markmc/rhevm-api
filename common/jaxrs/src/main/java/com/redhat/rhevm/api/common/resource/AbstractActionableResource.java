@@ -132,14 +132,32 @@ public abstract class AbstractActionableResource<R extends BaseResource> extends
 
     public static abstract class AbstractActionTask implements Runnable {
         protected Action action;
+        protected String reason;
+
         public AbstractActionTask(Action action) {
-            this.action = action;
+            this(action, "");
         }
 
-        protected void setFault(String reason, Exception e) {
+        public AbstractActionTask(Action action, String reason) {
+            this.action = action;
+            this.reason = reason;
+        }
+
+        public void run() {
+            try {
+                execute();
+            } catch (Throwable t) {
+                String message = t.getMessage() != null ? t.getMessage() : t.getClass().getName();
+                setFault(MessageFormat.format(reason, message), t);
+            }
+        }
+
+        protected abstract void execute();
+
+        protected void setFault(String reason, Throwable t) {
             Fault fault = new Fault();
             fault.setReason(reason);
-            fault.setDetail(trace(e));
+            fault.setDetail(trace(t));
             action.setFault(fault);
             action.setStatus(com.redhat.rhevm.api.model.Status.FAILED);
         }
@@ -155,10 +173,10 @@ public abstract class AbstractActionableResource<R extends BaseResource> extends
         public DoNothingTask(Action action) {
             super(action);
         }
-        public void run(){
+        public void execute(){
         }
     }
-    
+
     /**
      * Fallback executor, starts a new thread for each task.
      */

@@ -94,10 +94,10 @@ public class MockHostResource extends AbstractMockResource<Host> implements Host
     private class HostStatusSetter extends AbstractActionTask {
         private HostStatus status;
         HostStatusSetter(Action action, HostStatus status) {
-            super(action);
+            super(action, "Host status failed with {0}");
             this.status = status;
         }
-        public void run() {
+        public void execute() {
             MockHostResource.this.getModel().setStatus(status);
         }
     }

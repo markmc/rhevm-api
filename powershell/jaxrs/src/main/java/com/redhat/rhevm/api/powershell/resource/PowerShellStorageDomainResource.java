@@ -205,12 +205,12 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
         return new PowerShellAttachmentsResource(getId());
     }
 
-    private abstract class StorageDomainActionTask extends AbstractActionTask {
+    private abstract class StorageDomainActionTask extends AbstractPowerShellActionTask {
         protected String id;
         protected StorageDomain staged;
         protected PowerShellStorageDomainsResource parent;
-        public StorageDomainActionTask(Action action) {
-            super(action);
+        public StorageDomainActionTask(Action action, String command) {
+            super(action, command);
             this.id = PowerShellStorageDomainResource.this.getId();
             this.staged = PowerShellStorageDomainResource.this.staged;
             this.parent = PowerShellStorageDomainResource.this.parent;
@@ -219,12 +219,12 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
 
     private class StorageDomainInitializer extends StorageDomainActionTask {
         public StorageDomainInitializer(Action action) {
-            super(action);
+            super(action, "add-storagedomain");
         }
-        public void run() {
+        public void execute() {
             StringBuilder buf = new StringBuilder();
 
-            buf.append("add-storagedomain");
+            buf.append(command);
 
             if (staged.getName() != null) {
                 buf.append(" -name " + PowerShellUtils.escape(staged.getName()));
@@ -273,9 +273,9 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
 
     private class StorageDomainTeardowner extends StorageDomainActionTask {
         public StorageDomainTeardowner(Action action) {
-            super(action);
+            super(action, "remove-storagedomain -force");
         }
-        public void run() {
+        public void execute() {
             StorageDomain storageDomain = new StorageDomain();
             storageDomain.setId(id);
             parent.mapToRhevmId(storageDomain);
@@ -284,7 +284,7 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
 
             StringBuilder buf = new StringBuilder();
 
-            buf.append("remove-storagedomain -force");
+            buf.append(command);
 
             buf.append(" -storagedomainid " + PowerShellUtils.escape(storageDomain.getId()));
 

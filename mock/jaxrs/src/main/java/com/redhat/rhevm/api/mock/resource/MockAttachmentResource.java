@@ -95,10 +95,10 @@ public class MockAttachmentResource extends AbstractMockResource<Attachment> imp
     private class AttachmentStatusSetter extends AbstractActionTask {
         private StorageDomainStatus status;
         public AttachmentStatusSetter(Action action, StorageDomainStatus status) {
-            super(action);
+            super(action, "Attachment status failed with {0}");
             this.status = status;
         }
-        public void run() {
+        public void execute() {
             MockAttachmentResource.this.getModel().getStorageDomain().setStatus(status);
         }
     }

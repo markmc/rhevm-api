@@ -96,13 +96,11 @@ public class PowerShellAttachmentResource extends AbstractActionableResource<Att
         return doAction(uriInfo, new AttachmentActionTask(action, "deactivate-storagedomain"));
     }
 
-    private class AttachmentActionTask extends AbstractActionTask {
-        private String command;
+    private class AttachmentActionTask extends AbstractPowerShellActionTask {
         public AttachmentActionTask(Action action, String command) {
-            super(action);
-            this.command = command;
+            super(action, command);
         }
-        public void run() {
+        public void execute() {
             StringBuilder buf = new StringBuilder();
 
             buf.append(command);

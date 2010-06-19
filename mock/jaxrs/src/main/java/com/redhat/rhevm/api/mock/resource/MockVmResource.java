@@ -116,10 +116,10 @@ public class MockVmResource extends AbstractMockResource<VM> implements VmResour
     private class VmStatusSetter extends AbstractActionTask {
         private MockVmStatus status;
         VmStatusSetter(Action action, MockVmStatus status) {
-            super(action);
+            super(action, "VM status failed with {0}");
             this.status = status;
         }
-        public void run() {
+        public void execute() {
             MockVmResource.this.status = status;
         }
     }

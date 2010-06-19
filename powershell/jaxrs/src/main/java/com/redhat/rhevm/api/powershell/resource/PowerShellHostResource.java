@@ -97,20 +97,20 @@ public class PowerShellHostResource extends AbstractActionableResource<Host> imp
         return doAction(uriInfo, new CommandRunner(action, "suspend-host", "host", getId()));
     }
 
-    class HostInstaller extends AbstractActionTask {
+    class HostInstaller extends AbstractPowerShellActionTask {
 
         private String rootPassword;
 
         HostInstaller(Action action, String rootPassword) {
-            super(action);
+            super(action, "$h = " + CMD_PREFIX + "get-host ");
             this.rootPassword = rootPassword;
         }
 
-        public void run() {
+        public void execute() {
             String id = PowerShellHostResource.this.getId();
             StringBuilder buf = new StringBuilder();
 
-            buf.append("$h = " + CMD_PREFIX + "get-host " + PowerShellUtils.escape(id) + "\n");
+            buf.append(command + PowerShellUtils.escape(id) + "\n");
 
             buf.append("update-host");
             buf.append(" -hostobject $h");

@@ -18,8 +18,6 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import java.text.MessageFormat;
-
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -59,7 +57,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     private static final String GET_RETURN = "vmid: " + VM_ID + "\nname: " + VM_NAME + "\nhostclusterid: " + CLUSTER_ID + "\n" + "templateid: " + TEMPLATE_ID + "\n" + OTHER_PROPS;
     private static final String ACTION_RETURN = "replace with realistic powershell return";
     private static final String FAILURE = "replace with realistic powershell failure";
-    private static final String REASON = "Powershell command \"start-vm -vmid '" + VM_ID + "'\" failed with " + FAILURE;
+    private static final String REASON = "Powershell command \"start-vm -vmid " + VM_ID + "\" failed with " + FAILURE;
     private static final String DETAIL = "at com.redhat.rhevm.api.powershell.util.PowerShellCmd.runCommand(";
     private static final String UPDATE_COMMAND = "$v = get-vm '" + VM_ID + "'\n$v.name = '" + NEW_NAME + "'\nupdate-vm -vmobject $v";
     private static final String UPDATE_RETURN = "vmid: " + VM_ID + "\n name: " + NEW_NAME + "\nhostclusterid: " + CLUSTER_ID + "\n" + "templateid: " + TEMPLATE_ID + "\n" + OTHER_PROPS;

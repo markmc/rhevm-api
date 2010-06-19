@@ -20,20 +20,18 @@ package com.redhat.rhevm.api.powershell.resource;
 
 import java.text.MessageFormat;
 
+import com.redhat.rhevm.api.common.resource.AbstractActionableResource.AbstractActionTask;
 import com.redhat.rhevm.api.model.Action;
-import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
-import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
+public abstract class AbstractPowerShellActionTask extends AbstractActionTask {
 
-class CommandRunner extends AbstractPowerShellActionTask {
+    // REVISIT: i18n
+    private static final String REASON = "Powershell command \"{0}\" failed with ";
 
-    private static final String COMMAND = "{0} -{1}id {2}";
+    protected String command;
 
-    CommandRunner(Action action, String command, String type, String id) {
-        super(action, MessageFormat.format(COMMAND, command, type, PowerShellUtils.escape(id)));
-    }
-
-    public void execute() {
-        PowerShellCmd.runCommand(command);
+    protected AbstractPowerShellActionTask(Action action, String command) {
+        super(action, MessageFormat.format(REASON, command) + "{0}");
+        this.command = command;
     }
 }

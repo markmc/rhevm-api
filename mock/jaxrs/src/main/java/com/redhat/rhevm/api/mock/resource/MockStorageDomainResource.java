@@ -121,10 +121,10 @@ public class MockStorageDomainResource extends AbstractMockResource<StorageDomai
     private class StorageDomainStatusSetter extends AbstractActionTask {
         private StorageDomainStatus status;
         public StorageDomainStatusSetter(Action action, StorageDomainStatus status) {
-            super(action);
+            super(action, "StorageDomain status failed with {0}");
             this.status = status;
         }
-        public void run() {
+        public void execute() {
             MockStorageDomainResource.this.getModel().setStatus(status);
         }
     }
