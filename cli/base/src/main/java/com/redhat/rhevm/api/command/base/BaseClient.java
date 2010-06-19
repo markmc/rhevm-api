@@ -150,9 +150,11 @@ public class BaseClient {
         T ret = null;
 
         try {
-            WebClient post = WebClient.create(absolute(href));
-            r = post.path("/").put(resource);
-            ret = unmarshall(r, clz);
+            WebClient put = WebClient.create(absolute(href));
+            r = put.path("/").put(resource);
+            if (r.getStatus() == 200) {
+                ret = unmarshall(r, clz);
+            }
         } catch (Exception e) {
             failure = e;
         }

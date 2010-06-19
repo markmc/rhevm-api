@@ -19,6 +19,7 @@
 package com.redhat.rhevm.api.command.vms;
 
 import org.apache.felix.gogo.commands.Argument;
+import org.apache.felix.gogo.commands.Command;
 
 import com.redhat.rhevm.api.command.base.AbstractUpdateCommand;
 import com.redhat.rhevm.api.model.VM;
@@ -27,6 +28,7 @@ import com.redhat.rhevm.api.model.VMs;
 /**
  * Update a VM
  */
+@Command(scope = "vms", name = "update", description = "Update Virtual Machine state")
 public class VmsUpdateCommand extends AbstractUpdateCommand {
 
     @Argument(index = 0, name = "name", description = "The name of the VM", required = true, multiValued = false)
