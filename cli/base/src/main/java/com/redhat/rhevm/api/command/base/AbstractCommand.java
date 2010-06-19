@@ -67,12 +67,23 @@ public abstract class AbstractCommand extends OsgiCommandSupport {
     protected Link getLink(BaseResource resource, String rel) {
         Link ret = null;
         Collection<Link> links = resource.getActions().getLinks();
-        for (Link l : links) {
-           if (l.getRel().equals(rel)) {
-               ret = l;
+        for (Link link : links) {
+           if (rel.equals(link.getRel())) {
+               ret = link;
                break;
            }
         }
         return ret;
     }
+    
+    protected String getLink(List<Link> links, String rel) {
+        String ret = null;
+        for (Link link : links) {
+            if (rel.equals((link.getRel()))) {
+                ret = link.getHref();
+            }
+        }
+        return ret;
+    }
+
 }

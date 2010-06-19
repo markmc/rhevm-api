@@ -136,9 +136,9 @@ public class BaseClient {
                 : ", monitor @ " + reaction.getHref();
             System.out.println(verb + " " + reaction.getStatus() + monitor);
             if (Status.FAILED.equals(reaction.getStatus()) && reaction.isSetFault()) {
-                System.out.println("reason: [" + reaction.getFault().getReason() + "]");
+                System.out.println("[" + reaction.getFault().getReason() + "]");
                 if (detail) {
-                    System.out.println("detail: [" + reaction.getFault().getDetail() + "]");
+                    System.out.println("[" + reaction.getFault().getDetail() + "]");
                 }
             }
         }

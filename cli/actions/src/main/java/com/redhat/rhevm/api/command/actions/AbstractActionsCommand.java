@@ -35,12 +35,12 @@ public abstract class AbstractActionsCommand extends AbstractCommand {
     protected boolean detail;
 
     protected void display(Action action) throws Exception {
-        System.out.print("[" + client.getLink(action.getLink(), "replay"));
-        System.out.println("] status: " + action.getStatus());
+        System.out.print("[" + getLink(action.getLink(), "replay"));
+        System.out.println("] " + action.getStatus());
         if (Status.FAILED.equals(action.getStatus()) && action.isSetFault()) {
-            System.out.println("reason: [" + action.getFault().getReason() + "]");
+            System.out.println("[" + action.getFault().getReason() + "]");
             if (detail) {
-                System.out.println("detail: [" + action.getFault().getDetail() + "]");
+                System.out.println("[" + action.getFault().getDetail() + "]");
             }
         }
     }
