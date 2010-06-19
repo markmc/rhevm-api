@@ -18,7 +18,10 @@
  */
 package com.redhat.rhevm.api.common.resource;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URI;
+import java.text.MessageFormat;
 import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.Response;
@@ -28,6 +31,7 @@ import javax.ws.rs.core.Response.Status;
 import com.redhat.rhevm.api.common.util.ReapedMap;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.BaseResource;
+import com.redhat.rhevm.api.model.Fault;
 import com.redhat.rhevm.api.resource.ActionResource;
 
 public abstract class AbstractActionableResource<R extends BaseResource> extends AbstractUpdatableResource<R> {
@@ -130,6 +134,20 @@ public abstract class AbstractActionableResource<R extends BaseResource> extends
         protected Action action;
         public AbstractActionTask(Action action) {
             this.action = action;
+        }
+
+        protected void setFault(String reason, Exception e) {
+            Fault fault = new Fault();
+            fault.setReason(reason);
+            fault.setDetail(trace(e));
+            action.setFault(fault);
+            action.setStatus(com.redhat.rhevm.api.model.Status.FAILED);
+        }
+
+        protected static String trace(Throwable t) {
+            StringWriter sw = new StringWriter();
+            t.printStackTrace(new PrintWriter(sw, true));
+            return sw.toString();
         }
     }
 

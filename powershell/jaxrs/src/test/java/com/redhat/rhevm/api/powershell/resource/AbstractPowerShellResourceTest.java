@@ -82,10 +82,14 @@ public abstract class AbstractPowerShellResourceTest<R extends BaseResource,
         action.setAsync(async);
         return action;
     }
-
-    protected UriInfo setUpActionExpectation(String baseUri, String verb, String command, String ret) throws Exception {
+    
+    protected UriInfo setUpActionExpectation(String baseUri, String verb, String command, Object ret) throws Exception {
         mockStatic(PowerShellCmd.class);
-        expect(PowerShellCmd.runCommand(command)).andReturn(ret);
+        if (ret instanceof Throwable) {
+            expect(PowerShellCmd.runCommand(command)).andThrow((Throwable)ret);
+        } else  {
+            expect(PowerShellCmd.runCommand(command)).andReturn((String)ret);
+        }
 
         URI replayUri = new URI(baseUri + verb);
         URI actionUri = new URI(baseUri + verb + "/56789");
@@ -102,7 +106,12 @@ public abstract class AbstractPowerShellResourceTest<R extends BaseResource,
         return uriInfo;
     }
 
+
     protected void verifyActionResponse(Response r, String baseUri, boolean async) throws Exception {
+        verifyActionResponse(r, baseUri, async, null, null);
+    }
+
+    protected void verifyActionResponse(Response r, String baseUri, boolean async, String reason, String detailExerpt) throws Exception {
         assertEquals("unexpected status", async ? 202 : 200, r.getStatus());
         Object entity = r.getEntity();
         assertTrue("expect Action response entity", entity instanceof Action);
@@ -115,13 +124,20 @@ public abstract class AbstractPowerShellResourceTest<R extends BaseResource,
                    ? action.getStatus().equals(Status.PENDING)
                      || action.getStatus().equals(Status.IN_PROGRESS)
                      || action.getStatus().equals(Status.COMPLETE)
-                   : action.getStatus().equals(Status.COMPLETE));
+                   : reason == null 
+                     ? action.getStatus().equals(Status.COMPLETE)
+                     : action.getStatus().equals(Status.FAILED));
         assertEquals(1, action.getLink().size());
         assertEquals("expected replay link", "replay", action.getLink().get(0).getRel());
         assertNotNull(action.getLink().get(0).getHref());
         assertTrue(action.getLink().get(0).getHref().startsWith(baseUri));
         assertEquals("unexpected async task", async ? 1 : 0, executor.taskCount());
         executor.runNext();
+        if (reason != null) {
+            assertNotNull(action.getFault());
+            assertEquals(reason, action.getFault().getReason());
+            assertTrue(action.getFault().getDetail().indexOf(detailExerpt) != -1);
+        }
     }
 
     protected abstract A getResource();

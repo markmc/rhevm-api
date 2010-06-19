@@ -34,6 +34,7 @@ import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.VM;
 
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellException;
 
 import org.junit.Test;
 
@@ -57,6 +58,9 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
 
     private static final String GET_RETURN = "vmid: " + VM_ID + "\nname: " + VM_NAME + "\nhostclusterid: " + CLUSTER_ID + "\n" + "templateid: " + TEMPLATE_ID + "\n" + OTHER_PROPS;
     private static final String ACTION_RETURN = "replace with realistic powershell return";
+    private static final String FAILURE = "replace with realistic powershell failure";
+    private static final String REASON = "Powershell command \"start-vm -vmid '" + VM_ID + "'\" failed with " + FAILURE;
+    private static final String DETAIL = "at com.redhat.rhevm.api.powershell.util.PowerShellCmd.runCommand(";
     private static final String UPDATE_COMMAND = "$v = get-vm '" + VM_ID + "'\n$v.name = '" + NEW_NAME + "'\nupdate-vm -vmobject $v";
     private static final String UPDATE_RETURN = "vmid: " + VM_ID + "\n name: " + NEW_NAME + "\nhostclusterid: " + CLUSTER_ID + "\n" + "templateid: " + TEMPLATE_ID + "\n" + OTHER_PROPS;
 
@@ -135,6 +139,15 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     }
 
     @Test
+    public void testStartAsyncFailed() throws Exception {
+        verifyActionResponse(
+            resource.start(setUpActionExpectation("start", "start-vm", new PowerShellException(FAILURE)), getAction(true)),
+            true,
+            REASON,
+            DETAIL);
+    }
+
+    @Test
     public void testStopAsync() throws Exception {
         verifyActionResponse(
             resource.stop(setUpActionExpectation("stop", "stop-vm"), getAction(true)),
@@ -169,15 +182,23 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
         return null;
     }
 
-    private UriInfo setUpActionExpectation(String verb, String command, boolean appendVmId) throws Exception {
+    private UriInfo setUpActionExpectation(String verb, String command, boolean appendVmId, Throwable t) throws Exception {
         if (appendVmId) {
             command += " -vmid '" + VM_ID + "'";
         }
-        return setUpActionExpectation("/vms/" + VM_ID + "/", verb, command, ACTION_RETURN);
+        if (t == null) {
+            return setUpActionExpectation("/vms/" + VM_ID + "/", verb, command, ACTION_RETURN);
+        } else {
+            return setUpActionExpectation("/vms/" + VM_ID + "/", verb, command, t);
+        }
     }
 
     private UriInfo setUpActionExpectation(String verb, String command) throws Exception {
-        return setUpActionExpectation(verb, command, true);
+        return setUpActionExpectation(verb, command, true, null);
+    }
+
+    private UriInfo setUpActionExpectation(String verb, String command, Throwable t) throws Exception {
+        return setUpActionExpectation(verb, command, true, t);
     }
 
     private VM getVM(String name) {
@@ -199,6 +220,10 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
 
     private void verifyActionResponse(Response r, boolean async) throws Exception {
         verifyActionResponse(r, "/vms/" + VM_ID + "/", async);
+    }
+
+    private void verifyActionResponse(Response r, boolean async, String reason, String detailExerpt) throws Exception {
+        verifyActionResponse(r, "/vms/" + VM_ID + "/", async, reason, detailExerpt);
     }
 
     private void verifyUpdateException(WebApplicationException wae) {
