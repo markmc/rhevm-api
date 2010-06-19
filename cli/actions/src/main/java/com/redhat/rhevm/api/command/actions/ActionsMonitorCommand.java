@@ -18,10 +18,7 @@
  */
 package com.redhat.rhevm.api.command.actions;
 
-import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
-
-import com.redhat.rhevm.api.command.base.AbstractCommand;
 
 import com.redhat.rhevm.api.model.Action;
 
@@ -29,15 +26,10 @@ import com.redhat.rhevm.api.model.Action;
  * Displays the status of an Action
  */
 @Command(scope = "actions", name = "monitor", description = "Report status of an asynchronous action.")
-public class ActionsMonitorCommand extends AbstractCommand {
-
-    @Argument(index = 0, name = "url", description = "URL of the action to monitor", required = true, multiValued = false)
-    protected String url;
+public class ActionsMonitorCommand extends AbstractActionsCommand {
 
     protected Object doExecute() throws Exception {
-        Action action = client.get(url, Action.class);
-        System.out.print("[" + client.getLink(action.getLink(), "replay"));
-        System.out.println("] status: " + action.getStatus());
+        display(client.get(url, Action.class));
         return null;
     }
 }

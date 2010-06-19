@@ -18,11 +18,8 @@
  */
 package com.redhat.rhevm.api.command.actions;
 
-import org.apache.felix.gogo.commands.Argument;
 import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
-
-import com.redhat.rhevm.api.command.base.AbstractCommand;
 
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Status;
@@ -31,10 +28,7 @@ import com.redhat.rhevm.api.model.Status;
  * Awaits the completion of an Action
  */
 @Command(scope = "actions", name = "wait", description = "Await the completion of an asynchronous action.")
-public class ActionsWaitCommand extends AbstractCommand {
-
-    @Argument(index = 0, name = "url", description = "URL of the action to monitor", required = true, multiValued = false)
-    protected String url;
+public class ActionsWaitCommand extends AbstractActionsCommand {
 
     @Option(name = "-b", aliases = { "--bound" }, description = "Maximum time towait (in seconds)", required = false, multiValued = false)
     protected int bound = -1;
@@ -48,8 +42,7 @@ public class ActionsWaitCommand extends AbstractCommand {
         do {
             action = client.get(url, Action.class);
         } while (ongoing(action) && moreTime(start));
-        System.out.print("[" + client.getLink(action.getLink(), "replay"));
-        System.out.println("] status: " + action.getStatus());
+        display(action);
         return null;
     }
 
