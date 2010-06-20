@@ -51,7 +51,12 @@ public class MockHostResource extends AbstractMockResource<Host> implements Host
     // FIXME: this needs to be atomic
     public void updateModel(Host host) {
         // update writable fields only
-        getModel().setName(host.getName());
+        if (host.isSetName()) {
+            getModel().setName(host.getName());
+        }
+        if (host.isSetDescription()) {
+            getModel().setDescription(host.getDescription());
+        }
     }
 
     public Host addLinks() {

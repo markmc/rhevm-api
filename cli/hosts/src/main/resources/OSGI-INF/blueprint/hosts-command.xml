@@ -12,11 +12,13 @@
     <command name="hosts/list">
       <action class="com.redhat.rhevm.api.command.hosts.HostsListCommand">
         <property name="client" ref="baseClient" />
+        <property name="verboseDisplay" ref="hostVerboseDisplay" />
       </action>
     </command>
     <command name="hosts/add">
       <action class="com.redhat.rhevm.api.command.hosts.HostsAddCommand">
         <property name="client" ref="baseClient" />
+        <property name="verboseDisplay" ref="hostVerboseDisplay" />
       </action>
     </command>
     <command name="hosts/remove">
@@ -30,6 +32,7 @@
     <command name="hosts/update">
       <action class="com.redhat.rhevm.api.command.hosts.HostsUpdateCommand">
         <property name="client" ref="baseClient" />
+        <property name="verboseDisplay" ref="vmVerboseDisplay" />
       </action>
       <completers>
         <ref component-id="hostNameCompleter" />
@@ -65,6 +68,8 @@
   <bean id="hostNameCompleter" class="com.redhat.rhevm.api.command.hosts.HostNameCompleter">
     <property name="client" ref="baseClient" />
   </bean>
+
+  <bean id="hostVerboseDisplay" class="com.redhat.rhevm.api.command.hosts.HostVerboseDisplay"/>
 
   <bean id="baseClient" class="com.redhat.rhevm.api.command.base.BaseClient"  activation="eager">
     <property name="baseUrl" value="$[rhevm.base.url]"/>

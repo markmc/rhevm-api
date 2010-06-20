@@ -12,11 +12,13 @@
     <command name="datacenters/list">
       <action class="com.redhat.rhevm.api.command.datacenters.DataCentersListCommand">
         <property name="client" ref="baseClient" />
+        <property name="verboseDisplay" ref="dataCenterVerboseDisplay" />
       </action>
     </command>
     <command name="datacenters/add">
       <action class="com.redhat.rhevm.api.command.datacenters.DataCentersAddCommand">
         <property name="client" ref="baseClient" />
+        <property name="verboseDisplay" ref="dataCenterVerboseDisplay" />
       </action>
     </command>
     <command name="datacenters/remove">
@@ -27,20 +29,14 @@
         <ref component-id="dataCenterNameCompleter" />
       </completers>
     </command>
-    <!--command name="datacenters/approve">
-      <action class="com.redhat.rhevm.api.command.datacenters.DataCentersApproveCommand">
-        <property name="client" ref="baseClient" />
-      </action>
-      <completers>
-        <ref component-id="dataCenterNameCompleter" />
-      </completers>
-    </command-->
   </command-bundle>
 
 
   <bean id="dataCenterNameCompleter" class="com.redhat.rhevm.api.command.datacenters.DataCenterNameCompleter">
     <property name="client" ref="baseClient" />
   </bean>
+
+  <bean id="dataCenterVerboseDisplay" class="com.redhat.rhevm.api.command.datacenters.DataCenterVerboseDisplay"/>
 
   <bean id="baseClient" class="com.redhat.rhevm.api.command.base.BaseClient"  activation="eager">
     <property name="baseUrl" value="$[rhevm.base.url]"/>

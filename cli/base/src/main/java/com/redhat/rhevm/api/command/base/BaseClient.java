@@ -262,11 +262,15 @@ public class BaseClient {
     }
 
     public static String pad(String f, int width) {
-        StringBuffer field = new StringBuffer("[").append(f);
+        return pad(f, width, true);
+    }
+
+    public static String pad(String f, int width, boolean bracket) {
+        StringBuffer field = new StringBuffer(bracket ? "[" : " ").append(f);
         for (int i = 0 ; i < width - value(f).length() ; i++) {
             field.append(" ");
         }
-        return field.append("] ").toString();
+        return field.append(bracket ? "] " : "  ").toString();
     }
 
     public static String value(String f) {

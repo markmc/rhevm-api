@@ -24,42 +24,69 @@ import org.apache.felix.gogo.commands.Option;
 
 import com.redhat.rhevm.api.model.BaseResource;
 
+import com.redhat.rhevm.api.command.base.VerboseDisplay;
+
 import static com.redhat.rhevm.api.command.base.BaseClient.pad;
 import static com.redhat.rhevm.api.command.base.BaseClient.value;
 
 /**
  * Displays the resources
  */
-public abstract class AbstractListCommand extends AbstractCommand {
+public abstract class AbstractListCommand<T extends BaseResource> extends AbstractCommand {
 
     @Option(name = "-c", aliases = { "--concise" }, description = "Limit display to entity names", required = false, multiValued = false)
     private boolean concise;
 
-    protected Object doList(List <? extends BaseResource> collection, int limit) throws Exception {
-        int i = 0, widestName = 0, widestId = 0;
-        for (BaseResource resource : collection) {
-            if (resource.getName() != null && resource.getName().length() > widestName) {
-                widestName = resource.getName().length();
+    @Option(name = "-l", aliases = {"--verbose"}, description="Display entities in verbose format", required = false, multiValued = false)
+    protected boolean verbose;
+
+    protected VerboseDisplay<T> verboseDisplay;
+
+    protected Object doList(List<T> collection, int limit) throws Exception {
+        int i = 0, widestName = "Name".length(), widestId = "ID".length(), widestDescription = 0;
+        for (T model : collection) {
+            if (model.isSetName() && model.getName().length() > widestName) {
+                widestName = model.getName().length();
             }
-            if (resource.getId() != null && resource.getId().length() > widestId) {
-                widestId = resource.getId().length();
+            if (model.isSetId() && model.getId().length() > widestId) {
+                widestId = model.getId().length();
+            }
+            if (model.isSetDescription() && model.getDescription().length() > widestDescription) {
+                widestDescription = model.getDescription().length();
             }
         }
-        for (BaseResource resource : collection) {
+        for (T model : collection) {
             if (++i > limit) {
                 break;
             }
             if (concise) {
-                System.out.print(resource.getName() + " ");
+                System.out.print(model.getName() + " ");
             } else {
-                System.out.println(pad(resource.getName(), widestName)
-                                   + pad(resource.getId(), widestId)
-                                   + value(resource.getDescription()));
+                if (i == 1) {
+                    System.out.println(pad("Name", widestName, false)
+                            + pad("ID", widestId, false)
+                            + (widestDescription > 0 ? " Description" : ""));
+                }
+                System.out.println(pad(model.getName(), widestName)
+                                   + pad(model.getId(), widestId)
+                                   + value(model.getDescription()));
+                verbose(model);
             }
         }
         if (concise) {
             System.out.println();
         }
         return null;
+    }
+
+    protected void verbose(T model) {
+        if (verboseDisplay != null) {
+            verboseDisplay.expand(model);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void setVerboseDisplay(VerboseDisplay verboseDisplay) {
+        this.verboseDisplay = (VerboseDisplay<T>)verboseDisplay;
     }
 }

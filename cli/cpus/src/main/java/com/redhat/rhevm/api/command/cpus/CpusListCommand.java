@@ -28,6 +28,8 @@ import com.redhat.rhevm.api.command.base.AbstractCommand;
 import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.CPUs;
 
+import static com.redhat.rhevm.api.command.base.BaseClient.pad;
+
 /**
  * Displays the Cpus
  */
@@ -52,13 +54,5 @@ public class CpusListCommand extends AbstractCommand {
 
     private String value(String f) {
         return f != null ? f : "";
-    }
-
-    private String pad(String f, int width) {
-        StringBuffer field = new StringBuffer("[").append(f);
-        for (int i = 0 ; i < width - value(f).length() ; i++) {
-            field.append(" ");
-        }
-        return field.append("] ").toString();
     }
 }

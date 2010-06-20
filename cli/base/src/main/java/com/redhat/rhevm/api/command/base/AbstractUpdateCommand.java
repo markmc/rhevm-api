@@ -29,6 +29,7 @@ import com.redhat.rhevm.api.model.Host;
 
 import static com.redhat.rhevm.api.common.util.ReflectionHelper.set;
 import static com.redhat.rhevm.api.command.base.BaseClient.pad;
+import static com.redhat.rhevm.api.command.base.BaseClient.value;
 
 /**
  * Performs an update on a resource
@@ -40,6 +41,11 @@ public abstract class AbstractUpdateCommand<T extends BaseResource> extends Abst
 
     @Option(name = "-v", aliases = {"--value"}, description="New value for field", required = true, multiValued = false)
     protected String value;
+
+    @Option(name = "-l", aliases = {"--verbose"}, description="Display modified entity in verbose format", required = false, multiValued = false)
+    protected boolean verbose;
+
+    protected VerboseDisplay<T> verboseDisplay;
 
     protected void doUpdate(List<T> collection, Class<T> clz, String localName, String name) throws Exception {
         T resource = getResource(collection, name);
@@ -56,15 +62,28 @@ public abstract class AbstractUpdateCommand<T extends BaseResource> extends Abst
 
     protected void display(T model) {
         if (model != null) {
-            System.out.println(pad("NAME", longer(model.getName(), "NAME"))
-                               + pad("ID", longer(model.getId(), "ID")));
-            System.out.println(pad(model.getName(), longer(model.getName(), "NAME"))
+            System.out.println(pad("Name", longer(model.getName(), "Name"), false)
+                               + pad("ID", longer(model.getId(), "ID"), false)
+                               + (model.isSetDescription() ? " Description" : ""));
+            System.out.println(pad(model.getName(), longer(model.getName(), "Name"))
                                + pad(model.getId(), longer(model.getId(), "ID"))
-                               + " " + model.getDescription());
+                               + " " + value(model.getDescription()));
+            verbose(model);
         }
     }
 
     protected int longer(String a, String b) {
         return a.length() > b.length() ? a.length() : b.length();
+    }
+
+    protected void verbose(T model) {
+        if (verboseDisplay != null) {
+            verboseDisplay.expand(model);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void setVerboseDisplay(VerboseDisplay verboseDisplay) {
+        this.verboseDisplay = (VerboseDisplay<T>)verboseDisplay;
     }
 }

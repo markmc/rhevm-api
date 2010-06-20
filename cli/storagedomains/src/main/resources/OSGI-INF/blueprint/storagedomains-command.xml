@@ -12,11 +12,13 @@
     <command name="storagedomains/list">
       <action class="com.redhat.rhevm.api.command.storagedomains.StorageDomainsListCommand">
         <property name="client" ref="baseClient" />
+        <property name="verboseDisplay" ref="storagedomainVerboseDisplay" />
       </action>
     </command>
     <command name="storagedomains/add">
       <action class="com.redhat.rhevm.api.command.storagedomains.StorageDomainsAddCommand">
         <property name="client" ref="baseClient" />
+        <property name="verboseDisplay" ref="storagedomainVerboseDisplay" />
       </action>
     </command>
     <command name="storagedomains/remove">
@@ -33,6 +35,8 @@
   <bean id="storagedomainNameCompleter" class="com.redhat.rhevm.api.command.storagedomains.StorageDomainNameCompleter">
     <property name="client" ref="baseClient" />
   </bean>
+
+  <bean id="storagedomainVerboseDisplay" class="com.redhat.rhevm.api.command.storagedomains.StorageDomainVerboseDisplay"/>
 
   <bean id="baseClient" class="com.redhat.rhevm.api.command.base.BaseClient"  activation="eager">
     <property name="baseUrl" value="$[rhevm.base.url]"/>

@@ -22,13 +22,14 @@ import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 
 import com.redhat.rhevm.api.command.base.AbstractListCommand;
+import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.StorageDomains;
 
 /**
  * Displays the StorageDomains
  */
 @Command(scope = "storagedomains", name = "list", description = "Lists Storage Domains.")
-public class StorageDomainsListCommand extends AbstractListCommand {
+public class StorageDomainsListCommand extends AbstractListCommand<StorageDomain> {
 
     @Option(name = "-b", aliases = {"--bound"}, description="Upper bound on number of Storage Domains to display", required = false, multiValued = false)
     protected int limit = Integer.MAX_VALUE;

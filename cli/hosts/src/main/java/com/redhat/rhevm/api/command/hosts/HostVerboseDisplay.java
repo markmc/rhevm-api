@@ -18,27 +18,18 @@
  */
 package com.redhat.rhevm.api.command.hosts;
 
-import org.apache.felix.gogo.commands.Command;
-import org.apache.felix.gogo.commands.Option;
-
-import com.redhat.rhevm.api.command.base.AbstractListCommand;
 import com.redhat.rhevm.api.model.Host;
-import com.redhat.rhevm.api.model.Hosts;
 
-/**
- * Displays the Hosts
- */
-@Command(scope = "hosts", name = "list", description = "Lists Hosts.")
-public class HostsListCommand extends AbstractListCommand<Host> {
+import com.redhat.rhevm.api.command.base.VerboseDisplay;
 
-    @Option(name = "-b", aliases = {"--bound"}, description="Upper bound on number of Hosts to display", required = false, multiValued = false)
-    protected int limit = Integer.MAX_VALUE;
-
-    @Option(name = "-s", aliases = {"--search"}, description="Query constraint on Hosts", required = false, multiValued = false)
-    protected String constraint;
-
-    protected Object doExecute() throws Exception {
-        doList(client.getCollection("hosts", Hosts.class, constraint).getHosts(), limit);
-        return null;
+public class HostVerboseDisplay implements VerboseDisplay<Host> {
+    @Override
+    public void expand(Host model) {
+        if (model.isSetStatus()) {
+            System.out.println("  status: " + model.getStatus());
+        }
+        if (model.isSetAddress()) {
+            System.out.println("  address: " + model.getAddress());
+        }
     }
 }

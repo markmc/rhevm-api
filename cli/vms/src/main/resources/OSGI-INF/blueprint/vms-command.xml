@@ -12,6 +12,7 @@
     <command name="vms/list">
       <action class="com.redhat.rhevm.api.command.vms.VmsListCommand">
         <property name="client" ref="baseClient" />
+        <property name="verboseDisplay" ref="vmVerboseDisplay" />
       </action>
     </command>
     <command name="vms/remove">
@@ -65,6 +66,7 @@
     <command name="vms/update">
       <action class="com.redhat.rhevm.api.command.vms.VmsUpdateCommand">
         <property name="client" ref="baseClient" />
+        <property name="verboseDisplay" ref="vmVerboseDisplay" />
       </action>
       <completers>
         <ref component-id="vmNameCompleter" />
@@ -73,6 +75,7 @@
     <command name="vms/add">
       <action class="com.redhat.rhevm.api.command.vms.VmsAddCommand">
         <property name="client" ref="baseClient" />
+        <property name="verboseDisplay" ref="vmVerboseDisplay" />
       </action>
     </command>
   </command-bundle>
@@ -81,6 +84,8 @@
   <bean id="vmNameCompleter" class="com.redhat.rhevm.api.command.vms.VmNameCompleter">
     <property name="client" ref="baseClient" />
   </bean>
+
+  <bean id="vmVerboseDisplay" class="com.redhat.rhevm.api.command.vms.VmVerboseDisplay"/>
 
   <bean id="baseClient" class="com.redhat.rhevm.api.command.base.BaseClient"  activation="eager">
     <property name="baseUrl" value="$[rhevm.base.url]"/>

@@ -18,27 +18,18 @@
  */
 package com.redhat.rhevm.api.command.clusters;
 
-import org.apache.felix.gogo.commands.Command;
-import org.apache.felix.gogo.commands.Option;
-
-import com.redhat.rhevm.api.command.base.AbstractListCommand;
 import com.redhat.rhevm.api.model.Cluster;
-import com.redhat.rhevm.api.model.Clusters;
 
-/**
- * Displays the Clusters
- */
-@Command(scope = "clusters", name = "list", description = "Lists Clusters.")
-public class ClustersListCommand extends AbstractListCommand<Cluster> {
+import com.redhat.rhevm.api.command.base.VerboseDisplay;
 
-    @Option(name = "-b", aliases = {"--bound"}, description="Upper bound on number of Clusters to display", required = false, multiValued = false)
-    protected int limit = Integer.MAX_VALUE;
-
-    @Option(name = "-s", aliases = {"--search"}, description="Query constraint on Clusters", required = false, multiValued = false)
-    protected String constraint;
-
-    protected Object doExecute() throws Exception {
-        doList(client.getCollection("clusters", Clusters.class, constraint).getClusters(), limit);
-        return null;
+public class ClusterVerboseDisplay implements VerboseDisplay<Cluster> {
+    @Override
+    public void expand(Cluster model) {
+        if (model.isSetDataCenter()) {
+            System.out.println("  data center: " + model.getDataCenter().getName());
+        }
+        if (model.isSetCpu()) {
+            System.out.println("  CPU: " + model.getCpu().getId());
+        }
     }
 }

@@ -22,13 +22,14 @@ import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 
 import com.redhat.rhevm.api.command.base.AbstractListCommand;
+import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.DataCenters;
 
 /**
  * Displays the DataCenters
  */
 @Command(scope = "datacenters", name = "list", description = "Lists Data Centers.")
-public class DataCentersListCommand extends AbstractListCommand {
+public class DataCentersListCommand extends AbstractListCommand<DataCenter> {
 
     @Option(name = "-b", aliases = {"--bound"}, description="Upper bound on number of Data Centers to display", required = false, multiValued = false)
     protected int limit = Integer.MAX_VALUE;

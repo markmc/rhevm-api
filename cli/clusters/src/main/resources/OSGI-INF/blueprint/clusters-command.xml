@@ -12,11 +12,13 @@
     <command name="clusters/list">
       <action class="com.redhat.rhevm.api.command.clusters.ClustersListCommand">
         <property name="client" ref="baseClient" />
+        <property name="verboseDisplay" ref="clusterVerboseDisplay" />
       </action>
     </command>
     <command name="clusters/add">
       <action class="com.redhat.rhevm.api.command.clusters.ClustersAddCommand">
         <property name="client" ref="baseClient" />
+        <property name="verboseDisplay" ref="clusterVerboseDisplay" />
       </action>
     </command>
     <command name="clusters/remove">
@@ -33,6 +35,8 @@
   <bean id="clusterNameCompleter" class="com.redhat.rhevm.api.command.clusters.ClusterNameCompleter">
     <property name="client" ref="baseClient" />
   </bean>
+
+  <bean id="clusterVerboseDisplay" class="com.redhat.rhevm.api.command.clusters.ClusterVerboseDisplay"/>
 
   <bean id="baseClient" class="com.redhat.rhevm.api.command.base.BaseClient"  activation="eager">
     <property name="baseUrl" value="$[rhevm.base.url]"/>

@@ -31,6 +31,11 @@ public abstract class AbstractAddCommand<T extends BaseResource> extends Abstrac
     @Option(name = "-d", aliases = { "--description" }, description = "Description of the new entity", required = false, multiValued = false)
     private String description;
 
+    @Option(name = "-l", aliases = {"--verbose"}, description="Display new entity in verbose format", required = false, multiValued = false)
+    protected boolean verbose;
+
+    protected VerboseDisplay<T> verboseDisplay;
+
     protected T doAdd(T addition, Class<T> clz, String rel, String localName) throws Exception {
         addition.setDescription(description);
         return client.doAdd(addition, clz, client.getTopLink(rel), localName);
@@ -40,8 +45,21 @@ public abstract class AbstractAddCommand<T extends BaseResource> extends Abstrac
         if (model != null) {
             StringBuffer print = new StringBuffer("Created [");
             print.append(model.getName()).append("] [");
-            print.append(model.getId()).append("]\n");
+            print.append(model.getId()).append("] ");
+            print.append(model.isSetDescription() ? model.getDescription() : "").append("\n");
             System.out.print(print.toString());
+            verbose(model);
         }
+    }
+
+    protected void verbose(T model) {
+        if (verboseDisplay != null) {
+            verboseDisplay.expand(model);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void setVerboseDisplay(VerboseDisplay verboseDisplay) {
+        this.verboseDisplay = (VerboseDisplay<T>)verboseDisplay;
     }
 }
