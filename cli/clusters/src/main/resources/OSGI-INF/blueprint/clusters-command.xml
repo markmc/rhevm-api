@@ -29,6 +29,14 @@
         <ref component-id="clusterNameCompleter" />
       </completers>
     </command>
+    <command name="clusters/update">
+      <action class="com.redhat.rhevm.api.command.clusters.ClustersUpdateCommand">
+        <property name="client" ref="baseClient" />
+      </action>
+      <completers>
+        <ref component-id="clusterNameCompleter" />
+      </completers>
+    </command>
   </command-bundle>
 
 

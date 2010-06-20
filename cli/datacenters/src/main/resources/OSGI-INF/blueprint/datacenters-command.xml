@@ -29,6 +29,14 @@
         <ref component-id="dataCenterNameCompleter" />
       </completers>
     </command>
+    <command name="datacenters/update">
+      <action class="com.redhat.rhevm.api.command.datacenters.DataCentersUpdateRemoveCommand">
+        <property name="client" ref="baseClient" />
+      </action>
+      <completers>
+        <ref component-id="dataCenterNameCompleter" />
+      </completers>
+    </command>
   </command-bundle>
 
 

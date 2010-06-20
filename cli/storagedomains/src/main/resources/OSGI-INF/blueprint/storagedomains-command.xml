@@ -29,6 +29,14 @@
         <ref component-id="storagedomainNameCompleter" />
       </completers>
     </command>
+    <command name="storagedomains/update">
+      <action class="com.redhat.rhevm.api.command.storagedomains.StorageDomainsUpdateCommand">
+        <property name="client" ref="baseClient" />
+      </action>
+      <completers>
+        <ref component-id="storagedomainNameCompleter" />
+      </completers>
+    </command>
   </command-bundle>
 
 
