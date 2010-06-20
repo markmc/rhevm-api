@@ -22,6 +22,7 @@
     <module>storagedomains</module>
     <module>cpus</module>
     <module>actions</module>
+    <module>templates</module>
     <module>feature</module>
   </modules>
 
