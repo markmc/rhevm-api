@@ -15,14 +15,35 @@
         <property name="verboseDisplay" ref="networkVerboseDisplay" />
       </action>
     </command>
+    <command name="networks/update">
+      <action class="com.redhat.rhevm.api.command.networks.NetworksUpdateCommand">
+        <property name="client" ref="baseClient" />
+        <property name="verboseDisplay" ref="networkVerboseDisplay" />
+      </action>
+      <completers>
+        <ref component-id="networkNameCompleter" />
+      </completers>
+    </command>
     <command name="networks/add">
       <action class="com.redhat.rhevm.api.command.networks.NetworksAddCommand">
         <property name="client" ref="baseClient" />
         <property name="verboseDisplay" ref="networkVerboseDisplay" />
       </action>
     </command>
+    <command name="networks/remove">
+      <action class="com.redhat.rhevm.api.command.networks.NetworksRemoveCommand">
+        <property name="client" ref="baseClient" />
+      </action>
+      <completers>
+        <ref component-id="networkNameCompleter" />
+      </completers>
+    </command>
   </command-bundle>
 
+
+  <bean id="networkNameCompleter" class="com.redhat.rhevm.api.command.networks.NetworkNameCompleter">
+    <property name="client" ref="baseClient" />
+  </bean>
 
   <bean id="networkVerboseDisplay" class="com.redhat.rhevm.api.command.networks.NetworkVerboseDisplay"/>
 
