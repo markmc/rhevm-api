@@ -15,6 +15,12 @@
         <property name="verboseDisplay" ref="networkVerboseDisplay" />
       </action>
     </command>
+    <command name="networks/add">
+      <action class="com.redhat.rhevm.api.command.networks.NetworksAddCommand">
+        <property name="client" ref="baseClient" />
+        <property name="verboseDisplay" ref="networkVerboseDisplay" />
+      </action>
+    </command>
   </command-bundle>
 
 
