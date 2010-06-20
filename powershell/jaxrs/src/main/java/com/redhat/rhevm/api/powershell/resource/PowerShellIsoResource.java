@@ -18,9 +18,6 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import java.util.ArrayList;
-
-import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.DataCenter;
@@ -35,8 +32,8 @@ public class PowerShellIsoResource implements IsoResource {
     private static String dataCenterId;
 
     public PowerShellIsoResource(String id, String dataCenterId) {
-        this.id = id;
-        this.dataCenterId = dataCenterId;
+        PowerShellIsoResource.id = id;
+        PowerShellIsoResource.dataCenterId = dataCenterId;
     }
 
     public static Iso addLinks(Iso iso, String dataCenterId) {

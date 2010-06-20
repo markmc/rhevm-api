@@ -18,16 +18,13 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.Templates;
-import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.resource.TemplateResource;
 import com.redhat.rhevm.api.resource.TemplatesResource;
 import com.redhat.rhevm.api.common.util.LinkHelper;
-import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 
 public class PowerShellTemplatesResource
     extends AbstractPowerShellCollectionResource<Template, PowerShellTemplateResource>

@@ -22,22 +22,12 @@ import java.util.ArrayList;
 import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Action;
-import com.redhat.rhevm.api.model.ActionsBuilder;
-import com.redhat.rhevm.api.model.CdRom;
-import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.CpuTopology;
-import com.redhat.rhevm.api.model.Disk;
-import com.redhat.rhevm.api.model.NIC;
-import com.redhat.rhevm.api.model.Iso;
 import com.redhat.rhevm.api.model.Link;
-import com.redhat.rhevm.api.model.Network;
-import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VM;
-import com.redhat.rhevm.api.model.VmPool;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.common.util.JAXBHelper;

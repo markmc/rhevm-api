@@ -22,12 +22,10 @@ import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.resource.ClusterResource;
-import com.redhat.rhevm.api.resource.ClustersResource;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 

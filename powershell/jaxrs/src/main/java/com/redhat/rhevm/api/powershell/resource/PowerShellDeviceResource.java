@@ -49,7 +49,7 @@ public class PowerShellDeviceResource<D extends BaseDevice, C extends BaseDevice
                 List<D> devices;
 
                 try {
-                    devices = (List<D>)method.invoke(collection);
+                    devices = asDevices(method.invoke(collection));
                 } catch (Exception e) {
                     // invocation target exception should not occur on simple getter
                     continue;
@@ -64,5 +64,10 @@ public class PowerShellDeviceResource<D extends BaseDevice, C extends BaseDevice
         }
 
         return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<D> asDevices(Object o) {
+        return (List<D>)o;
     }
 }

@@ -24,7 +24,6 @@ import java.util.concurrent.Executor;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Cluster;
-import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.resource.ClusterResource;
 import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.common.util.LinkHelper;

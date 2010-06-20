@@ -24,7 +24,6 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.Disks;
-import com.redhat.rhevm.api.model.Network;
 
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.common.util.ReflectionHelper;

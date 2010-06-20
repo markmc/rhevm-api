@@ -20,11 +20,8 @@ package com.redhat.rhevm.api.mock.resource;
 
 import java.util.concurrent.Executor;
 
-import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.model.ActionsBuilder;
-import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.resource.NetworkResource;
 import com.redhat.rhevm.api.common.util.JAXBHelper;

@@ -18,12 +18,8 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
-
 import com.redhat.rhevm.api.model.BaseDevice;
 import com.redhat.rhevm.api.model.BaseDevices;
-import com.redhat.rhevm.api.resource.DeviceResource;
 import com.redhat.rhevm.api.resource.DevicesResource;
 
 

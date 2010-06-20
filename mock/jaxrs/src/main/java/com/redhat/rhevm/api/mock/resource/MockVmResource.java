@@ -21,11 +21,9 @@ package com.redhat.rhevm.api.mock.resource;
 import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Action;
-import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.resource.DevicesResource;

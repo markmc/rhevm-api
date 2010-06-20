@@ -18,8 +18,6 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import java.net.URI;
-
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
@@ -31,9 +29,7 @@ import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import org.junit.Test;
 
 import static org.easymock.classextension.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.isA;
 
-import static org.powermock.api.easymock.PowerMock.createMock;
 import static org.powermock.api.easymock.PowerMock.mockStatic;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 

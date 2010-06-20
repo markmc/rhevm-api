@@ -22,13 +22,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.model.Action;
-import com.redhat.rhevm.api.model.CdRom;
-import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.Fault;
-import com.redhat.rhevm.api.model.NIC;
-import com.redhat.rhevm.api.model.Iso;
-import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.VM;
 
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;

@@ -18,8 +18,6 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import java.text.MessageFormat;
-
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VM;

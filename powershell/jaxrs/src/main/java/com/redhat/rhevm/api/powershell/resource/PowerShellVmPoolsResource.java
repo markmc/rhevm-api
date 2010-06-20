@@ -26,7 +26,6 @@ import com.redhat.rhevm.api.model.VmPool;
 import com.redhat.rhevm.api.model.VmPools;
 import com.redhat.rhevm.api.resource.VmPoolResource;
 import com.redhat.rhevm.api.resource.VmPoolsResource;
-import com.redhat.rhevm.api.powershell.model.PowerShellVmPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 

@@ -20,7 +20,6 @@ package com.redhat.rhevm.api.powershell.resource;
 
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.Network;
-import com.redhat.rhevm.api.model.Networks;
 
 import org.junit.Test;
 

@@ -18,7 +18,6 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Iso;
