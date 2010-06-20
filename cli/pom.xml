@@ -23,6 +23,7 @@
     <module>cpus</module>
     <module>actions</module>
     <module>templates</module>
+    <module>networks</module>
     <module>feature</module>
   </modules>
 
