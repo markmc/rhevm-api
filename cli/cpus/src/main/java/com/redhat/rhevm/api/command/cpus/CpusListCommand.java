@@ -55,10 +55,10 @@ public class CpusListCommand extends AbstractCommand {
     }
 
     private String pad(String f, int width) {
-        StringBuffer field = new StringBuffer("[").append(f); 
+        StringBuffer field = new StringBuffer("[").append(f);
         for (int i = 0 ; i < width - value(f).length() ; i++) {
             field.append(" ");
-        } 
+        }
         return field.append("] ").toString();
     }
 }

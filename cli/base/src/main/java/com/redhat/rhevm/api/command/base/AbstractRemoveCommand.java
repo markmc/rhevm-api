@@ -34,7 +34,7 @@ public abstract class AbstractRemoveCommand extends AbstractCommand {
         if (resource != null) {
             if (resource.getHref() != null) {
                 client.doRemove(resource);
-            } 
+            }
         } else {
             System.err.println(name + " is unknown");
         }

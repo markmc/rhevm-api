@@ -44,7 +44,7 @@ public abstract class AbstractActionableResource<R extends BaseResource> extends
     public AbstractActionableResource(String id) {
         this(id, new SimpleExecutor());
     }
-    
+
     public AbstractActionableResource(String id, Executor executor) {
         super(id);
         this.executor = executor;
