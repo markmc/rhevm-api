@@ -56,7 +56,12 @@ public class MockStorageDomainResource extends AbstractMockResource<StorageDomai
     // FIXME: this needs to be atomic
     public void updateModel(StorageDomain storageDomain) {
         // update writable fields only
-        getModel().setName(storageDomain.getName());
+        if (storageDomain.isSetName()) {
+            getModel().setName(storageDomain.getName());
+        }
+        if (storageDomain.isSetDescription()) {
+            getModel().setDescription(storageDomain.getDescription());
+        }
     }
 
     public StorageDomain addLinks() {

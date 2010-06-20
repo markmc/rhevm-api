@@ -45,20 +45,20 @@ public class MockClusterResource extends AbstractMockResource<Cluster> implement
     // FIXME: this needs to be atomic
     public void updateModel(Cluster cluster) {
         // update writable fields only
-        if (cluster.getName() != null) {
+        if (cluster.isSetName()) {
             getModel().setName(cluster.getName());
         }
-        if (cluster.getDescription() != null) {
+        if (cluster.isSetDescription()) {
             getModel().setDescription(cluster.getDescription());
         }
 
-        if (cluster.getCpu() != null) {
+        if (cluster.isSetCpu()) {
             CPU cpu = new CPU();
             cpu.setId(cluster.getCpu().getId());
             getModel().setCpu(cpu);
         }
 
-        if (cluster.getDataCenter() != null) {
+        if (cluster.isSetDataCenter()) {
             DataCenter dataCenter = new DataCenter();
             dataCenter.setId(cluster.getDataCenter().getId());
             getModel().setDataCenter(dataCenter);

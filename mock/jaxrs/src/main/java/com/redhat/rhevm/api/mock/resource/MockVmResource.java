@@ -54,13 +54,13 @@ public class MockVmResource extends AbstractMockResource<VM> implements VmResour
     // FIXME: this needs to be atomic
     public void updateModel(VM vm) {
         // update writable fields only
-        if (vm.getName() != null) {
+        if (vm.isSetName()) {
             getModel().setName(vm.getName());
         }
-        if (vm.getDescription() != null) {
+        if (vm.isSetDescription()) {
             getModel().setDescription(vm.getDescription());
         }
-        if (vm.getCluster() != null) {
+        if (vm.isSetCluster()) {
             Cluster cluster = new Cluster();
             cluster.setId(vm.getCluster().getId());
             getModel().setCluster(cluster);

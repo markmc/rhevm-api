@@ -48,13 +48,13 @@ public class MockDataCenterResource extends AbstractMockResource<DataCenter> imp
     // FIXME: this needs to be atomic
     public void updateModel(DataCenter dataCenter) {
         // update writable fields only
-        if (dataCenter.getName() != null) {
+        if (dataCenter.isSetName()) {
             getModel().setName(dataCenter.getName());
         }
-        if (dataCenter.getDescription() != null) {
+        if (dataCenter.isSetDescription()) {
             getModel().setDescription(dataCenter.getDescription());
         }
-        if (dataCenter.getStorageType() != null) {
+        if (dataCenter.isSetStorageType()) {
             getModel().setStorageType(dataCenter.getStorageType());
         }
     }

@@ -43,7 +43,12 @@ public class MockNetworkResource extends AbstractMockResource<Network> implement
     // FIXME: this needs to be atomic
     public void updateModel(Network network) {
         // update writable fields only
-        getModel().setName(network.getName());
+        if (network.isSetName()) {
+            getModel().setName(network.getName());
+        }
+        if (network.isSetDescription()) {
+            getModel().setDescription(network.getDescription());
+        }
     }
 
     public Network addLinks() {
