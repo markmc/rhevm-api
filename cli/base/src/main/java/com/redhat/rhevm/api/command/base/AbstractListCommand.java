@@ -80,7 +80,7 @@ public abstract class AbstractListCommand<T extends BaseResource> extends Abstra
     }
 
     protected void verbose(T model) {
-        if (verboseDisplay != null) {
+        if (verbose && verboseDisplay != null) {
             verboseDisplay.expand(model);
         }
     }

@@ -53,7 +53,7 @@ public abstract class AbstractAddCommand<T extends BaseResource> extends Abstrac
     }
 
     protected void verbose(T model) {
-        if (verboseDisplay != null) {
+        if (verbose && verboseDisplay != null) {
             verboseDisplay.expand(model);
         }
     }

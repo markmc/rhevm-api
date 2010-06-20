@@ -35,7 +35,7 @@ public class DataCentersUpdateCommand extends AbstractUpdateCommand<DataCenter> 
     protected String name;
 
     protected Object doExecute() throws Exception {
-        doUpdate(client.getCollection("datacenters", DataCenters.class).getDataCenters(), DataCenter.class, "datacenter", name);
+        doUpdate(client.getCollection("datacenters", DataCenters.class).getDataCenters(), DataCenter.class, "data_center", name);
         return null;
     }
 }

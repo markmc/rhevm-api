@@ -32,6 +32,7 @@
     <command name="storagedomains/update">
       <action class="com.redhat.rhevm.api.command.storagedomains.StorageDomainsUpdateCommand">
         <property name="client" ref="baseClient" />
+        <property name="verboseDisplay" ref="storagedomainVerboseDisplay" />
       </action>
       <completers>
         <ref component-id="storagedomainNameCompleter" />

@@ -32,7 +32,7 @@
     <command name="hosts/update">
       <action class="com.redhat.rhevm.api.command.hosts.HostsUpdateCommand">
         <property name="client" ref="baseClient" />
-        <property name="verboseDisplay" ref="vmVerboseDisplay" />
+        <property name="verboseDisplay" ref="hostVerboseDisplay" />
       </action>
       <completers>
         <ref component-id="hostNameCompleter" />

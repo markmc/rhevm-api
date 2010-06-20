@@ -32,6 +32,7 @@
     <command name="clusters/update">
       <action class="com.redhat.rhevm.api.command.clusters.ClustersUpdateCommand">
         <property name="client" ref="baseClient" />
+        <property name="verboseDisplay" ref="clusterVerboseDisplay" />
       </action>
       <completers>
         <ref component-id="clusterNameCompleter" />

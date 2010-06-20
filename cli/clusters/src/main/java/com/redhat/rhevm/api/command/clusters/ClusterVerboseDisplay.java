@@ -25,7 +25,7 @@ import com.redhat.rhevm.api.command.base.VerboseDisplay;
 public class ClusterVerboseDisplay implements VerboseDisplay<Cluster> {
     @Override
     public void expand(Cluster model) {
-        if (model.isSetDataCenter()) {
+        if (model.isSetDataCenter() && model.getDataCenter().isSetName()) {
             System.out.println("  data center: " + model.getDataCenter().getName());
         }
         if (model.isSetCpu()) {

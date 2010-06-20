@@ -77,7 +77,7 @@ public abstract class AbstractUpdateCommand<T extends BaseResource> extends Abst
     }
 
     protected void verbose(T model) {
-        if (verboseDisplay != null) {
+        if (verbose && verboseDisplay != null) {
             verboseDisplay.expand(model);
         }
     }
