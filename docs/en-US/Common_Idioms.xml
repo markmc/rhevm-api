@@ -93,7 +93,7 @@ Content-Type: application/xml
     </title>
 
     <para>
-      A collection may be queried using a <literal>GET</literal> request on an appropropriate <literal>"collection/search"</literal> URI template, instanitated with a query constraint expressed in the RHEV-M query language. Only those resources in the collection satisfying the constraint will be returned.
+      A collection may be queried using a <literal>GET</literal> request on an appropropriate <literal>"collection/search"</literal> URI template, instantiated with a query constraint expressed in the RHEV-M query language. Only those resources in the collection satisfying the constraint will be returned.
     </para>
 
     <screen>
@@ -206,7 +206,7 @@ Content-Type: application/xml
     </para>
 
     <para>
-      If an attempt is made to modify a <italics>strictly<italics> immutable resource property, this is reported as <literal>409 Conflict<literal> error with a <literal>Fault</literal> representation in the response body. Other non-modifiable properties specified in the request entity-body may be silently ignored.
+      If an attempt is made to modify a <emphasis>strictly</emphasis> immutable resource property, this is reported as <literal>409 Conflict</literal> error with a <literal>Fault</literal> representation in the response body. Other non-modifiable properties specified in the request entity-body may be silently ignored.
     </para>
 
   </section>
@@ -293,7 +293,7 @@ Content-Type: application/xml
   &lt;async&gt;true&lt;/async&gt;
   ...
 &lt;action&gt;
-    <screen>
+    </screen>
 
     <para>
       A subsequent <literal>GET</literal> on the action URI provides an indication of the status of the asynchronous task:
@@ -346,7 +346,7 @@ Content-Type: application/xml
     </title>
 
     <para>
-      Some errors require further explanation beyond that provided by a standard HTTP status code. For example, an unsuccessful resource state update or action is reported with a <literal>Fault</literal> representation in the response entity-body. The fault contains reason and detail strings, which may be localized for the client's locale as specified via the <literal>Accept-Language</literal> HTTP header. Clients initiating a request which may fail in this way must be prepared to unmarshal either a <literal>Fault</literal> <italics>or</italics> the expected resource representation, depending on the response status code. Such cases are clearly indicated in the individual resource documentation.
+      Some errors require further explanation beyond that provided by a standard HTTP status code. For example, an unsuccessful resource state update or action is reported with a <literal>Fault</literal> representation in the response entity-body. The fault contains reason and detail strings, which may be localized for the client's locale as specified via the <literal>Accept-Language</literal> HTTP header. Clients initiating a request which may fail in this way must be prepared to unmarshal either a <literal>Fault</literal> <emphasis>or</emphasis> the expected resource representation, depending on the response status code. Such cases are clearly indicated in the individual resource documentation.
     </para>
 
     <screen>

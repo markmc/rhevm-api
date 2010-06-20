@@ -99,11 +99,12 @@ Content-Length: 0
       </para>
     </footnote>
     which describe the form of URI to be used for querying the collections. Each URI template is identified by a relation type, named according to the convention <literal>"collection/search"</literal>.
+  </para>
 
   <note>
     <title>URI Templates</title>
     <para>
-      The purpose of the URI template is allow a search be expressed using the natural HTTP idiom of a query parameter, but without requiring that the client is aware <italics>a priori</italics> of the URI structure. Thus clients should treat these templates as being opaque, and instantiate them via a URI template library such as the Google Code <ulink url="http://code.google.com/p/uri-templates/">uri-templates</ulink> Python package or the Apache Abdera <ulink url="https://cwiki.apache.org/ABDERA/uri-templates.html">support for Java templates</ulink>.
+      The purpose of the URI template is allow a search be expressed using the natural HTTP idiom of a query parameter, but without requiring that the client is aware <emphasis>a priori</emphasis> of the URI structure. Thus clients should treat these templates as being opaque, and instantiate them via a URI template library such as the Google Code <ulink url="http://code.google.com/p/uri-templates/">uri-templates</ulink> Python package or the Apache Abdera <ulink url="https://cwiki.apache.org/ABDERA/uri-templates.html">support for Java templates</ulink>.
     </para>
   </note>
 
@@ -127,7 +128,6 @@ Content-Length: 0
             <entry><literal>hosts/search</literal></entry>
             <entry>Query hosts</entry>
           </row>
-          <row>
           <row>
             <entry><literal>storagedomains/search</literal></entry>
             <entry>Query storage domains</entry>
