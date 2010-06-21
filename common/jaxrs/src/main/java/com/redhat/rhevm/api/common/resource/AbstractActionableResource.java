@@ -33,7 +33,6 @@ import com.redhat.rhevm.api.common.util.ReapedMap;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.BaseResource;
 import com.redhat.rhevm.api.model.Fault;
-import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.resource.ActionResource;
 
 public abstract class AbstractActionableResource<R extends BaseResource> extends AbstractUpdatableResource<R> {
@@ -101,12 +100,11 @@ public abstract class AbstractActionableResource<R extends BaseResource> extends
                : new ActionResource() {
                     @Override
                     public Response get() {
-                        // FIXME: need to abstract away "vms" here
-                        VM vm = new VM();
-                        vm.setId(getId());
-                        vm = LinkHelper.addLinks(vm);
+                        R tmp = newModel();
+                        tmp.setId(getId());
+                        tmp = LinkHelper.addLinks(tmp);
                         Response.Status status = Response.Status.MOVED_PERMANENTLY;
-                        return Response.status(status).location(URI.create(vm.getHref())).build();
+                        return Response.status(status).location(URI.create(tmp.getHref())).build();
                     }
                     @Override
                     public Action getAction() {
