@@ -49,6 +49,7 @@ public class ClustersAddCommand extends AbstractAddCommand<Cluster> {
 
     protected Cluster getModel() {
         Cluster model = new Cluster();
+        model.setName(name);
         model.setCpu(new CPU());
         model.getCpu().setId(cpu);
         model.setDataCenter(new DataCenter());
