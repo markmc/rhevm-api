@@ -27,6 +27,11 @@ via tab-completion, so for example v<TAB>l<TAB> will resolve to "vms:list",
 whereas v<TAB>sh<TAB>vm<TAB> will resolve to vms:shutdown with a list
 of VM names to choose from.
 
+The following command scopes are relevant to RHEV-M:
+
+  vms, vmpools, templates, actions, cpus, hosts,
+  clusters, datacenters, storagedomains, networks
+
 The --help option is supported with each command giving basic
 man-style documentation.
 
