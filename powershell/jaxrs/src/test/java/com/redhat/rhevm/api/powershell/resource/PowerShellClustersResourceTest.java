@@ -51,7 +51,7 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
     @Test
     public void testQuery() throws Exception {
         verifyCollection(
-            resource.list(setUpResourceExpectations(getQueryCommand(Clusters.class),
+            resource.list(setUpResourceExpectations(getQueryCommand(Cluster.class),
                                                     getQueryReturn(SELECT_RETURN_EPILOG),
                                                     getQueryParam(),
                                                     NAMES_SUBSET)).getClusters(),

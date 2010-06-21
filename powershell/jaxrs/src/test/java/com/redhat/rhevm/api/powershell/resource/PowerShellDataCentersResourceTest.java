@@ -58,7 +58,7 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
 
     @Test
     public void testQuery() throws Exception {
-        String [] commands = { getQueryCommand(DataCenters.class),
+        String [] commands = { getQueryCommand(DataCenter.class),
                                GET_STORAGE_COMMAND + "'" + NAMES[1].hashCode() + "'",
                                GET_STORAGE_COMMAND + "'" + NAMES[2].hashCode() + "'"};
         String [] returns =  { getQueryReturn(SELECT_RETURN_EPILOG),

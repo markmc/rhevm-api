@@ -47,7 +47,7 @@ public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionRes
     @Test
     public void testQuery() throws Exception {
         verifyCollection(
-            resource.list(setUpResourceExpectations(getQueryCommand(Hosts.class),
+            resource.list(setUpResourceExpectations(getQueryCommand(Host.class),
                                                     getQueryReturn(SELECT_RETURN_EPILOG),
                                                     getQueryParam(),
                                                     NAMES_SUBSET)).getHosts(),

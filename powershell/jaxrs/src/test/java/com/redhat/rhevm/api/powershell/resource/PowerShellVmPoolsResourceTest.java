@@ -65,7 +65,7 @@ public class PowerShellVmPoolsResourceTest extends AbstractPowerShellCollectionR
 
     @Test
     public void testQuery() throws Exception {
-        String [] commands = { getQueryCommand(VmPools.class),
+        String [] commands = { getQueryCommand(VmPool.class),
                                LOOKUP_CLUSTER_COMMAND, LOOKUP_TEMPLATE_COMMAND,
                                LOOKUP_CLUSTER_COMMAND, LOOKUP_TEMPLATE_COMMAND };
         String [] returns = { getQueryReturn(GET_RETURN_EPILOG),
