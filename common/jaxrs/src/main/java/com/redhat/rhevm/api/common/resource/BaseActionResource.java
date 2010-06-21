@@ -25,15 +25,20 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Action;
+import com.redhat.rhevm.api.model.BaseResource;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.resource.ActionResource;
+import com.redhat.rhevm.api.common.util.LinkHelper;
 
-public class BaseActionResource implements ActionResource {
+
+public class BaseActionResource<R extends BaseResource> implements ActionResource {
 
     private Action action;
+    private R parent;
 
-    BaseActionResource(UriInfo uriInfo, Action action) {
+    BaseActionResource(UriInfo uriInfo, Action action, R parent) {
         this.action = action;
+        this.parent = parent;
         action.setId(UUID.randomUUID().toString());
         addLinks(uriInfo);
     }
@@ -56,12 +61,17 @@ public class BaseActionResource implements ActionResource {
         return path;
     }
 
+    private void addLink(String rel, String href) {
+        Link link = new Link();
+        link.setRel(rel);
+        link.setHref(href);
+        action.getLink().add(link);
+    }
+
     private void addLinks(UriInfo uriInfo) {
         action.setHref(UriBuilder.fromPath(getRelativePath(uriInfo)).path(action.getId()).build().toString());
 
-        Link replay = new Link();
-        replay.setRel("replay");
-        replay.setHref(getRelativePath(uriInfo));
-        action.getLink().add(replay);
+        addLink("parent", LinkHelper.addLinks(parent).getHref());
+        addLink("replay", getRelativePath(uriInfo));
     }
 }

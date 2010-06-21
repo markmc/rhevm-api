@@ -66,7 +66,9 @@ public abstract class AbstractActionableResource<R extends BaseResource> extends
     protected Response doAction(UriInfo uriInfo, final AbstractActionTask task) {
         Action action = task.action;
         Response.Status status = null;
-        final ActionResource actionResource = new BaseActionResource(uriInfo, task.action);
+        R parent = newModel();
+        parent.setId(getId());
+        final ActionResource actionResource = new BaseActionResource<R>(uriInfo, task.action, parent);
         if (action.isSetAsync() && action.isAsync()) {
             action.setStatus(com.redhat.rhevm.api.model.Status.PENDING);
             actions.put(action.getId(), actionResource);
