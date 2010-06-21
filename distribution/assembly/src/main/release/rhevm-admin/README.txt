@@ -9,7 +9,8 @@ shell running in the Apache Felix Karaf OSGi runtime.
 Running the CLI
 ---------------
 
-The CLI is launched like so:
+The CLI is launched as follows (in a normal DOS command shell,
+as opposed to a PowerShell instance):
 
  > cd rhevm-admin\bin
  > rhevm-admin
