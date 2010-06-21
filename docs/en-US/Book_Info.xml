@@ -6,8 +6,8 @@
 <bookinfo id="book-REST_API_Guide-REST_API_Guide">
 	<title>REST API Guide</title>
 	<subtitle>A RESTful API for Red Hat Enterprise Virtualization</subtitle>
-	<productname>Red Hat Enterprise Virtualization</productname>
-	<productnumber>2.2</productnumber>
+	<productname>Red Hat Enterprise Virtualization REST API</productname>
+	<productnumber>0.9</productnumber>
 	<edition>0</edition>
 	<pubsnumber>0</pubsnumber>
 	<abstract>

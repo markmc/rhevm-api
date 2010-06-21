@@ -132,6 +132,8 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
     }
 
     public StorageDomain addLinks(StorageDomain storageDomain) {
+        storageDomain = JAXBHelper.clone(OBJECT_FACTORY.createStorageDomain(storageDomain));
+
         storageDomain = LinkHelper.addLinks(storageDomain);
 
         ActionValidator actionValidator = new StorageDomainActionValidator(storageDomain);
@@ -158,7 +160,6 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
             storageDomain = runAndParseSingle("get-storagedomain " + PowerShellUtils.escape(getId()), true);
             storageDomain = parent.mapFromRhevmId(storageDomain);
         }
-        storageDomain = JAXBHelper.clone(OBJECT_FACTORY.createStorageDomain(storageDomain));
         return addLinks(storageDomain);
     }
 
@@ -184,7 +185,6 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
 
             storageDomain = parent.mapFromRhevmId(runAndParseSingle(buf.toString(), true));
         }
-        storageDomain = JAXBHelper.clone(OBJECT_FACTORY.createStorageDomain(storageDomain));
         return addLinks(storageDomain);
     }
 
