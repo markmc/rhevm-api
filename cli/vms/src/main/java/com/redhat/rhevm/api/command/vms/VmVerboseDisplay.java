@@ -18,6 +18,7 @@
  */
 package com.redhat.rhevm.api.command.vms;
 
+import com.redhat.rhevm.api.model.OperatingSystem;
 import com.redhat.rhevm.api.model.VM;
 
 import com.redhat.rhevm.api.command.base.VerboseDisplay;
@@ -29,19 +30,41 @@ public class VmVerboseDisplay implements VerboseDisplay<VM> {
             System.out.println("  status: " + model.getStatus());
         }
         if (model.isSetMemory()) {
-            System.out.println("  memory: " + model.getMemory());
+            System.out.println("  memory: " + Math.floor(model.getMemory() / (1024 * 1024)) + " Mb");
         }
         if (model.isSetCluster()) {
-            System.out.println("  cluster: " + model.getCluster().getName());
+            if (model.getCluster().isSetName()) {
+                System.out.println("  cluster: " + model.getCluster().getName());
+            } else if (model.getCluster().isSetId()) {
+                System.out.println("  cluster ID: " + model.getCluster().getId());
+            }
         }
         if (model.isSetTemplate()) {
-            System.out.println("  template: " + model.getTemplate().getName());
+            if (model.getTemplate().isSetName()) {
+                System.out.println("  template: " + model.getTemplate().getName());
+            } else if (model.getTemplate().isSetId()) {
+                System.out.println("  template ID: " + model.getTemplate().getId());
+            }
         }
         if (model.isSetCpu()) {
-            System.out.println("  CPU: " + model.getCpu().getId());
+            if (model.getCpu().isSetId()) {
+                System.out.println("  CPU: " + model.getCpu().getId());
+            }
+            if (model.getCpu().isSetTopology()) {
+                if (model.getCpu().getTopology().isSetCores()) {
+                    System.out.println("  CPU cores: " + model.getCpu().getTopology().getCores());
+                }
+                if (model.getCpu().getTopology().isSetSockets()) {
+                    System.out.println("  CPU sockets: " + model.getCpu().getTopology().getSockets());
+                }
+            }
         }
         if (model.isSetOs() && model.getOs().isSetBoot()) {
-            System.out.println("  OS boot: " + model.getOs().getBoot());
+            System.out.print("  boot sequence:");
+            for (OperatingSystem.Boot boot : model.getOs().getBoot()) {
+                System.out.print(" " + boot.getDev().toString());
+            }
+            System.out.println();
         }
         if (model.isSetVmPool()) {
             System.out.println("  VM pool: " + model.getVmPool().getName());

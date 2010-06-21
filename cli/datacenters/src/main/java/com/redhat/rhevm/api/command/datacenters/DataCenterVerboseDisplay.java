@@ -39,7 +39,11 @@ public class DataCenterVerboseDisplay implements VerboseDisplay<DataCenter> {
                     System.out.println("    data center: " + attachment.getDataCenter().getName());
                 }
                 if (attachment.isSetStorageDomain()) {
-                    System.out.println("    storage domain: " + attachment.getStorageDomain().getName());
+                    if (attachment.getStorageDomain().isSetName()) {
+                        System.out.println("    storage domain: " + attachment.getStorageDomain().getName());
+                    } else if (attachment.getStorageDomain().isSetId()) {
+                        System.out.println("    storage domain ID: " + attachment.getStorageDomain().getId());
+                    }
                 }
                 if (attachment.isSetStatus()) {
                     System.out.println("    storage domain status: " + attachment.getStatus());
