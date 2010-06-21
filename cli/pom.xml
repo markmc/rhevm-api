@@ -26,6 +26,7 @@
     <module>networks</module>
     <module>vmpools</module>
     <module>feature</module>
+    <module>branding</module>
   </modules>
 
 </project>
