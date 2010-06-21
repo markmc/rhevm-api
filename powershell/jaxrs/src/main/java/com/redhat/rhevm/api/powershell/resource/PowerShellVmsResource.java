@@ -53,7 +53,9 @@ public class PowerShellVmsResource
         if (vm.getTemplate().isSetId()) {
             templateArg = PowerShellUtils.escape(vm.getTemplate().getId());
         } else {
-            buf.append("$t = select-template -searchtext name=" + vm.getTemplate().getName() + "\n");
+            buf.append("$t = select-template -searchtext ");
+            buf.append(PowerShellUtils.escape("name=" + vm.getTemplate().getName()));
+            buf.append("\n");
             templateArg = "$t.TemplateId";
         }
 
@@ -61,7 +63,9 @@ public class PowerShellVmsResource
         if (vm.getCluster().isSetId()) {
             clusterArg = PowerShellUtils.escape(vm.getCluster().getId());
         } else {
-            buf.append("$c = select-cluster -searchtext name=" +  vm.getCluster().getName() + "\n");
+            buf.append("$c = select-cluster -searchtext ");
+            buf.append(PowerShellUtils.escape("name=" +  vm.getCluster().getName()));
+            buf.append("\n");
             clusterArg = "$c.ClusterId";
         }
 

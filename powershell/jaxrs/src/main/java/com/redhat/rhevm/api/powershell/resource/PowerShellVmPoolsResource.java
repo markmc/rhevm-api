@@ -51,7 +51,9 @@ public class PowerShellVmPoolsResource
         if (pool.getTemplate().isSetId()) {
             templateArg = PowerShellUtils.escape(pool.getTemplate().getId());
         } else {
-            buf.append("$t = select-template -searchtext name=" + pool.getTemplate().getName() + "\n");
+            buf.append("$t = select-template -searchtext ");
+            buf.append(PowerShellUtils.escape("name=" + pool.getTemplate().getName()));
+            buf.append("\n");
             templateArg = "$t.TemplateId";
         }
 
@@ -59,7 +61,9 @@ public class PowerShellVmPoolsResource
         if (pool.getCluster().isSetId()) {
             clusterArg = PowerShellUtils.escape(pool.getCluster().getId());
         } else {
-            buf.append("$c = select-cluster -searchtext name=" +  pool.getCluster().getName() + "\n");
+            buf.append("$c = select-cluster -searchtext ");
+            buf.append(PowerShellUtils.escape("name=" +  pool.getCluster().getName()));
+            buf.append("\n");
             clusterArg = "$c.ClusterId";
         }
 

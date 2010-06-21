@@ -36,12 +36,12 @@ public class PowerShellVmPoolsResourceTest extends AbstractPowerShellCollectionR
     public static final String GET_RETURN_EPILOG = "\nvmcount: 15\ncluster: " + CLUSTER_NAME + "\ntemplate: " + TEMPLATE_NAME + "\n";
 
     private static final String TEMPLATE_BY_NAME_ADD_COMMAND =
-        "$t = select-template -searchtext name=" + TEMPLATE_NAME + "\n" +
+        "$t = select-template -searchtext 'name=" + TEMPLATE_NAME + "'\n" +
         "add-vmpool " + "-vmpoolname '" + NEW_NAME + "' -templateid $t.TemplateId -hostclusterid '" + CLUSTER_ID + "' -pooltype Automatic";
 
     private static final String CLUSTER_BY_NAME_ADD_COMMAND =
-        "$t = select-template -searchtext name=" + TEMPLATE_NAME  + "\n" +
-        "$c = select-cluster -searchtext name=" + CLUSTER_NAME + "\n" + 
+        "$t = select-template -searchtext 'name=" + TEMPLATE_NAME  + "'\n" +
+        "$c = select-cluster -searchtext 'name=" + CLUSTER_NAME + "'\n" +
         "add-vmpool " + "-vmpoolname '" + NEW_NAME + "' -templateid $t.TemplateId -hostclusterid $c.ClusterId -pooltype Automatic";
 
     private static final String ADD_COMMAND = "add-vmpool " + "-vmpoolname '" + NEW_NAME + "' -templateid '" + TEMPLATE_ID + "' -hostclusterid '" + CLUSTER_ID + "' -pooltype Automatic";
