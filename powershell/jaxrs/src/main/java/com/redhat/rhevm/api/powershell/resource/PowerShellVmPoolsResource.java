@@ -47,11 +47,27 @@ public class PowerShellVmPoolsResource
     public Response add(UriInfo uriInfo, VmPool pool) {
         StringBuilder buf = new StringBuilder();
 
+        String templateArg = null;
+        if (pool.getTemplate().isSetId()) {
+            templateArg = PowerShellUtils.escape(pool.getTemplate().getId());
+        } else {
+            buf.append("$t = select-template -searchtext name=" + pool.getTemplate().getName() + "\n");
+            templateArg = "$t.TemplateId";
+        }
+
+        String clusterArg = null;
+        if (pool.getCluster().isSetId()) {
+            clusterArg = PowerShellUtils.escape(pool.getCluster().getId());
+        } else {
+            buf.append("$c = select-cluster -searchtext name=" +  pool.getCluster().getName() + "\n");
+            clusterArg = "$c.ClusterId";
+        }
+
         buf.append("add-vmpool");
 
         buf.append(" -vmpoolname " + PowerShellUtils.escape(pool.getName()));
-        buf.append(" -templateid " + PowerShellUtils.escape(pool.getTemplate().getId()));
-        buf.append(" -hostclusterid " + PowerShellUtils.escape(pool.getCluster().getId()));
+        buf.append(" -templateid " + templateArg);
+        buf.append(" -hostclusterid " + clusterArg);
         buf.append(" -pooltype Automatic");
 
         if (pool.getDescription() != null) {

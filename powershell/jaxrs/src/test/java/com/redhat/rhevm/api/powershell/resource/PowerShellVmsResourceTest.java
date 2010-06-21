@@ -43,7 +43,7 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
 
     private static final String CLUSTER_BY_NAME_ADD_COMMAND_PROLOG =
         "$t = select-template -searchtext name=" + TEMPLATE_NAME + "\n" +
-         "$c = select-cluster -searchtext name=" + CLUSTER_NAME + "\n" +
+        "$c = select-cluster -searchtext name=" + CLUSTER_NAME + "\n" +
         "$templ = get-template -templateid $t.TemplateId\n";
 
     private static final String CLUSTER_BY_NAME_ADD_COMMAND_EPILOG =

@@ -35,6 +35,15 @@ public class PowerShellVmPoolsResourceTest extends AbstractPowerShellCollectionR
 
     public static final String GET_RETURN_EPILOG = "\nvmcount: 15\ncluster: " + CLUSTER_NAME + "\ntemplate: " + TEMPLATE_NAME + "\n";
 
+    private static final String TEMPLATE_BY_NAME_ADD_COMMAND =
+        "$t = select-template -searchtext name=" + TEMPLATE_NAME + "\n" +
+        "add-vmpool " + "-vmpoolname '" + NEW_NAME + "' -templateid $t.TemplateId -hostclusterid '" + CLUSTER_ID + "' -pooltype Automatic";
+
+    private static final String CLUSTER_BY_NAME_ADD_COMMAND =
+        "$t = select-template -searchtext name=" + TEMPLATE_NAME  + "\n" +
+        "$c = select-cluster -searchtext name=" + CLUSTER_NAME + "\n" + 
+        "add-vmpool " + "-vmpoolname '" + NEW_NAME + "' -templateid $t.TemplateId -hostclusterid $c.ClusterId -pooltype Automatic";
+
     private static final String ADD_COMMAND = "add-vmpool " + "-vmpoolname '" + NEW_NAME + "' -templateid '" + TEMPLATE_ID + "' -hostclusterid '" + CLUSTER_ID + "' -pooltype Automatic";
     private static final String REMOVE_COMMAND = "$p = get-vmpool -vmpoolid '" + NAMES[1].hashCode() + "'\nremove-vmpool -name $p.name";
 
@@ -86,6 +95,36 @@ public class PowerShellVmPoolsResourceTest extends AbstractPowerShellCollectionR
         verifyResponse(
             resource.add(setUpAddResourceExpectations(commands, returns, NEW_NAME),
                          getModel(NEW_NAME)),
+            NEW_NAME);
+    }
+
+    @Test
+    public void testAddWithTemplateName() throws Exception {
+        VmPool model = getModel(NEW_NAME);
+        model.getTemplate().setId(null);
+        model.getTemplate().setName(TEMPLATE_NAME);
+
+        String [] commands = { TEMPLATE_BY_NAME_ADD_COMMAND, LOOKUP_CLUSTER_COMMAND, LOOKUP_TEMPLATE_COMMAND };
+        String [] returns = { getAddReturn(GET_RETURN_EPILOG), LOOKUP_CLUSTER_RETURN, LOOKUP_TEMPLATE_RETURN };
+        verifyResponse(
+            resource.add(setUpAddResourceExpectations(commands, returns, NEW_NAME),
+                         model),
+            NEW_NAME);
+    }
+
+    @Test
+    public void testAddWithClusterName() throws Exception {
+        VmPool model = getModel(NEW_NAME);
+        model.getTemplate().setId(null);
+        model.getTemplate().setName(TEMPLATE_NAME);
+        model.getCluster().setId(null);
+        model.getCluster().setName(CLUSTER_NAME);
+
+        String [] commands = { CLUSTER_BY_NAME_ADD_COMMAND, LOOKUP_CLUSTER_COMMAND, LOOKUP_TEMPLATE_COMMAND };
+        String [] returns = { getAddReturn(GET_RETURN_EPILOG), LOOKUP_CLUSTER_RETURN, LOOKUP_TEMPLATE_RETURN };
+        verifyResponse(
+            resource.add(setUpAddResourceExpectations(commands, returns, NEW_NAME),
+                         model),
             NEW_NAME);
     }
 
