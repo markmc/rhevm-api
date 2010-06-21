@@ -1,7 +1,6 @@
 = RHEV-M API Definition =
 
-This is the very early stages of a project to define an official
-RESTful API for RHEV-M.
+This project's goal is to define an official RESTful API for RHEV-M.
 
 See our wiki for more details:
 
@@ -17,48 +16,73 @@ The PowerShell wrapper is for experimentation only and not a supported
 Red Hat solution.
 
 
-== Testing ==
+== Deploying ==
 
-The RHEVM-API can be deployed to any servlet container, for example
-Apache Tomcat or JBoss.
+The rhevm-api-powershell.war is designed to be deployed to a Java EE
+servlet container (such as JBoss EAP/AS or Apache Tomcat) running on
+your a machine alongside a RHEV-M 2.2 installation.
 
-If you take the former option, simply deploy via:
+Below are instructions for deploying to JBoss and Tomcat. In both cases,
+once the application server is running, you should be able to connect to
+the API via the following URL:
 
- $> cp webapp/rhevm-api-mock.war $CATALINA_HOME/webapps
- $> $CATALINA_HOME/bin/startup.sh  # if not already running
+  http://$host:$port/rhevm-api-powershell/
 
-If you take the later option, you first need to install JBoss.
-JBoss EAP 5.0 or JBoss AS 5.1.0.GA should work.
+JBoss:
+------
 
- $> wget https://sourceforge.net/projects/jboss/files/JBoss/JBoss-5.1.0.GA/jboss-5.1.0.GA.zip/download
- $> unzip jboss-5.1.0.GA.zip
- $> mv jboss-5.1.0.GA /usr/local/jboss-5.1.0.GA
- $> chown -R markmc:markmc /usr/local/jboss-5.1.0.GA
+You first need to install JBoss. JBoss EAP 5.0 or JBoss AS 5.1.0.GA
+should work.
 
-Install openjdk and make sure it's configured as the default java
-version:
+Steps:
 
- $> yum install -y java-1.6.0-openjdk-devel
- $> alternatives --display javac
+  1) Download:
 
-Then deploy the mock webapp:
+      https://sourceforge.net/projects/jboss/files/JBoss/JBoss-5.1.0.GA/jboss-5.1.0.GA.zip/download
 
- $> cp webapp/rhevm-api-mock.war /usr/local/jboss-5.1.0.GA/server/default/deploy/rhevm-api-mock.war
+  2) Unzip into suitable directory
 
-Run:
+  3) Copy rhevm-api-powershell.war under
 
- $> /usr/local/jboss-5.1.0.GA/bin/run.sh
+       jboss-5.1.0.GA\server\default\deploy
+
+  4) RHEV-M is probably already using port 8080, so change the port
+     number in:
+
+       jboss-5.1.0.GA\server\default\conf\bindingservice.beans\META-INF\bindings-jboss-beans.xml
+
+  5) Run JBoss:
+
+       jboss-5.1.0.GA\bin\run.bat
+
+     (If you want to connect remotely, pass '-b 0.0.0.0' to run.bat)
+
+Tomcat:
+-------
+
+To run rhevm-api under Apache Tomcat 5.5.x, follow these steps:
+
+  1) Download:
+
+      http://apache.mirrors.esat.net/tomcat/tomcat-5/v5.5.29/bin/apache-tomcat-5.5.29.zip
+
+  2) Unzip into suitable directory
+
+  3) Copy rhevm-api-powershell.war under
+
+       apache-tomcat-5.5.29\webapps
+
+  4) RHEV-M is probably already using port 8080, so change the port
+     number in:
+
+       apache-tomcat-5.5.29\conf\server.xml
+
+  5) Run Tomcat:
+
+       apache-tomcat-5.5.29\bin\startup.bat
 
 
-In either case, the deployment can be tested via:
-
- $> ./python/test.py
-
-with the --port=nnnn option if your servlet engine is running on a
-port other than 8080.
-
-
-=== Using the Command Line Interface ===
+== Using the Command Line Interface ==
 
 The RHEVM-API project provides a simple CLI with command-completion
 based on the Apache Felix Gogo shell.

@@ -1,11 +1,11 @@
 = RHEV-M API Definition =
 
-This is the very early stages of a project to define an official
-RESTful API for RHEV-M.
+This project's goal is to define an official RESTful API for RHEV-M.
 
 See our wiki for more details:
 
   https://fedorahosted.org/rhevm-api/
+
 
 == Disclaimers ==
 
@@ -15,62 +15,98 @@ and/or never become the official API.
 The PowerShell wrapper is for experimentation only and not a supported
 Red Hat solution.
 
-== Testing ==
 
-There are two options for running the python tests, either install and
-deploy to a full-blown JBoss instance, or else take a more lightweight
-approach and deploy via the maven jetty plugin.
+== Deploying ==
 
-Option 1:
----------
+The rhevm-api-powershell.war is designed to be deployed to a Java EE
+servlet container (such as JBoss EAP/AS or Apache Tomcat) running on
+your a machine alongside a RHEV-M 2.2 installation.
+
+Below are instructions for deploying to JBoss and Tomcat. In both cases,
+once the application server is running, you should be able to connect to
+the API via the following URL:
+
+  http://$host:$port/rhevm-api-powershell/
+
+JBoss:
+------
+
 You first need to install JBoss. JBoss EAP 5.0 or JBoss AS 5.1.0.GA
 should work.
 
- $> wget https://sourceforge.net/projects/jboss/files/JBoss/JBoss-5.1.0.GA/jboss-5.1.0.GA.zip/download
- $> unzip jboss-5.1.0.GA.zip
- $> mv jboss-5.1.0.GA /usr/local/jboss-5.1.0.GA
- $> chown -R markmc:markmc /usr/local/jboss-5.1.0.GA
+Steps:
 
-Install openjdk and make sure it's configured as the default java
-version:
+  1) Download:
+
+      https://sourceforge.net/projects/jboss/files/JBoss/JBoss-5.1.0.GA/jboss-5.1.0.GA.zip/download
+
+  2) Unzip into suitable directory
+
+  3) Copy rhevm-api-powershell.war under
+
+       jboss-5.1.0.GA\server\default\deploy
+
+  4) RHEV-M is probably already using port 8080, so change the port
+     number in:
+
+       jboss-5.1.0.GA\server\default\conf\bindingservice.beans\META-INF\bindings-jboss-beans.xml
+
+  5) Run JBoss:
+
+       jboss-5.1.0.GA\bin\run.bat
+
+     (If you want to connect remotely, pass '-b 0.0.0.0' to run.bat)
+
+Tomcat:
+-------
+
+To run rhevm-api under Apache Tomcat 5.5.x, follow these steps:
+
+  1) Download:
+
+      http://apache.mirrors.esat.net/tomcat/tomcat-5/v5.5.29/bin/apache-tomcat-5.5.29.zip
+
+  2) Unzip into suitable directory
+
+  3) Copy rhevm-api-powershell.war under
+
+       apache-tomcat-5.5.29\webapps
+
+  4) RHEV-M is probably already using port 8080, so change the port
+     number in:
+
+       apache-tomcat-5.5.29\conf\server.xml
+
+  5) Run Tomcat:
+
+       apache-tomcat-5.5.29\bin\startup.bat
+
+
+== Building from Git ==
+
+If you have checked out this directory from git and you want to build
+it on Fedora, first install openjdk and make sure it's configured as
+the default java version:
 
  $> yum install -y java-1.6.0-openjdk-devel
  $> alternatives --display javac
 
-Build:
+Then install maven and use build the code:
 
+ $> yum install -y maven
  $> mvn install
 
-Deploy:
+You can then run the mock implementation using jetty:
 
- $> cp mock/webapp/target/rhevm-api-mock.war /usr/local/jboss-5.1.0.GA/server/default/deploy/rhevm-api-mock.war
+ $> cd mock/webapp
+ $> mvn jetty:run
 
-Run:
-
- $> /usr/local/jboss-5.1.0.GA/bin/run.sh
-
-Test:
-
- $> ./python/test.py
-
-Option 2:
----------
-No external installation is required, simply build, run and test.
-
-Build:
-
- $> mvn install
-
-Run:
-
- $> cd mock/webapp ; mvn jetty:run
-
-Test:
+And test it using the python tests:
 
  $> ./python/test.py --port=8099
 
 
-=== Using the Command Line Interface ===
+== Using the Command Line Interface ==
 
 The RHEVM-API project provides a simple CLI with command-completion
 based on the Apache Felix Gogo shell. Using the CLI currently requires
@@ -80,7 +116,7 @@ Karaf shell plus a JAX-RS provider implementation.
 
 To install ServiceMix:
 
-$> wget https://repository.apache.org/content/repositories/releases/org/apache/servicemix/apache-servicemix/4.2.0/apache-servicemix-4.2.0.tar.gz
+ $> wget https://repository.apache.org/content/repositories/releases/org/apache/servicemix/apache-servicemix/4.2.0/apache-servicemix-4.2.0.tar.gz
 $> tar -xvzf apache-servicemix-4.2.0.tar.gz
 $> cd apache-servicemix-4.2.0
 
