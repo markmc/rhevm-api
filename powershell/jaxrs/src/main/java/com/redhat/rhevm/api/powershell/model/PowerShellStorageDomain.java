@@ -42,7 +42,9 @@ public class PowerShellStorageDomain extends StorageDomain {
 
     private static StorageDomainStatus parseStatus(HashMap<String,String> props, String key) {
         try {
-            return StorageDomainStatus.fromValue(props.get(key).toUpperCase());
+            return props.get(key) != null
+                   ? StorageDomainStatus.fromValue(props.get(key).toUpperCase())
+                   : null;
         } catch (IllegalArgumentException iae) {
             // ignore - assume status is 'Unknown'
             return null;
