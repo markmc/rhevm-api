@@ -242,7 +242,7 @@ HTTP/1.1 204 No Content
   ...
   &lt;actions&gt;
     &lt;link rel="frob" href="resources/{id}/frob"/&gt;
-    &lt;link rel="twiddle" href="resources/{id}/twiddle/"/&gt;
+    &lt;link rel="twiddle" href="resources/{id}/twiddle"/&gt;
     ...
   &lt;/actions&gt;
   ...
@@ -289,7 +289,7 @@ Accept: application/xml
 HTTP/1.1 202 Accept
 Content-Type: application/xml
 
-&lt;action id="{action_id}" href="/resources/{id}/{verb}/{action_id}"&gt;
+&lt;action id="{action_id}" href="resources/{id}/{verb}/{action_id}"&gt;
   &lt;async&gt;true&lt;/async&gt;
   ...
 &lt;action&gt;
@@ -333,10 +333,32 @@ Accept: application/xml
 HTTP/1.1 200 OK
 Content-Type: application/xml
 
-&lt;action id="{action_id}" href="/resources/{id}/{verb}/{action_id}"&gt;
+&lt;action id="{action_id}" href="resources/{id}/{verb}/{action_id}"&gt;
   &lt;status&gt;{PENDING|IN_PROGRESS|COMPLETE|FAILED}&lt;/status&gt;
+  &lt;link rel="parent" href="resources/{id}"/&gt;
+  &lt;link rel="replay" href="resources/{id}/{verb}"/&gt;
 &lt;action&gt;
     </screen>
+
+    <para>
+      An action description may also include some links which are identified by their <literal>rel</literal> attribute:
+      <informaltable frame="none">
+        <tgroup cols="2">
+          <colspec colwidth="2*"/>
+          <colspec colwidth="5*"/>
+          <tbody>
+            <row>
+              <entry><literal>parent</literal></entry>
+              <entry>A link back to the resource which this action was invoked upon</entry>
+            </row>
+            <row>
+              <entry><literal>replay</literal></entry>
+              <entry>A link back to the original action URI. POSTing to this URI will causing the action to be re-initiated</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+    </para>
 
   </section>
 
