@@ -37,10 +37,6 @@ import com.redhat.rhevm.api.model.Hosts;
 @Path("/hosts")
 @Produces(MediaType.APPLICATION_XML)
 public interface HostsResource {
-    /* FIXME: can we make uriInfo a field instead of a parameter to
-     *        each method? Adding @Context to the implementation
-     *        class doesn't seem to work.
-     */
 
     @GET
     @Formatted

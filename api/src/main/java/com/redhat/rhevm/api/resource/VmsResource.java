@@ -37,10 +37,6 @@ import com.redhat.rhevm.api.model.VMs;
 @Path("/vms")
 @Produces(MediaType.APPLICATION_XML)
 public interface VmsResource {
-    /* REVISIT: Singleton lifecycle probably requires that UriInfo
-     * must be modelled as a method parameter, as there would be
-     * concurrency issues around injection into a data member
-     */
 
     @GET
     @Formatted

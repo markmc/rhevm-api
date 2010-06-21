@@ -31,10 +31,6 @@ import com.redhat.rhevm.api.model.BaseResource;
 
 @Produces(MediaType.APPLICATION_XML)
 public interface UpdatableResource<R extends BaseResource> {
-    /* FIXME: can we make uriInfo a field instead of a parameter to
-     *        each method? Adding @Context to the implementation
-     *        class doesn't seem to work.
-     */
 
     @GET
     @Formatted

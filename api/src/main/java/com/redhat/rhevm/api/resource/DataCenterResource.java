@@ -32,10 +32,6 @@ import com.redhat.rhevm.api.model.DataCenter;
 
 @Produces(MediaType.APPLICATION_XML)
 public interface DataCenterResource extends UpdatableResource<DataCenter> {
-    /* FIXME: can we make uriInfo a field instead of a parameter to
-     *        each method? Adding @Context to the implementation
-     *        class doesn't seem to work.
-     */
 
     @GET
     @Formatted

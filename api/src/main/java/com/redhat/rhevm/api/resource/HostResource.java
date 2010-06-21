@@ -34,10 +34,6 @@ import com.redhat.rhevm.api.model.Host;
 
 @Produces(MediaType.APPLICATION_XML)
 public interface HostResource extends UpdatableResource<Host> {
-    /* FIXME: can we make uriInfo a field instead of a parameter to
-     *        each method? Adding @Context to the implementation
-     *        class doesn't seem to work.
-     */
 
     @Path("{action: (approve|fence|resume)}/{oid}")
     public ActionResource getActionSubresource(@PathParam("action")String action, @PathParam("oid")String oid);

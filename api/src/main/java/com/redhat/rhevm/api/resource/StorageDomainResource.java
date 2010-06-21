@@ -36,11 +36,6 @@ import com.redhat.rhevm.api.model.StorageDomain;
 @Produces(MediaType.APPLICATION_XML)
 public interface StorageDomainResource extends UpdatableResource<StorageDomain> {
 
-    /* FIXME: can we make uriInfo a field instead of a parameter to
-     *        each method? Adding @Context to the implementation
-     *        class doesn't seem to work.
-     */
-
     @Path("{action: (initialize|teardown)}/{oid}")
     public ActionResource getActionSubresource(@PathParam("action") String action, @PathParam("oid") String oid);
 
