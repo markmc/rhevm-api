@@ -42,11 +42,6 @@ public interface VmsResource {
     @Formatted
     public VMs list(@Context UriInfo uriInfo);
 
-    /* FIXME: need to move this to e.g. a top-level /search
-     * @GET
-     * public VMs search(String criteria);
-     */
-
     /**
      * Creates a new VM and adds it to the database. The VM is created
      * based on the properties of @vm.

@@ -42,11 +42,6 @@ public interface DataCentersResource {
     @Formatted
     public DataCenters list(@Context UriInfo uriInfo);
 
-    /* FIXME: need to move this to e.g. a top-level /search
-     * @GET
-     * public DataCenters search(String criteria);
-     */
-
     @POST
     @Formatted
     @Consumes(MediaType.APPLICATION_XML)

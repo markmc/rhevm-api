@@ -42,11 +42,6 @@ public interface HostsResource {
     @Formatted
     public Hosts list(@Context UriInfo uriInfo);
 
-    /* FIXME: need to move this to e.g. a top-level /search
-     * @GET
-     * public Hosts search(String criteria);
-     */
-
     /**
      * Creates a new host and adds it to the database. The host is
      * created based on the properties of @host.
