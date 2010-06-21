@@ -26,8 +26,9 @@
           <xh-exec executable="python">
             <arg value="${rhevm-admin.home}/../python/test.py"/>
             <arg value="--port=${jboss.http}"/>
+            <arg value="--debug"/>
           </xh-exec>
-          <output-has min="2" pattern="204"/>
+          <output-has pattern="Broken immutability constraint"/>
         </testcase>
 
         <testcase name="cli.vms.list" owner="eglynn">
@@ -42,12 +43,12 @@
 
         <testcase name="cli.vms.query" owner="eglynn">
           <rhevm-client command="vms:list --search=name=*1"/>
-          <output-is pattern="[vm1] [1] "/>
+          <output-has pattern="[vm1 ] [1 ]"/>
         </testcase>
 
         <testcase name="cli.hosts.list" owner="eglynn">
           <rhevm-client command="hosts:list"/>
-          <output-has pattern="[host2] [2]"/>
+          <output-has pattern="[host2] [2 ]"/>
         </testcase>
 
         <testcase name="cli.hosts.list.conicse" owner="eglynn">
@@ -57,12 +58,12 @@
 
         <testcase name="cli.hosts.query" owner="eglynn">
           <rhevm-client command="hosts:list --search=name=*1"/>
-          <output-is pattern="[host1] [1] "/>
+          <output-has pattern="[host1] [1 ]"/>
         </testcase>
 
         <testcase name="cli.datacenters.list" owner="eglynn">
           <rhevm-client command="datacenters:list"/>
-          <output-has pattern="[datacenter1] [1]"/>
+          <output-has pattern="[datacenter1] [1 ]"/>
         </testcase>
 
         <testcase name="cli.datacenters.list.concise" owner="eglynn">
@@ -72,12 +73,12 @@
 
         <testcase name="cli.datacenters.query" owner="eglynn">
           <rhevm-client command="datacenters:list --search=name=*1"/>
-          <output-is pattern="[datacenter1] [1] "/>
+          <output-has pattern="[datacenter1] [1 ]"/>
         </testcase>
 
         <testcase name="cli.vm.update" owner="eglynn">
           <rhevm-client command="vms:update -f name -v boo vm8"/>
-          <output-has pattern="[ boo] [ 8]"/>
+          <output-has pattern="[boo ] [8 ]"/>
         </testcase>
 
         <testcase name="cli.confirm.vm.update" owner="eglynn">
@@ -105,7 +106,7 @@
         <testcase name="cli.vm.start.async" owner="eglynn">
           <rhevm-client command="vms:start --async --grace=1000 vm5"/>
           <output-matches
-            pattern="start (IN_PROGRESS|PENDING), monitor @ http://localhost:${jboss.http}/${rhevm.api.impl}/vms/5/start/"/>
+            pattern="start (IN_PROGRESS|PENDING), monitor @ vms/5/start/"/>
         </testcase>
 
       </testgroup>
