@@ -323,7 +323,7 @@ Content-Type: application/xml
         </tgroup>
       </informaltable>
 
-      Once the task has completed, the Action is retained for an interminate period. Once this has expired, subsequent <literal>GET</literal>s are <literal>301 Moved Permanently</literal> redirected back to the target resource.
+      Once the task has completed, the Action is retained for an indeterminate period. Once this has expired, subsequent <literal>GET</literal>s are <literal>301 Moved Permanently</literal> redirected back to the target resource.
     </para>
 
     <screen>
