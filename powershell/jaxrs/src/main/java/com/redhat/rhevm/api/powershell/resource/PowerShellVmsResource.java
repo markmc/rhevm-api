@@ -39,7 +39,7 @@ public class PowerShellVmsResource
     @Override
     public VMs list(UriInfo uriInfo) {
         VMs ret = new VMs();
-        for (PowerShellVM vm : PowerShellVmResource.runAndParse(getSelectCommand("select-vm", uriInfo, VMs.class))) {
+        for (PowerShellVM vm : PowerShellVmResource.runAndParse(getSelectCommand("select-vm", uriInfo, VM.class))) {
             ret.getVMs().add(PowerShellVmResource.addLinks(vm));
         }
         return ret;

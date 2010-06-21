@@ -37,7 +37,7 @@ public class PowerShellVmPoolsResource
     @Override
     public VmPools list(UriInfo uriInfo) {
         VmPools ret = new VmPools();
-        for (VmPool pool : PowerShellVmPoolResource.runAndParse(getSelectCommand("select-vmpool", uriInfo, VmPools.class))) {
+        for (VmPool pool : PowerShellVmPoolResource.runAndParse(getSelectCommand("select-vmpool", uriInfo, VmPool.class))) {
             ret.getVmPools().add(PowerShellVmPoolResource.addLinks(pool));
         }
         return ret;

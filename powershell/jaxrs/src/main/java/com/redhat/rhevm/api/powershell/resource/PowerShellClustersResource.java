@@ -38,7 +38,7 @@ public class PowerShellClustersResource
     @Override
     public Clusters list(UriInfo uriInfo) {
         Clusters ret = new Clusters();
-        for (Cluster cluster : PowerShellClusterResource.runAndParse(getSelectCommand("select-cluster", uriInfo, Clusters.class))) {
+        for (Cluster cluster : PowerShellClusterResource.runAndParse(getSelectCommand("select-cluster", uriInfo, Cluster.class))) {
             ret.getClusters().add(LinkHelper.addLinks(cluster));
         }
         return ret;

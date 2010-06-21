@@ -37,7 +37,7 @@ public class PowerShellDataCentersResource
     @Override
     public DataCenters list(UriInfo uriInfo) {
         DataCenters ret = new DataCenters();
-        for (DataCenter dataCenter : PowerShellDataCenterResource.runAndParse(getSelectCommand("select-datacenter", uriInfo, DataCenters.class))) {
+        for (DataCenter dataCenter : PowerShellDataCenterResource.runAndParse(getSelectCommand("select-datacenter", uriInfo, DataCenter.class))) {
             ret.getDataCenters().add(PowerShellDataCenterResource.addLinks(dataCenter));
         }
         return ret;

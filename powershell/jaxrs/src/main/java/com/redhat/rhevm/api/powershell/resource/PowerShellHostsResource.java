@@ -38,7 +38,7 @@ public class PowerShellHostsResource
     @Override
     public Hosts list(UriInfo uriInfo) {
         Hosts ret = new Hosts();
-        for (Host host : PowerShellHostResource.runAndParse(getSelectCommand("select-host", uriInfo, Hosts.class))) {
+        for (Host host : PowerShellHostResource.runAndParse(getSelectCommand("select-host", uriInfo, Host.class))) {
             ret.getHosts().add(LinkHelper.addLinks(host));
         }
         return ret;
