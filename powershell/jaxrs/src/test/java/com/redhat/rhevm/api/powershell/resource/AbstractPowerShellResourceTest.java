@@ -116,10 +116,18 @@ public abstract class AbstractPowerShellResourceTest<R extends BaseResource,
                    : reason == null
                      ? action.getStatus().equals(Status.COMPLETE)
                      : action.getStatus().equals(Status.FAILED));
-        assertEquals(1, action.getLink().size());
-        assertEquals("expected replay link", "replay", action.getLink().get(0).getRel());
-        assertNotNull(action.getLink().get(0).getHref());
-        assertTrue(action.getLink().get(0).getHref().startsWith(baseUri));
+        // FIXME: https://fedorahosted.org/rhevm-api/ticket/29
+        assertTrue(action.getLink().size() == 1 || action.getLink().size() == 2);
+        int i = 0;
+        if (action.getLink().size() == 2) {
+            assertEquals("expected parent link", "parent", action.getLink().get(i).getRel());
+            assertNotNull(action.getLink().get(i).getHref());
+            assertTrue(action.getLink().get(i).getHref().startsWith(baseUri));
+            ++i;
+        }
+        assertEquals("expected replay link", "replay", action.getLink().get(i).getRel());
+        assertNotNull(action.getLink().get(i).getHref());
+        assertTrue(action.getLink().get(i).getHref().startsWith(baseUri));
         assertEquals("unexpected async task", async ? 1 : 0, executor.taskCount());
         executor.runNext();
         if (reason != null) {

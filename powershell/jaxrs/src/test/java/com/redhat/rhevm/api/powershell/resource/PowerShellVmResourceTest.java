@@ -211,11 +211,11 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     }
 
     private void verifyActionResponse(Response r, boolean async) throws Exception {
-        verifyActionResponse(r, "/vms/" + VM_ID + "/", async);
+        verifyActionResponse(r, "vms/" + VM_ID, async);
     }
 
     private void verifyActionResponse(Response r, boolean async, String reason, String detailExerpt) throws Exception {
-        verifyActionResponse(r, "/vms/" + VM_ID + "/", async, reason, detailExerpt);
+        verifyActionResponse(r, "vms/" + VM_ID, async, reason, detailExerpt);
     }
 
     private void verifyUpdateException(WebApplicationException wae) {

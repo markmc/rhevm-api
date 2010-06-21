@@ -71,7 +71,10 @@ public class BaseActionResource<R extends BaseResource> implements ActionResourc
     private void addLinks(UriInfo uriInfo) {
         action.setHref(UriBuilder.fromPath(getRelativePath(uriInfo)).path(action.getId()).build().toString());
 
-        addLink("parent", LinkHelper.addLinks(parent).getHref());
+        String parentHref = LinkHelper.addLinks(parent).getHref();
+        if (parentHref != null) {
+            addLink("parent", parentHref);
+        }
         addLink("replay", getRelativePath(uriInfo));
     }
 }

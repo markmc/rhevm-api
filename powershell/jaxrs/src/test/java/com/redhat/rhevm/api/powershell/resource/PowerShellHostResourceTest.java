@@ -95,7 +95,7 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
         Action action = getAction();
         action.setRootPassword(INSTALL_PASSWORD);
         verifyActionResponse(
-            resource.install(setUpActionExpectation("/hosts/12345/", "install", INSTALL_COMMAND, ACTION_RETURN), action),
+            resource.install(setUpActionExpectation("hosts/12345", "install", INSTALL_COMMAND, ACTION_RETURN), action),
             false);
     }
 
@@ -125,7 +125,7 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
         Action action = getAction(true);
         action.setRootPassword(INSTALL_PASSWORD);
         verifyActionResponse(
-            resource.install(setUpActionExpectation("/hosts/12345/", "install", INSTALL_COMMAND, ACTION_RETURN), action),
+            resource.install(setUpActionExpectation("hosts/12345", "install", INSTALL_COMMAND, ACTION_RETURN), action),
             true);
     }
 
@@ -182,7 +182,7 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
     }
 
     private void verifyActionResponse(Response r, boolean async) throws Exception {
-        verifyActionResponse(r, "/hosts/12345/", async);
+        verifyActionResponse(r, "hosts/12345", async);
     }
 
     private void verifyUpdateException(WebApplicationException wae) {
