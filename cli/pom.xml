@@ -24,6 +24,7 @@
     <module>actions</module>
     <module>templates</module>
     <module>networks</module>
+    <module>vmpools</module>
     <module>feature</module>
   </modules>
 

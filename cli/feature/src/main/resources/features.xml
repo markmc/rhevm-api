@@ -16,6 +16,7 @@
     <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-cpus/0.1-SNAPSHOT</bundle>
     <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-actions/0.1-SNAPSHOT</bundle>
     <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-templates/0.1-SNAPSHOT</bundle>
+    <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-vmpools/0.1-SNAPSHOT</bundle>
     <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-networks/0.1-SNAPSHOT</bundle>
   </feature>
 </features>
