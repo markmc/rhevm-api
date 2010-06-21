@@ -23,11 +23,11 @@
           </row>
           <row>
             <entry><literal>ip address= netmask= gateway=</literal></entry>
-            <entry>FIXME</entry>
+            <entry>Static IP configuration for the network</entry>
           </row>
           <row>
             <entry><literal>vlan id=</literal></entry>
-            <entry>FIXME</entry>
+            <entry>A VLAN tag</entry>
           </row>
           <row>
             <entry><literal>stp</literal></entry>
