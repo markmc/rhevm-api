@@ -1,12 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>com.redhat.rhevm.api</groupId>
     <artifactId>distribution-parent</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.9-milestone1</version>
   </parent>
 
   <artifactId>rhevm-api-distro</artifactId>
@@ -398,9 +396,8 @@
             </goals>
             <configuration>
               <tasks>
-                <mkdir dir="${basedir}/target/dependencies/docs"/>
-                <get src="http://markmc.fedorapeople.org/rhevm-api/en-US/pdf/Red_Hat_Enterprise_Virtualization-2.2-REST_API_Guide-en-US.pdf"
-                     dest="${basedir}/target/dependencies/docs/Red_Hat_Enterprise_Virtualization-2.2-REST_API_Guide-en-US.pdf"/>
+                <mkdir dir="${basedir}/target/dependencies/docs" />
+                <get src="http://markmc.fedorapeople.org/rhevm-api/en-US/pdf/Red_Hat_Enterprise_Virtualization-2.2-REST_API_Guide-en-US.pdf" dest="${basedir}/target/dependencies/docs/Red_Hat_Enterprise_Virtualization-2.2-REST_API_Guide-en-US.pdf" />
               </tasks>
             </configuration>
           </execution>

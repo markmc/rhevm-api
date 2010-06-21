@@ -1,12 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>com.redhat.rhevm.api</groupId>
     <artifactId>distribution-parent</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.9-milestone1</version>
   </parent>
 
   <artifactId>rhevm-itests</artifactId>
@@ -105,20 +103,19 @@
                 </goals>
                 <configuration>
                   <tasks>
-                    <property name="project.name" value="${pom.name}"/>
-                    <property name="rhevm.api.version" value="${pom.version}"/>
-                    <property name="rhevm.api.impl" value="${rhevm.api.impl}"/>
-                    <property name="rhevm-admin.home" value="${rhevm-api.dir}/rhevm-api-distro-${pom.version}/rhevm-admin/"/>
-                    <property name="rhevm-admin.bin" value="${rhevm-admin.home}/bin"/>
-                    <property name="jboss.home" value="${jboss.dir}/jboss-${jboss.version}"/>
-                    <property name="jboss.bin" value="${jboss.home}/bin"/>
-                    <property name="results.dir"
-                              value="${project.build.directory}/itests/results"/>
+                    <property name="project.name" value="${pom.name}" />
+                    <property name="rhevm.api.version" value="${pom.version}" />
+                    <property name="rhevm.api.impl" value="${rhevm.api.impl}" />
+                    <property name="rhevm-admin.home" value="${rhevm-api.dir}/rhevm-api-distro-${pom.version}/rhevm-admin/" />
+                    <property name="rhevm-admin.bin" value="${rhevm-admin.home}/bin" />
+                    <property name="jboss.home" value="${jboss.dir}/jboss-${jboss.version}" />
+                    <property name="jboss.bin" value="${jboss.home}/bin" />
+                    <property name="results.dir" value="${project.build.directory}/itests/results" />
                     <path id="itests.classpath">
-                      <pathelement path="${maven.test.classpath}"/>
-                      <pathelement path="${maven.plugin.classpath}"/>
+                      <pathelement path="${maven.test.classpath}" />
+                      <pathelement path="${maven.plugin.classpath}" />
                     </path>
-                    <ant target="itests" inheritRefs="true" antfile="src/main/resources/itests.xml" dir="${basedir}"/>
+                    <ant target="itests" inheritRefs="true" antfile="src/main/resources/itests.xml" dir="${basedir}" />
                   </tasks>
                 </configuration>
               </execution>
