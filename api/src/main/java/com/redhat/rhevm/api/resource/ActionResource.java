@@ -20,9 +20,7 @@ package com.redhat.rhevm.api.resource;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 import com.redhat.rhevm.api.model.Action;
@@ -33,7 +31,7 @@ public interface ActionResource {
 
     @GET
     @Formatted
-    public Response get(@Context UriInfo uriInfo);
+    public Response get();
 
     public Action getAction();
 }

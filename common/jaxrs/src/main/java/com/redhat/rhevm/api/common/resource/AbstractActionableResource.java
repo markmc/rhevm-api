@@ -28,10 +28,12 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
+import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.common.util.ReapedMap;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.BaseResource;
 import com.redhat.rhevm.api.model.Fault;
+import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.resource.ActionResource;
 
 public abstract class AbstractActionableResource<R extends BaseResource> extends AbstractUpdatableResource<R> {
@@ -96,11 +98,13 @@ public abstract class AbstractActionableResource<R extends BaseResource> extends
                ? exists
                : new ActionResource() {
                     @Override
-                    public Response get(UriInfo uriInfo) {
+                    public Response get() {
                         // FIXME: need to abstract away "vms" here
-                        URI redirect = uriInfo.getBaseUriBuilder().path("/vms/" + getId()).build();
+                        VM vm = new VM();
+                        vm.setId(getId());
+                        vm = LinkHelper.addLinks(vm);
                         Response.Status status = Response.Status.MOVED_PERMANENTLY;
-                        return Response.status(status).location(redirect).build();
+                        return Response.status(status).location(URI.create(vm.getHref())).build();
                     }
                     @Override
                     public Action getAction() {

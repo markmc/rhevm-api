@@ -39,8 +39,7 @@ public class BaseActionResource implements ActionResource {
     }
 
     @Override
-    public Response get(UriInfo uriInfo) {
-        // FIXME: addLinks(uriInfo);
+    public Response get() {
         return Response.ok(action).build();
     }
 
@@ -49,12 +48,20 @@ public class BaseActionResource implements ActionResource {
         return action;
     }
 
+    private String getRelativePath(UriInfo uriInfo) {
+        String path = uriInfo.getPath();
+        if (path.startsWith("/")) {
+            path = path.substring(1);
+        }
+        return path;
+    }
+
     private void addLinks(UriInfo uriInfo) {
-        action.setHref(UriBuilder.fromPath(uriInfo.getPath()).path(action.getId()).build().toString());
+        action.setHref(UriBuilder.fromPath(getRelativePath(uriInfo)).path(action.getId()).build().toString());
 
         Link replay = new Link();
         replay.setRel("replay");
-        replay.setHref(uriInfo.getPath().toString());
+        replay.setHref(getRelativePath(uriInfo));
         action.getLink().add(replay);
     }
 }
