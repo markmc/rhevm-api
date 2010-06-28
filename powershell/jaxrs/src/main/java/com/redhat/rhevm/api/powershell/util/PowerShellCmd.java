@@ -28,15 +28,10 @@ import org.apache.commons.logging.LogFactory;
 public class PowerShellCmd {
     private static final Log log = LogFactory.getLog(PowerShellCmd.class);
 
-    private String script;
-
-    public PowerShellCmd(String script) {
-        this.script = script;
-    }
-
+    private Process p;
     private String stdout, stderr;
 
-    public int runAndWait(Process p) {
+    public int runAndWait(String script) {
         try {
             p.getOutputStream().write(script.getBytes());
             p.getOutputStream().close();
@@ -84,23 +79,33 @@ public class PowerShellCmd {
         }
     }
 
-    public int run() {
-        log.debug("Running '" + script + "'");
-
+    public void start() {
         ProcessBuilder pb = new ProcessBuilder(findPowerShell(), "-command", "-");
-
-        Process p;
-
         try {
             p = pb.start();
         } catch	(java.io.IOException ex) {
             throw new PowerShellException("Launching powershell failed", ex);
         }
+    }
+
+    public void destroy() {
+        if (p != null) {
+            p.destroy();
+            p = null;
+        }
+    }
+
+    public int run(String script) {
+        if (p == null) {
+            start();
+        }
+
+        log.debug("Running '" + script + "'");
 
         try {
-            return runAndWait(p);
+            return runAndWait(script);
         } finally {
-            p.destroy();
+            destroy();
         }
     }
 
@@ -142,9 +147,9 @@ public class PowerShellCmd {
     }
 
     public static String runCommand(String command) {
-        PowerShellCmd cmd = new PowerShellCmd(command);
+        PowerShellCmd cmd = new PowerShellCmd();
 
-        int exitstatus = cmd.run();
+        int exitstatus = cmd.run(command);
 
         if (!cmd.getStdErr().isEmpty()) {
             log.warn(cmd.getStdErr());
