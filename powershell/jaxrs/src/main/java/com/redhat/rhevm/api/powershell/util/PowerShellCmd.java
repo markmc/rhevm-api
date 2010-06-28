@@ -25,11 +25,22 @@ import java.util.Scanner;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.redhat.rhevm.api.common.security.Principal;
+
 public class PowerShellCmd {
     private static final Log log = LogFactory.getLog(PowerShellCmd.class);
 
+    private Principal principal;
     private Process p;
     private String stdout, stderr;
+
+    public PowerShellCmd(Principal principal) {
+        this.principal = principal;
+    }
+
+    public PowerShellCmd() {
+        this(null);
+    }
 
     public int runAndWait(String script) {
         try {
@@ -79,12 +90,39 @@ public class PowerShellCmd {
         }
     }
 
+    private String buildLogin() {
+        StringBuilder loginUser = new StringBuilder();
+
+        loginUser.append("login-user");
+        if (principal.getDomain() != null) {
+            loginUser.append(" -domain "   + PowerShellUtils.escape(principal.getDomain()));
+        }
+        if (principal.getUser() != null) {
+            loginUser.append(" -username " + PowerShellUtils.escape(principal.getUser()));
+        }
+        if (principal.getSecret() != null) {
+            loginUser.append(" -password " + PowerShellUtils.escape(principal.getSecret()));
+        }
+        loginUser.append(";\n");
+
+        return loginUser.toString();
+    }
+
     public void start() {
         ProcessBuilder pb = new ProcessBuilder(findPowerShell(), "-command", "-");
+
         try {
             p = pb.start();
         } catch	(java.io.IOException ex) {
             throw new PowerShellException("Launching powershell failed", ex);
+        }
+
+        if (principal != null && !principal.equals(Principal.NONE)) {
+            try {
+                p.getOutputStream().write(buildLogin().getBytes());
+            } catch (java.io.IOException ex) {
+                throw new PowerShellException("Writing login-user to powershell process failed", ex);
+            }
         }
     }
 
