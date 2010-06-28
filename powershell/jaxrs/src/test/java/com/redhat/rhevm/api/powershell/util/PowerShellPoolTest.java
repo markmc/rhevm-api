@@ -35,6 +35,8 @@ import static org.powermock.api.easymock.PowerMock.expectNew;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
 
+import com.redhat.rhevm.api.common.security.Principal;
+
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({PowerShellPool.class})
 public class PowerShellPoolTest extends Assert {
@@ -50,7 +52,7 @@ public class PowerShellPoolTest extends Assert {
 
         ControllableExecutor executor = new ControllableExecutor();
 
-        PowerShellPool pool = new PowerShellPool(executor, 10);
+        PowerShellPool pool = new PowerShellPool(executor, Principal.NONE, 10);
 
         assertEquals(10, executor.taskCount());
 

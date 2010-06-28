@@ -22,24 +22,28 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import com.redhat.rhevm.api.common.security.Principal;
+
 public class PowerShellPool {
 
     private static final int DEFAULT_POOL_SIZE = 4;
 
     private ExecutorService executor;
+    private Principal principal;
 
     private BlockingQueue<PowerShellCmd> cmds = new LinkedBlockingQueue<PowerShellCmd>();
 
-    public PowerShellPool(ExecutorService executor, int initialSize) {
+    public PowerShellPool(ExecutorService executor, Principal principal, int initialSize) {
         this.executor = executor;
+        this.principal = principal;
 
         for (int i = 0; i < initialSize; i++) {
             executor.execute(new PowerShellLauncher());
         }
     }
 
-    public PowerShellPool(ExecutorService executor) {
-        this(executor, DEFAULT_POOL_SIZE);
+    public PowerShellPool(ExecutorService executor, Principal principal) {
+        this(executor, principal, DEFAULT_POOL_SIZE);
     }
 
     public PowerShellCmd get() {
