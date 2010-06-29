@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <beans
+  default-autowire="byType"
   xmlns="http://www.springframework.org/schema/beans"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:p="http://www.springframework.org/schema/p"
@@ -8,47 +9,40 @@
 
   <!-- Top-level Resources -->
   <bean id="powerShellApiResource"
+        lazy-init="true"
         class="com.redhat.rhevm.api.common.resource.DefaultApiResource"/>
 
   <bean id="powerShellVmsResource"
-        class="com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource">
-    <property name="executor"><ref bean="threadPoolExecutor"/></property>
-  </bean>
+        lazy-init="true"
+        class="com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource"/>
 
   <bean id="powerShellHostsResource"
-        class="com.redhat.rhevm.api.powershell.resource.PowerShellHostsResource">
-    <property name="executor"><ref bean="threadPoolExecutor"/></property>
-  </bean>
+        lazy-init="true"
+        class="com.redhat.rhevm.api.powershell.resource.PowerShellHostsResource"/>
 
   <bean id="powerShellNetworksResource"
-        class="com.redhat.rhevm.api.powershell.resource.PowerShellNetworksResource">
-    <property name="executor"><ref bean="threadPoolExecutor"/></property>
-  </bean>
+        lazy-init="true"
+        class="com.redhat.rhevm.api.powershell.resource.PowerShellNetworksResource"/>
 
   <bean id="powerShellTemplatesResource"
-        class="com.redhat.rhevm.api.powershell.resource.PowerShellTemplatesResource">
-    <property name="executor"><ref bean="threadPoolExecutor"/></property>
-  </bean>
+        lazy-init="true"
+        class="com.redhat.rhevm.api.powershell.resource.PowerShellTemplatesResource"/>
 
   <bean id="powerShellStorageDomainsResource"
-        class="com.redhat.rhevm.api.powershell.resource.PowerShellStorageDomainsResource">
-    <property name="executor"><ref bean="threadPoolExecutor"/></property>
-  </bean>
+        lazy-init="true"
+        class="com.redhat.rhevm.api.powershell.resource.PowerShellStorageDomainsResource"/>
 
   <bean id="powerShellDataCentersResource"
-        class="com.redhat.rhevm.api.powershell.resource.PowerShellDataCentersResource">
-    <property name="executor"><ref bean="threadPoolExecutor"/></property>
-  </bean>
+        lazy-init="true"
+        class="com.redhat.rhevm.api.powershell.resource.PowerShellDataCentersResource"/>
 
   <bean id="powerShellClustersResource"
-        class="com.redhat.rhevm.api.powershell.resource.PowerShellClustersResource">
-    <property name="executor"><ref bean="threadPoolExecutor"/></property>
-  </bean>
+        lazy-init="true"
+        class="com.redhat.rhevm.api.powershell.resource.PowerShellClustersResource"/>
 
   <bean id="powerShellVmPoolsResource"
-        class="com.redhat.rhevm.api.powershell.resource.PowerShellVmPoolsResource">
-    <property name="executor"><ref bean="threadPoolExecutor"/></property>
-  </bean>
+        lazy-init="true"
+        class="com.redhat.rhevm.api.powershell.resource.PowerShellVmPoolsResource"/>
 
   <bean id="powerShellCpusResource" class="com.redhat.rhevm.api.common.resource.DefaultCpusResource"/>
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <beans default-init-method="populate"
+  default-autowire="byType"
   xmlns="http://www.springframework.org/schema/beans"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:p="http://www.springframework.org/schema/p"
@@ -8,44 +9,40 @@
 
   <!-- Top-level Resources -->
   <bean id="mockApiResource"
+        lazy-init="true"
         class="com.redhat.rhevm.api.common.resource.DefaultApiResource"/>
 
   <bean id="mockVmsResource"
-        class="com.redhat.rhevm.api.mock.resource.MockVmsResource">
-    <property name="executor"><ref bean="threadPoolExecutor"/></property>
-  </bean>
+        lazy-init="true"
+        class="com.redhat.rhevm.api.mock.resource.MockVmsResource"/>
 
   <bean id="mockHostsResource"
-        class="com.redhat.rhevm.api.mock.resource.MockHostsResource">
-    <property name="executor"><ref bean="threadPoolExecutor"/></property>
-  </bean>
+        lazy-init="true"
+        class="com.redhat.rhevm.api.mock.resource.MockHostsResource"/>
 
   <bean id="mockNetworksResource"
-        class="com.redhat.rhevm.api.mock.resource.MockNetworksResource">
-    <property name="executor"><ref bean="threadPoolExecutor"/></property>
-  </bean>
+        lazy-init="true"
+        class="com.redhat.rhevm.api.mock.resource.MockNetworksResource"/>
 
   <bean id="mockStorageDomainsResource"
-        class="com.redhat.rhevm.api.mock.resource.MockStorageDomainsResource">
-    <property name="executor"><ref bean="threadPoolExecutor"/></property>
-  </bean>
+        lazy-init="true"
+        class="com.redhat.rhevm.api.mock.resource.MockStorageDomainsResource"/>
 
   <bean id="mockTemplatesResource"
-        class="com.redhat.rhevm.api.mock.resource.MockTemplatesResource">
-    <property name="executor"><ref bean="threadPoolExecutor"/></property>
-  </bean>
+        lazy-init="true"
+        class="com.redhat.rhevm.api.mock.resource.MockTemplatesResource"/>
 
   <bean id="mockDataCentersResource"
-        class="com.redhat.rhevm.api.mock.resource.MockDataCentersResource">
-    <property name="executor"><ref bean="threadPoolExecutor"/></property>
-  </bean>
+        lazy-init="true"
+        class="com.redhat.rhevm.api.mock.resource.MockDataCentersResource"/>
 
   <bean id="mockClustersResource"
-        class="com.redhat.rhevm.api.mock.resource.MockClustersResource">
-    <property name="executor"><ref bean="threadPoolExecutor"/></property>
-  </bean>
+        lazy-init="true"
+        class="com.redhat.rhevm.api.mock.resource.MockClustersResource"/>
 
-  <bean id="mockCpusResource" class="com.redhat.rhevm.api.common.resource.DefaultCpusResource"/>
+  <bean id="mockCpusResource"
+        lazy-init="true"
+        class="com.redhat.rhevm.api.common.resource.DefaultCpusResource"/>
 
   <!-- Shared Executor -->
   <bean id="keepAliveUnit"
