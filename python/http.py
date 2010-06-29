@@ -18,6 +18,7 @@
 # 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 
 import httplib
+import base64
 from testutils import debug
 
 def open_connection(opts):
@@ -25,6 +26,16 @@ def open_connection(opts):
     if opts['debug']:
         cnx.set_debuglevel(1)
     return cnx
+
+def basic_auth(opts):
+    credentials = base64.encodestring('%s:%s' % (opts['user'], opts['secret']))[:-1]
+    return "Basic %s" % credentials
+
+def basic_headers(opts):
+    headers = {}
+    if not (opts['user'] is None or opts['secret'] is None):
+        headers['Authorization'] = basic_auth(opts)
+    return headers
 
 #
 # Dumb attempt to parse e.g. <http://foo/>; rel=bar; type=text/plain
@@ -41,7 +52,7 @@ def parse_link(s, links):
 def HEAD_for_links(opts):
     cnx = open_connection(opts)
     try:
-        cnx.request('HEAD', opts['uri'])
+        cnx.request('HEAD', opts['uri'], headers = basic_headers(opts))
         links = {}
         for s in cnx.getresponse().getheader('Link').split(','):
             parse_link(s, links)
@@ -52,7 +63,7 @@ def HEAD_for_links(opts):
 def GET(opts, uri, type = None):
     cnx = open_connection(opts)
     try:
-        headers = {}
+        headers = basic_headers(opts)
         if not type is None:
             headers['Accept'] = type
         cnx.request('GET', uri, headers = headers)
@@ -68,7 +79,7 @@ def GET(opts, uri, type = None):
 def POST(opts, uri, body = None, type = None):
     cnx = open_connection(opts)
     try:
-        headers = {}
+        headers = basic_headers(opts)
         if not type is None:
             headers['Content-type'] = type
             headers['Accept'] = type
@@ -85,7 +96,7 @@ def POST(opts, uri, body = None, type = None):
 def PUT(opts, uri, body, type = None):
     cnx = open_connection(opts)
     try:
-        headers = {}
+        headers = basic_headers(opts)
         if not type is None:
             headers['Content-type'] = type
             headers['Accept'] = type
@@ -102,7 +113,7 @@ def PUT(opts, uri, body, type = None):
 def DELETE(opts, uri):
     cnx = open_connection(opts)
     try:
-        cnx.request('DELETE', uri)
+        cnx.request('DELETE', uri, headers = basic_headers(opts))
         ret = { 'status' : 0, 'body' : None }
         resp = cnx.getresponse()
         ret['status'] = resp.status

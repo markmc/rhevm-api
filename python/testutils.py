@@ -24,6 +24,7 @@ import random
 import template_parser
 import time
 import urlparse
+import copy
 
 random.seed()
 
@@ -33,11 +34,13 @@ def parseOptions():
         'port' : 8080,
         'impl' : "mock",
         'debug' : False,
+        'user' : None,
+        'secret' : None,
         }
 
     oargs = []
     if len(sys.argv) > 1:
-        options, oargs = getopt.getopt(sys.argv[1:], "h:p:i:d", ["host=", "port=", "impl=", "debug"])
+        options, oargs = getopt.getopt(sys.argv[1:], "h:p:i:u:s:d", ["host=", "port=", "impl=", "user=", "secret=", "debug"])
         for opt, a in options:
             if opt in ("-h", "--host"):
                 opts['host'] = a
@@ -45,6 +48,10 @@ def parseOptions():
                 opts['port'] = a
             if opt in ("-i", "--impl"):
                 opts['impl'] = a
+            if opt in ("-u", "--user"):
+                opts['user'] = a
+            if opt in ("-s", "--secret"):
+                opts['secret'] = a
             if opt in ("-d", "--debug"):
                 opts['debug'] = True
 
@@ -87,6 +94,13 @@ class TestUtils:
         ret = http.GET(self.opts, self.abs(href), self.fmt.MEDIA_TYPE)
         expectedStatusCode(ret, 200)
         return self.fmt.parse(ret['body'])
+
+    def unauth(self, href):
+        unauth_opts = copy.deepcopy(self.opts)
+        unauth_opts['user'] = None
+        unauth_opts['secret'] = None
+        ret = http.GET(unauth_opts, self.abs(href), self.fmt.MEDIA_TYPE)
+        expectedStatusCode(ret, 401)
 
     def query(self, href, constraint):
         t = template_parser.URITemplate(self.abs(href))

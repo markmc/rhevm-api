@@ -85,3 +85,5 @@ for fmt in [xmlfmt]:
     t.delete(foo_vm.href)
 
     t.delete(bar_host.href)
+
+    t.unauth(links['hosts'])
