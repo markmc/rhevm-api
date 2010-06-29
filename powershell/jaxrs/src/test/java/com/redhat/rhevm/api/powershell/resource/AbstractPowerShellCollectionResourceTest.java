@@ -37,6 +37,7 @@ import com.redhat.rhevm.api.common.resource.AbstractUpdatableResource;
 import com.redhat.rhevm.api.common.util.QueryHelper;
 import com.redhat.rhevm.api.common.util.ReflectionHelper;
 
+import com.redhat.rhevm.api.powershell.util.ControllableExecutor;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 
 import org.junit.After;

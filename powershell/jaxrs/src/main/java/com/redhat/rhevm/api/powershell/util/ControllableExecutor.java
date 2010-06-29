@@ -16,19 +16,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api.powershell.resource;
+package com.redhat.rhevm.api.powershell.util;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.Executor;
+import java.util.concurrent.AbstractExecutorService;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A simple executor for testing purposes that allows finegrained control
  * of when a task is run.
  */
-public class ControllableExecutor implements Executor {
+public class ControllableExecutor extends AbstractExecutorService {
 
     private List<Runnable> tasks;
+    private boolean shutdown = false;
 
     public ControllableExecutor() {
         tasks = new LinkedList<Runnable>();
@@ -36,6 +39,9 @@ public class ControllableExecutor implements Executor {
 
     @Override
     public synchronized void execute(Runnable command) {
+        if (shutdown) {
+            throw new RejectedExecutionException("executor is shutdown");
+        }
         tasks.add(tasks.size(), command);
     }
 
@@ -43,7 +49,7 @@ public class ControllableExecutor implements Executor {
         Runnable task = null;
         synchronized (this) {
             if (!tasks.isEmpty()) {
-                task = tasks.get(0);
+                task = tasks.remove(0);
             }
         }
         if (task != null) {
@@ -53,5 +59,39 @@ public class ControllableExecutor implements Executor {
 
     public synchronized int taskCount() {
         return tasks.size();
+    }
+
+    private void awaitTermination() {
+        while (taskCount() > 0) {
+            runNext();
+        }
+    }
+
+    @Override
+    public boolean awaitTermination(long timeout, TimeUnit unit) {
+        awaitTermination();
+        return true;
+    }
+
+    @Override
+    public boolean isTerminated() {
+        return isShutdown() && taskCount() == 0;
+    }
+
+    @Override
+    public synchronized boolean isShutdown() {
+        return shutdown;
+    }
+
+    @Override
+    public synchronized void shutdown() {
+        shutdown = true;
+    }
+
+    @Override
+    public List<Runnable> shutdownNow() {
+        shutdown();
+        awaitTermination();
+        return null;
     }
 }
