@@ -3,20 +3,20 @@
   <feature name="rhevm-api-cli">
     <feature>spring</feature>
     <feature>cxf-jaxrs</feature>
-    <bundle>wrap:mvn:org.jboss.resteasy/resteasy-jaxb-provider/2.0-beta-2</bundle>
-    <bundle>wrap:mvn:org.jboss.resteasy/resteasy-jettison-provider/2.0-beta-2</bundle>
-    <bundle>wrap:mvn:com.redhat.rhevm.api/rhevm-api/0.1-SNAPSHOT</bundle>
-    <bundle>wrap:mvn:com.redhat.rhevm.api/rhevm-api-common-jaxrs/0.1-SNAPSHOT</bundle>
-    <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-base/0.1-SNAPSHOT</bundle>
-    <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-vms/0.1-SNAPSHOT</bundle>
-    <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-hosts/0.1-SNAPSHOT</bundle>
-    <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-datacenters/0.1-SNAPSHOT</bundle>
-    <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-clusters/0.1-SNAPSHOT</bundle>
-    <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-storagedomains/0.1-SNAPSHOT</bundle>
-    <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-cpus/0.1-SNAPSHOT</bundle>
-    <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-actions/0.1-SNAPSHOT</bundle>
-    <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-templates/0.1-SNAPSHOT</bundle>
-    <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-vmpools/0.1-SNAPSHOT</bundle>
-    <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-networks/0.1-SNAPSHOT</bundle>
+    <bundle>wrap:mvn:org.jboss.resteasy/resteasy-jaxb-provider/${resteasy.version}</bundle>
+    <bundle>wrap:mvn:org.jboss.resteasy/resteasy-jettison-provider/${resteasy.version}</bundle>
+    <bundle>wrap:mvn:com.redhat.rhevm.api/rhevm-api/${project.version}</bundle>
+    <bundle>wrap:mvn:com.redhat.rhevm.api/rhevm-api-common-jaxrs/${project.version}</bundle>
+    <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-base/${project.version}</bundle>
+    <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-vms/${project.version}</bundle>
+    <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-hosts/${project.version}</bundle>
+    <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-datacenters/${project.version}</bundle>
+    <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-clusters/${project.version}</bundle>
+    <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-storagedomains/${project.version}</bundle>
+    <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-cpus/${project.version}</bundle>
+    <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-actions/${project.version}</bundle>
+    <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-templates/${project.version}</bundle>
+    <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-vmpools/${project.version}</bundle>
+    <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-networks/${project.version}</bundle>
   </feature>
 </features>

@@ -16,6 +16,15 @@
   <url>http://fedorahosted.org/rhevm-api/</url>
 
   <build>
+    <resources>
+      <resource>
+        <directory>${pom.basedir}/src/main/resources</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>features.xml</include>
+        </includes>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
