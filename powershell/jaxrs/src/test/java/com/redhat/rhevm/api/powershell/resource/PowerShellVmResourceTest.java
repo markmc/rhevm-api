@@ -18,6 +18,8 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.util.concurrent.Executor;
+
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -27,6 +29,7 @@ import com.redhat.rhevm.api.model.VM;
 
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellException;
+import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 
 import org.junit.Test;
 
@@ -56,8 +59,8 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     private static final String UPDATE_COMMAND = "$v = get-vm '" + VM_ID + "'\n$v.name = '" + NEW_NAME + "'\nupdate-vm -vmobject $v";
     private static final String UPDATE_RETURN = "vmid: " + VM_ID + "\n name: " + NEW_NAME + "\nhostclusterid: " + CLUSTER_ID + "\n" + "templateid: " + TEMPLATE_ID + "\n" + OTHER_PROPS;
 
-    protected PowerShellVmResource getResource() {
-        return new PowerShellVmResource(VM_ID);
+    protected PowerShellVmResource getResource(Executor executor, PowerShellPoolMap poolMap) {
+        return new PowerShellVmResource(VM_ID, executor, poolMap);
     }
 
     @Test
@@ -169,7 +172,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
 
     private UriInfo setUpVmExpectations(String command, String ret, String name) throws Exception {
         mockStatic(PowerShellCmd.class);
-        expect(PowerShellCmd.runCommand(command)).andReturn(ret);
+        expect(PowerShellCmd.runCommand(setUpShellExpectations(), command)).andReturn(ret);
         replayAll();
         return null;
     }

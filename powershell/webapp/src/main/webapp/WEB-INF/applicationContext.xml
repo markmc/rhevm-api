@@ -46,6 +46,9 @@
 
   <bean id="powerShellCpusResource" class="com.redhat.rhevm.api.common.resource.DefaultCpusResource"/>
 
+  <!-- PowerShell instance pooling -->
+  <bean id="poolMap" class="com.redhat.rhevm.api.powershell.util.PowerShellPoolMap"/>
+
   <!-- Shared Executor -->
   <bean id="keepAliveUnit"
         class="java.util.concurrent.TimeUnit"
@@ -66,7 +69,7 @@
     <constructor-arg><ref bean="keepAliveUnit"/></constructor-arg>
     <constructor-arg><ref bean="taskQueue"/></constructor-arg>
   </bean>
-
+	
   <!-- BASIC Auth infrastructure -->
 
   <bean id="authChallenger" class="com.redhat.rhevm.api.common.security.AuthorizationChallenger">

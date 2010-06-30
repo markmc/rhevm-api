@@ -28,9 +28,9 @@ import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.resource.VmsResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
-import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
+import static com.redhat.rhevm.api.powershell.util.PowerShellCmd.runCommand;
 
 public class PowerShellVmsResource
     extends AbstractPowerShellCollectionResource<VM, PowerShellVmResource>
@@ -39,7 +39,7 @@ public class PowerShellVmsResource
     @Override
     public VMs list(UriInfo uriInfo) {
         VMs ret = new VMs();
-        for (PowerShellVM vm : PowerShellVmResource.runAndParse(getSelectCommand("select-vm", uriInfo, VM.class))) {
+        for (PowerShellVM vm : PowerShellVmResource.runAndParse(getShell(), getSelectCommand("select-vm", uriInfo, VM.class))) {
             ret.getVMs().add(PowerShellVmResource.addLinks(vm));
         }
         return ret;
@@ -93,7 +93,7 @@ public class PowerShellVmsResource
             buf.append(" -defaultbootsequence " + bootSequence);
         }
 
-        PowerShellVM ret = PowerShellVmResource.runAndParseSingle(buf.toString());
+        PowerShellVM ret = PowerShellVmResource.runAndParseSingle(getShell(), buf.toString());
 
         vm = PowerShellVmResource.addLinks(ret);
 
@@ -104,7 +104,7 @@ public class PowerShellVmsResource
 
     @Override
     public void remove(String id) {
-        PowerShellCmd.runCommand("remove-vm -vmid " + PowerShellUtils.escape(id));
+        runCommand(getShell(), "remove-vm -vmid " + PowerShellUtils.escape(id));
         removeSubResource(id);
     }
 
@@ -115,6 +115,6 @@ public class PowerShellVmsResource
 
     @Override
     protected PowerShellVmResource createSubResource(String id) {
-        return new PowerShellVmResource(id, getExecutor());
+        return new PowerShellVmResource(id, getExecutor(), powerShellPoolMap);
     }
 }

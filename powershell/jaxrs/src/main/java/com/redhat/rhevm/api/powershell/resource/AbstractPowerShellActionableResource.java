@@ -18,25 +18,28 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import java.text.MessageFormat;
+import java.util.concurrent.Executor;
 
-import com.redhat.rhevm.api.model.Action;
+import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
+import com.redhat.rhevm.api.model.BaseResource;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
-import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 
+public abstract class AbstractPowerShellActionableResource<R extends BaseResource> extends AbstractActionableResource<R> {
 
-class CommandRunner extends AbstractPowerShellActionTask {
+    protected PowerShellPoolMap powerShellPoolMap;
 
-    private static final String COMMAND = "{0} -{1}id {2}";
-
-    private PowerShellCmd shell;
-
-    CommandRunner(Action action, String command, String type, String id, PowerShellCmd shell) {
-        super(action, MessageFormat.format(COMMAND, command, type, PowerShellUtils.escape(id)));
-        this.shell = shell;
+    public AbstractPowerShellActionableResource(String id , PowerShellPoolMap powerShellPoolMap) {
+        super(id);
+        this.powerShellPoolMap = powerShellPoolMap;
     }
 
-    public void execute() {
-        PowerShellCmd.runCommand(shell, command);
+    public AbstractPowerShellActionableResource(String id, Executor executor, PowerShellPoolMap powerShellPoolMap) {
+        super(id, executor);
+        this.powerShellPoolMap = powerShellPoolMap;
+    }
+
+    protected PowerShellCmd getShell() {
+        return powerShellPoolMap.get().get();
     }
 }

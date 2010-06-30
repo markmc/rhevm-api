@@ -25,25 +25,25 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.resource.NetworkResource;
-import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellNetwork;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
-public class PowerShellNetworkResource extends AbstractActionableResource<Network> implements NetworkResource {
+public class PowerShellNetworkResource extends AbstractPowerShellActionableResource<Network> implements NetworkResource {
 
-    public PowerShellNetworkResource(String id, Executor executor) {
-        super(id, executor);
+    public PowerShellNetworkResource(String id, Executor executor, PowerShellPoolMap powerShellPoolMap) {
+        super(id, executor, powerShellPoolMap);
     }
 
-    public static ArrayList<Network> runAndParse(String command) {
-        return PowerShellNetwork.parse(PowerShellCmd.runCommand(command));
+    public static ArrayList<Network> runAndParse(PowerShellCmd shell, String command) {
+        return PowerShellNetwork.parse(PowerShellCmd.runCommand(shell, command));
     }
 
-    public static Network runAndParseSingle(String command) {
-        ArrayList<Network> networks = runAndParse(command);
+    public static Network runAndParseSingle(PowerShellCmd shell, String command) {
+        ArrayList<Network> networks = runAndParse(shell, command);
 
         return !networks.isEmpty() ? networks.get(0) : null;
     }
@@ -59,7 +59,7 @@ public class PowerShellNetworkResource extends AbstractActionableResource<Networ
         buf.append("  }");
         buf.append("}");
 
-        return LinkHelper.addLinks(runAndParseSingle(buf.toString()));
+        return LinkHelper.addLinks(runAndParseSingle(getShell(), buf.toString()));
     }
 
     @Override
@@ -82,6 +82,6 @@ public class PowerShellNetworkResource extends AbstractActionableResource<Networ
         buf.append("  }");
         buf.append("}\n");
 
-        return LinkHelper.addLinks(runAndParseSingle(buf.toString()));
+        return LinkHelper.addLinks(runAndParseSingle(getShell(), buf.toString()));
     }
 }

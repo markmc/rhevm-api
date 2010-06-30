@@ -29,21 +29,22 @@ import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellTemplate;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
-public class PowerShellTemplateResource extends AbstractActionableResource<Template> implements TemplateResource {
+public class PowerShellTemplateResource extends AbstractPowerShellActionableResource<Template> implements TemplateResource {
 
-    public PowerShellTemplateResource(String id, Executor executor) {
-        super(id, executor);
+    public PowerShellTemplateResource(String id, Executor executor, PowerShellPoolMap powerShellPoolMap) {
+        super(id, executor, powerShellPoolMap);
     }
 
-    public static ArrayList<Template> runAndParse(String command) {
-        return PowerShellTemplate.parse(PowerShellCmd.runCommand(command));
+    public static ArrayList<Template> runAndParse(PowerShellCmd shell, String command) {
+        return PowerShellTemplate.parse(PowerShellCmd.runCommand(shell, command));
     }
 
-    public static Template runAndParseSingle(String command) {
-        ArrayList<Template> templates = runAndParse(command);
+    public static Template runAndParseSingle(PowerShellCmd shell, String command) {
+        ArrayList<Template> templates = runAndParse(shell, command);
 
         return !templates.isEmpty() ? templates.get(0) : null;
     }
@@ -54,6 +55,6 @@ public class PowerShellTemplateResource extends AbstractActionableResource<Templ
 
         buf.append("get-template -templateid " + PowerShellUtils.escape(getId()));
 
-        return LinkHelper.addLinks(runAndParseSingle(buf.toString()));
+        return LinkHelper.addLinks(runAndParseSingle(getShell(), buf.toString()));
     }
 }

@@ -23,6 +23,8 @@ import java.util.List;
 
 import com.redhat.rhevm.api.model.BaseDevice;
 import com.redhat.rhevm.api.model.BaseDevices;
+import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.resource.DeviceResource;
 
 
@@ -31,10 +33,17 @@ public class PowerShellDeviceResource<D extends BaseDevice, C extends BaseDevice
 
     protected AbstractPowerShellDevicesResource<D, C> parent;
     protected String deviceId;
+    protected PowerShellPoolMap powerShellPoolMap;
 
-    public PowerShellDeviceResource(AbstractPowerShellDevicesResource<D, C> parent, String deviceId) {
+    public PowerShellDeviceResource(AbstractPowerShellDevicesResource<D, C> parent, String deviceId, PowerShellPoolMap powerShellPoolMap) {
         this.parent = parent;
         this.deviceId = deviceId;
+        System.out.println("setting pool map: " + powerShellPoolMap);
+        this.powerShellPoolMap = powerShellPoolMap;
+    }
+
+    public PowerShellCmd getShell() {
+        return powerShellPoolMap.get().get();
     }
 
     @Override

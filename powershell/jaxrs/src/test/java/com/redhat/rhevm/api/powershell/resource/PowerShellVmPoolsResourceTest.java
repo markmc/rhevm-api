@@ -53,7 +53,7 @@ public class PowerShellVmPoolsResourceTest extends AbstractPowerShellCollectionR
     public static final String LOOKUP_TEMPLATE_RETURN = "templateid: " + TEMPLATE_ID + "\nname: " + TEMPLATE_NAME;
 
     public PowerShellVmPoolsResourceTest() {
-	super(new PowerShellVmPoolResource("0"), "vmpools", "vmpool");
+        super(new PowerShellVmPoolResource("0", null, null), "vmpools", "vmpool");
     }
 
     @Test
@@ -67,7 +67,7 @@ public class PowerShellVmPoolsResourceTest extends AbstractPowerShellCollectionR
                               LOOKUP_CLUSTER_RETURN, LOOKUP_TEMPLATE_RETURN,
                               LOOKUP_CLUSTER_RETURN, LOOKUP_TEMPLATE_RETURN };
         verifyCollection(
-            resource.list(setUpResourceExpectations(commands, returns, null, NAMES)).getVmPools(),
+            resource.list(setUpResourceExpectations(4, commands, returns, false, null, NAMES)).getVmPools(),
             NAMES);
     }
 
@@ -81,8 +81,10 @@ public class PowerShellVmPoolsResourceTest extends AbstractPowerShellCollectionR
                               LOOKUP_CLUSTER_RETURN, LOOKUP_TEMPLATE_RETURN,
                               LOOKUP_CLUSTER_RETURN, LOOKUP_TEMPLATE_RETURN };
         verifyCollection(
-            resource.list(setUpResourceExpectations(commands,
+            resource.list(setUpResourceExpectations(3,
+                                                    commands,
                                                     returns,
+                                                    false,
                                                     getQueryParam(),
                                                     NAMES_SUBSET)).getVmPools(),
             NAMES_SUBSET);
@@ -93,7 +95,7 @@ public class PowerShellVmPoolsResourceTest extends AbstractPowerShellCollectionR
         String [] commands = { ADD_COMMAND, LOOKUP_CLUSTER_COMMAND, LOOKUP_TEMPLATE_COMMAND };
         String [] returns = { getAddReturn(GET_RETURN_EPILOG), LOOKUP_CLUSTER_RETURN, LOOKUP_TEMPLATE_RETURN };
         verifyResponse(
-            resource.add(setUpAddResourceExpectations(commands, returns, NEW_NAME),
+            resource.add(setUpResourceExpectations(2, commands, returns, true, null, NEW_NAME),
                          getModel(NEW_NAME)),
             NEW_NAME);
     }
@@ -107,7 +109,7 @@ public class PowerShellVmPoolsResourceTest extends AbstractPowerShellCollectionR
         String [] commands = { TEMPLATE_BY_NAME_ADD_COMMAND, LOOKUP_CLUSTER_COMMAND, LOOKUP_TEMPLATE_COMMAND };
         String [] returns = { getAddReturn(GET_RETURN_EPILOG), LOOKUP_CLUSTER_RETURN, LOOKUP_TEMPLATE_RETURN };
         verifyResponse(
-            resource.add(setUpAddResourceExpectations(commands, returns, NEW_NAME),
+            resource.add(setUpResourceExpectations(2, commands, returns, true, null, NEW_NAME),
                          model),
             NEW_NAME);
     }
@@ -123,7 +125,7 @@ public class PowerShellVmPoolsResourceTest extends AbstractPowerShellCollectionR
         String [] commands = { CLUSTER_BY_NAME_ADD_COMMAND, LOOKUP_CLUSTER_COMMAND, LOOKUP_TEMPLATE_COMMAND };
         String [] returns = { getAddReturn(GET_RETURN_EPILOG), LOOKUP_CLUSTER_RETURN, LOOKUP_TEMPLATE_RETURN };
         verifyResponse(
-            resource.add(setUpAddResourceExpectations(commands, returns, NEW_NAME),
+            resource.add(setUpResourceExpectations(2, commands, returns, true, null, NEW_NAME),
                          model),
             NEW_NAME);
     }
@@ -143,7 +145,7 @@ public class PowerShellVmPoolsResourceTest extends AbstractPowerShellCollectionR
     }
 
     protected PowerShellVmPoolsResource getResource() {
-	return new PowerShellVmPoolsResource();
+        return new PowerShellVmPoolsResource();
     }
 
     protected void populateModel(VmPool pool) {

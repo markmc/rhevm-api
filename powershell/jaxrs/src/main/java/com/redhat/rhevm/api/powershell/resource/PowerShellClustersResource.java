@@ -38,7 +38,7 @@ public class PowerShellClustersResource
     @Override
     public Clusters list(UriInfo uriInfo) {
         Clusters ret = new Clusters();
-        for (Cluster cluster : PowerShellClusterResource.runAndParse(getSelectCommand("select-cluster", uriInfo, Cluster.class))) {
+        for (Cluster cluster : PowerShellClusterResource.runAndParse(getShell(), getSelectCommand("select-cluster", uriInfo, Cluster.class))) {
             ret.getClusters().add(LinkHelper.addLinks(cluster));
         }
         return ret;
@@ -63,7 +63,7 @@ public class PowerShellClustersResource
 
         buf.append(" -compatibilityversion $v");
 
-        cluster = LinkHelper.addLinks(PowerShellClusterResource.runAndParseSingle(buf.toString()));
+        cluster = LinkHelper.addLinks(PowerShellClusterResource.runAndParseSingle(getShell(), buf.toString()));
 
         UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(cluster.getId());
 
@@ -72,7 +72,7 @@ public class PowerShellClustersResource
 
     @Override
     public void remove(String id) {
-        PowerShellCmd.runCommand("remove-cluster -clusterid " + PowerShellUtils.escape(id));
+        PowerShellCmd.runCommand(getShell(), "remove-cluster -clusterid " + PowerShellUtils.escape(id));
         removeSubResource(id);
     }
 
@@ -82,6 +82,6 @@ public class PowerShellClustersResource
     }
 
     protected PowerShellClusterResource createSubResource(String id) {
-        return new PowerShellClusterResource(id, getExecutor());
+        return new PowerShellClusterResource(id, getExecutor(), powerShellPoolMap);
     }
 }

@@ -23,7 +23,6 @@ import java.util.concurrent.Executor;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.common.resource.AttachmentActionValidator;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.model.Action;
@@ -34,10 +33,11 @@ import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.resource.AttachmentResource;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
-public class PowerShellAttachmentResource extends AbstractActionableResource<Attachment> implements AttachmentResource {
+public class PowerShellAttachmentResource extends AbstractPowerShellActionableResource<Attachment> implements AttachmentResource {
 
     private String storageDomainId;
 
@@ -46,13 +46,8 @@ public class PowerShellAttachmentResource extends AbstractActionableResource<Att
      *
      * @param attachment  encapsulated Attachment
      */
-    PowerShellAttachmentResource(String dataCenterId, String storageDomainId, Executor executor) {
-        super(dataCenterId, executor);
-        this.storageDomainId = storageDomainId;
-    }
-
-    PowerShellAttachmentResource(String dataCenterId, String storageDomainId) {
-        super(dataCenterId);
+    PowerShellAttachmentResource(String dataCenterId, String storageDomainId, Executor executor, PowerShellPoolMap powerShellPoolMap) {
+        super(dataCenterId, executor, powerShellPoolMap);
         this.storageDomainId = storageDomainId;
     }
 
@@ -76,7 +71,7 @@ public class PowerShellAttachmentResource extends AbstractActionableResource<Att
         buf.append(" -datacenterid " + PowerShellUtils.escape(getId()));
         buf.append(" -storagedomainid " + PowerShellUtils.escape(storageDomainId));
 
-        StorageDomain storageDomain = PowerShellStorageDomainResource.runAndParseSingle(buf.toString());
+        StorageDomain storageDomain = PowerShellStorageDomainResource.runAndParseSingle(getShell(), buf.toString());
 
         DataCenter dataCenter = new DataCenter();
         dataCenter.setId(getId());
@@ -107,7 +102,7 @@ public class PowerShellAttachmentResource extends AbstractActionableResource<Att
             buf.append(" -datacenterid " + PowerShellUtils.escape(getId()));
             buf.append(" -storagedomainid " + PowerShellUtils.escape(storageDomainId));
 
-            PowerShellCmd.runCommand(buf.toString());
+            PowerShellCmd.runCommand(getShell(), buf.toString());
         }
     }
 }

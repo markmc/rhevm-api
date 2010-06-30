@@ -37,8 +37,8 @@ public class PowerShellVmPoolsResource
     @Override
     public VmPools list(UriInfo uriInfo) {
         VmPools ret = new VmPools();
-        for (VmPool pool : PowerShellVmPoolResource.runAndParse(getSelectCommand("select-vmpool", uriInfo, VmPool.class))) {
-            ret.getVmPools().add(PowerShellVmPoolResource.addLinks(pool));
+        for (VmPool pool : PowerShellVmPoolResource.runAndParse(getShell(), getSelectCommand("select-vmpool", uriInfo, VmPool.class))) {
+            ret.getVmPools().add(PowerShellVmPoolResource.addLinks(getShell(), pool));
         }
         return ret;
     }
@@ -81,8 +81,8 @@ public class PowerShellVmPoolsResource
             buf.append(" -numofvms " + pool.getSize());
         }
 
-        pool = PowerShellVmPoolResource.runAndParseSingle(buf.toString());
-        pool = PowerShellVmPoolResource.addLinks(pool);
+        pool = PowerShellVmPoolResource.runAndParseSingle(getShell(), buf.toString());
+        pool = PowerShellVmPoolResource.addLinks(getShell(), pool);
 
         UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(pool.getId());
 
@@ -96,7 +96,7 @@ public class PowerShellVmPoolsResource
         buf.append("$p = get-vmpool -vmpoolid " + PowerShellUtils.escape(id) + "\n");
         buf.append("remove-vmpool -name $p.name");
 
-        PowerShellCmd.runCommand(buf.toString());
+        PowerShellCmd.runCommand(getShell(), buf.toString());
 
         removeSubResource(id);
     }
@@ -108,6 +108,6 @@ public class PowerShellVmPoolsResource
 
     @Override
     protected PowerShellVmPoolResource createSubResource(String id) {
-        return new PowerShellVmPoolResource(id, getExecutor());
+        return new PowerShellVmPoolResource(id, getExecutor(), powerShellPoolMap);
     }
 }

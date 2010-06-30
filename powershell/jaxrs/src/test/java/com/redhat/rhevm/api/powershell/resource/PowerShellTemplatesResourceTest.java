@@ -25,7 +25,7 @@ import org.junit.Test;
 public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectionResourceTest<Template, PowerShellTemplateResource, PowerShellTemplatesResource> {
 
     public PowerShellTemplatesResourceTest() {
-        super(new PowerShellTemplateResource("0", null), "templates", "template");
+        super(new PowerShellTemplateResource("0", null, null), "templates", "template");
     }
 
     @Test

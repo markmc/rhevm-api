@@ -38,7 +38,7 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
         "storagedomainid: {0} \n name: {1}\ndomaintype: ISO \nstatus: ACTIVE\nsharedstatus: ACTIVE\ntype: ISCSI \n\n";
 
     public PowerShellDataCentersResourceTest() {
-        super(new PowerShellDataCenterResource("0", null), "datacenters", "datacenter");
+        super(new PowerShellDataCenterResource("0", null, null), "datacenters", "datacenter");
     }
 
     @Test
@@ -52,7 +52,7 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
                                MessageFormat.format(GET_STORAGE_RETURN, "dione".hashCode(), "dione"),
                                MessageFormat.format(GET_STORAGE_RETURN, "titan".hashCode(), "titan") };
          verifyCollection(
-             resource.list(setUpResourceExpectations(commands, returns, null, NAMES)).getDataCenters(),
+             resource.list(setUpResourceExpectations(4, commands, returns, false, null, NAMES)).getDataCenters(),
              NAMES);
     }
 
@@ -65,7 +65,7 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
                                MessageFormat.format(GET_STORAGE_RETURN, "mimas".hashCode(), "dione"),
                                MessageFormat.format(GET_STORAGE_RETURN, "dione".hashCode(), "titan") };
          verifyCollection(
-             resource.list(setUpResourceExpectations(commands, returns, getQueryParam(), NAMES_SUBSET)).getDataCenters(),
+             resource.list(setUpResourceExpectations(3, commands, returns, false, getQueryParam(), NAMES_SUBSET)).getDataCenters(),
              NAMES_SUBSET);
     }
 
@@ -76,7 +76,7 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
         String [] returns =  { getAddReturn(ADD_RETURN_EPILOG),
                            MessageFormat.format(GET_STORAGE_RETURN, "rhea".hashCode(), "rhea") };
         verifyResponse(
-            resource.add(setUpAddResourceExpectations(commands, returns, NEW_NAME), getModel(NEW_NAME)),
+            resource.add(setUpResourceExpectations(2, commands, returns, true, null, NEW_NAME), getModel(NEW_NAME)),
             NEW_NAME);
     }
 

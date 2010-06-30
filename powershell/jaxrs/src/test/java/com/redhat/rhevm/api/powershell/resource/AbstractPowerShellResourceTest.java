@@ -18,15 +18,18 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.util.concurrent.Executor;
+
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.BaseResource;
 import com.redhat.rhevm.api.model.Status;
-import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.powershell.util.ControllableExecutor;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellPool;
+import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -49,19 +52,20 @@ import static org.powermock.api.easymock.PowerMock.verifyAll;
 @PrepareForTest( { PowerShellCmd.class })
 @Ignore
 public abstract class AbstractPowerShellResourceTest<R extends BaseResource,
-                                                     A extends AbstractActionableResource<R>>
+                                                     A extends AbstractPowerShellActionableResource<R>>
     extends Assert {
 
     protected static final String URI_ROOT = "http://localhost:8099";
 
     protected A resource;
     protected ControllableExecutor executor;
+    protected PowerShellPoolMap poolMap;
 
     @Before
     public void setUp() {
         executor = new ControllableExecutor();
-        resource = getResource();
-        resource.setExecutor(executor);
+        poolMap = createMock(PowerShellPoolMap.class);
+        resource = getResource(executor, poolMap);
     }
 
     @After
@@ -83,9 +87,9 @@ public abstract class AbstractPowerShellResourceTest<R extends BaseResource,
     protected UriInfo setUpActionExpectation(String baseUri, String verb, String command, Object ret) throws Exception {
         mockStatic(PowerShellCmd.class);
         if (ret instanceof Throwable) {
-            expect(PowerShellCmd.runCommand(command)).andThrow((Throwable)ret);
+            expect(PowerShellCmd.runCommand(setUpShellExpectations(), command)).andThrow((Throwable)ret);
         } else  {
-            expect(PowerShellCmd.runCommand(command)).andReturn((String)ret);
+            expect(PowerShellCmd.runCommand(setUpShellExpectations(), command)).andReturn((String)ret);
         }
 
         UriInfo uriInfo = createMock(UriInfo.class);
@@ -96,6 +100,17 @@ public abstract class AbstractPowerShellResourceTest<R extends BaseResource,
         return uriInfo;
     }
 
+    protected PowerShellCmd setUpShellExpectations() {
+        return setUpShellExpectations(1);
+    }
+    
+    protected PowerShellCmd setUpShellExpectations(int times) {
+        PowerShellPool pool = createMock(PowerShellPool.class);
+        PowerShellCmd cmd = createMock(PowerShellCmd.class);
+        expect(pool.get()).andReturn(cmd).times(times);
+        expect(poolMap.get()).andReturn(pool).times(times);
+        return cmd;
+    }
 
     protected void verifyActionResponse(Response r, String baseUri, boolean async) throws Exception {
         verifyActionResponse(r, baseUri, async, null, null);
@@ -138,5 +153,5 @@ public abstract class AbstractPowerShellResourceTest<R extends BaseResource,
         }
     }
 
-    protected abstract A getResource();
+    protected abstract A getResource(Executor executor, PowerShellPoolMap poolMap);
 }

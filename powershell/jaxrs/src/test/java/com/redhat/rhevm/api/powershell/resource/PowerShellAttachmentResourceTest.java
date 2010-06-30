@@ -18,6 +18,8 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.util.concurrent.Executor;
+
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
@@ -25,6 +27,7 @@ import com.redhat.rhevm.api.model.Attachment;
 import com.redhat.rhevm.api.model.StorageDomainStatus;
 
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 
 import org.junit.Test;
 
@@ -55,8 +58,8 @@ public class PowerShellAttachmentResourceTest extends AbstractPowerShellResource
         "nfspath: foo.bar:/blaa/and/butter\n";
     private static final String ACTION_RETURN = "replace with realistic powershell return";
 
-    protected PowerShellAttachmentResource getResource() {
-        return new PowerShellAttachmentResource(DATA_CENTER_ID, STORAGE_DOMAIN_ID);
+    protected PowerShellAttachmentResource getResource(Executor executor, PowerShellPoolMap poolMap) {
+        return new PowerShellAttachmentResource(DATA_CENTER_ID, STORAGE_DOMAIN_ID, executor, poolMap);
     }
 
     @Test
@@ -94,7 +97,7 @@ public class PowerShellAttachmentResourceTest extends AbstractPowerShellResource
 
     private UriInfo setUpAttachmentExpectations() throws Exception {
         mockStatic(PowerShellCmd.class);
-        expect(PowerShellCmd.runCommand(GET_COMMAND)).andReturn(GET_RETURN);
+        expect(PowerShellCmd.runCommand(setUpShellExpectations(), GET_COMMAND)).andReturn(GET_RETURN);
         replayAll();
         return null;
     }

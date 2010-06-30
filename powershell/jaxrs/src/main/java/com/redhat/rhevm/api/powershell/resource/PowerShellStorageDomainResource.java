@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.common.resource.StorageDomainActionValidator;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
@@ -38,24 +37,26 @@ import com.redhat.rhevm.api.resource.AttachmentsResource;
 import com.redhat.rhevm.api.resource.StorageDomainResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellStorageDomain;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
-public class PowerShellStorageDomainResource extends AbstractActionableResource<StorageDomain> implements StorageDomainResource {
+public class PowerShellStorageDomainResource extends AbstractPowerShellActionableResource<StorageDomain> implements StorageDomainResource {
 
     private PowerShellStorageDomainsResource parent;
     private StorageDomain staged;
 
     public PowerShellStorageDomainResource(String id,
                                            PowerShellStorageDomainsResource parent,
-                                           StorageDomain staged) {
-        super(id, parent.getExecutor());
+                                           StorageDomain staged,
+                                           PowerShellPoolMap powerShellPoolMap) {
+        super(id, parent.getExecutor(), powerShellPoolMap);
         this.parent = parent;
         this.staged = staged;
     }
 
-    public PowerShellStorageDomainResource(String id, PowerShellStorageDomainsResource parent) {
-        this(id, parent, null);
+    public PowerShellStorageDomainResource(String id, PowerShellStorageDomainsResource parent, PowerShellPoolMap powerShellPoolMap) {
+        this(id, parent, null, powerShellPoolMap);
     }
 
     public StorageDomain getStaged() {
@@ -78,9 +79,9 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
      * @param sharedStatus whether the 'sharedStatus' property is needed
      * @return a list of storage domains
      */
-    public static ArrayList<StorageDomain> runAndParse(String command, boolean sharedStatus) {
+    public static ArrayList<StorageDomain> runAndParse(PowerShellCmd shell, String command, boolean sharedStatus) {
         ArrayList<PowerShellStorageDomain> storageDomains =
-            PowerShellStorageDomain.parse(PowerShellCmd.runCommand(command));
+            PowerShellStorageDomain.parse(PowerShellCmd.runCommand(shell, command));
         ArrayList<StorageDomain> ret = new ArrayList<StorageDomain>();
 
         for (PowerShellStorageDomain storageDomain : storageDomains) {
@@ -101,8 +102,8 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
      * @param command the powershell command to execute
      * @return a list of storage domains
      */
-    public static ArrayList<StorageDomain> runAndParse(String command) {
-        return runAndParse(command, false);
+    public static ArrayList<StorageDomain> runAndParse(PowerShellCmd shell, String command) {
+        return runAndParse(shell, command, false);
     }
 
     /**
@@ -113,8 +114,8 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
      * @param whether the 'sharedStatus' property is needed
      * @return a single storage domain, or null
      */
-    public static StorageDomain runAndParseSingle(String command, boolean sharedStatus) {
-        ArrayList<StorageDomain> storageDomains = runAndParse(command, sharedStatus);
+    public static StorageDomain runAndParseSingle(PowerShellCmd shell, String command, boolean sharedStatus) {
+        ArrayList<StorageDomain> storageDomains = runAndParse(shell, command, sharedStatus);
 
         return !storageDomains.isEmpty() ? storageDomains.get(0) : null;
     }
@@ -127,8 +128,8 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
      * @param command the powershell command to execute
      * @return a single storage domain, or null
      */
-    public static StorageDomain runAndParseSingle(String command) {
-        return runAndParseSingle(command, false);
+    public static StorageDomain runAndParseSingle(PowerShellCmd shell, String command) {
+        return runAndParseSingle(shell, command, false);
     }
 
     public StorageDomain addLinks(StorageDomain storageDomain) {
@@ -157,7 +158,7 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
         if (staged != null) {
             storageDomain = staged;
         } else {
-            storageDomain = runAndParseSingle("get-storagedomain " + PowerShellUtils.escape(getId()), true);
+            storageDomain = runAndParseSingle(getShell(), "get-storagedomain " + PowerShellUtils.escape(getId()), true);
             storageDomain = parent.mapFromRhevmId(storageDomain);
         }
         return addLinks(storageDomain);
@@ -183,7 +184,7 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
             buf.append("\n");
             buf.append("update-storagedomain -storagedomainobject $v");
 
-            storageDomain = parent.mapFromRhevmId(runAndParseSingle(buf.toString(), true));
+            storageDomain = parent.mapFromRhevmId(runAndParseSingle(getShell(), buf.toString(), true));
         }
         return addLinks(storageDomain);
     }
@@ -201,7 +202,7 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
 
     @Override
     public AttachmentsResource getAttachmentsResource() {
-        return new PowerShellAttachmentsResource(getId());
+        return new PowerShellAttachmentsResource(getId(), powerShellPoolMap);
     }
 
     private abstract class StorageDomainActionTask extends AbstractPowerShellActionTask {
@@ -263,7 +264,7 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
                 break;
             }
 
-            StorageDomain storageDomain = PowerShellStorageDomainResource.runAndParseSingle(buf.toString(), true);
+            StorageDomain storageDomain = PowerShellStorageDomainResource.runAndParseSingle(getShell(), buf.toString(), true);
 
             parent.unstageDomain(id, storageDomain.getId());
             PowerShellStorageDomainResource.this.staged = null;
@@ -279,7 +280,7 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
             storageDomain.setId(id);
             parent.mapToRhevmId(storageDomain);
 
-            storageDomain = runAndParseSingle("get-storagedomain " + PowerShellUtils.escape(storageDomain.getId()), true);
+            storageDomain = runAndParseSingle(getShell(), "get-storagedomain " + PowerShellUtils.escape(storageDomain.getId()), true);
 
             StringBuilder buf = new StringBuilder();
 
@@ -289,7 +290,7 @@ public class PowerShellStorageDomainResource extends AbstractActionableResource<
 
             buf.append(" -hostid " + PowerShellUtils.escape(action.getHost().getId()));
 
-            PowerShellCmd.runCommand(buf.toString());
+            PowerShellCmd.runCommand(getShell(), buf.toString());
 
             storageDomain.setStatus(StorageDomainStatus.UNINITIALIZED);
             PowerShellStorageDomainResource.this.staged = parent.mapFromRhevmId(storageDomain);

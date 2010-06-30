@@ -29,17 +29,18 @@ import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
 public class PowerShellNicsResource extends AbstractPowerShellDevicesResource<NIC, Nics> {
 
-    public PowerShellNicsResource(String vmId) {
-        super(vmId);
+    public PowerShellNicsResource(String vmId, PowerShellPoolMap powerShellPoolMap) {
+        super(vmId, powerShellPoolMap);
     }
 
     public Nics runAndParse(String command) {
-        return PowerShellVM.parseNics(vmId, PowerShellCmd.runCommand(command));
+        return PowerShellVM.parseNics(vmId, PowerShellCmd.runCommand(getShell(), command));
     }
 
     public NIC runAndParseSingle(String command) {
@@ -75,7 +76,7 @@ public class PowerShellNicsResource extends AbstractPowerShellDevicesResource<NI
         buf.append("}");
 
         Network network = new Network();
-        network.setId(PowerShellNetworkResource.runAndParseSingle(buf.toString()).getId());
+        network.setId(PowerShellNetworkResource.runAndParseSingle(getShell(), buf.toString()).getId());
         nic.setNetwork(network);
 
         return nic;
@@ -137,11 +138,11 @@ public class PowerShellNicsResource extends AbstractPowerShellDevicesResource<NI
         buf.append("}\n");
         buf.append("remove-networkadapter -vmobject $v -networkadapterobject $n");
 
-        PowerShellCmd.runCommand(buf.toString());
+        PowerShellCmd.runCommand(getShell(), buf.toString());
     }
 
     @Override
     public PowerShellDeviceResource<NIC, Nics> getDeviceSubResource(String id) {
-        return new PowerShellDeviceResource<NIC, Nics>(this, id);
+        return new PowerShellDeviceResource<NIC, Nics>(this, id, powerShellPoolMap);
     }
 }

@@ -20,6 +20,8 @@ package com.redhat.rhevm.api.powershell.resource;
 
 import com.redhat.rhevm.api.model.BaseDevice;
 import com.redhat.rhevm.api.model.BaseDevices;
+import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.resource.DevicesResource;
 
 
@@ -27,9 +29,16 @@ public abstract class AbstractPowerShellDevicesResource<D extends BaseDevice, C 
     implements DevicesResource<D, C> {
 
     protected String vmId;
+    protected PowerShellPoolMap powerShellPoolMap;
 
-    public AbstractPowerShellDevicesResource(String vmId) {
+    public AbstractPowerShellDevicesResource(String vmId, PowerShellPoolMap powerShellPoolMap) {
         this.vmId = vmId;
+        this.powerShellPoolMap = powerShellPoolMap;
+    }
+
+    public PowerShellCmd getShell() {
+        System.out.println("get from pool map: " + powerShellPoolMap);
+        return powerShellPoolMap.get().get();
     }
 
     public abstract D addLinks(D device);

@@ -29,6 +29,7 @@ import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
@@ -36,8 +37,8 @@ public class PowerShellCdRomsResource extends AbstractPowerShellDevicesResource<
 
     private static final String CDROM_ID = Integer.toString("cdrom".hashCode());
 
-    public PowerShellCdRomsResource(String vmId) {
-        super(vmId);
+    public PowerShellCdRomsResource(String vmId, PowerShellPoolMap powerShellPoolMap) {
+        super(vmId, powerShellPoolMap);
     }
 
     private CdRom buildCdRom(String cdIsoPath) {
@@ -54,7 +55,7 @@ public class PowerShellCdRomsResource extends AbstractPowerShellDevicesResource<
     public CdRoms getDevices() {
         CdRoms cdroms = new CdRoms();
 
-        PowerShellVM vm = PowerShellVmResource.runAndParseSingle("get-vm " + PowerShellUtils.escape(vmId));
+        PowerShellVM vm = PowerShellVmResource.runAndParseSingle(getShell(), "get-vm " + PowerShellUtils.escape(vmId));
 
         if (vm.getCdIsoPath() != null) {
             cdroms.getCdRoms().add(buildCdRom(vm.getCdIsoPath()));
@@ -84,7 +85,7 @@ public class PowerShellCdRomsResource extends AbstractPowerShellDevicesResource<
         buf.append("$v.cdisopath = " + PowerShellUtils.escape(cdIsoPath) + "\n");
         buf.append("update-vm -vmobject $v");
 
-        PowerShellCmd.runCommand(buf.toString());
+        PowerShellCmd.runCommand(getShell(), buf.toString());
     }
 
     @Override
@@ -109,6 +110,6 @@ public class PowerShellCdRomsResource extends AbstractPowerShellDevicesResource<
 
     @Override
     public PowerShellDeviceResource<CdRom, CdRoms> getDeviceSubResource(String id) {
-        return new PowerShellDeviceResource<CdRom, CdRoms>(this, id);
+        return new PowerShellDeviceResource<CdRom, CdRoms>(this, id, powerShellPoolMap);
     }
 }

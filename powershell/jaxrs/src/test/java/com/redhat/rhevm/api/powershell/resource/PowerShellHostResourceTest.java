@@ -19,6 +19,7 @@
 package com.redhat.rhevm.api.powershell.resource;
 
 import java.net.URI;
+import java.util.concurrent.Executor;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
@@ -30,6 +31,7 @@ import com.redhat.rhevm.api.model.Fault;
 import com.redhat.rhevm.api.model.Host;
 
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 
 import org.junit.Test;
 
@@ -51,8 +53,8 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
     private static final String INSTALL_PASSWORD = "boldlygoingnowhere";
     private static final String INSTALL_COMMAND = "$h = rhevmpssnapin\\get-host '12345'\nupdate-host -hostobject $h -install -rootpassword '" + INSTALL_PASSWORD + "'";
 
-    protected PowerShellHostResource getResource() {
-        return new PowerShellHostResource("12345", executor);
+    protected PowerShellHostResource getResource(Executor executor, PowerShellPoolMap poolMap) {
+        return new PowerShellHostResource("12345", executor, poolMap);
     }
 
     @Test
@@ -145,7 +147,7 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
 
     private UriInfo setUpHostExpectations(String command, String ret, String name) throws Exception {
         mockStatic(PowerShellCmd.class);
-        expect(PowerShellCmd.runCommand(command)).andReturn(ret);
+        expect(PowerShellCmd.runCommand(setUpShellExpectations(), command)).andReturn(ret);
         String href = URI_ROOT + "/hosts/12345";
         UriInfo uriInfo = createMock(UriInfo.class);
         UriBuilder uriBuilder = createMock(UriBuilder.class);

@@ -20,26 +20,40 @@ package com.redhat.rhevm.api.powershell.util;
 
 import java.util.concurrent.ExecutorService;
 
+import com.redhat.rhevm.api.common.invocation.Current;
 import com.redhat.rhevm.api.common.security.Principal;
 import com.redhat.rhevm.api.common.util.ReapedMap;
 
+@SuppressWarnings("serial")
 public class PowerShellPoolMap extends ReapedMap<Principal, PowerShellPool> {
 
     private static final long REAP_AFTER = 10 * 60 * 1000L; // 10 minutes
 
-    private static ExecutorService executor;
+    private ExecutorService executor;
+    private Current current;
 
-    public PowerShellPoolMap(ExecutorService executor) {
+    public PowerShellPoolMap() {
         super(REAP_AFTER);
+    }
+
+    public void setExecutor(ExecutorService executor) {
         this.executor = executor;
     }
 
-    public synchronized PowerShellPool get(Principal principal) {
-        PowerShellPool pool = super.get(principal);
-        if (pool == null) {
-            pool = new PowerShellPool(executor, principal);
-            super.put(principal, pool);
-            super.reapable(principal);
+    public void setCurrent(Current current) {
+        this.current = current;
+    }
+
+    public synchronized PowerShellPool get() {
+        PowerShellPool pool = null;
+        Principal principal = current.get(Principal.class);
+        if (principal != null) {
+            pool = super.get(principal);
+            if (pool == null) {
+                pool = new PowerShellPool(executor, principal);
+                super.put(principal, pool);
+                super.reapable(principal);
+            }
         }
         return pool;
     }

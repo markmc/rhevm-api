@@ -184,19 +184,17 @@ public class PowerShellCmd {
         }
     }
 
-    public static String runCommand(String command) {
-        PowerShellCmd cmd = new PowerShellCmd();
+    public static String runCommand(PowerShellCmd runner, String command) {
+        int exitstatus = runner.run(command);
 
-        int exitstatus = cmd.run(command);
-
-        if (!cmd.getStdErr().isEmpty()) {
-            log.warn(cmd.getStdErr());
+        if (!runner.getStdErr().isEmpty()) {
+            log.warn(runner.getStdErr());
         }
 
         if (exitstatus != 0) {
             throw new PowerShellException("Command '" + command + "' exited with status=" + exitstatus);
         }
 
-        return cmd.getStdOut();
+        return runner.getStdOut();
     }
 }

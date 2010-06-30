@@ -33,9 +33,12 @@ import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.NIC;
 import com.redhat.rhevm.api.model.Nics;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellPool;
+import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import org.junit.runner.RunWith;
@@ -86,6 +89,13 @@ public class PowerShellDevicesResourceTest extends Assert {
     private static final String ADD_NIC_COMMAND = "$v = get-vm ''{0}''\nforeach ($i in get-networks) '{'  if ($i.networkid -eq ''{1}'') '{    $n = $i  }}'\nadd-networkadapter -vmobject $v -interfacename ''{2}'' -networkname $n.name";
     private static final String REMOVE_NIC_COMMAND = "$v = get-vm ''{0}''\nforeach ($i in $v.GetNetworkAdapters()) '{'  if ($i.id -eq ''{1}'') '{    $n = $i  }}'\nremove-networkadapter -vmobject $v -networkadapterobject $n";
 
+    private PowerShellPoolMap poolMap;
+
+    @Before
+    public void setUp() {
+        poolMap = createMock(PowerShellPoolMap.class);
+    }
+
     @After
     public void tearDown() {
         verifyAll();
@@ -93,9 +103,9 @@ public class PowerShellDevicesResourceTest extends Assert {
 
     @Test
     public void testCdRomGet() throws Exception {
-        PowerShellCdRomsResource parent = new PowerShellCdRomsResource(VM_ID);
+        PowerShellCdRomsResource parent = new PowerShellCdRomsResource(VM_ID, poolMap);
         PowerShellDeviceResource<CdRom, CdRoms> resource =
-            new PowerShellDeviceResource<CdRom, CdRoms>(parent, CDROM_ID);
+            new PowerShellDeviceResource<CdRom, CdRoms>(parent, CDROM_ID, poolMap);
 
         setUpCmdExpectations(GET_CDROMS_CMD, GET_CDROMS_RETURN);
         verifyCdRom(resource.get());
@@ -103,7 +113,7 @@ public class PowerShellDevicesResourceTest extends Assert {
 
     @Test
     public void testCdRomList() throws Exception {
-        PowerShellCdRomsResource resource = new PowerShellCdRomsResource(VM_ID);
+        PowerShellCdRomsResource resource = new PowerShellCdRomsResource(VM_ID, poolMap);
 
         setUpCmdExpectations(GET_CDROMS_CMD, GET_CDROMS_RETURN);
 
@@ -112,7 +122,7 @@ public class PowerShellDevicesResourceTest extends Assert {
 
     @Test
     public void testCdRomAdd() throws Exception {
-        PowerShellCdRomsResource resource = new PowerShellCdRomsResource(VM_ID);
+        PowerShellCdRomsResource resource = new PowerShellCdRomsResource(VM_ID, poolMap);
 
         CdRom cdrom = new CdRom();
         cdrom.setIso(new Iso());
@@ -127,7 +137,7 @@ public class PowerShellDevicesResourceTest extends Assert {
 
     @Test
     public void testCdRomRemove() throws Exception {
-        PowerShellCdRomsResource resource = new PowerShellCdRomsResource(VM_ID);
+        PowerShellCdRomsResource resource = new PowerShellCdRomsResource(VM_ID, poolMap);
 
         String command = MessageFormat.format(UPDATE_CDROM_CMD, VM_ID, "");
 
@@ -138,9 +148,9 @@ public class PowerShellDevicesResourceTest extends Assert {
 
     @Test
     public void testDiskGet() throws Exception {
-        PowerShellDisksResource parent = new PowerShellDisksResource(VM_ID);
+        PowerShellDisksResource parent = new PowerShellDisksResource(VM_ID, poolMap);
         PowerShellDeviceResource<Disk, Disks> resource =
-            new PowerShellDeviceResource<Disk, Disks>(parent, DISK_ID);
+            new PowerShellDeviceResource<Disk, Disks>(parent, DISK_ID, poolMap);
 
         setUpCmdExpectations(GET_DISKS_CMD, GET_DISKS_RETURN);
         verifyDisk(resource.get());
@@ -148,7 +158,7 @@ public class PowerShellDevicesResourceTest extends Assert {
 
     @Test
     public void testDiskList() throws Exception {
-        PowerShellDisksResource resource = new PowerShellDisksResource(VM_ID);
+        PowerShellDisksResource resource = new PowerShellDisksResource(VM_ID, poolMap);
 
         setUpCmdExpectations(GET_DISKS_CMD, GET_DISKS_RETURN);
 
@@ -157,7 +167,7 @@ public class PowerShellDevicesResourceTest extends Assert {
 
     @Test
     public void testDiskAdd() throws Exception {
-        PowerShellDisksResource resource = new PowerShellDisksResource(VM_ID);
+        PowerShellDisksResource resource = new PowerShellDisksResource(VM_ID, poolMap);
 
         Disk disk = new Disk();
         disk.setSize(DISK_SIZE_BYTES);
@@ -171,7 +181,7 @@ public class PowerShellDevicesResourceTest extends Assert {
 
     @Test
     public void testDiskRemove() throws Exception {
-        PowerShellDisksResource resource = new PowerShellDisksResource(VM_ID);
+        PowerShellDisksResource resource = new PowerShellDisksResource(VM_ID, poolMap);
 
         String command = MessageFormat.format(REMOVE_DISK_COMMAND, VM_ID, DISK_ID);
 
@@ -182,9 +192,9 @@ public class PowerShellDevicesResourceTest extends Assert {
 
     @Test
     public void testNicGet() throws Exception {
-        PowerShellNicsResource parent = new PowerShellNicsResource(VM_ID);
+        PowerShellNicsResource parent = new PowerShellNicsResource(VM_ID, poolMap);
         PowerShellDeviceResource<NIC, Nics> resource =
-            new PowerShellDeviceResource<NIC, Nics>(parent, NIC_ID);
+            new PowerShellDeviceResource<NIC, Nics>(parent, NIC_ID, poolMap);
 
         String [] commands = { GET_NICS_CMD, LOOKUP_NETWORK_ID_COMMAND };
         String [] returns = { GET_NICS_RETURN, LOOKUP_NETWORK_ID_RETURN };
@@ -196,7 +206,7 @@ public class PowerShellDevicesResourceTest extends Assert {
 
     @Test
     public void testNicList() throws Exception {
-        PowerShellNicsResource resource = new PowerShellNicsResource(VM_ID);
+        PowerShellNicsResource resource = new PowerShellNicsResource(VM_ID, poolMap);
 
         String [] commands = { GET_NICS_CMD, LOOKUP_NETWORK_ID_COMMAND };
         String [] returns = { GET_NICS_RETURN, LOOKUP_NETWORK_ID_RETURN };
@@ -208,7 +218,7 @@ public class PowerShellDevicesResourceTest extends Assert {
 
     @Test
     public void testNicAdd() throws Exception {
-        PowerShellNicsResource resource = new PowerShellNicsResource(VM_ID);
+        PowerShellNicsResource resource = new PowerShellNicsResource(VM_ID, poolMap);
 
         NIC nic = new NIC();
         nic.setName(NIC_NAME);
@@ -229,7 +239,7 @@ public class PowerShellDevicesResourceTest extends Assert {
 
     @Test
     public void testNicRemove() throws Exception {
-        PowerShellNicsResource resource = new PowerShellNicsResource(VM_ID);
+        PowerShellNicsResource resource = new PowerShellNicsResource(VM_ID, poolMap);
 
         String command = MessageFormat.format(REMOVE_NIC_COMMAND, VM_ID, NIC_ID);
 
@@ -242,7 +252,7 @@ public class PowerShellDevicesResourceTest extends Assert {
         mockStatic(PowerShellCmd.class);
         for (int i = 0 ; i < Math.min(commands.length, returns.length) ; i++) {
             if (commands[i] != null) {
-                expect(PowerShellCmd.runCommand(commands[i])).andReturn(returns[i]);
+                expect(PowerShellCmd.runCommand(setUpShellExpectations(), commands[i])).andReturn(returns[i]);
             }
         }
 
@@ -258,6 +268,14 @@ public class PowerShellDevicesResourceTest extends Assert {
         replayAll();
 
         return uriInfo;
+    }
+
+    protected PowerShellCmd setUpShellExpectations() {
+        PowerShellPool pool = createMock(PowerShellPool.class);
+        PowerShellCmd cmd = createMock(PowerShellCmd.class);
+        expect(pool.get()).andReturn(cmd);
+        expect(poolMap.get()).andReturn(pool);
+        return cmd;
     }
 
     private void setUpCmdExpectations(String[] commands, String[] returns) throws Exception {

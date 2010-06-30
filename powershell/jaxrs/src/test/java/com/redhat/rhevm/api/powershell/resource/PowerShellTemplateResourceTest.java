@@ -19,6 +19,7 @@
 package com.redhat.rhevm.api.powershell.resource;
 
 import java.net.URI;
+import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -26,6 +27,7 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.Template;
 
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 
 import org.junit.Test;
 
@@ -44,8 +46,8 @@ public class PowerShellTemplateResourceTest extends AbstractPowerShellResourceTe
     private static final String GET_COMMAND = "get-template -templateid '" + TEMPLATE_ID + "'";
     private static final String GET_RETURN = "templateid: " + TEMPLATE_ID + "\nname: " + TEMPLATE_NAME + "\ndescription: " + TEMPLATE_DESCRIPTION;
 
-    protected PowerShellTemplateResource getResource() {
-        return new PowerShellTemplateResource(TEMPLATE_ID, executor);
+    protected PowerShellTemplateResource getResource(Executor executor, PowerShellPoolMap poolMap) {
+        return new PowerShellTemplateResource(TEMPLATE_ID, executor, poolMap);
     }
 
     @Test
@@ -55,7 +57,7 @@ public class PowerShellTemplateResourceTest extends AbstractPowerShellResourceTe
 
     private UriInfo setUpTemplateExpectations(String command, String ret) throws Exception {
         mockStatic(PowerShellCmd.class);
-        expect(PowerShellCmd.runCommand(command)).andReturn(ret);
+        expect(PowerShellCmd.runCommand(setUpShellExpectations(), command)).andReturn(ret);
         UriInfo uriInfo = createMock(UriInfo.class);
         UriBuilder uriBuilder = createMock(UriBuilder.class);
         expect(uriInfo.getRequestUriBuilder()).andReturn(uriBuilder).anyTimes();

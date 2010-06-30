@@ -39,7 +39,7 @@ public class PowerShellNetworksResource
     @Override
     public Networks list(UriInfo uriInfo) {
         Networks ret = new Networks();
-        for (Network network : PowerShellNetworkResource.runAndParse("get-networks")) {
+        for (Network network : PowerShellNetworkResource.runAndParse(getShell(), "get-networks")) {
             ret.getNetworks().add(LinkHelper.addLinks(network));
         }
         return ret;
@@ -79,7 +79,7 @@ public class PowerShellNetworksResource
             buf.append(" -stp");
         }
 
-        network = LinkHelper.addLinks(PowerShellNetworkResource.runAndParseSingle(buf.toString()));
+        network = LinkHelper.addLinks(PowerShellNetworkResource.runAndParseSingle(getShell(), buf.toString()));
 
         UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(network.getId());
 
@@ -99,7 +99,7 @@ public class PowerShellNetworksResource
         buf.append("  }");
         buf.append("}");
 
-        PowerShellCmd.runCommand(buf.toString());
+        PowerShellCmd.runCommand(getShell(), buf.toString());
 
         removeSubResource(id);
     }
@@ -110,6 +110,6 @@ public class PowerShellNetworksResource
     }
 
     protected PowerShellNetworkResource createSubResource(String id) {
-        return new PowerShellNetworkResource(id, getExecutor());
+        return new PowerShellNetworkResource(id, getExecutor(), powerShellPoolMap);
     }
 }

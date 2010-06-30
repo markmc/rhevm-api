@@ -27,29 +27,25 @@ import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VmPool;
 import com.redhat.rhevm.api.resource.VmPoolResource;
-import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellVmPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
-public class PowerShellVmPoolResource extends AbstractActionableResource<VmPool> implements VmPoolResource {
+public class PowerShellVmPoolResource extends AbstractPowerShellActionableResource<VmPool> implements VmPoolResource {
 
-    public PowerShellVmPoolResource(String id, Executor executor) {
-        super(id, executor);
+    public PowerShellVmPoolResource(String id, Executor executor, PowerShellPoolMap powerShellPoolMap) {
+        super(id, executor, powerShellPoolMap);
     }
 
-    public PowerShellVmPoolResource(String id) {
-        super(id);
+    public static ArrayList<VmPool> runAndParse(PowerShellCmd shell, String command) {
+        return PowerShellVmPool.parse(PowerShellCmd.runCommand(shell, command));
     }
 
-    public static ArrayList<VmPool> runAndParse(String command) {
-        return PowerShellVmPool.parse(PowerShellCmd.runCommand(command));
-    }
-
-    public static VmPool runAndParseSingle(String command) {
-        ArrayList<VmPool> pools = runAndParse(command);
+    public static VmPool runAndParseSingle(PowerShellCmd shell, String command) {
+        ArrayList<VmPool> pools = runAndParse(shell, command);
 
         return !pools.isEmpty() ? pools.get(0) : null;
     }
@@ -57,16 +53,17 @@ public class PowerShellVmPoolResource extends AbstractActionableResource<VmPool>
     /* Map the template name to template ID on a VM pool, since
      * the powershell output only includes the template name.
      *
+     * @param shell the shell to run the command
      * @param pool  the VM pool to modify
      * @return      the modified VM pool
      */
-    private static VmPool lookupTemplateId(VmPool pool) {
+    private static VmPool lookupTemplateId(PowerShellCmd shell, VmPool pool) {
         StringBuilder buf = new StringBuilder();
 
         buf.append("select-template -searchtext 'name = " + pool.getTemplate().getName() + "'");
 
         Template template = new Template();
-        template.setId(PowerShellTemplateResource.runAndParseSingle(buf.toString()).getId());
+        template.setId(PowerShellTemplateResource.runAndParseSingle(shell, buf.toString()).getId());
         pool.setTemplate(template);
 
         return pool;
@@ -75,26 +72,27 @@ public class PowerShellVmPoolResource extends AbstractActionableResource<VmPool>
     /* Map the cluster name to cluster ID on a VM pool, since
      * the powershell output only includes the cluster name.
      *
+     * @param shell the shell to run the command
      * @param pool  the VM pool to modify
      * @return      the modified VM pool
      */
-    private static VmPool lookupClusterId(VmPool pool) {
+    private static VmPool lookupClusterId(PowerShellCmd shell, VmPool pool) {
         StringBuilder buf = new StringBuilder();
 
         buf.append("select-cluster -searchtext 'name = " + pool.getCluster().getName() + "'");
 
         Cluster cluster = new Cluster();
-        cluster.setId(PowerShellClusterResource.runAndParseSingle(buf.toString()).getId());
+        cluster.setId(PowerShellClusterResource.runAndParseSingle(shell, buf.toString()).getId());
         pool.setCluster(cluster);
 
         return pool;
     }
 
-    public static VmPool addLinks(VmPool pool) {
-        pool = lookupClusterId(pool);
+    public static VmPool addLinks(PowerShellCmd shell, VmPool pool) {
+        pool = lookupClusterId(shell, pool);
 
         if (pool.getTemplate() != null) {
-            pool = lookupTemplateId(pool);
+            pool = lookupTemplateId(shell, pool);
         }
 
         return LinkHelper.addLinks(pool);
@@ -102,7 +100,7 @@ public class PowerShellVmPoolResource extends AbstractActionableResource<VmPool>
 
     @Override
     public VmPool get(UriInfo uriInfo) {
-        return addLinks(runAndParseSingle("get-vmpool -vmpoolid " + PowerShellUtils.escape(getId())));
+        return addLinks(getShell(), runAndParseSingle(getShell(), "get-vmpool -vmpoolid " + PowerShellUtils.escape(getId())));
     }
 
     @Override
@@ -125,6 +123,7 @@ public class PowerShellVmPoolResource extends AbstractActionableResource<VmPool>
 
         buf.append("update-vmpool -vmpoolobject $v");
 
-        return addLinks(runAndParseSingle(buf.toString()));
+        PowerShellCmd cmd = getShell();
+        return addLinks(cmd, runAndParseSingle(getShell(), buf.toString()));
     }
 }

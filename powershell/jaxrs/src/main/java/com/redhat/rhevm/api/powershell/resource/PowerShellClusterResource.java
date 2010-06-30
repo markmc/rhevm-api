@@ -25,29 +25,25 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.resource.ClusterResource;
-import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellCluster;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
-public class PowerShellClusterResource extends AbstractActionableResource<Cluster> implements ClusterResource {
+public class PowerShellClusterResource extends AbstractPowerShellActionableResource<Cluster> implements ClusterResource {
 
-    public PowerShellClusterResource(String id, Executor executor) {
-        super(id, executor);
+    public PowerShellClusterResource(String id, Executor executor, PowerShellPoolMap powerShellPoolMap) {
+        super(id, executor, powerShellPoolMap);
     }
 
-    public PowerShellClusterResource(String id) {
-        super(id);
+    public static ArrayList<Cluster> runAndParse(PowerShellCmd shell, String command) {
+        return PowerShellCluster.parse(PowerShellCmd.runCommand(shell, command));
     }
 
-    public static ArrayList<Cluster> runAndParse(String command) {
-        return PowerShellCluster.parse(PowerShellCmd.runCommand(command));
-    }
-
-    public static Cluster runAndParseSingle(String command) {
-        ArrayList<Cluster> clusters = runAndParse(command);
+    public static Cluster runAndParseSingle(PowerShellCmd shell, String command) {
+        ArrayList<Cluster> clusters = runAndParse(shell, command);
 
         return !clusters.isEmpty() ? clusters.get(0) : null;
     }
@@ -63,7 +59,7 @@ public class PowerShellClusterResource extends AbstractActionableResource<Cluste
         buf.append("  } ");
         buf.append("}");
 
-        return LinkHelper.addLinks(runAndParseSingle(buf.toString()));
+        return LinkHelper.addLinks(runAndParseSingle(getShell(), buf.toString()));
     }
 
     @Override
@@ -91,6 +87,6 @@ public class PowerShellClusterResource extends AbstractActionableResource<Cluste
         buf.append("  } ");
         buf.append("}");
 
-        return LinkHelper.addLinks(runAndParseSingle(buf.toString()));
+        return LinkHelper.addLinks(runAndParseSingle(getShell(), buf.toString()));
     }
 }

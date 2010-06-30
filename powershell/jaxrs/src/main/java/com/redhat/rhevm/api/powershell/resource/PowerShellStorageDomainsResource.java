@@ -54,13 +54,13 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
     public StorageDomains list(UriInfo uriInfo) {
         StorageDomains ret = new StorageDomains();
 
-        List<StorageDomain> storageDomains = PowerShellStorageDomainResource.runAndParse("select-storagedomain", true);
+        List<StorageDomain> storageDomains = PowerShellStorageDomainResource.runAndParse(getShell(), "select-storagedomain", true);
 
         for (StorageDomain storageDomain : storageDomains) {
             if (fromRhevmIdMapping.containsKey(storageDomain.getId())) {
                 storageDomain.setId(fromRhevmIdMapping.get(storageDomain.getId()));
             }
-            PowerShellStorageDomainResource resource = new PowerShellStorageDomainResource(storageDomain.getId(), this);
+            PowerShellStorageDomainResource resource = new PowerShellStorageDomainResource(storageDomain.getId(), this, powerShellPoolMap);
             ret.getStorageDomains().add(resource.addLinks(storageDomain));
         }
 
@@ -78,7 +78,7 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
         storageDomain.setStatus(StorageDomainStatus.UNINITIALIZED);
 
         PowerShellStorageDomainResource resource =
-            new PowerShellStorageDomainResource(storageDomain.getId(), this, storageDomain);
+            new PowerShellStorageDomainResource(storageDomain.getId(), this, storageDomain, powerShellPoolMap);
 
         stagedDomains.put(storageDomain.getId(), resource);
 
@@ -108,7 +108,7 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
     }
 
     protected PowerShellStorageDomainResource createSubResource(String id) {
-        return new PowerShellStorageDomainResource(id, this);
+        return new PowerShellStorageDomainResource(id, this, powerShellPoolMap);
     }
 
     /**

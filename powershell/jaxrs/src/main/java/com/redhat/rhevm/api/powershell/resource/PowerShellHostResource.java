@@ -27,35 +27,35 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.resource.HostResource;
-import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellHost;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
-public class PowerShellHostResource extends AbstractActionableResource<Host> implements HostResource {
+public class PowerShellHostResource extends AbstractPowerShellActionableResource<Host> implements HostResource {
 
-    public PowerShellHostResource(String id, Executor executor) {
-        super(id, executor);
+    public PowerShellHostResource(String id, Executor executor, PowerShellPoolMap powerShellPoolMap) {
+        super(id, executor, powerShellPoolMap);
     }
 
     /* needed because there are two get-host commands */
     private static final String CMD_PREFIX = "rhevmpssnapin\\";
 
-    public static ArrayList<Host> runAndParse(String command) {
-        return PowerShellHost.parse(PowerShellCmd.runCommand(command));
+    public static ArrayList<Host> runAndParse(PowerShellCmd shell, String command) {
+        return PowerShellHost.parse(PowerShellCmd.runCommand(shell, command));
     }
 
-    public static Host runAndParseSingle(String command) {
-        ArrayList<Host> hosts = runAndParse(command);
+    public static Host runAndParseSingle(PowerShellCmd shell, String command) {
+        ArrayList<Host> hosts = runAndParse(shell, command);
 
         return !hosts.isEmpty() ? hosts.get(0) : null;
     }
 
     @Override
     public Host get(UriInfo uriInfo) {
-        return LinkHelper.addLinks(runAndParseSingle(CMD_PREFIX + "get-host " + PowerShellUtils.escape(getId())));
+        return LinkHelper.addLinks(runAndParseSingle(getShell(), CMD_PREFIX + "get-host " + PowerShellUtils.escape(getId())));
     }
 
     @Override
@@ -72,36 +72,38 @@ public class PowerShellHostResource extends AbstractActionableResource<Host> imp
 
         buf.append("update-host -hostobject $h");
 
-        return LinkHelper.addLinks(runAndParseSingle(buf.toString()));
+        return LinkHelper.addLinks(runAndParseSingle(getShell(), buf.toString()));
     }
 
     @Override
     public Response approve(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new CommandRunner(action, "approve-host", "host", getId()));
+        return doAction(uriInfo, new CommandRunner(action, "approve-host", "host", getId(), getShell()));
     }
 
     @Override
     public Response install(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new HostInstaller(action, action.getRootPassword()));
+        return doAction(uriInfo, new HostInstaller(action, action.getRootPassword(), getShell()));
     }
 
     @Override
     public Response activate(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new CommandRunner(action, "resume-host", "host", getId()));
+        return doAction(uriInfo, new CommandRunner(action, "resume-host", "host", getId(), getShell()));
     }
 
     @Override
     public Response deactivate(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new CommandRunner(action, "suspend-host", "host", getId()));
+        return doAction(uriInfo, new CommandRunner(action, "suspend-host", "host", getId(), getShell()));
     }
 
     class HostInstaller extends AbstractPowerShellActionTask {
 
         private String rootPassword;
+        private PowerShellCmd shell;
 
-        HostInstaller(Action action, String rootPassword) {
+        HostInstaller(Action action, String rootPassword, PowerShellCmd shell) {
             super(action, "$h = " + CMD_PREFIX + "get-host ");
             this.rootPassword = rootPassword;
+            this.shell = shell;
         }
 
         public void execute() {
@@ -115,7 +117,7 @@ public class PowerShellHostResource extends AbstractActionableResource<Host> imp
             buf.append(" -install");
             buf.append(" -rootpassword " + PowerShellUtils.escape(rootPassword));
 
-            PowerShellCmd.runCommand(buf.toString());
+            PowerShellCmd.runCommand(shell, buf.toString());
         }
     }
 }

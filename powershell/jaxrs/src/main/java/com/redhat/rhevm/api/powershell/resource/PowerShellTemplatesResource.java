@@ -33,7 +33,7 @@ public class PowerShellTemplatesResource
     @Override
     public Templates list(UriInfo uriInfo) {
         Templates ret = new Templates();
-        for (Template template : PowerShellTemplateResource.runAndParse(getSelectCommand("select-template", uriInfo, Template.class))) {
+        for (Template template : PowerShellTemplateResource.runAndParse(getShell(), getSelectCommand("select-template", uriInfo, Template.class))) {
             ret.getTemplates().add(LinkHelper.addLinks(template));
         }
         return ret;
@@ -45,6 +45,6 @@ public class PowerShellTemplatesResource
     }
 
     protected PowerShellTemplateResource createSubResource(String id) {
-        return new PowerShellTemplateResource(id, getExecutor());
+        return new PowerShellTemplateResource(id, getExecutor(), powerShellPoolMap);
     }
 }

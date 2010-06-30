@@ -37,8 +37,8 @@ public class PowerShellDataCentersResource
     @Override
     public DataCenters list(UriInfo uriInfo) {
         DataCenters ret = new DataCenters();
-        for (DataCenter dataCenter : PowerShellDataCenterResource.runAndParse(getSelectCommand("select-datacenter", uriInfo, DataCenter.class))) {
-            ret.getDataCenters().add(PowerShellDataCenterResource.addLinks(dataCenter));
+        for (DataCenter dataCenter : PowerShellDataCenterResource.runAndParse(getShell(), getSelectCommand("select-datacenter", uriInfo, DataCenter.class))) {
+            ret.getDataCenters().add(PowerShellDataCenterResource.addLinks(getShell(), dataCenter));
         }
         return ret;
     }
@@ -56,8 +56,8 @@ public class PowerShellDataCentersResource
             buf.append(" -description " + PowerShellUtils.escape(dataCenter.getDescription()));
         }
 
-        dataCenter = PowerShellDataCenterResource.runAndParseSingle(buf.toString());
-        dataCenter = PowerShellDataCenterResource.addLinks(dataCenter);
+        dataCenter = PowerShellDataCenterResource.runAndParseSingle(getShell(), buf.toString());
+        dataCenter = PowerShellDataCenterResource.addLinks(getShell(), dataCenter);
 
         UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(dataCenter.getId());
 
@@ -66,7 +66,7 @@ public class PowerShellDataCentersResource
 
     @Override
     public void remove(String id) {
-        PowerShellCmd.runCommand("remove-datacenter -datacenterid " + PowerShellUtils.escape(id));
+        PowerShellCmd.runCommand(getShell(), "remove-datacenter -datacenterid " + PowerShellUtils.escape(id));
         removeSubResource(id);
     }
 
@@ -76,6 +76,6 @@ public class PowerShellDataCentersResource
     }
 
     protected PowerShellDataCenterResource createSubResource(String id) {
-        return new PowerShellDataCenterResource(id, getExecutor());
+        return new PowerShellDataCenterResource(id, getExecutor(), powerShellPoolMap);
     }
 }

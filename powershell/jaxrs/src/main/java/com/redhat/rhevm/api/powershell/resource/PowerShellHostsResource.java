@@ -38,7 +38,7 @@ public class PowerShellHostsResource
     @Override
     public Hosts list(UriInfo uriInfo) {
         Hosts ret = new Hosts();
-        for (Host host : PowerShellHostResource.runAndParse(getSelectCommand("select-host", uriInfo, Host.class))) {
+        for (Host host : PowerShellHostResource.runAndParse(getShell(), getSelectCommand("select-host", uriInfo, Host.class))) {
             ret.getHosts().add(LinkHelper.addLinks(host));
         }
         return ret;
@@ -56,7 +56,7 @@ public class PowerShellHostsResource
         // It appears that the root password is not really needed here
         buf.append(" -rootpassword notneeded");
 
-        host = PowerShellHostResource.runAndParseSingle(buf.toString());
+        host = PowerShellHostResource.runAndParseSingle(getShell(), buf.toString());
         host = LinkHelper.addLinks(host);
 
         UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(host.getId());
@@ -66,7 +66,7 @@ public class PowerShellHostsResource
 
     @Override
     public void remove(String id) {
-        PowerShellCmd.runCommand("remove-host -hostid " + PowerShellUtils.escape(id));
+        PowerShellCmd.runCommand(getShell(), "remove-host -hostid " + PowerShellUtils.escape(id));
         removeSubResource(id);
     }
 
@@ -76,6 +76,6 @@ public class PowerShellHostsResource
     }
 
     protected PowerShellHostResource createSubResource(String id) {
-        return new PowerShellHostResource(id, getExecutor());
+        return new PowerShellHostResource(id, getExecutor(), powerShellPoolMap);
     }
 }

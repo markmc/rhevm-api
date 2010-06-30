@@ -39,6 +39,8 @@ import com.redhat.rhevm.api.common.util.ReflectionHelper;
 
 import com.redhat.rhevm.api.powershell.util.ControllableExecutor;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellPool;
+import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -140,7 +142,7 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
             mockStatic(PowerShellCmd.class);
             for (int i = 0 ; i < Math.min(commands.length, rets.length) ; i++) {
                 if (commands[i] != null) {
-                    expect(PowerShellCmd.runCommand(commands[i])).andReturn(rets[i]);
+                    expect(PowerShellCmd.runCommand(setUpShellExpectations(), commands[i])).andReturn(rets[i]);
                 }
             }
         }
@@ -163,6 +165,53 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
         }
         replayAll();
         return uriInfo;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected UriInfo setUpResourceExpectations(int shells, String[] commands, String[] rets, boolean add, QueryParam query, String ... names) throws Exception {
+        if (commands != null) {
+            mockStatic(PowerShellCmd.class);
+            PowerShellCmd cmd = setUpShellExpectations(shells);
+            for (int i = 0 ; i < Math.min(commands.length, rets.length) ; i++) {
+                if (commands[i] != null) {
+                    expect(PowerShellCmd.runCommand(cmd, commands[i])).andReturn(rets[i]);
+                }
+            }
+        }
+        UriInfo uriInfo = createMock(UriInfo.class);
+        if (query != null) {
+            MultivaluedMap<String, String> queries = createMock(MultivaluedMap.class);
+            List<String> queryParam = new ArrayList<String>();
+            queryParam.add(query.value());
+            expect(queries.get("search")).andReturn(queryParam).anyTimes();
+            expect(uriInfo.getQueryParameters()).andReturn(queries).anyTimes();
+        } else {
+            expect(uriInfo.getQueryParameters()).andReturn(null).anyTimes();
+        }
+        if (add) {
+            String href = URI_ROOT + SLASH + collectionName + SLASH + names[0].hashCode();
+            UriBuilder uriBuilder = createMock(UriBuilder.class);
+            expect(uriInfo.getAbsolutePathBuilder()).andReturn(uriBuilder);
+            expect(uriBuilder.path(Integer.toString(names[0].hashCode()))).andReturn(uriBuilder);
+            expect(uriBuilder.build()).andReturn(new URI(href)).anyTimes();
+        }
+        replayAll();
+        return uriInfo;
+    }
+
+    protected PowerShellCmd setUpShellExpectations() {
+        return setUpShellExpectations(1);
+    }
+
+
+    protected PowerShellCmd setUpShellExpectations(int times) {
+        PowerShellPoolMap poolMap = createMock(PowerShellPoolMap.class);
+        resource.setPowerShellPoolMap(poolMap);
+        PowerShellPool pool = createMock(PowerShellPool.class);
+        PowerShellCmd cmd = createMock(PowerShellCmd.class);
+        expect(pool.get()).andReturn(cmd).times(times);
+        expect(poolMap.get()).andReturn(pool).times(times);
+        return cmd;
     }
 
     protected String getSelectCommand() {

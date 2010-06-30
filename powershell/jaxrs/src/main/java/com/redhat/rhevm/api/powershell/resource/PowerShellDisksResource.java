@@ -29,17 +29,18 @@ import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.common.util.ReflectionHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
 public class PowerShellDisksResource extends AbstractPowerShellDevicesResource<Disk, Disks> {
 
-    public PowerShellDisksResource(String vmId) {
-        super(vmId);
+    public PowerShellDisksResource(String vmId, PowerShellPoolMap powerShellPoolMap) {
+        super(vmId, powerShellPoolMap);
     }
 
     public Disks runAndParse(String command) {
-        return PowerShellVM.parseDisks(vmId, PowerShellCmd.runCommand(command));
+        return PowerShellVM.parseDisks(vmId, PowerShellCmd.runCommand(getShell(), command));
     }
 
     public Disk runAndParseSingle(String command) {
@@ -137,11 +138,11 @@ public class PowerShellDisksResource extends AbstractPowerShellDevicesResource<D
         buf.append(" -vmid " + PowerShellUtils.escape(vmId));
         buf.append(" -diskids " + PowerShellUtils.escape(id));
 
-        PowerShellCmd.runCommand(buf.toString());
+        PowerShellCmd.runCommand(getShell(), buf.toString());
     }
 
     @Override
     public PowerShellDeviceResource<Disk, Disks> getDeviceSubResource(String id) {
-        return new PowerShellDeviceResource<Disk, Disks>(this, id);
+        return new PowerShellDeviceResource<Disk, Disks>(this, id, powerShellPoolMap);
     }
 }

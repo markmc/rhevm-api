@@ -29,30 +29,26 @@ import com.redhat.rhevm.api.model.CpuTopology;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.resource.VmResource;
-import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
-public class PowerShellVmResource extends AbstractActionableResource<VM> implements VmResource {
+public class PowerShellVmResource extends AbstractPowerShellActionableResource<VM> implements VmResource {
 
-    public PowerShellVmResource(String id, Executor executor) {
-        super(id, executor);
+    public PowerShellVmResource(String id, Executor executor, PowerShellPoolMap powerShellPoolMap) {
+        super(id, executor, powerShellPoolMap);
     }
 
-    public PowerShellVmResource(String id) {
-        super(id);
+    public static ArrayList<PowerShellVM> runAndParse(PowerShellCmd shell, String command) {
+        return PowerShellVM.parse(PowerShellCmd.runCommand(shell, command));
     }
 
-    public static ArrayList<PowerShellVM> runAndParse(String command) {
-        return PowerShellVM.parse(PowerShellCmd.runCommand(command));
-    }
-
-    public static PowerShellVM runAndParseSingle(String command) {
-        ArrayList<PowerShellVM> vms = runAndParse(command);
+    public static PowerShellVM runAndParseSingle(PowerShellCmd shell, String command) {
+        ArrayList<PowerShellVM> vms = runAndParse(shell, command);
 
         return !vms.isEmpty() ? vms.get(0) : null;
     }
@@ -76,7 +72,7 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
 
     @Override
     public VM get(UriInfo uriInfo) {
-        return addLinks(runAndParseSingle("get-vm " + PowerShellUtils.escape(getId())));
+        return addLinks(runAndParseSingle(getShell(), "get-vm " + PowerShellUtils.escape(getId())));
     }
 
     @Override
@@ -108,46 +104,46 @@ public class PowerShellVmResource extends AbstractActionableResource<VM> impleme
 
         buf.append("update-vm -vmobject $v");
 
-        return addLinks(runAndParseSingle(buf.toString()));
+        return addLinks(runAndParseSingle(getShell(), buf.toString()));
     }
 
     @Override
     public Response start(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new CommandRunner(action, "start-vm", "vm", getId()));
+        return doAction(uriInfo, new CommandRunner(action, "start-vm", "vm", getId(), getShell()));
     }
 
     @Override
     public Response stop(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new CommandRunner(action, "stop-vm", "vm", getId()));
+        return doAction(uriInfo, new CommandRunner(action, "stop-vm", "vm", getId(), getShell()));
     }
 
     @Override
     public Response shutdown(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new CommandRunner(action, "shutdown-vm", "vm", getId()));
+        return doAction(uriInfo, new CommandRunner(action, "shutdown-vm", "vm", getId(), getShell()));
     }
 
     @Override
     public Response suspend(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new CommandRunner(action, "suspend-vm", "vm", getId()));
+        return doAction(uriInfo, new CommandRunner(action, "suspend-vm", "vm", getId(), getShell()));
     }
 
     @Override
     public Response detach(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new CommandRunner(action, "detach-vm", "vm", getId()));
+        return doAction(uriInfo, new CommandRunner(action, "detach-vm", "vm", getId(), getShell()));
     }
 
     @Override
     public PowerShellCdRomsResource getCdRomsResource() {
-        return new PowerShellCdRomsResource(getId());
+        return new PowerShellCdRomsResource(getId(), powerShellPoolMap);
     }
 
     @Override
     public PowerShellDisksResource getDisksResource() {
-        return new PowerShellDisksResource(getId());
+        return new PowerShellDisksResource(getId(), powerShellPoolMap);
     }
 
     @Override
     public PowerShellNicsResource getNicsResource() {
-        return new PowerShellNicsResource(getId());
+        return new PowerShellNicsResource(getId(), powerShellPoolMap);
     }
 }

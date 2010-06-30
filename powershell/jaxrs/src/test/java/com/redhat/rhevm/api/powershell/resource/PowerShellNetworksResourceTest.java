@@ -31,7 +31,7 @@ public class PowerShellNetworksResourceTest extends AbstractPowerShellCollection
     private static final String REMOVE_COMMAND = "$n = get-networks\nforeach ($i in $n) {  if ($i.networkid -eq '3121815') {    remove-network -networkobject $i -datacenterid $i.datacenterid  }}";
 
     public PowerShellNetworksResourceTest() {
-        super(new PowerShellNetworkResource("0", null), "networks", "network");
+        super(new PowerShellNetworkResource("0", null, null), "networks", "network");
     }
 
     @Test

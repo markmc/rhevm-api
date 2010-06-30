@@ -55,7 +55,7 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     private static final String ADD_RETURN_EPILOG    = "\nhostclusterid: " + CLUSTER_ID + "\ntemplateid: " + TEMPLATE_ID + "\n" + OTHER_PROPS;
 
     public PowerShellVmsResourceTest() {
-        super(new PowerShellVmResource("0", null), "vms", "vm");
+        super(new PowerShellVmResource("0", null, null), "vms", "vm");
     }
 
     @Test

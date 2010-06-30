@@ -18,6 +18,8 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.util.concurrent.Executor;
+
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.UriInfo;
 
@@ -26,6 +28,7 @@ import com.redhat.rhevm.api.model.Fault;
 import com.redhat.rhevm.api.model.Network;
 
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 
 import org.junit.Test;
 
@@ -43,8 +46,8 @@ public class PowerShellNetworkResourceTest extends AbstractPowerShellResourceTes
     private static final String UPDATE_COMMAND = "foreach ($i in $n) {  if ($i.networkid -eq '12345') {    $i.name = 'eris'\n    update-network -networkobject $i -datacenterid '54321'  }}\n";
     private static final String UPDATE_RETURN = "networkid: 12345 \nname: eris\ndatacenterid: 54321";
 
-    protected PowerShellNetworkResource getResource() {
-        return new PowerShellNetworkResource("12345", executor);
+    protected PowerShellNetworkResource getResource(Executor executor, PowerShellPoolMap poolMap) {
+        return new PowerShellNetworkResource("12345", executor, poolMap);
     }
 
     @Test
@@ -77,7 +80,7 @@ public class PowerShellNetworkResourceTest extends AbstractPowerShellResourceTes
 
     private UriInfo setUpNetworkExpectations(String command, String ret, String name) throws Exception {
         mockStatic(PowerShellCmd.class);
-        expect(PowerShellCmd.runCommand(command)).andReturn(ret);
+        expect(PowerShellCmd.runCommand(setUpShellExpectations(), command)).andReturn(ret);
         replayAll();
         return null;
     }
