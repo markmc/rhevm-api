@@ -4,5 +4,11 @@ DIRNAME=`dirname $0`
 if [ "x$RHEVM_API_URL" = "x" ]; then
   RHEVM_API_URL=http://localhost:8080/rhevm-api-mock
 fi
-export JAVA_OPTS=-Drhevm.base.url=$RHEVM_API_URL
+if [ "x$RHEVM_USERNAME" = "x" ]; then
+  RHEVM_USERNAME=
+fi
+if [ "x$RHEVM_PASSWORD" = "x" ]; then
+  RHEVM_PASSWORD=
+fi
+export JAVA_OPTS="-Drhevm.base.url=$RHEVM_API_URL -Drhevm.auth.username=$RHEVM_USERNAME -Drhevm.auth.password=$RHEVM_PASSWORD"
 $DIRNAME/karaf $@

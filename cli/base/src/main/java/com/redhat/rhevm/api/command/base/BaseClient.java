@@ -54,6 +54,8 @@ public class BaseClient {
     protected static final String HTTP_SCHEME = "http://";
 
     protected String baseUrl;
+    protected String user;
+    protected String secret;
 
     public String getBaseUrl() {
         return baseUrl;
@@ -63,13 +65,21 @@ public class BaseClient {
         this.baseUrl = baseUrl;
     }
 
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
+
     public <S> S get(String href, Class<S> clz) throws Exception {
         S ret = clz.newInstance();
         Response r = null;
         Exception failure = null;
         try {
-            WebClient get = WebClient.create(absolute(href));
-            r = get.path("/").accept("application/xml").get();
+            WebClient get = getClient(href);
+            r = getClient(href).path("/").accept("application/xml").get();
         } catch (Exception e) {
            failure = e;
         }
@@ -97,7 +107,7 @@ public class BaseClient {
 
         if (top != null) {
             try {
-                WebClient get = WebClient.create(getBaseUri(top, constraint));
+                WebClient get = getClient(getBaseUri(top, constraint));
                 r = get.path("/").accept("application/xml").get();
             } catch (Exception e) {
                 failure = e;
@@ -118,7 +128,7 @@ public class BaseClient {
         Exception failure = null;
 
         try {
-            WebClient post = WebClient.create(absolute(link.getHref()));
+            WebClient post = getClient(link.getHref());
             r = post.path("/").post(action);
         } catch (Exception e) {
             failure = e;
@@ -150,7 +160,7 @@ public class BaseClient {
         T ret = null;
 
         try {
-            WebClient put = WebClient.create(absolute(href));
+            WebClient put = getClient(href);
             r = put.path("/").put(new JAXBElement<T>(new QName("", localName), clz, null, resource));
             if (r.getStatus() == 200) {
                 ret = unmarshall(r, clz);
@@ -171,7 +181,7 @@ public class BaseClient {
         T ret = null;
 
         try {
-            WebClient post = WebClient.create(absolute(href));
+            WebClient post = getClient(href);
             r = post.path("/").post(new JAXBElement<T>(new QName("", localName), clz, null, resource));
             ret = unmarshall(r, clz);
         } catch (Exception e) {
@@ -189,7 +199,7 @@ public class BaseClient {
         Exception failure = null;
 
         try {
-            WebClient delete = WebClient.create(absolute(resource.getHref()));
+            WebClient delete = getClient(resource.getHref());
             r = delete.path("/").delete();
         } catch (Exception e) {
             failure = e;
@@ -214,7 +224,7 @@ public class BaseClient {
                                        new JAXRSBindingFactory());
 
         try {
-            WebClient head = WebClient.create(getBaseUrl());
+            WebClient head = getClient(getBaseUrl());
             links = head.path("/").head();
             ret = links.getStatus() == 200 ? getLink(links, rel) : null;
         } catch (Exception e) {
@@ -227,6 +237,12 @@ public class BaseClient {
         }
 
         return ret;
+    }
+
+    private WebClient getClient(String href) {
+        return user == null || secret == null
+               ? WebClient.create(absolute(href))
+               : WebClient.create(absolute(href), user, secret, null);
     }
 
     private <S> S unmarshall(Response r, Class<S> clz) throws Exception {

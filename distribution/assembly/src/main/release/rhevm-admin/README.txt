@@ -44,6 +44,21 @@ over-ridden, for example by setting:
 To exit the CLI, use the shutdown command.
 
 
+Authentication
+--------------
+
+RHEVM_API uses HTTP Basic authenication to pass RHEVM credentials from
+the client. In order to provide the  correct user name and password, the
+following variables are set:
+
+  > set RHEVM_USERNAME=username
+  > set RHEVM_PASSWORD=password
+
+The Windows domain may be embedded in the username via the usual convention:
+
+  domainname\username
+
+
 Scripting with the CLI
 ----------------------
 

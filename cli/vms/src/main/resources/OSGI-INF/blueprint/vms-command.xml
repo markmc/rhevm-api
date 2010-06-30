@@ -89,6 +89,8 @@
 
   <bean id="baseClient" class="com.redhat.rhevm.api.command.base.BaseClient"  activation="eager">
     <property name="baseUrl" value="$[rhevm.base.url]"/>
+    <property name="user" value="$[rhevm.auth.username]"/>
+    <property name="secret" value="$[rhevm.auth.password]"/>
   </bean>
 
 </blueprint>
