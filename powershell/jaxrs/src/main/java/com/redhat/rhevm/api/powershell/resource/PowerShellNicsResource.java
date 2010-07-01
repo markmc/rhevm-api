@@ -35,8 +35,8 @@ import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 public class PowerShellNicsResource extends AbstractPowerShellDevicesResource<NIC, Nics> {
 
-    public PowerShellNicsResource(String vmId, PowerShellPoolMap powerShellPoolMap) {
-        super(vmId, powerShellPoolMap);
+    public PowerShellNicsResource(String vmId, PowerShellPoolMap shellPools) {
+        super(vmId, shellPools);
     }
 
     public Nics runAndParse(String command) {
@@ -143,6 +143,6 @@ public class PowerShellNicsResource extends AbstractPowerShellDevicesResource<NI
 
     @Override
     public PowerShellDeviceResource<NIC, Nics> getDeviceSubResource(String id) {
-        return new PowerShellDeviceResource<NIC, Nics>(this, id, powerShellPoolMap);
+        return new PowerShellDeviceResource<NIC, Nics>(this, id, shellPools);
     }
 }

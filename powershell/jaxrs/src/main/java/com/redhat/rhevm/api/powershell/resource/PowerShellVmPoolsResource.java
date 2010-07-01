@@ -108,6 +108,6 @@ public class PowerShellVmPoolsResource
 
     @Override
     protected PowerShellVmPoolResource createSubResource(String id) {
-        return new PowerShellVmPoolResource(id, getExecutor(), powerShellPoolMap);
+        return new PowerShellVmPoolResource(id, getExecutor(), shellPools);
     }
 }

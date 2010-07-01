@@ -34,8 +34,8 @@ import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 public class PowerShellNetworkResource extends AbstractPowerShellActionableResource<Network> implements NetworkResource {
 
-    public PowerShellNetworkResource(String id, Executor executor, PowerShellPoolMap powerShellPoolMap) {
-        super(id, executor, powerShellPoolMap);
+    public PowerShellNetworkResource(String id, Executor executor, PowerShellPoolMap shellPools) {
+        super(id, executor, shellPools);
     }
 
     public static ArrayList<Network> runAndParse(PowerShellCmd shell, String command) {

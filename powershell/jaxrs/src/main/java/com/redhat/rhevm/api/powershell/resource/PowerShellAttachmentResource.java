@@ -46,8 +46,8 @@ public class PowerShellAttachmentResource extends AbstractPowerShellActionableRe
      *
      * @param attachment  encapsulated Attachment
      */
-    PowerShellAttachmentResource(String dataCenterId, String storageDomainId, Executor executor, PowerShellPoolMap powerShellPoolMap) {
-        super(dataCenterId, executor, powerShellPoolMap);
+    PowerShellAttachmentResource(String dataCenterId, String storageDomainId, Executor executor, PowerShellPoolMap shellPools) {
+        super(dataCenterId, executor, shellPools);
         this.storageDomainId = storageDomainId;
     }
 

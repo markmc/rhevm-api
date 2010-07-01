@@ -35,8 +35,8 @@ import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 public class PowerShellDisksResource extends AbstractPowerShellDevicesResource<Disk, Disks> {
 
-    public PowerShellDisksResource(String vmId, PowerShellPoolMap powerShellPoolMap) {
-        super(vmId, powerShellPoolMap);
+    public PowerShellDisksResource(String vmId, PowerShellPoolMap shellPools) {
+        super(vmId, shellPools);
     }
 
     public Disks runAndParse(String command) {
@@ -143,6 +143,6 @@ public class PowerShellDisksResource extends AbstractPowerShellDevicesResource<D
 
     @Override
     public PowerShellDeviceResource<Disk, Disks> getDeviceSubResource(String id) {
-        return new PowerShellDeviceResource<Disk, Disks>(this, id, powerShellPoolMap);
+        return new PowerShellDeviceResource<Disk, Disks>(this, id, shellPools);
     }
 }

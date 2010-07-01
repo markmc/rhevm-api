@@ -76,6 +76,6 @@ public class PowerShellDataCentersResource
     }
 
     protected PowerShellDataCenterResource createSubResource(String id) {
-        return new PowerShellDataCenterResource(id, getExecutor(), powerShellPoolMap);
+        return new PowerShellDataCenterResource(id, getExecutor(), shellPools);
     }
 }

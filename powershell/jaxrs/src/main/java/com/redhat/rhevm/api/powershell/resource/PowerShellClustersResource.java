@@ -82,6 +82,6 @@ public class PowerShellClustersResource
     }
 
     protected PowerShellClusterResource createSubResource(String id) {
-        return new PowerShellClusterResource(id, getExecutor(), powerShellPoolMap);
+        return new PowerShellClusterResource(id, getExecutor(), shellPools);
     }
 }

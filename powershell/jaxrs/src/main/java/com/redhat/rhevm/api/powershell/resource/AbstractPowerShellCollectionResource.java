@@ -35,7 +35,7 @@ public abstract class AbstractPowerShellCollectionResource<R extends BaseResourc
                                                            U extends AbstractUpdatableResource<R>> {
     private ReapedMap<String, U> resources;
     private Executor executor;
-    protected PowerShellPoolMap powerShellPoolMap;
+    protected PowerShellPoolMap shellPools;
     private final static String SEARCH_TEXT = " -searchtext ";
 
     public AbstractPowerShellCollectionResource() {
@@ -79,12 +79,12 @@ public abstract class AbstractPowerShellCollectionResource<R extends BaseResourc
         this.executor = executor;
     }
 
-    public void setPowerShellPoolMap(PowerShellPoolMap powerShellPoolMap) {
-        this.powerShellPoolMap = powerShellPoolMap;
+    public void setPowerShellPoolMap(PowerShellPoolMap shellPools) {
+        this.shellPools = shellPools;
     }
 
     protected PowerShellCmd getShell() {
-        return powerShellPoolMap.get().get();
+        return shellPools.get().get();
     }
 
     protected abstract U createSubResource(String id);

@@ -42,11 +42,11 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
 
     private String storageDomainId;
     private Executor executor;
-    private PowerShellPoolMap powerShellPoolMap;
+    private PowerShellPoolMap shellPools;
 
-    public PowerShellAttachmentsResource(String storageDomainId, PowerShellPoolMap powerShellPoolMap) {
+    public PowerShellAttachmentsResource(String storageDomainId, PowerShellPoolMap shellPools) {
         this.storageDomainId = storageDomainId;
-        this.powerShellPoolMap = powerShellPoolMap;
+        this.shellPools = shellPools;
     }
 
     public static Attachment buildAttachment(DataCenter dataCenter, StorageDomain storageDomain) {
@@ -145,7 +145,7 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
             buf.append(" -storagedomainid " + PowerShellUtils.escape(storageDomainId));
             PowerShellCmd.runCommand(getShell(), buf.toString());
 
-            return new PowerShellAttachmentResource(id, storageDomainId, executor, powerShellPoolMap);
+            return new PowerShellAttachmentResource(id, storageDomainId, executor, shellPools);
         } catch (PowerShellException e) {
             return null;
         }
@@ -191,6 +191,6 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
     }
 
     protected PowerShellCmd getShell() {
-        return powerShellPoolMap.get().get();
+        return shellPools.get().get();
     }
 }

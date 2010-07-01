@@ -34,8 +34,8 @@ import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 public class PowerShellClusterResource extends AbstractPowerShellActionableResource<Cluster> implements ClusterResource {
 
-    public PowerShellClusterResource(String id, Executor executor, PowerShellPoolMap powerShellPoolMap) {
-        super(id, executor, powerShellPoolMap);
+    public PowerShellClusterResource(String id, Executor executor, PowerShellPoolMap shellPools) {
+        super(id, executor, shellPools);
     }
 
     public static ArrayList<Cluster> runAndParse(PowerShellCmd shell, String command) {

@@ -29,16 +29,15 @@ public abstract class AbstractPowerShellDevicesResource<D extends BaseDevice, C 
     implements DevicesResource<D, C> {
 
     protected String vmId;
-    protected PowerShellPoolMap powerShellPoolMap;
+    protected PowerShellPoolMap shellPools;
 
-    public AbstractPowerShellDevicesResource(String vmId, PowerShellPoolMap powerShellPoolMap) {
+    public AbstractPowerShellDevicesResource(String vmId, PowerShellPoolMap shellPools) {
         this.vmId = vmId;
-        this.powerShellPoolMap = powerShellPoolMap;
+        this.shellPools = shellPools;
     }
 
     public PowerShellCmd getShell() {
-        System.out.println("get from pool map: " + powerShellPoolMap);
-        return powerShellPoolMap.get().get();
+        return shellPools.get().get();
     }
 
     public abstract D addLinks(D device);

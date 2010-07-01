@@ -60,7 +60,7 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
             if (fromRhevmIdMapping.containsKey(storageDomain.getId())) {
                 storageDomain.setId(fromRhevmIdMapping.get(storageDomain.getId()));
             }
-            PowerShellStorageDomainResource resource = new PowerShellStorageDomainResource(storageDomain.getId(), this, powerShellPoolMap);
+            PowerShellStorageDomainResource resource = new PowerShellStorageDomainResource(storageDomain.getId(), this, shellPools);
             ret.getStorageDomains().add(resource.addLinks(storageDomain));
         }
 
@@ -78,7 +78,7 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
         storageDomain.setStatus(StorageDomainStatus.UNINITIALIZED);
 
         PowerShellStorageDomainResource resource =
-            new PowerShellStorageDomainResource(storageDomain.getId(), this, storageDomain, powerShellPoolMap);
+            new PowerShellStorageDomainResource(storageDomain.getId(), this, storageDomain, shellPools);
 
         stagedDomains.put(storageDomain.getId(), resource);
 
@@ -108,7 +108,7 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
     }
 
     protected PowerShellStorageDomainResource createSubResource(String id) {
-        return new PowerShellStorageDomainResource(id, this, powerShellPoolMap);
+        return new PowerShellStorageDomainResource(id, this, shellPools);
     }
 
     /**

@@ -37,8 +37,8 @@ public class PowerShellCdRomsResource extends AbstractPowerShellDevicesResource<
 
     private static final String CDROM_ID = Integer.toString("cdrom".hashCode());
 
-    public PowerShellCdRomsResource(String vmId, PowerShellPoolMap powerShellPoolMap) {
-        super(vmId, powerShellPoolMap);
+    public PowerShellCdRomsResource(String vmId, PowerShellPoolMap shellPools) {
+        super(vmId, shellPools);
     }
 
     private CdRom buildCdRom(String cdIsoPath) {
@@ -110,6 +110,6 @@ public class PowerShellCdRomsResource extends AbstractPowerShellDevicesResource<
 
     @Override
     public PowerShellDeviceResource<CdRom, CdRoms> getDeviceSubResource(String id) {
-        return new PowerShellDeviceResource<CdRom, CdRoms>(this, id, powerShellPoolMap);
+        return new PowerShellDeviceResource<CdRom, CdRoms>(this, id, shellPools);
     }
 }

@@ -37,8 +37,8 @@ import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 public class PowerShellDataCenterResource extends AbstractPowerShellActionableResource<DataCenter> implements DataCenterResource {
 
-    public PowerShellDataCenterResource(String id, Executor executor, PowerShellPoolMap powerShellPoolMap) {
-        super(id, executor, powerShellPoolMap);
+    public PowerShellDataCenterResource(String id, Executor executor, PowerShellPoolMap shellPools) {
+        super(id, executor, shellPools);
     }
 
     public static ArrayList<DataCenter> runAndParse(PowerShellCmd shell, String command) {
@@ -93,6 +93,6 @@ public class PowerShellDataCenterResource extends AbstractPowerShellActionableRe
     }
 
     public IsosResource getIsosResource() {
-        return new PowerShellIsosResource(getId(), powerShellPoolMap);
+        return new PowerShellIsosResource(getId(), shellPools);
     }
 }

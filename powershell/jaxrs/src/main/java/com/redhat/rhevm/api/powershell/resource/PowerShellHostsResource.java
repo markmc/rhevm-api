@@ -76,6 +76,6 @@ public class PowerShellHostsResource
     }
 
     protected PowerShellHostResource createSubResource(String id) {
-        return new PowerShellHostResource(id, getExecutor(), powerShellPoolMap);
+        return new PowerShellHostResource(id, getExecutor(), shellPools);
     }
 }

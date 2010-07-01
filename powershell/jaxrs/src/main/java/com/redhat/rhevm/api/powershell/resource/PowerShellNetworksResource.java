@@ -110,6 +110,6 @@ public class PowerShellNetworksResource
     }
 
     protected PowerShellNetworkResource createSubResource(String id) {
-        return new PowerShellNetworkResource(id, getExecutor(), powerShellPoolMap);
+        return new PowerShellNetworkResource(id, getExecutor(), shellPools);
     }
 }

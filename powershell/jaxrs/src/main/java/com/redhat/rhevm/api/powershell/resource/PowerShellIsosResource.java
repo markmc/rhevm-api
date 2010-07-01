@@ -33,11 +33,11 @@ import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 public class PowerShellIsosResource implements IsosResource {
 
     private String dataCenterId;
-    private PowerShellPoolMap powerShellPoolMap;
+    private PowerShellPoolMap shellPools;
 
-    public PowerShellIsosResource(String dataCenterId, PowerShellPoolMap powerShellPoolMap) {
+    public PowerShellIsosResource(String dataCenterId, PowerShellPoolMap shellPools) {
         this.dataCenterId = dataCenterId;
-        this.powerShellPoolMap = powerShellPoolMap;
+        this.shellPools = shellPools;
     }
 
     @Override
@@ -58,6 +58,6 @@ public class PowerShellIsosResource implements IsosResource {
     }
 
     protected PowerShellCmd getShell() {
-        return powerShellPoolMap.get().get();
+        return shellPools.get().get();
     }
 }

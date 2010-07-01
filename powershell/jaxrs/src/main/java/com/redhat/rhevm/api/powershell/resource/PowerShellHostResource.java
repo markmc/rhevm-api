@@ -36,8 +36,8 @@ import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 public class PowerShellHostResource extends AbstractPowerShellActionableResource<Host> implements HostResource {
 
-    public PowerShellHostResource(String id, Executor executor, PowerShellPoolMap powerShellPoolMap) {
-        super(id, executor, powerShellPoolMap);
+    public PowerShellHostResource(String id, Executor executor, PowerShellPoolMap shellPools) {
+        super(id, executor, shellPools);
     }
 
     /* needed because there are two get-host commands */

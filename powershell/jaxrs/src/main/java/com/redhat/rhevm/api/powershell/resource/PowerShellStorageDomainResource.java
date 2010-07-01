@@ -49,14 +49,14 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
     public PowerShellStorageDomainResource(String id,
                                            PowerShellStorageDomainsResource parent,
                                            StorageDomain staged,
-                                           PowerShellPoolMap powerShellPoolMap) {
-        super(id, parent.getExecutor(), powerShellPoolMap);
+                                           PowerShellPoolMap shellPools) {
+        super(id, parent.getExecutor(), shellPools);
         this.parent = parent;
         this.staged = staged;
     }
 
-    public PowerShellStorageDomainResource(String id, PowerShellStorageDomainsResource parent, PowerShellPoolMap powerShellPoolMap) {
-        this(id, parent, null, powerShellPoolMap);
+    public PowerShellStorageDomainResource(String id, PowerShellStorageDomainsResource parent, PowerShellPoolMap shellPools) {
+        this(id, parent, null, shellPools);
     }
 
     public StorageDomain getStaged() {
@@ -202,7 +202,7 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
 
     @Override
     public AttachmentsResource getAttachmentsResource() {
-        return new PowerShellAttachmentsResource(getId(), powerShellPoolMap);
+        return new PowerShellAttachmentsResource(getId(), shellPools);
     }
 
     private abstract class StorageDomainActionTask extends AbstractPowerShellActionTask {

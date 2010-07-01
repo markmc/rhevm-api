@@ -45,6 +45,6 @@ public class PowerShellTemplatesResource
     }
 
     protected PowerShellTemplateResource createSubResource(String id) {
-        return new PowerShellTemplateResource(id, getExecutor(), powerShellPoolMap);
+        return new PowerShellTemplateResource(id, getExecutor(), shellPools);
     }
 }

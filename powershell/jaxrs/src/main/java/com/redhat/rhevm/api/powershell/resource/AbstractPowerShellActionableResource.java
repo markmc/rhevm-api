@@ -27,19 +27,19 @@ import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 
 public abstract class AbstractPowerShellActionableResource<R extends BaseResource> extends AbstractActionableResource<R> {
 
-    protected PowerShellPoolMap powerShellPoolMap;
+    protected PowerShellPoolMap shellPools;
 
-    public AbstractPowerShellActionableResource(String id , PowerShellPoolMap powerShellPoolMap) {
+    public AbstractPowerShellActionableResource(String id , PowerShellPoolMap shellPools) {
         super(id);
-        this.powerShellPoolMap = powerShellPoolMap;
+        this.shellPools = shellPools;
     }
 
-    public AbstractPowerShellActionableResource(String id, Executor executor, PowerShellPoolMap powerShellPoolMap) {
+    public AbstractPowerShellActionableResource(String id, Executor executor, PowerShellPoolMap shellPools) {
         super(id, executor);
-        this.powerShellPoolMap = powerShellPoolMap;
+        this.shellPools = shellPools;
     }
 
     protected PowerShellCmd getShell() {
-        return powerShellPoolMap.get().get();
+        return shellPools.get().get();
     }
 }

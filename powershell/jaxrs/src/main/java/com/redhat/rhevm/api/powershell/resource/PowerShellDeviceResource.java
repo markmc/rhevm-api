@@ -33,17 +33,16 @@ public class PowerShellDeviceResource<D extends BaseDevice, C extends BaseDevice
 
     protected AbstractPowerShellDevicesResource<D, C> parent;
     protected String deviceId;
-    protected PowerShellPoolMap powerShellPoolMap;
+    protected PowerShellPoolMap shellPools;
 
-    public PowerShellDeviceResource(AbstractPowerShellDevicesResource<D, C> parent, String deviceId, PowerShellPoolMap powerShellPoolMap) {
+    public PowerShellDeviceResource(AbstractPowerShellDevicesResource<D, C> parent, String deviceId, PowerShellPoolMap shellPools) {
         this.parent = parent;
         this.deviceId = deviceId;
-        System.out.println("setting pool map: " + powerShellPoolMap);
-        this.powerShellPoolMap = powerShellPoolMap;
+        this.shellPools = shellPools;
     }
 
     public PowerShellCmd getShell() {
-        return powerShellPoolMap.get().get();
+        return shellPools.get().get();
     }
 
     @Override

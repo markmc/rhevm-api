@@ -35,8 +35,8 @@ import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 public class PowerShellTemplateResource extends AbstractPowerShellActionableResource<Template> implements TemplateResource {
 
-    public PowerShellTemplateResource(String id, Executor executor, PowerShellPoolMap powerShellPoolMap) {
-        super(id, executor, powerShellPoolMap);
+    public PowerShellTemplateResource(String id, Executor executor, PowerShellPoolMap shellPools) {
+        super(id, executor, shellPools);
     }
 
     public static ArrayList<Template> runAndParse(PowerShellCmd shell, String command) {

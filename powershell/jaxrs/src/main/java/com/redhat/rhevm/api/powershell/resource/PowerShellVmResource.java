@@ -39,8 +39,8 @@ import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 public class PowerShellVmResource extends AbstractPowerShellActionableResource<VM> implements VmResource {
 
-    public PowerShellVmResource(String id, Executor executor, PowerShellPoolMap powerShellPoolMap) {
-        super(id, executor, powerShellPoolMap);
+    public PowerShellVmResource(String id, Executor executor, PowerShellPoolMap shellPools) {
+        super(id, executor, shellPools);
     }
 
     public static ArrayList<PowerShellVM> runAndParse(PowerShellCmd shell, String command) {
@@ -134,16 +134,16 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
 
     @Override
     public PowerShellCdRomsResource getCdRomsResource() {
-        return new PowerShellCdRomsResource(getId(), powerShellPoolMap);
+        return new PowerShellCdRomsResource(getId(), shellPools);
     }
 
     @Override
     public PowerShellDisksResource getDisksResource() {
-        return new PowerShellDisksResource(getId(), powerShellPoolMap);
+        return new PowerShellDisksResource(getId(), shellPools);
     }
 
     @Override
     public PowerShellNicsResource getNicsResource() {
-        return new PowerShellNicsResource(getId(), powerShellPoolMap);
+        return new PowerShellNicsResource(getId(), shellPools);
     }
 }

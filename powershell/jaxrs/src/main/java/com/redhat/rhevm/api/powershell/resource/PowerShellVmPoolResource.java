@@ -36,8 +36,8 @@ import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 public class PowerShellVmPoolResource extends AbstractPowerShellActionableResource<VmPool> implements VmPoolResource {
 
-    public PowerShellVmPoolResource(String id, Executor executor, PowerShellPoolMap powerShellPoolMap) {
-        super(id, executor, powerShellPoolMap);
+    public PowerShellVmPoolResource(String id, Executor executor, PowerShellPoolMap shellPools) {
+        super(id, executor, shellPools);
     }
 
     public static ArrayList<VmPool> runAndParse(PowerShellCmd shell, String command) {
