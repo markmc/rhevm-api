@@ -75,7 +75,7 @@ public class PowerShellPool {
 
     private class PowerShellLauncher implements Runnable {
         @Override public void run() {
-            PowerShellCmd cmd = new PowerShellCmd();
+            PowerShellCmd cmd = new PowerShellCmd(principal);
             cmd.start();
             PowerShellPool.this.add(cmd);
         }

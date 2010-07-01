@@ -48,11 +48,13 @@ public class PowerShellPoolTest extends Assert {
 
     @Test
     public void test() throws Exception {
-        setupExpectations();
+        Principal principal = new Principal("joe", "schmoe");
+
+        setupExpectations(principal);
 
         ControllableExecutor executor = new ControllableExecutor();
 
-        PowerShellPool pool = new PowerShellPool(executor, Principal.NONE, 10);
+        PowerShellPool pool = new PowerShellPool(executor, principal, 10);
 
         assertEquals(10, executor.taskCount());
 
@@ -76,9 +78,9 @@ public class PowerShellPoolTest extends Assert {
         pool.shutdown();
     }
 
-    private void setupExpectations() throws Exception {
+    private void setupExpectations(Principal principal) throws Exception {
         PowerShellCmd cmd = createMock(PowerShellCmd.class);
-        expectNew(PowerShellCmd.class).andReturn(cmd).anyTimes();
+        expectNew(PowerShellCmd.class, principal).andReturn(cmd).anyTimes();
         cmd.start();
         expectLastCall().anyTimes();
         cmd.destroy();
