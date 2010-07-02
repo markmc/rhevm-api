@@ -24,6 +24,8 @@ import org.junit.Test;
 
 public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectionResourceTest<Template, PowerShellTemplateResource, PowerShellTemplatesResource> {
 
+    private static final String SELECT_RETURN_EPILOG = "\nmemsizemb: 1024\ndefaultbootsequence: CDN\nnumofsockets: 2\nnumofcpuspersocket: 4\n";
+
     public PowerShellTemplatesResourceTest() {
         super(new PowerShellTemplateResource("0", null, null), "templates", "template");
     }
@@ -32,7 +34,7 @@ public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectio
     public void testList() throws Exception {
         verifyCollection(
             resource.list(setUpResourceExpectations("select-template",
-                                                    getSelectReturn(),
+                                                    getSelectReturn(SELECT_RETURN_EPILOG),
                                                     NAMES)).getTemplates(),
             NAMES);
     }

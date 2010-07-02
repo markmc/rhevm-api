@@ -218,6 +218,14 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <xs:simpleType name="TemplateStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ILLEGAL"/>
+      <xs:enumeration value="LOCKED"/>
+      <xs:enumeration value="OK"/>
+    </xs:restriction>
+  </xs:simpleType>
+
   <xs:simpleType name="VmStatus">
     <xs:restriction base="xs:string">
       <xs:enumeration value="PAUSED"/>
@@ -538,8 +546,14 @@
     <xs:complexType>
       <xs:complexContent>
         <xs:extension base="BaseResource">
-          <xs:sequence/>
-          <!-- also rel="cdroms/disks/nics" links, see Devices below -->
+          <xs:sequence>
+            <xs:element name="status" type="TemplateStatus" minOccurs="0"/>
+            <xs:element name="memory" type="xs:long" minOccurs="0"/>
+            <xs:element name="cpu" type="CPU" minOccurs="0"/>
+            <xs:element name="os" type="OperatingSystem" minOccurs="0"/>
+            <xs:element ref="cluster" minOccurs="0" maxOccurs="1"/>
+            <!-- also rel="cdroms/disks/nics" links, see Devices below -->
+          </xs:sequence>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>

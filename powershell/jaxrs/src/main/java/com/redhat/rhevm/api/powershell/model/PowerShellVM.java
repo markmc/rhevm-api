@@ -80,7 +80,7 @@ public class PowerShellVM extends VM {
         return !bootSequence.isEmpty() ? bootSequence : null;
     }
 
-    private static void parseBootDevices(PowerShellVM vm, String bootSequence) {
+    public static void parseBootDevices(OperatingSystem os, String bootSequence) {
         for (int i = 0; i < bootSequence.length(); i++) {
             char c = bootSequence.charAt(i);
             OperatingSystem.Boot boot = new OperatingSystem.Boot();
@@ -100,7 +100,7 @@ public class PowerShellVM extends VM {
             }
 
             if (boot.isSetDev()) {
-                vm.getOs().getBoot().add(boot);
+                os.getBoot().add(boot);
             }
         }
     }
@@ -141,8 +141,8 @@ public class PowerShellVM extends VM {
             vm.setCpu(cpu);
 
             OperatingSystem os = new OperatingSystem();
+            parseBootDevices(os, props.get("defaultbootsequence"));
             vm.setOs(os);
-            parseBootDevices(vm, props.get("defaultbootsequence"));
 
             Cluster cluster = new Cluster();
             cluster.setId(props.get("hostclusterid"));

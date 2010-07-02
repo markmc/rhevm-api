@@ -21,11 +21,26 @@ package com.redhat.rhevm.api.powershell.model;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.redhat.rhevm.api.model.BootDevice;
+import com.redhat.rhevm.api.model.Cluster;
+import com.redhat.rhevm.api.model.CPU;
+import com.redhat.rhevm.api.model.CpuTopology;
+import com.redhat.rhevm.api.model.OperatingSystem;
 import com.redhat.rhevm.api.model.Template;
+import com.redhat.rhevm.api.model.TemplateStatus;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
 public class PowerShellTemplate extends Template {
+
+    private static TemplateStatus parseStatus(HashMap<String,String> props, String key) {
+        String s = props.get(key);
+        if (s == null) return null;
+        else if (s.equals("Illegal")) return TemplateStatus.ILLEGAL;
+        else if (s.equals("Locked"))  return TemplateStatus.LOCKED;
+        else if (s.equals("OK"))      return TemplateStatus.OK;
+        else return null;
+    }
 
     public static ArrayList<PowerShellTemplate> parse(String output) {
         ArrayList<HashMap<String,String>> templatesProps = PowerShellUtils.parseProps(output);
@@ -37,6 +52,27 @@ public class PowerShellTemplate extends Template {
             template.setId(props.get("templateid"));
             template.setName(props.get("name"));
             template.setDescription(props.get("description"));
+            template.setMemory(Long.parseLong(props.get("memsizemb")) * 1024 * 1024);
+
+            TemplateStatus status = parseStatus(props, "status");
+            if (status != null) {
+                template.setStatus(status);
+            }
+
+            CpuTopology topo = new CpuTopology();
+            topo.setSockets(Integer.parseInt(props.get("numofsockets")));
+            topo.setCores(Integer.parseInt(props.get("numofcpuspersocket")));
+            CPU cpu = new CPU();
+            cpu.setTopology(topo);
+            template.setCpu(cpu);
+
+            OperatingSystem os = new OperatingSystem();
+            PowerShellVM.parseBootDevices(os, props.get("defaultbootsequence"));
+            template.setOs(os);
+
+            Cluster cluster = new Cluster();
+            cluster.setId(props.get("hostclusterid"));
+            template.setCluster(cluster);
 
             ret.add(template);
         }

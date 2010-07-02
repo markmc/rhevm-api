@@ -44,7 +44,7 @@ public class PowerShellTemplateResourceTest extends AbstractPowerShellResourceTe
     private static final String TEMPLATE_NAME = "sedna";
     private static final String TEMPLATE_DESCRIPTION = "this is a template";
     private static final String GET_COMMAND = "get-template -templateid '" + TEMPLATE_ID + "'";
-    private static final String GET_RETURN = "templateid: " + TEMPLATE_ID + "\nname: " + TEMPLATE_NAME + "\ndescription: " + TEMPLATE_DESCRIPTION;
+    private static final String GET_RETURN = "templateid: " + TEMPLATE_ID + "\nname: " + TEMPLATE_NAME + "\ndescription: " + TEMPLATE_DESCRIPTION + "\nmemsizemb: 1024\ndefaultbootsequence: CDN\nnumofsockets: 2\nnumofcpuspersocket: 4\n";
 
     protected PowerShellTemplateResource getResource(Executor executor, PowerShellPoolMap poolMap) {
         return new PowerShellTemplateResource(TEMPLATE_ID, executor, poolMap);
