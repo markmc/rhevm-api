@@ -23,6 +23,7 @@ import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.resource.TemplateResource;
 import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
@@ -53,9 +54,18 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
     public static Template addLinks(PowerShellTemplate template) {
         Template ret = JAXBHelper.clone("template", Template.class, template);
 
-        ret = LinkHelper.addLinks(ret);
+        String [] deviceCollections = { "disks" };
 
-        return ret;
+        ret.getLinks().clear();
+
+        for (String collection : deviceCollections) {
+            Link link = new Link();
+            link.setRel(collection);
+            link.setHref(LinkHelper.getUriBuilder(ret).path(collection).build().toString());
+            ret.getLinks().add(link);
+        }
+
+        return LinkHelper.addLinks(ret);
     }
 
     @Override
@@ -65,5 +75,10 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
         buf.append("get-template -templateid " + PowerShellUtils.escape(getId()));
 
         return addLinks(runAndParseSingle(getShell(), buf.toString()));
+    }
+
+    @Override
+    public PowerShellReadOnlyDisksResource getDisksResource() {
+        return new PowerShellReadOnlyDisksResource(getId(), shellPools, "get-template");
     }
 }

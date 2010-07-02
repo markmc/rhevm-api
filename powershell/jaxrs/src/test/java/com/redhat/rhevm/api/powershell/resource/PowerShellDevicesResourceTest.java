@@ -148,7 +148,7 @@ public class PowerShellDevicesResourceTest extends Assert {
 
     @Test
     public void testDiskGet() throws Exception {
-        PowerShellDisksResource parent = new PowerShellDisksResource(VM_ID, poolMap);
+        PowerShellDisksResource parent = new PowerShellDisksResource(VM_ID, poolMap, "get-vm");
         PowerShellDeviceResource<Disk, Disks> resource =
             new PowerShellDeviceResource<Disk, Disks>(parent, DISK_ID, poolMap);
 
@@ -158,7 +158,7 @@ public class PowerShellDevicesResourceTest extends Assert {
 
     @Test
     public void testDiskList() throws Exception {
-        PowerShellDisksResource resource = new PowerShellDisksResource(VM_ID, poolMap);
+        PowerShellDisksResource resource = new PowerShellDisksResource(VM_ID, poolMap, "get-vm");
 
         setUpCmdExpectations(GET_DISKS_CMD, GET_DISKS_RETURN);
 
@@ -167,7 +167,7 @@ public class PowerShellDevicesResourceTest extends Assert {
 
     @Test
     public void testDiskAdd() throws Exception {
-        PowerShellDisksResource resource = new PowerShellDisksResource(VM_ID, poolMap);
+        PowerShellDisksResource resource = new PowerShellDisksResource(VM_ID, poolMap, "get-vm");
 
         Disk disk = new Disk();
         disk.setSize(DISK_SIZE_BYTES);
@@ -181,7 +181,7 @@ public class PowerShellDevicesResourceTest extends Assert {
 
     @Test
     public void testDiskRemove() throws Exception {
-        PowerShellDisksResource resource = new PowerShellDisksResource(VM_ID, poolMap);
+        PowerShellDisksResource resource = new PowerShellDisksResource(VM_ID, poolMap, "get-vm");
 
         String command = MessageFormat.format(REMOVE_DISK_COMMAND, VM_ID, DISK_ID);
 

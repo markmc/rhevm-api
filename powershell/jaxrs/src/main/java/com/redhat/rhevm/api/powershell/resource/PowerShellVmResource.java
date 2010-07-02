@@ -139,7 +139,7 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
 
     @Override
     public PowerShellDisksResource getDisksResource() {
-        return new PowerShellDisksResource(getId(), shellPools);
+        return new PowerShellDisksResource(getId(), shellPools, "get-vm");
     }
 
     @Override

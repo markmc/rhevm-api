@@ -23,6 +23,7 @@ import java.util.concurrent.Executor;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Template;
+import com.redhat.rhevm.api.resource.DevicesResource;
 import com.redhat.rhevm.api.resource.TemplateResource;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
@@ -48,4 +49,6 @@ public class MockTemplateResource extends AbstractMockResource<Template> impleme
     public Template get(UriInfo uriInfo) {
         return addLinks();
     }
+
+    @Override public DevicesResource getDisksResource()  { return null; }
 }

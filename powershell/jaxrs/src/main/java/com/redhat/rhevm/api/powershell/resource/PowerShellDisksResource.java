@@ -35,8 +35,8 @@ public class PowerShellDisksResource
     extends PowerShellReadOnlyDisksResource
     implements DevicesResource<Disk, Disks> {
 
-    public PowerShellDisksResource(String parentId, PowerShellPoolMap shellPools) {
-        super(parentId, shellPools);
+    public PowerShellDisksResource(String parentId, PowerShellPoolMap shellPools, String getCommand) {
+        super(parentId, shellPools, getCommand);
     }
 
     @Override
