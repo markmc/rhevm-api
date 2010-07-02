@@ -28,11 +28,11 @@ import com.redhat.rhevm.api.resource.ReadOnlyDevicesResource;
 public abstract class AbstractPowerShellDevicesResource<D extends BaseDevice, C extends BaseDevices>
     implements ReadOnlyDevicesResource<D, C> {
 
-    protected String vmId;
+    protected String parentId;
     protected PowerShellPoolMap shellPools;
 
-    public AbstractPowerShellDevicesResource(String vmId, PowerShellPoolMap shellPools) {
-        this.vmId = vmId;
+    public AbstractPowerShellDevicesResource(String parentId, PowerShellPoolMap shellPools) {
+        this.parentId = parentId;
         this.shellPools = shellPools;
     }
 

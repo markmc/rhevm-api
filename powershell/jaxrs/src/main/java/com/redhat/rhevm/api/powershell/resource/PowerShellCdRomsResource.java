@@ -36,14 +36,14 @@ public class PowerShellCdRomsResource
 
     private static final String CDROM_ID = Integer.toString("cdrom".hashCode());
 
-    public PowerShellCdRomsResource(String vmId, PowerShellPoolMap shellPools) {
-        super(vmId, shellPools);
+    public PowerShellCdRomsResource(String parentId, PowerShellPoolMap shellPools) {
+        super(parentId, shellPools);
     }
 
     private void updateCdRom(String cdIsoPath) {
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$v = get-vm " + PowerShellUtils.escape(vmId) + "\n");
+        buf.append("$v = get-vm " + PowerShellUtils.escape(parentId) + "\n");
         buf.append("$v.cdisopath = " + PowerShellUtils.escape(cdIsoPath) + "\n");
         buf.append("update-vm -vmobject $v");
 

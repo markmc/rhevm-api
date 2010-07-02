@@ -35,8 +35,8 @@ public class PowerShellDisksResource
     extends PowerShellReadOnlyDisksResource
     implements DevicesResource<Disk, Disks> {
 
-    public PowerShellDisksResource(String vmId, PowerShellPoolMap shellPools) {
-        super(vmId, shellPools);
+    public PowerShellDisksResource(String parentId, PowerShellPoolMap shellPools) {
+        super(parentId, shellPools);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class PowerShellDisksResource
         }
         buf.append("\n");
 
-        buf.append("$v = get-vm " + PowerShellUtils.escape(vmId) + "\n");
+        buf.append("$v = get-vm " + PowerShellUtils.escape(parentId) + "\n");
 
         buf.append("add-disk -diskobject $d -vmobject $v");
         if (disk.getStorageDomain() != null) {
@@ -101,7 +101,7 @@ public class PowerShellDisksResource
         StringBuilder buf = new StringBuilder();
 
         buf.append("remove-disk");
-        buf.append(" -vmid " + PowerShellUtils.escape(vmId));
+        buf.append(" -vmid " + PowerShellUtils.escape(parentId));
         buf.append(" -diskids " + PowerShellUtils.escape(id));
 
         PowerShellCmd.runCommand(getShell(), buf.toString());

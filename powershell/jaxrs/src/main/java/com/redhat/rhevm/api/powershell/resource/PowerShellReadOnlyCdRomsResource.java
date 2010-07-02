@@ -32,8 +32,8 @@ public class PowerShellReadOnlyCdRomsResource extends AbstractPowerShellDevicesR
 
     private static final String CDROM_ID = Integer.toString("cdrom".hashCode());
 
-    public PowerShellReadOnlyCdRomsResource(String vmId, PowerShellPoolMap shellPools) {
-        super(vmId, shellPools);
+    public PowerShellReadOnlyCdRomsResource(String parentId, PowerShellPoolMap shellPools) {
+        super(parentId, shellPools);
     }
 
     protected CdRom buildCdRom(String cdIsoPath) {
@@ -42,7 +42,7 @@ public class PowerShellReadOnlyCdRomsResource extends AbstractPowerShellDevicesR
         cdrom.setIso(new Iso());
         cdrom.getIso().setId(cdIsoPath);
         cdrom.setVm(new VM());
-        cdrom.getVm().setId(vmId);
+        cdrom.getVm().setId(parentId);
         return cdrom;
     }
 
@@ -50,7 +50,7 @@ public class PowerShellReadOnlyCdRomsResource extends AbstractPowerShellDevicesR
     public CdRoms getDevices() {
         CdRoms cdroms = new CdRoms();
 
-        PowerShellVM vm = PowerShellVmResource.runAndParseSingle(getShell(), "get-vm " + PowerShellUtils.escape(vmId));
+        PowerShellVM vm = PowerShellVmResource.runAndParseSingle(getShell(), "get-vm " + PowerShellUtils.escape(parentId));
 
         if (vm.getCdIsoPath() != null) {
             cdroms.getCdRoms().add(buildCdRom(vm.getCdIsoPath()));

@@ -36,15 +36,15 @@ public class PowerShellNicsResource
     extends PowerShellReadOnlyNicsResource
     implements DevicesResource<NIC, Nics> {
 
-    public PowerShellNicsResource(String vmId, PowerShellPoolMap shellPools) {
-        super(vmId, shellPools);
+    public PowerShellNicsResource(String parentId, PowerShellPoolMap shellPools) {
+        super(parentId, shellPools);
     }
 
     @Override
     public Response add(UriInfo uriInfo, NIC nic) {
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$v = get-vm " + PowerShellUtils.escape(vmId) + "\n");
+        buf.append("$v = get-vm " + PowerShellUtils.escape(parentId) + "\n");
         buf.append("foreach ($i in get-networks) {");
         buf.append("  if ($i.networkid -eq " + PowerShellUtils.escape(nic.getNetwork().getId()) + ") {");
         buf.append("    $n = $i");
@@ -73,7 +73,7 @@ public class PowerShellNicsResource
     public void remove(String id) {
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$v = get-vm " + PowerShellUtils.escape(vmId) + "\n");
+        buf.append("$v = get-vm " + PowerShellUtils.escape(parentId) + "\n");
 
         buf.append("foreach ($i in $v.GetNetworkAdapters()) {");
         buf.append("  if ($i.id -eq " + PowerShellUtils.escape(id) + ") {");

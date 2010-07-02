@@ -30,12 +30,12 @@ import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 public class PowerShellReadOnlyNicsResource extends AbstractPowerShellDevicesResource<NIC, Nics> {
 
-    public PowerShellReadOnlyNicsResource(String vmId, PowerShellPoolMap shellPools) {
-        super(vmId, shellPools);
+    public PowerShellReadOnlyNicsResource(String parentId, PowerShellPoolMap shellPools) {
+        super(parentId, shellPools);
     }
 
     public Nics runAndParse(String command) {
-        return PowerShellVM.parseNics(vmId, PowerShellCmd.runCommand(getShell(), command));
+        return PowerShellVM.parseNics(parentId, PowerShellCmd.runCommand(getShell(), command));
     }
 
     public NIC runAndParseSingle(String command) {
@@ -48,7 +48,7 @@ public class PowerShellReadOnlyNicsResource extends AbstractPowerShellDevicesRes
     public Nics getDevices() {
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$v = get-vm " + PowerShellUtils.escape(vmId) + "\n");
+        buf.append("$v = get-vm " + PowerShellUtils.escape(parentId) + "\n");
         buf.append("$v.GetNetworkAdapters()\n");
 
         return runAndParse(buf.toString());

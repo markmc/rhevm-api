@@ -30,12 +30,12 @@ import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 public class PowerShellReadOnlyDisksResource extends AbstractPowerShellDevicesResource<Disk, Disks> {
 
-    public PowerShellReadOnlyDisksResource(String vmId, PowerShellPoolMap shellPools) {
-        super(vmId, shellPools);
+    public PowerShellReadOnlyDisksResource(String parentId, PowerShellPoolMap shellPools) {
+        super(parentId, shellPools);
     }
 
     public Disks runAndParse(String command) {
-        return PowerShellVM.parseDisks(vmId, PowerShellCmd.runCommand(getShell(), command));
+        return PowerShellVM.parseDisks(parentId, PowerShellCmd.runCommand(getShell(), command));
     }
 
     public Disk runAndParseSingle(String command) {
@@ -48,7 +48,7 @@ public class PowerShellReadOnlyDisksResource extends AbstractPowerShellDevicesRe
     public Disks getDevices() {
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$v = get-vm " + PowerShellUtils.escape(vmId) + "\n");
+        buf.append("$v = get-vm " + PowerShellUtils.escape(parentId) + "\n");
         buf.append("$v.GetDiskImages()\n");
 
         return runAndParse(buf.toString());
