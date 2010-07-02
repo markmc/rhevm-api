@@ -52,11 +52,11 @@ public class AuthorizationChallengerTest extends Assert {
     @Before
     public void setUp() {
         control = EasyMock.createNiceControl();
-        challenger = new AuthorizationChallenger();
     }
 
     @Test
     public void testAuthHeaderPresent() {
+        challenger = new AuthorizationChallenger();
         ResourceMethod resource = control.createMock(ResourceMethod.class);
         ServerResponse response = challenger.preProcess(setUpRequestExpectations(CREDENTIALS), resource);
         assertNull(response);
@@ -65,6 +65,7 @@ public class AuthorizationChallengerTest extends Assert {
 
     @Test
     public void testAuthHeaderMissing() {
+        challenger = new AuthorizationChallenger();
         ResourceMethod resource = control.createMock(ResourceMethod.class);
         ServerResponse response = challenger.preProcess(setUpRequestExpectations(null), resource);
         assertNotNull(response);
@@ -72,7 +73,30 @@ public class AuthorizationChallengerTest extends Assert {
         control.verify();
     }
 
+    @Test
+    public void testAuthHeaderValidateTrue() {
+        challenger = new ValidatingChallenger(true);
+        ResourceMethod resource = control.createMock(ResourceMethod.class);
+        ServerResponse response = challenger.preProcess(setUpRequestExpectations(CREDENTIALS, true), resource);
+        assertNull(response);
+        control.verify();
+    }
+
+    @Test
+    public void testAuthHeaderValidateFalse() {
+        challenger = new ValidatingChallenger(false);
+        ResourceMethod resource = control.createMock(ResourceMethod.class);
+        ServerResponse response = challenger.preProcess(setUpRequestExpectations(CREDENTIALS, false), resource);
+        assertNotNull(response);
+        assertEquals(Status.UNAUTHORIZED.getStatusCode(), response.getStatus());
+        control.verify();
+    }
+
     private HttpRequest setUpRequestExpectations(String credentials) {
+        return setUpRequestExpectations(credentials, credentials != null);
+    }
+
+    private HttpRequest setUpRequestExpectations(String credentials, boolean valid) {
         Authorizer authorizer = control.createMock(Authorizer.class);
         challenger.setAuthorizer(authorizer);
         Current current = control.createMock(Current.class);
@@ -86,11 +110,25 @@ public class AuthorizationChallengerTest extends Assert {
             Principal principal = new Principal(USER, SECRET, DOMAIN);
             expect(authorizer.decode(headers)).andReturn(principal);
             authHeaders.add(credentials);
-            current.set(principal);
-            EasyMock.expectLastCall();
+            if (valid) {
+                current.set(principal);
+                EasyMock.expectLastCall();
+            }
         }
         control.replay();
         return request;
     }
 
+    protected class ValidatingChallenger extends AuthorizationChallenger {
+        private boolean valid;
+
+        protected ValidatingChallenger(boolean valid) {
+            this.valid = valid;
+        }
+
+        @Override
+        protected boolean validate(Principal principal) {
+            return valid;
+        }
+    }
 }

@@ -63,14 +63,39 @@ public class AuthorizationChallenger implements PreProcessInterceptor {
         HttpHeaders headers = request.getHttpHeaders();
         List<String> auth = headers.getRequestHeader(HttpHeaders.AUTHORIZATION);
         if (auth == null || auth.size() == 0) {
-            response = ServerResponse.copyIfNotServerResponse(
-                           Response.status(Status.UNAUTHORIZED)
-                                   .header(HttpHeaders.WWW_AUTHENTICATE, authorizer.getChallenge(realm))
-                                   .build());
+            response = challenge();
         } else {
             Principal principal = authorizer.decode(headers);
-            current.set(principal);
+            if (validate(principal)) {
+                current.set(principal);
+            } else {
+                response = challenge();
+            }
         }
         return response;
+    }
+
+    /**
+     * By default principal validation is lazy, with the assumption that this
+     * will be initiated by the resource later on the dispatch path. This method
+     * allows subclasses to pursue an alternate strategy based on eager validation.
+     *
+     * @param principal  the decoded principal
+     * @return           true iff dispatch should continue
+     */
+    protected boolean validate(Principal principal) {
+        return true;
+    }
+
+    /**
+     * Issue 401 challenge on missing or invalid credentials.
+     *
+     * @return ServerResponse containing challenge
+     */
+    private ServerResponse challenge() {
+        return ServerResponse.copyIfNotServerResponse(
+                   Response.status(Status.UNAUTHORIZED)
+                           .header(HttpHeaders.WWW_AUTHENTICATE, authorizer.getChallenge(realm))
+                           .build());
     }
 }
