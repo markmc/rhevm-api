@@ -25,75 +25,19 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.NIC;
 import com.redhat.rhevm.api.model.Nics;
 import com.redhat.rhevm.api.model.Network;
-
 import com.redhat.rhevm.api.common.util.LinkHelper;
-import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+import com.redhat.rhevm.api.resource.DevicesResource;
 
 
-public class PowerShellNicsResource extends AbstractPowerShellDevicesResource<NIC, Nics> {
+public class PowerShellNicsResource
+    extends PowerShellReadOnlyNicsResource
+    implements DevicesResource<NIC, Nics> {
 
     public PowerShellNicsResource(String vmId, PowerShellPoolMap shellPools) {
         super(vmId, shellPools);
-    }
-
-    public Nics runAndParse(String command) {
-        return PowerShellVM.parseNics(vmId, PowerShellCmd.runCommand(getShell(), command));
-    }
-
-    public NIC runAndParseSingle(String command) {
-        Nics nics = runAndParse(command);
-
-        return (nics != null && !nics.getNics().isEmpty()) ? nics.getNics().get(0) : null;
-    }
-
-    @Override
-    public Nics getDevices() {
-        StringBuilder buf = new StringBuilder();
-
-        buf.append("$v = get-vm " + PowerShellUtils.escape(vmId) + "\n");
-        buf.append("$v.GetNetworkAdapters()\n");
-
-        return runAndParse(buf.toString());
-    }
-
-    /* Map the network names to network ID on the supplied network
-     * interfaces. The powershell output only includes the network name.
-     *
-     * @param nic  the NIC to modify
-     * @return     the modified NIC
-     */
-    private NIC lookupNetworkId(NIC nic) {
-        StringBuilder buf = new StringBuilder();
-
-        buf.append("$n = get-networks\n");
-        buf.append("foreach ($i in $n) {");
-        buf.append("  if ($i.name -eq " + PowerShellUtils.escape(nic.getNetwork().getName()) + ") {");
-        buf.append("    $i");
-        buf.append("  }");
-        buf.append("}");
-
-        Network network = new Network();
-        network.setId(PowerShellNetworkResource.runAndParseSingle(getShell(), buf.toString()).getId());
-        nic.setNetwork(network);
-
-        return nic;
-    }
-
-    @Override
-    public NIC addLinks(NIC nic) {
-        return LinkHelper.addLinks(lookupNetworkId(nic));
-    }
-
-    @Override
-    public Nics list() {
-        Nics nics = getDevices();
-        for (NIC nic : nics.getNics()) {
-            addLinks(nic);
-        }
-        return nics;
     }
 
     @Override
@@ -139,10 +83,5 @@ public class PowerShellNicsResource extends AbstractPowerShellDevicesResource<NI
         buf.append("remove-networkadapter -vmobject $v -networkadapterobject $n");
 
         PowerShellCmd.runCommand(getShell(), buf.toString());
-    }
-
-    @Override
-    public PowerShellDeviceResource<NIC, Nics> getDeviceSubResource(String id) {
-        return new PowerShellDeviceResource<NIC, Nics>(this, id, shellPools);
     }
 }

@@ -18,56 +18,59 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
-
 import com.redhat.rhevm.api.model.CdRom;
 import com.redhat.rhevm.api.model.CdRoms;
-import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.model.Iso;
+import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.common.util.LinkHelper;
+import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
-import com.redhat.rhevm.api.resource.DevicesResource;
 
 
-public class PowerShellCdRomsResource
-    extends PowerShellReadOnlyCdRomsResource
-    implements DevicesResource<CdRom, CdRoms> {
+public class PowerShellReadOnlyCdRomsResource extends AbstractPowerShellDevicesResource<CdRom, CdRoms> {
 
     private static final String CDROM_ID = Integer.toString("cdrom".hashCode());
 
-    public PowerShellCdRomsResource(String vmId, PowerShellPoolMap shellPools) {
+    public PowerShellReadOnlyCdRomsResource(String vmId, PowerShellPoolMap shellPools) {
         super(vmId, shellPools);
     }
 
-    private void updateCdRom(String cdIsoPath) {
-        StringBuilder buf = new StringBuilder();
-
-        buf.append("$v = get-vm " + PowerShellUtils.escape(vmId) + "\n");
-        buf.append("$v.cdisopath = " + PowerShellUtils.escape(cdIsoPath) + "\n");
-        buf.append("update-vm -vmobject $v");
-
-        PowerShellCmd.runCommand(getShell(), buf.toString());
+    protected CdRom buildCdRom(String cdIsoPath) {
+        CdRom cdrom = new CdRom();
+        cdrom.setId(CDROM_ID);
+        cdrom.setIso(new Iso());
+        cdrom.getIso().setId(cdIsoPath);
+        cdrom.setVm(new VM());
+        cdrom.getVm().setId(vmId);
+        return cdrom;
     }
 
     @Override
-    public Response add(UriInfo uriInfo, CdRom cdrom) {
-        String cdIsoPath = cdrom.getIso().getId();
+    public CdRoms getDevices() {
+        CdRoms cdroms = new CdRoms();
 
-        updateCdRom(cdIsoPath);
+        PowerShellVM vm = PowerShellVmResource.runAndParseSingle(getShell(), "get-vm " + PowerShellUtils.escape(vmId));
 
-        cdrom = addLinks(buildCdRom(cdIsoPath));
-
-        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(cdrom.getId());
-
-        return Response.created(uriBuilder.build()).entity(cdrom).build();
-    }
-
-    @Override
-    public void remove(String id) {
-        if (id.equals(CDROM_ID)) {
-            updateCdRom("");
+        if (vm.getCdIsoPath() != null) {
+            cdroms.getCdRoms().add(buildCdRom(vm.getCdIsoPath()));
         }
+
+        return cdroms;
+    }
+
+    @Override
+    public CdRom addLinks(CdRom cdrom) {
+        return LinkHelper.addLinks(cdrom);
+    }
+
+    @Override
+    public CdRoms list() {
+        CdRoms cdroms = getDevices();
+        for (CdRom cdrom : cdroms.getCdRoms()) {
+            addLinks(cdrom);
+        }
+        return cdroms;
     }
 
     @Override

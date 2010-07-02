@@ -18,15 +18,11 @@
  */
 package com.redhat.rhevm.api.resource;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 import com.redhat.rhevm.api.model.BaseDevice;
@@ -34,15 +30,19 @@ import com.redhat.rhevm.api.model.BaseDevices;
 
 
 @Produces(MediaType.APPLICATION_XML)
-public interface DevicesResource<D extends BaseDevice, C extends BaseDevices>
-    extends ReadOnlyDevicesResource<D, C> {
+public interface ReadOnlyDevicesResource<D extends BaseDevice, C extends BaseDevices> {
 
-    @POST
+    @GET
     @Formatted
-    @Consumes(MediaType.APPLICATION_XML)
-    public Response add(@Context UriInfo uriInfo, D device);
+    public C list();
 
-    @DELETE
+    /**
+     * Sub-resource locator method, returns individual DeviceResource on which the
+     * remainder of the URI is dispatched.
+     *
+     * @param id  the Device ID
+     * @return    matching subresource if found
+     */
     @Path("{id}")
-    public void remove(@PathParam("id") String id);
+    public DeviceResource<D> getDeviceSubResource(@PathParam("id") String id);
 }

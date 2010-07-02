@@ -24,53 +24,19 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.Disks;
-
-import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.common.util.ReflectionHelper;
-import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+import com.redhat.rhevm.api.resource.DevicesResource;
 
 
-public class PowerShellDisksResource extends AbstractPowerShellDevicesResource<Disk, Disks> {
+public class PowerShellDisksResource
+    extends PowerShellReadOnlyDisksResource
+    implements DevicesResource<Disk, Disks> {
 
     public PowerShellDisksResource(String vmId, PowerShellPoolMap shellPools) {
         super(vmId, shellPools);
-    }
-
-    public Disks runAndParse(String command) {
-        return PowerShellVM.parseDisks(vmId, PowerShellCmd.runCommand(getShell(), command));
-    }
-
-    public Disk runAndParseSingle(String command) {
-        Disks disks = runAndParse(command);
-
-        return (disks != null && !disks.getDisks().isEmpty()) ? disks.getDisks().get(0) : null;
-    }
-
-    @Override
-    public Disks getDevices() {
-        StringBuilder buf = new StringBuilder();
-
-        buf.append("$v = get-vm " + PowerShellUtils.escape(vmId) + "\n");
-        buf.append("$v.GetDiskImages()\n");
-
-        return runAndParse(buf.toString());
-    }
-
-    @Override
-    public Disk addLinks(Disk disk) {
-        return LinkHelper.addLinks(disk);
-    }
-
-    @Override
-    public Disks list() {
-        Disks disks = getDevices();
-        for (Disk disk : disks.getDisks()) {
-            addLinks(disk);
-        }
-        return disks;
     }
 
     @Override
@@ -139,10 +105,5 @@ public class PowerShellDisksResource extends AbstractPowerShellDevicesResource<D
         buf.append(" -diskids " + PowerShellUtils.escape(id));
 
         PowerShellCmd.runCommand(getShell(), buf.toString());
-    }
-
-    @Override
-    public PowerShellDeviceResource<Disk, Disks> getDeviceSubResource(String id) {
-        return new PowerShellDeviceResource<Disk, Disks>(this, id, shellPools);
     }
 }
