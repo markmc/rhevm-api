@@ -24,7 +24,7 @@ import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.Templates;
 import com.redhat.rhevm.api.resource.TemplateResource;
 import com.redhat.rhevm.api.resource.TemplatesResource;
-import com.redhat.rhevm.api.common.util.LinkHelper;
+import com.redhat.rhevm.api.powershell.model.PowerShellTemplate;
 
 public class PowerShellTemplatesResource
     extends AbstractPowerShellCollectionResource<Template, PowerShellTemplateResource>
@@ -33,8 +33,8 @@ public class PowerShellTemplatesResource
     @Override
     public Templates list(UriInfo uriInfo) {
         Templates ret = new Templates();
-        for (Template template : PowerShellTemplateResource.runAndParse(getShell(), getSelectCommand("select-template", uriInfo, Template.class))) {
-            ret.getTemplates().add(LinkHelper.addLinks(template));
+        for (PowerShellTemplate template : PowerShellTemplateResource.runAndParse(getShell(), getSelectCommand("select-template", uriInfo, Template.class))) {
+            ret.getTemplates().add(PowerShellTemplateResource.addLinks(template));
         }
         return ret;
     }

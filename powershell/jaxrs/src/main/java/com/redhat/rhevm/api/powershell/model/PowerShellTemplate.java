@@ -25,14 +25,14 @@ import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
-public class PowerShellTemplate {
+public class PowerShellTemplate extends Template {
 
-    public static ArrayList<Template> parse(String output) {
+    public static ArrayList<PowerShellTemplate> parse(String output) {
         ArrayList<HashMap<String,String>> templatesProps = PowerShellUtils.parseProps(output);
-        ArrayList<Template> ret = new ArrayList<Template>();
+        ArrayList<PowerShellTemplate> ret = new ArrayList<PowerShellTemplate>();
 
         for (HashMap<String,String> props : templatesProps) {
-            Template template = new Template();
+            PowerShellTemplate template = new PowerShellTemplate();
 
             template.setId(props.get("templateid"));
             template.setName(props.get("name"));

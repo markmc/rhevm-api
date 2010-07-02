@@ -27,7 +27,7 @@ import com.redhat.rhevm.api.model.Template;
 
 public class PowerShellTemplateTest extends PowerShellModelTest {
 
-    private void testTemplate(Template n, String id, String name, String description) {
+    private void testTemplate(PowerShellTemplate n, String id, String name, String description) {
         assertEquals(n.getId(), id);
         assertEquals(n.getName(), name);
         assertEquals(n.getDescription(), description);
@@ -38,7 +38,7 @@ public class PowerShellTemplateTest extends PowerShellModelTest {
         String data = readFileContents("template.data");
         assertNotNull(data);
 
-        ArrayList<Template> templates = PowerShellTemplate.parse(data);
+        ArrayList<PowerShellTemplate> templates = PowerShellTemplate.parse(data);
 
         assertEquals(templates.size(), 1);
 
