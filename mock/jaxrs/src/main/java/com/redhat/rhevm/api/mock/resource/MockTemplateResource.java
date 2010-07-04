@@ -51,4 +51,5 @@ public class MockTemplateResource extends AbstractMockResource<Template> impleme
     }
 
     @Override public DevicesResource getDisksResource()  { return null; }
+    @Override public DevicesResource getNicsResource()   { return null; }
 }

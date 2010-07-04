@@ -192,7 +192,7 @@ public class PowerShellDevicesResourceTest extends Assert {
 
     @Test
     public void testNicGet() throws Exception {
-        PowerShellNicsResource parent = new PowerShellNicsResource(VM_ID, poolMap);
+        PowerShellNicsResource parent = new PowerShellNicsResource(VM_ID, poolMap, "get-vm");
         PowerShellDeviceResource<NIC, Nics> resource =
             new PowerShellDeviceResource<NIC, Nics>(parent, NIC_ID, poolMap);
 
@@ -206,7 +206,7 @@ public class PowerShellDevicesResourceTest extends Assert {
 
     @Test
     public void testNicList() throws Exception {
-        PowerShellNicsResource resource = new PowerShellNicsResource(VM_ID, poolMap);
+        PowerShellNicsResource resource = new PowerShellNicsResource(VM_ID, poolMap, "get-vm");
 
         String [] commands = { GET_NICS_CMD, LOOKUP_NETWORK_ID_COMMAND };
         String [] returns = { GET_NICS_RETURN, LOOKUP_NETWORK_ID_RETURN };
@@ -218,7 +218,7 @@ public class PowerShellDevicesResourceTest extends Assert {
 
     @Test
     public void testNicAdd() throws Exception {
-        PowerShellNicsResource resource = new PowerShellNicsResource(VM_ID, poolMap);
+        PowerShellNicsResource resource = new PowerShellNicsResource(VM_ID, poolMap, "get-vm");
 
         NIC nic = new NIC();
         nic.setName(NIC_NAME);
@@ -239,7 +239,7 @@ public class PowerShellDevicesResourceTest extends Assert {
 
     @Test
     public void testNicRemove() throws Exception {
-        PowerShellNicsResource resource = new PowerShellNicsResource(VM_ID, poolMap);
+        PowerShellNicsResource resource = new PowerShellNicsResource(VM_ID, poolMap, "get-vm");
 
         String command = MessageFormat.format(REMOVE_NIC_COMMAND, VM_ID, NIC_ID);
 

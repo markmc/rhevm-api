@@ -36,8 +36,8 @@ public class PowerShellNicsResource
     extends PowerShellReadOnlyNicsResource
     implements DevicesResource<NIC, Nics> {
 
-    public PowerShellNicsResource(String parentId, PowerShellPoolMap shellPools) {
-        super(parentId, shellPools);
+    public PowerShellNicsResource(String parentId, PowerShellPoolMap shellPools, String getCommand) {
+        super(parentId, shellPools, getCommand);
     }
 
     @Override

@@ -27,6 +27,8 @@ import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.Disks;
+import com.redhat.rhevm.api.model.NIC;
+import com.redhat.rhevm.api.model.Nics;
 import com.redhat.rhevm.api.model.Template;
 
 
@@ -39,4 +41,7 @@ public interface TemplateResource {
 
     @Path("disks")
     public ReadOnlyDevicesResource<Disk, Disks> getDisksResource();
+
+    @Path("nics")
+    public ReadOnlyDevicesResource<NIC, Nics> getNicsResource();
 }

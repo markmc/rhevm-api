@@ -144,6 +144,6 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
 
     @Override
     public PowerShellNicsResource getNicsResource() {
-        return new PowerShellNicsResource(getId(), shellPools);
+        return new PowerShellNicsResource(getId(), shellPools, "get-vm");
     }
 }

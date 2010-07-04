@@ -54,7 +54,7 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
     public static Template addLinks(PowerShellTemplate template) {
         Template ret = JAXBHelper.clone("template", Template.class, template);
 
-        String [] deviceCollections = { "disks" };
+        String [] deviceCollections = { "disks", "nics" };
 
         ret.getLinks().clear();
 
@@ -80,5 +80,10 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
     @Override
     public PowerShellReadOnlyDisksResource getDisksResource() {
         return new PowerShellReadOnlyDisksResource(getId(), shellPools, "get-template");
+    }
+
+    @Override
+    public PowerShellReadOnlyNicsResource getNicsResource() {
+        return new PowerShellReadOnlyNicsResource(getId(), shellPools, "get-template");
     }
 }
