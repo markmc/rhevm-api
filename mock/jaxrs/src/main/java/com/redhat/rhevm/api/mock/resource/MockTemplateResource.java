@@ -50,6 +50,7 @@ public class MockTemplateResource extends AbstractMockResource<Template> impleme
         return addLinks();
     }
 
+    @Override public DevicesResource getCdRomsResource() { return null; }
     @Override public DevicesResource getDisksResource()  { return null; }
     @Override public DevicesResource getNicsResource()   { return null; }
 }

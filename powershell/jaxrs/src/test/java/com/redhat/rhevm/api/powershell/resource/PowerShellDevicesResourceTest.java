@@ -103,7 +103,9 @@ public class PowerShellDevicesResourceTest extends Assert {
 
     @Test
     public void testCdRomGet() throws Exception {
-        PowerShellCdRomsResource parent = new PowerShellCdRomsResource(VM_ID, poolMap);
+        PowerShellCdRomsResource parent = new PowerShellCdRomsResource(VM_ID,
+                                                                       poolMap,
+                                                                       new PowerShellVmResource.CdRomQuery(VM_ID));
         PowerShellDeviceResource<CdRom, CdRoms> resource =
             new PowerShellDeviceResource<CdRom, CdRoms>(parent, CDROM_ID, poolMap);
 
@@ -113,7 +115,9 @@ public class PowerShellDevicesResourceTest extends Assert {
 
     @Test
     public void testCdRomList() throws Exception {
-        PowerShellCdRomsResource resource = new PowerShellCdRomsResource(VM_ID, poolMap);
+        PowerShellCdRomsResource resource = new PowerShellCdRomsResource(VM_ID,
+                                                                         poolMap,
+                                                                         new PowerShellVmResource.CdRomQuery(VM_ID));
 
         setUpCmdExpectations(GET_CDROMS_CMD, GET_CDROMS_RETURN);
 
@@ -122,7 +126,9 @@ public class PowerShellDevicesResourceTest extends Assert {
 
     @Test
     public void testCdRomAdd() throws Exception {
-        PowerShellCdRomsResource resource = new PowerShellCdRomsResource(VM_ID, poolMap);
+        PowerShellCdRomsResource resource = new PowerShellCdRomsResource(VM_ID,
+                                                                         poolMap,
+                                                                         new PowerShellVmResource.CdRomQuery(VM_ID));
 
         CdRom cdrom = new CdRom();
         cdrom.setIso(new Iso());
@@ -137,7 +143,9 @@ public class PowerShellDevicesResourceTest extends Assert {
 
     @Test
     public void testCdRomRemove() throws Exception {
-        PowerShellCdRomsResource resource = new PowerShellCdRomsResource(VM_ID, poolMap);
+        PowerShellCdRomsResource resource = new PowerShellCdRomsResource(VM_ID,
+                                                                         poolMap,
+                                                                         new PowerShellVmResource.CdRomQuery(VM_ID));
 
         String command = MessageFormat.format(UPDATE_CDROM_CMD, VM_ID, "");
 

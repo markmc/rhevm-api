@@ -24,6 +24,7 @@ import com.redhat.rhevm.api.model.Iso;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
+import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
@@ -32,8 +33,11 @@ public class PowerShellReadOnlyCdRomsResource extends AbstractPowerShellDevicesR
 
     private static final String CDROM_ID = Integer.toString("cdrom".hashCode());
 
-    public PowerShellReadOnlyCdRomsResource(String parentId, PowerShellPoolMap shellPools) {
+    private CdRomQuery query;
+
+    public PowerShellReadOnlyCdRomsResource(String parentId, PowerShellPoolMap shellPools, CdRomQuery query) {
         super(parentId, shellPools);
+        this.query = query;
     }
 
     protected CdRom buildCdRom(String cdIsoPath) {
@@ -50,10 +54,9 @@ public class PowerShellReadOnlyCdRomsResource extends AbstractPowerShellDevicesR
     public CdRoms getDevices() {
         CdRoms cdroms = new CdRoms();
 
-        PowerShellVM vm = PowerShellVmResource.runAndParseSingle(getShell(), "get-vm " + PowerShellUtils.escape(parentId));
-
-        if (vm.getCdIsoPath() != null) {
-            cdroms.getCdRoms().add(buildCdRom(vm.getCdIsoPath()));
+        String cdIsoPath = query.getCdIsoPath(getShell());
+        if (cdIsoPath != null) {
+            cdroms.getCdRoms().add(buildCdRom(cdIsoPath));
         }
 
         return cdroms;
@@ -76,5 +79,13 @@ public class PowerShellReadOnlyCdRomsResource extends AbstractPowerShellDevicesR
     @Override
     public PowerShellDeviceResource<CdRom, CdRoms> getDeviceSubResource(String id) {
         return new PowerShellDeviceResource<CdRom, CdRoms>(this, id, shellPools);
+    }
+
+    public static abstract class CdRomQuery {
+        protected String id;
+        public CdRomQuery(String id) {
+            this.id = id;
+        }
+        protected abstract String getCdIsoPath(PowerShellCmd shell);
     }
 }

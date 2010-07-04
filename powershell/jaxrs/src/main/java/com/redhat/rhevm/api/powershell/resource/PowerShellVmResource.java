@@ -132,9 +132,18 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
         return doAction(uriInfo, new CommandRunner(action, "detach-vm", "vm", getId(), getShell()));
     }
 
+    public static class CdRomQuery extends PowerShellCdRomsResource.CdRomQuery {
+        public CdRomQuery(String id) {
+            super(id);
+        }
+        @Override protected String getCdIsoPath(PowerShellCmd shell) {
+            return runAndParseSingle(shell, "get-vm " + PowerShellUtils.escape(id)).getCdIsoPath();
+        }
+    }
+
     @Override
     public PowerShellCdRomsResource getCdRomsResource() {
-        return new PowerShellCdRomsResource(getId(), shellPools);
+        return new PowerShellCdRomsResource(getId(), shellPools, new CdRomQuery(getId()));
     }
 
     @Override

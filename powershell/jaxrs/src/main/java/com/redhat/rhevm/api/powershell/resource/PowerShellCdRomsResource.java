@@ -36,8 +36,8 @@ public class PowerShellCdRomsResource
 
     private static final String CDROM_ID = Integer.toString("cdrom".hashCode());
 
-    public PowerShellCdRomsResource(String parentId, PowerShellPoolMap shellPools) {
-        super(parentId, shellPools);
+    public PowerShellCdRomsResource(String parentId, PowerShellPoolMap shellPools, CdRomQuery query) {
+        super(parentId, shellPools, query);
     }
 
     private void updateCdRom(String cdIsoPath) {

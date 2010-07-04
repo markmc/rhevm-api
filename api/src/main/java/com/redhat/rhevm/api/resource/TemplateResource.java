@@ -25,6 +25,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
+import com.redhat.rhevm.api.model.CdRom;
+import com.redhat.rhevm.api.model.CdRoms;
 import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.Disks;
 import com.redhat.rhevm.api.model.NIC;
@@ -38,6 +40,9 @@ public interface TemplateResource {
     @GET
     @Formatted
     public Template get(@Context UriInfo uriInfo);
+
+    @Path("cdroms")
+    public ReadOnlyDevicesResource<CdRom, CdRoms> getCdRomsResource();
 
     @Path("disks")
     public ReadOnlyDevicesResource<Disk, Disks> getDisksResource();

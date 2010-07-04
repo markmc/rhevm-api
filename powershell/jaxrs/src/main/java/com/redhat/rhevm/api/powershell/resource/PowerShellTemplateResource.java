@@ -54,7 +54,7 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
     public static Template addLinks(PowerShellTemplate template) {
         Template ret = JAXBHelper.clone("template", Template.class, template);
 
-        String [] deviceCollections = { "disks", "nics" };
+        String [] deviceCollections = { "cdroms", "disks", "nics" };
 
         ret.getLinks().clear();
 
@@ -75,6 +75,20 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
         buf.append("get-template -templateid " + PowerShellUtils.escape(getId()));
 
         return addLinks(runAndParseSingle(getShell(), buf.toString()));
+    }
+
+    public static class CdRomQuery extends PowerShellCdRomsResource.CdRomQuery {
+        public CdRomQuery(String id) {
+            super(id);
+        }
+        @Override protected String getCdIsoPath(PowerShellCmd shell) {
+            return runAndParseSingle(shell, "get-template " + PowerShellUtils.escape(id)).getCdIsoPath();
+        }
+    }
+
+    @Override
+    public PowerShellReadOnlyCdRomsResource getCdRomsResource() {
+        return new PowerShellReadOnlyCdRomsResource(getId(), shellPools, new CdRomQuery(getId()));
     }
 
     @Override
