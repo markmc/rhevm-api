@@ -97,7 +97,7 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
             buf.append(" $v.numofsockets = " + topology.getSockets() + "\n");
             buf.append(" $v.numofcpuspersocket = " + topology.getCores() + "\n");
         }
-        String bootSequence = PowerShellVM.buildBootSequence(vm);
+        String bootSequence = PowerShellVM.buildBootSequence(vm.getOs());
         if (bootSequence != null) {
             buf.append(" $v.defaultbootsequence = '" + bootSequence + "'\n");
         }

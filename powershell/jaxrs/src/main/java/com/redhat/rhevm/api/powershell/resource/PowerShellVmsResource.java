@@ -88,7 +88,7 @@ public class PowerShellVmsResource
             buf.append(" -numofsockets " + topology.getSockets());
             buf.append(" -numofcpuspersocket " + topology.getCores());
         }
-        String bootSequence = PowerShellVM.buildBootSequence(vm);
+        String bootSequence = PowerShellVM.buildBootSequence(vm.getOs());
         if (bootSequence != null) {
             buf.append(" -defaultbootsequence " + bootSequence);
         }

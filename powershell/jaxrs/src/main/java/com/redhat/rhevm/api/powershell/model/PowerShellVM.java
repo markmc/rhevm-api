@@ -54,12 +54,12 @@ public class PowerShellVM extends VM {
         this.cdIsoPath = cdIsoPath;
     }
 
-    public static String buildBootSequence(VM vm) {
-        if (vm.getOs() == null || vm.getOs().getBoot().size() <= 0) {
+    public static String buildBootSequence(OperatingSystem os) {
+        if (os == null || os.getBoot().size() <= 0) {
             return null;
         }
         String bootSequence = "";
-        for (OperatingSystem.Boot boot : vm.getOs().getBoot()) {
+        for (OperatingSystem.Boot boot : os.getBoot()) {
             if (boot.getDev() == null) {
                 continue;
             }
