@@ -35,11 +35,7 @@ import com.redhat.rhevm.api.model.Template;
 
 
 @Produces(MediaType.APPLICATION_XML)
-public interface TemplateResource {
-
-    @GET
-    @Formatted
-    public Template get(@Context UriInfo uriInfo);
+public interface TemplateResource extends UpdatableResource<Template> {
 
     @Path("cdroms")
     public ReadOnlyDevicesResource<CdRom, CdRoms> getCdRomsResource();

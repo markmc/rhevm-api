@@ -22,6 +22,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.mock.util.SimpleQueryEvaluator;
@@ -63,6 +65,27 @@ public class MockTemplatesResource extends AbstractMockQueryableResource<Templat
         }
 
         return ret;
+    }
+
+    @Override
+    public Response add(UriInfo uriInfo, Template template) {
+        MockTemplateResource resource = new MockTemplateResource(allocateId(Template.class), getExecutor());
+
+        resource.updateModel(template);
+
+        String id = resource.getId();
+        templates.put(id, resource);
+
+        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(id);
+
+        template = resource.addLinks();
+
+        return Response.created(uriBuilder.build()).entity(template).build();
+    }
+
+    @Override
+    public void remove(String id) {
+        templates.remove(id);
     }
 
     @Override

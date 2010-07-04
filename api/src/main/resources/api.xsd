@@ -547,6 +547,7 @@
       <xs:complexContent>
         <xs:extension base="BaseResource">
           <xs:sequence>
+            <xs:element ref="vm" minOccurs="0" maxOccurs="1"/>
             <xs:element name="status" type="TemplateStatus" minOccurs="0"/>
             <xs:element name="memory" type="xs:long" minOccurs="0"/>
             <xs:element name="cpu" type="CPU" minOccurs="0"/>

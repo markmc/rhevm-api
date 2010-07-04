@@ -18,14 +18,19 @@
  */
 package com.redhat.rhevm.api.resource;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
+import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.Templates;
 
 
@@ -36,6 +41,15 @@ public interface TemplatesResource {
     @GET
     @Formatted
     public Templates list(@Context UriInfo uriInfo);
+
+    @POST
+    @Formatted
+    @Consumes(MediaType.APPLICATION_XML)
+    public Response add(@Context UriInfo uriInfo, Template template);
+
+    @DELETE
+    @Path("{id}")
+    public void remove(@PathParam("id") String id);
 
     @Path("{id}")
     public TemplateResource getTemplateSubResource(@Context UriInfo uriInfo, @PathParam("id") String id);

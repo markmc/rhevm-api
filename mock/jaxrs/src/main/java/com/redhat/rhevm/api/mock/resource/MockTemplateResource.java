@@ -41,12 +41,30 @@ public class MockTemplateResource extends AbstractMockResource<Template> impleme
         super(id, executor);
     }
 
+    // FIXME: this needs to be atomic
+    public void updateModel(Template template) {
+        // update writable fields only
+        if (template.isSetName()) {
+            getModel().setName(template.getName());
+        }
+        if (template.isSetDescription()) {
+            getModel().setDescription(template.getDescription());
+        }
+    }
+
     public Template addLinks() {
         return LinkHelper.addLinks(JAXBHelper.clone("template", Template.class, getModel()));
     }
 
     @Override
     public Template get(UriInfo uriInfo) {
+        return addLinks();
+    }
+
+    @Override
+    public Template update(UriInfo uriInfo, Template template) {
+        validateUpdate(template);
+        updateModel(template);
         return addLinks();
     }
 

@@ -23,6 +23,7 @@ import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.model.CpuTopology;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.resource.TemplateResource;
@@ -30,6 +31,7 @@ import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellTemplate;
+import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
@@ -73,6 +75,38 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
         StringBuilder buf = new StringBuilder();
 
         buf.append("get-template -templateid " + PowerShellUtils.escape(getId()));
+
+        return addLinks(runAndParseSingle(getShell(), buf.toString()));
+    }
+
+    @Override
+    public Template update(UriInfo uriInfo, Template template) {
+        validateUpdate(template);
+
+        StringBuilder buf = new StringBuilder();
+
+        buf.append("$t = get-template " + PowerShellUtils.escape(getId()) + "\n");
+
+        if (template.getName() != null) {
+            buf.append("$t.name = " + PowerShellUtils.escape(template.getName()) + "\n");
+        }
+        if (template.getDescription() != null) {
+            buf.append("$t.description = " + PowerShellUtils.escape(template.getDescription()) + "\n");
+        }
+        if (template.isSetMemory()) {
+            buf.append(" $t.memsizemb = " + Math.round((double)template.getMemory()/(1024*1024)) + "\n");
+        }
+        if (template.getCpu() != null && template.getCpu().getTopology() != null) {
+            CpuTopology topology = template.getCpu().getTopology();
+            buf.append(" $t.numofsockets = " + topology.getSockets() + "\n");
+            buf.append(" $t.numofcpuspersocket = " + topology.getCores() + "\n");
+        }
+        String bootSequence = PowerShellVM.buildBootSequence(template.getOs());
+        if (bootSequence != null) {
+            buf.append(" $t.defaultbootsequence = '" + bootSequence + "'\n");
+        }
+
+        buf.append("update-template -templateobject $t");
 
         return addLinks(runAndParseSingle(getShell(), buf.toString()));
     }
