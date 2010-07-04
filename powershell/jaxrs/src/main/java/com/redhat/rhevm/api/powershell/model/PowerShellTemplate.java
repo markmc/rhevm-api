@@ -33,6 +33,14 @@ import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 public class PowerShellTemplate extends Template {
 
+    private String cdIsoPath;
+    public String getCdIsoPath() {
+        return cdIsoPath;
+    }
+    public void setCdIsoPath(String cdIsoPath) {
+        this.cdIsoPath = cdIsoPath;
+    }
+
     private static TemplateStatus parseStatus(HashMap<String,String> props, String key) {
         String s = props.get(key);
         if (s == null) return null;
@@ -53,6 +61,7 @@ public class PowerShellTemplate extends Template {
             template.setName(props.get("name"));
             template.setDescription(props.get("description"));
             template.setMemory(Long.parseLong(props.get("memsizemb")) * 1024 * 1024);
+            template.setCdIsoPath(props.get("cdisopath"));
 
             TemplateStatus status = parseStatus(props, "status");
             if (status != null) {
