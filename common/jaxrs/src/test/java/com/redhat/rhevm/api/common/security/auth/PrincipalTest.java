@@ -16,10 +16,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api.common.security;
+package com.redhat.rhevm.api.common.security.auth;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import com.redhat.rhevm.api.common.security.auth.Principal;
 
 public class PrincipalTest extends Assert {
 

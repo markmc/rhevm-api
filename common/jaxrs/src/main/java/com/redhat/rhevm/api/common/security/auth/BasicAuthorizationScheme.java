@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api.common.security;
+package com.redhat.rhevm.api.common.security.auth;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -25,7 +25,8 @@ import javax.ws.rs.core.HttpHeaders;
 
 import org.apache.commons.codec.binary.Base64;
 
-public class BasicAuthorizer implements Authorizer {
+
+public class BasicAuthorizationScheme implements Scheme {
 
     private static final String SCHEME = "Basic";
     private static final String CHALLANGE_TEMPLATE = SCHEME + " realm = \"{0}\"";
@@ -34,7 +35,7 @@ public class BasicAuthorizer implements Authorizer {
     private static String USER_DOMAIN_SEPARATOR = "\\";
 
     @Override
-    public String getScheme() {
+    public String getName() {
         return SCHEME;
     }
 

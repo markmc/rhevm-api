@@ -69,14 +69,14 @@
     <constructor-arg><ref bean="keepAliveUnit"/></constructor-arg>
     <constructor-arg><ref bean="taskQueue"/></constructor-arg>
   </bean>
-	
+
   <!-- BASIC Auth infrastructure -->
 
-  <bean id="authChallenger" class="com.redhat.rhevm.api.common.security.AuthorizationChallenger">
+  <bean id="authChallenger" class="com.redhat.rhevm.api.common.security.auth.Challenger">
     <property name="realm" value="RHEVM"/>
   </bean>
 
-  <bean id="basicAuth" class="com.redhat.rhevm.api.common.security.BasicAuthorizer"/>
+  <bean id="basicAuth" class="com.redhat.rhevm.api.common.security.auth.BasicAuthorizationScheme"/>
 
   <bean id="current" class="com.redhat.rhevm.api.common.invocation.Current"/>
 

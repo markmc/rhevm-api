@@ -22,7 +22,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import com.redhat.rhevm.api.common.security.Principal;
+import com.redhat.rhevm.api.common.security.auth.Principal;
 
 public class PowerShellPool {
 

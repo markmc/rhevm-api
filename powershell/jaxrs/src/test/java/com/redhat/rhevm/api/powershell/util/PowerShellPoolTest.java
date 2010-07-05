@@ -35,7 +35,7 @@ import static org.powermock.api.easymock.PowerMock.expectNew;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
 
-import com.redhat.rhevm.api.common.security.Principal;
+import com.redhat.rhevm.api.common.security.auth.Principal;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({PowerShellPool.class})

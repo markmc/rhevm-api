@@ -25,7 +25,7 @@ import java.util.Scanner;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.redhat.rhevm.api.common.security.Principal;
+import com.redhat.rhevm.api.common.security.auth.Principal;
 
 public class PowerShellCmd {
     private static final Log log = LogFactory.getLog(PowerShellCmd.class);

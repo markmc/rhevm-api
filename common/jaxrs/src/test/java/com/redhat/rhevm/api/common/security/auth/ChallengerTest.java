@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api.common.security;
+package com.redhat.rhevm.api.common.security.auth;
 
 import static org.easymock.EasyMock.expect;
 
@@ -36,27 +36,30 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.redhat.rhevm.api.common.invocation.Current;
+import com.redhat.rhevm.api.common.security.auth.Principal;
+import com.redhat.rhevm.api.common.security.auth.Scheme;
+import com.redhat.rhevm.api.common.security.auth.Challenger;
 
 import junit.framework.Assert;
 
-public class AuthorizationChallengerTest extends Assert {
+public class ChallengerTest extends Assert {
 
     private static final String CREDENTIALS = "Basic TWFnaHJlYlxBbGFkZGluOm9wZW4gc2VzYW1l";
     private static final String USER = "Aladdin";
     private static final String SECRET = "open sesame";
     private static final String DOMAIN = "Maghreb";
 
-    private AuthorizationChallenger challenger;
+    private Challenger challenger;
     private IMocksControl control;
 
     @Before
     public void setUp() {
+        challenger = new Challenger();
         control = EasyMock.createNiceControl();
     }
 
     @Test
     public void testAuthHeaderPresent() {
-        challenger = new AuthorizationChallenger();
         ResourceMethod resource = control.createMock(ResourceMethod.class);
         ServerResponse response = challenger.preProcess(setUpRequestExpectations(CREDENTIALS), resource);
         assertNull(response);
@@ -65,7 +68,6 @@ public class AuthorizationChallengerTest extends Assert {
 
     @Test
     public void testAuthHeaderMissing() {
-        challenger = new AuthorizationChallenger();
         ResourceMethod resource = control.createMock(ResourceMethod.class);
         ServerResponse response = challenger.preProcess(setUpRequestExpectations(null), resource);
         assertNotNull(response);
@@ -75,7 +77,7 @@ public class AuthorizationChallengerTest extends Assert {
 
     @Test
     public void testAuthHeaderValidateTrue() {
-        challenger = new ValidatingChallenger(true);
+        challenger.setValidator(new ConstValidator(true));
         ResourceMethod resource = control.createMock(ResourceMethod.class);
         ServerResponse response = challenger.preProcess(setUpRequestExpectations(CREDENTIALS, true), resource);
         assertNull(response);
@@ -84,7 +86,7 @@ public class AuthorizationChallengerTest extends Assert {
 
     @Test
     public void testAuthHeaderValidateFalse() {
-        challenger = new ValidatingChallenger(false);
+        challenger.setValidator(new ConstValidator(false));
         ResourceMethod resource = control.createMock(ResourceMethod.class);
         ServerResponse response = challenger.preProcess(setUpRequestExpectations(CREDENTIALS, false), resource);
         assertNotNull(response);
@@ -97,8 +99,8 @@ public class AuthorizationChallengerTest extends Assert {
     }
 
     private HttpRequest setUpRequestExpectations(String credentials, boolean valid) {
-        Authorizer authorizer = control.createMock(Authorizer.class);
-        challenger.setAuthorizer(authorizer);
+        Scheme authorizer = control.createMock(Scheme.class);
+        challenger.setScheme(authorizer);
         Current current = control.createMock(Current.class);
         challenger.setCurrent(current);
         HttpRequest request = control.createMock(HttpRequest.class);
@@ -119,15 +121,15 @@ public class AuthorizationChallengerTest extends Assert {
         return request;
     }
 
-    protected class ValidatingChallenger extends AuthorizationChallenger {
+    protected class ConstValidator implements Validator {
         private boolean valid;
 
-        protected ValidatingChallenger(boolean valid) {
+        protected ConstValidator(boolean valid) {
             this.valid = valid;
         }
 
         @Override
-        protected boolean validate(Principal principal) {
+        public boolean validate(Principal principal) {
             return valid;
         }
     }

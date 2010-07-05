@@ -1,7 +1,7 @@
-package com.redhat.rhevm.api.common.security;
+package com.redhat.rhevm.api.common.security.auth;
 
 /**
- * Encasulates user identity.
+ * Encapsulates user identity.
  */
 public class Principal {
 

@@ -16,30 +16,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api.common.security;
 
-import javax.ws.rs.core.HttpHeaders;
+package com.redhat.rhevm.api.common.security.auth;
 
-public interface Authorizer {
-    /**
-     * @return the authorization scheme (BASIC or DIGEST)
-     */
-    String getScheme();
+public interface Validator {
 
     /**
-     * Generate a challenge.
+     * By default principal validation is lazy, with the assumption
+     * that this will be initiated by the resource later on the
+     * dispatch path. This method allows subclasses to pursue an
+     * alternate strategy based on eager validation.  The injected
+     * validator, if present, will be called immediately after the
+     * credentials have been decoded.
      *
-     * @param realm the target realm
-     * @return      the challenge header to return in response to an
-     *              unauthorized request
+     * @param principal  the decoded principal
+     * @return           true iff dispatch should continue
      */
-    String getChallenge(String realm);
-
-    /**
-     * Decode the auth header and extract a principal (not necessarily
-     * fully validated as yet).
-     *
-     * @return the decoded principal
-     */
-    Principal decode(HttpHeaders headers);
+    boolean validate(Principal principal);
 }

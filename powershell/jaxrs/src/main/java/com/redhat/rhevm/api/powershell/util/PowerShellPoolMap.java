@@ -21,7 +21,7 @@ package com.redhat.rhevm.api.powershell.util;
 import java.util.concurrent.ExecutorService;
 
 import com.redhat.rhevm.api.common.invocation.Current;
-import com.redhat.rhevm.api.common.security.Principal;
+import com.redhat.rhevm.api.common.security.auth.Principal;
 import com.redhat.rhevm.api.common.util.ReapedMap;
 
 @SuppressWarnings("serial")

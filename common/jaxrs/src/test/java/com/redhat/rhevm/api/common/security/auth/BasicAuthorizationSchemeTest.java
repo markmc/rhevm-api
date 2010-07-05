@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api.common.security;
+package com.redhat.rhevm.api.common.security.auth;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,11 +28,15 @@ import org.easymock.classextension.IMocksControl;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.redhat.rhevm.api.common.security.auth.BasicAuthorizationScheme;
+import com.redhat.rhevm.api.common.security.auth.Principal;
+import com.redhat.rhevm.api.common.security.auth.Scheme;
+
 import junit.framework.Assert;
 
 import static org.easymock.classextension.EasyMock.expect;
 
-public class BasicAuthorizerTest extends Assert {
+public class BasicAuthorizationSchemeTest extends Assert {
 
     private static final String SHORT_CREDENTIALS = "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==";
     private static final String LONG_CREDENTIALS = "Basic TWFnaHJlYlxBbGFkZGluOm9wZW4gc2VzYW1l";
@@ -48,23 +52,23 @@ public class BasicAuthorizerTest extends Assert {
     private static final String DOMAIN = "Maghreb";
 
 
-    private Authorizer authorizer;
+    private Scheme scheme;
     private IMocksControl control;
 
     @Before
     public void setUp() {
         control = EasyMock.createNiceControl();
-        authorizer = new BasicAuthorizer();
+        scheme = new BasicAuthorizationScheme();
     }
 
     @Test
-    public void testScheme() {
-        assertEquals("Basic", authorizer.getScheme());
+    public void testSchemeName() {
+        assertEquals("Basic", scheme.getName());
     }
 
     @Test
     public void testDecodeShortCredentials() {
-        Principal principal = authorizer.decode(setUpHeadersExpectation(SHORT_CREDENTIALS));
+        Principal principal = scheme.decode(setUpHeadersExpectation(SHORT_CREDENTIALS));
         assertNotNull(principal);
         assertEquals(USER, principal.getUser());
         assertEquals(SECRET, principal.getSecret());
@@ -74,7 +78,7 @@ public class BasicAuthorizerTest extends Assert {
 
     @Test
     public void testDecodeLongCredentials() {
-        Principal principal = authorizer.decode(setUpHeadersExpectation(LONG_CREDENTIALS));
+        Principal principal = scheme.decode(setUpHeadersExpectation(LONG_CREDENTIALS));
         assertNotNull(principal);
         assertEquals(USER, principal.getUser());
         assertEquals(SECRET, principal.getSecret());
@@ -84,14 +88,14 @@ public class BasicAuthorizerTest extends Assert {
 
     @Test
     public void testDecodeBadCredentials() {
-        Principal principal = authorizer.decode(setUpHeadersExpectation(BAD_CREDENTIALS));
+        Principal principal = scheme.decode(setUpHeadersExpectation(BAD_CREDENTIALS));
         assertNull(principal);
         control.verify();
     }
 
     @Test
     public void testDecodeDigestCredentials() {
-        Principal principal = authorizer.decode(setUpHeadersExpectation(DIGEST_CREDENTIALS));
+        Principal principal = scheme.decode(setUpHeadersExpectation(DIGEST_CREDENTIALS));
         assertNull(principal);
         control.verify();
     }

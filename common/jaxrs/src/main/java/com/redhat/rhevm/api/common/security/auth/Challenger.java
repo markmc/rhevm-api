@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api.common.security;
+package com.redhat.rhevm.api.common.security.auth;
 
 import java.util.List;
 
@@ -39,18 +39,23 @@ import com.redhat.rhevm.api.common.invocation.Current;
 @Provider
 @ServerInterceptor
 @Precedence("SECURITY")
-public class AuthorizationChallenger implements PreProcessInterceptor {
+public class Challenger implements PreProcessInterceptor {
 
     private String realm;
-    private Authorizer authorizer;
+    private Scheme scheme;
+    private Validator validator;
     private Current current;
 
     public void setRealm(String realm) {
         this.realm = realm;
     }
 
-    public void setAuthorizer(Authorizer authorizer) {
-        this.authorizer = authorizer;
+    public void setScheme(Scheme scheme) {
+        this.scheme = scheme;
+    }
+
+    public void setValidator(Validator validator) {
+        this.validator = validator;
     }
 
     public void setCurrent(Current current) {
@@ -65,8 +70,8 @@ public class AuthorizationChallenger implements PreProcessInterceptor {
         if (auth == null || auth.size() == 0) {
             response = challenge();
         } else {
-            Principal principal = authorizer.decode(headers);
-            if (validate(principal)) {
+            Principal principal = scheme.decode(headers);
+            if (validator == null || validator.validate(principal)) {
                 current.set(principal);
             } else {
                 response = challenge();
@@ -95,7 +100,7 @@ public class AuthorizationChallenger implements PreProcessInterceptor {
     private ServerResponse challenge() {
         return ServerResponse.copyIfNotServerResponse(
                    Response.status(Status.UNAUTHORIZED)
-                           .header(HttpHeaders.WWW_AUTHENTICATE, authorizer.getChallenge(realm))
+                           .header(HttpHeaders.WWW_AUTHENTICATE, scheme.getChallenge(realm))
                            .build());
     }
 }
