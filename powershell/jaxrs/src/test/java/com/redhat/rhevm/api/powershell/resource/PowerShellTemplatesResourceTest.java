@@ -77,7 +77,7 @@ public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectio
     @Test
     public void testAddWithVmId() throws Exception {
         verifyResponse(
-            resource.add(setUpAddResourceExpectations(ADD_COMMAND_PROLOG + getAddCommand() + ADD_COMMAND_EPILOG,
+            resource.add(setUpAddResourceExpectations(ADD_COMMAND_PROLOG + getAddCommand(true) + ADD_COMMAND_EPILOG,
                                                       getAddReturn(ADD_RETURN_EPILOG),
                                                       NEW_NAME),
                          getModel(NEW_NAME)),
@@ -90,7 +90,7 @@ public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectio
         model.setCluster(null);
 
         verifyResponse(
-            resource.add(setUpAddResourceExpectations(ADD_COMMAND_PROLOG + getAddCommand() + ADD_COMMAND_NO_CLUSTER_EPILOG,
+            resource.add(setUpAddResourceExpectations(ADD_COMMAND_PROLOG + getAddCommand(true) + ADD_COMMAND_NO_CLUSTER_EPILOG,
                                                       getAddReturn(ADD_NO_CLUSTER_RETURN_EPILOG),
                                                       NEW_NAME),
                          model),
@@ -104,7 +104,7 @@ public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectio
         model.getVm().setName(VM_NAME);
 
         verifyResponse(
-            resource.add(setUpAddResourceExpectations(VM_BY_NAME_ADD_COMMAND_PROLOG + getAddCommand() + ADD_COMMAND_EPILOG,
+            resource.add(setUpAddResourceExpectations(VM_BY_NAME_ADD_COMMAND_PROLOG + getAddCommand(true) + ADD_COMMAND_EPILOG,
                                                       getAddReturn(ADD_RETURN_EPILOG),
                                                       NEW_NAME),
                          model),
@@ -120,7 +120,7 @@ public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectio
         model.getCluster().setName(CLUSTER_NAME);
 
         verifyResponse(
-            resource.add(setUpAddResourceExpectations(CLUSTER_BY_NAME_ADD_COMMAND_PROLOG + getAddCommand() + CLUSTER_BY_NAME_ADD_COMMAND_EPILOG,
+            resource.add(setUpAddResourceExpectations(CLUSTER_BY_NAME_ADD_COMMAND_PROLOG + getAddCommand(true) + CLUSTER_BY_NAME_ADD_COMMAND_EPILOG,
                                                       getAddReturn(ADD_RETURN_EPILOG),
                                                       NEW_NAME),
                          model),

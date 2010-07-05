@@ -71,6 +71,7 @@ public class PowerShellTemplatesResource
         }
 
         buf.append("add-template");
+        buf.append(" -async");
 
         buf.append(" -name " + PowerShellUtils.escape(template.getName()) + "");
         buf.append(" -mastervm $v");

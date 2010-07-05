@@ -80,7 +80,7 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
         "{0}id: " + "eris".hashCode() + " \n name: eris {1}\n\n" +
         "{0}id: " + "orcus".hashCode() + " \n name: orcus {1}";
 
-    private static final String ADD_COMMAND = "add-{0} -name ''ceres'' ";
+    private static final String ADD_COMMAND = "add-{0}{1} -name ''ceres'' ";
     private static final String ADD_RETURN =
         "{0}id: " + "ceres".hashCode() + " \n name: ceres {1}\n\n";
 
@@ -250,8 +250,12 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
         return MessageFormat.format(QUERY_RETURN, individualName, epilog);
     }
 
+    protected String getAddCommand(boolean async) {
+        return MessageFormat.format(ADD_COMMAND, individualName, async ? " -async" : "");
+    }
+
     protected String getAddCommand() {
-        return MessageFormat.format(ADD_COMMAND, individualName);
+        return getAddCommand(false);
     }
 
     protected String getAddReturn() {
