@@ -180,6 +180,7 @@ class VmPool(Base):
 class Template(Base):
     NAME = "template"
     COLLECTION = "templates"
+    ELEMENTS = Base.ELEMENTS + ['status', 'memory', 'os', 'cpu', 'cluster', 'vm']
 
 TYPES = [ Action, Actions, Attachment, Boot, CdRom, Cluster, CPU, DataCenter, Disk, GracePeriod, Host, IP, Iso, Link, MAC, Network, NIC, OS, Storage, StorageDomain, Template, Topology, VLAN, VM, VmPool ]
 

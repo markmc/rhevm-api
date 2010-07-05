@@ -34,3 +34,15 @@ for fmt in [xmlfmt]:
 
    for template in t.get(links['templates']):
       t.get(template.href)
+
+   tmpl = fmt.Template()
+   tmpl.name = randomName('foo')
+   tmpl.vm = fmt.VM()
+   tmpl.vm.id = t.get(links['templates'])[0].id
+   tmpl = t.create(links['templates'], tmpl)
+
+   tmpl = t.get(tmpl.href)
+   tmpl.description = "Testing times"
+   tmpl = t.update(tmpl.href, tmpl, 200)
+
+   t.delete(tmpl.href)
