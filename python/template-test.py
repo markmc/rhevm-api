@@ -38,8 +38,19 @@ for fmt in [xmlfmt]:
    tmpl = fmt.Template()
    tmpl.name = randomName('foo')
    tmpl.vm = fmt.VM()
-   tmpl.vm.id = t.get(links['templates'])[0].id
+   tmpl.vm.id = t.get(links['vms'])[1].id
    tmpl = t.create(links['templates'], tmpl)
+
+   def waitFor(tmpl, status):
+      tmpl = t.get(tmpl.href)
+      while not hasattr(tmpl, 'status') or tmpl.status != status:
+         debug(opts, "waiting to go to %s", status)
+         time.sleep(1)
+         tmpl = t.get(tmpl.href)
+         continue
+      return tmpl
+
+   tmpl = waitFor(tmpl, 'OK')
 
    tmpl = t.get(tmpl.href)
    tmpl.description = "Testing times"
