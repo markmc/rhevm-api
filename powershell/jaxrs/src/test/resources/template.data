@@ -25,6 +25,6 @@ USBPolicy           : Enabled
 TimeZone            :
 AutoStartup         : False
 IsStateless         : False
-CdIsoPath           :
+CdIsoPath           : foo.iso
 DisplayType         : VNC
 Origin              : RHEVM

@@ -23,14 +23,24 @@ import org.junit.Test;
 import java.util.ArrayList;
 
 import com.redhat.rhevm.api.model.Template;
+import com.redhat.rhevm.api.model.TemplateStatus;
 
 
 public class PowerShellTemplateTest extends PowerShellModelTest {
 
-    private void testTemplate(PowerShellTemplate n, String id, String name, String description) {
-        assertEquals(n.getId(), id);
-        assertEquals(n.getName(), name);
-        assertEquals(n.getDescription(), description);
+    private void testTemplate(PowerShellTemplate t, String id, String name, String description, TemplateStatus status, Long memory, int sockets, int cores, String cdIsoPath, String clusterId) {
+        assertEquals(t.getId(), id);
+        assertEquals(t.getName(), name);
+        assertEquals(t.getDescription(), description);
+        assertEquals(t.getStatus(), status);
+        assertEquals(t.getMemory(), memory);
+        assertNotNull(t.getCpu());
+        assertNotNull(t.getCpu().getTopology());
+        assertEquals(t.getCpu().getTopology().getSockets(), sockets);
+        assertEquals(t.getCpu().getTopology().getCores(), cores);
+        assertEquals(t.getCdIsoPath(), cdIsoPath);
+        assertNotNull(t.getCluster());
+        assertEquals(t.getCluster().getId(), clusterId);
     }
 
     @Test
@@ -42,6 +52,6 @@ public class PowerShellTemplateTest extends PowerShellModelTest {
 
         assertEquals(templates.size(), 1);
 
-        testTemplate(templates.get(0), "00000000-0000-0000-0000-000000000000", "Blank", "Blank template");
+        testTemplate(templates.get(0), "00000000-0000-0000-0000-000000000000", "Blank", "Blank template", TemplateStatus.OK, 536870912L, 1, 1, "foo.iso", "0");
     }
 }
