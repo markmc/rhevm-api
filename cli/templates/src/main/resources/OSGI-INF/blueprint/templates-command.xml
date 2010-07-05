@@ -12,9 +12,39 @@
     <command name="templates/list">
       <action class="com.redhat.rhevm.api.command.templates.TemplatesListCommand">
         <property name="client" ref="baseClient" />
+        <property name="verboseDisplay" ref="templateVerboseDisplay" />
+      </action>
+    </command>
+    <command name="templates/remove">
+      <action class="com.redhat.rhevm.api.command.templates.TemplatesRemoveCommand">
+        <property name="client" ref="baseClient" />
+      </action>
+      <completers>
+        <ref component-id="templateNameCompleter" />
+      </completers>
+    </command>
+    <command name="templates/update">
+      <action class="com.redhat.rhevm.api.command.templates.TemplatesUpdateCommand">
+        <property name="client" ref="baseClient" />
+        <property name="verboseDisplay" ref="templateVerboseDisplay" />
+      </action>
+      <completers>
+        <ref component-id="templateNameCompleter" />
+      </completers>
+    </command>
+    <command name="templates/add">
+      <action class="com.redhat.rhevm.api.command.templates.TemplatesAddCommand">
+        <property name="client" ref="baseClient" />
+        <property name="verboseDisplay" ref="templateVerboseDisplay" />
       </action>
     </command>
   </command-bundle>
+
+  <bean id="templateNameCompleter" class="com.redhat.rhevm.api.command.templates.TemplateNameCompleter">
+    <property name="client" ref="baseClient" />
+  </bean>
+
+  <bean id="templateVerboseDisplay" class="com.redhat.rhevm.api.command.templates.TemplateVerboseDisplay"/>
 
   <bean id="baseClient" class="com.redhat.rhevm.api.command.base.BaseClient"  activation="eager">
     <property name="baseUrl" value="$[rhevm.base.url]"/>
