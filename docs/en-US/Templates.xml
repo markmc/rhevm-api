@@ -15,8 +15,28 @@
         <colspec colwidth="5*"/>
         <tbody>
           <row>
-            <entry><literal></literal></entry>
-            <entry></entry>
+            <entry><literal>status</literal></entry>
+            <entry>One of ILLEGAL, LOCKED or OK</entry>
+          </row>
+          <row>
+            <entry><literal>memory</literal></entry>
+            <entry>The amount of memory allocated to the guest, in bytes</entry>
+          </row>
+          <row>
+            <entry><literal>cpu</literal></entry>
+            <entry>The CPU <literal>topology</literal> (i.e. number of <literal>sockets</literal> and <literal>cores</literal>) available to the guest</entry>
+          </row>
+          <row>
+            <entry><literal>os</literal></entry>
+            <entry>A list of boot devices (using <literal>boot dev</literal>) - either <literal>cdrom</literal>, <literal>hd</literal> or <literal>network</literal></entry>
+          </row>
+          <row>
+            <entry><literal>cluster</literal></entry>
+            <entry>A reference to the cluster on which an instance of this template will run. See <xref linkend="chap-REST_API_Guide-Clusters"/></entry>
+          </row>
+          <row>
+            <entry><literal>vm</literal></entry>
+            <entry>A reference to the VM on which this template is based. See <xref linkend="chap-REST_API_Guide-VMs"/></entry>
           </row>
         </tbody>
       </tgroup>
@@ -29,14 +49,27 @@
 &lt;template id="00000000-0000-0000-0000-000000000000" href="templates/00000000-0000-0000-0000-000000000000"&gt;
   &lt;name&gt;Blank&lt;/name&gt;
   &lt;description&gt;Blank template&lt;/description&gt;
+  &lt;status&gt;OK&lt;/status&gt;
+  &lt;memory&gt;536870912&lt;/memory&gt;
+  &lt;cpu&gt;
+    &lt;topology cores="1" sockets="1"/&gt;
+  &lt;/cpu&gt;
+  &lt;os&gt;
+    &lt;boot dev="hd"/&gt;
+  &lt;/os&gt;
+  &lt;cluster id="0" href="clusters/0"/&gt;
   &lt;actions/&gt;
 &lt;/template&gt;
   </screen>
 
   <note>
     <para>
-      Templates are a read-only resource. Creating new templates and updating or deleting existing templates is not yet supported.
+      When creating a new template, the <literal>name</literal> and <literal>vm id</literal> elements are required. The <literal>name</literal>, <literal>description</literal>, <literal>memory</literal>, <literal>cpu topology</literal> and <literal>os boot dev</literal> properties may be updated post-creation.
     </para>
   </note>
+
+  <para>
+    Templates also have a number of read-only device collections through which the devices attached to template may be queried. Like with VMs, there are <literal>cdroms</literal>, <literal>disks</literal> and <literal>nics</literal> collections. See <xref linkend="sect-REST_API_Guide-VMs-Devices"/>.
+  </para>
 
 </chapter>
