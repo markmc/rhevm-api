@@ -65,7 +65,16 @@
       <includes>
         <include>config.properties</include>
         <include>org.apache.felix.karaf.features.cfg</include>
-        <exclude>org.apache.felix.karaf.management.cfg</exclude>
+      </includes>
+      <lineEnding>${line.ending}</lineEnding>
+      <fileMode>0644</fileMode>
+    </fileSet>
+
+    <fileSet>
+      <directory>${basedir}/src/main/release/rhevm-admin/etc</directory>
+      <outputDirectory>/rhevm-admin/etc/</outputDirectory>
+      <includes>
+        <include>org.apache.felix.karaf.management.cfg</include>
       </includes>
       <lineEnding>${line.ending}</lineEnding>
       <fileMode>0644</fileMode>
