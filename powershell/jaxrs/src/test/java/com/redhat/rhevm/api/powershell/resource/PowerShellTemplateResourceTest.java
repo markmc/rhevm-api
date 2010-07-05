@@ -21,9 +21,12 @@ package com.redhat.rhevm.api.powershell.resource;
 import java.net.URI;
 import java.util.concurrent.Executor;
 
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.model.Fault;
 import com.redhat.rhevm.api.model.Template;
 
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
@@ -43,8 +46,16 @@ public class PowerShellTemplateResourceTest extends AbstractPowerShellResourceTe
     private static final String TEMPLATE_ID = "12345";
     private static final String TEMPLATE_NAME = "sedna";
     private static final String TEMPLATE_DESCRIPTION = "this is a template";
+    private static final String NEW_NAME = "eris";
+    private static final String BAD_ID = "98765";
+
+    private static final String OTHER_PROPS = "memsizemb: 1024\ndefaultbootsequence: CDN\nnumofsockets: 2\nnumofcpuspersocket: 4\n";
+
     private static final String GET_COMMAND = "get-template -templateid '" + TEMPLATE_ID + "'";
-    private static final String GET_RETURN = "templateid: " + TEMPLATE_ID + "\nname: " + TEMPLATE_NAME + "\ndescription: " + TEMPLATE_DESCRIPTION + "\nmemsizemb: 1024\ndefaultbootsequence: CDN\nnumofsockets: 2\nnumofcpuspersocket: 4\n";
+    private static final String GET_RETURN = "templateid: " + TEMPLATE_ID + "\nname: " + TEMPLATE_NAME + "\ndescription: " + TEMPLATE_DESCRIPTION + "\n" + OTHER_PROPS;
+
+    private static final String UPDATE_COMMAND = "$t = get-template '" + TEMPLATE_ID + "'\n$t.name = '" + NEW_NAME + "'\nupdate-template -templateobject $t";
+    private static final String UPDATE_RETURN = "templateid: " + TEMPLATE_ID + "\n name: " + NEW_NAME + "\ndescription: " + TEMPLATE_DESCRIPTION + "\n" + OTHER_PROPS;
 
     protected PowerShellTemplateResource getResource(Executor executor, PowerShellPoolMap poolMap) {
         return new PowerShellTemplateResource(TEMPLATE_ID, executor, poolMap);
@@ -52,7 +63,28 @@ public class PowerShellTemplateResourceTest extends AbstractPowerShellResourceTe
 
     @Test
     public void testGet() throws Exception {
-        verifyTemplate(resource.get(setUpTemplateExpectations(GET_COMMAND, GET_RETURN)));
+        verifyTemplate(resource.get(setUpTemplateExpectations(GET_COMMAND, GET_RETURN)), TEMPLATE_NAME);
+    }
+
+    @Test
+    public void testGoodUpdate() throws Exception {
+        verifyTemplate(
+            resource.update(setUpTemplateExpectations(UPDATE_COMMAND, UPDATE_RETURN),
+                            getTemplate(NEW_NAME)),
+            NEW_NAME);
+    }
+
+    @Test
+    public void testBadUpdate() throws Exception {
+        try {
+            UriInfo uriInfo = createMock(UriInfo.class);
+            replayAll();
+            resource.update(uriInfo,
+                            getTemplate(BAD_ID, NEW_NAME));
+            fail("expected WebApplicationException on bad update");
+        } catch (WebApplicationException wae) {
+            verifyUpdateException(wae);
+        }
     }
 
     private UriInfo setUpTemplateExpectations(String command, String ret) throws Exception {
@@ -67,10 +99,29 @@ public class PowerShellTemplateResourceTest extends AbstractPowerShellResourceTe
         return uriInfo;
     }
 
-    private void verifyTemplate(Template template) {
+    private Template getTemplate(String name) {
+        return getTemplate(TEMPLATE_ID, name);
+    }
+
+    private Template getTemplate(String id, String name) {
+        Template template = new Template();
+        template.setId(id);
+        template.setName(name);
+        return template;
+    }
+
+    private void verifyTemplate(Template template, String name) {
         assertNotNull(template);
         assertEquals(template.getId(), TEMPLATE_ID);
-        assertEquals(template.getName(), TEMPLATE_NAME);
+        assertEquals(template.getName(), name);
         assertEquals(template.getDescription(), TEMPLATE_DESCRIPTION);
+    }
+
+    private void verifyUpdateException(WebApplicationException wae) {
+        assertEquals(409, wae.getResponse().getStatus());
+        Fault fault = (Fault)wae.getResponse().getEntity();
+        assertNotNull(fault);
+        assertEquals("Broken immutability constraint", fault.getReason());
+        assertEquals("Attempt to set immutable field: id", fault.getDetail());
     }
 }
