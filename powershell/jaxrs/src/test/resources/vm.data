@@ -1,16 +1,16 @@
 
 
-VmId                : 439c0c13-3e0a-489e-a514-1b07232ace41
-Name                : test_1
+VmId                : aa0e6522-5baf-4f92-86d3-716883de4359
+Name                : test
 Description         :
-HostClusterId       : 0
+HostClusterId       : 99408929-82cf-4dc7-a532-9d998063fa95
 TemplateId          : 00000000-0000-0000-0000-000000000000
 Session             : Unknown
 MemorySize          : 512
 Priority            : 1
 Domain              :
 OperatingSystem     : WindowsXP
-CreationDate        : 06/05/2010 13:08:00
+CreationDate        : 02/07/2010 10:27:02
 NumOfMonitors       : 1
 NumOfSockets        : 1
 NumOfCpusPerSocket  : 1
@@ -38,10 +38,56 @@ LoginTime           :
 CurrentUserName     :
 LastLogoutTime      :
 ElapsedTime         : 0
-RunningOnHost       : -1
-MigratingToHost     : -1
+RunningOnHost       : 00000000-0000-0000-0000-000000000000
+MigratingToHost     : 00000000-0000-0000-0000-000000000000
 ApplicationList     : {}
 DisplayPort         : 5910
 HighlyAvailable     : False
 TimeZone            : GMT Standard Time
-PoolId              : -1
+PoolId              : 00000000-0000-0000-0000-000000000000
+
+VmId                : 5114bb3e-a4e6-44b2-b783-b3eea7d84720
+Name                : testf13
+Description         :
+HostClusterId       : 99408929-82cf-4dc7-a532-9d998063fa95
+TemplateId          : 00000000-0000-0000-0000-000000000000
+Session             : Unknown
+MemorySize          : 512
+Priority            : 1
+Domain              :
+OperatingSystem     : OtherLinux
+CreationDate        : 02/07/2010 10:58:41
+NumOfMonitors       : 1
+NumOfSockets        : 1
+NumOfCpusPerSocket  : 1
+DefaultHostId       :
+NiceLevel           : 0
+FailBack            : False
+DefaultBootSequence : CDN
+VmType              : Desktop
+HypervisorType      : KVM
+OperationMode       : FullVirtualized
+AutoStartup         : False
+Stateless           : False
+DisplayType         : VNC
+CdIsoPath           :
+FloppyPath          :
+Origin              : RHEV
+KvmEnabled          : True
+RunAndPause         : False
+AcpiEnabled         : True
+Status              : Powering Up
+Ip                  :
+HostName            :
+UpTime              : 00:00:06
+LoginTime           :
+CurrentUserName     : Unknown
+LastLogoutTime      :
+ElapsedTime         : 6
+RunningOnHost       : 5f38363b-7457-4884-831e-78c27cebb31d
+MigratingToHost     : 00000000-0000-0000-0000-000000000000
+ApplicationList     : {}
+DisplayPort         : 5910
+HighlyAvailable     : False
+TimeZone            :
+PoolId              : 00000000-0000-0000-0000-000000000000
