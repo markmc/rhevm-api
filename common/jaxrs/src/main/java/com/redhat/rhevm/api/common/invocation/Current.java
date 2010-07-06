@@ -23,14 +23,12 @@ import java.util.Map;
 
 import javax.ws.rs.ext.Provider;
 
-import org.jboss.resteasy.annotations.interception.Precedence;
 import org.jboss.resteasy.annotations.interception.ServerInterceptor;
 import org.jboss.resteasy.core.ServerResponse;
 import org.jboss.resteasy.spi.interception.PostProcessInterceptor;
 
 @Provider
 @ServerInterceptor
-@Precedence("SECURITY")
 public class Current implements PostProcessInterceptor {
 
     private ThreadLocal<Map<Class<?>, Object>> currents;
