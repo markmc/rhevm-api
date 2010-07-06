@@ -31,6 +31,7 @@ import com.redhat.rhevm.api.model.DiskFormat;
 import com.redhat.rhevm.api.model.DiskInterface;
 import com.redhat.rhevm.api.model.DiskStatus;
 import com.redhat.rhevm.api.model.DiskType;
+import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.NIC;
 import com.redhat.rhevm.api.model.Nics;
 import com.redhat.rhevm.api.model.NicType;
@@ -43,6 +44,7 @@ import com.redhat.rhevm.api.model.VmPool;
 import com.redhat.rhevm.api.model.VmStatus;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+import com.redhat.rhevm.api.powershell.util.UUID;
 
 public class PowerShellVM extends VM {
 
@@ -144,6 +146,13 @@ public class PowerShellVM extends VM {
             OperatingSystem os = new OperatingSystem();
             parseBootDevices(os, props.get("defaultbootsequence"));
             vm.setOs(os);
+
+            if (props.get("runningonhost") != null &&
+                !props.get("runningonhost").equals(UUID.EMPTY)) {
+                Host host = new Host();
+                host.setId(props.get("runningonhost"));
+                vm.setHost(host);
+            }
 
             Cluster cluster = new Cluster();
             cluster.setId(props.get("hostclusterid"));

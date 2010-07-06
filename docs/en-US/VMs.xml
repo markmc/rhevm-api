@@ -30,6 +30,10 @@
             <entry>A list of boot devices (using <literal>boot dev</literal>) - either <literal>cdrom</literal>, <literal>hd</literal> or <literal>network</literal></entry>
           </row>
           <row>
+            <entry><literal>host</literal></entry>
+            <entry>A reference to the host which this VM is currently running on. See <xref linkend="chap-REST_API_Guide-Hosts"/></entry>
+          </row>
+          <row>
             <entry><literal>cluster</literal></entry>
             <entry>A reference to the cluster on which this VM will run. See <xref linkend="chap-REST_API_Guide-Clusters"/></entry>
           </row>

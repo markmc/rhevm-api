@@ -599,6 +599,7 @@
             <xs:element name="memory" type="xs:long" minOccurs="0"/>
             <xs:element name="cpu" type="CPU" minOccurs="0"/>
             <xs:element name="os" type="OperatingSystem" minOccurs="0"/>
+            <xs:element ref="host" minOccurs="0" maxOccurs="1"/>
             <xs:element ref="cluster" minOccurs="0" maxOccurs="1"/>
             <xs:element ref="template" minOccurs="0" maxOccurs="1"/>
             <xs:element ref="vmpool" minOccurs="0" maxOccurs="1">

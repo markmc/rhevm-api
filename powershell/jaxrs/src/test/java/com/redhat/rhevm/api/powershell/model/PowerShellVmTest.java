@@ -40,7 +40,7 @@ public class PowerShellVmTest extends PowerShellModelTest {
 
     private static final String VM_ID = "439c0c13-3e0a-489e-a514-1b07232ace41";
 
-    private void testVM(PowerShellVM v, String id, String name, String description, VmStatus status, Long memory, int sockets, int cores, String cdIsoPath, String clusterId, String templateId) {
+    private void testVM(PowerShellVM v, String id, String name, String description, VmStatus status, Long memory, int sockets, int cores, String cdIsoPath, String hostId, String clusterId, String templateId) {
         assertEquals(v.getId(), id);
         assertEquals(v.getName(), name);
         assertEquals(v.getDescription(), description);
@@ -77,10 +77,10 @@ public class PowerShellVmTest extends PowerShellModelTest {
 
         assertEquals(vms.size(), 2);
 
-        testVM(vms.get(0), "aa0e6522-5baf-4f92-86d3-716883de4359", "test", null, VmStatus.SHUTOFF, 536870912L, 1, 1, "foo.iso", "99408929-82cf-4dc7-a532-9d998063fa95", "00000000-0000-0000-0000-000000000000");
+        testVM(vms.get(0), "aa0e6522-5baf-4f92-86d3-716883de4359", "test", null, VmStatus.SHUTOFF, 536870912L, 1, 1, "foo.iso", null, "99408929-82cf-4dc7-a532-9d998063fa95", "00000000-0000-0000-0000-000000000000");
         testBootDevices(vms.get(0), BootDevice.HD);
 
-        testVM(vms.get(1), "5114bb3e-a4e6-44b2-b783-b3eea7d84720", "testf13", null, VmStatus.RUNNING, 536870912L, 1, 1, null, "99408929-82cf-4dc7-a532-9d998063fa95", "00000000-0000-0000-0000-000000000000");
+        testVM(vms.get(1), "5114bb3e-a4e6-44b2-b783-b3eea7d84720", "testf13", null, VmStatus.RUNNING, 536870912L, 1, 1, null, "5f38363b-7457-4884-831e-78c27cebb31d", "99408929-82cf-4dc7-a532-9d998063fa95", "00000000-0000-0000-0000-000000000000");
         testBootDevices(vms.get(1), BootDevice.HD, BootDevice.CDROM, BootDevice.NETWORK);
     }
 
