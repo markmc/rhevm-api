@@ -59,7 +59,7 @@
   <xs:group name="ActionParameterGroup">
     <xs:sequence>
       <xs:element name="grace_period" type="GracePeriod" minOccurs="0"/>
-      <!-- for StorageDomain initialize/teardown actions -->
+      <!-- for StorageDomain initialize/teardown and VM migrate actions -->
       <xs:element name="host" type="Host" minOccurs="0"/>
       <!-- when installing a host, a root password is required -->
       <xs:element name="root_password" type="xs:string" minOccurs="0" maxOccurs="1"/>

@@ -74,6 +74,7 @@
     &lt;link rel="stop" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/stop"/&gt;
     &lt;link rel="suspend" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/suspend"/&gt;
     &lt;link rel="detach" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/detach"/&gt;
+    &lt;link rel="migrate" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/migrate"/&gt;
   &lt;/actions&gt;
 &lt;/vm&gt;
   </screen>
@@ -83,7 +84,7 @@
   </para>
 
   <para>
-    There are five possible actions for hosts - <literal>start</literal>, <literal>stop</literal>, <literal>shutdown</literal>, <literal>suspend</literal> and <literal>detach</literal>.
+    There are five possible actions for hosts - <literal>start</literal>, <literal>stop</literal>, <literal>shutdown</literal>, <literal>suspend</literal>, <literal>detach</literal> and <literal>migrate</literal>.
   </para>
 
   <section id="sect-REST_API_Guide-VMs-Devices">
@@ -345,6 +346,26 @@ Content-type: application/xml
     <screen>
 POST /vms/0/detach HTTP/1.1
 Content-type: application/xml
+    </screen>
+
+  </section>
+
+  <section id="sect-REST_API_Guide-VMs-Migrate">
+    <title>
+      Migrate Action
+    </title>
+
+    <para>
+      Migrate a VM to another physical host. The destination host is a required parameter.
+    </para>
+
+    <screen>
+POST /vms/0/migrate HTTP/1.1
+Content-type: application/xml
+
+&lt;action&gt;
+  &lt;host id="2"/&gt;
+&lt;/action&gt;
     </screen>
 
   </section>

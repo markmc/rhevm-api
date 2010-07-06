@@ -132,6 +132,27 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
         return doAction(uriInfo, new CommandRunner(action, "detach-vm", "vm", getId(), getShell()));
     }
 
+    @Override
+    public Response migrate(UriInfo uriInfo, Action action) {
+        StringBuilder buf = new StringBuilder();
+
+        String hostArg;
+        if (action.getHost().isSetId()) {
+            hostArg = PowerShellUtils.escape(action.getHost().getId());
+        } else {
+            buf.append("$h = select-host -searchtext ");
+            buf.append(PowerShellUtils.escape("name=" + action.getHost().getName()));
+            buf.append("\n");
+            hostArg = "$h.hostid";
+        }
+
+        buf.append("migrate-vm");
+        buf.append(" -vmid " + PowerShellUtils.escape(getId()));
+        buf.append(" -desthostid " + hostArg);
+
+        return doAction(uriInfo, new CommandRunner(action, buf.toString(), getShell()));
+    }
+
     public static class CdRomQuery extends PowerShellCdRomsResource.CdRomQuery {
         public CdRomQuery(String id) {
             super(id);

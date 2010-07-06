@@ -24,7 +24,9 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Fault;
+import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.VM;
 
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
@@ -58,6 +60,13 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     private static final String DETAIL = "at com.redhat.rhevm.api.powershell.util.PowerShellCmd.runCommand(";
     private static final String UPDATE_COMMAND = "$v = get-vm '" + VM_ID + "'\n$v.name = '" + NEW_NAME + "'\nupdate-vm -vmobject $v";
     private static final String UPDATE_RETURN = "vmid: " + VM_ID + "\n name: " + NEW_NAME + "\nhostclusterid: " + CLUSTER_ID + "\n" + "templateid: " + TEMPLATE_ID + "\n" + OTHER_PROPS;
+
+    private static final String DEST_HOST_ID = "1337";
+    private static final String DEST_HOST_NAME = "farawaysoclose";
+    private static final String MIGRATE_COMMAND = "migrate-vm -vmid '" + VM_ID + "' -desthostid '" + DEST_HOST_ID + "'";
+    private static final String MIGRATE_COMMAND_WITH_HOST_NAME =
+        "$h = select-host -searchtext 'name=" + DEST_HOST_NAME + "'\n" +
+        "migrate-vm -vmid '" + VM_ID + "' -desthostid $h.hostid";
 
     protected PowerShellVmResource getResource(Executor executor, PowerShellPoolMap poolMap) {
         return new PowerShellVmResource(VM_ID, executor, poolMap);
@@ -127,6 +136,26 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     }
 
     @Test
+    public void testMigrate() throws Exception {
+        Action action = getAction();
+        action.setHost(new Host());
+        action.getHost().setId(DEST_HOST_ID);
+        verifyActionResponse(
+            resource.migrate(setUpActionExpectation("migrate", MIGRATE_COMMAND, false, null), action),
+            false);
+    }
+
+    @Test
+    public void testMigrateWithHostName() throws Exception {
+        Action action = getAction();
+        action.setHost(new Host());
+        action.getHost().setName(DEST_HOST_NAME);
+        verifyActionResponse(
+            resource.migrate(setUpActionExpectation("migrate", MIGRATE_COMMAND_WITH_HOST_NAME, false, null), action),
+            false);
+    }
+
+    @Test
     public void testStartAsync() throws Exception {
         verifyActionResponse(
             resource.start(setUpActionExpectation("start", "start-vm"), getAction(true)),
@@ -167,6 +196,26 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     public void testDetachAsync() throws Exception {
         verifyActionResponse(
             resource.detach(setUpActionExpectation("detach", "detach-vm"), getAction(true)),
+            true);
+    }
+
+    @Test
+    public void testMigrateAsync() throws Exception {
+        Action action = getAction(true);
+        action.setHost(new Host());
+        action.getHost().setId(DEST_HOST_ID);
+        verifyActionResponse(
+            resource.migrate(setUpActionExpectation("migrate", MIGRATE_COMMAND, false, null), action),
+            true);
+    }
+
+    @Test
+    public void testMigrateAsyncWithHostName() throws Exception {
+        Action action = getAction(true);
+        action.setHost(new Host());
+        action.getHost().setName(DEST_HOST_NAME);
+        verifyActionResponse(
+            resource.migrate(setUpActionExpectation("migrate", MIGRATE_COMMAND_WITH_HOST_NAME, false, null), action),
             true);
     }
 

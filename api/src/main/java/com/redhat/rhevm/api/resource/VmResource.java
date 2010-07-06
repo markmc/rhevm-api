@@ -42,7 +42,7 @@ import com.redhat.rhevm.api.model.VM;
 @Produces(MediaType.APPLICATION_XML)
 public interface VmResource extends UpdatableResource<VM> {
 
-    @Path("{action: (start|stop|shutdown|suspend|detach)}/{oid}")
+    @Path("{action: (start|stop|shutdown|suspend|detach|migrate)}/{oid}")
     public ActionResource getActionSubresource(@PathParam("action")String action, @PathParam("oid")String oid);
 
     @POST
@@ -79,6 +79,13 @@ public interface VmResource extends UpdatableResource<VM> {
     @Actionable
     @Path("detach")
     public Response detach(@Context UriInfo uriInfo, Action action);
+
+    @POST
+    @Formatted
+    @Consumes(MediaType.APPLICATION_XML)
+    @Actionable
+    @Path("migrate")
+    public Response migrate(@Context UriInfo uriInfo, Action action);
 
     @Path("cdroms")
     public DevicesResource<CdRom, CdRoms> getCdRomsResource();
