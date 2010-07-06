@@ -111,7 +111,8 @@ public class PowerShellVM extends VM {
         else if (s.equals("Down"))         return VmStatus.SHUTOFF;
         else if (s.equals("Paused"))       return VmStatus.PAUSED;
         else if (s.equals("PoweringDown")) return VmStatus.SHUTDOWN;
-        else if (s.equals("Up"))           return VmStatus.RUNNING;
+        else if (s.equals("Up") ||
+                 s.equals("Powering Up"))  return VmStatus.RUNNING;
         else return null;
     }
 

@@ -80,7 +80,7 @@ public class PowerShellVmTest extends PowerShellModelTest {
         testVM(vms.get(0), "aa0e6522-5baf-4f92-86d3-716883de4359", "test", null, VmStatus.SHUTOFF, 536870912L, 1, 1, "foo.iso", "99408929-82cf-4dc7-a532-9d998063fa95", "00000000-0000-0000-0000-000000000000");
         testBootDevices(vms.get(0), BootDevice.HD);
 
-        testVM(vms.get(1), "5114bb3e-a4e6-44b2-b783-b3eea7d84720", "testf13", null, null, 536870912L, 1, 1, null, "99408929-82cf-4dc7-a532-9d998063fa95", "00000000-0000-0000-0000-000000000000");
+        testVM(vms.get(1), "5114bb3e-a4e6-44b2-b783-b3eea7d84720", "testf13", null, VmStatus.RUNNING, 536870912L, 1, 1, null, "99408929-82cf-4dc7-a532-9d998063fa95", "00000000-0000-0000-0000-000000000000");
         testBootDevices(vms.get(1), BootDevice.HD, BootDevice.CDROM, BootDevice.NETWORK);
     }
 
