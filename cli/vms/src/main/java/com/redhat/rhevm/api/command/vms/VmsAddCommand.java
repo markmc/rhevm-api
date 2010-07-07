@@ -40,7 +40,7 @@ public class VmsAddCommand extends AbstractAddCommand<VM> {
     @Argument(index = 0, name = "name", description = "Name of the VM to add", required = true, multiValued = false)
     protected String name;
 
-    @Option(name = "-t", aliases = { "--template" }, description = "VM template name", required = true, multiValued = false)
+    @Option(name = "-t", aliases = { "--template" }, description = "VM template name", required = false, multiValued = false)
     private String template;
 
     @Option(name = "-c", aliases = { "--cluster" }, description = "Cluster name", required = true, multiValued = false)
