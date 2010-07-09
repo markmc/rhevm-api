@@ -137,18 +137,7 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
 
     @Override
     public AttachmentResource getAttachmentSubResource(UriInfo uriInfo, String id) {
-        try {
-            StringBuilder buf = new StringBuilder();
-
-            buf.append("get-storagedomain");
-            buf.append(" -datacenterid " + PowerShellUtils.escape(id));
-            buf.append(" -storagedomainid " + PowerShellUtils.escape(storageDomainId));
-            PowerShellCmd.runCommand(getShell(), buf.toString());
-
-            return new PowerShellAttachmentResource(id, storageDomainId, executor, shellPools);
-        } catch (PowerShellException e) {
-            return null;
-        }
+        return new PowerShellAttachmentResource(id, storageDomainId, executor, shellPools);
     }
 
     /**
