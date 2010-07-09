@@ -23,6 +23,7 @@ import org.apache.felix.gogo.commands.Command;
 import org.apache.felix.gogo.commands.Option;
 
 import com.redhat.rhevm.api.command.base.AbstractAddCommand;
+import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.Storage;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.StorageDomainType;
@@ -36,6 +37,9 @@ public class StorageDomainsAddCommand extends AbstractAddCommand<StorageDomain> 
 
     @Argument(index = 0, name = "name", description = "Name of the Storage Domain to add", required = true, multiValued = false)
     protected String name;
+
+    @Option(name = "-h", aliases = { "--host" }, description = "Name of initialization host", required = true, multiValued = false)
+    private String host;
 
     @Option(name = "-i", aliases = { "--id" }, description = "Storage Domain ID", required = true, multiValued = false)
     private String id;
@@ -67,6 +71,8 @@ public class StorageDomainsAddCommand extends AbstractAddCommand<StorageDomain> 
         StorageDomain model = new StorageDomain();
         model.setId(id);
         model.setName(name);
+        model.setHost(new Host());
+        model.getHost().setName(host);
         model.setType(StorageDomainType.valueOf(domainType));
         model.setStorage(new Storage());
         model.getStorage().setType(StorageType.valueOf(storageType));

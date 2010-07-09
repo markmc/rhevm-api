@@ -165,7 +165,7 @@ class Storage(Element):
 class StorageDomain(Base):
     NAME = "storage_domain"
     COLLECTION = "storage_domains"
-    ELEMENTS = Base.ELEMENTS + ['type', 'status', 'master', 'storage'] # FIXME: attachments
+    ELEMENTS = Base.ELEMENTS + ['type', 'status', 'master', 'storage', 'host'] # FIXME: attachments
 
 class VM(Base):
     NAME = "vm"

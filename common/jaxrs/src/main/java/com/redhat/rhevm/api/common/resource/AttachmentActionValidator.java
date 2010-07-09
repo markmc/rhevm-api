@@ -35,10 +35,10 @@ public class AttachmentActionValidator implements ActionValidator {
             return action.equals("deactivate");
         case INACTIVE:
             return action.equals("activate");
-        case UNINITIALIZED:
         case UNATTACHED:
         case LOCKED:
         case MIXED:
+        case TORNDOWN:
         default:
             assert false : attachment.getStatus();
             return false;

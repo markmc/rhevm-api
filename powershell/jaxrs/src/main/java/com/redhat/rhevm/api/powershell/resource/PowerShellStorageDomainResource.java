@@ -30,7 +30,6 @@ import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.ActionValidator;
 import com.redhat.rhevm.api.model.Link;
-import com.redhat.rhevm.api.model.Storage;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.StorageDomainStatus;
 import com.redhat.rhevm.api.resource.AttachmentsResource;
@@ -44,23 +43,17 @@ import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 public class PowerShellStorageDomainResource extends AbstractPowerShellActionableResource<StorageDomain> implements StorageDomainResource {
 
     private PowerShellStorageDomainsResource parent;
-    private StorageDomain staged;
+    private StorageDomain tornDown;
 
     public PowerShellStorageDomainResource(String id,
                                            PowerShellStorageDomainsResource parent,
-                                           StorageDomain staged,
                                            PowerShellPoolMap shellPools) {
         super(id, parent.getExecutor(), shellPools);
         this.parent = parent;
-        this.staged = staged;
     }
 
-    public PowerShellStorageDomainResource(String id, PowerShellStorageDomainsResource parent, PowerShellPoolMap shellPools) {
-        this(id, parent, null, shellPools);
-    }
-
-    public StorageDomain getStaged() {
-        return staged;
+    public StorageDomain getTornDown() {
+        return tornDown;
     }
 
     /**
@@ -132,8 +125,8 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
         return runAndParseSingle(shell, command, false);
     }
 
-    public StorageDomain addLinks(StorageDomain storageDomain) {
-        storageDomain = JAXBHelper.clone(OBJECT_FACTORY.createStorageDomain(storageDomain));
+    public static StorageDomain addLinks(StorageDomain storageDomain) {
+        storageDomain = JAXBHelper.clone("storage_domain", StorageDomain.class, storageDomain);
 
         storageDomain = LinkHelper.addLinks(storageDomain);
 
@@ -155,11 +148,10 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
     @Override
     public StorageDomain get(UriInfo uriInfo) {
         StorageDomain storageDomain;
-        if (staged != null) {
-            storageDomain = staged;
+        if (tornDown != null) {
+            storageDomain = tornDown;
         } else {
             storageDomain = runAndParseSingle(getShell(), "get-storagedomain " + PowerShellUtils.escape(getId()), true);
-            storageDomain = parent.mapFromRhevmId(storageDomain);
         }
         return addLinks(storageDomain);
     }
@@ -169,11 +161,10 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
         validateUpdate(storageDomain);
 
         StringBuilder buf = new StringBuilder();
-        if (staged != null) {
+        if (tornDown != null) {
             // update writable fields only
-            staged.setName(storageDomain.getName());
-
-            storageDomain = staged;
+            tornDown.setName(storageDomain.getName());
+            storageDomain = tornDown;
         } else {
             buf.append("$h = get-storagedomain " + PowerShellUtils.escape(getId()) + "\n");
 
@@ -184,16 +175,10 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
             buf.append("\n");
             buf.append("update-storagedomain -storagedomainobject $v");
 
-            storageDomain = parent.mapFromRhevmId(runAndParseSingle(getShell(), buf.toString(), true));
+            storageDomain = runAndParseSingle(getShell(), buf.toString(), true);
         }
         return addLinks(storageDomain);
     }
-
-    @Override
-    public Response initialize(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new StorageDomainInitializer(action));
-    }
-
 
     @Override
     public Response teardown(UriInfo uriInfo, Action action) {
@@ -205,96 +190,31 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
         return new PowerShellAttachmentsResource(getId(), shellPools);
     }
 
-    private abstract class StorageDomainActionTask extends AbstractPowerShellActionTask {
-        protected String id;
-        protected StorageDomain staged;
-        protected PowerShellStorageDomainsResource parent;
-        public StorageDomainActionTask(Action action, String command) {
-            super(action, command);
-            this.id = PowerShellStorageDomainResource.this.getId();
-            this.staged = PowerShellStorageDomainResource.this.staged;
-            this.parent = PowerShellStorageDomainResource.this.parent;
-        }
-    }
+    private class StorageDomainTeardowner extends AbstractPowerShellActionTask {
 
-    private class StorageDomainInitializer extends StorageDomainActionTask {
-        public StorageDomainInitializer(Action action) {
-            super(action, "add-storagedomain");
-        }
-        public void execute() {
-            StringBuilder buf = new StringBuilder();
-
-            buf.append(command);
-
-            if (staged.getName() != null) {
-                buf.append(" -name " + PowerShellUtils.escape(staged.getName()));
-            }
-
-            buf.append(" -hostid " + PowerShellUtils.escape(action.getHost().getId()));
-
-            buf.append(" -domaintype ");
-            switch (staged.getType()) {
-            case DATA:
-                buf.append("Data");
-                break;
-            case ISO:
-                buf.append("ISO");
-                break;
-            case EXPORT:
-                buf.append("Export");
-                break;
-            default:
-                assert false : staged.getType();
-                break;
-            }
-
-            Storage storage = staged.getStorage();
-
-            buf.append(" -storagetype " + storage.getType().toString());
-            buf.append(" -storage ");
-
-            switch (storage.getType()) {
-            case NFS:
-                buf.append(PowerShellUtils.escape(storage.getAddress() + ":" + storage.getPath()));
-                break;
-            case ISCSI:
-            case FCP:
-            default:
-                assert false : storage.getType();
-                break;
-            }
-
-            StorageDomain storageDomain = PowerShellStorageDomainResource.runAndParseSingle(getShell(), buf.toString(), true);
-
-            parent.unstageDomain(id, storageDomain.getId());
-            PowerShellStorageDomainResource.this.staged = null;
-        }
-    }
-
-    private class StorageDomainTeardowner extends StorageDomainActionTask {
         public StorageDomainTeardowner(Action action) {
             super(action, "remove-storagedomain -force");
         }
-        public void execute() {
-            StorageDomain storageDomain = new StorageDomain();
-            storageDomain.setId(id);
-            parent.mapToRhevmId(storageDomain);
 
-            storageDomain = runAndParseSingle(getShell(), "get-storagedomain " + PowerShellUtils.escape(storageDomain.getId()), true);
+        public void execute() {
+            String id = PowerShellStorageDomainResource.this.getId();
+
+            StorageDomain storageDomain =
+                runAndParseSingle(getShell(), "get-storagedomain " + PowerShellUtils.escape(id), true);
 
             StringBuilder buf = new StringBuilder();
 
             buf.append(command);
 
-            buf.append(" -storagedomainid " + PowerShellUtils.escape(storageDomain.getId()));
+            buf.append(" -storagedomainid " + PowerShellUtils.escape(id));
 
             buf.append(" -hostid " + PowerShellUtils.escape(action.getHost().getId()));
 
             PowerShellCmd.runCommand(getShell(), buf.toString());
 
-            storageDomain.setStatus(StorageDomainStatus.UNINITIALIZED);
-            PowerShellStorageDomainResource.this.staged = parent.mapFromRhevmId(storageDomain);
-            parent.stageDomain(id, PowerShellStorageDomainResource.this);
+            storageDomain.setStatus(StorageDomainStatus.TORNDOWN);
+            PowerShellStorageDomainResource.this.tornDown = storageDomain;
+            PowerShellStorageDomainResource.this.parent.addToTornDownDomains(id, PowerShellStorageDomainResource.this);
         }
     }
 }

@@ -61,6 +61,9 @@ for fmt in [xmlfmt]:
     if name is None:
         continue
 
+    h = fmt.Host()
+    h.id = find_host(t, host).id
+
     dom = fmt.StorageDomain()
     dom.name = name
     dom.type = 'DATA'
@@ -68,12 +71,8 @@ for fmt in [xmlfmt]:
     dom.storage.type = 'NFS'
     dom.storage.address = address
     dom.storage.path = path
+    dom.host = h
     dom = t.create(links['storagedomains'], dom)
-
-    h = fmt.Host()
-    h.id = find_host(t, host).id
-
-    t.syncAction(dom.actions, "initialize", host=h)
 
     attachment = fmt.Attachment()
     attachment.data_center = fmt.DataCenter()

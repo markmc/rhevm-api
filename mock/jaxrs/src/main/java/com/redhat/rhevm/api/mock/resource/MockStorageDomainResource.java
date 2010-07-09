@@ -49,7 +49,7 @@ public class MockStorageDomainResource extends AbstractMockResource<StorageDomai
      */
     MockStorageDomainResource(String id, Executor executor) {
         super(id, executor);
-        getModel().setStatus(StorageDomainStatus.UNINITIALIZED);
+        getModel().setStatus(StorageDomainStatus.UNATTACHED);
         this.attachments = new MockAttachmentsResource(id, executor);
     }
 
@@ -97,15 +97,9 @@ public class MockStorageDomainResource extends AbstractMockResource<StorageDomai
     }
 
     @Override
-    public Response initialize(UriInfo uriInfo, Action action) {
-        // FIXME: error if not uninitialized
-        return doAction(uriInfo, new StorageDomainStatusSetter(action, StorageDomainStatus.UNATTACHED));
-    }
-
-    @Override
     public Response teardown(UriInfo uriInfo, Action action) {
         // FIXME: error if not unattached
-        return doAction(uriInfo, new StorageDomainStatusSetter(action, StorageDomainStatus.UNINITIALIZED));
+        return doAction(uriInfo, new StorageDomainStatusSetter(action, StorageDomainStatus.TORNDOWN));
     }
 
     public AttachmentsResource getAttachmentsResource() {

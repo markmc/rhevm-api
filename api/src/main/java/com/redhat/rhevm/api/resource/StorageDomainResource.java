@@ -36,15 +36,8 @@ import com.redhat.rhevm.api.model.StorageDomain;
 @Produces(MediaType.APPLICATION_XML)
 public interface StorageDomainResource extends UpdatableResource<StorageDomain> {
 
-    @Path("{action: (initialize|teardown)}/{oid}")
+    @Path("{action: (teardown)}/{oid}")
     public ActionResource getActionSubresource(@PathParam("action") String action, @PathParam("oid") String oid);
-
-    @POST
-    @Formatted
-    @Consumes(MediaType.APPLICATION_XML)
-    @Actionable
-    @Path("initialize")
-    public Response initialize(@Context UriInfo uriInfo, Action action);
 
     @POST
     @Formatted

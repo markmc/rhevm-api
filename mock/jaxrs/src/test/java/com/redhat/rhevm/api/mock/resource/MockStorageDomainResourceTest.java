@@ -38,14 +38,14 @@ public class MockStorageDomainResourceTest extends MockTestBase {
         assertTrue(domain.getHref().endsWith("storagedomains/" + domain.getId()));
         assertNotNull(domain.getActions());
         assertTrue(domain.getActions().getLinks().size() > 0);
-        boolean includesInitLink = false;
+        boolean includesLink = false;
         for (Link actionLink : domain.getActions().getLinks()) {
-            includesInitLink = actionLink.getHref().endsWith("storagedomains/" + domain.getId() + "/initialize");
-            if (includesInitLink) {
+            includesLink = actionLink.getHref().endsWith("storagedomains/" + domain.getId() + "/teardown");
+            if (includesLink) {
                 break;
             }
         }
-        assertTrue("expected initialize link", includesInitLink);
+        assertTrue("expected teardown link", includesLink);
     }
 
     @Test
@@ -107,14 +107,8 @@ public class MockStorageDomainResourceTest extends MockTestBase {
         StorageDomain domain = service.list(null).getStorageDomains().get(0);
         assertNotNull(domain);
 
-        assertEquals(domain.getStatus(), StorageDomainStatus.UNINITIALIZED);
-
-        Action action = new Action();
-
-        createActionResource(getActionUri(domain, "initialize")).post(action);
-
-        domain = service.get(domain.getId());
         assertEquals(domain.getStatus(), StorageDomainStatus.UNATTACHED);
+
 /* FIXME
         createActionResource(getActionUri(domain, "attach")).post(action);
 

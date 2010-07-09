@@ -34,14 +34,13 @@ public class StorageDomainActionValidator implements ActionValidator {
             return false;
         }
         switch (storageDomain.getStatus()) {
-        case UNINITIALIZED:
-            return action.equals("initialize");
         case UNATTACHED:
             return action.equals("teardown");
         case ACTIVE:
         case INACTIVE:
         case LOCKED:
         case MIXED:
+        case TORNDOWN:
             return false;
         default:
             assert false : storageDomain.getStatus();
