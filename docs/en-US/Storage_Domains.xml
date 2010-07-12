@@ -96,7 +96,7 @@
     </title>
 
     <para>
-      The teardown removes the storage domain from the physcail storage. A <literal>host</literal> which has physical access to the storage must be supplied.
+      The teardown removes the storage domain from the physical storage. A <literal>host</literal> which has physical access to the storage must be supplied.
     </para>
 
     <screen>
