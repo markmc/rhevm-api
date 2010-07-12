@@ -48,6 +48,8 @@ public class PowerShellHostsResource
     public Response add(UriInfo uriInfo, Host host) {
         StringBuilder buf = new StringBuilder();
 
+        String clusterArg = getClusterArg(buf, host);
+
         buf.append("add-host");
 
         buf.append(" -name " + PowerShellUtils.escape(host.getName()));
@@ -55,6 +57,12 @@ public class PowerShellHostsResource
 
         // It appears that the root password is not really needed here
         buf.append(" -rootpassword notneeded");
+
+        buf.append(clusterArg);
+
+        if (host.isSetPort()) {
+            buf.append(" -port " + host.getPort());
+        }
 
         host = PowerShellHostResource.runAndParseSingle(getShell(), buf.toString());
         host = LinkHelper.addLinks(host);
@@ -77,5 +85,20 @@ public class PowerShellHostsResource
 
     protected PowerShellHostResource createSubResource(String id) {
         return new PowerShellHostResource(id, getExecutor(), shellPools);
+    }
+
+    private String getClusterArg(StringBuilder buf, Host host) {
+        String clusterArg = "";
+        if (host.isSetCluster()) {
+            if (host.getCluster().isSetId()) {
+                clusterArg = " -hostclusterid " + PowerShellUtils.escape(host.getCluster().getId());
+            } else if (host.getCluster().isSetName())  {
+                buf.append("$c = select-cluster -searchtext ");
+                buf.append(PowerShellUtils.escape("name=" + host.getCluster().getName()));
+                buf.append("\n");
+                clusterArg = " -hostclusterid $c.ClusterId";
+            }
+        }
+        return clusterArg;
     }
 }

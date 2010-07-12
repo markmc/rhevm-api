@@ -396,6 +396,10 @@
         <xs:sequence>
           <xs:element name="address" type="xs:string" minOccurs="0"/>
           <xs:element name="status" type="HostStatus" minOccurs="0"/>
+          <xs:element name="cluster" type="Cluster" minOccurs="0"/>
+          <!-- unsigned to avoid issues with port values greater than 32767,
+               e.g. the standard VDSM port 54321 -->
+          <xs:element name="port" type="xs:unsignedShort" minOccurs="0"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
