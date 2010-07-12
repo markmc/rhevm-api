@@ -204,11 +204,21 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
 
             StringBuilder buf = new StringBuilder();
 
+            String hostArg = null;
+            if (action.getHost().isSetId()) {
+                hostArg = PowerShellUtils.escape(action.getHost().getId());
+            } else {
+                buf.append("$h = select-host -searchtext ");
+                buf.append(PowerShellUtils.escape("name=" +  action.getHost().getName()));
+                buf.append("\n");
+                hostArg = "$h.hostid";
+            }
+
             buf.append(command);
 
             buf.append(" -storagedomainid " + PowerShellUtils.escape(id));
 
-            buf.append(" -hostid " + PowerShellUtils.escape(action.getHost().getId()));
+            buf.append(" -hostid " + hostArg);
 
             PowerShellCmd.runCommand(getShell(), buf.toString());
 

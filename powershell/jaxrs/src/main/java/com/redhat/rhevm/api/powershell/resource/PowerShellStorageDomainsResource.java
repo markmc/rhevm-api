@@ -63,13 +63,23 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
     public Response add(UriInfo uriInfo, StorageDomain storageDomain) {
         StringBuilder buf = new StringBuilder();
 
+        String hostArg = null;
+        if (storageDomain.getHost().isSetId()) {
+            hostArg = PowerShellUtils.escape(storageDomain.getHost().getId());
+        } else {
+            buf.append("$h = select-host -searchtext ");
+            buf.append(PowerShellUtils.escape("name=" +  storageDomain.getHost().getName()));
+            buf.append("\n");
+            hostArg = "$h.hostid";
+        }
+
         buf.append("add-storagedomain");
 
         if (storageDomain.getName() != null) {
             buf.append(" -name " + PowerShellUtils.escape(storageDomain.getName()));
         }
 
-        buf.append(" -hostid " + PowerShellUtils.escape(storageDomain.getHost().getId()));
+        buf.append(" -hostid " + hostArg);
 
         buf.append(" -domaintype ");
         switch (storageDomain.getType()) {
