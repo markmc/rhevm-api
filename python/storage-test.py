@@ -34,16 +34,8 @@ if len(opts['oargs']) >= 3:
 
 links = http.HEAD_for_links(opts)
 
-def find_host(t, name):
-   hosts = filter(lambda h: h.name == name,
-                  t.get(links['hosts'], t.fmt.parse))
-   if len(hosts) == 0:
-      raise RuntimeError("host '%s' not found" % name)
-   return hosts[0]
-
 def find_data_center(t, name):
-   datacenters = filter(lambda d: d.name == name,
-                        t.get(links['datacenters'], t.fmt.parse))
+   datacenters = filter(lambda d: d.name == name, t.get(links['datacenters']))
    if len(datacenters) == 0:
       raise RuntimeError("data center '%s' not found" % name)
    return datacenters[0]
@@ -62,7 +54,7 @@ for fmt in [xmlfmt]:
         continue
 
     h = fmt.Host()
-    h.id = find_host(t, host).id
+    h.name = host
 
     dom = fmt.StorageDomain()
     dom.name = name
