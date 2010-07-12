@@ -75,9 +75,7 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
 
         buf.append("add-storagedomain");
 
-        if (storageDomain.getName() != null) {
-            buf.append(" -name " + PowerShellUtils.escape(storageDomain.getName()));
-        }
+        buf.append(" -name " + PowerShellUtils.escape(storageDomain.getName()));
 
         buf.append(" -hostid " + hostArg);
 
