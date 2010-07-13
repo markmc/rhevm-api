@@ -32,7 +32,7 @@ def parseOptions():
     opts = {
         'host' : 'localhost',
         'port' : 8080,
-        'impl' : "mock",
+        'impl' : None,
         'debug' : False,
         'user' : None,
         'secret' : None,
@@ -55,7 +55,12 @@ def parseOptions():
             if opt in ("-d", "--debug"):
                 opts['debug'] = True
 
-    opts['uri'] = 'http://%(host)s:%(port)s/rhevm-api-%(impl)s/' % opts
+    if opts['impl'] is None:
+        opts['urisuffix'] = ''
+    else:
+        opts['urisuffix'] = '-' + options['impl']
+
+    opts['uri'] = 'http://%(host)s:%(port)s/rhevm-api%(urisuffix)s/' % opts
     opts['oargs'] = oargs
 
     return opts
