@@ -113,7 +113,7 @@ class VLAN(Element):
 
 class Base(Element):
     ATTRIBUTES = Element.ATTRIBUTES + ["id", "href"]
-    ELEMENTS = Element.ELEMENTS + ["name", "actions", "link"]
+    ELEMENTS = Element.ELEMENTS + ["name", "description", "actions", "link"]
 
 class Attachment(Base):
     NAME = 'attachment'
