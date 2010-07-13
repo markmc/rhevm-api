@@ -133,6 +133,7 @@ class Cluster(Base):
 class DataCenter(Base):
     NAME = "data_center"
     COLLECTION = "data_centers"
+    ELEMENTS = Base.ELEMENTS + ["storage_type"]
 
 class Disk(Base):
     NAME = 'disk'
