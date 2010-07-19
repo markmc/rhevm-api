@@ -3,7 +3,7 @@
         "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
-   <display-name>RHEV-M PowerShell API Implementation</display-name>
+   <display-name>RHEV-M Mock API Implementation</display-name>
 
    <listener>
       <listener-class>org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap</listener-class>
@@ -22,19 +22,5 @@
       <servlet-name>Resteasy</servlet-name>
       <url-pattern>/*</url-pattern>
    </servlet-mapping>
-
-   <security-constraint>
-      <web-resource-collection>
-         <web-resource-name>RHEVM-API Mock Resource</web-resource-name>
-         <url-pattern>/*</url-pattern>
-         <http-method>GET</http-method>
-         <http-method>POST</http-method>
-         <http-method>PUT</http-method>
-         <http-method>DELETE</http-method>
-      </web-resource-collection>
-      <user-data-constraint>
-         <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-      </user-data-constraint>
-   </security-constraint>
 
 </web-app>

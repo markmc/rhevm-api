@@ -15,7 +15,60 @@
 
   <properties>
     <webapp.name>rhevm-api-powershell</webapp.name>
+    <keystore>${project.build.directory}/security/keystore</keystore>
+    <key.password>Open sesame!</key.password>
+    <keystore.password>Open sesame!</keystore.password>
   </properties>
+
+  <profiles>
+    <profile>
+      <id>insecure</id>
+      <properties>
+        <maven.war.webxml>${basedir}/src/main/webapp/WEB-INF/web-insecure.xml</maven.war.webxml>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>secure</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>keytool-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>clean-keys</id>
+                <phase>initialize</phase>
+                <goals>
+                  <goal>clean</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>keytool-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>generate-keys</id>
+                <phase>generate-test-resources</phase>
+                <goals>
+                  <goal>genkey</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <keystore>${keystore}</keystore>
+              <dname>cn=localhost, ou=rhevm-api, L=Dublin, ST=None, o=fedorahosted.org, c=IE</dname>
+              <keypass>${key.password}</keypass>
+              <storepass>${keystore.password}</storepass>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
   <dependencies>
 
@@ -81,6 +134,13 @@
             <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
               <port>8099</port>
               <maxIdleTime>60000</maxIdleTime>
+            </connector>
+            <connector implementation="org.mortbay.jetty.security.SslSocketConnector">
+              <port>8943</port>
+              <maxIdleTime>60000</maxIdleTime>
+              <keystore>${keystore}</keystore>
+              <password>${key.password}</password>
+              <keyPassword>${keystore.password}</keyPassword>
             </connector>
           </connectors>
         </configuration>
