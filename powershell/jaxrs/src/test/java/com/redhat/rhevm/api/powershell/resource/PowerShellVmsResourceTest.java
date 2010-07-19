@@ -33,17 +33,17 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     private static String CLUSTER_NAME = "pleiades";
 
     private static final String ADD_COMMAND_PROLOG =
-        "$templ = get-template -templateid '" + TEMPLATE_ID + "'\n";
+        "$templ = get-template -templateid \"" + TEMPLATE_ID + "\"\n";
     private static final String ADD_COMMAND_EPILOG =
-        "-templateobject $templ -hostclusterid '" + CLUSTER_ID + "'";
+        "-templateobject $templ -hostclusterid \"" + CLUSTER_ID + "\"";
 
     private static final String TEMPLATE_BY_NAME_ADD_COMMAND_PROLOG =
-        "$t = select-template -searchtext 'name=" + TEMPLATE_NAME + "'\n" +
+        "$t = select-template -searchtext \"name=" + TEMPLATE_NAME + "\"\n" +
         "$templ = get-template -templateid $t.TemplateId\n";
 
     private static final String CLUSTER_BY_NAME_ADD_COMMAND_PROLOG =
-        "$t = select-template -searchtext 'name=" + TEMPLATE_NAME + "'\n" +
-        "$c = select-cluster -searchtext 'name=" + CLUSTER_NAME + "'\n" +
+        "$t = select-template -searchtext \"name=" + TEMPLATE_NAME + "\"\n" +
+        "$c = select-cluster -searchtext \"name=" + CLUSTER_NAME + "\"\n" +
         "$templ = get-template -templateid $t.TemplateId\n";
 
     private static final String CLUSTER_BY_NAME_ADD_COMMAND_EPILOG =

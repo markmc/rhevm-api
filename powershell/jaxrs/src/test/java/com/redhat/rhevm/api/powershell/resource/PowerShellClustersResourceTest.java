@@ -99,13 +99,13 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
     protected String getAddCommand() {
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$v = get-clustercompatibilityversions -datacenterid '" + DATA_CENTER_ID + "'\n");
+        buf.append("$v = get-clustercompatibilityversions -datacenterid \"" + DATA_CENTER_ID + "\"\n");
 
         buf.append("add-cluster");
 
-        buf.append(" -clustername '" + NEW_NAME + "'");
-        buf.append(" -clustercpuname '" + CLUSTER_CPU + "'");
-        buf.append(" -datacenterid '" + DATA_CENTER_ID + "'");
+        buf.append(" -clustername \"" + NEW_NAME + "\"");
+        buf.append(" -clustercpuname \"" + CLUSTER_CPU + "\"");
+        buf.append(" -datacenterid \"" + DATA_CENTER_ID + "\"");
         buf.append(" -compatibilityversion $v");
 
 	return buf.toString();

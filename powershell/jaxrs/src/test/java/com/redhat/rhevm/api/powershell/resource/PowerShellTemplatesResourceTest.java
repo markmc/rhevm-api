@@ -32,16 +32,16 @@ public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectio
     private static String CLUSTER_ID = "cluster1";
     private static String CLUSTER_NAME = "pleiades";
 
-    private static final String ADD_COMMAND_PROLOG = "$v = get-vm '" + VM_ID + "'\n";
+    private static final String ADD_COMMAND_PROLOG = "$v = get-vm \"" + VM_ID + "\"\n";
     private static final String ADD_COMMAND_NO_CLUSTER_EPILOG = "-mastervm $v";
     private static final String ADD_COMMAND_EPILOG =
-        ADD_COMMAND_NO_CLUSTER_EPILOG + " -hostclusterid '" + CLUSTER_ID + "'";
+        ADD_COMMAND_NO_CLUSTER_EPILOG + " -hostclusterid \"" + CLUSTER_ID + "\"";
 
-    private static final String VM_BY_NAME_ADD_COMMAND_PROLOG = "$v = select-vm -searchtext 'name=" + VM_NAME + "'\n";
+    private static final String VM_BY_NAME_ADD_COMMAND_PROLOG = "$v = select-vm -searchtext \"name=" + VM_NAME + "\"\n";
 
     private static final String CLUSTER_BY_NAME_ADD_COMMAND_PROLOG =
-        "$v = select-vm -searchtext 'name=" + VM_NAME + "'\n" +
-        "$c = select-cluster -searchtext 'name=" + CLUSTER_NAME + "'\n";
+        "$v = select-vm -searchtext \"name=" + VM_NAME + "\"\n" +
+        "$c = select-cluster -searchtext \"name=" + CLUSTER_NAME + "\"\n";
 
     private static final String CLUSTER_BY_NAME_ADD_COMMAND_EPILOG = ADD_COMMAND_NO_CLUSTER_EPILOG + " -hostclusterid $c.ClusterId";
 

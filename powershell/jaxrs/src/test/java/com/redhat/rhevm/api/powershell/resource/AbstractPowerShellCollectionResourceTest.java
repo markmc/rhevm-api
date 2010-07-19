@@ -80,11 +80,11 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
         "{0}id: " + "eris".hashCode() + " \n name: eris {1}\n\n" +
         "{0}id: " + "orcus".hashCode() + " \n name: orcus {1}";
 
-    private static final String ADD_COMMAND = "add-{0}{1} -name ''ceres'' ";
+    private static final String ADD_COMMAND = "add-{0}{1} -name \"ceres\" ";
     private static final String ADD_RETURN =
         "{0}id: " + "ceres".hashCode() + " \n name: ceres {1}\n\n";
 
-    private static final String REMOVE_COMMAND = "remove-{0} -{0}id ''" + "eris".hashCode() + "''";
+    private static final String REMOVE_COMMAND = "remove-{0} -{0}id \"" + "eris".hashCode() + "\"";
 
     private static final String SEARCH_OPTION = " -searchtext ";
     private static final String QUERY = "name=*r*s";
@@ -227,7 +227,7 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
     }
 
     protected String getQueryCommand(Class<?> clz) {
-        return getSelectCommand() + SEARCH_OPTION + "'" + QueryHelper.RETURN_TYPES.get(clz) + QUERY + "'";
+        return getSelectCommand() + SEARCH_OPTION + "\"" + QueryHelper.RETURN_TYPES.get(clz) + QUERY + "\"";
     }
 
     protected QueryParam getQueryParam() {

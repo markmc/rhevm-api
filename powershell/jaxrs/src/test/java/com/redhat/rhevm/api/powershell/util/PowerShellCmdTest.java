@@ -57,8 +57,8 @@ public class PowerShellCmdTest extends Assert {
     private static final String DOMAIN = "LeinsterHouse";
     private static final String USER = "Jackie";
     private static final String PASSWORD = "HealyRae";
-    private static final String LOGIN_USER = "login-user -domain '" + DOMAIN + "' -username '" + USER + "' -password '" + PASSWORD + "';\n";
-    private static final String LOGIN_USER_NO_DOMAIN = "login-user -username '" + USER + "' -password '" + PASSWORD + "';\n";
+    private static final String LOGIN_USER = "login-user -domain \"" + DOMAIN + "\" -username \"" + USER + "\" -password \"" + PASSWORD + "\";\n";
+    private static final String LOGIN_USER_NO_DOMAIN = "login-user -username \"" + USER + "\" -password \"" + PASSWORD + "\";\n";
 
     @After
     public void tearDown() {

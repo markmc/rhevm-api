@@ -51,10 +51,10 @@ public class PowerShellTemplateResourceTest extends AbstractPowerShellResourceTe
 
     private static final String OTHER_PROPS = "memsizemb: 1024\ndefaultbootsequence: CDN\nnumofsockets: 2\nnumofcpuspersocket: 4\n";
 
-    private static final String GET_COMMAND = "get-template -templateid '" + TEMPLATE_ID + "'";
+    private static final String GET_COMMAND = "get-template -templateid \"" + TEMPLATE_ID + "\"";
     private static final String GET_RETURN = "templateid: " + TEMPLATE_ID + "\nname: " + TEMPLATE_NAME + "\ndescription: " + TEMPLATE_DESCRIPTION + "\n" + OTHER_PROPS;
 
-    private static final String UPDATE_COMMAND = "$t = get-template '" + TEMPLATE_ID + "'\n$t.name = '" + NEW_NAME + "'\nupdate-template -templateobject $t";
+    private static final String UPDATE_COMMAND = "$t = get-template \"" + TEMPLATE_ID + "\"\n$t.name = \"" + NEW_NAME + "\"\nupdate-template -templateobject $t";
     private static final String UPDATE_RETURN = "templateid: " + TEMPLATE_ID + "\n name: " + NEW_NAME + "\ndescription: " + TEMPLATE_DESCRIPTION + "\n" + OTHER_PROPS;
 
     protected PowerShellTemplateResource getResource(Executor executor, PowerShellPoolMap poolMap) {

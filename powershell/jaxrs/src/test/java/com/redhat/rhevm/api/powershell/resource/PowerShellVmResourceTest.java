@@ -56,17 +56,17 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     private static final String GET_RETURN = "vmid: " + VM_ID + "\nname: " + VM_NAME + "\nhostclusterid: " + CLUSTER_ID + "\n" + "templateid: " + TEMPLATE_ID + "\n" + OTHER_PROPS;
     private static final String ACTION_RETURN = "replace with realistic powershell return";
     private static final String FAILURE = "replace with realistic powershell failure";
-    private static final String REASON = "Powershell command \"start-vm -vmid " + VM_ID + "\" failed with " + FAILURE;
+    private static final String REASON = "Powershell command \"start-vm -vmid \"" + VM_ID + "\"\" failed with " + FAILURE;
     private static final String DETAIL = "at com.redhat.rhevm.api.powershell.util.PowerShellCmd.runCommand(";
-    private static final String UPDATE_COMMAND = "$v = get-vm '" + VM_ID + "'\n$v.name = '" + NEW_NAME + "'\nupdate-vm -vmobject $v";
+    private static final String UPDATE_COMMAND = "$v = get-vm \"" + VM_ID + "\"\n$v.name = \"" + NEW_NAME + "\"\nupdate-vm -vmobject $v";
     private static final String UPDATE_RETURN = "vmid: " + VM_ID + "\n name: " + NEW_NAME + "\nhostclusterid: " + CLUSTER_ID + "\n" + "templateid: " + TEMPLATE_ID + "\n" + OTHER_PROPS;
 
     private static final String DEST_HOST_ID = "1337";
     private static final String DEST_HOST_NAME = "farawaysoclose";
-    private static final String MIGRATE_COMMAND = "migrate-vm -vmid '" + VM_ID + "' -desthostid '" + DEST_HOST_ID + "'";
+    private static final String MIGRATE_COMMAND = "migrate-vm -vmid \"" + VM_ID + "\" -desthostid \"" + DEST_HOST_ID + "\"";
     private static final String MIGRATE_COMMAND_WITH_HOST_NAME =
-        "$h = select-host -searchtext 'name=" + DEST_HOST_NAME + "'\n" +
-        "migrate-vm -vmid '" + VM_ID + "' -desthostid $h.hostid";
+        "$h = select-host -searchtext \"name=" + DEST_HOST_NAME + "\"\n" +
+        "migrate-vm -vmid \"" + VM_ID + "\" -desthostid $h.hostid";
 
     protected PowerShellVmResource getResource(Executor executor, PowerShellPoolMap poolMap) {
         return new PowerShellVmResource(VM_ID, executor, poolMap);
@@ -75,7 +75,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     @Test
     public void testGet() throws Exception {
         verifyVM(
-            resource.get(setUpVmExpectations("get-vm '" + VM_ID + "'", GET_RETURN, VM_NAME)),
+            resource.get(setUpVmExpectations("get-vm \"" + VM_ID + "\"", GET_RETURN, VM_NAME)),
             VM_NAME);
     }
 
@@ -228,7 +228,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
 
     private UriInfo setUpActionExpectation(String verb, String command, boolean appendVmId, Throwable t) throws Exception {
         if (appendVmId) {
-            command += " -vmid '" + VM_ID + "'";
+            command += " -vmid \"" + VM_ID + "\"";
         }
         if (t == null) {
             return setUpActionExpectation("/vms/" + VM_ID + "/", verb, command, ACTION_RETURN);

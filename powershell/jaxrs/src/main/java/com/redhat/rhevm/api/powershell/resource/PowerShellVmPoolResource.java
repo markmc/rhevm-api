@@ -60,7 +60,8 @@ public class PowerShellVmPoolResource extends AbstractPowerShellActionableResour
     private static VmPool lookupTemplateId(PowerShellCmd shell, VmPool pool) {
         StringBuilder buf = new StringBuilder();
 
-        buf.append("select-template -searchtext 'name = " + pool.getTemplate().getName() + "'");
+        buf.append("select-template -searchtext ");
+        buf.append(PowerShellUtils.escape("name = " + pool.getTemplate().getName()));
 
         Template template = new Template();
         template.setId(PowerShellTemplateResource.runAndParseSingle(shell, buf.toString()).getId());
@@ -79,7 +80,8 @@ public class PowerShellVmPoolResource extends AbstractPowerShellActionableResour
     private static VmPool lookupClusterId(PowerShellCmd shell, VmPool pool) {
         StringBuilder buf = new StringBuilder();
 
-        buf.append("select-cluster -searchtext 'name = " + pool.getCluster().getName() + "'");
+        buf.append("select-cluster -searchtext ");
+        buf.append(PowerShellUtils.escape("name = " + pool.getCluster().getName()));
 
         Cluster cluster = new Cluster();
         cluster.setId(PowerShellClusterResource.runAndParseSingle(shell, buf.toString()).getId());

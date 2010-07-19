@@ -31,11 +31,11 @@ public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionRes
     private static int PORT = 12345;
 
     private static final String CLUSTER_BY_NAME_ADD_COMMAND_PROLOG =
-        "$c = select-cluster -searchtext 'name=" + CLUSTER_NAME + "'\n";
+        "$c = select-cluster -searchtext \"name=" + CLUSTER_NAME + "\"\n";
 
-    private static final String ADD_COMMAND_EPILOG = "-address '127.0.0.1' -rootpassword notneeded";
+    private static final String ADD_COMMAND_EPILOG = "-address \"127.0.0.1\" -rootpassword notneeded";
     private static final String CLUSTER_BY_NAME_ADD_COMMAND_EPILOG = ADD_COMMAND_EPILOG + " -hostclusterid $c.ClusterId";
-    private static final String CLUSTER_BY_ID_ADD_COMMAND_EPILOG = ADD_COMMAND_EPILOG + " -hostclusterid '" + CLUSTER_ID + "'";
+    private static final String CLUSTER_BY_ID_ADD_COMMAND_EPILOG = ADD_COMMAND_EPILOG + " -hostclusterid \"" + CLUSTER_ID + "\"";
     private static final String PORT_OVERRIDE_ADD_COMMAND_EPILOG = ADD_COMMAND_EPILOG + " -port " + PORT;
     private static final String ADD_RETURN_EPILOG = "\nstatus: up";
 

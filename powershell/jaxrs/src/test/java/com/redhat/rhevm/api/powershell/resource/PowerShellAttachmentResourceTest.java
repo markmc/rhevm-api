@@ -45,8 +45,8 @@ public class PowerShellAttachmentResourceTest extends AbstractPowerShellResource
     private static final String STORAGE_DOMAIN_URI = URI_ROOT + "/storagedomains/" + STORAGE_DOMAIN_ID;
     private static final String ATTACHMENT_URI = STORAGE_DOMAIN_URI + "/attachments/" + DATA_CENTER_ID;
     private static final String DEACTIVATE_ACTION_URI = ATTACHMENT_URI + "/deactivate";
-    private static final String DATA_CENTER_ARG = " -datacenterid '" + DATA_CENTER_ID + "'";
-    private static final String STORAGE_DOMAIN_ARG = " -storagedomainid '" + STORAGE_DOMAIN_ID + "'";
+    private static final String DATA_CENTER_ARG = " -datacenterid \"" + DATA_CENTER_ID + "\"";
+    private static final String STORAGE_DOMAIN_ARG = " -storagedomainid \"" + STORAGE_DOMAIN_ID + "\"";
     private static final String DC_AND_SD_ARGS = DATA_CENTER_ARG + STORAGE_DOMAIN_ARG;
     private static final String GET_COMMAND = "get-storagedomain" + DC_AND_SD_ARGS;
     private static final String GET_RETURN =

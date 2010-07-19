@@ -64,30 +64,30 @@ public class PowerShellDevicesResourceTest extends Assert {
     private static final String CDROM_ID = Integer.toString("cdrom".hashCode());
     private static final String ISO_NAME = "foo.iso";
 
-    private static final String GET_CDROMS_CMD = "get-vm '" + VM_ID + "'";
+    private static final String GET_CDROMS_CMD = "get-vm \"" + VM_ID + "\"";
     private static final String GET_CDROMS_RETURN = "vmid: " + VM_ID + "\nname: x\nhostclusterid: x\ntemplateid: x\nmemorysize: 1024\ndefaultbootsequence: CDN\nnumofsockets: 2\nnumofcpuspersocket: 4\npoolid: -1\ncdisopath: " + ISO_NAME + "\n";
 
-    private static final String UPDATE_CDROM_CMD = "$v = get-vm ''{0}''\n$v.cdisopath = ''{1}''\nupdate-vm -vmobject $v";
+    private static final String UPDATE_CDROM_CMD = "$v = get-vm \"{0}\"\n$v.cdisopath = \"{1}\"\nupdate-vm -vmobject $v";
 
     private static final long DISK_SIZE = 10;
     private static final long DISK_SIZE_BYTES = DISK_SIZE * 1024 * 1024 * 1024;
 
-    private static final String GET_DISKS_CMD = "$v = get-vm '" + VM_ID + "'\n$v.GetDiskImages()\n";
+    private static final String GET_DISKS_CMD = "$v = get-vm \"" + VM_ID + "\"\n$v.GetDiskImages()\n";
     private static final String GET_DISKS_RETURN = "snapshotid: " + DISK_ID + "\nactualsizeinbytes: " + Long.toString(DISK_SIZE_BYTES) + "\ndisktype: system\nstatus: ok\ndiskinterface: ide\nvolumeformat: raw\nvolumetype: sparse\nboot: true\nwipeafterdelete: false\npropagateerrors: off\n";
 
-    private static final String ADD_DISK_COMMAND = "$d = new-disk -disksize {0}\n$v = get-vm ''{1}''\nadd-disk -diskobject $d -vmobject $v";
-    private static final String REMOVE_DISK_COMMAND = "remove-disk -vmid ''{0}'' -diskids ''{1}''";
+    private static final String ADD_DISK_COMMAND = "$d = new-disk -disksize {0}\n$v = get-vm \"{1}\"\nadd-disk -diskobject $d -vmobject $v";
+    private static final String REMOVE_DISK_COMMAND = "remove-disk -vmid \"{0}\" -diskids \"{1}\"";
 
-    private static final String GET_NICS_CMD = "$v = get-vm '" + VM_ID + "'\n$v.GetNetworkAdapters()\n";
+    private static final String GET_NICS_CMD = "$v = get-vm \"" + VM_ID + "\"\n$v.GetNetworkAdapters()\n";
     private static final String GET_NICS_RETURN = "id: " + NIC_ID + "\nname: eth1\nnetwork: net1\ntype: pv\nmacaddress: 00:1a:4a:16:84:02\naddress: 172.31.0.10\nsubnet: 255.255.255.0\ngateway: 172.31.0.1\n";
 
-    public static final String LOOKUP_NETWORK_ID_COMMAND = "$n = get-networks\nforeach ($i in $n) {  if ($i.name -eq 'net1') {    $i  }}";
+    public static final String LOOKUP_NETWORK_ID_COMMAND = "$n = get-networks\nforeach ($i in $n) {  if ($i.name -eq \"net1\") {    $i  }}";
     public static final String LOOKUP_NETWORK_ID_RETURN = "networkid: 666\nname: net1\ndatacenterid: 999";
 
     private static final String NIC_NAME = "eth11";
     private static final String NIC_NETWORK = "b4fb4d54-ca44-444c-ba26-d51f18c91998";
-    private static final String ADD_NIC_COMMAND = "$v = get-vm ''{0}''\nforeach ($i in get-networks) '{'  if ($i.networkid -eq ''{1}'') '{    $n = $i  }}'\nadd-networkadapter -vmobject $v -interfacename ''{2}'' -networkname $n.name";
-    private static final String REMOVE_NIC_COMMAND = "$v = get-vm ''{0}''\nforeach ($i in $v.GetNetworkAdapters()) '{'  if ($i.id -eq ''{1}'') '{    $n = $i  }}'\nremove-networkadapter -vmobject $v -networkadapterobject $n";
+    private static final String ADD_NIC_COMMAND = "$v = get-vm \"{0}\"\nforeach ($i in get-networks) '{'  if ($i.networkid -eq \"{1}\") '{    $n = $i  }}'\nadd-networkadapter -vmobject $v -interfacename \"{2}\" -networkname $n.name";
+    private static final String REMOVE_NIC_COMMAND = "$v = get-vm \"{0}\"\nforeach ($i in $v.GetNetworkAdapters()) '{'  if ($i.id -eq \"{1}\") '{    $n = $i  }}'\nremove-networkadapter -vmobject $v -networkadapterobject $n";
 
     private PowerShellPoolMap poolMap;
 
