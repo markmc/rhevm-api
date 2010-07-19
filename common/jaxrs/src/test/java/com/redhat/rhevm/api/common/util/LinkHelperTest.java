@@ -23,11 +23,14 @@ import org.junit.Test;
 
 import com.redhat.rhevm.api.model.Attachment;
 import com.redhat.rhevm.api.model.Attachments;
+import com.redhat.rhevm.api.model.CdRom;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.DataCenter;
+import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.Iso;
 import com.redhat.rhevm.api.model.Network;
+import com.redhat.rhevm.api.model.NIC;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VmPool;
@@ -45,6 +48,9 @@ public class LinkHelperTest extends Assert {
     private static final String DATA_CENTER_ID = "majestic";
     private static final String NETWORK_ID = "stupendous";
     private static final String ISO_ID = "faroutdude";
+    private static final String CDROM_ID = "wonderful";
+    private static final String DISK_ID = "fantastic";
+    private static final String NIC_ID = "super";
 
     private static final String VM_HREF = "vms/" + VM_ID;
     private static final String CLUSTER_HREF = "clusters/" + CLUSTER_ID;
@@ -56,6 +62,9 @@ public class LinkHelperTest extends Assert {
     private static final String NETWORK_HREF = "networks/" + NETWORK_ID;
     private static final String ISO_HREF = "datacenters/" + DATA_CENTER_ID + "/isos/" + ISO_ID;
     private static final String ATTACHMENT_HREF = STORAGE_DOMAIN_HREF + "/attachments/" + DATA_CENTER_ID;
+    private static final String CDROM_HREF = VM_HREF + "/cdroms/" + CDROM_ID;
+    private static final String DISK_HREF = VM_HREF + "/disks/" + DISK_ID;
+    private static final String NIC_HREF = VM_HREF + "/nics/" + NIC_ID;
 
     @Test
     public void testVmLinks() throws Exception {
@@ -140,6 +149,45 @@ public class LinkHelperTest extends Assert {
         LinkHelper.addLinks(iso);
 
         assertEquals(iso.getHref(), ISO_HREF);
+    }
+
+    @Test
+    public void testCdRomLinks() throws Exception {
+        CdRom cdrom = new CdRom();
+        cdrom.setId(CDROM_ID);
+
+        cdrom.setVm(new VM());
+        cdrom.getVm().setId(VM_ID);
+
+        LinkHelper.addLinks(cdrom);
+
+        assertEquals(cdrom.getHref(), CDROM_HREF);
+    }
+
+    @Test
+    public void testDiskLinks() throws Exception {
+        Disk disk = new Disk();
+        disk.setId(DISK_ID);
+
+        disk.setVm(new VM());
+        disk.getVm().setId(VM_ID);
+
+        LinkHelper.addLinks(disk);
+
+        assertEquals(disk.getHref(), DISK_HREF);
+    }
+
+    @Test
+    public void testNicLinks() throws Exception {
+        NIC nic = new NIC();
+        nic.setId(NIC_ID);
+
+        nic.setVm(new VM());
+        nic.getVm().setId(VM_ID);
+
+        LinkHelper.addLinks(nic);
+
+        assertEquals(nic.getHref(), NIC_HREF);
     }
 
     @Test

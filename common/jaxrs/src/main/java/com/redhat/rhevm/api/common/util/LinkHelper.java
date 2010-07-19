@@ -115,10 +115,11 @@ public class LinkHelper {
         return path;
     }
 
-    private static String getPath(Class<?> clz, Class<?> parent) {
+    private static String getPath(Class<?> clz, Class<?> parent, Class<?> type) {
         for (Method method : parent.getMethods()) {
             if (method.getName().startsWith("get") &&
-                clz.isAssignableFrom(method.getReturnType())) {
+                clz.isAssignableFrom(method.getReturnType()) &&
+                method.getName().toLowerCase().contains(type.getSimpleName().toLowerCase())) {
                 Path pathAnnotation = (Path)method.getAnnotation(Path.class);
                 return pathAnnotation.value();
             }
@@ -161,7 +162,8 @@ public class LinkHelper {
         UriBuilder uriBuilder;
         if (type.getParentType() != null) {
             String path = getPath(type.getCollectionType(),
-                                  TYPES.get(type.getParentType()).getResourceType());
+                                  TYPES.get(type.getParentType()).getResourceType(),
+                                  model.getClass());
             BaseResource parent = getParentModel(model, type.getParentType());
             if (parent == null) {
                 return null;
