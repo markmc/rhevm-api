@@ -49,7 +49,7 @@ public class PowerShellDisksResource
             buf.append(" -volumeformat " + disk.getFormat().toString());
         }
         if (disk.getType() != null) {
-            buf.append(" -disktype " + ReflectionHelper.capitalize(disk.getType().toString()));
+            buf.append(" -disktype " + ReflectionHelper.capitalize(disk.getType().toString().toLowerCase()));
         }
         if (disk.getInterface() != null) {
             buf.append(" -diskinterface ");

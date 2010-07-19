@@ -28,6 +28,7 @@ import com.redhat.rhevm.api.model.CdRom;
 import com.redhat.rhevm.api.model.CdRoms;
 import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.Disks;
+import com.redhat.rhevm.api.model.DiskType;
 import com.redhat.rhevm.api.model.Iso;
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.NIC;
@@ -75,7 +76,7 @@ public class PowerShellDevicesResourceTest extends Assert {
     private static final String GET_DISKS_CMD = "$v = get-vm \"" + VM_ID + "\"\n$v.GetDiskImages()\n";
     private static final String GET_DISKS_RETURN = "snapshotid: " + DISK_ID + "\nactualsizeinbytes: " + Long.toString(DISK_SIZE_BYTES) + "\ndisktype: system\nstatus: ok\ndiskinterface: ide\nvolumeformat: raw\nvolumetype: sparse\nboot: true\nwipeafterdelete: false\npropagateerrors: off\n";
 
-    private static final String ADD_DISK_COMMAND = "$d = new-disk -disksize {0}\n$v = get-vm \"{1}\"\nadd-disk -diskobject $d -vmobject $v";
+    private static final String ADD_DISK_COMMAND = "$d = new-disk -disksize {0} -disktype System\n$v = get-vm \"{1}\"\nadd-disk -diskobject $d -vmobject $v";
     private static final String REMOVE_DISK_COMMAND = "remove-disk -vmid \"{0}\" -diskids \"{1}\"";
 
     private static final String GET_NICS_CMD = "$v = get-vm \"" + VM_ID + "\"\n$v.GetNetworkAdapters()\n";
@@ -178,6 +179,7 @@ public class PowerShellDevicesResourceTest extends Assert {
         PowerShellDisksResource resource = new PowerShellDisksResource(VM_ID, poolMap, "get-vm");
 
         Disk disk = new Disk();
+        disk.setType(DiskType.SYSTEM);
         disk.setSize(DISK_SIZE_BYTES);
 
         String command = MessageFormat.format(ADD_DISK_COMMAND, DISK_SIZE, VM_ID);
