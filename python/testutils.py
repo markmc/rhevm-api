@@ -58,7 +58,7 @@ def parseOptions():
     if opts['impl'] is None:
         opts['urisuffix'] = ''
     else:
-        opts['urisuffix'] = '-' + options['impl']
+        opts['urisuffix'] = '-' + opts['impl']
 
     opts['uri'] = 'http://%(host)s:%(port)s/rhevm-api%(urisuffix)s/' % opts
     opts['oargs'] = oargs
