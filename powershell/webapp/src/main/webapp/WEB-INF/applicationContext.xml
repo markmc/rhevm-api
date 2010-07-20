@@ -46,6 +46,23 @@
 
   <bean id="powerShellCpusResource" class="com.redhat.rhevm.api.common.resource.DefaultCpusResource"/>
 
+  <!-- XML parser -->
+  <bean id="documentBuilderFactory"
+        class="javax.xml.parsers.DocumentBuilderFactory"
+        factory-method="newInstance">
+    <property name="validating" value="false" />
+    <property name="ignoringElementContentWhitespace" value="true" />
+  </bean>
+
+  <bean id="documentBuilder"
+        class="javax.xml.parsers.DocumentBuilder"
+        factory-bean="documentBuilderFactory"
+        factory-method="newDocumentBuilder"/>
+
+  <bean id="enumMapper" class="com.redhat.rhevm.api.powershell.enums.EnumMapper"/>
+
+  <bean id="parser" class="com.redhat.rhevm.api.powershell.util.PowerShellParser"/>
+
   <!-- PowerShell instance pooling -->
   <bean id="poolMap" class="com.redhat.rhevm.api.powershell.util.PowerShellPoolMap"/>
 
