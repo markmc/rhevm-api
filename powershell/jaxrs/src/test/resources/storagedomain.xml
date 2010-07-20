@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<Objects>
+  <Object Type="RhevmCmd.CLIStorageDomain">
+    <Property Name="StorageDomainId" Type="System.String">788cd1e6-aa2b-412e-bcaf-0b37b96f00b2</Property>
+    <Property Name="VGId" Type="System.String" />
+    <Property Name="DomainType" Type="System.String">Data</Property>
+    <Property Name="Name" Type="System.String">foo222</Property>
+    <Property Name="DataCenterId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="DataCenterName" Type="System.String" />
+    <Property Name="Type" Type="VdcCommon.BusinessEntities.StorageType">
+      <Property Name="value__" Type="System.Int32">1</Property>
+    </Property>
+    <Property Name="NFSPath" Type="System.String">172.31.0.6:/exports/RHEVX/markmc/images/2</Property>
+    <Property Name="AvailableDiskSize" Type="System.Int32">150</Property>
+    <Property Name="Status" Type="VdcCommon.BusinessEntities.StorageDomainStatus">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="SharedStatus" Type="VdcCommon.BusinessEntities.StorageDomainSharedStatus">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UsedDiskSize" Type="System.Int32">139</Property>
+    <Property Name="CommittedDiskSize" Type="System.Int32">0</Property>
+  </Object>
+  <Object Type="RhevmCmd.CLIStorageDomain">
+    <Property Name="StorageDomainId" Type="System.String">85fa8ff2-b3e4-483a-970d-7a8a13bc839f</Property>
+    <Property Name="VGId" Type="System.String" />
+    <Property Name="DomainType" Type="System.String">Data (Master)</Property>
+    <Property Name="Name" Type="System.String">images0</Property>
+    <Property Name="DataCenterId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="DataCenterName" Type="System.String" />
+    <Property Name="Type" Type="VdcCommon.BusinessEntities.StorageType">
+      <Property Name="value__" Type="System.Int32">1</Property>
+    </Property>
+    <Property Name="NFSPath" Type="System.String">172.31.0.6:/exports/RHEVX/markmc/images/0</Property>
+    <Property Name="AvailableDiskSize" Type="System.Int32">150</Property>
+    <Property Name="Status" Type="VdcCommon.BusinessEntities.StorageDomainStatus">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="SharedStatus" Type="VdcCommon.BusinessEntities.StorageDomainSharedStatus">
+      <Property Name="value__" Type="System.Int32">1</Property>
+    </Property>
+    <Property Name="UsedDiskSize" Type="System.Int32">139</Property>
+    <Property Name="CommittedDiskSize" Type="System.Int32">16</Property>
+  </Object>
+  <Object Type="RhevmCmd.CLIStorageDomain">
+    <Property Name="StorageDomainId" Type="System.String">4fa5e14f-8404-4dee-a16f-172279376f0c</Property>
+    <Property Name="VGId" Type="System.String" />
+    <Property Name="DomainType" Type="System.String">ISO</Property>
+    <Property Name="Name" Type="System.String">iso0</Property>
+    <Property Name="DataCenterId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="DataCenterName" Type="System.String" />
+    <Property Name="Type" Type="VdcCommon.BusinessEntities.StorageType">
+      <Property Name="value__" Type="System.Int32">1</Property>
+    </Property>
+    <Property Name="NFSPath" Type="System.String">172.31.0.6:/exports/RHEVX/markmc/iso/0</Property>
+    <Property Name="AvailableDiskSize" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="Status" Type="VdcCommon.BusinessEntities.StorageDomainStatus">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="SharedStatus" Type="VdcCommon.BusinessEntities.StorageDomainSharedStatus">
+      <Property Name="value__" Type="System.Int32">2</Property>
+    </Property>
+    <Property Name="UsedDiskSize" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="CommittedDiskSize" Type="System.Int32">0</Property>
+  </Object>
+</Objects>

@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<Objects>
+  <Object Type="RhevmCmd.CLICluster">
+    <Property Name="ClusterID" Type="System.Guid">99408929-82cf-4dc7-a532-9d998063fa95</Property>
+    <Property Name="Name" Type="System.String">Default</Property>
+    <Property Name="Description" Type="System.String">The default server cluster</Property>
+    <Property Name="CpuName" Type="System.String">Intel Xeon 45nm Core2</Property>
+    <Property Name="SelectionAlgorithm" Type="RhevmCmd.HostSelectionAlgorithm">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="HighUtilization" Type="System.Int32">75</Property>
+    <Property Name="LowUtilization" Type="System.Int32">0</Property>
+    <Property Name="CpuOverCommitDurationMinutes" Type="System.Int32">2</Property>
+    <Property Name="HypervisorType" Type="VdcCommon.BusinessEntities.HypervisorType">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="DataCenterId" Type="System.String">bb0fd622-5b2a-4c69-bfc5-29493932844a</Property>
+    <Property Name="IsInitialized" Type="System.Boolean">True</Property>
+    <Property Name="MaxHostMemoryOverCommit" Type="System.Int32">200</Property>
+    <Property Name="CompatibilityVersion" Type="RhevmCmd.CLICompatibilityVersion">
+      <Property Name="MinorRevision" Type="System.Int16">-1</Property>
+      <Property Name="MajorRevision" Type="System.Int16">-1</Property>
+      <Property Name="Major" Type="System.Int32">2</Property>
+      <Property Name="Minor" Type="System.Int32">2</Property>
+      <Property Name="Build" Type="System.Int32">-1</Property>
+      <Property Name="Revision" Type="System.Int32">-1</Property>
+    </Property>
+  </Object>
+</Objects>

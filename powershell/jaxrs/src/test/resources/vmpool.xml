@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<Objects>
+  <Object Type="RhevmCmd.CLIVmPool">
+    <Property Name="VmPoolId" Type="System.Guid">1de2d827-4569-47cb-a3c7-643124ecc083</Property>
+    <Property Name="Description" Type="System.String" />
+    <Property Name="Name" Type="System.String">foo</Property>
+    <Property Name="Cluster" Type="System.String">Default</Property>
+    <Property Name="Vms" Type="System.Collections.Generic.List`1[RhevmCmd.CLIVm]">
+      <Property Type="RhevmCmd.CLIVm">
+        <Property Name="VmId" Type="System.String">142bf5b1-04fb-4221-9360-0f9b7dab3013</Property>
+        <Property Name="Name" Type="System.String">foo-1</Property>
+        <Property Name="Description" Type="System.String" />
+        <Property Name="HostClusterId" Type="System.Guid">99408929-82cf-4dc7-a532-9d998063fa95</Property>
+        <Property Name="TemplateId" Type="System.String">3ee77811-f1eb-4d3f-991e-e539dbb2f1f9</Property>
+        <Property Name="Session" Type="System.String">Unknown</Property>
+        <Property Name="MemorySize" Type="System.Int32">512</Property>
+        <Property Name="Priority" Type="System.Int32">0</Property>
+        <Property Name="Domain" Type="System.String" />
+        <Property Name="OperatingSystem" Type="System.String">OtherLinux</Property>
+        <Property Name="CreationDate" Type="System.DateTime">20/07/2010 17:28:18</Property>
+        <Property Name="NumOfMonitors" Type="System.Int32">1</Property>
+        <Property Name="NumOfSockets" Type="System.Int32">1</Property>
+        <Property Name="NumOfCpusPerSocket" Type="System.Int32">1</Property>
+        <Property Name="DefaultHostId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+        <Property Name="NiceLevel" Type="System.Int32">0</Property>
+        <Property Name="FailBack" Type="System.Boolean">False</Property>
+        <Property Name="DefaultBootSequence" Type="VdcCommon.BusinessEntities.BootSequence">
+          <Property Name="value__" Type="System.Int32">0</Property>
+        </Property>
+        <Property Name="VmType" Type="VdcCommon.BusinessEntities.VmType">
+          <Property Name="value__" Type="System.Int32">0</Property>
+        </Property>
+        <Property Name="HypervisorType" Type="VdcCommon.BusinessEntities.HypervisorType">
+          <Property Name="value__" Type="System.Int32">0</Property>
+        </Property>
+        <Property Name="OperationMode" Type="VdcCommon.BusinessEntities.OperationMode">
+          <Property Name="value__" Type="System.Int32">0</Property>
+        </Property>
+        <Property Name="AutoStartup" Type="System.Boolean">False</Property>
+        <Property Name="Stateless" Type="System.Boolean">False</Property>
+        <Property Name="DisplayType" Type="System.String">Spice</Property>
+        <Property Name="CdIsoPath" Type="System.String" />
+        <Property Name="FloppyPath" Type="System.String" />
+        <Property Name="Origin" Type="System.String">RHEV</Property>
+        <Property Name="KvmEnabled" Type="System.Boolean">True</Property>
+        <Property Name="RunAndPause" Type="System.Boolean">False</Property>
+        <Property Name="AcpiEnabled" Type="System.Boolean">True</Property>
+        <Property Name="Status" Type="System.String">Up</Property>
+        <Property Name="Ip" Type="System.String" />
+        <Property Name="HostName" Type="System.String" />
+        <Property Name="UpTime" Type="System.TimeSpan">00:06:24</Property>
+        <Property Name="LoginTime" Type="System.Nullable`1[[System.DateTime, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+        <Property Name="CurrentUserName" Type="System.String">Unknown</Property>
+        <Property Name="LastLogoutTime" Type="System.Nullable`1[[System.DateTime, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+        <Property Name="ElapsedTime" Type="System.Decimal">384</Property>
+        <Property Name="RunningOnHost" Type="System.Guid">5f38363b-7457-4884-831e-78c27cebb31d</Property>
+        <Property Name="MigratingToHost" Type="System.Guid">00000000-0000-0000-0000-000000000000</Property>
+        <Property Name="ApplicationList" Type="System.String[]">
+          <Property Type="System.String" />
+        </Property>
+        <Property Name="DisplayPort" Type="System.Int32">5910</Property>
+        <Property Name="HighlyAvailable" Type="System.Boolean">False</Property>
+        <Property Name="TimeZone" Type="System.String" />
+        <Property Name="PoolId" Type="System.Guid">1de2d827-4569-47cb-a3c7-643124ecc083</Property>
+      </Property>
+      <Property Type="RhevmCmd.CLIVm">
+        <Property Name="VmId" Type="System.String">f9e37917-8382-486f-875d-4045be045d85</Property>
+        <Property Name="Name" Type="System.String">foo-2</Property>
+        <Property Name="Description" Type="System.String" />
+        <Property Name="HostClusterId" Type="System.Guid">99408929-82cf-4dc7-a532-9d998063fa95</Property>
+        <Property Name="TemplateId" Type="System.String">3ee77811-f1eb-4d3f-991e-e539dbb2f1f9</Property>
+        <Property Name="Session" Type="System.String">Unknown</Property>
+        <Property Name="MemorySize" Type="System.Int32">512</Property>
+        <Property Name="Priority" Type="System.Int32">0</Property>
+        <Property Name="Domain" Type="System.String" />
+        <Property Name="OperatingSystem" Type="System.String">OtherLinux</Property>
+        <Property Name="CreationDate" Type="System.DateTime">20/07/2010 17:33:03</Property>
+        <Property Name="NumOfMonitors" Type="System.Int32">1</Property>
+        <Property Name="NumOfSockets" Type="System.Int32">1</Property>
+        <Property Name="NumOfCpusPerSocket" Type="System.Int32">1</Property>
+        <Property Name="DefaultHostId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+        <Property Name="NiceLevel" Type="System.Int32">0</Property>
+        <Property Name="FailBack" Type="System.Boolean">False</Property>
+        <Property Name="DefaultBootSequence" Type="VdcCommon.BusinessEntities.BootSequence">
+          <Property Name="value__" Type="System.Int32">0</Property>
+        </Property>
+        <Property Name="VmType" Type="VdcCommon.BusinessEntities.VmType">
+          <Property Name="value__" Type="System.Int32">0</Property>
+        </Property>
+        <Property Name="HypervisorType" Type="VdcCommon.BusinessEntities.HypervisorType">
+          <Property Name="value__" Type="System.Int32">0</Property>
+        </Property>
+        <Property Name="OperationMode" Type="VdcCommon.BusinessEntities.OperationMode">
+          <Property Name="value__" Type="System.Int32">0</Property>
+        </Property>
+        <Property Name="AutoStartup" Type="System.Boolean">False</Property>
+        <Property Name="Stateless" Type="System.Boolean">False</Property>
+        <Property Name="DisplayType" Type="System.String">Spice</Property>
+        <Property Name="CdIsoPath" Type="System.String" />
+        <Property Name="FloppyPath" Type="System.String" />
+        <Property Name="Origin" Type="System.String">RHEV</Property>
+        <Property Name="KvmEnabled" Type="System.Boolean">True</Property>
+        <Property Name="RunAndPause" Type="System.Boolean">False</Property>
+        <Property Name="AcpiEnabled" Type="System.Boolean">True</Property>
+        <Property Name="Status" Type="System.String">Down</Property>
+        <Property Name="Ip" Type="System.String" />
+        <Property Name="HostName" Type="System.String" />
+        <Property Name="UpTime" Type="System.TimeSpan">00:00:00</Property>
+        <Property Name="LoginTime" Type="System.Nullable`1[[System.DateTime, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+        <Property Name="CurrentUserName" Type="System.String" />
+        <Property Name="LastLogoutTime" Type="System.Nullable`1[[System.DateTime, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+        <Property Name="ElapsedTime" Type="System.Decimal">0</Property>
+        <Property Name="RunningOnHost" Type="System.Guid">00000000-0000-0000-0000-000000000000</Property>
+        <Property Name="MigratingToHost" Type="System.Guid">00000000-0000-0000-0000-000000000000</Property>
+        <Property Name="ApplicationList" Type="System.String[]" />
+        <Property Name="DisplayPort" Type="System.Int32">-1</Property>
+        <Property Name="HighlyAvailable" Type="System.Boolean">False</Property>
+        <Property Name="TimeZone" Type="System.String" />
+        <Property Name="PoolId" Type="System.Guid">1de2d827-4569-47cb-a3c7-643124ecc083</Property>
+      </Property>
+    </Property>
+    <Property Name="VmCount" Type="System.Int32">2</Property>
+    <Property Name="Users" Type="System.Collections.Generic.List`1[RhevmCmd.CLIUser]" />
+    <Property Name="RunningVms" Type="System.Int32">1</Property>
+    <Property Name="PoolType" Type="System.String">Automatic</Property>
+    <Property Name="LeaseDays" Type="System.Int32">0</Property>
+    <Property Name="LeaseStartTime" Type="System.TimeSpan">00:00:00</Property>
+    <Property Name="LeaseEndTime" Type="System.TimeSpan">00:00:00</Property>
+    <Property Name="HasFreeVms" Type="System.Boolean">True</Property>
+    <Property Name="Template" Type="System.String">tmpl1</Property>
+    <Property Name="NumberOfMonitors" Type="System.Int32">1</Property>
+    <Property Name="UsbPolicy" Type="VdcCommon.BusinessEntities.UsbPolicy">
+      <Property Name="value__" Type="System.Int32">1</Property>
+    </Property>
+    <Property Name="OperatingSystem" Type="System.String">OtherLinux</Property>
+    <Property Name="MemorySize" Type="System.Int32">512</Property>
+  </Object>
+</Objects>

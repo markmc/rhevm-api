@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<Objects>
+  <Object Type="RhevmCmd.CLINetwork">
+    <Property Name="NetworkId" Type="System.Guid">00000000-0000-0000-0000-000000000009</Property>
+    <Property Name="Address" Type="System.String" />
+    <Property Name="Description" Type="System.String">Management Network</Property>
+    <Property Name="Name" Type="System.String">rhevm</Property>
+    <Property Name="Gateway" Type="System.String" />
+    <Property Name="Type" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="VlanId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="Status" Type="VdcCommon.BusinessEntities.NetworkStatus">
+      <Property Name="value__" Type="System.Int32">1</Property>
+    </Property>
+    <Property Name="Stp" Type="System.Boolean">False</Property>
+    <Property Name="DataCenterId" Type="System.Guid">bb0fd622-5b2a-4c69-bfc5-29493932844a</Property>
+    <Property Name="Subnet" Type="System.String" />
+    <Property Name="IsDisplay" Type="System.Boolean">False</Property>
+  </Object>
+</Objects>

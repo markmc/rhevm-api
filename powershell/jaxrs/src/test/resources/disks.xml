@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<Objects>
+  <Object Type="RhevmCmd.CLIImage">
+    <Property Name="SnapshotId" Type="System.String">0b9318b4-e426-4380-9e6a-bb7f3a38a2ce</Property>
+    <Property Name="CreationDate" Type="System.DateTime">10/12/1969 17:29:35</Property>
+    <Property Name="LastModified" Type="System.DateTime">10/12/1969 17:29:35</Property>
+    <Property Name="ActualSizeInBytes" Type="System.Double">1341231104</Property>
+    <Property Name="ActualSizeInMB" Type="System.Double">1279.09765625</Property>
+    <Property Name="ActualSizeInGB" Type="System.Double">1.24911880493164</Property>
+    <Property Name="Description" Type="System.String">_Undefined_Fri Jul 02 10:27:34 IST 2010</Property>
+    <Property Name="VmSnapshotId" Type="System.String">563055c6-b1ec-4f31-85a1-6354a916a0b5</Property>
+    <Property Name="SizeInGB" Type="System.Int64">10</Property>
+    <Property Name="ParentId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="Status" Type="VdcCommon.BusinessEntities.ImageStatus">
+      <Property Name="value__" Type="System.Int32">1</Property>
+    </Property>
+    <Property Name="AppList" Type="System.String" />
+    <Property Name="VolumeType" Type="VdcCommon.BusinessEntities.VolumeType">
+      <Property Name="value__" Type="System.Int32">2</Property>
+    </Property>
+    <Property Name="VolumeFormat" Type="VdcCommon.BusinessEntities.VolumeFormat">
+      <Property Name="value__" Type="System.Int32">2</Property>
+    </Property>
+    <Property Name="DiskType" Type="VdcCommon.BusinessEntities.DiskType">
+      <Property Name="value__" Type="System.Int32">1</Property>
+    </Property>
+    <Property Name="InternalDriveMapping" Type="System.String">1</Property>
+    <Property Name="Boot" Type="System.Boolean">True</Property>
+    <Property Name="DiskInterface" Type="System.String">IDE</Property>
+    <Property Name="WipeAfterDelete" Type="System.Boolean">False</Property>
+    <Property Name="PropagateErrors" Type="VdcCommon.BusinessEntities.PropagateErrors">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+  </Object>
+</Objects>
