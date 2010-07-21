@@ -23,11 +23,13 @@ import java.util.concurrent.Executor;
 import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.model.BaseResource;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 
 public abstract class AbstractPowerShellActionableResource<R extends BaseResource> extends AbstractActionableResource<R> {
 
     protected PowerShellPoolMap shellPools;
+    protected PowerShellParser parser;
 
     public AbstractPowerShellActionableResource(String id , PowerShellPoolMap shellPools) {
         super(id);
@@ -39,7 +41,20 @@ public abstract class AbstractPowerShellActionableResource<R extends BaseResourc
         this.shellPools = shellPools;
     }
 
+    public AbstractPowerShellActionableResource(String id,
+                                                Executor executor,
+                                                PowerShellPoolMap shellPools,
+                                                PowerShellParser parser) {
+        super(id, executor);
+        this.shellPools = shellPools;
+        this.parser = parser;
+    }
+
     protected PowerShellCmd getShell() {
         return shellPools.get().get();
+    }
+
+    protected PowerShellParser getParser() {
+        return parser;
     }
 }

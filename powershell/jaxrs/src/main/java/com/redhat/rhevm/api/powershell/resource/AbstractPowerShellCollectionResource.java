@@ -27,6 +27,7 @@ import com.redhat.rhevm.api.common.util.QueryHelper;
 import com.redhat.rhevm.api.common.util.ReapedMap;
 import com.redhat.rhevm.api.model.BaseResource;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
@@ -35,6 +36,7 @@ public abstract class AbstractPowerShellCollectionResource<R extends BaseResourc
                                                            U extends AbstractUpdatableResource<R>> {
     private ReapedMap<String, U> resources;
     private Executor executor;
+    private PowerShellParser parser;
     protected PowerShellPoolMap shellPools;
     private final static String SEARCH_TEXT = " -searchtext ";
 
@@ -77,6 +79,14 @@ public abstract class AbstractPowerShellCollectionResource<R extends BaseResourc
 
     public void setExecutor(Executor executor) {
         this.executor = executor;
+    }
+
+    public PowerShellParser getParser() {
+        return parser;
+    }
+
+    public void setParser(PowerShellParser parser) {
+        this.parser = parser;
     }
 
     public void setPowerShellPoolMap(PowerShellPoolMap shellPools) {
