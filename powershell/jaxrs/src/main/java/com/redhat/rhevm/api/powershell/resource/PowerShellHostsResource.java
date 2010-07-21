@@ -18,6 +18,8 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.util.List;
+
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -28,6 +30,7 @@ import com.redhat.rhevm.api.resource.HostResource;
 import com.redhat.rhevm.api.resource.HostsResource;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
@@ -35,10 +38,18 @@ public class PowerShellHostsResource
     extends AbstractPowerShellCollectionResource<Host, PowerShellHostResource>
     implements HostsResource {
 
+    public List<Host> runAndParse(String command) {
+        return PowerShellHostResource.runAndParse(getShell(), getParser(), command);
+    }
+
+    public Host runAndParseSingle(String command) {
+        return PowerShellHostResource.runAndParseSingle(getShell(), getParser(), command);
+    }
+
     @Override
     public Hosts list(UriInfo uriInfo) {
         Hosts ret = new Hosts();
-        for (Host host : PowerShellHostResource.runAndParse(getShell(), getSelectCommand("select-host", uriInfo, Host.class))) {
+        for (Host host : runAndParse(getSelectCommand("select-host", uriInfo, Host.class))) {
             ret.getHosts().add(LinkHelper.addLinks(host));
         }
         return ret;
@@ -64,8 +75,7 @@ public class PowerShellHostsResource
             buf.append(" -port " + host.getPort());
         }
 
-        host = PowerShellHostResource.runAndParseSingle(getShell(), buf.toString());
-        host = LinkHelper.addLinks(host);
+        host = LinkHelper.addLinks(runAndParseSingle(buf.toString()));
 
         UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(host.getId());
 
@@ -84,7 +94,7 @@ public class PowerShellHostsResource
     }
 
     protected PowerShellHostResource createSubResource(String id) {
-        return new PowerShellHostResource(id, getExecutor(), shellPools);
+        return new PowerShellHostResource(id, getExecutor(), shellPools, getParser());
     }
 
     private String getClusterArg(StringBuilder buf, Host host) {
@@ -95,7 +105,7 @@ public class PowerShellHostsResource
             } else if (host.getCluster().isSetName())  {
                 buf.append("$c = select-cluster -searchtext ");
                 buf.append(PowerShellUtils.escape("name=" + host.getCluster().getName()));
-                buf.append("\n");
+                buf.append(";");
                 clusterArg = " -hostclusterid $c.ClusterId";
             }
         }

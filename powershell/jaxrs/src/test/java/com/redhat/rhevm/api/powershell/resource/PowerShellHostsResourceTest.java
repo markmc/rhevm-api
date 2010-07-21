@@ -43,7 +43,7 @@ public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionRes
 
 
     public PowerShellHostsResourceTest() {
-        super(new PowerShellHostResource("0", null, null), "hosts", "host");
+        super(new PowerShellHostResource("0", null, null, null), "hosts", "host");
     }
 
     @Test

@@ -54,7 +54,7 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
     private static final String INSTALL_COMMAND = "$h = rhevmpssnapin\\get-host \"12345\"\nupdate-host -hostobject $h -install -rootpassword \"" + INSTALL_PASSWORD + "\"";
 
     protected PowerShellHostResource getResource(Executor executor, PowerShellPoolMap poolMap) {
-        return new PowerShellHostResource("12345", executor, poolMap);
+        return new PowerShellHostResource("12345", executor, poolMap, null);
     }
 
     @Test

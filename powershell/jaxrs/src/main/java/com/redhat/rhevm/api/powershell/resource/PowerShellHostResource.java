@@ -18,7 +18,7 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.Response;
@@ -31,31 +31,43 @@ import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellHost;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
 public class PowerShellHostResource extends AbstractPowerShellActionableResource<Host> implements HostResource {
 
-    public PowerShellHostResource(String id, Executor executor, PowerShellPoolMap shellPools) {
-        super(id, executor, shellPools);
+    public PowerShellHostResource(String id,
+                                  Executor executor,
+                                  PowerShellPoolMap shellPools,
+                                  PowerShellParser parser) {
+        super(id, executor, shellPools, parser);
     }
 
     /* needed because there are two get-host commands */
     private static final String CMD_PREFIX = "rhevmpssnapin\\";
 
-    public static ArrayList<Host> runAndParse(PowerShellCmd shell, String command) {
-        return PowerShellHost.parse(PowerShellCmd.runCommand(shell, command));
+    public static List<Host> runAndParse(PowerShellCmd shell, PowerShellParser parser, String command) {
+        return PowerShellHost.parse(parser, PowerShellCmd.runCommand(shell, command, true));
     }
 
-    public static Host runAndParseSingle(PowerShellCmd shell, String command) {
-        ArrayList<Host> hosts = runAndParse(shell, command);
+    public static Host runAndParseSingle(PowerShellCmd shell, PowerShellParser parser, String command) {
+        List<Host> hosts = runAndParse(shell, parser, command);
 
         return !hosts.isEmpty() ? hosts.get(0) : null;
     }
 
+    public List<Host> runAndParse(String command) {
+        return runAndParse(getShell(), getParser(), command);
+    }
+
+    public Host runAndParseSingle(String command) {
+        return runAndParseSingle(getShell(), getParser(), command);
+    }
+
     @Override
     public Host get(UriInfo uriInfo) {
-        return LinkHelper.addLinks(runAndParseSingle(getShell(), CMD_PREFIX + "get-host " + PowerShellUtils.escape(getId())));
+        return LinkHelper.addLinks(runAndParseSingle(CMD_PREFIX + "get-host " + PowerShellUtils.escape(getId())));
     }
 
     @Override
@@ -64,15 +76,15 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
 
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$h = " + CMD_PREFIX + "get-host " + PowerShellUtils.escape(getId()) + "\n");
+        buf.append("$h = " + CMD_PREFIX + "get-host " + PowerShellUtils.escape(getId()) + ";");
 
         if (host.getName() != null) {
-            buf.append("$h.name = " + PowerShellUtils.escape(host.getName()) + "\n");
+            buf.append("$h.name = " + PowerShellUtils.escape(host.getName()) + ";");
         }
 
         buf.append("update-host -hostobject $h");
 
-        return LinkHelper.addLinks(runAndParseSingle(getShell(), buf.toString()));
+        return LinkHelper.addLinks(runAndParseSingle(buf.toString()));
     }
 
     @Override
@@ -110,7 +122,7 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
             String id = PowerShellHostResource.this.getId();
             StringBuilder buf = new StringBuilder();
 
-            buf.append(command + PowerShellUtils.escape(id) + "\n");
+            buf.append(command + PowerShellUtils.escape(id) + ";");
 
             buf.append("update-host");
             buf.append(" -hostobject $h");

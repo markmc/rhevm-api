@@ -20,7 +20,7 @@ package com.redhat.rhevm.api.powershell.model;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.HostStatus;
@@ -35,14 +35,14 @@ public class PowerShellHostTest extends PowerShellModelTest {
     }
 
     @Test
-    public void testParse() {
-        String data = readFileContents("host.data");
+    public void testParse() throws Exception {
+        String data = readFileContents("host.xml");
         assertNotNull(data);
 
-        ArrayList<Host> hosts = PowerShellHost.parse(data);
+        List<Host> hosts = PowerShellHost.parse(getParser(), data);
 
         assertEquals(hosts.size(), 1);
 
-        testHost(hosts.get(0), "0", "zig", HostStatus.UP);
+        testHost(hosts.get(0), "5f38363b-7457-4884-831e-78c27cebb31d", "zig", HostStatus.UP);
     }
 }

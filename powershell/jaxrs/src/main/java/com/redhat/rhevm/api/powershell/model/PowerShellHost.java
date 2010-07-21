@@ -19,17 +19,16 @@
 package com.redhat.rhevm.api.powershell.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.HostStatus;
 import com.redhat.rhevm.api.powershell.model.PowerShellHost;
-import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 
 public class PowerShellHost {
 
-    private static HostStatus parseStatus(HashMap<String,String> props, String key) {
-        String s = props.get(key);
+    private static HostStatus parseStatus(String s) {
         if (s.equals("Down"))                      return HostStatus.DOWN;
         if (s.equals("Error"))                     return HostStatus.ERROR;
         if (s.equals("Initializing"))              return HostStatus.INITIALIZING;
@@ -48,16 +47,15 @@ public class PowerShellHost {
         return null;
     }
 
-    public static ArrayList<Host> parse(String output) {
-        ArrayList<HashMap<String,String>> hostsProps = PowerShellUtils.parseProps(output);
-        ArrayList<Host> ret = new ArrayList<Host>();
+    public static List<Host> parse(PowerShellParser parser, String output) {
+        List<Host> ret = new ArrayList<Host>();
 
-        for (HashMap<String,String> props : hostsProps) {
+        for (PowerShellParser.Entity entity : parser.parse(output)) {
             Host host = new Host();
 
-            host.setId(props.get("hostid"));
-            host.setName(props.get("name"));
-            host.setStatus(parseStatus(props, "status"));
+            host.setId(entity.get("hostid"));
+            host.setName(entity.get("name"));
+            host.setStatus(parseStatus(entity.get("status")));
 
             ret.add(host);
         }
