@@ -33,6 +33,7 @@ import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.resource.AttachmentResource;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
@@ -46,8 +47,12 @@ public class PowerShellAttachmentResource extends AbstractPowerShellActionableRe
      *
      * @param attachment  encapsulated Attachment
      */
-    PowerShellAttachmentResource(String dataCenterId, String storageDomainId, Executor executor, PowerShellPoolMap shellPools) {
-        super(dataCenterId, executor, shellPools);
+    PowerShellAttachmentResource(String dataCenterId,
+                                 String storageDomainId,
+                                 Executor executor,
+                                 PowerShellPoolMap shellPools,
+                                 PowerShellParser parser) {
+        super(dataCenterId, executor, shellPools, parser);
         this.storageDomainId = storageDomainId;
     }
 
@@ -71,7 +76,9 @@ public class PowerShellAttachmentResource extends AbstractPowerShellActionableRe
         buf.append(" -datacenterid " + PowerShellUtils.escape(getId()));
         buf.append(" -storagedomainid " + PowerShellUtils.escape(storageDomainId));
 
-        StorageDomain storageDomain = PowerShellStorageDomainResource.runAndParseSingle(getShell(), buf.toString());
+        StorageDomain storageDomain = PowerShellStorageDomainResource.runAndParseSingle(getShell(),
+                                                                                        getParser(),
+                                                                                        buf.toString());
 
         DataCenter dataCenter = new DataCenter();
         dataCenter.setId(getId());

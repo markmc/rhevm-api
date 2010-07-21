@@ -41,11 +41,19 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
     private static HashMap<String, PowerShellStorageDomainResource> tornDownDomains =
         new HashMap<String, PowerShellStorageDomainResource>();
 
+    public List<StorageDomain> runAndParse(String command, boolean sharedStatus) {
+        return PowerShellStorageDomainResource.runAndParse(getShell(), getParser(), command, sharedStatus);
+    }
+
+    public StorageDomain runAndParseSingle(String command, boolean sharedStatus) {
+        return PowerShellStorageDomainResource.runAndParseSingle(getShell(), getParser(), command, sharedStatus);
+    }
+
     @Override
     public StorageDomains list(UriInfo uriInfo) {
         StorageDomains ret = new StorageDomains();
 
-        List<StorageDomain> storageDomains = PowerShellStorageDomainResource.runAndParse(getShell(), "select-storagedomain", true);
+        List<StorageDomain> storageDomains = runAndParse("select-storagedomain", true);
 
         for (StorageDomain storageDomain : storageDomains) {
             ret.getStorageDomains().add(PowerShellStorageDomainResource.addLinks(storageDomain));
@@ -69,7 +77,7 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
         } else {
             buf.append("$h = select-host -searchtext ");
             buf.append(PowerShellUtils.escape("name=" +  storageDomain.getHost().getName()));
-            buf.append("\n");
+            buf.append(";");
             hostArg = "$h.hostid";
         }
 
@@ -111,7 +119,7 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
             break;
         }
 
-        storageDomain = PowerShellStorageDomainResource.runAndParseSingle(getShell(), buf.toString(), true);
+        storageDomain = runAndParseSingle(buf.toString(), true);
 
         storageDomain = PowerShellStorageDomainResource.addLinks(storageDomain);
 

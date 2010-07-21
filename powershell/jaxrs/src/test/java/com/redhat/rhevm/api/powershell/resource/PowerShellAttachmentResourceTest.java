@@ -59,7 +59,7 @@ public class PowerShellAttachmentResourceTest extends AbstractPowerShellResource
     private static final String ACTION_RETURN = "replace with realistic powershell return";
 
     protected PowerShellAttachmentResource getResource(Executor executor, PowerShellPoolMap poolMap) {
-        return new PowerShellAttachmentResource(DATA_CENTER_ID, STORAGE_DOMAIN_ID, executor, poolMap);
+        return new PowerShellAttachmentResource(DATA_CENTER_ID, STORAGE_DOMAIN_ID, executor, poolMap, null);
     }
 
     @Test

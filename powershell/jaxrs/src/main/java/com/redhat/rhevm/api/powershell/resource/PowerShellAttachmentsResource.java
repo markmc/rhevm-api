@@ -18,7 +18,6 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 
@@ -100,7 +99,9 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
             buf.append(" -datacenterid " + PowerShellUtils.escape(dataCenter.getId()));
             buf.append(" -storagedomainid " + PowerShellUtils.escape(storageDomainId));
 
-            StorageDomain storageDomain = PowerShellStorageDomainResource.runAndParseSingle(getShell(), buf.toString());
+            StorageDomain storageDomain = PowerShellStorageDomainResource.runAndParseSingle(getShell(),
+                                                                                            getParser(),
+                                                                                            buf.toString());
 
             Attachment attachment = buildAttachment(dataCenter, storageDomain);
 
@@ -120,7 +121,9 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
         buf.append(" -datacenterid " + PowerShellUtils.escape(dataCenter.getId()));
         buf.append(" -storagedomainid " + PowerShellUtils.escape(storageDomainId));
 
-        StorageDomain storageDomain = PowerShellStorageDomainResource.runAndParseSingle(getShell(), buf.toString());
+        StorageDomain storageDomain = PowerShellStorageDomainResource.runAndParseSingle(getShell(),
+                                                                                        getParser(),
+                                                                                        buf.toString());
 
         attachment = buildAttachment(dataCenter, storageDomain);
         attachment = PowerShellAttachmentResource.addLinks(attachment);
@@ -143,7 +146,7 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
 
     @Override
     public AttachmentResource getAttachmentSubResource(UriInfo uriInfo, String id) {
-        return new PowerShellAttachmentResource(id, storageDomainId, executor, shellPools);
+        return new PowerShellAttachmentResource(id, storageDomainId, executor, shellPools, getParser());
     }
 
     /**
@@ -152,7 +155,9 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
      * @param dataCenterId  the ID of the data center
      * @return  an encapsulation of the attachments
      */
-    public static Attachments getAttachmentsForDataCenter(PowerShellCmd shell, String dataCenterId) {
+    public static Attachments getAttachmentsForDataCenter(PowerShellCmd shell,
+                                                          PowerShellParser parser,
+                                                          String dataCenterId) {
         Attachments attachments = new Attachments();
 
         StringBuilder buf = new StringBuilder();
@@ -160,9 +165,9 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
         buf.append("get-storagedomain");
         buf.append(" -datacenterid " + PowerShellUtils.escape(dataCenterId));
 
-        ArrayList<StorageDomain> storageDomains;
+        List<StorageDomain> storageDomains;
         try {
-            storageDomains = PowerShellStorageDomainResource.runAndParse(shell, buf.toString());
+            storageDomains = PowerShellStorageDomainResource.runAndParse(shell, parser, buf.toString());
         } catch (PowerShellException e) {
             // Ignore 'There is no Storage Domains in DataCenter' error
             // i.e. no storage domains are attached to this data center

@@ -63,10 +63,12 @@ public class PowerShellDataCenterResource extends AbstractPowerShellActionableRe
         return runAndParseSingle(getShell(), getParser(), command);
     }
 
-    public static DataCenter addLinks(PowerShellCmd shell, DataCenter dataCenter) {
+    public static DataCenter addLinks(PowerShellCmd shell, PowerShellParser parser, DataCenter dataCenter) {
         dataCenter = LinkHelper.addLinks(dataCenter);
 
-        Attachments attachments = PowerShellAttachmentsResource.getAttachmentsForDataCenter(shell, dataCenter.getId());
+        Attachments attachments = PowerShellAttachmentsResource.getAttachmentsForDataCenter(shell,
+                                                                                            parser,
+                                                                                            dataCenter.getId());
         dataCenter.setAttachments(attachments);
 
         Link link = new Link();
@@ -78,9 +80,13 @@ public class PowerShellDataCenterResource extends AbstractPowerShellActionableRe
         return dataCenter;
     }
 
+    public DataCenter addLinks(DataCenter dataCenter) {
+        return addLinks(getShell(), getParser(), dataCenter);
+    }
+
     @Override
     public DataCenter get(UriInfo uriInfo) {
-        return addLinks(getShell(), runAndParseSingle("get-datacenter " + PowerShellUtils.escape(getId())));
+        return addLinks(runAndParseSingle("get-datacenter " + PowerShellUtils.escape(getId())));
     }
 
     @Override
@@ -100,7 +106,7 @@ public class PowerShellDataCenterResource extends AbstractPowerShellActionableRe
 
         buf.append("update-datacenter -datacenterobject $v");
 
-        return addLinks(getShell(), runAndParseSingle(buf.toString()));
+        return addLinks(runAndParseSingle(buf.toString()));
     }
 
     public IsosResource getIsosResource() {

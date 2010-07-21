@@ -20,7 +20,7 @@ package com.redhat.rhevm.api.powershell.model;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.redhat.rhevm.api.model.Storage;
 import com.redhat.rhevm.api.model.StorageDomainStatus;
@@ -32,12 +32,12 @@ import com.redhat.rhevm.api.powershell.model.PowerShellStorageDomain;
 public class PowerShellStorageDomainTest extends PowerShellModelTest {
 
     private void testStorageDomain(PowerShellStorageDomain s, String id, String name, StorageDomainType type, Boolean isMaster, StorageDomainStatus status, StorageDomainStatus sharedStatus) {
-        assertEquals(s.getId(), id);
-        assertEquals(s.getName(), name);
-        assertEquals(s.getType(), type);
-        assertEquals(s.isMaster(), isMaster);
-        assertEquals(s.getStatus(), status);
-        assertEquals(s.getSharedStatus(), sharedStatus);
+        assertEquals(id, s.getId());
+        assertEquals(name, s.getName());
+        assertEquals(type, s.getType());
+        assertEquals(isMaster, s.isMaster());
+        assertEquals(status, s.getStatus());
+        assertEquals(sharedStatus, s.getSharedStatus());
     }
 
     private void testNfsStorageDomain(PowerShellStorageDomain s, String id, String name, StorageDomainType type, Boolean isMaster, StorageDomainStatus status, StorageDomainStatus sharedStatus, String address, String path) {
@@ -46,38 +46,33 @@ public class PowerShellStorageDomainTest extends PowerShellModelTest {
         Storage storage = s.getStorage();
         assertNotNull(storage);
 
-        assertEquals(storage.getType(), StorageType.NFS);
-        assertEquals(storage.getAddress(), address);
-        assertEquals(storage.getPath(), path);
+        assertEquals(StorageType.NFS, storage.getType());
+        assertEquals(address, storage.getAddress());
+        assertEquals(path, storage.getPath());
     }
 
     @Test
-    public void testParse() {
-        String data = readFileContents("storagedomain.data");
+    public void testParse() throws Exception {
+        String data = readFileContents("storagedomain.xml");
         assertNotNull(data);
 
-        ArrayList<PowerShellStorageDomain> storageDomains = PowerShellStorageDomain.parse(data);
+        List<PowerShellStorageDomain> storageDomains = PowerShellStorageDomain.parse(getParser(), data);
 
-        assertEquals(storageDomains.size(), 4);
+        assertEquals(storageDomains.size(), 3);
 
         testNfsStorageDomain(storageDomains.get(0),
-                             "749ce52b-555c-4725-83b9-0cb2cc5303a9", "images_0",
-                             StorageDomainType.DATA, true,  null, StorageDomainStatus.INACTIVE,
-                             "172.31.0.6", "/exports/RHEVX/images/0");
+                             "788cd1e6-aa2b-412e-bcaf-0b37b96f00b2", "foo222",
+                             StorageDomainType.DATA, null,  null, StorageDomainStatus.UNATTACHED,
+                             "172.31.0.6", "/exports/RHEVX/markmc/images/2");
 
         testNfsStorageDomain(storageDomains.get(1),
-                             "644448c4-4b93-44a5-8295-db6d1bb367d8", "images_1",
-                             StorageDomainType.DATA, null, null, StorageDomainStatus.UNATTACHED,
-                             "172.31.0.6", "/exports/RHEVX/images/1");
+                             "85fa8ff2-b3e4-483a-970d-7a8a13bc839f", "images0",
+                             StorageDomainType.DATA, true, null, StorageDomainStatus.ACTIVE,
+                             "172.31.0.6", "/exports/RHEVX/markmc/images/0");
 
         testNfsStorageDomain(storageDomains.get(2),
-                             "dcf38312-15d6-4e3f-a5cb-b90a4554b415", "images_8",
-                             StorageDomainType.DATA, null, null, StorageDomainStatus.INACTIVE,
-                             "172.31.0.6", "/exports/RHEVX/images/8");
-
-        testNfsStorageDomain(storageDomains.get(3),
-                             "5db1ae3d-1628-439e-996e-b4ad955b6480", "iso_0",
-                             StorageDomainType.ISO,  null, null, StorageDomainStatus.INACTIVE,
-                             "172.31.0.6", "/exports/RHEVX/iso/0");
+                             "4fa5e14f-8404-4dee-a16f-172279376f0c", "iso0",
+                             StorageDomainType.ISO, null, null, StorageDomainStatus.INACTIVE,
+                             "172.31.0.6", "/exports/RHEVX/markmc/iso/0");
     }
 }

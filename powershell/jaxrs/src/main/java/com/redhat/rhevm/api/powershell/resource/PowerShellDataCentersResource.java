@@ -45,7 +45,7 @@ public class PowerShellDataCentersResource
     }
 
     public DataCenter addLinks(DataCenter dataCenter) {
-        return PowerShellDataCenterResource.addLinks(getShell(), dataCenter);
+        return PowerShellDataCenterResource.addLinks(getShell(), getParser(), dataCenter);
     }
 
     @Override

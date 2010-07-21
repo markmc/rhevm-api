@@ -19,15 +19,18 @@
 package com.redhat.rhevm.api.powershell.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
 import com.redhat.rhevm.api.model.Storage;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.StorageDomainStatus;
 import com.redhat.rhevm.api.model.StorageDomainType;
 import com.redhat.rhevm.api.model.StorageType;
+import com.redhat.rhevm.api.powershell.enums.PowerShellStorageDomainSharedStatus;
+import com.redhat.rhevm.api.powershell.enums.PowerShellStorageDomainStatus;
+import com.redhat.rhevm.api.powershell.enums.PowerShellStorageType;
 import com.redhat.rhevm.api.powershell.model.PowerShellStorageDomain;
-import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 
 public class PowerShellStorageDomain extends StorageDomain {
 
@@ -40,44 +43,32 @@ public class PowerShellStorageDomain extends StorageDomain {
         this.sharedStatus = sharedStatus;
     }
 
-    private static StorageDomainStatus parseStatus(HashMap<String,String> props, String key) {
-        try {
-            return props.get(key) != null
-                   ? StorageDomainStatus.fromValue(props.get(key).toUpperCase())
-                   : null;
-        } catch (IllegalArgumentException iae) {
-            // ignore - assume status is 'Unknown'
-            return null;
-        }
-    }
+    public static List<PowerShellStorageDomain> parse(PowerShellParser parser, String output) {
+        List<PowerShellStorageDomain> ret = new ArrayList<PowerShellStorageDomain>();
 
-    public static ArrayList<PowerShellStorageDomain> parse(String output) {
-        ArrayList<HashMap<String,String>> storageDomainsProps = PowerShellUtils.parseProps(output);
-        ArrayList<PowerShellStorageDomain> ret = new ArrayList<PowerShellStorageDomain>();
-
-        for (HashMap<String,String> props : storageDomainsProps) {
+        for (PowerShellParser.Entity entity : parser.parse(output)) {
             PowerShellStorageDomain storageDomain = new PowerShellStorageDomain();
 
-            storageDomain.setId(props.get("storagedomainid"));
-            storageDomain.setName(props.get("name"));
+            storageDomain.setId(entity.get("storagedomainid"));
+            storageDomain.setName(entity.get("name"));
 
-            String domainType = props.get("domaintype").toUpperCase();
+            String domainType = entity.get("domaintype").toUpperCase();
             if (domainType.endsWith(" (MASTER)")) {
                 domainType = domainType.split(" ")[0];
                 storageDomain.setMaster(true);
             }
             storageDomain.setType(StorageDomainType.fromValue(domainType));
 
-            storageDomain.setStatus(parseStatus(props, "status"));
-            storageDomain.setSharedStatus(parseStatus(props, "sharedstatus"));
+            storageDomain.setStatus(entity.get("status", PowerShellStorageDomainStatus.class).map());
+            storageDomain.setSharedStatus(entity.get("sharedstatus", PowerShellStorageDomainSharedStatus.class).map());
 
             Storage storage = new Storage();
 
-            storage.setType(StorageType.fromValue(props.get("type").toUpperCase()));
+            storage.setType(entity.get("type", PowerShellStorageType.class).map());
 
             switch (storage.getType()) {
             case NFS:
-                String[] parts = props.get("nfspath").split(":");
+                String[] parts = entity.get("nfspath").split(":");
                 storage.setAddress(parts[0]);
                 storage.setPath(parts[1]);
                 break;

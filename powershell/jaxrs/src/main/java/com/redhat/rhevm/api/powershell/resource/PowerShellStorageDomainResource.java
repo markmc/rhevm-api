@@ -19,6 +19,7 @@
 package com.redhat.rhevm.api.powershell.resource;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -74,10 +75,13 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
      * @param sharedStatus whether the 'sharedStatus' property is needed
      * @return a list of storage domains
      */
-    public static ArrayList<StorageDomain> runAndParse(PowerShellCmd shell, String command, boolean sharedStatus) {
-        ArrayList<PowerShellStorageDomain> storageDomains =
-            PowerShellStorageDomain.parse(PowerShellCmd.runCommand(shell, command));
-        ArrayList<StorageDomain> ret = new ArrayList<StorageDomain>();
+    public static List<StorageDomain> runAndParse(PowerShellCmd shell,
+                                                  PowerShellParser parser,
+                                                  String command,
+                                                  boolean sharedStatus) {
+        List<PowerShellStorageDomain> storageDomains =
+            PowerShellStorageDomain.parse(parser, PowerShellCmd.runCommand(shell, command, true));
+        List<StorageDomain> ret = new ArrayList<StorageDomain>();
 
         for (PowerShellStorageDomain storageDomain : storageDomains) {
             if (sharedStatus) {
@@ -97,8 +101,8 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
      * @param command the powershell command to execute
      * @return a list of storage domains
      */
-    public static ArrayList<StorageDomain> runAndParse(PowerShellCmd shell, String command) {
-        return runAndParse(shell, command, false);
+    public static List<StorageDomain> runAndParse(PowerShellCmd shell, PowerShellParser parser, String command) {
+        return runAndParse(shell, parser, command, false);
     }
 
     /**
@@ -109,8 +113,11 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
      * @param whether the 'sharedStatus' property is needed
      * @return a single storage domain, or null
      */
-    public static StorageDomain runAndParseSingle(PowerShellCmd shell, String command, boolean sharedStatus) {
-        ArrayList<StorageDomain> storageDomains = runAndParse(shell, command, sharedStatus);
+    public static StorageDomain runAndParseSingle(PowerShellCmd shell,
+                                                  PowerShellParser parser,
+                                                  String command,
+                                                  boolean sharedStatus) {
+        List<StorageDomain> storageDomains = runAndParse(shell, parser, command, sharedStatus);
 
         return !storageDomains.isEmpty() ? storageDomains.get(0) : null;
     }
@@ -123,8 +130,12 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
      * @param command the powershell command to execute
      * @return a single storage domain, or null
      */
-    public static StorageDomain runAndParseSingle(PowerShellCmd shell, String command) {
-        return runAndParseSingle(shell, command, false);
+    public static StorageDomain runAndParseSingle(PowerShellCmd shell, PowerShellParser parser, String command) {
+        return runAndParseSingle(shell, parser, command, false);
+    }
+
+    public StorageDomain runAndParseSingle(String command, boolean sharedStatus) {
+        return runAndParseSingle(getShell(), getParser(), command, sharedStatus);
     }
 
     public static StorageDomain addLinks(StorageDomain storageDomain) {
@@ -153,7 +164,7 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
         if (tornDown != null) {
             storageDomain = tornDown;
         } else {
-            storageDomain = runAndParseSingle(getShell(), "get-storagedomain " + PowerShellUtils.escape(getId()), true);
+            storageDomain = runAndParseSingle("get-storagedomain " + PowerShellUtils.escape(getId()), true);
         }
         return addLinks(storageDomain);
     }
@@ -168,16 +179,15 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
             tornDown.setName(storageDomain.getName());
             storageDomain = tornDown;
         } else {
-            buf.append("$h = get-storagedomain " + PowerShellUtils.escape(getId()) + "\n");
+            buf.append("$h = get-storagedomain " + PowerShellUtils.escape(getId()) + ";");
 
             if (storageDomain.getName() != null) {
-                buf.append("$h.name = " + PowerShellUtils.escape(storageDomain.getName()) + "\n");
+                buf.append("$h.name = " + PowerShellUtils.escape(storageDomain.getName()) + ";");
             }
 
-            buf.append("\n");
             buf.append("update-storagedomain -storagedomainobject $v");
 
-            storageDomain = runAndParseSingle(getShell(), buf.toString(), true);
+            storageDomain = runAndParseSingle(buf.toString(), true);
         }
         return addLinks(storageDomain);
     }
@@ -202,7 +212,7 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
             String id = PowerShellStorageDomainResource.this.getId();
 
             StorageDomain storageDomain =
-                runAndParseSingle(getShell(), "get-storagedomain " + PowerShellUtils.escape(id), true);
+                runAndParseSingle("get-storagedomain " + PowerShellUtils.escape(id), true);
 
             StringBuilder buf = new StringBuilder();
 
@@ -212,7 +222,7 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
             } else {
                 buf.append("$h = select-host -searchtext ");
                 buf.append(PowerShellUtils.escape("name=" +  action.getHost().getName()));
-                buf.append("\n");
+                buf.append(";");
                 hostArg = "$h.hostid";
             }
 
