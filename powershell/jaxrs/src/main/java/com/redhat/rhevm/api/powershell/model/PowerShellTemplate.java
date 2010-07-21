@@ -19,7 +19,7 @@
 package com.redhat.rhevm.api.powershell.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
 import com.redhat.rhevm.api.model.BootDevice;
 import com.redhat.rhevm.api.model.Cluster;
@@ -28,7 +28,9 @@ import com.redhat.rhevm.api.model.CpuTopology;
 import com.redhat.rhevm.api.model.OperatingSystem;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.TemplateStatus;
-import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+import com.redhat.rhevm.api.powershell.enums.PowerShellBootSequence;
+import com.redhat.rhevm.api.powershell.enums.PowerShellVmTemplateStatus;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 
 
 public class PowerShellTemplate extends Template {
@@ -41,46 +43,34 @@ public class PowerShellTemplate extends Template {
         this.cdIsoPath = cdIsoPath;
     }
 
-    private static TemplateStatus parseStatus(HashMap<String,String> props, String key) {
-        String s = props.get(key);
-        if (s == null) return null;
-        else if (s.equals("Illegal")) return TemplateStatus.ILLEGAL;
-        else if (s.equals("Locked"))  return TemplateStatus.LOCKED;
-        else if (s.equals("OK"))      return TemplateStatus.OK;
-        else return null;
-    }
+    public static List<PowerShellTemplate> parse(PowerShellParser parser, String output) {
+        List<PowerShellTemplate> ret = new ArrayList<PowerShellTemplate>();
 
-    public static ArrayList<PowerShellTemplate> parse(String output) {
-        ArrayList<HashMap<String,String>> templatesProps = PowerShellUtils.parseProps(output);
-        ArrayList<PowerShellTemplate> ret = new ArrayList<PowerShellTemplate>();
-
-        for (HashMap<String,String> props : templatesProps) {
+        for (PowerShellParser.Entity entity : parser.parse(output)) {
             PowerShellTemplate template = new PowerShellTemplate();
 
-            template.setId(props.get("templateid"));
-            template.setName(props.get("name"));
-            template.setDescription(props.get("description"));
-            template.setMemory(Long.parseLong(props.get("memsizemb")) * 1024 * 1024);
-            template.setCdIsoPath(props.get("cdisopath"));
-
-            TemplateStatus status = parseStatus(props, "status");
-            if (status != null) {
-                template.setStatus(status);
-            }
+            template.setId(entity.get("templateid"));
+            template.setName(entity.get("name"));
+            template.setDescription(entity.get("description"));
+            template.setMemory(entity.get("memsizemb", Integer.class) * 1024L * 1024L);
+            template.setCdIsoPath(entity.get("cdisopath"));
+            template.setStatus(entity.get("status", PowerShellVmTemplateStatus.class).map());
 
             CpuTopology topo = new CpuTopology();
-            topo.setSockets(Integer.parseInt(props.get("numofsockets")));
-            topo.setCores(Integer.parseInt(props.get("numofcpuspersocket")));
+            topo.setSockets(entity.get("numofsockets", Integer.class));
+            topo.setCores(entity.get("numofcpuspersocket", Integer.class));
             CPU cpu = new CPU();
             cpu.setTopology(topo);
             template.setCpu(cpu);
 
             OperatingSystem os = new OperatingSystem();
-            PowerShellVM.parseBootDevices(os, props.get("defaultbootsequence"));
+            for (OperatingSystem.Boot boot : entity.get("defaultbootsequence", PowerShellBootSequence.class).map()) {
+                os.getBoot().add(boot);
+            }
             template.setOs(os);
 
             Cluster cluster = new Cluster();
-            cluster.setId(props.get("hostclusterid"));
+            cluster.setId(entity.get("hostclusterid"));
             template.setCluster(cluster);
 
             ret.add(template);

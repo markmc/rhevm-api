@@ -20,7 +20,7 @@ package com.redhat.rhevm.api.powershell.model;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.TemplateStatus;
@@ -29,29 +29,34 @@ import com.redhat.rhevm.api.model.TemplateStatus;
 public class PowerShellTemplateTest extends PowerShellModelTest {
 
     private void testTemplate(PowerShellTemplate t, String id, String name, String description, TemplateStatus status, Long memory, int sockets, int cores, String cdIsoPath, String clusterId) {
-        assertEquals(t.getId(), id);
-        assertEquals(t.getName(), name);
-        assertEquals(t.getDescription(), description);
-        assertEquals(t.getStatus(), status);
-        assertEquals(t.getMemory(), memory);
+        assertEquals(id, t.getId());
+        assertEquals(name, t.getName());
+        assertEquals(description, t.getDescription());
+        assertEquals(status, t.getStatus());
+        assertEquals(memory, t.getMemory());
         assertNotNull(t.getCpu());
         assertNotNull(t.getCpu().getTopology());
-        assertEquals(t.getCpu().getTopology().getSockets(), sockets);
-        assertEquals(t.getCpu().getTopology().getCores(), cores);
-        assertEquals(t.getCdIsoPath(), cdIsoPath);
+        assertEquals(sockets, t.getCpu().getTopology().getSockets());
+        assertEquals(cores, t.getCpu().getTopology().getCores());
+        assertEquals(cdIsoPath, t.getCdIsoPath());
         assertNotNull(t.getCluster());
-        assertEquals(t.getCluster().getId(), clusterId);
+        assertEquals(clusterId, t.getCluster().getId());
     }
 
     @Test
-    public void testParse() {
-        String data = readFileContents("template.data");
+    public void testParse() throws Exception {
+        String data = readFileContents("template.xml");
         assertNotNull(data);
 
-        ArrayList<PowerShellTemplate> templates = PowerShellTemplate.parse(data);
+        List<PowerShellTemplate> templates = PowerShellTemplate.parse(getParser(), data);
 
-        assertEquals(templates.size(), 1);
+        assertEquals(templates.size(), 4);
 
-        testTemplate(templates.get(0), "00000000-0000-0000-0000-000000000000", "Blank", "Blank template", TemplateStatus.OK, 536870912L, 1, 1, "foo.iso", "0");
+        testTemplate(templates.get(0), "00000000-0000-0000-0000-000000000000", "Blank", "Blank template", TemplateStatus.OK, 536870912L, 1, 1, null, "99408929-82cf-4dc7-a532-9d998063fa95");
+        testTemplate(templates.get(1), "8d465dcc-df83-4161-868b-ad223744b14a", "foo520", null, TemplateStatus.OK, 536870912L, 1, 1, null, "99408929-82cf-4dc7-a532-9d998063fa95");
+        testTemplate(templates.get(2), "b3831709-6a0b-41dd-8e96-ea1f2573f95a", "foobar", "foo", TemplateStatus.OK, 536870912L, 1, 1,null, "99408929-82cf-4dc7-a532-9d998063fa95");
+        testTemplate(templates.get(3), "3ee77811-f1eb-4d3f-991e-e539dbb2f1f9", "tmpl1", null, TemplateStatus.OK, 536870912L, 1, 1,null, "99408929-82cf-4dc7-a532-9d998063fa95");
+
+
     }
 }

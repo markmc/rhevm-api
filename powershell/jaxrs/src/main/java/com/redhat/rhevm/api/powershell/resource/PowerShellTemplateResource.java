@@ -18,7 +18,7 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.UriInfo;
@@ -47,14 +47,20 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
         super(id, executor, shellPools, parser);
     }
 
-    public static ArrayList<PowerShellTemplate> runAndParse(PowerShellCmd shell, String command) {
-        return PowerShellTemplate.parse(PowerShellCmd.runCommand(shell, command));
+    public static List<PowerShellTemplate> runAndParse(PowerShellCmd shell,
+                                                       PowerShellParser parser,
+                                                       String command) {
+        return PowerShellTemplate.parse(parser, PowerShellCmd.runCommand(shell, command, true));
     }
 
-    public static PowerShellTemplate runAndParseSingle(PowerShellCmd shell, String command) {
-        ArrayList<PowerShellTemplate> templates = runAndParse(shell, command);
+    public static PowerShellTemplate runAndParseSingle(PowerShellCmd shell, PowerShellParser parser, String command) {
+        List<PowerShellTemplate> templates = runAndParse(shell, parser, command);
 
         return !templates.isEmpty() ? templates.get(0) : null;
+    }
+
+    public PowerShellTemplate runAndParseSingle(String command) {
+        return runAndParseSingle(getShell(), getParser(), command);
     }
 
     public static Template addLinks(PowerShellTemplate template) {
@@ -80,7 +86,7 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
 
         buf.append("get-template -templateid " + PowerShellUtils.escape(getId()));
 
-        return addLinks(runAndParseSingle(getShell(), buf.toString()));
+        return addLinks(runAndParseSingle(buf.toString()));
     }
 
     @Override
@@ -89,38 +95,38 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
 
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$t = get-template " + PowerShellUtils.escape(getId()) + "\n");
+        buf.append("$t = get-template " + PowerShellUtils.escape(getId()) + ";");
 
         if (template.getName() != null) {
-            buf.append("$t.name = " + PowerShellUtils.escape(template.getName()) + "\n");
+            buf.append("$t.name = " + PowerShellUtils.escape(template.getName()) + ";");
         }
         if (template.getDescription() != null) {
-            buf.append("$t.description = " + PowerShellUtils.escape(template.getDescription()) + "\n");
+            buf.append("$t.description = " + PowerShellUtils.escape(template.getDescription()) + ";");
         }
         if (template.isSetMemory()) {
-            buf.append(" $t.memsizemb = " + Math.round((double)template.getMemory()/(1024*1024)) + "\n");
+            buf.append(" $t.memsizemb = " + Math.round((double)template.getMemory()/(1024*1024)) + ";");
         }
         if (template.getCpu() != null && template.getCpu().getTopology() != null) {
             CpuTopology topology = template.getCpu().getTopology();
-            buf.append(" $t.numofsockets = " + topology.getSockets() + "\n");
-            buf.append(" $t.numofcpuspersocket = " + topology.getCores() + "\n");
+            buf.append(" $t.numofsockets = " + topology.getSockets() + ";");
+            buf.append(" $t.numofcpuspersocket = " + topology.getCores() + ";");
         }
         String bootSequence = PowerShellVM.buildBootSequence(template.getOs());
         if (bootSequence != null) {
-            buf.append(" $t.defaultbootsequence = '" + bootSequence + "'\n");
+            buf.append(" $t.defaultbootsequence = '" + bootSequence + "';");
         }
 
         buf.append("update-template -templateobject $t");
 
-        return addLinks(runAndParseSingle(getShell(), buf.toString()));
+        return addLinks(runAndParseSingle(buf.toString()));
     }
 
-    public static class CdRomQuery extends PowerShellCdRomsResource.CdRomQuery {
+    public class CdRomQuery extends PowerShellCdRomsResource.CdRomQuery {
         public CdRomQuery(String id) {
             super(id);
         }
         @Override protected String getCdIsoPath(PowerShellCmd shell) {
-            return runAndParseSingle(shell, "get-template " + PowerShellUtils.escape(id)).getCdIsoPath();
+            return runAndParseSingle("get-template " + PowerShellUtils.escape(id)).getCdIsoPath();
         }
     }
 

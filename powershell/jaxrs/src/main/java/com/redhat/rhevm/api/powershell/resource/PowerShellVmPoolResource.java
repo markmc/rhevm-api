@@ -61,14 +61,14 @@ public class PowerShellVmPoolResource extends AbstractPowerShellActionableResour
      * @param pool  the VM pool to modify
      * @return      the modified VM pool
      */
-    private static VmPool lookupTemplateId(PowerShellCmd shell, VmPool pool) {
+    private static VmPool lookupTemplateId(PowerShellCmd shell, PowerShellParser parser, VmPool pool) {
         StringBuilder buf = new StringBuilder();
 
         buf.append("select-template -searchtext ");
         buf.append(PowerShellUtils.escape("name = " + pool.getTemplate().getName()));
 
         Template template = new Template();
-        template.setId(PowerShellTemplateResource.runAndParseSingle(shell, buf.toString()).getId());
+        template.setId(PowerShellTemplateResource.runAndParseSingle(shell, parser, buf.toString()).getId());
         pool.setTemplate(template);
 
         return pool;
@@ -98,7 +98,7 @@ public class PowerShellVmPoolResource extends AbstractPowerShellActionableResour
         pool = lookupClusterId(shell, parser, pool);
 
         if (pool.getTemplate() != null) {
-            pool = lookupTemplateId(shell, pool);
+            pool = lookupTemplateId(shell, parser, pool);
         }
 
         return LinkHelper.addLinks(pool);

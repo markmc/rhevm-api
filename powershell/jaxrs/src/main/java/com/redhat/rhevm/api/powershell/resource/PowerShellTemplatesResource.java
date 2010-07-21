@@ -18,6 +18,7 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.util.List;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -36,10 +37,18 @@ public class PowerShellTemplatesResource
     extends AbstractPowerShellCollectionResource<Template, PowerShellTemplateResource>
     implements TemplatesResource {
 
+    public List<PowerShellTemplate> runAndParse(String command) {
+        return PowerShellTemplateResource.runAndParse(getShell(), getParser(), command);
+    }
+
+    public PowerShellTemplate runAndParseSingle(String command) {
+        return PowerShellTemplateResource.runAndParseSingle(getShell(), getParser(), command);
+    }
+
     @Override
     public Templates list(UriInfo uriInfo) {
         Templates ret = new Templates();
-        for (PowerShellTemplate template : PowerShellTemplateResource.runAndParse(getShell(), getSelectCommand("select-template", uriInfo, Template.class))) {
+        for (PowerShellTemplate template : runAndParse(getSelectCommand("select-template", uriInfo, Template.class))) {
             ret.getTemplates().add(PowerShellTemplateResource.addLinks(template));
         }
         return ret;
@@ -51,11 +60,11 @@ public class PowerShellTemplatesResource
 
         String vmArg = null;
         if (template.getVm().isSetId()) {
-            buf.append("$v = get-vm " + PowerShellUtils.escape(template.getVm().getId())+ "\n");
+            buf.append("$v = get-vm " + PowerShellUtils.escape(template.getVm().getId())+ ";");
         } else {
             buf.append("$v = select-vm -searchtext ");
             buf.append(PowerShellUtils.escape("name=" + template.getVm().getName()));
-            buf.append("\n");
+            buf.append(";");
         }
 
         String clusterArg = null;
@@ -65,7 +74,7 @@ public class PowerShellTemplatesResource
             } else {
                 buf.append("$c = select-cluster -searchtext ");
                 buf.append(PowerShellUtils.escape("name=" +  template.getCluster().getName()));
-                buf.append("\n");
+                buf.append(";");
                 clusterArg = "$c.ClusterId";
             }
         }
@@ -95,7 +104,7 @@ public class PowerShellTemplatesResource
             buf.append(" -defaultbootsequence " + bootSequence);
         }
 
-        PowerShellTemplate ret = PowerShellTemplateResource.runAndParseSingle(getShell(), buf.toString());
+        PowerShellTemplate ret = runAndParseSingle(buf.toString());
 
         template = PowerShellTemplateResource.addLinks(ret);
 
