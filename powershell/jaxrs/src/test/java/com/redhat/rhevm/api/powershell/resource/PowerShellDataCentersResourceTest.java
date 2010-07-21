@@ -38,7 +38,7 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
         "storagedomainid: {0} \n name: {1}\ndomaintype: ISO \nstatus: ACTIVE\nsharedstatus: ACTIVE\ntype: ISCSI \n\n";
 
     public PowerShellDataCentersResourceTest() {
-        super(new PowerShellDataCenterResource("0", null, null), "datacenters", "datacenter");
+        super(new PowerShellDataCenterResource("0", null, null, null), "datacenters", "datacenter");
     }
 
     @Test

@@ -19,6 +19,7 @@
 package com.redhat.rhevm.api.powershell.resource;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.Response;
@@ -34,6 +35,7 @@ import com.redhat.rhevm.api.resource.AttachmentsResource;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.util.PowerShellException;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
@@ -43,10 +45,14 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
     private String storageDomainId;
     private Executor executor;
     private PowerShellPoolMap shellPools;
+    private PowerShellParser parser;
 
-    public PowerShellAttachmentsResource(String storageDomainId, PowerShellPoolMap shellPools) {
+    public PowerShellAttachmentsResource(String storageDomainId,
+                                         PowerShellPoolMap shellPools,
+                                         PowerShellParser parser) {
         this.storageDomainId = storageDomainId;
         this.shellPools = shellPools;
+        this.parser = parser;
     }
 
     public static Attachment buildAttachment(DataCenter dataCenter, StorageDomain storageDomain) {
@@ -78,9 +84,9 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
 
         buf.append("get-datacenter -storagedomainid " + PowerShellUtils.escape(storageDomainId));
 
-        ArrayList<DataCenter> dataCenters;
+        List<DataCenter> dataCenters;
         try {
-            dataCenters = PowerShellDataCenterResource.runAndParse(getShell(), buf.toString());
+            dataCenters = PowerShellDataCenterResource.runAndParse(getShell(), getParser(), buf.toString());
         } catch (PowerShellException e) {
             // Ignore 'Can not find any DataCenter by StorageDomainId' error
             // i.e. the storage domain isn't attached to any data center
@@ -181,5 +187,9 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
 
     protected PowerShellCmd getShell() {
         return shellPools.get().get();
+    }
+
+    protected PowerShellParser getParser() {
+        return parser;
     }
 }

@@ -20,7 +20,7 @@ package com.redhat.rhevm.api.powershell.model;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.StorageType;
@@ -29,21 +29,21 @@ import com.redhat.rhevm.api.model.StorageType;
 public class PowerShellDataCenterTest extends PowerShellModelTest {
 
     private void testDataCenter(DataCenter d, String id, String name, String description, StorageType type) {
-        assertEquals(d.getId(), id);
-        assertEquals(d.getName(), name);
-        assertEquals(d.getDescription(), description);
-        assertEquals(d.getStorageType(), type);
+        assertEquals(id, d.getId());
+        assertEquals(name, d.getName());
+        assertEquals(description, d.getDescription());
+        assertEquals(type, d.getStorageType());
     }
 
     @Test
-    public void testParse() {
-        String data = readFileContents("datacenter.data");
+    public void testParse() throws Exception {
+        String data = readFileContents("datacenter.xml");
         assertNotNull(data);
 
-        ArrayList<DataCenter> dataCenters = PowerShellDataCenter.parse(data);
+        List<DataCenter> dataCenters = PowerShellDataCenter.parse(getParser(), data);
 
         assertEquals(dataCenters.size(), 1);
 
-        testDataCenter(dataCenters.get(0), "c116abad-99ce-4888-ad7f-5c7f8d7a75f2", "Default", "The default Data Center", StorageType.NFS);
+        testDataCenter(dataCenters.get(0), "bb0fd622-5b2a-4c69-bfc5-29493932844a", "Default", "The default Data Center", StorageType.NFS);
     }
 }

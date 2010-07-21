@@ -136,7 +136,7 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
     }
 
     protected PowerShellStorageDomainResource createSubResource(String id) {
-        return new PowerShellStorageDomainResource(id, this, shellPools);
+        return new PowerShellStorageDomainResource(id, this, shellPools, getParser());
     }
 
     /**

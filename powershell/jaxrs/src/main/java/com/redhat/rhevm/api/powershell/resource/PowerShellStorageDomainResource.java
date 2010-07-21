@@ -36,6 +36,7 @@ import com.redhat.rhevm.api.resource.AttachmentsResource;
 import com.redhat.rhevm.api.resource.StorageDomainResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellStorageDomain;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
@@ -47,8 +48,9 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
 
     public PowerShellStorageDomainResource(String id,
                                            PowerShellStorageDomainsResource parent,
-                                           PowerShellPoolMap shellPools) {
-        super(id, parent.getExecutor(), shellPools);
+                                           PowerShellPoolMap shellPools,
+                                           PowerShellParser parser) {
+        super(id, parent.getExecutor(), shellPools, parser);
         this.parent = parent;
     }
 
@@ -187,7 +189,7 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
 
     @Override
     public AttachmentsResource getAttachmentsResource() {
-        return new PowerShellAttachmentsResource(getId(), shellPools);
+        return new PowerShellAttachmentsResource(getId(), shellPools, getParser());
     }
 
     private class StorageDomainTeardowner extends AbstractPowerShellActionTask {

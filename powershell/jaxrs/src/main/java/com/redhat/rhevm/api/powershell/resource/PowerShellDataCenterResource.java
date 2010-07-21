@@ -18,7 +18,7 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.UriInfo;
@@ -31,24 +31,36 @@ import com.redhat.rhevm.api.resource.IsosResource;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellDataCenter;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
 public class PowerShellDataCenterResource extends AbstractPowerShellActionableResource<DataCenter> implements DataCenterResource {
 
-    public PowerShellDataCenterResource(String id, Executor executor, PowerShellPoolMap shellPools) {
-        super(id, executor, shellPools);
+    public PowerShellDataCenterResource(String id,
+                                        Executor executor,
+                                        PowerShellPoolMap shellPools,
+                                        PowerShellParser parser) {
+        super(id, executor, shellPools, parser);
     }
 
-    public static ArrayList<DataCenter> runAndParse(PowerShellCmd shell, String command) {
-        return PowerShellDataCenter.parse(PowerShellCmd.runCommand(shell, command));
+    public static List<DataCenter> runAndParse(PowerShellCmd shell, PowerShellParser parser, String command) {
+        return PowerShellDataCenter.parse(parser, PowerShellCmd.runCommand(shell, command, true));
     }
 
-    public static DataCenter runAndParseSingle(PowerShellCmd shell, String command) {
-        ArrayList<DataCenter> dataCenters = runAndParse(shell, command);
+    public static DataCenter runAndParseSingle(PowerShellCmd shell, PowerShellParser parser, String command) {
+        List<DataCenter> dataCenters = runAndParse(shell, parser, command);
 
         return !dataCenters.isEmpty() ? dataCenters.get(0) : null;
+    }
+
+    public List<DataCenter> runAndParse(String command) {
+        return runAndParse(getShell(), getParser(), command);
+    }
+
+    public DataCenter runAndParseSingle(String command) {
+        return runAndParseSingle(getShell(), getParser(), command);
     }
 
     public static DataCenter addLinks(PowerShellCmd shell, DataCenter dataCenter) {
@@ -68,7 +80,7 @@ public class PowerShellDataCenterResource extends AbstractPowerShellActionableRe
 
     @Override
     public DataCenter get(UriInfo uriInfo) {
-        return addLinks(getShell(), runAndParseSingle(getShell(), "get-datacenter " + PowerShellUtils.escape(getId())));
+        return addLinks(getShell(), runAndParseSingle("get-datacenter " + PowerShellUtils.escape(getId())));
     }
 
     @Override
@@ -77,19 +89,18 @@ public class PowerShellDataCenterResource extends AbstractPowerShellActionableRe
 
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$h = get-datacenter " + PowerShellUtils.escape(getId()) + "\n");
+        buf.append("$h = get-datacenter " + PowerShellUtils.escape(getId()) + ";");
 
         if (dataCenter.getName() != null) {
-            buf.append("$h.name = " + PowerShellUtils.escape(dataCenter.getName()) + "\n");
+            buf.append("$h.name = " + PowerShellUtils.escape(dataCenter.getName()) + ";");
         }
         if (dataCenter.getDescription() != null) {
-            buf.append("$h.description = " + PowerShellUtils.escape(dataCenter.getDescription()) + "\n");
+            buf.append("$h.description = " + PowerShellUtils.escape(dataCenter.getDescription()) + ";");
         }
 
-        buf.append("\n");
         buf.append("update-datacenter -datacenterobject $v");
 
-        return addLinks(getShell(), runAndParseSingle(getShell(), buf.toString()));
+        return addLinks(getShell(), runAndParseSingle(buf.toString()));
     }
 
     public IsosResource getIsosResource() {

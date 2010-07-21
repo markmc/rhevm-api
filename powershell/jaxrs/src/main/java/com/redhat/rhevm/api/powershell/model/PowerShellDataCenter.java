@@ -19,26 +19,26 @@
 package com.redhat.rhevm.api.powershell.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.StorageType;
+import com.redhat.rhevm.api.powershell.enums.PowerShellStorageType;
 import com.redhat.rhevm.api.powershell.model.PowerShellDataCenter;
-import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 
 public class PowerShellDataCenter {
 
-    public static ArrayList<DataCenter> parse(String output) {
-        ArrayList<HashMap<String,String>> dataCentersProps = PowerShellUtils.parseProps(output);
-        ArrayList<DataCenter> ret = new ArrayList<DataCenter>();
+    public static List<DataCenter> parse(PowerShellParser parser, String output) {
+        List<DataCenter> ret = new ArrayList<DataCenter>();
 
-        for (HashMap<String,String> props : dataCentersProps) {
+        for (PowerShellParser.Entity entity : parser.parse(output)) {
             DataCenter dataCenter = new DataCenter();
 
-            dataCenter.setId(props.get("datacenterid"));
-            dataCenter.setName(props.get("name"));
-            dataCenter.setDescription(props.get("description"));
-            dataCenter.setStorageType(StorageType.fromValue(props.get("type")));
+            dataCenter.setId(entity.get("datacenterid"));
+            dataCenter.setName(entity.get("name"));
+            dataCenter.setDescription(entity.get("description"));
+            dataCenter.setStorageType(entity.get("type", PowerShellStorageType.class).map());
 
             ret.add(dataCenter);
         }
