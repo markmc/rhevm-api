@@ -19,36 +19,33 @@
 package com.redhat.rhevm.api.powershell.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VmPool;
-import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 
 public class PowerShellVmPool {
 
-    public static ArrayList<VmPool> parse(String output) {
-        ArrayList<HashMap<String,String>> poolsProps = PowerShellUtils.parseProps(output);
-        ArrayList<VmPool> ret = new ArrayList<VmPool>();
+    public static List<VmPool> parse(PowerShellParser parser, String output) {
+        List<VmPool> ret = new ArrayList<VmPool>();
 
-        for (HashMap<String,String> props : poolsProps) {
+        for (PowerShellParser.Entity entity : parser.parse(output)) {
             VmPool pool = new VmPool();
 
-            pool.setId(props.get("vmpoolid"));
-            pool.setName(props.get("name"));
-            pool.setDescription(props.get("description"));
-            pool.setSize(Integer.parseInt(props.get("vmcount")));
+            pool.setId(entity.get("vmpoolid"));
+            pool.setName(entity.get("name"));
+            pool.setDescription(entity.get("description"));
+            pool.setSize(entity.get("vmcount", Integer.class));
 
             Cluster cluster = new Cluster();
-            cluster.setName(props.get("cluster"));
+            cluster.setName(entity.get("cluster"));
             pool.setCluster(cluster);
 
-            if (props.get("template") != null) {
-                Template template = new Template();
-                template.setName(props.get("template"));
-                pool.setTemplate(template);
-            }
+            Template template = new Template();
+            template.setName(entity.get("template"));
+            pool.setTemplate(template);
 
             ret.add(pool);
         }

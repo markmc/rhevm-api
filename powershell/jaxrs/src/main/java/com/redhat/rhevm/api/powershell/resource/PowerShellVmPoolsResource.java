@@ -18,6 +18,7 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.util.List;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -34,6 +35,14 @@ public class PowerShellVmPoolsResource
     extends AbstractPowerShellCollectionResource<VmPool, PowerShellVmPoolResource>
     implements VmPoolsResource {
 
+    public List<VmPool> runAndParse(String command) {
+        return PowerShellVmPoolResource.runAndParse(getShell(), getParser(), command);
+    }
+
+    public VmPool runAndParseSingle(String command) {
+        return PowerShellVmPoolResource.runAndParseSingle(getShell(), getParser(), command);
+    }
+
     public VmPool addLinks(VmPool pool) {
         return PowerShellVmPoolResource.addLinks(getShell(), getParser(), pool);
     }
@@ -41,7 +50,7 @@ public class PowerShellVmPoolsResource
     @Override
     public VmPools list(UriInfo uriInfo) {
         VmPools ret = new VmPools();
-        for (VmPool pool : PowerShellVmPoolResource.runAndParse(getShell(), getSelectCommand("select-vmpool", uriInfo, VmPool.class))) {
+        for (VmPool pool : runAndParse(getSelectCommand("select-vmpool", uriInfo, VmPool.class))) {
             ret.getVmPools().add(addLinks(pool));
         }
         return ret;
@@ -57,7 +66,7 @@ public class PowerShellVmPoolsResource
         } else {
             buf.append("$t = select-template -searchtext ");
             buf.append(PowerShellUtils.escape("name=" + pool.getTemplate().getName()));
-            buf.append("\n");
+            buf.append(";");
             templateArg = "$t.TemplateId";
         }
 
@@ -67,7 +76,7 @@ public class PowerShellVmPoolsResource
         } else {
             buf.append("$c = select-cluster -searchtext ");
             buf.append(PowerShellUtils.escape("name=" +  pool.getCluster().getName()));
-            buf.append("\n");
+            buf.append(";");
             clusterArg = "$c.ClusterId";
         }
 
@@ -85,7 +94,7 @@ public class PowerShellVmPoolsResource
             buf.append(" -numofvms " + pool.getSize());
         }
 
-        pool = addLinks(PowerShellVmPoolResource.runAndParseSingle(getShell(), buf.toString()));
+        pool = addLinks(runAndParseSingle(buf.toString()));
 
         UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(pool.getId());
 
@@ -96,7 +105,7 @@ public class PowerShellVmPoolsResource
     public void remove(String id) {
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$p = get-vmpool -vmpoolid " + PowerShellUtils.escape(id) + "\n");
+        buf.append("$p = get-vmpool -vmpoolid " + PowerShellUtils.escape(id) + ";");
         buf.append("remove-vmpool -name $p.name");
 
         PowerShellCmd.runCommand(getShell(), buf.toString());

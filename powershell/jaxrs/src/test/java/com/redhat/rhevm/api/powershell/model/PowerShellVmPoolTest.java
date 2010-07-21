@@ -20,7 +20,7 @@ package com.redhat.rhevm.api.powershell.model;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.redhat.rhevm.api.model.VmPool;
 
@@ -28,27 +28,27 @@ import com.redhat.rhevm.api.model.VmPool;
 public class PowerShellVmPoolTest extends PowerShellModelTest {
 
     private void testVmPool(VmPool v, String id, String name, String description, Integer size, String clusterName, String templateName) {
-        assertEquals(v.getId(), id);
-        assertEquals(v.getName(), name);
-        assertEquals(v.getDescription(), description);
-        assertEquals(v.getSize(), size);
+        assertEquals(id, v.getId());
+        assertEquals(name, v.getName());
+        assertEquals(description, v.getDescription());
+        assertEquals(size, v.getSize());
         assertNotNull(v.getCluster());
-        assertEquals(v.getCluster().getName(), clusterName);
+        assertEquals(clusterName, v.getCluster().getName());
         assertNotNull(v.getTemplate());
-        assertEquals(v.getTemplate().getName(), templateName);
+        assertEquals(templateName, v.getTemplate().getName());
     }
 
     @Test
-    public void testParse() {
-        String data = readFileContents("vmpool.data");
+    public void testParse() throws Exception {
+        String data = readFileContents("vmpool.xml");
         assertNotNull(data);
 
-        ArrayList<VmPool> pools = PowerShellVmPool.parse(data);
+        List<VmPool> pools = PowerShellVmPool.parse(getParser(), data);
 
         assertEquals(pools.size(), 1);
 
         VmPool pool = pools.get(0);
 
-        testVmPool(pool, "0", "test", "Testing, Testing", 1, "Default", "foo");
+        testVmPool(pool, "1de2d827-4569-47cb-a3c7-643124ecc083", "foo", null, 2, "Default", "tmpl1");
     }
 }

@@ -18,7 +18,7 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.UriInfo;
@@ -44,14 +44,18 @@ public class PowerShellVmPoolResource extends AbstractPowerShellActionableResour
         super(id, executor, shellPools, parser);
     }
 
-    public static ArrayList<VmPool> runAndParse(PowerShellCmd shell, String command) {
-        return PowerShellVmPool.parse(PowerShellCmd.runCommand(shell, command));
+    public static List<VmPool> runAndParse(PowerShellCmd shell, PowerShellParser parser, String command) {
+        return PowerShellVmPool.parse(parser, PowerShellCmd.runCommand(shell, command, true));
     }
 
-    public static VmPool runAndParseSingle(PowerShellCmd shell, String command) {
-        ArrayList<VmPool> pools = runAndParse(shell, command);
+    public static VmPool runAndParseSingle(PowerShellCmd shell, PowerShellParser parser, String command) {
+        List<VmPool> pools = runAndParse(shell, parser, command);
 
         return !pools.isEmpty() ? pools.get(0) : null;
+    }
+
+    public VmPool runAndParseSingle(String command) {
+        return runAndParseSingle(getShell(), getParser(), command);
     }
 
     /* Map the template name to template ID on a VM pool, since
@@ -110,7 +114,7 @@ public class PowerShellVmPoolResource extends AbstractPowerShellActionableResour
 
     @Override
     public VmPool get(UriInfo uriInfo) {
-        return addLinks(runAndParseSingle(getShell(), "get-vmpool -vmpoolid " + PowerShellUtils.escape(getId())));
+        return addLinks(runAndParseSingle("get-vmpool -vmpoolid " + PowerShellUtils.escape(getId())));
     }
 
     @Override
@@ -119,20 +123,20 @@ public class PowerShellVmPoolResource extends AbstractPowerShellActionableResour
 
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$v = get-vmpool " + PowerShellUtils.escape(getId()) + "\n");
+        buf.append("$v = get-vmpool " + PowerShellUtils.escape(getId()) + ";");
 
         if (pool.getName() != null) {
-            buf.append("$v.name = " + PowerShellUtils.escape(pool.getName()) + "\n");
+            buf.append("$v.name = " + PowerShellUtils.escape(pool.getName()) + ";");
         }
         if (pool.getDescription() != null) {
-            buf.append("$v.description = " + PowerShellUtils.escape(pool.getDescription()) + "\n");
+            buf.append("$v.description = " + PowerShellUtils.escape(pool.getDescription()) + ";");
         }
         if (pool.getSize() != null) {
-            buf.append("$v.vmcount = " + pool.getSize() + "\n");
+            buf.append("$v.vmcount = " + pool.getSize() + ";");
         }
 
         buf.append("update-vmpool -vmpoolobject $v");
 
-        return addLinks(runAndParseSingle(getShell(), buf.toString()));
+        return addLinks(runAndParseSingle(buf.toString()));
     }
 }
