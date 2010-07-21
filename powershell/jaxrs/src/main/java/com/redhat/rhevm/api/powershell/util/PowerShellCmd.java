@@ -184,17 +184,67 @@ public class PowerShellCmd {
         }
     }
 
+    private static final String QUOTE = "'";
+
+    private static String escape(String arg) {
+        arg = arg.replace(QUOTE, QUOTE + QUOTE);
+        return new StringBuffer(QUOTE).append(arg).append(QUOTE).toString();
+    }
+
+    private static String addConvertToXml(String command) {
+        // REVIST: I can't get the commented out bits to work
+        StringBuilder buf = new StringBuilder();
+        buf.append("Write-Host \"<output>\";\n");
+        //buf.append("try {\n");
+        buf.append("  $result = Invoke-Expression " + escape(command) + ";\n");
+        buf.append("  $result | ConvertTo-XML -As String -Depth 5;\n");
+        buf.append("  $status = 0;\n");
+        //buf.append("} catch {\n");
+        //buf.append("  ConvertTo-XML $_ -As String -Depth 1;\n");
+        //buf.append("  $status = 1;\n");
+        //buf.append("}\n");
+        buf.append("Write-Host \"</output> $status\";\n");
+        return buf.toString();
+    }
+
+    private static void handleExitStatus(int exitstatus, String command) {
+        if (exitstatus != 0) {
+            throw new PowerShellException("Command '" + command + "' exited with status=" + exitstatus);
+        }
+    }
+
     public static String runCommand(PowerShellCmd runner, String command) {
+        return runCommand(runner, command, false);
+    }
+
+    public static String runCommand(PowerShellCmd runner, String command, boolean convertToXml) {
+        if (convertToXml) {
+            command = addConvertToXml(command);
+        }
         int exitstatus = runner.run(command);
 
         if (!runner.getStdErr().isEmpty()) {
             log.warn(runner.getStdErr());
         }
 
-        if (exitstatus != 0) {
-            throw new PowerShellException("Command '" + command + "' exited with status=" + exitstatus);
+        handleExitStatus(exitstatus, command);
+
+        String output = runner.getStdOut();
+        if (convertToXml) {
+            if (output.contains("<output>")) {
+                output = output.substring(output.indexOf("<output>") + 8);
+            }
+            if (output.contains("</output>")) {
+                int i = output.indexOf("</output>");
+                exitstatus = Integer.parseInt(output.substring(i + 10, i + 11));
+                output = output.substring(0, i);
+            }
+            if (exitstatus != 0) {
+                log.warn(output);
+                handleExitStatus(exitstatus, command);
+            }
         }
 
-        return runner.getStdOut();
+        return output.trim();
     }
 }
