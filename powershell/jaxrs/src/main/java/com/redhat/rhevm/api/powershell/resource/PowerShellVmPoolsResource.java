@@ -34,11 +34,15 @@ public class PowerShellVmPoolsResource
     extends AbstractPowerShellCollectionResource<VmPool, PowerShellVmPoolResource>
     implements VmPoolsResource {
 
+    public VmPool addLinks(VmPool pool) {
+        return PowerShellVmPoolResource.addLinks(getShell(), getParser(), pool);
+    }
+
     @Override
     public VmPools list(UriInfo uriInfo) {
         VmPools ret = new VmPools();
         for (VmPool pool : PowerShellVmPoolResource.runAndParse(getShell(), getSelectCommand("select-vmpool", uriInfo, VmPool.class))) {
-            ret.getVmPools().add(PowerShellVmPoolResource.addLinks(getShell(), pool));
+            ret.getVmPools().add(addLinks(pool));
         }
         return ret;
     }
@@ -81,8 +85,7 @@ public class PowerShellVmPoolsResource
             buf.append(" -numofvms " + pool.getSize());
         }
 
-        pool = PowerShellVmPoolResource.runAndParseSingle(getShell(), buf.toString());
-        pool = PowerShellVmPoolResource.addLinks(getShell(), pool);
+        pool = addLinks(PowerShellVmPoolResource.runAndParseSingle(getShell(), buf.toString()));
 
         UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(pool.getId());
 
@@ -108,6 +111,6 @@ public class PowerShellVmPoolsResource
 
     @Override
     protected PowerShellVmPoolResource createSubResource(String id) {
-        return new PowerShellVmPoolResource(id, getExecutor(), shellPools);
+        return new PowerShellVmPoolResource(id, getExecutor(), shellPools, getParser());
     }
 }

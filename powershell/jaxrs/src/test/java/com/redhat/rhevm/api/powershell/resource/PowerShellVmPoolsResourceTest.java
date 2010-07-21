@@ -53,7 +53,7 @@ public class PowerShellVmPoolsResourceTest extends AbstractPowerShellCollectionR
     public static final String LOOKUP_TEMPLATE_RETURN = "templateid: " + TEMPLATE_ID + "\nname: " + TEMPLATE_NAME + "\nmemsizemb: 1024\ndefaultbootsequence: CDN\nnumofsockets: 2\nnumofcpuspersocket: 4\n";
 
     public PowerShellVmPoolsResourceTest() {
-        super(new PowerShellVmPoolResource("0", null, null), "vmpools", "vmpool");
+        super(new PowerShellVmPoolResource("0", null, null, null), "vmpools", "vmpool");
     }
 
     @Test

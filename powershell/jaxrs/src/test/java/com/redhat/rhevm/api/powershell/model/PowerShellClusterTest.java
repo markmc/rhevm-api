@@ -20,7 +20,7 @@ package com.redhat.rhevm.api.powershell.model;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.redhat.rhevm.api.model.Cluster;
 
@@ -38,15 +38,14 @@ public class PowerShellClusterTest extends PowerShellModelTest {
     }
 
     @Test
-    public void testParse() {
-        String data = readFileContents("cluster.data");
+    public void testParse() throws Exception {
+        String data = readFileContents("cluster.xml");
         assertNotNull(data);
 
-        ArrayList<Cluster> clusters = PowerShellCluster.parse(data);
+        List<Cluster> clusters = PowerShellCluster.parse(getParser(), data);
 
-        assertEquals(clusters.size(), 2);
+        assertEquals(clusters.size(), 1);
 
-        testCluster(clusters.get(0), "0", "Default", "The default server cluster", "Intel Xeon 45nm Core2", "c116abad-99ce-4888-ad7f-5c7f8d7a75f2");
-        testCluster(clusters.get(1), "2", "foo",     null,                         "Intel Xeon",            "c116abad-99ce-4888-ad7f-5c7f8d7a75f2");
+        testCluster(clusters.get(0), "99408929-82cf-4dc7-a532-9d998063fa95", "Default", "The default server cluster", "Intel Xeon 45nm Core2", "bb0fd622-5b2a-4c69-bfc5-29493932844a");
     }
 }

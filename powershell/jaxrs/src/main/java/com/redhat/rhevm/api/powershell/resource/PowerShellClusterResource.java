@@ -18,7 +18,7 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.UriInfo;
@@ -28,38 +28,50 @@ import com.redhat.rhevm.api.resource.ClusterResource;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellCluster;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
 public class PowerShellClusterResource extends AbstractPowerShellActionableResource<Cluster> implements ClusterResource {
 
-    public PowerShellClusterResource(String id, Executor executor, PowerShellPoolMap shellPools) {
-        super(id, executor, shellPools);
+    public PowerShellClusterResource(String id,
+                                     Executor executor,
+                                     PowerShellPoolMap shellPools,
+                                     PowerShellParser parser) {
+        super(id, executor, shellPools, parser);
     }
 
-    public static ArrayList<Cluster> runAndParse(PowerShellCmd shell, String command) {
-        return PowerShellCluster.parse(PowerShellCmd.runCommand(shell, command));
+    public static List<Cluster> runAndParse(PowerShellCmd shell, PowerShellParser parser, String command) {
+        return PowerShellCluster.parse(parser, PowerShellCmd.runCommand(shell, command, true));
     }
 
-    public static Cluster runAndParseSingle(PowerShellCmd shell, String command) {
-        ArrayList<Cluster> clusters = runAndParse(shell, command);
+    public static Cluster runAndParseSingle(PowerShellCmd shell, PowerShellParser parser, String command) {
+        List<Cluster> clusters = runAndParse(shell, parser, command);
 
         return !clusters.isEmpty() ? clusters.get(0) : null;
+    }
+
+    public List<Cluster> runAndParse(String command) {
+        return runAndParse(getShell(), getParser(), command);
+    }
+
+    public Cluster runAndParseSingle(String command) {
+        return runAndParseSingle(getShell(), getParser(), command);
     }
 
     @Override
     public Cluster get(UriInfo uriInfo) {
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$l = select-cluster\n");
+        buf.append("$l = select-cluster;");
         buf.append("foreach ($c in $l) { ");
         buf.append("  if ($c.clusterid -eq " + PowerShellUtils.escape(getId()) + ") { ");
         buf.append("    echo $c ");
         buf.append("  } ");
         buf.append("}");
 
-        return LinkHelper.addLinks(runAndParseSingle(getShell(), buf.toString()));
+        return LinkHelper.addLinks(runAndParseSingle(buf.toString()));
     }
 
     @Override
@@ -68,25 +80,25 @@ public class PowerShellClusterResource extends AbstractPowerShellActionableResou
 
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$l = select-cluster\n");
+        buf.append("$l = select-cluster;");
         buf.append("foreach ($c in $l) { ");
         buf.append("  if ($c.clusterid -eq " + PowerShellUtils.escape(getId()) + ") { ");
 
         if (cluster.getName() != null) {
-            buf.append("    $c.name = " + PowerShellUtils.escape(cluster.getName()) + "\n");
+            buf.append("    $c.name = " + PowerShellUtils.escape(cluster.getName()) + ";");
         }
         if (cluster.getCpu() != null) {
-            buf.append("    $c.cpuname = " + PowerShellUtils.escape(cluster.getCpu().getId()) + "\n");
+            buf.append("    $c.cpuname = " + PowerShellUtils.escape(cluster.getCpu().getId()) + ";");
         }
         if (cluster.getDescription() != null) {
-            buf.append("    $c.description = " + PowerShellUtils.escape(cluster.getDescription()) + "\n");
+            buf.append("    $c.description = " + PowerShellUtils.escape(cluster.getDescription()) + ";");
         }
 
-        buf.append("    update-datacenter -datacenterobject $v");
+        buf.append("    update-datacenter -datacenterobject $v;");
 
         buf.append("  } ");
         buf.append("}");
 
-        return LinkHelper.addLinks(runAndParseSingle(getShell(), buf.toString()));
+        return LinkHelper.addLinks(runAndParseSingle(buf.toString()));
     }
 }

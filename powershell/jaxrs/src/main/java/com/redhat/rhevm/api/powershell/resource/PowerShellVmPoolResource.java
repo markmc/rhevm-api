@@ -30,14 +30,18 @@ import com.redhat.rhevm.api.resource.VmPoolResource;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellVmPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
 public class PowerShellVmPoolResource extends AbstractPowerShellActionableResource<VmPool> implements VmPoolResource {
 
-    public PowerShellVmPoolResource(String id, Executor executor, PowerShellPoolMap shellPools) {
-        super(id, executor, shellPools);
+    public PowerShellVmPoolResource(String id,
+                                    Executor executor,
+                                    PowerShellPoolMap shellPools,
+                                    PowerShellParser parser) {
+        super(id, executor, shellPools, parser);
     }
 
     public static ArrayList<VmPool> runAndParse(PowerShellCmd shell, String command) {
@@ -77,21 +81,21 @@ public class PowerShellVmPoolResource extends AbstractPowerShellActionableResour
      * @param pool  the VM pool to modify
      * @return      the modified VM pool
      */
-    private static VmPool lookupClusterId(PowerShellCmd shell, VmPool pool) {
+    private static VmPool lookupClusterId(PowerShellCmd shell, PowerShellParser parser, VmPool pool) {
         StringBuilder buf = new StringBuilder();
 
         buf.append("select-cluster -searchtext ");
         buf.append(PowerShellUtils.escape("name = " + pool.getCluster().getName()));
 
         Cluster cluster = new Cluster();
-        cluster.setId(PowerShellClusterResource.runAndParseSingle(shell, buf.toString()).getId());
+        cluster.setId(PowerShellClusterResource.runAndParseSingle(shell, parser, buf.toString()).getId());
         pool.setCluster(cluster);
 
         return pool;
     }
 
-    public static VmPool addLinks(PowerShellCmd shell, VmPool pool) {
-        pool = lookupClusterId(shell, pool);
+    public static VmPool addLinks(PowerShellCmd shell, PowerShellParser parser, VmPool pool) {
+        pool = lookupClusterId(shell, parser, pool);
 
         if (pool.getTemplate() != null) {
             pool = lookupTemplateId(shell, pool);
@@ -100,9 +104,13 @@ public class PowerShellVmPoolResource extends AbstractPowerShellActionableResour
         return LinkHelper.addLinks(pool);
     }
 
+    public VmPool addLinks(VmPool pool) {
+        return addLinks(getShell(), getParser(), pool);
+    }
+
     @Override
     public VmPool get(UriInfo uriInfo) {
-        return addLinks(getShell(), runAndParseSingle(getShell(), "get-vmpool -vmpoolid " + PowerShellUtils.escape(getId())));
+        return addLinks(runAndParseSingle(getShell(), "get-vmpool -vmpoolid " + PowerShellUtils.escape(getId())));
     }
 
     @Override
@@ -125,7 +133,6 @@ public class PowerShellVmPoolResource extends AbstractPowerShellActionableResour
 
         buf.append("update-vmpool -vmpoolobject $v");
 
-        PowerShellCmd cmd = getShell();
-        return addLinks(cmd, runAndParseSingle(getShell(), buf.toString()));
+        return addLinks(runAndParseSingle(getShell(), buf.toString()));
     }
 }

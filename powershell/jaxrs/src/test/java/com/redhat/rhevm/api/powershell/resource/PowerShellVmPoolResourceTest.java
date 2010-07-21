@@ -52,7 +52,7 @@ public class PowerShellVmPoolResourceTest extends AbstractPowerShellResourceTest
     private static final String UPDATE_RETURN = "vmpoolid: " + POOL_ID + "\nname: " + NEW_NAME + PowerShellVmPoolsResourceTest.GET_RETURN_EPILOG;
 
     protected PowerShellVmPoolResource getResource(Executor executor, PowerShellPoolMap poolMap) {
-        return new PowerShellVmPoolResource(POOL_ID, executor, poolMap);
+        return new PowerShellVmPoolResource(POOL_ID, executor, poolMap, null);
     }
 
     @Test

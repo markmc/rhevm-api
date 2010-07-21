@@ -18,6 +18,8 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.util.List;
+
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -28,6 +30,7 @@ import com.redhat.rhevm.api.resource.ClusterResource;
 import com.redhat.rhevm.api.resource.ClustersResource;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
@@ -35,10 +38,18 @@ public class PowerShellClustersResource
     extends AbstractPowerShellCollectionResource<Cluster, PowerShellClusterResource>
     implements ClustersResource {
 
+    public List<Cluster> runAndParse(String command) {
+        return PowerShellClusterResource.runAndParse(getShell(), getParser(), command);
+    }
+
+    public Cluster runAndParseSingle(String command) {
+        return PowerShellClusterResource.runAndParseSingle(getShell(), getParser(), command);
+    }
+
     @Override
     public Clusters list(UriInfo uriInfo) {
         Clusters ret = new Clusters();
-        for (Cluster cluster : PowerShellClusterResource.runAndParse(getShell(), getSelectCommand("select-cluster", uriInfo, Cluster.class))) {
+        for (Cluster cluster : runAndParse(getSelectCommand("select-cluster", uriInfo, Cluster.class))) {
             ret.getClusters().add(LinkHelper.addLinks(cluster));
         }
         return ret;
@@ -49,7 +60,7 @@ public class PowerShellClustersResource
         StringBuilder buf = new StringBuilder();
 
         buf.append("$v = get-clustercompatibilityversions");
-        buf.append(" -datacenterid " + PowerShellUtils.escape(cluster.getDataCenter().getId()) + "\n");
+        buf.append(" -datacenterid " + PowerShellUtils.escape(cluster.getDataCenter().getId()) + ";");
 
         buf.append("add-cluster");
 
@@ -63,7 +74,7 @@ public class PowerShellClustersResource
 
         buf.append(" -compatibilityversion $v");
 
-        cluster = LinkHelper.addLinks(PowerShellClusterResource.runAndParseSingle(getShell(), buf.toString()));
+        cluster = LinkHelper.addLinks(runAndParseSingle(buf.toString()));
 
         UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(cluster.getId());
 
@@ -82,6 +93,6 @@ public class PowerShellClustersResource
     }
 
     protected PowerShellClusterResource createSubResource(String id) {
-        return new PowerShellClusterResource(id, getExecutor(), shellPools);
+        return new PowerShellClusterResource(id, getExecutor(), shellPools, getParser());
     }
 }

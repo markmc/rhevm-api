@@ -19,33 +19,32 @@
 package com.redhat.rhevm.api.powershell.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.powershell.model.PowerShellCluster;
-import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 
 public class PowerShellCluster {
 
-    public static ArrayList<Cluster> parse(String output) {
-        ArrayList<HashMap<String,String>> clustersProps = PowerShellUtils.parseProps(output);
-        ArrayList<Cluster> ret = new ArrayList<Cluster>();
+    public static List<Cluster> parse(PowerShellParser parser, String output) {
+        List<Cluster> ret = new ArrayList<Cluster>();
 
-        for (HashMap<String,String> props : clustersProps) {
+        for (PowerShellParser.Entity entity : parser.parse(output)) {
             Cluster cluster = new Cluster();
 
-            cluster.setId(props.get("clusterid"));
-            cluster.setName(props.get("name"));
-            cluster.setDescription(props.get("description"));
+            cluster.setId(entity.get("clusterid"));
+            cluster.setName(entity.get("name"));
+            cluster.setDescription(entity.get("description"));
 
             CPU cpu = new CPU();
-            cpu.setId(props.get("cpuname"));
+            cpu.setId(entity.get("cpuname"));
             cluster.setCpu(cpu);
 
             DataCenter dataCenter = new DataCenter();
-            dataCenter.setId(props.get("datacenterid"));
+            dataCenter.setId(entity.get("datacenterid"));
             cluster.setDataCenter(dataCenter);
 
             ret.add(cluster);

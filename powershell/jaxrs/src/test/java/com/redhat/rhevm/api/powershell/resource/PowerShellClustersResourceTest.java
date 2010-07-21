@@ -35,7 +35,7 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
     private static final String ADD_RETURN_EPILOG = "\ndatacenterid: " + DATA_CENTER_ID;
 
     public PowerShellClustersResourceTest() {
-	super(new PowerShellClusterResource("0", null, null), "clusters", "cluster");
+	super(new PowerShellClusterResource("0", null, null, null), "clusters", "cluster");
     }
 
     @Test
