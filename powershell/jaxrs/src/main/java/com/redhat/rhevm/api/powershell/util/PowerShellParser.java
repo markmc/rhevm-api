@@ -30,6 +30,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -413,5 +414,19 @@ public class PowerShellParser {
         public void setOptions(String options) {
             this.options = options;
         }
+    }
+
+    /* Only intended for unit tests */
+    public static PowerShellParser newInstance() throws Exception {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder documentBuilder = factory.newDocumentBuilder();
+
+        EnumMapper enumMapper = new EnumMapper();
+
+        PowerShellParser p = new PowerShellParser();
+        p.setDocumentBuilder(documentBuilder);
+        p.setEnumMapper(enumMapper);
+
+        return p;
     }
 }

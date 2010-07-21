@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.io.IOException;
 import java.util.Scanner;
 
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 
 @Ignore
 public class PowerShellModelTest extends Assert {
@@ -46,5 +47,9 @@ public class PowerShellModelTest extends Assert {
                 // ignore
             }
         }
+    }
+
+    protected PowerShellParser getParser() throws Exception {
+        return PowerShellParser.newInstance();
     }
 }

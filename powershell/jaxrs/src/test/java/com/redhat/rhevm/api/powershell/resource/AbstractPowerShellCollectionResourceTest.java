@@ -39,6 +39,7 @@ import com.redhat.rhevm.api.common.util.ReflectionHelper;
 
 import com.redhat.rhevm.api.powershell.util.ControllableExecutor;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 
@@ -97,6 +98,7 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
     protected String collectionName;
     protected String individualName;
     protected Executor executor;
+    protected PowerShellParser parser;
 
     protected AbstractPowerShellCollectionResourceTest(U updatable, String collectionName, String individualName) {
         this.updatable = updatable;
@@ -105,10 +107,12 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
     }
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         executor = new ControllableExecutor();
+        parser = PowerShellParser.newInstance();
         resource = getResource();
         resource.setExecutor(executor);
+        resource.setParser(parser);
     }
 
     @After
