@@ -52,7 +52,7 @@ public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectio
     private static final String ADD_RETURN_EPILOG = "\nhostclusterid: " + CLUSTER_ID + ADD_NO_CLUSTER_RETURN_EPILOG;
 
     public PowerShellTemplatesResourceTest() {
-        super(new PowerShellTemplateResource("0", null, null), "templates", "template");
+        super(new PowerShellTemplateResource("0", null, null, null), "templates", "template");
     }
 
     @Test

@@ -58,7 +58,7 @@ public class PowerShellTemplateResourceTest extends AbstractPowerShellResourceTe
     private static final String UPDATE_RETURN = "templateid: " + TEMPLATE_ID + "\n name: " + NEW_NAME + "\ndescription: " + TEMPLATE_DESCRIPTION + "\n" + OTHER_PROPS;
 
     protected PowerShellTemplateResource getResource(Executor executor, PowerShellPoolMap poolMap) {
-        return new PowerShellTemplateResource(TEMPLATE_ID, executor, poolMap);
+        return new PowerShellTemplateResource(TEMPLATE_ID, executor, poolMap, null);
     }
 
     @Test

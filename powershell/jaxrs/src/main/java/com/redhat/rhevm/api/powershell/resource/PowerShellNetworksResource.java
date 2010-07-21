@@ -18,6 +18,8 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.util.List;
+
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -36,10 +38,18 @@ public class PowerShellNetworksResource
     extends AbstractPowerShellCollectionResource<Network, PowerShellNetworkResource>
     implements NetworksResource {
 
+    public List<Network> runAndParse(String command) {
+        return PowerShellNetworkResource.runAndParse(getShell(), getParser(), command);
+    }
+
+    public Network runAndParseSingle(String command) {
+        return PowerShellNetworkResource.runAndParseSingle(getShell(), getParser(), command);
+    }
+
     @Override
     public Networks list(UriInfo uriInfo) {
         Networks ret = new Networks();
-        for (Network network : PowerShellNetworkResource.runAndParse(getShell(), "get-networks")) {
+        for (Network network : runAndParse("get-networks")) {
             ret.getNetworks().add(LinkHelper.addLinks(network));
         }
         return ret;
@@ -79,7 +89,7 @@ public class PowerShellNetworksResource
             buf.append(" -stp");
         }
 
-        network = LinkHelper.addLinks(PowerShellNetworkResource.runAndParseSingle(getShell(), buf.toString()));
+        network = LinkHelper.addLinks(runAndParseSingle(buf.toString()));
 
         UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(network.getId());
 
@@ -90,7 +100,7 @@ public class PowerShellNetworksResource
     public void remove(String id) {
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$n = get-networks\n");
+        buf.append("$n = get-networks;");
         buf.append("foreach ($i in $n) {");
         buf.append("  if ($i.networkid -eq " + PowerShellUtils.escape(id) + ") {");
         buf.append("    remove-network");
@@ -110,6 +120,6 @@ public class PowerShellNetworksResource
     }
 
     protected PowerShellNetworkResource createSubResource(String id) {
-        return new PowerShellNetworkResource(id, getExecutor(), shellPools);
+        return new PowerShellNetworkResource(id, getExecutor(), shellPools, getParser());
     }
 }

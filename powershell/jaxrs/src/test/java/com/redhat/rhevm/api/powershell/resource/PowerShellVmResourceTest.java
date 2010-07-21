@@ -69,7 +69,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
         "migrate-vm -vmid \"" + VM_ID + "\" -desthostid $h.hostid";
 
     protected PowerShellVmResource getResource(Executor executor, PowerShellPoolMap poolMap) {
-        return new PowerShellVmResource(VM_ID, executor, poolMap);
+        return new PowerShellVmResource(VM_ID, executor, poolMap, null);
     }
 
     @Test

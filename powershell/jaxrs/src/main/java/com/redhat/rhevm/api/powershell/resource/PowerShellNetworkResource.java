@@ -18,7 +18,7 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.UriInfo;
@@ -28,38 +28,50 @@ import com.redhat.rhevm.api.resource.NetworkResource;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellNetwork;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
 public class PowerShellNetworkResource extends AbstractPowerShellActionableResource<Network> implements NetworkResource {
 
-    public PowerShellNetworkResource(String id, Executor executor, PowerShellPoolMap shellPools) {
-        super(id, executor, shellPools);
+    public PowerShellNetworkResource(String id,
+                                     Executor executor,
+                                     PowerShellPoolMap shellPools,
+                                     PowerShellParser parser) {
+        super(id, executor, shellPools, parser);
     }
 
-    public static ArrayList<Network> runAndParse(PowerShellCmd shell, String command) {
-        return PowerShellNetwork.parse(PowerShellCmd.runCommand(shell, command));
+    public static List<Network> runAndParse(PowerShellCmd shell, PowerShellParser parser, String command) {
+        return PowerShellNetwork.parse(parser, PowerShellCmd.runCommand(shell, command, true));
     }
 
-    public static Network runAndParseSingle(PowerShellCmd shell, String command) {
-        ArrayList<Network> networks = runAndParse(shell, command);
+    public static Network runAndParseSingle(PowerShellCmd shell, PowerShellParser parser, String command) {
+        List<Network> networks = runAndParse(shell, parser, command);
 
         return !networks.isEmpty() ? networks.get(0) : null;
+    }
+
+    public List<Network> runAndParse(String command) {
+        return runAndParse(getShell(), getParser(), command);
+    }
+
+    public Network runAndParseSingle(String command) {
+        return runAndParseSingle(getShell(), getParser(), command);
     }
 
     @Override
     public Network get(UriInfo uriInfo) {
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$n = get-networks\n");
+        buf.append("$n = get-networks;");
         buf.append("foreach ($i in $n) {");
         buf.append("  if ($i.networkid -eq " + PowerShellUtils.escape(getId()) + ") {");
         buf.append("    $i");
         buf.append("  }");
         buf.append("}");
 
-        return LinkHelper.addLinks(runAndParseSingle(getShell(), buf.toString()));
+        return LinkHelper.addLinks(runAndParseSingle(buf.toString()));
     }
 
     @Override
@@ -72,7 +84,7 @@ public class PowerShellNetworkResource extends AbstractPowerShellActionableResou
         buf.append("  if ($i.networkid -eq " + PowerShellUtils.escape(getId()) + ") {");
 
         if (network.getName() != null) {
-            buf.append("    $i.name = " + PowerShellUtils.escape(network.getName()) + "\n");
+            buf.append("    $i.name = " + PowerShellUtils.escape(network.getName()) + ";");
         }
 
         buf.append("    update-network");
@@ -80,8 +92,8 @@ public class PowerShellNetworkResource extends AbstractPowerShellActionableResou
         buf.append(" -datacenterid " + PowerShellUtils.escape(network.getDataCenter().getId()));
 
         buf.append("  }");
-        buf.append("}\n");
+        buf.append("}");
 
-        return LinkHelper.addLinks(runAndParseSingle(getShell(), buf.toString()));
+        return LinkHelper.addLinks(runAndParseSingle(buf.toString()));
     }
 }

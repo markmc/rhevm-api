@@ -19,60 +19,51 @@
 package com.redhat.rhevm.api.powershell.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.IP;
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.NetworkStatus;
+import com.redhat.rhevm.api.powershell.enums.PowerShellNetworkStatus;
 import com.redhat.rhevm.api.powershell.model.PowerShellNetwork;
-import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
-
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 
 public class PowerShellNetwork {
 
-    public static ArrayList<Network> parse(String output) {
-        ArrayList<HashMap<String,String>> networksProps = PowerShellUtils.parseProps(output);
+    public static List<Network> parse(PowerShellParser parser, String output) {
         ArrayList<Network> ret = new ArrayList<Network>();
 
-        for (HashMap<String,String> props : networksProps) {
+        for (PowerShellParser.Entity entity : parser.parse(output)) {
             Network network = new Network();
 
-            network.setId(props.get("networkid"));
-            network.setName(props.get("name"));
-            network.setDescription(props.get("description"));
+            network.setId(entity.get("networkid"));
+            network.setName(entity.get("name"));
+            network.setDescription(entity.get("description"));
+            network.setStatus(entity.get("status", PowerShellNetworkStatus.class).map());
 
             DataCenter dataCenter = new DataCenter();
-            dataCenter.setId(props.get("datacenterid"));
+            dataCenter.setId(entity.get("datacenterid"));
             network.setDataCenter(dataCenter);
 
-            if (props.get("address") != null ||
-                props.get("subnet") != null ||
-                props.get("gateway") != null) {
+            if (entity.get("address") != null ||
+                entity.get("subnet") != null ||
+                entity.get("gateway") != null) {
                 IP ip = new IP();
-                ip.setAddress(props.get("address"));
-                ip.setNetmask(props.get("subnet"));
-                ip.setGateway(props.get("gateway"));
+                ip.setAddress(entity.get("address"));
+                ip.setNetmask(entity.get("subnet"));
+                ip.setGateway(entity.get("gateway"));
                 network.setIp(ip);
             }
 
-            if (props.get("vlanid") != null) {
+            if (entity.isSet("vlanid")) {
                 Network.Vlan vlan = new Network.Vlan();
-                vlan.setId(props.get("vlanid"));
+                vlan.setId(entity.get("vlanid"));
                 network.setVlan(vlan);
             }
 
-            if (props.get("stp") != null &&
-                props.get("stp").toLowerCase().equals("true")) {
+            if (entity.get("stp", Boolean.class)) {
                 network.setStp(true);
-            }
-
-            if (props.get("status") != null) {
-                if (props.get("status").toLowerCase().equals("operational")) {
-                    network.setStatus(NetworkStatus.OPERATIONAL);
-                } else {
-                    network.setStatus(NetworkStatus.NON_OPERATIONAL);
-                }
             }
 
             ret.add(network);

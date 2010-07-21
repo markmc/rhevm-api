@@ -47,7 +47,7 @@ public class PowerShellNetworkResourceTest extends AbstractPowerShellResourceTes
     private static final String UPDATE_RETURN = "networkid: 12345 \nname: eris\ndatacenterid: 54321";
 
     protected PowerShellNetworkResource getResource(Executor executor, PowerShellPoolMap poolMap) {
-        return new PowerShellNetworkResource("12345", executor, poolMap);
+        return new PowerShellNetworkResource("12345", executor, poolMap, null);
     }
 
     @Test

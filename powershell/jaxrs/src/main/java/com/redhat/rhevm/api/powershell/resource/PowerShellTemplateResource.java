@@ -33,14 +33,18 @@ import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellTemplate;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
 public class PowerShellTemplateResource extends AbstractPowerShellActionableResource<Template> implements TemplateResource {
 
-    public PowerShellTemplateResource(String id, Executor executor, PowerShellPoolMap shellPools) {
-        super(id, executor, shellPools);
+    public PowerShellTemplateResource(String id,
+                                      Executor executor,
+                                      PowerShellPoolMap shellPools,
+                                      PowerShellParser parser) {
+        super(id, executor, shellPools, parser);
     }
 
     public static ArrayList<PowerShellTemplate> runAndParse(PowerShellCmd shell, String command) {
@@ -132,6 +136,6 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
 
     @Override
     public PowerShellReadOnlyNicsResource getNicsResource() {
-        return new PowerShellReadOnlyNicsResource(getId(), shellPools, "get-template");
+        return new PowerShellReadOnlyNicsResource(getId(), shellPools, getParser(), "get-template");
     }
 }

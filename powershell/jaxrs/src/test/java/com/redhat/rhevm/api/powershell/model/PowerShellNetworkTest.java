@@ -20,7 +20,7 @@ package com.redhat.rhevm.api.powershell.model;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.NetworkStatus;
@@ -53,14 +53,14 @@ public class PowerShellNetworkTest extends PowerShellModelTest {
     }
 
     @Test
-    public void testParse() {
-        String data = readFileContents("network.data");
+    public void testParse() throws Exception {
+        String data = readFileContents("network.xml");
         assertNotNull(data);
 
-        ArrayList<Network> networks = PowerShellNetwork.parse(data);
+        List<Network> networks = PowerShellNetwork.parse(getParser(), data);
 
         assertEquals(networks.size(), 1);
 
-        testNetwork(networks.get(0), "00000000-0000-0000-0000-000000000009", "rhevm", "Management Network", "c116abad-99ce-4888-ad7f-5c7f8d7a75f2", null, null, null, null, null, NetworkStatus.OPERATIONAL);
+        testNetwork(networks.get(0), "00000000-0000-0000-0000-000000000009", "rhevm", "Management Network", "bb0fd622-5b2a-4c69-bfc5-29493932844a", null, null, null, null, null, NetworkStatus.OPERATIONAL);
     }
 }

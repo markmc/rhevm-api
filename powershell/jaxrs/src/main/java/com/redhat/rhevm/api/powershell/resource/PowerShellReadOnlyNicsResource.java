@@ -24,6 +24,7 @@ import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
@@ -32,8 +33,11 @@ public class PowerShellReadOnlyNicsResource extends AbstractPowerShellDevicesRes
 
     private String getCommand;
 
-    public PowerShellReadOnlyNicsResource(String parentId, PowerShellPoolMap shellPools, String getCommand) {
-        super(parentId, shellPools);
+    public PowerShellReadOnlyNicsResource(String parentId,
+                                          PowerShellPoolMap shellPools,
+                                          PowerShellParser parser,
+                                          String getCommand) {
+        super(parentId, shellPools, parser);
         this.getCommand = getCommand;
     }
 
@@ -74,7 +78,7 @@ public class PowerShellReadOnlyNicsResource extends AbstractPowerShellDevicesRes
         buf.append("}");
 
         Network network = new Network();
-        network.setId(PowerShellNetworkResource.runAndParseSingle(getShell(), buf.toString()).getId());
+        network.setId(PowerShellNetworkResource.runAndParseSingle(getShell(), getParser(), buf.toString()).getId());
         nic.setNetwork(network);
 
         return nic;

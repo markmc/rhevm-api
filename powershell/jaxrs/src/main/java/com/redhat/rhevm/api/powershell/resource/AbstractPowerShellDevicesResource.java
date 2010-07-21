@@ -25,6 +25,7 @@ import com.redhat.rhevm.api.model.BaseDevices;
 import com.redhat.rhevm.api.resource.MediaType;
 
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.resource.ReadOnlyDevicesResource;
 
@@ -34,14 +35,26 @@ public abstract class AbstractPowerShellDevicesResource<D extends BaseDevice, C 
 
     protected String parentId;
     protected PowerShellPoolMap shellPools;
+    protected PowerShellParser parser;
 
-    public AbstractPowerShellDevicesResource(String parentId, PowerShellPoolMap shellPools) {
+    public AbstractPowerShellDevicesResource(String parentId,
+                                             PowerShellPoolMap shellPools,
+                                             PowerShellParser parser) {
         this.parentId = parentId;
         this.shellPools = shellPools;
+        this.parser = parser;
+    }
+
+    public AbstractPowerShellDevicesResource(String parentId, PowerShellPoolMap shellPools) {
+        this(parentId, shellPools, null);
     }
 
     public PowerShellCmd getShell() {
         return shellPools.get().get();
+    }
+
+    public PowerShellParser getParser() {
+        return parser;
     }
 
     public abstract D addLinks(D device);

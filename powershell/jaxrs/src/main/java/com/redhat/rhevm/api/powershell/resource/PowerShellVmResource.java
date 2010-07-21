@@ -33,14 +33,18 @@ import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
 public class PowerShellVmResource extends AbstractPowerShellActionableResource<VM> implements VmResource {
 
-    public PowerShellVmResource(String id, Executor executor, PowerShellPoolMap shellPools) {
-        super(id, executor, shellPools);
+    public PowerShellVmResource(String id,
+                                Executor executor,
+                                PowerShellPoolMap shellPools,
+                                PowerShellParser parser) {
+        super(id, executor, shellPools, parser);
     }
 
     public static ArrayList<PowerShellVM> runAndParse(PowerShellCmd shell, String command) {
@@ -174,6 +178,6 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
 
     @Override
     public PowerShellNicsResource getNicsResource() {
-        return new PowerShellNicsResource(getId(), shellPools, "get-vm");
+        return new PowerShellNicsResource(getId(), shellPools, getParser(), "get-vm");
     }
 }

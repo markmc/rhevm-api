@@ -116,6 +116,6 @@ public class PowerShellTemplatesResource
     }
 
     protected PowerShellTemplateResource createSubResource(String id) {
-        return new PowerShellTemplateResource(id, getExecutor(), shellPools);
+        return new PowerShellTemplateResource(id, getExecutor(), shellPools, getParser());
     }
 }
