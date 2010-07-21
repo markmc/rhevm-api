@@ -18,24 +18,31 @@
  */
 package com.redhat.rhevm.api.powershell.model;
 
-import java.util.ArrayList;
+import org.junit.Test;
+
 import java.util.List;
 
 import com.redhat.rhevm.api.model.Iso;
-import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 
-public class PowerShellIso {
 
-    public static List<Iso> parse(PowerShellParser parser, String output) {
-        List<Iso> ret = new ArrayList<Iso>();
+public class PowerShellIsoTest extends PowerShellModelTest {
 
-        for (PowerShellParser.Entity entity : parser.parse(output)) {
-            Iso iso = new Iso();
-            iso.setId(entity.getValue());
-            iso.setName(entity.getValue());
-            ret.add(iso);
-        }
+    private void testIso(Iso i, String id) {
+        assertEquals(id, i.getId());
+        assertEquals(id, i.getName());
+    }
 
-        return ret;
+    @Test
+    public void testParse() throws Exception {
+        String data = readFileContents("iso.xml");
+        assertNotNull(data);
+
+        List<Iso> isos = PowerShellIso.parse(getParser(), data);
+
+        assertEquals(isos.size(), 3);
+
+        testIso(isos.get(0), "Fedora-13-x86_64-Live.iso");
+        testIso(isos.get(1), "en_winxp_pro_with_sp2.iso");
+        testIso(isos.get(2), "WindowsXP-sp2-vlk.iso");
     }
 }

@@ -104,6 +104,6 @@ public class PowerShellDataCenterResource extends AbstractPowerShellActionableRe
     }
 
     public IsosResource getIsosResource() {
-        return new PowerShellIsosResource(getId(), shellPools);
+        return new PowerShellIsosResource(getId(), shellPools, getParser());
     }
 }

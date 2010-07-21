@@ -26,6 +26,7 @@ import com.redhat.rhevm.api.resource.IsoResource;
 import com.redhat.rhevm.api.resource.IsosResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellIso;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
@@ -34,10 +35,14 @@ public class PowerShellIsosResource implements IsosResource {
 
     private String dataCenterId;
     private PowerShellPoolMap shellPools;
+    private PowerShellParser parser;
 
-    public PowerShellIsosResource(String dataCenterId, PowerShellPoolMap shellPools) {
+    public PowerShellIsosResource(String dataCenterId,
+                                  PowerShellPoolMap shellPools,
+                                  PowerShellParser parser) {
         this.dataCenterId = dataCenterId;
         this.shellPools = shellPools;
+        this.parser = parser;
     }
 
     @Override
@@ -46,7 +51,7 @@ public class PowerShellIsosResource implements IsosResource {
         buf.append("get-isoimages");
         buf.append(" -datacenterid " + PowerShellUtils.escape(dataCenterId));
         Isos ret = new Isos();
-        for (Iso iso : PowerShellIso.parse(PowerShellCmd.runCommand(getShell(), buf.toString()))) {
+        for (Iso iso : PowerShellIso.parse(parser, PowerShellCmd.runCommand(getShell(), buf.toString(), true))) {
             ret.getIsos().add(PowerShellIsoResource.addLinks(iso, dataCenterId));
         }
         return ret;
