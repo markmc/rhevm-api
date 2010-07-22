@@ -18,13 +18,17 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import javax.ws.rs.Produces;
+
 import com.redhat.rhevm.api.model.BaseDevice;
 import com.redhat.rhevm.api.model.BaseDevices;
+import com.redhat.rhevm.api.resource.MediaType;
+
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.resource.ReadOnlyDevicesResource;
 
-
+@Produces(MediaType.APPLICATION_XML)
 public abstract class AbstractPowerShellDevicesResource<D extends BaseDevice, C extends BaseDevices>
     implements ReadOnlyDevicesResource<D, C> {
 
