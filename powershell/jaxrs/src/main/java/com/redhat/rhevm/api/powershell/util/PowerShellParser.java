@@ -26,6 +26,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import javax.xml.parsers.DocumentBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -37,6 +40,7 @@ import org.xml.sax.SAXException;
 import com.redhat.rhevm.api.powershell.enums.EnumMapper;
 
 public class PowerShellParser {
+    private static final Log log = LogFactory.getLog(PowerShellCmd.class);
 
     private DocumentBuilder documentBuilder;
     private EnumMapper enumMapper;
@@ -55,6 +59,7 @@ public class PowerShellParser {
     }
 
     public List<Entity> parse(String contents) {
+        log.info("Parsing powershell output '" + contents + "'");
         InputSource source = new InputSource(new StringReader(stripNewlines(contents)));
         Node doc;
         try {

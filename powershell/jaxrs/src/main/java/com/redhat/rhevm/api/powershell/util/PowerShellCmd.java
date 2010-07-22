@@ -138,7 +138,7 @@ public class PowerShellCmd {
             start();
         }
 
-        log.debug("Running '" + script + "'");
+        log.info("Running '" + script + "'");
 
         try {
             return runAndWait(script);
