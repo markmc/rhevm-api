@@ -18,7 +18,7 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.Response;
@@ -47,14 +47,18 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
         super(id, executor, shellPools, parser);
     }
 
-    public static ArrayList<PowerShellVM> runAndParse(PowerShellCmd shell, String command) {
-        return PowerShellVM.parse(PowerShellCmd.runCommand(shell, command));
+    public static List<PowerShellVM> runAndParse(PowerShellCmd shell, PowerShellParser parser, String command) {
+        return PowerShellVM.parse(parser, PowerShellCmd.runCommand(shell, command, true));
     }
 
-    public static PowerShellVM runAndParseSingle(PowerShellCmd shell, String command) {
-        ArrayList<PowerShellVM> vms = runAndParse(shell, command);
+    public static PowerShellVM runAndParseSingle(PowerShellCmd shell, PowerShellParser parser, String command) {
+        List<PowerShellVM> vms = runAndParse(shell, parser, command);
 
         return !vms.isEmpty() ? vms.get(0) : null;
+    }
+
+    public PowerShellVM runAndParseSingle(String command) {
+        return runAndParseSingle(getShell(), getParser(), command);
     }
 
     public static VM addLinks(PowerShellVM vm) {
@@ -76,7 +80,7 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
 
     @Override
     public VM get(UriInfo uriInfo) {
-        return addLinks(runAndParseSingle(getShell(), "get-vm " + PowerShellUtils.escape(getId())));
+        return addLinks(runAndParseSingle("get-vm " + PowerShellUtils.escape(getId())));
     }
 
     @Override
@@ -85,30 +89,30 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
 
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$v = get-vm " + PowerShellUtils.escape(getId()) + "\n");
+        buf.append("$v = get-vm " + PowerShellUtils.escape(getId()) + ";");
 
         if (vm.getName() != null) {
-            buf.append("$v.name = " + PowerShellUtils.escape(vm.getName()) + "\n");
+            buf.append("$v.name = " + PowerShellUtils.escape(vm.getName()) + ";");
         }
         if (vm.getDescription() != null) {
-            buf.append("$v.description = " + PowerShellUtils.escape(vm.getDescription()) + "\n");
+            buf.append("$v.description = " + PowerShellUtils.escape(vm.getDescription()) + ";");
         }
         if (vm.isSetMemory()) {
-            buf.append(" $v.memorysize = " + Math.round((double)vm.getMemory()/(1024*1024)) + "\n");
+            buf.append(" $v.memorysize = " + Math.round((double)vm.getMemory()/(1024*1024)) + ";");
         }
         if (vm.getCpu() != null && vm.getCpu().getTopology() != null) {
             CpuTopology topology = vm.getCpu().getTopology();
-            buf.append(" $v.numofsockets = " + topology.getSockets() + "\n");
-            buf.append(" $v.numofcpuspersocket = " + topology.getCores() + "\n");
+            buf.append(" $v.numofsockets = " + topology.getSockets() + ";");
+            buf.append(" $v.numofcpuspersocket = " + topology.getCores() + ";");
         }
         String bootSequence = PowerShellVM.buildBootSequence(vm.getOs());
         if (bootSequence != null) {
-            buf.append(" $v.defaultbootsequence = '" + bootSequence + "'\n");
+            buf.append(" $v.defaultbootsequence = '" + bootSequence + "';");
         }
 
         buf.append("update-vm -vmobject $v");
 
-        return addLinks(runAndParseSingle(getShell(), buf.toString()));
+        return addLinks(runAndParseSingle(buf.toString()));
     }
 
     @Override
@@ -146,7 +150,7 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
         } else {
             buf.append("$h = select-host -searchtext ");
             buf.append(PowerShellUtils.escape("name=" + action.getHost().getName()));
-            buf.append("\n");
+            buf.append(";");
             hostArg = "$h.hostid";
         }
 
@@ -157,12 +161,12 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
         return doAction(uriInfo, new CommandRunner(action, buf.toString(), getShell()));
     }
 
-    public static class CdRomQuery extends PowerShellCdRomsResource.CdRomQuery {
+    public class CdRomQuery extends PowerShellCdRomsResource.CdRomQuery {
         public CdRomQuery(String id) {
             super(id);
         }
-        @Override protected String getCdIsoPath(PowerShellCmd shell) {
-            return runAndParseSingle(shell, "get-vm " + PowerShellUtils.escape(id)).getCdIsoPath();
+        @Override protected String getCdIsoPath() {
+            return runAndParseSingle("get-vm " + PowerShellUtils.escape(id)).getCdIsoPath();
         }
     }
 

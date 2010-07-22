@@ -20,7 +20,7 @@ package com.redhat.rhevm.api.powershell.model;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.redhat.rhevm.api.model.BootDevice;
 import com.redhat.rhevm.api.model.Disk;
@@ -41,20 +41,20 @@ public class PowerShellVmTest extends PowerShellModelTest {
     private static final String VM_ID = "439c0c13-3e0a-489e-a514-1b07232ace41";
 
     private void testVM(PowerShellVM v, String id, String name, String description, VmStatus status, Long memory, int sockets, int cores, String cdIsoPath, String hostId, String clusterId, String templateId) {
-        assertEquals(v.getId(), id);
-        assertEquals(v.getName(), name);
-        assertEquals(v.getDescription(), description);
-        assertEquals(v.getStatus(), status);
-        assertEquals(v.getMemory(), memory);
+        assertEquals(id, v.getId());
+        assertEquals(name, v.getName());
+        assertEquals(description, v.getDescription());
+        assertEquals(status, v.getStatus());
+        assertEquals(memory, v.getMemory());
         assertNotNull(v.getCpu());
         assertNotNull(v.getCpu().getTopology());
-        assertEquals(v.getCpu().getTopology().getSockets(), sockets);
-        assertEquals(v.getCpu().getTopology().getCores(), cores);
-        assertEquals(v.getCdIsoPath(), cdIsoPath);
+        assertEquals(sockets, v.getCpu().getTopology().getSockets());
+        assertEquals(cores, v.getCpu().getTopology().getCores());
+        assertEquals(cdIsoPath, v.getCdIsoPath());
         assertNotNull(v.getCluster());
-        assertEquals(v.getCluster().getId(), clusterId);
+        assertEquals(clusterId, v.getCluster().getId());
         assertNotNull(v.getTemplate());
-        assertEquals(v.getTemplate().getId(), templateId);
+        assertEquals(templateId, v.getTemplate().getId());
     }
 
     private void testBootDevices(VM vm, BootDevice ... bootDevices) {
@@ -69,19 +69,25 @@ public class PowerShellVmTest extends PowerShellModelTest {
     }
 
     @Test
-    public void testParse() {
-        String data = readFileContents("vm.data");
+    public void testParse() throws Exception {
+        String data = readFileContents("vm.xml");
         assertNotNull(data);
 
-        ArrayList<PowerShellVM> vms = PowerShellVM.parse(data);
+        List<PowerShellVM> vms = PowerShellVM.parse(getParser(), data);
 
-        assertEquals(vms.size(), 2);
+        assertEquals(vms.size(), 4);
 
-        testVM(vms.get(0), "aa0e6522-5baf-4f92-86d3-716883de4359", "test", null, VmStatus.SHUTOFF, 536870912L, 1, 1, "foo.iso", null, "99408929-82cf-4dc7-a532-9d998063fa95", "00000000-0000-0000-0000-000000000000");
+        testVM(vms.get(0), "142bf5b1-04fb-4221-9360-0f9b7dab3013", "foo-1", null, VmStatus.RUNNING, 536870912L, 1, 1, null, "5f38363b-7457-4884-831e-78c27cebb31d", "99408929-82cf-4dc7-a532-9d998063fa95", "3ee77811-f1eb-4d3f-991e-e539dbb2f1f9");
         testBootDevices(vms.get(0), BootDevice.HD);
 
-        testVM(vms.get(1), "5114bb3e-a4e6-44b2-b783-b3eea7d84720", "testf13", null, VmStatus.RUNNING, 536870912L, 1, 1, null, "5f38363b-7457-4884-831e-78c27cebb31d", "99408929-82cf-4dc7-a532-9d998063fa95", "00000000-0000-0000-0000-000000000000");
-        testBootDevices(vms.get(1), BootDevice.HD, BootDevice.CDROM, BootDevice.NETWORK);
+        testVM(vms.get(1), "f9e37917-8382-486f-875d-4045be045d85", "foo-2", null, VmStatus.SHUTOFF, 536870912L, 1, 1, null, null, "99408929-82cf-4dc7-a532-9d998063fa95", "3ee77811-f1eb-4d3f-991e-e539dbb2f1f9");
+        testBootDevices(vms.get(1), BootDevice.HD);
+
+        testVM(vms.get(2), "aa0e6522-5baf-4f92-86d3-716883de4359", "test", null, VmStatus.SHUTOFF, 536870912L, 1, 1, null, null, "99408929-82cf-4dc7-a532-9d998063fa95", "00000000-0000-0000-0000-000000000000");
+        testBootDevices(vms.get(2), BootDevice.HD);
+
+        testVM(vms.get(3), "5114bb3e-a4e6-44b2-b783-b3eea7d84720", "testf13", null, VmStatus.SHUTOFF, 536870912L, 1, 1, null, null, "99408929-82cf-4dc7-a532-9d998063fa95", "00000000-0000-0000-0000-000000000000");
+        testBootDevices(vms.get(3), BootDevice.HD);
     }
 
     private void testDisk(Disk d, String id, String vmId, Long size, DiskType type, DiskStatus status, DiskInterface iface, DiskFormat format, Boolean sparse, Boolean bootable, Boolean wipeAfterDelete, Boolean propagateErrors) {

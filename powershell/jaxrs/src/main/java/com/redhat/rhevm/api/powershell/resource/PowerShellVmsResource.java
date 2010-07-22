@@ -18,6 +18,8 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.util.List;
+
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -36,10 +38,18 @@ public class PowerShellVmsResource
     extends AbstractPowerShellCollectionResource<VM, PowerShellVmResource>
     implements VmsResource {
 
+    public List<PowerShellVM> runAndParse(String command) {
+        return PowerShellVmResource.runAndParse(getShell(), getParser(), command);
+    }
+
+    public PowerShellVM runAndParseSingle(String command) {
+        return PowerShellVmResource.runAndParseSingle(getShell(), getParser(), command);
+    }
+
     @Override
     public VMs list(UriInfo uriInfo) {
         VMs ret = new VMs();
-        for (PowerShellVM vm : PowerShellVmResource.runAndParse(getShell(), getSelectCommand("select-vm", uriInfo, VM.class))) {
+        for (PowerShellVM vm : runAndParse(getSelectCommand("select-vm", uriInfo, VM.class))) {
             ret.getVMs().add(PowerShellVmResource.addLinks(vm));
         }
         return ret;
@@ -55,7 +65,7 @@ public class PowerShellVmsResource
         } else {
             buf.append("$t = select-template -searchtext ");
             buf.append(PowerShellUtils.escape("name=" + vm.getTemplate().getName()));
-            buf.append("\n");
+            buf.append(";");
             templateArg = "$t.TemplateId";
         }
 
@@ -65,11 +75,11 @@ public class PowerShellVmsResource
         } else {
             buf.append("$c = select-cluster -searchtext ");
             buf.append(PowerShellUtils.escape("name=" +  vm.getCluster().getName()));
-            buf.append("\n");
+            buf.append(";");
             clusterArg = "$c.ClusterId";
         }
 
-        buf.append("$templ = get-template -templateid " + templateArg + "\n");
+        buf.append("$templ = get-template -templateid " + templateArg + ";");
 
         buf.append("add-vm");
 
@@ -93,7 +103,7 @@ public class PowerShellVmsResource
             buf.append(" -defaultbootsequence " + bootSequence);
         }
 
-        PowerShellVM ret = PowerShellVmResource.runAndParseSingle(getShell(), buf.toString());
+        PowerShellVM ret = runAndParseSingle(buf.toString());
 
         vm = PowerShellVmResource.addLinks(ret);
 

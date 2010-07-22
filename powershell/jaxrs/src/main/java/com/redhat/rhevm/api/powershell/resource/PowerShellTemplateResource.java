@@ -125,7 +125,7 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
         public CdRomQuery(String id) {
             super(id);
         }
-        @Override protected String getCdIsoPath(PowerShellCmd shell) {
+        @Override protected String getCdIsoPath() {
             return runAndParseSingle("get-template " + PowerShellUtils.escape(id)).getCdIsoPath();
         }
     }

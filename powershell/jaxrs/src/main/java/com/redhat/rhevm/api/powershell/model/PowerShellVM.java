@@ -20,6 +20,7 @@ package com.redhat.rhevm.api.powershell.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import com.redhat.rhevm.api.model.BootDevice;
 import com.redhat.rhevm.api.model.Cluster;
@@ -42,7 +43,9 @@ import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VmPool;
 import com.redhat.rhevm.api.model.VmStatus;
+import com.redhat.rhevm.api.powershell.enums.PowerShellBootSequence;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 import com.redhat.rhevm.api.powershell.util.UUID;
 
@@ -82,33 +85,7 @@ public class PowerShellVM extends VM {
         return !bootSequence.isEmpty() ? bootSequence : null;
     }
 
-    public static void parseBootDevices(OperatingSystem os, String bootSequence) {
-        for (int i = 0; i < bootSequence.length(); i++) {
-            char c = bootSequence.charAt(i);
-            OperatingSystem.Boot boot = new OperatingSystem.Boot();
-
-            switch (c) {
-            case 'C':
-                boot.setDev(BootDevice.HD);
-                break;
-            case 'D':
-                boot.setDev(BootDevice.CDROM);
-                break;
-            case 'N':
-                boot.setDev(BootDevice.NETWORK);
-                break;
-            default:
-                break;
-            }
-
-            if (boot.isSetDev()) {
-                os.getBoot().add(boot);
-            }
-        }
-    }
-
-    private static VmStatus parseStatus(HashMap<String,String> props, String key) {
-        String s = props.get(key);
+    private static VmStatus parseStatus(String s) {
         if (s == null) return null;
         else if (s.equals("Down"))         return VmStatus.SHUTOFF;
         else if (s.equals("Paused"))       return VmStatus.PAUSED;
@@ -118,53 +95,53 @@ public class PowerShellVM extends VM {
         else return null;
     }
 
-    public static ArrayList<PowerShellVM> parse(String output) {
-        ArrayList<HashMap<String,String>> vmsProps = PowerShellUtils.parseProps(output);
-        ArrayList<PowerShellVM> ret = new ArrayList<PowerShellVM>();
+    public static List<PowerShellVM> parse(PowerShellParser parser, String output) {
+        List<PowerShellVM> ret = new ArrayList<PowerShellVM>();
 
-        for (HashMap<String,String> props : vmsProps) {
+        for (PowerShellParser.Entity entity : parser.parse(output)) {
             PowerShellVM vm = new PowerShellVM();
 
-            vm.setId(props.get("vmid"));
-            vm.setName(props.get("name"));
-            vm.setDescription(props.get("description"));
-            vm.setMemory(Long.parseLong(props.get("memorysize")) * 1024 * 1024);
-            vm.setCdIsoPath(props.get("cdisopath"));
+            vm.setId(entity.get("vmid"));
+            vm.setName(entity.get("name"));
+            vm.setDescription(entity.get("description"));
+            vm.setMemory(entity.get("memorysize", Integer.class) * 1024L * 1024L);
+            vm.setCdIsoPath(entity.get("cdisopath"));
 
-            VmStatus status = parseStatus(props, "status");
+            VmStatus status = parseStatus(entity.get("status"));
             if (status != null) {
                 vm.setStatus(status);
             }
 
             CpuTopology topo = new CpuTopology();
-            topo.setSockets(Integer.parseInt(props.get("numofsockets")));
-            topo.setCores(Integer.parseInt(props.get("numofcpuspersocket")));
+            topo.setSockets(entity.get("numofsockets", Integer.class));
+            topo.setCores(entity.get("numofcpuspersocket", Integer.class));
             CPU cpu = new CPU();
             cpu.setTopology(topo);
             vm.setCpu(cpu);
 
             OperatingSystem os = new OperatingSystem();
-            parseBootDevices(os, props.get("defaultbootsequence"));
+            for (OperatingSystem.Boot boot : entity.get("defaultbootsequence", PowerShellBootSequence.class).map()) {
+                os.getBoot().add(boot);
+            }
             vm.setOs(os);
 
-            if (props.get("runningonhost") != null &&
-                !props.get("runningonhost").equals(UUID.EMPTY)) {
+            if (!entity.get("runningonhost").equals(UUID.EMPTY)) {
                 Host host = new Host();
-                host.setId(props.get("runningonhost"));
+                host.setId(entity.get("runningonhost"));
                 vm.setHost(host);
             }
 
             Cluster cluster = new Cluster();
-            cluster.setId(props.get("hostclusterid"));
+            cluster.setId(entity.get("hostclusterid"));
             vm.setCluster(cluster);
 
             Template template = new Template();
-            template.setId(props.get("templateid"));
+            template.setId(entity.get("templateid"));
             vm.setTemplate(template);
 
-            if (!props.get("poolid").equals("-1")) {
+            if (!entity.get("poolid").equals(UUID.EMPTY)) {
                 VmPool pool = new VmPool();
-                pool.setId(props.get("poolid"));
+                pool.setId(entity.get("poolid"));
                 vm.setVmPool(pool);
             }
 

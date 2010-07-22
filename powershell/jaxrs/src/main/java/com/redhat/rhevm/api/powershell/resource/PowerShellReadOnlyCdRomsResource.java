@@ -54,7 +54,7 @@ public class PowerShellReadOnlyCdRomsResource extends AbstractPowerShellDevicesR
     public CdRoms getDevices() {
         CdRoms cdroms = new CdRoms();
 
-        String cdIsoPath = query.getCdIsoPath(getShell());
+        String cdIsoPath = query.getCdIsoPath();
         if (cdIsoPath != null) {
             cdroms.getCdRoms().add(buildCdRom(cdIsoPath));
         }
@@ -86,6 +86,6 @@ public class PowerShellReadOnlyCdRomsResource extends AbstractPowerShellDevicesR
         public CdRomQuery(String id) {
             this.id = id;
         }
-        protected abstract String getCdIsoPath(PowerShellCmd shell);
+        protected abstract String getCdIsoPath();
     }
 }
