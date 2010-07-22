@@ -78,7 +78,7 @@ public class PowerShellReadOnlyCdRomsResource extends AbstractPowerShellDevicesR
 
     @Override
     public PowerShellDeviceResource<CdRom, CdRoms> getDeviceSubResource(String id) {
-        return new PowerShellDeviceResource<CdRom, CdRoms>(this, id, shellPools);
+        return new PowerShellDeviceResource<CdRom, CdRoms>(this, id);
     }
 
     public static abstract class CdRomQuery {

@@ -137,7 +137,7 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
 
     @Override
     public PowerShellReadOnlyDisksResource getDisksResource() {
-        return new PowerShellReadOnlyDisksResource(getId(), shellPools, "get-template");
+        return new PowerShellReadOnlyDisksResource(getId(), shellPools, getParser(), "get-template");
     }
 
     @Override

@@ -42,7 +42,7 @@ public class PowerShellReadOnlyNicsResource extends AbstractPowerShellDevicesRes
     }
 
     public Nics runAndParse(String command) {
-        return PowerShellVM.parseNics(parentId, PowerShellCmd.runCommand(getShell(), command));
+        return PowerShellVM.parseNics(getParser(), parentId, PowerShellCmd.runCommand(getShell(), command, true));
     }
 
     public NIC runAndParseSingle(String command) {
@@ -55,8 +55,8 @@ public class PowerShellReadOnlyNicsResource extends AbstractPowerShellDevicesRes
     public Nics getDevices() {
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$v = " + getCommand + " " + PowerShellUtils.escape(parentId) + "\n");
-        buf.append("$v.GetNetworkAdapters()\n");
+        buf.append("$v = " + getCommand + " " + PowerShellUtils.escape(parentId) + ";");
+        buf.append("$v.GetNetworkAdapters()");
 
         return runAndParse(buf.toString());
     }
@@ -70,7 +70,7 @@ public class PowerShellReadOnlyNicsResource extends AbstractPowerShellDevicesRes
     private NIC lookupNetworkId(NIC nic) {
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$n = get-networks\n");
+        buf.append("$n = get-networks;");
         buf.append("foreach ($i in $n) {");
         buf.append("  if ($i.name -eq " + PowerShellUtils.escape(nic.getNetwork().getName()) + ") {");
         buf.append("    $i");
@@ -100,6 +100,6 @@ public class PowerShellReadOnlyNicsResource extends AbstractPowerShellDevicesRes
 
     @Override
     public PowerShellDeviceResource<NIC, Nics> getDeviceSubResource(String id) {
-        return new PowerShellDeviceResource<NIC, Nics>(this, id, shellPools);
+        return new PowerShellDeviceResource<NIC, Nics>(this, id);
     }
 }

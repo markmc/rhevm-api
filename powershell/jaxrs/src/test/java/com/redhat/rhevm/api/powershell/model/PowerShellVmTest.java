@@ -106,53 +106,53 @@ public class PowerShellVmTest extends PowerShellModelTest {
     }
 
     @Test
-    public void testParseDisks() {
-        String data = readFileContents("disks.data");
+    public void testParseDisks() throws Exception {
+        String data = readFileContents("disks.xml");
         assertNotNull(data);
 
-        Disks disks = PowerShellVM.parseDisks(VM_ID, data);
+        Disks disks = PowerShellVM.parseDisks(getParser(), VM_ID, data);
 
         assertNotNull(disks);
         assertEquals(disks.getDisks().size(), 1);
 
-        testDisk(disks.getDisks().get(0), "eeca0966-ad77-4a3d-a750-f3ba390446da", VM_ID, 683622400L, DiskType.SYSTEM, DiskStatus.OK, DiskInterface.IDE, DiskFormat.RAW, true, true, null, null);
+        testDisk(disks.getDisks().get(0), "0b9318b4-e426-4380-9e6a-bb7f3a38a2ce", VM_ID, 1341231104L, DiskType.SYSTEM, DiskStatus.OK, DiskInterface.IDE, DiskFormat.RAW, true, true, null, null);
 
     }
 
     private void testNic(NIC n, String id, String name, String vmId, String network, NicType type, String macAddress, String ipAddress, String ipNetmask, String ipGateway) {
-        assertEquals(n.getId(), id);
-        assertEquals(n.getName(), name);
+        assertEquals(id, n.getId());
+        assertEquals(name, n.getName());
         assertNotNull(n.getVm());
-        assertEquals(n.getVm().getId(), vmId);
+        assertEquals(vmId, n.getVm().getId());
         assertNotNull(n.getNetwork());
-        assertEquals(n.getNetwork().getName(), network);
-        assertEquals(n.getType(), type);
+        assertEquals(network, n.getNetwork().getName());
+        assertEquals(type, n.getType());
         if (macAddress != null) {
             assertNotNull(n.getMac());
-            assertEquals(n.getMac().getAddress(), macAddress);
+            assertEquals(macAddress, n.getMac().getAddress());
         } else {
             assertNull(n.getMac());
         }
         if (ipAddress != null || ipNetmask != null || ipGateway != null) {
             assertNotNull(n.getIp());
-            assertEquals(n.getIp().getAddress(), ipAddress);
-            assertEquals(n.getIp().getNetmask(), ipNetmask);
-            assertEquals(n.getIp().getGateway(), ipGateway);
+            assertEquals(ipAddress, n.getIp().getAddress());
+            assertEquals(ipNetmask, n.getIp().getNetmask());
+            assertEquals(ipGateway, n.getIp().getGateway());
         } else {
             assertNull(n.getIp());
         }
     }
 
     @Test
-    public void testParseNics() {
-        String data = readFileContents("nics.data");
+    public void testParseNics() throws Exception {
+        String data = readFileContents("nics.xml");
         assertNotNull(data);
 
-        Nics nics = PowerShellVM.parseNics(VM_ID, data);
+        Nics nics = PowerShellVM.parseNics(getParser(), VM_ID, data);
 
         assertNotNull(nics);
-        assertEquals(nics.getNics().size(), 1);
+        assertEquals(1, nics.getNics().size());
 
-        testNic(nics.getNics().get(0), "5e8471ec-d8b5-431b-afcb-c74846e0019b", "eth0", VM_ID, "rhevm", NicType.RTL_8139_PV, "00:1a:4a:16:84:02", null, null, null);
+        testNic(nics.getNics().get(0), "a34b8c24-f1cf-4b67-9912-3b04e9ce0a7b", "nic1", VM_ID, "rhevm", NicType.RTL_8139_PV, "00:1a:4a:16:84:02", null, null, null);
     }
 }

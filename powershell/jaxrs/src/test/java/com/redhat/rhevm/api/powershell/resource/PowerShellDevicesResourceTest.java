@@ -165,9 +165,9 @@ public class PowerShellDevicesResourceTest extends Assert {
 
     @Test
     public void testDiskGet() throws Exception {
-        PowerShellDisksResource parent = new PowerShellDisksResource(VM_ID, poolMap, "get-vm");
+        PowerShellDisksResource parent = new PowerShellDisksResource(VM_ID, poolMap, null, "get-vm");
         PowerShellDeviceResource<Disk, Disks> resource =
-            new PowerShellDeviceResource<Disk, Disks>(parent, DISK_ID, poolMap);
+            new PowerShellDeviceResource<Disk, Disks>(parent, DISK_ID);
 
         setUpCmdExpectations(GET_DISKS_CMD, GET_DISKS_RETURN);
         verifyDisk(resource.get());
@@ -175,7 +175,7 @@ public class PowerShellDevicesResourceTest extends Assert {
 
     @Test
     public void testDiskList() throws Exception {
-        PowerShellDisksResource resource = new PowerShellDisksResource(VM_ID, poolMap, "get-vm");
+        PowerShellDisksResource resource = new PowerShellDisksResource(VM_ID, poolMap, null, "get-vm");
 
         setUpCmdExpectations(GET_DISKS_CMD, GET_DISKS_RETURN);
 
@@ -184,7 +184,7 @@ public class PowerShellDevicesResourceTest extends Assert {
 
     @Test
     public void testDiskAdd() throws Exception {
-        PowerShellDisksResource resource = new PowerShellDisksResource(VM_ID, poolMap, "get-vm");
+        PowerShellDisksResource resource = new PowerShellDisksResource(VM_ID, poolMap, null, "get-vm");
 
         Disk disk = new Disk();
         disk.setType(DiskType.SYSTEM);
@@ -199,7 +199,7 @@ public class PowerShellDevicesResourceTest extends Assert {
 
     @Test
     public void testDiskRemove() throws Exception {
-        PowerShellDisksResource resource = new PowerShellDisksResource(VM_ID, poolMap, "get-vm");
+        PowerShellDisksResource resource = new PowerShellDisksResource(VM_ID, poolMap, null, "get-vm");
 
         String command = MessageFormat.format(REMOVE_DISK_COMMAND, VM_ID, DISK_ID);
 
@@ -212,7 +212,7 @@ public class PowerShellDevicesResourceTest extends Assert {
     public void testNicGet() throws Exception {
         PowerShellNicsResource parent = new PowerShellNicsResource(VM_ID, poolMap, null, "get-vm");
         PowerShellDeviceResource<NIC, Nics> resource =
-            new PowerShellDeviceResource<NIC, Nics>(parent, NIC_ID, poolMap);
+            new PowerShellDeviceResource<NIC, Nics>(parent, NIC_ID);
 
         String [] commands = { GET_NICS_CMD, LOOKUP_NETWORK_ID_COMMAND };
         String [] returns = { GET_NICS_RETURN, LOOKUP_NETWORK_ID_RETURN };

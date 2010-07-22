@@ -43,8 +43,8 @@ public class PowerShellCdRomsResource
     private void updateCdRom(String cdIsoPath) {
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$v = get-vm " + PowerShellUtils.escape(parentId) + "\n");
-        buf.append("$v.cdisopath = " + PowerShellUtils.escape(cdIsoPath) + "\n");
+        buf.append("$v = get-vm " + PowerShellUtils.escape(parentId) + ";");
+        buf.append("$v.cdisopath = " + PowerShellUtils.escape(cdIsoPath) + ";");
         buf.append("update-vm -vmobject $v");
 
         PowerShellCmd.runCommand(getShell(), buf.toString());
@@ -72,6 +72,6 @@ public class PowerShellCdRomsResource
 
     @Override
     public PowerShellDeviceResource<CdRom, CdRoms> getDeviceSubResource(String id) {
-        return new PowerShellDeviceResource<CdRom, CdRoms>(this, id, shellPools);
+        return new PowerShellDeviceResource<CdRom, CdRoms>(this, id);
     }
 }

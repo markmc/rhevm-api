@@ -26,6 +26,7 @@ import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.Disks;
 import com.redhat.rhevm.api.common.util.ReflectionHelper;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 import com.redhat.rhevm.api.resource.DevicesResource;
@@ -35,8 +36,11 @@ public class PowerShellDisksResource
     extends PowerShellReadOnlyDisksResource
     implements DevicesResource<Disk, Disks> {
 
-    public PowerShellDisksResource(String parentId, PowerShellPoolMap shellPools, String getCommand) {
-        super(parentId, shellPools, getCommand);
+    public PowerShellDisksResource(String parentId,
+                                   PowerShellPoolMap shellPools,
+                                   PowerShellParser parser,
+                                   String getCommand) {
+        super(parentId, shellPools, parser, getCommand);
     }
 
     @Override
@@ -80,9 +84,9 @@ public class PowerShellDisksResource
                 buf.append("off");
             }
         }
-        buf.append("\n");
+        buf.append(";");
 
-        buf.append("$v = get-vm " + PowerShellUtils.escape(parentId) + "\n");
+        buf.append("$v = get-vm " + PowerShellUtils.escape(parentId) + ";");
 
         buf.append("add-disk -diskobject $d -vmobject $v");
         if (disk.getStorageDomain() != null) {

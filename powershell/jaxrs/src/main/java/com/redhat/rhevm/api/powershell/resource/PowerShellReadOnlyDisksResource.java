@@ -24,6 +24,7 @@ import com.redhat.rhevm.api.model.Disks;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
@@ -32,13 +33,16 @@ public class PowerShellReadOnlyDisksResource extends AbstractPowerShellDevicesRe
 
     private String getCommand;
 
-    public PowerShellReadOnlyDisksResource(String parentId, PowerShellPoolMap shellPools, String getCommand) {
-        super(parentId, shellPools);
+    public PowerShellReadOnlyDisksResource(String parentId,
+                                           PowerShellPoolMap shellPools,
+                                           PowerShellParser parser,
+                                           String getCommand) {
+        super(parentId, shellPools, parser);
         this.getCommand = getCommand;
     }
 
     public Disks runAndParse(String command) {
-        return PowerShellVM.parseDisks(parentId, PowerShellCmd.runCommand(getShell(), command));
+        return PowerShellVM.parseDisks(getParser(), parentId, PowerShellCmd.runCommand(getShell(), command, true));
     }
 
     public Disk runAndParseSingle(String command) {
@@ -51,8 +55,8 @@ public class PowerShellReadOnlyDisksResource extends AbstractPowerShellDevicesRe
     public Disks getDevices() {
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$v = " + getCommand + " " + PowerShellUtils.escape(parentId) + "\n");
-        buf.append("$v.GetDiskImages()\n");
+        buf.append("$v = " + getCommand + " " + PowerShellUtils.escape(parentId) + ";");
+        buf.append("$v.GetDiskImages()");
 
         return runAndParse(buf.toString());
     }
@@ -73,6 +77,6 @@ public class PowerShellReadOnlyDisksResource extends AbstractPowerShellDevicesRe
 
     @Override
     public PowerShellDeviceResource<Disk, Disks> getDeviceSubResource(String id) {
-        return new PowerShellDeviceResource<Disk, Disks>(this, id, shellPools);
+        return new PowerShellDeviceResource<Disk, Disks>(this, id);
     }
 }
