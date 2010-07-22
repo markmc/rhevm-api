@@ -21,35 +21,12 @@ package com.redhat.rhevm.api.powershell.util;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.InputStream;
-import java.io.IOException;
-import java.util.Scanner;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import com.redhat.rhevm.api.powershell.enums.EnumMapper;
 
 public class PowerShellParserTest extends Assert {
-
-    private String readFileContents(String file) {
-        InputStream is = this.getClass().getClassLoader().getResourceAsStream(file);
-        assertNotNull(is);
-        try {
-            StringBuilder outputBuffer = new StringBuilder();
-            Scanner sc = new Scanner(is);
-            while (sc.hasNext()) {
-                outputBuffer.append(sc.nextLine() + "\n");
-            }
-            return outputBuffer.toString();
-        } finally {
-            try {
-                is.close();
-            } catch (IOException ioe) {
-                // ignore
-            }
-        }
-    }
 
     @Test
     public void testParse() throws Exception {
@@ -72,8 +49,7 @@ public class PowerShellParserTest extends Assert {
         p.setEnumMapper(new EnumMapper());
 
         for (int i = 0; i < files.length; i++) {
-            String contents = readFileContents(files[i]);
-            p.parse(contents);
+            p.parse(PowerShellTestUtils.readClassPathFile(files[i]));
         }
 
     }

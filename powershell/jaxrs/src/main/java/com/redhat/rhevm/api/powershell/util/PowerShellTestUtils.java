@@ -16,22 +16,29 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api.powershell.model;
+package com.redhat.rhevm.api.powershell.util;
 
-import org.junit.Assert;
-import org.junit.Ignore;
+import java.io.InputStream;
+import java.io.IOException;
+import java.util.Scanner;
 
-import com.redhat.rhevm.api.powershell.util.PowerShellParser;
-import com.redhat.rhevm.api.powershell.util.PowerShellTestUtils;
+public class PowerShellTestUtils {
 
-@Ignore
-public class PowerShellModelTest extends Assert {
-
-    protected String readFileContents(String file) {
-        return PowerShellTestUtils.readClassPathFile(file);
-    }
-
-    protected PowerShellParser getParser() throws Exception {
-        return PowerShellParser.newInstance();
+    public static String readClassPathFile(String name) {
+        InputStream is = PowerShellTestUtils.class.getClassLoader().getResourceAsStream(name);
+        try {
+            StringBuilder outputBuffer = new StringBuilder();
+            Scanner sc = new Scanner(is);
+            while (sc.hasNext()) {
+                outputBuffer.append(sc.nextLine() + "\n");
+            }
+            return outputBuffer.toString();
+        } finally {
+            try {
+                is.close();
+            } catch (IOException ioe) {
+                // ignore
+            }
+        }
     }
 }
