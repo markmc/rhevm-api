@@ -48,7 +48,7 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
     private static final String CMD_PREFIX = "rhevmpssnapin\\";
 
     public static List<Host> runAndParse(PowerShellCmd shell, PowerShellParser parser, String command) {
-        return PowerShellHost.parse(parser, PowerShellCmd.runCommand(shell, command, true));
+        return PowerShellHost.parse(parser, PowerShellCmd.runCommand(shell, command));
     }
 
     public static Host runAndParseSingle(PowerShellCmd shell, PowerShellParser parser, String command) {

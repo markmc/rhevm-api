@@ -48,7 +48,7 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
     }
 
     public static List<PowerShellVM> runAndParse(PowerShellCmd shell, PowerShellParser parser, String command) {
-        return PowerShellVM.parse(parser, PowerShellCmd.runCommand(shell, command, true));
+        return PowerShellVM.parse(parser, PowerShellCmd.runCommand(shell, command));
     }
 
     public static PowerShellVM runAndParseSingle(PowerShellCmd shell, PowerShellParser parser, String command) {

@@ -50,7 +50,7 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
     public static List<PowerShellTemplate> runAndParse(PowerShellCmd shell,
                                                        PowerShellParser parser,
                                                        String command) {
-        return PowerShellTemplate.parse(parser, PowerShellCmd.runCommand(shell, command, true));
+        return PowerShellTemplate.parse(parser, PowerShellCmd.runCommand(shell, command));
     }
 
     public static PowerShellTemplate runAndParseSingle(PowerShellCmd shell, PowerShellParser parser, String command) {

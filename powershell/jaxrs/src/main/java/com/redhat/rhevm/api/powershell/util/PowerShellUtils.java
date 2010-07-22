@@ -18,52 +18,7 @@
  */
 package com.redhat.rhevm.api.powershell.util;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 public class PowerShellUtils {
-    private static final Log log = LogFactory.getLog(PowerShellUtils.class);
-
-    public static ArrayList<HashMap<String,String>> parseProps(String str) {
-        ArrayList<HashMap<String,String>> ret = new ArrayList<HashMap<String,String>>();
-        HashMap<String,String> props = null;
-
-        for (String s : str.split("\n")) {
-            if (props != null && s.isEmpty()) {
-                ret.add(props);
-                props = null;
-            }
-
-            String[] parts = s.split(":", 2);
-            if (parts.length != 2)
-                continue;
-
-            String key = parts[0].trim().toLowerCase();
-            if (key.isEmpty()) {
-                continue;
-            }
-
-            String value = parts[1].trim();
-            if (value.isEmpty()) {
-                value = null;
-            }
-
-            if (props == null) {
-                props = new HashMap<String,String>();
-            }
-
-            props.put(key, value);
-        }
-
-        if (props != null) {
-            ret.add(props);
-        }
-
-        return ret;
-    }
 
     private static final String QUOTE = "\"";
     private static final String ESCAPE = "`";

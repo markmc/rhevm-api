@@ -80,7 +80,7 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
                                                   String command,
                                                   boolean sharedStatus) {
         List<PowerShellStorageDomain> storageDomains =
-            PowerShellStorageDomain.parse(parser, PowerShellCmd.runCommand(shell, command, true));
+            PowerShellStorageDomain.parse(parser, PowerShellCmd.runCommand(shell, command));
         List<StorageDomain> ret = new ArrayList<StorageDomain>();
 
         for (PowerShellStorageDomain storageDomain : storageDomains) {

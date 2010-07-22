@@ -51,7 +51,7 @@ public class PowerShellIsosResource implements IsosResource {
         buf.append("get-isoimages");
         buf.append(" -datacenterid " + PowerShellUtils.escape(dataCenterId));
         Isos ret = new Isos();
-        for (Iso iso : PowerShellIso.parse(parser, PowerShellCmd.runCommand(getShell(), buf.toString(), true))) {
+        for (Iso iso : PowerShellIso.parse(parser, PowerShellCmd.runCommand(getShell(), buf.toString()))) {
             ret.getIsos().add(PowerShellIsoResource.addLinks(iso, dataCenterId));
         }
         return ret;

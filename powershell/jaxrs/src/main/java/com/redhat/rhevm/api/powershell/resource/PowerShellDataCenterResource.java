@@ -46,7 +46,7 @@ public class PowerShellDataCenterResource extends AbstractPowerShellActionableRe
     }
 
     public static List<DataCenter> runAndParse(PowerShellCmd shell, PowerShellParser parser, String command) {
-        return PowerShellDataCenter.parse(parser, PowerShellCmd.runCommand(shell, command, true));
+        return PowerShellDataCenter.parse(parser, PowerShellCmd.runCommand(shell, command));
     }
 
     public static DataCenter runAndParseSingle(PowerShellCmd shell, PowerShellParser parser, String command) {

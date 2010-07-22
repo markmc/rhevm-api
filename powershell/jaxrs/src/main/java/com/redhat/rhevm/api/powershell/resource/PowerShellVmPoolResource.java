@@ -45,7 +45,7 @@ public class PowerShellVmPoolResource extends AbstractPowerShellActionableResour
     }
 
     public static List<VmPool> runAndParse(PowerShellCmd shell, PowerShellParser parser, String command) {
-        return PowerShellVmPool.parse(parser, PowerShellCmd.runCommand(shell, command, true));
+        return PowerShellVmPool.parse(parser, PowerShellCmd.runCommand(shell, command));
     }
 
     public static VmPool runAndParseSingle(PowerShellCmd shell, PowerShellParser parser, String command) {

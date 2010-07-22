@@ -43,7 +43,7 @@ public class PowerShellClusterResource extends AbstractPowerShellActionableResou
     }
 
     public static List<Cluster> runAndParse(PowerShellCmd shell, PowerShellParser parser, String command) {
-        return PowerShellCluster.parse(parser, PowerShellCmd.runCommand(shell, command, true));
+        return PowerShellCluster.parse(parser, PowerShellCmd.runCommand(shell, command));
     }
 
     public static Cluster runAndParseSingle(PowerShellCmd shell, PowerShellParser parser, String command) {

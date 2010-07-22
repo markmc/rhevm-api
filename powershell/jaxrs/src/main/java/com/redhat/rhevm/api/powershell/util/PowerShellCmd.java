@@ -214,14 +214,7 @@ public class PowerShellCmd {
     }
 
     public static String runCommand(PowerShellCmd runner, String command) {
-        return runCommand(runner, command, false);
-    }
-
-    public static String runCommand(PowerShellCmd runner, String command, boolean convertToXml) {
-        if (convertToXml) {
-            command = addConvertToXml(command);
-        }
-        int exitstatus = runner.run(command);
+        int exitstatus = runner.run(addConvertToXml(command));
 
         if (!runner.getStdErr().isEmpty()) {
             log.warn(runner.getStdErr());
@@ -230,19 +223,17 @@ public class PowerShellCmd {
         handleExitStatus(exitstatus, command);
 
         String output = runner.getStdOut();
-        if (convertToXml) {
-            if (output.contains("<output>")) {
-                output = output.substring(output.indexOf("<output>") + 8);
-            }
-            if (output.contains("</output>")) {
-                int i = output.indexOf("</output>");
-                exitstatus = Integer.parseInt(output.substring(i + 10, i + 11));
-                output = output.substring(0, i);
-            }
-            if (exitstatus != 0) {
-                log.warn(output);
-                handleExitStatus(exitstatus, command);
-            }
+        if (output.contains("<output>")) {
+            output = output.substring(output.indexOf("<output>") + 8);
+        }
+        if (output.contains("</output>")) {
+            int i = output.indexOf("</output>");
+            exitstatus = Integer.parseInt(output.substring(i + 10, i + 11));
+            output = output.substring(0, i);
+        }
+        if (exitstatus != 0) {
+            log.warn(output);
+            handleExitStatus(exitstatus, command);
         }
 
         return output.trim();

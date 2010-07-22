@@ -42,7 +42,7 @@ public class PowerShellReadOnlyDisksResource extends AbstractPowerShellDevicesRe
     }
 
     public Disks runAndParse(String command) {
-        return PowerShellVM.parseDisks(getParser(), parentId, PowerShellCmd.runCommand(getShell(), command, true));
+        return PowerShellVM.parseDisks(getParser(), parentId, PowerShellCmd.runCommand(getShell(), command));
     }
 
     public Disk runAndParseSingle(String command) {

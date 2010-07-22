@@ -43,7 +43,7 @@ public class PowerShellNetworkResource extends AbstractPowerShellActionableResou
     }
 
     public static List<Network> runAndParse(PowerShellCmd shell, PowerShellParser parser, String command) {
-        return PowerShellNetwork.parse(parser, PowerShellCmd.runCommand(shell, command, true));
+        return PowerShellNetwork.parse(parser, PowerShellCmd.runCommand(shell, command));
     }
 
     public static Network runAndParseSingle(PowerShellCmd shell, PowerShellParser parser, String command) {

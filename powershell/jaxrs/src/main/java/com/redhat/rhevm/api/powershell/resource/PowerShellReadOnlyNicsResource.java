@@ -42,7 +42,7 @@ public class PowerShellReadOnlyNicsResource extends AbstractPowerShellDevicesRes
     }
 
     public Nics runAndParse(String command) {
-        return PowerShellVM.parseNics(getParser(), parentId, PowerShellCmd.runCommand(getShell(), command, true));
+        return PowerShellVM.parseNics(getParser(), parentId, PowerShellCmd.runCommand(getShell(), command));
     }
 
     public NIC runAndParseSingle(String command) {
