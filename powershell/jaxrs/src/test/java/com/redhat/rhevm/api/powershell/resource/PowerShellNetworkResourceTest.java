@@ -28,6 +28,7 @@ import com.redhat.rhevm.api.model.Fault;
 import com.redhat.rhevm.api.model.Network;
 
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 
 import org.junit.Test;
@@ -41,26 +42,39 @@ import static org.powermock.api.easymock.PowerMock.replayAll;
 
 public class PowerShellNetworkResourceTest extends AbstractPowerShellResourceTest<Network, PowerShellNetworkResource> {
 
-    private static final String GET_COMMAND = "$n = get-networks\nforeach ($i in $n) {  if ($i.networkid -eq \"12345\") {    $i  }}";
-    private static final String GET_RETURN = "networkid: 12345 \nname: sedna\ndatacenterid: 54321";
-    private static final String UPDATE_COMMAND = "foreach ($i in $n) {  if ($i.networkid -eq \"12345\") {    $i.name = \"eris\"\n    update-network -networkobject $i -datacenterid \"54321\"  }}\n";
-    private static final String UPDATE_RETURN = "networkid: 12345 \nname: eris\ndatacenterid: 54321";
+    private static final String NETWORK_NAME = "rhevm";
+    private static final String NETWORK_ID = Integer.toString(NETWORK_NAME.hashCode());
+    private static final String DATA_CENTER_ID = PowerShellNetworksResourceTest.DATA_CENTER_ID;
 
-    protected PowerShellNetworkResource getResource(Executor executor, PowerShellPoolMap poolMap) {
-        return new PowerShellNetworkResource("12345", executor, poolMap, null);
+    private static final String GET_COMMAND = "$n = get-networks;foreach ($i in $n) {  if ($i.networkid -eq \"" + NETWORK_ID + "\") {    $i  }}";
+    private static final String UPDATE_COMMAND = "foreach ($i in $n) {  if ($i.networkid -eq \"" + NETWORK_ID + "\") {    $i.name = \"eris\";    update-network -networkobject $i -datacenterid \"" + DATA_CENTER_ID + "\"  }}";
+
+    protected PowerShellNetworkResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser) {
+        return new PowerShellNetworkResource(NETWORK_ID, executor, poolMap, parser);
+    }
+
+    protected String formatNetwork(String name) {
+        return formatXmlReturn("network",
+                               new String[] { name },
+                               new String[] { "" },
+                               PowerShellNetworksResourceTest.extraArgs);
     }
 
     @Test
     public void testGet() throws Exception {
         verifyNetwork(
-            resource.get(setUpNetworkExpectations(GET_COMMAND, GET_RETURN, "sedna")),
-            "sedna");
+            resource.get(setUpNetworkExpectations(GET_COMMAND,
+                                                  formatNetwork(NETWORK_NAME),
+                                                  NETWORK_NAME)),
+            NETWORK_NAME);
     }
 
     @Test
     public void testGoodUpdate() throws Exception {
         verifyNetwork(
-            resource.update(setUpNetworkExpectations(UPDATE_COMMAND, UPDATE_RETURN, "eris"),
+            resource.update(setUpNetworkExpectations(UPDATE_COMMAND,
+                                                     formatNetwork("eris"),
+                                                     "eris"),
                             getNetwork("eris")),
             "eris");
     }
@@ -86,7 +100,7 @@ public class PowerShellNetworkResourceTest extends AbstractPowerShellResourceTes
     }
 
     private Network getNetwork(String name) {
-        return getNetwork("12345", name);
+        return getNetwork(NETWORK_ID, name);
     }
 
     private Network getNetwork(String id, String name) {
@@ -94,17 +108,17 @@ public class PowerShellNetworkResourceTest extends AbstractPowerShellResourceTes
         network.setId(id);
         network.setName(name);
         DataCenter dataCenter = new DataCenter();
-        dataCenter.setId("54321");
+        dataCenter.setId(DATA_CENTER_ID);
         network.setDataCenter(dataCenter);
         return network;
     }
 
     private void verifyNetwork(Network network, String name) {
         assertNotNull(network);
-        assertEquals(network.getId(), "12345");
+        assertEquals(network.getId(), Integer.toString(name.hashCode()));
         assertEquals(network.getName(), name);
         assertNotNull(network.getDataCenter());
-        assertEquals(network.getDataCenter().getId(), "54321");
+        assertEquals(network.getDataCenter().getId(), DATA_CENTER_ID);
     }
 
     private void verifyUpdateException(WebApplicationException wae) {

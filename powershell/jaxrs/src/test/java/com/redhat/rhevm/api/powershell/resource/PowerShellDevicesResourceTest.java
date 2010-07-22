@@ -21,6 +21,8 @@ package com.redhat.rhevm.api.powershell.resource;
 import java.net.URI;
 import java.text.MessageFormat;
 
+import java.util.concurrent.Executor;
+
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.UriBuilder;
 
@@ -33,13 +35,13 @@ import com.redhat.rhevm.api.model.Iso;
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.NIC;
 import com.redhat.rhevm.api.model.Nics;
+import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import org.junit.runner.RunWith;
@@ -56,85 +58,104 @@ import static org.powermock.api.easymock.PowerMock.verifyAll;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest( { PowerShellCmd.class })
-public class PowerShellDevicesResourceTest extends Assert {
+public class PowerShellDevicesResourceTest
+    extends AbstractPowerShellResourceTest<VM, PowerShellVmResource> {
 
-    private static final String VM_ID = "1234";
-    private static final String DISK_ID = "3456";
-    private static final String NIC_ID = "5678";
+    private static final String VM_NAME = "1234";
+    private static final String VM_ID = Integer.toString(VM_NAME.hashCode());
+    private static final String DISK_NAME = "3456";
+    private static final String DISK_ID = Integer.toString(DISK_NAME.hashCode());
+    private static final String NIC_NAME = "eth11";
+    private static final String NIC_ID = Integer.toString(NIC_NAME.hashCode());
+    private static final String NETWORK_NAME = "net1";
+    private static final String NETWORK_ID = Integer.toString(NETWORK_NAME.hashCode());
+    private static final String DATA_CENTER_ID = "999";
+    private static final String ISO_NAME = PowerShellVmsResourceTest.ISO_NAME;
 
     private static final String CDROM_ID = Integer.toString("cdrom".hashCode());
-    private static final String ISO_NAME = "foo.iso";
 
     private static final String GET_CDROMS_CMD = "get-vm \"" + VM_ID + "\"";
-    private static final String GET_CDROMS_RETURN = "vmid: " + VM_ID + "\nname: x\nhostclusterid: x\ntemplateid: x\nmemorysize: 1024\ndefaultbootsequence: CDN\nnumofsockets: 2\nnumofcpuspersocket: 4\npoolid: -1\ncdisopath: " + ISO_NAME + "\n";
-
-    private static final String UPDATE_CDROM_CMD = "$v = get-vm \"{0}\"\n$v.cdisopath = \"{1}\"\nupdate-vm -vmobject $v";
+    private static final String UPDATE_CDROM_CMD = "$v = get-vm \"{0}\";$v.cdisopath = \"{1}\";update-vm -vmobject $v";
 
     private static final long DISK_SIZE = 10;
     private static final long DISK_SIZE_BYTES = DISK_SIZE * 1024 * 1024 * 1024;
 
-    private static final String GET_DISKS_CMD = "$v = get-vm \"" + VM_ID + "\"\n$v.GetDiskImages()\n";
-    private static final String GET_DISKS_RETURN = "snapshotid: " + DISK_ID + "\nactualsizeinbytes: " + Long.toString(DISK_SIZE_BYTES) + "\ndisktype: system\nstatus: ok\ndiskinterface: ide\nvolumeformat: raw\nvolumetype: sparse\nboot: true\nwipeafterdelete: false\npropagateerrors: off\n";
+    private static final String[] diskArgs = new String[] { Long.toString(DISK_SIZE_BYTES) };
+    private static final String[] networkArgs = new String[] { DATA_CENTER_ID};
+    private static final String[] nicArgs = new String[] { NETWORK_NAME };
 
-    private static final String ADD_DISK_COMMAND = "$d = new-disk -disksize {0} -disktype System\n$v = get-vm \"{1}\"\nadd-disk -diskobject $d -vmobject $v";
+    private static final String GET_DISKS_CMD = "$v = get-vm \"" + VM_ID + "\";$v.GetDiskImages()";
+
+    private static final String ADD_DISK_COMMAND = "$d = new-disk -disksize {0} -disktype System;$v = get-vm \"{1}\";add-disk -diskobject $d -vmobject $v";
     private static final String REMOVE_DISK_COMMAND = "remove-disk -vmid \"{0}\" -diskids \"{1}\"";
 
-    private static final String GET_NICS_CMD = "$v = get-vm \"" + VM_ID + "\"\n$v.GetNetworkAdapters()\n";
-    private static final String GET_NICS_RETURN = "id: " + NIC_ID + "\nname: eth1\nnetwork: net1\ntype: pv\nmacaddress: 00:1a:4a:16:84:02\naddress: 172.31.0.10\nsubnet: 255.255.255.0\ngateway: 172.31.0.1\n";
+    private static final String GET_NICS_CMD = "$v = get-vm \"" + VM_ID + "\";$v.GetNetworkAdapters()";
 
-    public static final String LOOKUP_NETWORK_ID_COMMAND = "$n = get-networks\nforeach ($i in $n) {  if ($i.name -eq \"net1\") {    $i  }}";
-    public static final String LOOKUP_NETWORK_ID_RETURN = "networkid: 666\nname: net1\ndatacenterid: 999";
+    public static final String LOOKUP_NETWORK_ID_COMMAND = "$n = get-networks;foreach ($i in $n) {  if ($i.name -eq \"" + NETWORK_NAME + "\") {    $i  }}";
 
-    private static final String NIC_NAME = "eth11";
-    private static final String NIC_NETWORK = "b4fb4d54-ca44-444c-ba26-d51f18c91998";
-    private static final String ADD_NIC_COMMAND = "$v = get-vm \"{0}\"\nforeach ($i in get-networks) '{'  if ($i.networkid -eq \"{1}\") '{    $n = $i  }}'\nadd-networkadapter -vmobject $v -interfacename \"{2}\" -networkname $n.name";
-    private static final String REMOVE_NIC_COMMAND = "$v = get-vm \"{0}\"\nforeach ($i in $v.GetNetworkAdapters()) '{'  if ($i.id -eq \"{1}\") '{    $n = $i  }}'\nremove-networkadapter -vmobject $v -networkadapterobject $n";
+    private static final String ADD_NIC_COMMAND = "$v = get-vm \"{0}\";foreach ($i in get-networks) '{'  if ($i.networkid -eq \"{1}\") '{    $n = $i  }}'add-networkadapter -vmobject $v -interfacename \"{2}\" -networkname $n.name";
+    private static final String REMOVE_NIC_COMMAND = "$v = get-vm \"{0}\";foreach ($i in $v.GetNetworkAdapters()) '{'  if ($i.id -eq \"{1}\") '{    $n = $i  }}'remove-networkadapter -vmobject $v -networkadapterobject $n";
 
-    private PowerShellPoolMap poolMap;
-
-    @Before
-    public void setUp() {
-        poolMap = createMock(PowerShellPoolMap.class);
+    protected PowerShellVmResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser) {
+        return new PowerShellVmResource(VM_ID, executor, poolMap, parser);
     }
 
-    @After
-    public void tearDown() {
-        verifyAll();
+    protected String formatVm(String name) {
+        return formatXmlReturn("vm",
+                               new String[] { name },
+                               new String[] { "" },
+                               PowerShellVmsResourceTest.extraArgs);
+    }
+
+    protected String formatDisk(String name) {
+        return formatXmlReturn("disk",
+                               new String[] { name },
+                               new String[] { "" },
+                               diskArgs);
+    }
+
+    protected String formatNetwork(String name) {
+        return formatXmlReturn("network",
+                               new String[] { name },
+                               new String[] { "" },
+                               networkArgs);
+    }
+
+    protected String formatNic(String name) {
+        return formatXmlReturn("nic",
+                               new String[] { name },
+                               new String[] { "" },
+                               nicArgs);
     }
 
     @Test
     public void testCdRomGet() throws Exception {
-        /* REVIST: CdRomQuery is no longer a static class
         PowerShellCdRomsResource parent = new PowerShellCdRomsResource(VM_ID,
                                                                        poolMap,
-                                                                       new PowerShellVmResource.CdRomQuery(VM_ID));
+                                                                       resource.new CdRomQuery(VM_ID));
         PowerShellDeviceResource<CdRom, CdRoms> resource =
-            new PowerShellDeviceResource<CdRom, CdRoms>(parent, CDROM_ID, poolMap);
+            new PowerShellDeviceResource<CdRom, CdRoms>(parent, CDROM_ID);
 
-        setUpCmdExpectations(GET_CDROMS_CMD, GET_CDROMS_RETURN);
+        setUpCmdExpectations(GET_CDROMS_CMD, formatVm(VM_NAME));
         verifyCdRom(resource.get());
-        */
     }
 
     @Test
     public void testCdRomList() throws Exception {
-        /* REVIST: CdRomQuery is no longer a static class
         PowerShellCdRomsResource resource = new PowerShellCdRomsResource(VM_ID,
                                                                          poolMap,
-                                                                         new PowerShellVmResource.CdRomQuery(VM_ID));
+                                                                         this.resource.new CdRomQuery(VM_ID));
 
-        setUpCmdExpectations(GET_CDROMS_CMD, GET_CDROMS_RETURN);
+        setUpCmdExpectations(GET_CDROMS_CMD, formatVm(VM_NAME));
 
         verifyCdRoms(resource.list());
-        */
     }
 
     @Test
     public void testCdRomAdd() throws Exception {
-        /* REVIST: CdRomQuery is no longer a static class
         PowerShellCdRomsResource resource = new PowerShellCdRomsResource(VM_ID,
                                                                          poolMap,
-                                                                         new PowerShellVmResource.CdRomQuery(VM_ID));
+                                                                         this.resource.new CdRomQuery(VM_ID));
 
         CdRom cdrom = new CdRom();
         cdrom.setIso(new Iso());
@@ -145,46 +166,43 @@ public class PowerShellDevicesResourceTest extends Assert {
         UriInfo uriInfo = setUpCmdExpectations(command, "", "cdroms", CDROM_ID);
 
         verifyCdRom((CdRom)resource.add(uriInfo, cdrom).getEntity());
-        */
     }
 
     @Test
     public void testCdRomRemove() throws Exception {
-        /* REVIST: CdRomQuery is no longer a static class
         PowerShellCdRomsResource resource = new PowerShellCdRomsResource(VM_ID,
                                                                          poolMap,
-                                                                         new PowerShellVmResource.CdRomQuery(VM_ID));
+                                                                         this.resource.new CdRomQuery(VM_ID));
 
         String command = MessageFormat.format(UPDATE_CDROM_CMD, VM_ID, "");
 
         setUpCmdExpectations(command, "");
 
         resource.remove(CDROM_ID);
-        */
     }
 
     @Test
     public void testDiskGet() throws Exception {
-        PowerShellDisksResource parent = new PowerShellDisksResource(VM_ID, poolMap, null, "get-vm");
+        PowerShellDisksResource parent = new PowerShellDisksResource(VM_ID, poolMap, parser, "get-vm");
         PowerShellDeviceResource<Disk, Disks> resource =
             new PowerShellDeviceResource<Disk, Disks>(parent, DISK_ID);
 
-        setUpCmdExpectations(GET_DISKS_CMD, GET_DISKS_RETURN);
+        setUpCmdExpectations(GET_DISKS_CMD, formatDisk(DISK_NAME));
         verifyDisk(resource.get());
     }
 
     @Test
     public void testDiskList() throws Exception {
-        PowerShellDisksResource resource = new PowerShellDisksResource(VM_ID, poolMap, null, "get-vm");
+        PowerShellDisksResource resource = new PowerShellDisksResource(VM_ID, poolMap, parser, "get-vm");
 
-        setUpCmdExpectations(GET_DISKS_CMD, GET_DISKS_RETURN);
+        setUpCmdExpectations(GET_DISKS_CMD, formatDisk(DISK_NAME));
 
         verifyDisks(resource.list());
     }
 
     @Test
     public void testDiskAdd() throws Exception {
-        PowerShellDisksResource resource = new PowerShellDisksResource(VM_ID, poolMap, null, "get-vm");
+        PowerShellDisksResource resource = new PowerShellDisksResource(VM_ID, poolMap, parser, "get-vm");
 
         Disk disk = new Disk();
         disk.setType(DiskType.SYSTEM);
@@ -192,14 +210,14 @@ public class PowerShellDevicesResourceTest extends Assert {
 
         String command = MessageFormat.format(ADD_DISK_COMMAND, DISK_SIZE, VM_ID);
 
-        UriInfo uriInfo = setUpCmdExpectations(command, GET_DISKS_RETURN, "disks", DISK_ID);
+        UriInfo uriInfo = setUpCmdExpectations(command, formatDisk(DISK_NAME), "disks", DISK_ID);
 
         verifyDisk((Disk)resource.add(uriInfo, disk).getEntity());
     }
 
     @Test
     public void testDiskRemove() throws Exception {
-        PowerShellDisksResource resource = new PowerShellDisksResource(VM_ID, poolMap, null, "get-vm");
+        PowerShellDisksResource resource = new PowerShellDisksResource(VM_ID, poolMap, parser, "get-vm");
 
         String command = MessageFormat.format(REMOVE_DISK_COMMAND, VM_ID, DISK_ID);
 
@@ -210,12 +228,12 @@ public class PowerShellDevicesResourceTest extends Assert {
 
     @Test
     public void testNicGet() throws Exception {
-        PowerShellNicsResource parent = new PowerShellNicsResource(VM_ID, poolMap, null, "get-vm");
+        PowerShellNicsResource parent = new PowerShellNicsResource(VM_ID, poolMap, parser, "get-vm");
         PowerShellDeviceResource<NIC, Nics> resource =
             new PowerShellDeviceResource<NIC, Nics>(parent, NIC_ID);
 
         String [] commands = { GET_NICS_CMD, LOOKUP_NETWORK_ID_COMMAND };
-        String [] returns = { GET_NICS_RETURN, LOOKUP_NETWORK_ID_RETURN };
+        String [] returns = { formatNic(NIC_NAME), formatNetwork(NETWORK_NAME) };
 
         setUpCmdExpectations(commands, returns);
 
@@ -224,10 +242,10 @@ public class PowerShellDevicesResourceTest extends Assert {
 
     @Test
     public void testNicList() throws Exception {
-        PowerShellNicsResource resource = new PowerShellNicsResource(VM_ID, poolMap, null, "get-vm");
+        PowerShellNicsResource resource = new PowerShellNicsResource(VM_ID, poolMap, parser, "get-vm");
 
         String [] commands = { GET_NICS_CMD, LOOKUP_NETWORK_ID_COMMAND };
-        String [] returns = { GET_NICS_RETURN, LOOKUP_NETWORK_ID_RETURN };
+        String [] returns = { formatNic(NIC_NAME), formatNetwork(NETWORK_NAME) };
 
         setUpCmdExpectations(commands, returns);
 
@@ -236,19 +254,19 @@ public class PowerShellDevicesResourceTest extends Assert {
 
     @Test
     public void testNicAdd() throws Exception {
-        PowerShellNicsResource resource = new PowerShellNicsResource(VM_ID, poolMap, null, "get-vm");
+        PowerShellNicsResource resource = new PowerShellNicsResource(VM_ID, poolMap, parser, "get-vm");
 
         NIC nic = new NIC();
         nic.setName(NIC_NAME);
         nic.setNetwork(new Network());
-        nic.getNetwork().setId(NIC_NETWORK);
+        nic.getNetwork().setId(NETWORK_ID);
 
         String [] commands = {
-            MessageFormat.format(ADD_NIC_COMMAND, VM_ID, NIC_NETWORK, NIC_NAME),
+            MessageFormat.format(ADD_NIC_COMMAND, VM_ID, NETWORK_ID, NIC_NAME),
             LOOKUP_NETWORK_ID_COMMAND
         };
 
-        String [] returns = { GET_NICS_RETURN, LOOKUP_NETWORK_ID_RETURN };
+        String [] returns = { formatNic(NIC_NAME), formatNetwork(NETWORK_NAME) };
 
         UriInfo uriInfo = setUpCmdExpectations(commands, returns, "nics", NIC_ID);
 
@@ -257,7 +275,7 @@ public class PowerShellDevicesResourceTest extends Assert {
 
     @Test
     public void testNicRemove() throws Exception {
-        PowerShellNicsResource resource = new PowerShellNicsResource(VM_ID, poolMap, null, "get-vm");
+        PowerShellNicsResource resource = new PowerShellNicsResource(VM_ID, poolMap, parser, "get-vm");
 
         String command = MessageFormat.format(REMOVE_NIC_COMMAND, VM_ID, NIC_ID);
 

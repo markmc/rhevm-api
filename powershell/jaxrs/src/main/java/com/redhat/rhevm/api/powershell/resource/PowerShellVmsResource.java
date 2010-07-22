@@ -84,12 +84,11 @@ public class PowerShellVmsResource
         buf.append("add-vm");
 
         buf.append(" -name " + PowerShellUtils.escape(vm.getName()) + "");
-        buf.append(" -templateobject $templ");
-        buf.append(" -hostclusterid " + clusterArg);
-
         if (vm.getDescription() != null) {
             buf.append(" -description " + PowerShellUtils.escape(vm.getDescription()));
         }
+        buf.append(" -templateobject $templ");
+        buf.append(" -hostclusterid " + clusterArg);
         if (vm.isSetMemory()) {
             buf.append(" -memorysize " + Math.round((double)vm.getMemory()/(1024*1024)));
         }

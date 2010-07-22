@@ -1,0 +1,17 @@
+  <!-- args: id, name, description, dataCenterId -->
+  <Object Type="RhevmCmd.CLINetwork">
+    <Property Name="NetworkId" Type="System.Guid">{0}</Property>
+    <Property Name="Address" Type="System.String" />
+    <Property Name="Description" Type="System.String">{2}</Property>
+    <Property Name="Name" Type="System.String">{1}</Property>
+    <Property Name="Gateway" Type="System.String" />
+    <Property Name="Type" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="VlanId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="Status" Type="VdcCommon.BusinessEntities.NetworkStatus">
+      <Property Name="value__" Type="System.Int32">1</Property>
+    </Property>
+    <Property Name="Stp" Type="System.Boolean">False</Property>
+    <Property Name="DataCenterId" Type="System.Guid">{3}</Property>
+    <Property Name="Subnet" Type="System.String" />
+    <Property Name="IsDisplay" Type="System.Boolean">False</Property>
+  </Object>

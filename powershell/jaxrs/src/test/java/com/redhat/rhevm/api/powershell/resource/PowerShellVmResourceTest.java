@@ -31,6 +31,7 @@ import com.redhat.rhevm.api.model.VM;
 
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellException;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 
 import org.junit.Test;
@@ -44,45 +45,52 @@ import static org.powermock.api.easymock.PowerMock.replayAll;
 
 public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM, PowerShellVmResource> {
 
-    private static final String VM_ID = "12345";
     private static final String VM_NAME = "sedna";
+    private static final String VM_ID = Integer.toString(VM_NAME.hashCode());
     private static final String NEW_NAME = "eris";
-    private static final String CLUSTER_ID = "3321";
-    private static final String TEMPLATE_ID = "666";
+    private static final String CLUSTER_ID = PowerShellVmsResourceTest.CLUSTER_ID;
+    private static final String TEMPLATE_ID = PowerShellVmsResourceTest.TEMPLATE_ID;
     private static final String BAD_ID = "98765";
 
-    private static final String OTHER_PROPS = "memorysize: 1024\ndefaultbootsequence: CDN\nnumofsockets: 2\nnumofcpuspersocket: 4\npoolid: -1\n";
-
-    private static final String GET_RETURN = "vmid: " + VM_ID + "\nname: " + VM_NAME + "\nhostclusterid: " + CLUSTER_ID + "\n" + "templateid: " + TEMPLATE_ID + "\n" + OTHER_PROPS;
     private static final String ACTION_RETURN = "replace with realistic powershell return";
     private static final String FAILURE = "replace with realistic powershell failure";
     private static final String REASON = "Powershell command \"start-vm -vmid \"" + VM_ID + "\"\" failed with " + FAILURE;
     private static final String DETAIL = "at com.redhat.rhevm.api.powershell.util.PowerShellCmd.runCommand(";
-    private static final String UPDATE_COMMAND = "$v = get-vm \"" + VM_ID + "\"\n$v.name = \"" + NEW_NAME + "\"\nupdate-vm -vmobject $v";
-    private static final String UPDATE_RETURN = "vmid: " + VM_ID + "\n name: " + NEW_NAME + "\nhostclusterid: " + CLUSTER_ID + "\n" + "templateid: " + TEMPLATE_ID + "\n" + OTHER_PROPS;
+    private static final String UPDATE_COMMAND = "$v = get-vm \"" + VM_ID + "\";$v.name = \"" + NEW_NAME + "\";update-vm -vmobject $v";
 
     private static final String DEST_HOST_ID = "1337";
     private static final String DEST_HOST_NAME = "farawaysoclose";
     private static final String MIGRATE_COMMAND = "migrate-vm -vmid \"" + VM_ID + "\" -desthostid \"" + DEST_HOST_ID + "\"";
     private static final String MIGRATE_COMMAND_WITH_HOST_NAME =
-        "$h = select-host -searchtext \"name=" + DEST_HOST_NAME + "\"\n" +
+        "$h = select-host -searchtext \"name=" + DEST_HOST_NAME + "\";" +
         "migrate-vm -vmid \"" + VM_ID + "\" -desthostid $h.hostid";
 
-    protected PowerShellVmResource getResource(Executor executor, PowerShellPoolMap poolMap) {
-        return new PowerShellVmResource(VM_ID, executor, poolMap, null);
+    protected PowerShellVmResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser) {
+        return new PowerShellVmResource(VM_ID, executor, poolMap, parser);
+    }
+
+    protected String formatVm(String name) {
+        return formatXmlReturn("vm",
+                               new String[] { name },
+                               new String[] { "" },
+                               PowerShellVmsResourceTest.extraArgs);
     }
 
     @Test
     public void testGet() throws Exception {
         verifyVM(
-            resource.get(setUpVmExpectations("get-vm \"" + VM_ID + "\"", GET_RETURN, VM_NAME)),
+            resource.get(setUpVmExpectations("get-vm \"" + VM_ID + "\"",
+                                             formatVm(VM_NAME),
+                                             VM_NAME)),
             VM_NAME);
     }
 
     @Test
     public void testGoodUpdate() throws Exception {
         verifyVM(
-            resource.update(setUpVmExpectations(UPDATE_COMMAND, UPDATE_RETURN, NEW_NAME),
+            resource.update(setUpVmExpectations(UPDATE_COMMAND,
+                                                formatVm(NEW_NAME),
+                                                NEW_NAME),
                             getVM(NEW_NAME)),
             NEW_NAME);
     }
@@ -258,8 +266,8 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
 
     private void verifyVM(VM vm, String name) {
         assertNotNull(vm);
-        assertEquals(vm.getId(), VM_ID);
-        assertEquals(vm.getName(), name);
+        assertEquals(Integer.toString(name.hashCode()), vm.getId());
+        assertEquals(name, vm.getName());
     }
 
     private void verifyActionResponse(Response r, boolean async) throws Exception {

@@ -83,13 +83,12 @@ public class PowerShellVmPoolsResource
         buf.append("add-vmpool");
 
         buf.append(" -vmpoolname " + PowerShellUtils.escape(pool.getName()));
+        if (pool.getDescription() != null) {
+            buf.append(" -vmpooldescription " + PowerShellUtils.escape(pool.getDescription()));
+        }
         buf.append(" -templateid " + templateArg);
         buf.append(" -hostclusterid " + clusterArg);
         buf.append(" -pooltype Automatic");
-
-        if (pool.getDescription() != null) {
-            buf.append(" -vmpooldescription '" + PowerShellUtils.escape(pool.getDescription()) + "'");
-        }
         if (pool.getSize() != null) {
             buf.append(" -numofvms " + pool.getSize());
         }

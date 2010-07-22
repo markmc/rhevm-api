@@ -25,32 +25,35 @@ import org.junit.Test;
 
 public class PowerShellNetworksResourceTest extends AbstractPowerShellCollectionResourceTest<Network, PowerShellNetworkResource, PowerShellNetworksResource> {
 
-    private static final String ADD_COMMAND_EPILOG = "-datacenterid \"54321\"";
-    private static final String ADD_RETURN_EPILOG = "\ndatacenterid: 54321";
+    public static final String DATA_CENTER_ID = "54321";
 
-    private static final String REMOVE_COMMAND = "$n = get-networks\nforeach ($i in $n) {  if ($i.networkid -eq \"3121815\") {    remove-network -networkobject $i -datacenterid $i.datacenterid  }}";
+    public static final String[] extraArgs = new String[] { DATA_CENTER_ID };
+
+    private static final String ADD_COMMAND_EPILOG = "-datacenterid \"" + DATA_CENTER_ID + "\"";
+
+    private static final String REMOVE_COMMAND = "$n = get-networks;foreach ($i in $n) {  if ($i.networkid -eq \"" + Integer.toString(NAMES[1].hashCode()) + "\") {    remove-network -networkobject $i -datacenterid $i.datacenterid  }}";
 
     public PowerShellNetworksResourceTest() {
-        super(new PowerShellNetworkResource("0", null, null, null), "networks", "network");
+        super(new PowerShellNetworkResource("0", null, null, null), "networks", "network", extraArgs);
     }
 
     @Test
     public void testList() throws Exception {
         verifyCollection(
             resource.list(setUpResourceExpectations("get-networks",
-                                                    getSelectReturn(ADD_RETURN_EPILOG),
+                                                    getSelectReturn(),
                                                     NAMES)).getNetworks(),
-            NAMES);
+            NAMES, DESCRIPTIONS);
     }
 
     @Test
     public void testAdd() throws Exception {
         verifyResponse(
             resource.add(setUpAddResourceExpectations(getAddCommand() + ADD_COMMAND_EPILOG,
-                                                      getAddReturn(ADD_RETURN_EPILOG),
+                                                      getAddReturn(),
                                                       NEW_NAME),
-                         getModel(NEW_NAME)),
-            NEW_NAME);
+                         getModel(NEW_NAME, NEW_DESCRIPTION)),
+            NEW_NAME, NEW_DESCRIPTION);
     }
 
     @Test

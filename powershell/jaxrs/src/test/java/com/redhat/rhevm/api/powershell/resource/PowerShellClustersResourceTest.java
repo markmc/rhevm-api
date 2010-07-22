@@ -31,20 +31,19 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
     private static final String CLUSTER_CPU = "xeon";
     private static final String DATA_CENTER_ID = "12345";
 
-    private static final String SELECT_RETURN_EPILOG = "\ndatacenterid: " + DATA_CENTER_ID;
-    private static final String ADD_RETURN_EPILOG = "\ndatacenterid: " + DATA_CENTER_ID;
+    public static final String[] extraArgs = new String[] { CLUSTER_CPU, DATA_CENTER_ID };
 
     public PowerShellClustersResourceTest() {
-	super(new PowerShellClusterResource("0", null, null, null), "clusters", "cluster");
+	super(new PowerShellClusterResource("0", null, null, null), "clusters", "cluster", extraArgs);
     }
 
     @Test
     public void testList() throws Exception {
         verifyCollection(
             resource.list(setUpResourceExpectations(getSelectCommand(),
-                                                    getSelectReturn(SELECT_RETURN_EPILOG),
+                                                    getSelectReturn(),
                                                     NAMES)).getClusters(),
-            NAMES);
+            NAMES, DESCRIPTIONS);
     }
 
 
@@ -52,20 +51,20 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
     public void testQuery() throws Exception {
         verifyCollection(
             resource.list(setUpResourceExpectations(getQueryCommand(Cluster.class),
-                                                    getQueryReturn(SELECT_RETURN_EPILOG),
+                                                    getQueryReturn(),
                                                     getQueryParam(),
                                                     NAMES_SUBSET)).getClusters(),
-            NAMES_SUBSET);
+            NAMES_SUBSET, DESCRIPTIONS_SUBSET);
     }
 
     @Test
     public void testAdd() throws Exception {
         verifyResponse(
             resource.add(setUpAddResourceExpectations(getAddCommand(),
-                                                      getAddReturn(ADD_RETURN_EPILOG),
+                                                      getAddReturn(),
                                                       NEW_NAME),
-                         getModel(NEW_NAME)),
-            NEW_NAME);
+                         getModel(NEW_NAME, NEW_DESCRIPTION)),
+            NEW_NAME, NEW_DESCRIPTION);
     }
 
     @Test
@@ -99,11 +98,12 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
     protected String getAddCommand() {
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$v = get-clustercompatibilityversions -datacenterid \"" + DATA_CENTER_ID + "\"\n");
+        buf.append("$v = get-clustercompatibilityversions -datacenterid \"" + DATA_CENTER_ID + "\";");
 
         buf.append("add-cluster");
 
         buf.append(" -clustername \"" + NEW_NAME + "\"");
+        buf.append(" -clusterdescription \"" + NEW_DESCRIPTION + "\"");
         buf.append(" -clustercpuname \"" + CLUSTER_CPU + "\"");
         buf.append(" -datacenterid \"" + DATA_CENTER_ID + "\"");
         buf.append(" -compatibilityversion $v");

@@ -27,6 +27,7 @@ import com.redhat.rhevm.api.model.Fault;
 import com.redhat.rhevm.api.model.VmPool;
 
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 
 import org.junit.Test;
@@ -40,19 +41,37 @@ import static org.powermock.api.easymock.PowerMock.replayAll;
 
 public class PowerShellVmPoolResourceTest extends AbstractPowerShellResourceTest<VmPool, PowerShellVmPoolResource> {
 
-    private static final String POOL_ID = "1337";
     private static final String POOL_NAME = "fionnula";
+    private static final String POOL_ID = Integer.toString(POOL_NAME.hashCode());
     private static final String BAD_ID = "98765";
     private static final String NEW_NAME = "fidelma";
 
     private static final String GET_COMMAND = "get-vmpool -vmpoolid \"" + POOL_ID + "\"";
-    private static final String GET_RETURN = "vmpoolid: " + POOL_ID + "\nname: " + POOL_NAME + PowerShellVmPoolsResourceTest.GET_RETURN_EPILOG;
+    private static final String UPDATE_COMMAND = "$v = get-vmpool \"" + POOL_ID + "\";$v.name = \"" + NEW_NAME + "\";update-vmpool -vmpoolobject $v";
 
-    private static final String UPDATE_COMMAND = "$v = get-vmpool \"" + POOL_ID + "\"\n$v.name = \"" + NEW_NAME + "\"\nupdate-vmpool -vmpoolobject $v";
-    private static final String UPDATE_RETURN = "vmpoolid: " + POOL_ID + "\nname: " + NEW_NAME + PowerShellVmPoolsResourceTest.GET_RETURN_EPILOG;
+    protected PowerShellVmPoolResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser) {
+        return new PowerShellVmPoolResource(POOL_ID, executor, poolMap, parser);
+    }
 
-    protected PowerShellVmPoolResource getResource(Executor executor, PowerShellPoolMap poolMap) {
-        return new PowerShellVmPoolResource(POOL_ID, executor, poolMap, null);
+    protected String formatVmPool(String name) {
+        return formatXmlReturn("vmpool",
+                               new String[] { name },
+                               new String[] { "" },
+                               PowerShellVmPoolsResourceTest.extraArgs);
+    }
+
+    protected String formatCluster(String name) {
+        return formatXmlReturn("cluster",
+                               new String[] { name },
+                               new String[] { "" },
+                               PowerShellClustersResourceTest.extraArgs);
+    }
+
+    protected String formatTemplate(String name) {
+        return formatXmlReturn("template",
+                               new String[] { name },
+                               new String[] { "" },
+                               PowerShellTemplatesResourceTest.extraArgs);
     }
 
     @Test
@@ -60,9 +79,9 @@ public class PowerShellVmPoolResourceTest extends AbstractPowerShellResourceTest
         String [] commands = { GET_COMMAND,
                                PowerShellVmPoolsResourceTest.LOOKUP_CLUSTER_COMMAND,
                                PowerShellVmPoolsResourceTest.LOOKUP_TEMPLATE_COMMAND };
-        String [] returns  = { GET_RETURN,
-                               PowerShellVmPoolsResourceTest.LOOKUP_CLUSTER_RETURN,
-                               PowerShellVmPoolsResourceTest.LOOKUP_TEMPLATE_RETURN };
+        String [] returns  = { formatVmPool(POOL_NAME),
+                               formatCluster(PowerShellVmPoolsResourceTest.CLUSTER_NAME),
+                               formatTemplate(PowerShellVmPoolsResourceTest.TEMPLATE_NAME) };
 
         verifyVmPool(
             resource.get(setUpVmPoolExpectations(commands, returns, POOL_NAME)),
@@ -71,21 +90,17 @@ public class PowerShellVmPoolResourceTest extends AbstractPowerShellResourceTest
 
     @Test
     public void testGoodUpdate() throws Exception {
-        try {
         String [] commands = { UPDATE_COMMAND,
                                PowerShellVmPoolsResourceTest.LOOKUP_CLUSTER_COMMAND,
                                PowerShellVmPoolsResourceTest.LOOKUP_TEMPLATE_COMMAND };
-        String [] returns  = { UPDATE_RETURN,
-                               PowerShellVmPoolsResourceTest.LOOKUP_CLUSTER_RETURN,
-                               PowerShellVmPoolsResourceTest.LOOKUP_TEMPLATE_RETURN };
+        String [] returns  = { formatVmPool(NEW_NAME),
+                               formatCluster(PowerShellVmPoolsResourceTest.CLUSTER_NAME),
+                               formatTemplate(PowerShellVmPoolsResourceTest.TEMPLATE_NAME) };
 
         verifyVmPool(
             resource.update(setUpVmPoolExpectations(commands, returns, NEW_NAME),
                             getVmPool(NEW_NAME)),
             NEW_NAME);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Test
@@ -129,7 +144,7 @@ public class PowerShellVmPoolResourceTest extends AbstractPowerShellResourceTest
 
     private void verifyVmPool(VmPool pool, String name) {
         assertNotNull(pool);
-        assertEquals(pool.getId(), POOL_ID);
+        assertEquals(pool.getId(), Integer.toString(name.hashCode()));
         assertEquals(pool.getName(), name);
     }
 

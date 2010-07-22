@@ -65,13 +65,11 @@ public class PowerShellClustersResource
         buf.append("add-cluster");
 
         buf.append(" -clustername " + PowerShellUtils.escape(cluster.getName()));
-        buf.append(" -clustercpuname " + PowerShellUtils.escape(cluster.getCpu().getId()));
-        buf.append(" -datacenterid " + PowerShellUtils.escape(cluster.getDataCenter().getId()));
-
         if (cluster.getDescription() != null) {
             buf.append(" -clusterdescription " + PowerShellUtils.escape(cluster.getDescription()));
         }
-
+        buf.append(" -clustercpuname " + PowerShellUtils.escape(cluster.getCpu().getId()));
+        buf.append(" -datacenterid " + PowerShellUtils.escape(cluster.getDataCenter().getId()));
         buf.append(" -compatibilityversion $v");
 
         cluster = LinkHelper.addLinks(runAndParseSingle(buf.toString()));

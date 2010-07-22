@@ -61,11 +61,10 @@ public class PowerShellNetworksResource
 
         buf.append("add-network");
         buf.append(" -name " + PowerShellUtils.escape(network.getName()) + "");
-        buf.append(" -datacenterid " + PowerShellUtils.escape(network.getDataCenter().getId()));
-
         if (network.getDescription() != null) {
             buf.append(" -description " + PowerShellUtils.escape(network.getDescription()));
         }
+        buf.append(" -datacenterid " + PowerShellUtils.escape(network.getDataCenter().getId()));
 
         if (network.getIp() != null) {
             IP ip = network.getIp();

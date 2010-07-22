@@ -1,0 +1,27 @@
+  <!-- args: id, name, description, cpu, dataCenterId -->
+  <Object Type="RhevmCmd.CLICluster">
+    <Property Name="ClusterID" Type="System.Guid">{0}</Property>
+    <Property Name="Name" Type="System.String">{1}</Property>
+    <Property Name="Description" Type="System.String">{2}</Property>
+    <Property Name="CpuName" Type="System.String">{3}</Property>
+    <Property Name="SelectionAlgorithm" Type="RhevmCmd.HostSelectionAlgorithm">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="HighUtilization" Type="System.Int32">75</Property>
+    <Property Name="LowUtilization" Type="System.Int32">0</Property>
+    <Property Name="CpuOverCommitDurationMinutes" Type="System.Int32">2</Property>
+    <Property Name="HypervisorType" Type="VdcCommon.BusinessEntities.HypervisorType">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="DataCenterId" Type="System.String">{4}</Property>
+    <Property Name="IsInitialized" Type="System.Boolean">True</Property>
+    <Property Name="MaxHostMemoryOverCommit" Type="System.Int32">200</Property>
+    <Property Name="CompatibilityVersion" Type="RhevmCmd.CLICompatibilityVersion">
+      <Property Name="MinorRevision" Type="System.Int16">-1</Property>
+      <Property Name="MajorRevision" Type="System.Int16">-1</Property>
+      <Property Name="Major" Type="System.Int32">2</Property>
+      <Property Name="Minor" Type="System.Int32">2</Property>
+      <Property Name="Build" Type="System.Int32">-1</Property>
+      <Property Name="Revision" Type="System.Int32">-1</Property>
+    </Property>
+  </Object>

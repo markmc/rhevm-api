@@ -23,6 +23,7 @@ import org.junit.Test;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.powershell.enums.PowerShellBootSequence;
 
 
 public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectionResourceTest<Template, PowerShellTemplateResource, PowerShellTemplatesResource> {
@@ -32,88 +33,89 @@ public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectio
     private static String CLUSTER_ID = "cluster1";
     private static String CLUSTER_NAME = "pleiades";
 
-    private static final String ADD_COMMAND_PROLOG = "$v = get-vm \"" + VM_ID + "\"\n";
+    private static int MEMSIZE = 1024;
+    private static int BOOTSEQUENCE = PowerShellBootSequence.CDN.getValue();
+    private static int N_SOCKETS = 2;
+    private static int N_CPUS = 4;
+
+    public static final String[] extraArgs = new String[] { CLUSTER_ID, Integer.toString(MEMSIZE), Integer.toString(BOOTSEQUENCE), Integer.toString(N_SOCKETS), Integer.toString(N_CPUS) };
+
+    private static final String ADD_COMMAND_PROLOG = "$v = get-vm \"" + VM_ID + "\";";
     private static final String ADD_COMMAND_NO_CLUSTER_EPILOG = "-mastervm $v";
     private static final String ADD_COMMAND_EPILOG =
         ADD_COMMAND_NO_CLUSTER_EPILOG + " -hostclusterid \"" + CLUSTER_ID + "\"";
 
-    private static final String VM_BY_NAME_ADD_COMMAND_PROLOG = "$v = select-vm -searchtext \"name=" + VM_NAME + "\"\n";
+    private static final String VM_BY_NAME_ADD_COMMAND_PROLOG = "$v = select-vm -searchtext \"name=" + VM_NAME + "\";";
 
     private static final String CLUSTER_BY_NAME_ADD_COMMAND_PROLOG =
-        "$v = select-vm -searchtext \"name=" + VM_NAME + "\"\n" +
-        "$c = select-cluster -searchtext \"name=" + CLUSTER_NAME + "\"\n";
+        "$v = select-vm -searchtext \"name=" + VM_NAME + "\";" +
+        "$c = select-cluster -searchtext \"name=" + CLUSTER_NAME + "\";";
 
     private static final String CLUSTER_BY_NAME_ADD_COMMAND_EPILOG = ADD_COMMAND_NO_CLUSTER_EPILOG + " -hostclusterid $c.ClusterId";
 
-    private static final String OTHER_PROPS = "memsizemb: 1024\ndefaultbootsequence: CDN\nnumofsockets: 2\nnumofcpuspersocket: 4\n";
-
-    private static final String SELECT_RETURN_EPILOG = "\n" + OTHER_PROPS;
-    private static final String ADD_NO_CLUSTER_RETURN_EPILOG = "\nvmid: " + VM_ID + "\n" + OTHER_PROPS;
-    private static final String ADD_RETURN_EPILOG = "\nhostclusterid: " + CLUSTER_ID + ADD_NO_CLUSTER_RETURN_EPILOG;
-
     public PowerShellTemplatesResourceTest() {
-        super(new PowerShellTemplateResource("0", null, null, null), "templates", "template");
+        super(new PowerShellTemplateResource("0", null, null, null), "templates", "template", extraArgs);
     }
 
     @Test
     public void testList() throws Exception {
         verifyCollection(
             resource.list(setUpResourceExpectations(getSelectCommand(),
-                                                    getSelectReturn(SELECT_RETURN_EPILOG),
+                                                    getSelectReturn(),
                                                     NAMES)).getTemplates(),
-            NAMES);
+            NAMES, DESCRIPTIONS);
     }
 
     @Test
     public void testQuery() throws Exception {
         verifyCollection(
             resource.list(setUpResourceExpectations(getQueryCommand(Template.class),
-                                                    getQueryReturn(SELECT_RETURN_EPILOG),
+                                                    getQueryReturn(),
                                                     getQueryParam(),
                                                     NAMES_SUBSET)).getTemplates(),
-            NAMES_SUBSET);
+            NAMES_SUBSET, DESCRIPTIONS_SUBSET);
     }
 
     @Test
     public void testAddWithVmId() throws Exception {
         verifyResponse(
             resource.add(setUpAddResourceExpectations(ADD_COMMAND_PROLOG + getAddCommand(true) + ADD_COMMAND_EPILOG,
-                                                      getAddReturn(ADD_RETURN_EPILOG),
+                                                      getAddReturn(),
                                                       NEW_NAME),
-                         getModel(NEW_NAME)),
-            NEW_NAME);
+                         getModel(NEW_NAME, NEW_DESCRIPTION)),
+            NEW_NAME, NEW_DESCRIPTION);
     }
 
     @Test
     public void testAddWithNoCluster() throws Exception {
-        Template model = getModel(NEW_NAME);
+        Template model = getModel(NEW_NAME, NEW_DESCRIPTION);
         model.setCluster(null);
 
         verifyResponse(
             resource.add(setUpAddResourceExpectations(ADD_COMMAND_PROLOG + getAddCommand(true) + ADD_COMMAND_NO_CLUSTER_EPILOG,
-                                                      getAddReturn(ADD_NO_CLUSTER_RETURN_EPILOG),
+                                                      getAddReturn(),
                                                       NEW_NAME),
                          model),
-            NEW_NAME);
+            NEW_NAME, NEW_DESCRIPTION);
     }
 
     @Test
     public void testAddWithVmName() throws Exception {
-        Template model = getModel(NEW_NAME);
+        Template model = getModel(NEW_NAME, NEW_DESCRIPTION);
         model.getVm().setId(null);
         model.getVm().setName(VM_NAME);
 
         verifyResponse(
             resource.add(setUpAddResourceExpectations(VM_BY_NAME_ADD_COMMAND_PROLOG + getAddCommand(true) + ADD_COMMAND_EPILOG,
-                                                      getAddReturn(ADD_RETURN_EPILOG),
+                                                      getAddReturn(),
                                                       NEW_NAME),
                          model),
-            NEW_NAME);
+            NEW_NAME, NEW_DESCRIPTION);
     }
 
     @Test
     public void testAddWithClusterName() throws Exception {
-        Template model = getModel(NEW_NAME);
+        Template model = getModel(NEW_NAME, NEW_DESCRIPTION);
         model.getVm().setId(null);
         model.getVm().setName(VM_NAME);
         model.getCluster().setId(null);
@@ -121,10 +123,10 @@ public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectio
 
         verifyResponse(
             resource.add(setUpAddResourceExpectations(CLUSTER_BY_NAME_ADD_COMMAND_PROLOG + getAddCommand(true) + CLUSTER_BY_NAME_ADD_COMMAND_EPILOG,
-                                                      getAddReturn(ADD_RETURN_EPILOG),
+                                                      getAddReturn(),
                                                       NEW_NAME),
                          model),
-            NEW_NAME);
+            NEW_NAME, NEW_DESCRIPTION);
     }
 
     @Test

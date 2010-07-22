@@ -44,7 +44,6 @@ import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 
@@ -64,26 +63,27 @@ import static org.powermock.api.easymock.PowerMock.verifyAll;
 public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseResource,
                                                                U extends AbstractUpdatableResource<R>,
                                                                T extends AbstractPowerShellCollectionResource<R, U>>
-    extends Assert {
+    extends BasePowerShellResourceTest {
 
     private static final String URI_ROOT = "http://localhost:8099";
 
     protected static final String[] NAMES = {"sedna", "eris", "orcus"};
     protected static final String[] NAMES_SUBSET = {"eris", "orcus"};
     protected static final String NEW_NAME = "ceres";
+    protected static final String[] DESCRIPTIONS = {"first", "second", "third"};
+    protected static final String[] DESCRIPTIONS_SUBSET = {"first", "second"};
+    protected static final String NEW_DESCRIPTION = "Newbie right here!";
+
     private static final String SELECT_COMMAND = "select-{0}";
-    private static final String SELECT_RETURN =
-        "{0}id: " + "sedna".hashCode() + " \n name: sedna {1}\n\n" +
-        "{0}id: " + "eris".hashCode() + " \n name: eris {1}\n\n" +
-        "{0}id: " + "orcus".hashCode() + " \n name: orcus {1}";
+
 
     private static final String QUERY_RETURN =
         "{0}id: " + "eris".hashCode() + " \n name: eris {1}\n\n" +
         "{0}id: " + "orcus".hashCode() + " \n name: orcus {1}";
 
-    private static final String ADD_COMMAND = "add-{0}{1} -name \"ceres\" ";
-    private static final String ADD_RETURN =
-        "{0}id: " + "ceres".hashCode() + " \n name: ceres {1}\n\n";
+    private static final String ADD_COMMAND =
+        "add-{0}{1} -name \"" + NEW_NAME +
+                "\" -description \"" + NEW_DESCRIPTION + "\" ";
 
     private static final String REMOVE_COMMAND = "remove-{0} -{0}id \"" + "eris".hashCode() + "\"";
 
@@ -97,13 +97,18 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
     protected U updatable;
     protected String collectionName;
     protected String individualName;
+    protected String[] extraArgs;
     protected Executor executor;
     protected PowerShellParser parser;
 
-    protected AbstractPowerShellCollectionResourceTest(U updatable, String collectionName, String individualName) {
+    protected AbstractPowerShellCollectionResourceTest(U updatable,
+                                                       String collectionName,
+                                                       String individualName,
+                                                       String[] extraArgs) {
         this.updatable = updatable;
         this.collectionName = collectionName;
         this.individualName = individualName;
+        this.extraArgs = extraArgs;
     }
 
     @Before
@@ -223,11 +228,18 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
     }
 
     protected String getSelectReturn() {
-        return getSelectReturn("");
+        return formatXmlReturn(individualName, NAMES, DESCRIPTIONS, extraArgs);
     }
 
-    protected String getSelectReturn(String epilog) {
-        return MessageFormat.format(SELECT_RETURN, individualName, epilog);
+    protected String getQueryReturn() {
+        return formatXmlReturn(individualName, NAMES_SUBSET, DESCRIPTIONS_SUBSET, extraArgs);
+    }
+
+    protected String getAddReturn() {
+        return formatXmlReturn(individualName,
+                               new String[] { NEW_NAME },
+                               new String[] { NEW_DESCRIPTION },
+                               extraArgs);
     }
 
     protected String getQueryCommand(Class<?> clz) {
@@ -246,14 +258,6 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
         };
     }
 
-    protected String getQueryReturn() {
-        return getQueryReturn("");
-    }
-
-    protected String getQueryReturn(String epilog) {
-        return MessageFormat.format(QUERY_RETURN, individualName, epilog);
-    }
-
     protected String getAddCommand(boolean async) {
         return MessageFormat.format(ADD_COMMAND, individualName, async ? " -async" : "");
     }
@@ -262,33 +266,27 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
         return getAddCommand(false);
     }
 
-    protected String getAddReturn() {
-        return getAddReturn("");
-    }
-
-    protected String getAddReturn(String epilog) {
-        return MessageFormat.format(ADD_RETURN, individualName, epilog);
-    }
-
     protected String getRemoveCommand() {
         return MessageFormat.format(REMOVE_COMMAND, individualName);
     }
 
-    protected R getModel(String name) {
+    protected R getModel(String name, String description) {
         R model = ReflectionHelper.newModel(updatable);
         model.setId(Integer.toString(name.hashCode()));
         model.setName(name);
+        model.setDescription(description);
         populateModel(model);
         return model;
     }
 
-    protected void verifyResponse(Response r, String name) {
+    protected void verifyResponse(Response r, String name, String description) {
         assertEquals("unexpected status", 201, r.getStatus());
         Object entity = r.getEntity();
         assertTrue("expect response entity", entity instanceof BaseResource);
         BaseResource model = (BaseResource)entity;
-        assertEquals(model.getId(), Integer.toString(name.hashCode()));
-        assertEquals(model.getName(), name);
+        assertEquals(Integer.toString(name.hashCode()), model.getId());
+        assertEquals(name, model.getName());
+        assertEquals(description, model.getDescription());
         assertNotNull(r.getMetadata().get("Location"));
         assertTrue("expected location header",
                    r.getMetadata().get("Location").size() > 0);
@@ -297,13 +295,14 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
                      r.getMetadata().get("Location").get(0).toString());
     }
 
-    protected void verifyCollection(List<R> collection, String ... names) {
+    protected void verifyCollection(List<R> collection, String[] names, String[] descriptions) {
         assertNotNull(collection);
         assertEquals("unexpected collection size", collection.size(), names.length);
-        for (String name: names) {
+        for (int i = 0; i < names.length; i++) {
             R model = collection.remove(0);
-            assertEquals(Integer.toString(name.hashCode()), model.getId());
-            assertEquals(name, model.getName());
+            assertEquals(Integer.toString(names[i].hashCode()), model.getId());
+            assertEquals(names[i], model.getName());
+            assertEquals(descriptions[i], model.getDescription());
         }
     }
 

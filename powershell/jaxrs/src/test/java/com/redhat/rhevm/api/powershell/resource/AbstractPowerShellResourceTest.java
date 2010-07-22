@@ -28,11 +28,11 @@ import com.redhat.rhevm.api.model.BaseResource;
 import com.redhat.rhevm.api.model.Status;
 import com.redhat.rhevm.api.powershell.util.ControllableExecutor;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 
@@ -53,19 +53,21 @@ import static org.powermock.api.easymock.PowerMock.verifyAll;
 @Ignore
 public abstract class AbstractPowerShellResourceTest<R extends BaseResource,
                                                      A extends AbstractPowerShellActionableResource<R>>
-    extends Assert {
+    extends BasePowerShellResourceTest {
 
     protected static final String URI_ROOT = "http://localhost:8099";
 
     protected A resource;
     protected ControllableExecutor executor;
     protected PowerShellPoolMap poolMap;
+    protected PowerShellParser parser;
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         executor = new ControllableExecutor();
         poolMap = createMock(PowerShellPoolMap.class);
-        resource = getResource(executor, poolMap);
+        parser = PowerShellParser.newInstance();
+        resource = getResource(executor, poolMap, parser);
     }
 
     @After
@@ -103,7 +105,7 @@ public abstract class AbstractPowerShellResourceTest<R extends BaseResource,
     protected PowerShellCmd setUpShellExpectations() {
         return setUpShellExpectations(1);
     }
-    
+
     protected PowerShellCmd setUpShellExpectations(int times) {
         PowerShellPool pool = createMock(PowerShellPool.class);
         PowerShellCmd cmd = createMock(PowerShellCmd.class);
@@ -153,5 +155,5 @@ public abstract class AbstractPowerShellResourceTest<R extends BaseResource,
         }
     }
 
-    protected abstract A getResource(Executor executor, PowerShellPoolMap poolMap);
+    protected abstract A getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser);
 }

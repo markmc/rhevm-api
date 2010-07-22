@@ -24,21 +24,26 @@ import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.DataCenters;
 import com.redhat.rhevm.api.model.StorageType;
 
+import com.redhat.rhevm.api.powershell.enums.PowerShellStorageType;
+
 import org.junit.Test;
 
 public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollectionResourceTest<DataCenter, PowerShellDataCenterResource, PowerShellDataCentersResource> {
 
-    private static final String SELECT_RETURN_EPILOG = "\ntype: ISCSI";
-    private static final String ADD_COMMAND_EPILOG =
-        "-type ISCSI";
-    private static final String ADD_RETURN_EPILOG = "\ntype: ISCSI";
-    private static final String GET_STORAGE_COMMAND =
-        "get-storagedomain -datacenterid ";
-    private static final String GET_STORAGE_RETURN =
-        "storagedomainid: {0} \n name: {1}\ndomaintype: ISO \nstatus: ACTIVE\nsharedstatus: ACTIVE\ntype: ISCSI \n\n";
+    private static final String STORAGE_TYPE = Integer.toString(PowerShellStorageType.ISCSI.getValue());
+
+    private static final String[] extraArgs = new String[] { STORAGE_TYPE };
+
+    private static final String ADD_COMMAND_EPILOG = "-datacentertype ISCSI";
+
+    private static final String GET_STORAGE_COMMAND = "get-storagedomain -datacenterid ";
 
     public PowerShellDataCentersResourceTest() {
-        super(new PowerShellDataCenterResource("0", null, null, null), "datacenters", "datacenter");
+        super(new PowerShellDataCenterResource("0", null, null, null), "datacenters", "datacenter", extraArgs);
+    }
+
+    protected String formatStorageDomain(String name) {
+        return formatXmlReturn("storagedomain", new String[] { name }, new String[] { "" }, new String[] {});
     }
 
     @Test
@@ -47,13 +52,13 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
                                GET_STORAGE_COMMAND + "\"" + NAMES[0].hashCode() + "\"",
                                GET_STORAGE_COMMAND + "\"" + NAMES[1].hashCode() + "\"",
                                GET_STORAGE_COMMAND + "\"" + NAMES[2].hashCode() + "\"" };
-        String [] returns =  { getSelectReturn(SELECT_RETURN_EPILOG),
-                               MessageFormat.format(GET_STORAGE_RETURN, "mimas".hashCode(), "mimas"),
-                               MessageFormat.format(GET_STORAGE_RETURN, "dione".hashCode(), "dione"),
-                               MessageFormat.format(GET_STORAGE_RETURN, "titan".hashCode(), "titan") };
+        String [] returns =  { getSelectReturn(),
+                               formatStorageDomain("mimas"),
+                               formatStorageDomain("dione"),
+                               formatStorageDomain("titan") };
          verifyCollection(
              resource.list(setUpResourceExpectations(4, commands, returns, false, null, NAMES)).getDataCenters(),
-             NAMES);
+             NAMES, DESCRIPTIONS);
     }
 
     @Test
@@ -61,23 +66,24 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
         String [] commands = { getQueryCommand(DataCenter.class),
                                GET_STORAGE_COMMAND + "\"" + NAMES[1].hashCode() + "\"",
                                GET_STORAGE_COMMAND + "\"" + NAMES[2].hashCode() + "\""};
-        String [] returns =  { getQueryReturn(SELECT_RETURN_EPILOG),
-                               MessageFormat.format(GET_STORAGE_RETURN, "mimas".hashCode(), "dione"),
-                               MessageFormat.format(GET_STORAGE_RETURN, "dione".hashCode(), "titan") };
+        String [] returns =  { getQueryReturn(),
+                               formatStorageDomain("mimas"),
+                               formatStorageDomain("dione") };
          verifyCollection(
              resource.list(setUpResourceExpectations(3, commands, returns, false, getQueryParam(), NAMES_SUBSET)).getDataCenters(),
-             NAMES_SUBSET);
+             NAMES_SUBSET, DESCRIPTIONS_SUBSET);
     }
 
     @Test
     public void testAdd() throws Exception {
         String [] commands = { getAddCommand() + ADD_COMMAND_EPILOG,
-                           GET_STORAGE_COMMAND + "\"" + NEW_NAME.hashCode() + "\""};
-        String [] returns =  { getAddReturn(ADD_RETURN_EPILOG),
-                           MessageFormat.format(GET_STORAGE_RETURN, "rhea".hashCode(), "rhea") };
+                               GET_STORAGE_COMMAND + "\"" + NEW_NAME.hashCode() + "\""};
+        String [] returns =  { getAddReturn(),
+                               formatStorageDomain("rhea") };
         verifyResponse(
-            resource.add(setUpResourceExpectations(2, commands, returns, true, null, NEW_NAME), getModel(NEW_NAME)),
-            NEW_NAME);
+            resource.add(setUpResourceExpectations(2, commands, returns, true, null, NEW_NAME),
+                         getModel(NEW_NAME, NEW_DESCRIPTION)),
+            NEW_NAME, NEW_DESCRIPTION);
     }
 
     @Test

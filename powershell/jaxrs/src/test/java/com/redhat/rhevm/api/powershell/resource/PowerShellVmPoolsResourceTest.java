@@ -29,31 +29,44 @@ import org.junit.Test;
 public class PowerShellVmPoolsResourceTest extends AbstractPowerShellCollectionResourceTest<VmPool, PowerShellVmPoolResource, PowerShellVmPoolsResource> {
 
     public static final String CLUSTER_NAME = "Default";
-    public static final String CLUSTER_ID = "54321";
+    public static final String CLUSTER_ID = Integer.toString(CLUSTER_NAME.hashCode());
     public static final String TEMPLATE_NAME = "foo";
-    public static final String TEMPLATE_ID = "12345";
+    public static final String TEMPLATE_ID = Integer.toString(TEMPLATE_NAME.hashCode());
+    public static final int vmCount = 2;
 
-    public static final String GET_RETURN_EPILOG = "\nvmcount: 15\ncluster: " + CLUSTER_NAME + "\ntemplate: " + TEMPLATE_NAME + "\n";
+    public static final String[] extraArgs = new String[] { CLUSTER_NAME, TEMPLATE_NAME, Integer.toString(vmCount) };
 
     private static final String TEMPLATE_BY_NAME_ADD_COMMAND =
-        "$t = select-template -searchtext \"name=" + TEMPLATE_NAME + "\"\n" +
-        "add-vmpool " + "-vmpoolname \"" + NEW_NAME + "\" -templateid $t.TemplateId -hostclusterid \"" + CLUSTER_ID + "\" -pooltype Automatic";
+        "$t = select-template -searchtext \"name=" + TEMPLATE_NAME + "\";" +
+        "add-vmpool " + "-vmpoolname \"" + NEW_NAME + "\" -vmpooldescription \"" + NEW_DESCRIPTION + "\" -templateid $t.TemplateId -hostclusterid \"" + CLUSTER_ID + "\" -pooltype Automatic";
 
     private static final String CLUSTER_BY_NAME_ADD_COMMAND =
-        "$t = select-template -searchtext \"name=" + TEMPLATE_NAME  + "\"\n" +
-        "$c = select-cluster -searchtext \"name=" + CLUSTER_NAME + "\"\n" +
-        "add-vmpool " + "-vmpoolname \"" + NEW_NAME + "\" -templateid $t.TemplateId -hostclusterid $c.ClusterId -pooltype Automatic";
+        "$t = select-template -searchtext \"name=" + TEMPLATE_NAME  + "\";" +
+        "$c = select-cluster -searchtext \"name=" + CLUSTER_NAME + "\";" +
+        "add-vmpool " + "-vmpoolname \"" + NEW_NAME + "\" -vmpooldescription \"" + NEW_DESCRIPTION + "\" -templateid $t.TemplateId -hostclusterid $c.ClusterId -pooltype Automatic";
 
-    private static final String ADD_COMMAND = "add-vmpool " + "-vmpoolname \"" + NEW_NAME + "\" -templateid \"" + TEMPLATE_ID + "\" -hostclusterid \"" + CLUSTER_ID + "\" -pooltype Automatic";
-    private static final String REMOVE_COMMAND = "$p = get-vmpool -vmpoolid \"" + NAMES[1].hashCode() + "\"\nremove-vmpool -name $p.name";
+    private static final String ADD_COMMAND = "add-vmpool " + "-vmpoolname \"" + NEW_NAME + "\" -vmpooldescription \"" + NEW_DESCRIPTION + "\" -templateid \"" + TEMPLATE_ID + "\" -hostclusterid \"" + CLUSTER_ID + "\" -pooltype Automatic";
+    private static final String REMOVE_COMMAND = "$p = get-vmpool -vmpoolid \"" + NAMES[1].hashCode() + "\";remove-vmpool -name $p.name";
 
     public static final String LOOKUP_CLUSTER_COMMAND = "select-cluster -searchtext \"name = " + CLUSTER_NAME + "\"";
-    public static final String LOOKUP_CLUSTER_RETURN = "clusterid: " + CLUSTER_ID + "\nname: " + CLUSTER_NAME + "\ndatacenterid: 666";
     public static final String LOOKUP_TEMPLATE_COMMAND = "select-template -searchtext \"name = " + TEMPLATE_NAME + "\"";
-    public static final String LOOKUP_TEMPLATE_RETURN = "templateid: " + TEMPLATE_ID + "\nname: " + TEMPLATE_NAME + "\nmemsizemb: 1024\ndefaultbootsequence: CDN\nnumofsockets: 2\nnumofcpuspersocket: 4\n";
 
     public PowerShellVmPoolsResourceTest() {
-        super(new PowerShellVmPoolResource("0", null, null, null), "vmpools", "vmpool");
+        super(new PowerShellVmPoolResource("0", null, null, null), "vmpools", "vmpool", extraArgs);
+    }
+
+    protected String formatCluster(String name) {
+        return formatXmlReturn("cluster",
+                               new String[] { name },
+                               new String[] { "" },
+                               PowerShellClustersResourceTest.extraArgs);
+    }
+
+    protected String formatTemplate(String name) {
+        return formatXmlReturn("template",
+                               new String[] { name },
+                               new String[] { "" },
+                               PowerShellTemplatesResourceTest.extraArgs);
     }
 
     @Test
@@ -62,13 +75,13 @@ public class PowerShellVmPoolsResourceTest extends AbstractPowerShellCollectionR
                                LOOKUP_CLUSTER_COMMAND, LOOKUP_TEMPLATE_COMMAND,
                                LOOKUP_CLUSTER_COMMAND, LOOKUP_TEMPLATE_COMMAND,
                                LOOKUP_CLUSTER_COMMAND, LOOKUP_TEMPLATE_COMMAND };
-        String [] returns = { getSelectReturn(GET_RETURN_EPILOG),
-                              LOOKUP_CLUSTER_RETURN, LOOKUP_TEMPLATE_RETURN,
-                              LOOKUP_CLUSTER_RETURN, LOOKUP_TEMPLATE_RETURN,
-                              LOOKUP_CLUSTER_RETURN, LOOKUP_TEMPLATE_RETURN };
+        String [] returns = { getSelectReturn(),
+                              formatCluster(CLUSTER_NAME), formatTemplate(TEMPLATE_NAME),
+                              formatCluster(CLUSTER_NAME), formatTemplate(TEMPLATE_NAME),
+                              formatCluster(CLUSTER_NAME), formatTemplate(TEMPLATE_NAME) };
         verifyCollection(
             resource.list(setUpResourceExpectations(4, commands, returns, false, null, NAMES)).getVmPools(),
-            NAMES);
+            NAMES, DESCRIPTIONS);
     }
 
 
@@ -77,9 +90,9 @@ public class PowerShellVmPoolsResourceTest extends AbstractPowerShellCollectionR
         String [] commands = { getQueryCommand(VmPool.class),
                                LOOKUP_CLUSTER_COMMAND, LOOKUP_TEMPLATE_COMMAND,
                                LOOKUP_CLUSTER_COMMAND, LOOKUP_TEMPLATE_COMMAND };
-        String [] returns = { getQueryReturn(GET_RETURN_EPILOG),
-                              LOOKUP_CLUSTER_RETURN, LOOKUP_TEMPLATE_RETURN,
-                              LOOKUP_CLUSTER_RETURN, LOOKUP_TEMPLATE_RETURN };
+        String [] returns = { getQueryReturn(),
+                              formatCluster(CLUSTER_NAME), formatTemplate(TEMPLATE_NAME),
+                              formatCluster(CLUSTER_NAME), formatTemplate(TEMPLATE_NAME) };
         verifyCollection(
             resource.list(setUpResourceExpectations(3,
                                                     commands,
@@ -87,47 +100,47 @@ public class PowerShellVmPoolsResourceTest extends AbstractPowerShellCollectionR
                                                     false,
                                                     getQueryParam(),
                                                     NAMES_SUBSET)).getVmPools(),
-            NAMES_SUBSET);
+            NAMES_SUBSET, DESCRIPTIONS_SUBSET);
     }
 
     @Test
     public void testAdd() throws Exception {
         String [] commands = { ADD_COMMAND, LOOKUP_CLUSTER_COMMAND, LOOKUP_TEMPLATE_COMMAND };
-        String [] returns = { getAddReturn(GET_RETURN_EPILOG), LOOKUP_CLUSTER_RETURN, LOOKUP_TEMPLATE_RETURN };
+        String [] returns = { getAddReturn(), formatCluster(CLUSTER_NAME), formatTemplate(TEMPLATE_NAME) };
         verifyResponse(
             resource.add(setUpResourceExpectations(2, commands, returns, true, null, NEW_NAME),
-                         getModel(NEW_NAME)),
-            NEW_NAME);
+                         getModel(NEW_NAME, NEW_DESCRIPTION)),
+            NEW_NAME, NEW_DESCRIPTION);
     }
 
     @Test
     public void testAddWithTemplateName() throws Exception {
-        VmPool model = getModel(NEW_NAME);
+        VmPool model = getModel(NEW_NAME, NEW_DESCRIPTION);
         model.getTemplate().setId(null);
         model.getTemplate().setName(TEMPLATE_NAME);
 
         String [] commands = { TEMPLATE_BY_NAME_ADD_COMMAND, LOOKUP_CLUSTER_COMMAND, LOOKUP_TEMPLATE_COMMAND };
-        String [] returns = { getAddReturn(GET_RETURN_EPILOG), LOOKUP_CLUSTER_RETURN, LOOKUP_TEMPLATE_RETURN };
+        String [] returns = { getAddReturn(), formatCluster(CLUSTER_NAME), formatTemplate(TEMPLATE_NAME) };
         verifyResponse(
             resource.add(setUpResourceExpectations(2, commands, returns, true, null, NEW_NAME),
                          model),
-            NEW_NAME);
+            NEW_NAME, NEW_DESCRIPTION);
     }
 
     @Test
     public void testAddWithClusterName() throws Exception {
-        VmPool model = getModel(NEW_NAME);
+        VmPool model = getModel(NEW_NAME, NEW_DESCRIPTION);
         model.getTemplate().setId(null);
         model.getTemplate().setName(TEMPLATE_NAME);
         model.getCluster().setId(null);
         model.getCluster().setName(CLUSTER_NAME);
 
         String [] commands = { CLUSTER_BY_NAME_ADD_COMMAND, LOOKUP_CLUSTER_COMMAND, LOOKUP_TEMPLATE_COMMAND };
-        String [] returns = { getAddReturn(GET_RETURN_EPILOG), LOOKUP_CLUSTER_RETURN, LOOKUP_TEMPLATE_RETURN };
+        String [] returns = { getAddReturn(), formatCluster(CLUSTER_NAME), formatTemplate(TEMPLATE_NAME) };
         verifyResponse(
             resource.add(setUpResourceExpectations(2, commands, returns, true, null, NEW_NAME),
                          model),
-            NEW_NAME);
+            NEW_NAME, NEW_DESCRIPTION);
     }
 
     @Test

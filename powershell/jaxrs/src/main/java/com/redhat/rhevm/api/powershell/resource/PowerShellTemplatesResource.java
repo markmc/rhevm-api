@@ -81,15 +81,13 @@ public class PowerShellTemplatesResource
 
         buf.append("add-template");
         buf.append(" -async");
-
         buf.append(" -name " + PowerShellUtils.escape(template.getName()) + "");
+        if (template.getDescription() != null) {
+            buf.append(" -description " + PowerShellUtils.escape(template.getDescription()));
+        }
         buf.append(" -mastervm $v");
         if (clusterArg != null) {
             buf.append(" -hostclusterid " + clusterArg);
-        }
-
-        if (template.getDescription() != null) {
-            buf.append(" -description " + PowerShellUtils.escape(template.getDescription()));
         }
         if (template.isSetMemory()) {
             buf.append(" -memory " + Math.round((double)template.getMemory()/(1024*1024)));

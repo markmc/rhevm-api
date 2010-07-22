@@ -30,6 +30,7 @@ import com.redhat.rhevm.api.model.Fault;
 import com.redhat.rhevm.api.model.Template;
 
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 
 import org.junit.Test;
@@ -43,33 +44,38 @@ import static org.powermock.api.easymock.PowerMock.replayAll;
 
 public class PowerShellTemplateResourceTest extends AbstractPowerShellResourceTest<Template, PowerShellTemplateResource> {
 
-    private static final String TEMPLATE_ID = "12345";
     private static final String TEMPLATE_NAME = "sedna";
+    private static final String TEMPLATE_ID = Integer.toString(TEMPLATE_NAME.hashCode());
     private static final String TEMPLATE_DESCRIPTION = "this is a template";
     private static final String NEW_NAME = "eris";
     private static final String BAD_ID = "98765";
 
-    private static final String OTHER_PROPS = "memsizemb: 1024\ndefaultbootsequence: CDN\nnumofsockets: 2\nnumofcpuspersocket: 4\n";
-
     private static final String GET_COMMAND = "get-template -templateid \"" + TEMPLATE_ID + "\"";
-    private static final String GET_RETURN = "templateid: " + TEMPLATE_ID + "\nname: " + TEMPLATE_NAME + "\ndescription: " + TEMPLATE_DESCRIPTION + "\n" + OTHER_PROPS;
+    private static final String UPDATE_COMMAND = "$t = get-template \"" + TEMPLATE_ID + "\";$t.name = \"" + NEW_NAME + "\";update-template -templateobject $t";
 
-    private static final String UPDATE_COMMAND = "$t = get-template \"" + TEMPLATE_ID + "\"\n$t.name = \"" + NEW_NAME + "\"\nupdate-template -templateobject $t";
-    private static final String UPDATE_RETURN = "templateid: " + TEMPLATE_ID + "\n name: " + NEW_NAME + "\ndescription: " + TEMPLATE_DESCRIPTION + "\n" + OTHER_PROPS;
+    protected PowerShellTemplateResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser) {
+        return new PowerShellTemplateResource(TEMPLATE_ID, executor, poolMap, parser);
+    }
 
-    protected PowerShellTemplateResource getResource(Executor executor, PowerShellPoolMap poolMap) {
-        return new PowerShellTemplateResource(TEMPLATE_ID, executor, poolMap, null);
+    protected String formatTemplate(String name) {
+        return formatXmlReturn("template",
+                               new String[] { name },
+                               new String[] { TEMPLATE_DESCRIPTION },
+                               PowerShellTemplatesResourceTest.extraArgs);
     }
 
     @Test
     public void testGet() throws Exception {
-        verifyTemplate(resource.get(setUpTemplateExpectations(GET_COMMAND, GET_RETURN)), TEMPLATE_NAME);
+        verifyTemplate(resource.get(setUpTemplateExpectations(GET_COMMAND,
+                                                              formatTemplate(TEMPLATE_NAME))),
+                       TEMPLATE_NAME);
     }
 
     @Test
     public void testGoodUpdate() throws Exception {
         verifyTemplate(
-            resource.update(setUpTemplateExpectations(UPDATE_COMMAND, UPDATE_RETURN),
+            resource.update(setUpTemplateExpectations(UPDATE_COMMAND,
+                                                      formatTemplate(NEW_NAME)),
                             getTemplate(NEW_NAME)),
             NEW_NAME);
     }
@@ -112,7 +118,7 @@ public class PowerShellTemplateResourceTest extends AbstractPowerShellResourceTe
 
     private void verifyTemplate(Template template, String name) {
         assertNotNull(template);
-        assertEquals(template.getId(), TEMPLATE_ID);
+        assertEquals(template.getId(), Integer.toString(name.hashCode()));
         assertEquals(template.getName(), name);
         assertEquals(template.getDescription(), TEMPLATE_DESCRIPTION);
     }

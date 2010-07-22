@@ -31,6 +31,7 @@ import com.redhat.rhevm.api.model.Fault;
 import com.redhat.rhevm.api.model.Host;
 
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 
 import org.junit.Test;
@@ -45,30 +46,44 @@ import static org.powermock.api.easymock.PowerMock.replayAll;
 
 public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<Host, PowerShellHostResource> {
 
-    private static final String GET_COMMAND = "rhevmpssnapin\\get-host \"12345\"";
-    private static final String GET_RETURN = "hostid: 12345 \n name: sedna\nstatus: up";
-    private static final String ACTION_RETURN = "replace with realistic powershell return";
-    private static final String UPDATE_COMMAND = "$h = rhevmpssnapin\\get-host \"12345\"\n$h.name = \"eris\"\nupdate-host -hostobject $h";
-    private static final String UPDATE_RETURN = "hostid: 12345 \n name: eris\nstatus: up";
-    private static final String INSTALL_PASSWORD = "boldlygoingnowhere";
-    private static final String INSTALL_COMMAND = "$h = rhevmpssnapin\\get-host \"12345\"\nupdate-host -hostobject $h -install -rootpassword \"" + INSTALL_PASSWORD + "\"";
+    private static final String HOST_NAME = "sedna";
+    private static final String HOST_ID = Integer.toString(HOST_NAME.hashCode());
 
-    protected PowerShellHostResource getResource(Executor executor, PowerShellPoolMap poolMap) {
-        return new PowerShellHostResource("12345", executor, poolMap, null);
+    private static final String GET_COMMAND = "rhevmpssnapin\\get-host \"" + HOST_ID + "\"";
+    private static final String ACTION_RETURN = "replace with realistic powershell return";
+    private static final String UPDATE_COMMAND = "$h = rhevmpssnapin\\get-host \"" + HOST_ID + "\";$h.name = \"eris\";update-host -hostobject $h";
+    private static final String INSTALL_PASSWORD = "boldlygoingnowhere";
+    private static final String INSTALL_COMMAND = "$h = rhevmpssnapin\\get-host \"" + HOST_ID + "\";update-host -hostobject $h -install -rootpassword \"" + INSTALL_PASSWORD + "\"";
+
+    protected PowerShellHostResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser) {
+        return new PowerShellHostResource(HOST_ID, executor, poolMap, parser);
+    }
+
+    protected String formatHost(String name) {
+        String ret = formatXmlReturn("host",
+                               new String[] { name },
+                               new String[] { "" },
+                               PowerShellHostsResourceTest.extraArgs);
+        System.out.println(ret);
+        return ret;
     }
 
     @Test
     public void testGet() throws Exception {
         verifyHost(
-            resource.get(setUpHostExpectations(GET_COMMAND, GET_RETURN, "sedna")),
-            "sedna");
+            resource.get(setUpHostExpectations(GET_COMMAND,
+                                               formatHost(HOST_NAME),
+                                               HOST_NAME)),
+            HOST_NAME);
     }
 
     @Test
     public void testGoodUpdate() throws Exception {
         verifyHost(
-            resource.update(setUpHostExpectations(UPDATE_COMMAND, UPDATE_RETURN, "eris"),
-                            getHost("eris")),
+            resource.update(setUpHostExpectations(UPDATE_COMMAND,
+                                                  formatHost("eris"),
+                                                  "eris"),
+                            getHost(HOST_ID, "eris")),
             "eris");
     }
 
@@ -97,7 +112,7 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
         Action action = getAction();
         action.setRootPassword(INSTALL_PASSWORD);
         verifyActionResponse(
-            resource.install(setUpActionExpectation("hosts/12345", "install", INSTALL_COMMAND, ACTION_RETURN), action),
+            resource.install(setUpActionExpectation("hosts/" + HOST_ID, "install", INSTALL_COMMAND, ACTION_RETURN), action),
             false);
     }
 
@@ -127,7 +142,7 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
         Action action = getAction(true);
         action.setRootPassword(INSTALL_PASSWORD);
         verifyActionResponse(
-            resource.install(setUpActionExpectation("hosts/12345", "install", INSTALL_COMMAND, ACTION_RETURN), action),
+            resource.install(setUpActionExpectation("hosts/" + HOST_ID, "install", INSTALL_COMMAND, ACTION_RETURN), action),
             true);
     }
 
@@ -148,7 +163,7 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
     private UriInfo setUpHostExpectations(String command, String ret, String name) throws Exception {
         mockStatic(PowerShellCmd.class);
         expect(PowerShellCmd.runCommand(setUpShellExpectations(), command)).andReturn(ret);
-        String href = URI_ROOT + "/hosts/12345";
+        String href = URI_ROOT + "/hosts/" + Integer.toString(name.hashCode());
         UriInfo uriInfo = createMock(UriInfo.class);
         UriBuilder uriBuilder = createMock(UriBuilder.class);
         expect(uriInfo.getRequestUriBuilder()).andReturn(uriBuilder).anyTimes();
@@ -163,11 +178,14 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
     }
 
     private UriInfo setUpActionExpectation(String verb, String command) throws Exception {
-        return setUpActionExpectation("/hosts/12345/", verb, command + " -hostid \"12345\"", ACTION_RETURN);
+        return setUpActionExpectation("/hosts/"+ HOST_ID + "/",
+                                      verb,
+                                      command + " -hostid \"" + HOST_ID + "\"",
+                                      ACTION_RETURN);
     }
 
     private Host getHost(String name) {
-        return getHost("12345", name);
+        return getHost(Integer.toString(name.hashCode()), name);
     }
 
     private Host getHost(String id, String name) {
@@ -179,12 +197,12 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
 
     private void verifyHost(Host host, String name) {
         assertNotNull(host);
-        assertEquals(host.getId(), "12345");
-        assertEquals(host.getName(), name);
+        assertEquals(Integer.toString(name.hashCode()), host.getId());
+        assertEquals(name, host.getName());
     }
 
     private void verifyActionResponse(Response r, boolean async) throws Exception {
-        verifyActionResponse(r, "hosts/12345", async);
+        verifyActionResponse(r, "hosts/" + HOST_ID, async);
     }
 
     private void verifyUpdateException(WebApplicationException wae) {

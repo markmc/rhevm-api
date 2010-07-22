@@ -27,6 +27,7 @@ import com.redhat.rhevm.api.model.Attachment;
 import com.redhat.rhevm.api.model.StorageDomainStatus;
 
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 
 import org.junit.Test;
@@ -39,8 +40,10 @@ import static org.powermock.api.easymock.PowerMock.replayAll;
 
 public class PowerShellAttachmentResourceTest extends AbstractPowerShellResourceTest<Attachment, PowerShellAttachmentResource> {
 
-    private static final String DATA_CENTER_ID = "d12345";
-    private static final String STORAGE_DOMAIN_ID = "s98765";
+    private static final String DATA_CENTER_NAME = "d12345";
+    private static final String DATA_CENTER_ID = Integer.toString(DATA_CENTER_NAME.hashCode());
+    private static final String STORAGE_DOMAIN_NAME = "d12345";
+    private static final String STORAGE_DOMAIN_ID = Integer.toString(STORAGE_DOMAIN_NAME.hashCode());
     private static final String DATA_CENTER_URI = URI_ROOT + "/datacenters/" + DATA_CENTER_ID;
     private static final String STORAGE_DOMAIN_URI = URI_ROOT + "/storagedomains/" + STORAGE_DOMAIN_ID;
     private static final String ATTACHMENT_URI = STORAGE_DOMAIN_URI + "/attachments/" + DATA_CENTER_ID;
@@ -49,17 +52,14 @@ public class PowerShellAttachmentResourceTest extends AbstractPowerShellResource
     private static final String STORAGE_DOMAIN_ARG = " -storagedomainid \"" + STORAGE_DOMAIN_ID + "\"";
     private static final String DC_AND_SD_ARGS = DATA_CENTER_ARG + STORAGE_DOMAIN_ARG;
     private static final String GET_COMMAND = "get-storagedomain" + DC_AND_SD_ARGS;
-    private static final String GET_RETURN =
-        "storagedomainid:" + STORAGE_DOMAIN_ID + "\n" +
-        "status: active\n" +
-        "sharedstatus: active\n" +
-        "domaintype: data (master)\n" +
-        "type: nfs\n" +
-        "nfspath: foo.bar:/blaa/and/butter\n";
     private static final String ACTION_RETURN = "replace with realistic powershell return";
 
-    protected PowerShellAttachmentResource getResource(Executor executor, PowerShellPoolMap poolMap) {
-        return new PowerShellAttachmentResource(DATA_CENTER_ID, STORAGE_DOMAIN_ID, executor, poolMap, null);
+    protected PowerShellAttachmentResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser) {
+        return new PowerShellAttachmentResource(DATA_CENTER_ID, STORAGE_DOMAIN_ID, executor, poolMap, parser);
+    }
+
+    protected String formatStorageDomain(String name) {
+        return formatXmlReturn("storagedomain", new String[] { name }, new String[] { "" }, new String[] {});
     }
 
     @Test
@@ -97,7 +97,8 @@ public class PowerShellAttachmentResourceTest extends AbstractPowerShellResource
 
     private UriInfo setUpAttachmentExpectations() throws Exception {
         mockStatic(PowerShellCmd.class);
-        expect(PowerShellCmd.runCommand(setUpShellExpectations(), GET_COMMAND)).andReturn(GET_RETURN);
+        expect(PowerShellCmd.runCommand(setUpShellExpectations(),
+                                        GET_COMMAND)).andReturn(formatStorageDomain(STORAGE_DOMAIN_NAME));
         replayAll();
         return null;
     }
