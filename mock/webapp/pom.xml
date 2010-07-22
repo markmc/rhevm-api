@@ -16,8 +16,8 @@
   <properties>
     <webapp.name>rhevm-api-mock</webapp.name>
     <keystore>${project.build.directory}/security/keystore</keystore>
-    <key.password>Open sesame!</key.password>
-    <keystore.password>Open sesame!</keystore.password>
+    <key.password>Open_sesame</key.password>
+    <keystore.password>Open_sesame</keystore.password>
   </properties>
 
   <profiles>

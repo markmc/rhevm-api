@@ -12,7 +12,7 @@ if "%RHEVM_API_URL%" == "" (
 )
 
 if "%JAVA_OPTS%" == "" (
-  set JAVA_OPTS=-Drhevm.base.url=%RHEVM_API_URL% -Drhevm.auth.username=%RHEVM_USERNAME% -Drhevm.auth.password=%RHEVM_PASSWORD%
+  set JAVA_OPTS=-Drhevm.base.url=%RHEVM_API_URL% -Drhevm.auth.username=%RHEVM_USERNAME% -Drhevm.auth.password=%RHEVM_PASSWORD% -Drhevm.truststore.path=%RHEVM_TRUSTSTORE_PATH% -Drhevm.truststore.password=%RHEVM_TRUSTSTORE_PASSWORD%
 )
 
 if "%SHIFT%" == "true" SET ARGS=%2 %3 %4 %5 %6 %7 %8

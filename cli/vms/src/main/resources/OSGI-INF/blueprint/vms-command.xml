@@ -99,6 +99,8 @@
     <property name="baseUrl" value="$[rhevm.base.url]"/>
     <property name="user" value="$[rhevm.auth.username]"/>
     <property name="secret" value="$[rhevm.auth.password]"/>
+    <property name="trustStorePath" value="$[rhevm.truststore.path]"/>
+    <property name="trustStorePassword" value="$[rhevm.truststore.password]"/>
   </bean>
 
 </blueprint>

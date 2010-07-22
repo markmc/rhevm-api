@@ -18,10 +18,17 @@
  */
 package com.redhat.rhevm.api.command.base;
 
+import java.io.FileInputStream;
 import java.io.InputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import java.security.KeyStore;
+
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.TrustManagerFactory;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -33,9 +40,10 @@ import javax.ws.rs.core.Response;
 import org.apache.abdera.i18n.templates.Template;
 import org.apache.cxf.BusFactory;
 import org.apache.cxf.binding.BindingFactoryManager;
+import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.jaxrs.JAXRSBindingFactory;
-
 import org.apache.cxf.jaxrs.client.WebClient;
+import org.apache.cxf.transport.http.HTTPConduit;
 
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.BaseResource;
@@ -51,11 +59,15 @@ import com.redhat.rhevm.api.model.Status;
 public class BaseClient {
 
     protected static final String SEARCH_RELATION = "/search";
-    protected static final String HTTP_SCHEME = "http://";
+    protected static final String HTTP_SCHEME = "http";
+    protected static final String HTTPS_SCHEME = "https";
 
     protected String baseUrl;
     protected String user;
     protected String secret;
+
+    protected String trustStorePath;
+    protected String trustStorePassword;
 
     public String getBaseUrl() {
         return baseUrl;
@@ -71,6 +83,14 @@ public class BaseClient {
 
     public void setSecret(String secret) {
         this.secret = secret;
+    }
+
+    public void setTrustStorePath(String trustStorePath) {
+        this.trustStorePath = trustStorePath;
+    }
+
+    public void setTrustStorePassword(String trustStorePassword) {
+        this.trustStorePassword = trustStorePassword;
     }
 
     public <S> S get(String href, Class<S> clz) throws Exception {
@@ -239,10 +259,33 @@ public class BaseClient {
         return ret;
     }
 
-    private WebClient getClient(String href) {
-        return user == null || secret == null
-               ? WebClient.create(absolute(href))
-               : WebClient.create(absolute(href), user, secret, null);
+    private WebClient getClient(String href) throws Exception {
+
+        return configureTLS(user == null || secret == null
+                            ? WebClient.create(absolute(href))
+                            : WebClient.create(absolute(href), user, secret, null));
+   }
+
+    private WebClient configureTLS(WebClient client) throws Exception {
+        if (client.getBaseURI().getScheme().startsWith(HTTPS_SCHEME)
+            && !(trustStorePath == null || trustStorePassword ==null)) {
+
+            HTTPConduit conduit =
+                (HTTPConduit)WebClient.getConfig(client).getConduit();
+
+            TLSClientParameters tlsParameters = new TLSClientParameters();
+            KeyStore trustStore = KeyStore.getInstance("JKS");
+            trustStore.load(new FileInputStream(trustStorePath),
+                            trustStorePassword.toCharArray());
+            TrustManagerFactory trustFactory =
+                TrustManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+            trustFactory.init(trustStore);
+            tlsParameters.setTrustManagers(trustFactory.getTrustManagers());
+            // allow a hostname mismatch
+            tlsParameters.setDisableCNCheck(true);
+            conduit.setTlsClientParameters(tlsParameters);
+        }
+        return client;
     }
 
     private <S> S unmarshall(Response r, Class<S> clz) throws Exception {
@@ -305,7 +348,7 @@ public class BaseClient {
     }
 
     private String absolute(String href) {
-        return href.startsWith(HTTP_SCHEME)
+        return href.startsWith(HTTP_SCHEME) || href.startsWith(HTTPS_SCHEME)
                ? href
                : href.startsWith("/")
                  ? getBaseUrl() + href
