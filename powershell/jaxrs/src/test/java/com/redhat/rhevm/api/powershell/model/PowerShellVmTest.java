@@ -116,7 +116,20 @@ public class PowerShellVmTest extends PowerShellModelTest {
         assertEquals(disks.getDisks().size(), 1);
 
         testDisk(disks.getDisks().get(0), "0b9318b4-e426-4380-9e6a-bb7f3a38a2ce", VM_ID, 1341231104L, DiskType.SYSTEM, DiskStatus.OK, DiskInterface.IDE, DiskFormat.RAW, true, true, null, null);
+    }
 
+    @Test
+    public void testParseDisks22() throws Exception {
+        String data = readFileContents("disks22.xml");
+        assertNotNull(data);
+
+        Disks disks = PowerShellVM.parseDisks(getParser(), VM_ID, data);
+
+        assertNotNull(disks);
+        assertEquals(disks.getDisks().size(), 2);
+
+        testDisk(disks.getDisks().get(0), "222ea10f-7c0a-4302-8e80-2834b8fa681a", VM_ID, 1073741824L, DiskType.DATA, DiskStatus.OK, DiskInterface.IDE, DiskFormat.COW, true, null, null, null);
+        testDisk(disks.getDisks().get(1), "0e833f37-3437-44f2-a04f-6f9692882431", VM_ID, 2147483648L, DiskType.SYSTEM, DiskStatus.OK, DiskInterface.VIRTIO, DiskFormat.RAW, null, true, true, null);
     }
 
     private void testNic(NIC n, String id, String name, String vmId, String network, NicType type, String macAddress, String ipAddress, String ipNetmask, String ipGateway) {

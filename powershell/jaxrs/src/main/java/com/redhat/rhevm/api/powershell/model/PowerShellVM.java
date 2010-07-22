@@ -48,6 +48,7 @@ import com.redhat.rhevm.api.powershell.enums.PowerShellDiskType;
 import com.redhat.rhevm.api.powershell.enums.PowerShellImageStatus;
 import com.redhat.rhevm.api.powershell.enums.PowerShellPropagateErrors;
 import com.redhat.rhevm.api.powershell.enums.PowerShellVolumeFormat;
+import com.redhat.rhevm.api.powershell.enums.PowerShellVolumeFormat22;
 import com.redhat.rhevm.api.powershell.enums.PowerShellVolumeType;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
@@ -170,7 +171,11 @@ public class PowerShellVM extends VM {
             disk.setType(entity.get("disktype", PowerShellDiskType.class).map());
             disk.setStatus(entity.get("status", PowerShellImageStatus.class).map());
             disk.setInterface(DiskInterface.fromValue(entity.get("diskinterface").toUpperCase()));
-            disk.setFormat(entity.get("volumeformat", PowerShellVolumeFormat.class).map());
+            try {
+                disk.setFormat(entity.get("volumeformat", PowerShellVolumeFormat.class).map());
+            } catch (ClassCastException ex) {
+                disk.setFormat(entity.get("volumeformat", PowerShellVolumeFormat22.class).map());
+            }
             if (entity.get("volumetype", PowerShellVolumeType.class).map()) {
                 disk.setSparse(true);
             }
