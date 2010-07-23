@@ -55,8 +55,6 @@ public abstract class AbstractPowerShellResourceTest<R extends BaseResource,
                                                      A extends AbstractPowerShellActionableResource<R>>
     extends BasePowerShellResourceTest {
 
-    protected static final String URI_ROOT = "http://localhost:8099";
-
     protected A resource;
     protected ControllableExecutor executor;
     protected PowerShellPoolMap poolMap;

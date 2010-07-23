@@ -99,7 +99,7 @@ public class PowerShellTemplateResourceTest extends AbstractPowerShellResourceTe
         UriInfo uriInfo = createMock(UriInfo.class);
         UriBuilder uriBuilder = createMock(UriBuilder.class);
         expect(uriInfo.getRequestUriBuilder()).andReturn(uriBuilder).anyTimes();
-        expect(uriBuilder.build()).andReturn(new URI(URI_ROOT + "/templates/" + TEMPLATE_ID)).anyTimes();
+        expect(uriBuilder.build()).andReturn(new URI("templates/" + TEMPLATE_ID)).anyTimes();
         replayAll();
 
         return uriInfo;

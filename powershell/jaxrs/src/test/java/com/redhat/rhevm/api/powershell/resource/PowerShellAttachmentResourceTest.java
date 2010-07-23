@@ -44,8 +44,8 @@ public class PowerShellAttachmentResourceTest extends AbstractPowerShellResource
     private static final String DATA_CENTER_ID = Integer.toString(DATA_CENTER_NAME.hashCode());
     private static final String STORAGE_DOMAIN_NAME = "d12345";
     private static final String STORAGE_DOMAIN_ID = Integer.toString(STORAGE_DOMAIN_NAME.hashCode());
-    private static final String DATA_CENTER_URI = URI_ROOT + "/datacenters/" + DATA_CENTER_ID;
-    private static final String STORAGE_DOMAIN_URI = URI_ROOT + "/storagedomains/" + STORAGE_DOMAIN_ID;
+    private static final String DATA_CENTER_URI = "datacenters/" + DATA_CENTER_ID;
+    private static final String STORAGE_DOMAIN_URI = "storagedomains/" + STORAGE_DOMAIN_ID;
     private static final String ATTACHMENT_URI = STORAGE_DOMAIN_URI + "/attachments/" + DATA_CENTER_ID;
     private static final String DEACTIVATE_ACTION_URI = ATTACHMENT_URI + "/deactivate";
     private static final String DATA_CENTER_ARG = " -datacenterid \"" + DATA_CENTER_ID + "\"";
