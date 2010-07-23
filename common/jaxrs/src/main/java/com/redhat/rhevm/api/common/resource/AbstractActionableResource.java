@@ -52,6 +52,11 @@ public abstract class AbstractActionableResource<R extends BaseResource> extends
         actions = new ReapedMap<String, ActionResource>(REAP_AFTER);
     }
 
+    protected R getModel() {
+        R parent = newModel();
+        parent.setId(getId());
+        return parent;
+    }
 
     /**
      * Perform an action, managing asynchrony and returning an appropriate
@@ -65,9 +70,7 @@ public abstract class AbstractActionableResource<R extends BaseResource> extends
     protected Response doAction(UriInfo uriInfo, final AbstractActionTask task) {
         Action action = task.action;
         Response.Status status = null;
-        R parent = newModel();
-        parent.setId(getId());
-        final ActionResource actionResource = new BaseActionResource<R>(uriInfo, task.action, parent);
+        final ActionResource actionResource = new BaseActionResource<R>(uriInfo, task.action, getModel());
         if (action.isSetAsync() && action.isAsync()) {
             action.setStatus(com.redhat.rhevm.api.model.Status.PENDING);
             actions.put(action.getId(), actionResource);

@@ -69,6 +69,15 @@ public class PowerShellAttachmentResource extends AbstractPowerShellActionableRe
     }
 
     @Override
+    protected Attachment getModel() {
+        Attachment attachment = new Attachment();
+        attachment.setId(getId());
+        attachment.setStorageDomain(new StorageDomain());
+        attachment.getStorageDomain().setId(storageDomainId);
+        return attachment;
+    }
+
+    @Override
     public Attachment get(UriInfo uriInfo) {
         StringBuilder buf = new StringBuilder();
 
