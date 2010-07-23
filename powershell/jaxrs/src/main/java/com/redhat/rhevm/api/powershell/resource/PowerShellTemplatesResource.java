@@ -23,6 +23,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.common.util.ReflectionHelper;
 import com.redhat.rhevm.api.model.CpuTopology;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.Templates;
@@ -88,6 +89,9 @@ public class PowerShellTemplatesResource
         buf.append(" -mastervm $v");
         if (clusterArg != null) {
             buf.append(" -hostclusterid " + clusterArg);
+        }
+        if (template.getType() != null) {
+            buf.append(" -vmtype " + ReflectionHelper.capitalize(template.getType().toString().toLowerCase()));
         }
         if (template.isSetMemory()) {
             buf.append(" -memory " + Math.round((double)template.getMemory()/(1024*1024)));

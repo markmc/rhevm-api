@@ -30,6 +30,7 @@ import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.TemplateStatus;
 import com.redhat.rhevm.api.powershell.enums.PowerShellBootSequence;
 import com.redhat.rhevm.api.powershell.enums.PowerShellVmTemplateStatus;
+import com.redhat.rhevm.api.powershell.enums.PowerShellVmType;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 
 
@@ -52,6 +53,7 @@ public class PowerShellTemplate extends Template {
             template.setId(entity.get("templateid"));
             template.setName(entity.get("name"));
             template.setDescription(entity.get("description"));
+            template.setType(entity.get("vmtype", PowerShellVmType.class).map());
             template.setMemory(entity.get("memsizemb", Integer.class) * 1024L * 1024L);
             template.setCdIsoPath(entity.get("cdisopath"));
             template.setStatus(entity.get("status", PowerShellVmTemplateStatus.class).map());

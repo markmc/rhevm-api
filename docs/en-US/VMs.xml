@@ -14,6 +14,10 @@
         <colspec colwidth="5*"/>
         <tbody>
           <row>
+            <entry><literal>type</literal></entry>
+            <entry>One of DESKTOP or SERVER</entry>
+          </row>
+          <row>
             <entry><literal>status</literal></entry>
             <entry>One of PAUSED, RUNNING, SHUTDOWN or SHUTOFF</entry>
           </row>
@@ -59,6 +63,7 @@
   <screen>
 &lt;vm id="082c794b-771f-452f-83c9-b2b5a19c0399" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399"&gt;
   &lt;name&gt;vm1&lt;/name&gt;
+  &lt;type&gt;SERVER&lt;/type&gt;
   &lt;status&gt;SHUTOFF&lt;/status&gt;
   &lt;memory&gt;536870912&lt;/memory&gt;
   &lt;cpu&gt;
@@ -84,7 +89,7 @@
   </screen>
 
   <para>
-    When creating a new VM, the <literal>name</literal>, <literal>template id</literal> and <literal>cluster id</literal> elements are required. The <literal>name</literal>, <literal>description</literal>, <literal>memory</literal>, <literal>cpu topology</literal> and <literal>os boot dev</literal> properties may be updated post-creation.
+    When creating a new VM, the <literal>name</literal>, <literal>template id</literal> and <literal>cluster id</literal> elements are required. The <literal>name</literal>, <literal>description</literal>, <literal>type</literal>, <literal>memory</literal>, <literal>cpu topology</literal> and <literal>os boot dev</literal> properties may be updated post-creation.
   </para>
 
   <para>

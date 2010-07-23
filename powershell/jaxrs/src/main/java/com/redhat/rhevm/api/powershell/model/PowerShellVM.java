@@ -47,6 +47,7 @@ import com.redhat.rhevm.api.powershell.enums.PowerShellBootSequence;
 import com.redhat.rhevm.api.powershell.enums.PowerShellDiskType;
 import com.redhat.rhevm.api.powershell.enums.PowerShellImageStatus;
 import com.redhat.rhevm.api.powershell.enums.PowerShellPropagateErrors;
+import com.redhat.rhevm.api.powershell.enums.PowerShellVmType;
 import com.redhat.rhevm.api.powershell.enums.PowerShellVolumeFormat;
 import com.redhat.rhevm.api.powershell.enums.PowerShellVolumeFormat22;
 import com.redhat.rhevm.api.powershell.enums.PowerShellVolumeType;
@@ -109,6 +110,7 @@ public class PowerShellVM extends VM {
             vm.setId(entity.get("vmid"));
             vm.setName(entity.get("name"));
             vm.setDescription(entity.get("description"));
+            vm.setType(entity.get("vmtype", PowerShellVmType.class).map());
             vm.setMemory(entity.get("memorysize", Integer.class) * 1024L * 1024L);
             vm.setCdIsoPath(entity.get("cdisopath"));
 

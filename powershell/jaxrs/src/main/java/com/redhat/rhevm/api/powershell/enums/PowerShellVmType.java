@@ -20,6 +20,8 @@ package com.redhat.rhevm.api.powershell.enums;
 
 import java.util.HashMap;
 
+import com.redhat.rhevm.api.model.VmType;
+
 public enum PowerShellVmType {
     Desktop(0), Server(1);
 
@@ -39,6 +41,18 @@ public enum PowerShellVmType {
 
     public int getValue() {
         return value;
+    }
+
+    public VmType map() {
+        switch (this) {
+        case Desktop:
+            return VmType.DESKTOP;
+        case Server:
+            return VmType.SERVER;
+        default:
+            assert false : this;
+            return null;
+        }
     }
 
     public static PowerShellVmType forValue(int value) {

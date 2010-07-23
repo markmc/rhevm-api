@@ -171,7 +171,7 @@ class StorageDomain(Base):
 class VM(Base):
     NAME = "vm"
     COLLECTION = "vms"
-    ELEMENTS = Base.ELEMENTS + ['status', 'memory', 'os', 'cpu', 'cluster', 'template', 'vmpool']
+    ELEMENTS = Base.ELEMENTS + ['type', 'status', 'memory', 'os', 'cpu', 'cluster', 'template', 'vmpool']
 
 class VmPool(Base):
     NAME = "vmpool"
@@ -181,7 +181,7 @@ class VmPool(Base):
 class Template(Base):
     NAME = "template"
     COLLECTION = "templates"
-    ELEMENTS = Base.ELEMENTS + ['status', 'memory', 'os', 'cpu', 'cluster', 'vm']
+    ELEMENTS = Base.ELEMENTS + ['type', 'status', 'memory', 'os', 'cpu', 'cluster', 'vm']
 
 TYPES = [ Action, Actions, Attachment, Boot, CdRom, Cluster, CPU, DataCenter, Disk, GracePeriod, Host, IP, Iso, Link, MAC, Network, NIC, OS, Storage, StorageDomain, Template, Topology, VLAN, VM, VmPool ]
 

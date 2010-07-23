@@ -31,6 +31,7 @@ import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
+import com.redhat.rhevm.api.common.util.ReflectionHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
@@ -96,6 +97,9 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
         }
         if (vm.getDescription() != null) {
             buf.append("$v.description = " + PowerShellUtils.escape(vm.getDescription()) + ";");
+        }
+        if (vm.getType() != null) {
+            buf.append("$v.vmtype = " + ReflectionHelper.capitalize(vm.getType().toString().toLowerCase()) + ";");
         }
         if (vm.isSetMemory()) {
             buf.append(" $v.memorysize = " + Math.round((double)vm.getMemory()/(1024*1024)) + ";");

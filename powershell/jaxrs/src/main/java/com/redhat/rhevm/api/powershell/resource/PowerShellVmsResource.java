@@ -24,6 +24,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.common.util.ReflectionHelper;
 import com.redhat.rhevm.api.model.CpuTopology;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
@@ -89,6 +90,9 @@ public class PowerShellVmsResource
         }
         buf.append(" -templateobject $templ");
         buf.append(" -hostclusterid " + clusterArg);
+        if (vm.getType() != null) {
+            buf.append(" -vmtype " + ReflectionHelper.capitalize(vm.getType().toString().toLowerCase()));
+        }
         if (vm.isSetMemory()) {
             buf.append(" -memorysize " + Math.round((double)vm.getMemory()/(1024*1024)));
         }

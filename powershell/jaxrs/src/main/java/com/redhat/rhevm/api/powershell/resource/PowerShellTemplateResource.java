@@ -30,6 +30,7 @@ import com.redhat.rhevm.api.resource.TemplateResource;
 import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
+import com.redhat.rhevm.api.common.util.ReflectionHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellTemplate;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
@@ -102,6 +103,9 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
         }
         if (template.getDescription() != null) {
             buf.append("$t.description = " + PowerShellUtils.escape(template.getDescription()) + ";");
+        }
+        if (template.getType() != null) {
+            buf.append("$t.vmtype = " + ReflectionHelper.capitalize(template.getType().toString().toLowerCase()) + ";");
         }
         if (template.isSetMemory()) {
             buf.append(" $t.memsizemb = " + Math.round((double)template.getMemory()/(1024*1024)) + ";");
