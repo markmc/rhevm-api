@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "REST_API_Guide.ent">
+%BOOK_ENTITIES;
+]>
+<chapter id="chap-REST_API_Guide-Authentication">
+  <title>Authentication</title>
+
+  <para>
+    A valid RHEVM username and password must be provided with all invocations on the API, with HTTP Basic Authentication
+    <footnote>
+      <para>
+        Basic Authentication is described in <ulink url="http://tools.ietf.org/html/rfc2617">RFC 2617 HTTP Authentication: Basic and Digest Access Authentication</ulink>.
+      </para>
+    </footnote>
+     used to encode these credentials. If an invocation on the API does not include an appropriate <literal>Authorization</literal> header, then a <literal>401 Authorization Required</literal> challenge will be issued, as in the message exchange below:
+  </para>
+
+  <screen>
+HEAD {base} HTTP/1.1
+Host: {host}
+
+HTTP/1.1 401 Authorization Required
+  </screen>
+
+  <para>
+    In this case, the request should be re-issued with an <literal>Authorization</literal> header for the specified realm. The RHEVM domain and user should be encoded in the supplied credentials via the domain\username convention. So for example given the following user details:
+    <informaltable frame="none">
+      <tgroup cols="2">
+        <colspec colwidth="2*"/>
+        <colspec colwidth="5*"/>
+        <tbody>
+          <row>
+            <entry>username</entry>
+            <entry>vdcadmin</entry>
+          </row>
+          <row>
+            <entry>domain</entry>
+            <entry>black.qumranet.com</entry>
+          </row>
+          <row>
+            <entry>password</entry>
+            <entry>123456</entry>
+          </row>
+          <row>
+            <entry>unencoded credentials</entry>
+            <entry>black.qumranet.com\vdcadmin:123456</entry>
+          </row>
+          <row>
+            <entry>base64 encoded credentials</entry>
+            <entry>YmxhY2sucXVtcmFuZXQuY29tXHZkY2FkbWluOjEyMzQ1Ng==</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+    we would encode the credentials as shown:
+  </para>
+
+  <screen>
+HEAD {base} HTTP/1.1
+Host: {host}
+Authorization: Basic YmxhY2sucXVtcmFuZXQuY29tXHZkY2FkbWluOjEyMzQ1Ng==
+
+HTTP/1.1 200 OK
+...
+  </screen>
+
+  <note>
+    <title>Confidentiality</title>
+    <para>
+    Basic authentication involves potentially sensistive information such as passwords being sent in plain text, hence it is recommended that confidentiality is ensured via transport-level encryption.
+    </para>
+  </note>
+
+</chapter>
