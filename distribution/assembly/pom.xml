@@ -397,7 +397,7 @@
             <configuration>
               <tasks>
                 <mkdir dir="${basedir}/target/dependencies/docs" />
-                <get src="http://markmc.fedorapeople.org/rhevm-api/en-US/pdf/Red_Hat_Enterprise_Virtualization-2.2-REST_API_Guide-en-US.pdf" dest="${basedir}/target/dependencies/docs/Red_Hat_Enterprise_Virtualization-2.2-REST_API_Guide-en-US.pdf" />
+                <get src="http://markmc.fedorapeople.org/rhevm-api/en-US/pdf/Red_Hat_Enterprise_Virtualization_REST_API-0.9-REST_API_Guide-en-US.pdf" dest="${basedir}/target/dependencies/docs/Red_Hat_Enterprise_Virtualization_REST_API-0.9-REST_API_Guide-en-US.pdf" />
               </tasks>
             </configuration>
           </execution>
