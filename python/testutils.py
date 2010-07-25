@@ -30,6 +30,7 @@ random.seed()
 
 def parseOptions():
     opts = {
+        'scheme' : 'http',
         'host' : 'localhost',
         'port' : 8080,
         'impl' : None,
@@ -40,7 +41,7 @@ def parseOptions():
 
     oargs = []
     if len(sys.argv) > 1:
-        options, oargs = getopt.getopt(sys.argv[1:], "h:p:i:u:s:d", ["host=", "port=", "impl=", "user=", "secret=", "debug"])
+        options, oargs = getopt.getopt(sys.argv[1:], "h:p:i:u:s:de", ["host=", "port=", "impl=", "user=", "secret=", "debug", "encrypt"])
         for opt, a in options:
             if opt in ("-h", "--host"):
                 opts['host'] = a
@@ -54,13 +55,15 @@ def parseOptions():
                 opts['secret'] = a
             if opt in ("-d", "--debug"):
                 opts['debug'] = True
+            if opt in ("-e", "--encrypt"):
+                opts['scheme'] = 'https'
 
     if opts['impl'] is None:
         opts['urisuffix'] = ''
     else:
         opts['urisuffix'] = '-' + opts['impl']
 
-    opts['uri'] = 'http://%(host)s:%(port)s/rhevm-api%(urisuffix)s/' % opts
+    opts['uri'] = '%(scheme)s://%(host)s:%(port)s/rhevm-api%(urisuffix)s/' % opts
     opts['oargs'] = oargs
 
     return opts

@@ -22,7 +22,10 @@ import base64
 from testutils import debug
 
 def open_connection(opts):
-    cnx = httplib.HTTPConnection(opts['host'], opts['port'])
+    if opts['scheme'] == 'https':
+        cnx = httplib.HTTPSConnection(opts['host'], opts['port'])
+    else:
+        cnx = httplib.HTTPConnection(opts['host'], opts['port'])
     if opts['debug']:
         cnx.set_debuglevel(1)
     return cnx
