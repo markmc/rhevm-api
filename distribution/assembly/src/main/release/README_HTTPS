@@ -1,0 +1,125 @@
+
+= Setting up HTTPS =
+
+By default, rhevm-api uses HTTPS to ensure confidentiality on the
+wire, as potentially sensitive information like passwords are sent
+in plain text under HTTP Basic Authentication.
+
+
+== Key Generation ==
+
+First for testing purposes, generate a self-signed certificate in
+your home directory (this may be replaced later with a cert that
+has been properly signed by a fully-fledged certificate authority).
+
+Unix:
+
+  $ keytool -genkey -alias rhevm -keyalg RSA -keystore ~/rhevm-keystore
+
+Windows:
+
+  > keytool -genkey -alias rhevm -keyalg RSA -keystore %HOME\rhevm-keystore
+
+
+== Deployment Configuration ==
+
+Next configure your favorite servlet container to enable HTTPS with the
+previously generated kesytore.
+
+JBoss:
+------
+
+If you have chosen to deploy the rhevm-api webapp to JBoss, edit
+$JBOSS_HOME/server/default/deploy/jbossweb.sar/server.xml, replacing
+the following lines:
+
+      <!-- SSL/TLS Connector configuration using the admin devl guide keystore
+      <Connector protocol="HTTP/1.1" SSLEnabled="true"
+           port="8443" address="${jboss.bind.address}"
+           scheme="https" secure="true" clientAuth="false"
+           keystoreFile="${jboss.server.home.dir}/conf/chap8.keystore"
+           keystorePass="rmi+ssl" sslProtocol = "TLS" />
+      -->
+
+with:
+
+      <!-- SSL/TLS Connector configuration using our new keystore -->
+      <Connector protocol="HTTP/1.1" SSLEnabled="true"
+           port="8443" address="${jboss.bind.address}"
+           scheme="https" secure="true" clientAuth="false"
+           keystoreFile="${user.home}/rhevm-keystore"
+           keystorePass="password" sslProtocol = "TLS" />
+
+
+Tomcat:
+-------
+
+If on the other hand, you have chosen to deploy on Apache Tomcat, then
+similar changes are required in the $CATALINA_HOME/conf/server.xml,
+replacing:
+
+    <!--
+    <Connector port="8443" maxHttpHeaderSize="8192"
+               maxThreads="150" minSpareThreads="25" maxSpareThreads="75"
+               enableLookups="false" disableUploadTimeout="true"
+               acceptCount="100" scheme="https" secure="true"
+               clientAuth="false" sslProtocol="TLS" />
+    -->
+
+with:
+
+    <Connector port="8443" maxHttpHeaderSize="8192"
+               maxThreads="150" minSpareThreads="25" maxSpareThreads="75"
+               enableLookups="false" disableUploadTimeout="true"
+               acceptCount="100" scheme="https" secure="true"
+               keystoreFile="${user.home}/rhevm_keystore"
+               keystorePass="password"
+               clientAuth="false" sslProtocol="TLS" />
+
+
+== Client Configuration ==
+
+You may or may not need any prior configuration of your HTTPS-capable
+client, depending on its policy with respect to trusting server-side
+certificates.
+
+For example, the python test client will implicitly trust any
+server-side certificate when run with the --encrypt option.
+Or the wget utility supports a --no-check-certificate option
+to allow a self-signed certificate be considered acceptable.
+Alternatively, browsers often provide the capability to set up a
+security exception on the fly, so that you can assign trust to the
+rhevm-api certificate when it is first encountered by the client.
+
+On the other hand, if your client requires trust to be established
+a priori (for example the rhevm-admin CLI), you will need to export
+the certificate and import it into a truststore.
+
+Unix:
+
+  $ keytool -export -alias rhevm -file rhevm.cer \
+      -keystore ~/rhevm-keystore -storepass password
+
+  $ keytool -import -v -trustcacerts -alias rhevm -keypass password \
+      -file rhevm.cer -keystore ~/rhevm-truststore -storepass password
+
+Windows:
+
+  $ keytool -export -alias rhevm -file rhevm.cer ^
+      -keystore %HOME%\rhevm-keystore -storepass password
+
+  $ keytool -export -alias rhevm -file rhevm.cer ^
+      -keystore %HOME%\rhevm-keystore -storepass password
+
+Additionally, if using rhevm-admin CLI, set the following environment
+variables to identify the truststore:
+
+Unix:
+
+  $ export RHEVM_TRUSTSTORE_PATH=$HOME/rhevm-truststore
+  $ export RHEVM_TRUSTSTORE_PASSWORD=password
+
+Windows:
+
+  > set RHEVM_TRUSTSTORE_PATH=%HOME%\rhevm-truststore
+  > set RHEVM_TRUSTSTORE_PASSWORD=password

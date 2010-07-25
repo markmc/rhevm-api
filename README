@@ -4,7 +4,7 @@ This project's goal is to define an official RESTful API for RHEV-M.
 
 See our wiki for more details:
 
-  https://fedorahosted.org/rhevm-api/
+  http://fedorahosted.org/rhevm-api/
 
 
 == Disclaimers ==
@@ -22,11 +22,15 @@ The rhevm-api-powershell.war is designed to be deployed to a Java EE
 servlet container (such as JBoss EAP/AS or Apache Tomcat) running on
 your a machine alongside a RHEV-M 2.2 installation.
 
+By default, RHEVM-API uses HTTPS for encryption on the wire. See
+distribution/assembly/src/main/release/README_HTTPS for details on
+how to set this up.
+
 Below are instructions for deploying to JBoss and Tomcat. In both cases,
 once the application server is running, you should be able to connect to
 the API via the following URL:
 
-  http://$host:$port/rhevm-api-powershell/
+  https://$host:$port/rhevm-api-powershell/
 
 JBoss:
 ------
@@ -109,38 +113,6 @@ And test it using the python tests:
 == Using the Command Line Interface ==
 
 The RHEVM-API project provides a simple CLI with command-completion
-based on the Apache Felix Gogo shell. Using the CLI currently requires
-an external installation of Apache ServiceMix for convenience, but
-ultimately we intend to provide a more minimal option based on the
-Karaf shell plus a JAX-RS provider implementation.
-
-To install ServiceMix:
-
- $> wget https://repository.apache.org/content/repositories/releases/org/apache/servicemix/apache-servicemix/4.2.0/apache-servicemix-4.2.0.tar.gz
-$> tar -xvzf apache-servicemix-4.2.0.tar.gz
-$> cd apache-servicemix-4.2.0
-
-Then simply launch ServiceMix:
-
-$> bin/servicemix
-
-The very first time you run it, allow ServiceMix a few seconds to
-activate all the system bundles, then run the following commands to
-install the CXF JAX-RS provider and the RHEVM-API components:
-
-karaf@root> features:addUrl mvn:com.redhat.rhevm.api/rhevm-api-cli/0.1-SNAPSHOT/xml/features
-
-karaf@root> features:install rhevm-api-cli
-
-Then the vms commands will become available via tab-completion, so for
-example v<TAB>l<TAB> will resolve to "vms:list", whereas v<TAB>sh<TAB>
-vm<TAB> will resolve to vms:shutdown with a list of VM names to choose
-from.
-
-The --help option is supported with each command giving basic
-man-style documentation.
-
-By default the base URL used matches the port for deployment option #2
-described above, but this can be over-ridden, for example:
-
-$> export JAVA_OPTS=-Drhevm.base.url=http://localhost:8080/rhevm-api-mock
+based on the Apache Felix Gogo shell. To use the CLI, simply install
+a built RHEVM-API distribution and see rhevm-admin/README for more
+details.

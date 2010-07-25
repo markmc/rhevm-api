@@ -28,6 +28,8 @@ the API via the following URL:
 
   http://$host:$port/rhevm-api-powershell/
 
+from which you will be re-directed to the configured HTTPS port.
+
 JBoss:
 ------
 

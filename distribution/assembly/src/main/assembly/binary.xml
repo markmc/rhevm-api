@@ -99,6 +99,14 @@
     </file>
 
     <file>
+      <source>${basedir}/src/main/release/README_HTTPS</source>
+      <outputDirectory>/</outputDirectory>
+      <destName>README_HTTPS${text.extension}</destName>
+      <fileMode>0644</fileMode>
+      <lineEnding>${line.ending}</lineEnding>
+    </file>
+
+    <file>
       <source>${basedir}/src/main/release/NOTICE</source>
       <outputDirectory>/</outputDirectory>
       <destName>NOTICE${text.extension}</destName>
