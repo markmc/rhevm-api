@@ -26,9 +26,10 @@ Below are instructions for deploying to JBoss and Tomcat. In both cases,
 once the application server is running, you should be able to connect to
 the API via the following URL:
 
-  http://$host:$port/rhevm-api-powershell/
+  https://$host:$port/rhevm-api-powershell/
 
-from which you will be re-directed to the configured HTTPS port.
+where $port is the configured configured HTTPS port (see README_HTTPS
+for further details on HTTPS configuation).
 
 JBoss:
 ------
@@ -48,10 +49,7 @@ Steps:
 
        jboss-5.1.0.GA\server\default\deploy
 
-  4) RHEV-M is probably already using port 8080, so change the port
-     number in:
-
-       jboss-5.1.0.GA\server\default\conf\bindingservice.beans\META-INF\bindings-jboss-beans.xml
+  4) Ensure HTTPS is configured as described in README_HTTPS
 
   5) Run JBoss:
 
@@ -74,10 +72,7 @@ To run rhevm-api under Apache Tomcat 5.5.x, follow these steps:
 
        apache-tomcat-5.5.29\webapps
 
-  4) RHEV-M is probably already using port 8080, so change the port
-     number in:
-
-       apache-tomcat-5.5.29\conf\server.xml
+  4) Ensure HTTPS is configured as described in README_HTTPS
 
   5) Run Tomcat:
 

@@ -9,17 +9,17 @@ in plain text under HTTP Basic Authentication.
 == Key Generation ==
 
 First for testing purposes, generate a self-signed certificate in
-your home directory (this may be replaced later with a cert that
+the current directory (this may be replaced later with a cert that
 has been properly signed by a fully-fledged certificate authority).
 
 Unix:
 
-  $ keytool -genkey -alias rhevm -keyalg RSA -keystore ~/rhevm-keystore \
+  $ keytool -genkey -alias rhevm -keyalg RSA -keystore rhevm-keystore \
       -keypass password -storepass password
 
 Windows:
 
-  > keytool -genkey -alias rhevm -keyalg RSA -keystore %HOME%\rhevm-keystore ^
+  > keytool -genkey -alias rhevm -keyalg RSA -keystore rhevm-keystore ^
       -keypass password -storepass password
 
 == Deployment Configuration ==
@@ -48,9 +48,12 @@ with:
       <Connector protocol="HTTP/1.1" SSLEnabled="true"
            port="8443" address="${jboss.bind.address}"
            scheme="https" secure="true" clientAuth="false"
-           keystoreFile="${user.home}/rhevm-keystore"
+           keystoreFile="${jboss.server.home.dir}/conf/rhevm-keystore"
            keystorePass="password" sslProtocol = "TLS" />
 
+Copy the keystore generated earlier to $JBOSS_HOME/server/default/conf
+or whatever other directory is convenient to reference from the configuration
+above.
 
 Tomcat:
 -------
@@ -73,9 +76,12 @@ with:
                maxThreads="150" minSpareThreads="25" maxSpareThreads="75"
                enableLookups="false" disableUploadTimeout="true"
                acceptCount="100" scheme="https" secure="true"
-               keystoreFile="${user.home}/rhevm_keystore"
+               keystoreFile="${catalina.home}/conf/rhevm-keystore"
                keystorePass="password"
                clientAuth="false" sslProtocol="TLS" />
+
+Copy the keystore generated earlier to $CATALINA_HOME/conf or whatever
+other directory is convenient to reference from the configuration above.
 
 
 == Client Configuration ==
@@ -99,28 +105,31 @@ the certificate and import it into a truststore.
 Unix:
 
   $ keytool -export -alias rhevm -file rhevm.cer \
-      -keystore ~/rhevm-keystore -storepass password
+      -keystore rhevm-keystore -storepass password
 
   $ keytool -import -v -trustcacerts -alias rhevm -keypass password \
-      -file rhevm.cer -keystore ~/rhevm-truststore -storepass password
+      -file rhevm.cer -keystore rhevm-truststore -storepass password
 
 Windows:
 
   $ keytool -export -alias rhevm -file rhevm.cer ^
-      -keystore %HOME%\rhevm-keystore -storepass password
+      -keystore rhevm-keystore -storepass password
 
   $ keytool -import -v -trustcacerts -alias rhevm -keypass password ^
-      -file rhevm.cer -keystore %HOME%\rhevm-truststore -storepass password
+      -file rhevm.cer -keystore rhevm-truststore -storepass password
 
 Additionally, if using rhevm-admin CLI, set the following environment
 variables to identify the truststore:
 
 Unix:
 
-  $ export RHEVM_TRUSTSTORE_PATH=$HOME/rhevm-truststore
+  $ export RHEVM_TRUSTSTORE_PATH=rhevm-truststore
   $ export RHEVM_TRUSTSTORE_PASSWORD=password
 
 Windows:
 
-  > set RHEVM_TRUSTSTORE_PATH=%HOME%\rhevm-truststore
+  > set RHEVM_TRUSTSTORE_PATH=rhevm-truststore
   > set RHEVM_TRUSTSTORE_PASSWORD=password
+
+Assuming the rhevm-truststore generated earlier has been copied to the
+directory you are running rhevm-admin from.

@@ -38,7 +38,7 @@ man-style documentation.
 By default the base URL used includes the port 8080, but this can be
 over-ridden, for example by setting:
 
- $> export RHEVM_API_URL=http://localhost:8081/rhevm-api-mock
+ $> export RHEVM_API_URL=https://localhost:8443/rhevm-api-mock
 
 To exit the CLI, use the shutdown command.
 
@@ -56,6 +56,8 @@ following variables are set:
 The Windows domain may be embedded in the username via the usual convention:
 
   domainname\username
+
+See ../README_HTTPS for further details on HTTPS setup.
 
 
 Scripting with the CLI
