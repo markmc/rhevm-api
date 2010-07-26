@@ -111,6 +111,7 @@
                     <property name="jboss.home" value="${jboss.dir}/jboss-${jboss.version}" />
                     <property name="jboss.bin" value="${jboss.home}/bin" />
                     <property name="results.dir" value="${project.build.directory}/itests/results" />
+                    <property name="key.dir" value="${project.build.directory}/itests/keys" />
                     <path id="itests.classpath">
                       <pathelement path="${maven.test.classpath}" />
                       <pathelement path="${maven.plugin.classpath}" />

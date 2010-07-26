@@ -14,12 +14,13 @@ has been properly signed by a fully-fledged certificate authority).
 
 Unix:
 
-  $ keytool -genkey -alias rhevm -keyalg RSA -keystore ~/rhevm-keystore
+  $ keytool -genkey -alias rhevm -keyalg RSA -keystore ~/rhevm-keystore \
+      -keypass password -storepass password
 
 Windows:
 
-  > keytool -genkey -alias rhevm -keyalg RSA -keystore %HOME\rhevm-keystore
-
+  > keytool -genkey -alias rhevm -keyalg RSA -keystore %HOME%\rhevm-keystore ^
+      -keypass password -storepass password
 
 == Deployment Configuration ==
 
@@ -108,8 +109,8 @@ Windows:
   $ keytool -export -alias rhevm -file rhevm.cer ^
       -keystore %HOME%\rhevm-keystore -storepass password
 
-  $ keytool -export -alias rhevm -file rhevm.cer ^
-      -keystore %HOME%\rhevm-keystore -storepass password
+  $ keytool -import -v -trustcacerts -alias rhevm -keypass password ^
+      -file rhevm.cer -keystore %HOME%\rhevm-truststore -storepass password
 
 Additionally, if using rhevm-admin CLI, set the following environment
 variables to identify the truststore:

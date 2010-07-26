@@ -35,7 +35,11 @@
                  processname="rhevm-admin">
         <envset>
           <env key="RHEVM_API_URL"
-               value="http://localhost:${jboss.http}/${rhevm.api.impl}"/>
+               value="https://localhost:${jboss.http}/${rhevm.api.impl}"/>
+          <env key="RHEVM_USERNAME" value="domain\user"/>
+          <env key="RHEVM_PASSWORD" value="123456"/>
+          <env key="RHEVM_TRUSTSTORE_PATH" value="${key.dir}/rhevm-truststore"/>
+          <env key="RHEVM_TRUSTSTORE_PASSWORD" value="password"/>
         </envset>
         <arg value="server"/>
       </xh-execbg>

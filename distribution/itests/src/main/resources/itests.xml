@@ -26,6 +26,10 @@
           <xh-exec executable="python">
             <arg value="${rhevm-admin.home}/../python/test.py"/>
             <arg value="--port=${jboss.http}"/>
+            <arg value="--impl=mock"/>
+            <arg value="--user=domain\user"/>
+            <arg value="--secret=123456"/>
+            <arg value="--encrypt"/>
             <arg value="--debug"/>
           </xh-exec>
           <output-has pattern="Broken immutability constraint"/>

@@ -2,7 +2,7 @@
 <project name="RHEVM-API Integration Test Setup">
 
   <!-- using standard ports offset by 100 to avoid clashes -->
-  <property name="jboss.http" value="8180"/>
+  <property name="jboss.http" value="8543"/>
   <property name="jboss.rmi" value="1199"/>
 
 
@@ -37,8 +37,39 @@
     </xh-exec>
   </target>
 
+  <target name="setup.keys">
+    <delete dir="${key.dir}" failonerror="false" />
+    <mkdir dir="${key.dir}" />
+    <exec executable="${java.home}/bin/keytool">
+      <arg value="-genkey" />
+      <arg line="-alias rhevm" />
+      <arg line="-keyalg RSA" />
+      <arg line="-dname 'cn=localhost, ou=rhevm-api, o=fedorahosted.org, c=IE'" />
+      <arg line="-keypass password -storepass password" />
+      <arg line="-keystore ${key.dir}/rhevm-keystore" />
+    </exec>
+    <exec executable="${java.home}/bin/keytool">
+      <arg value="-export" />
+      <arg line="-alias rhevm" />
+      <arg line="-file ${key.dir}/rhevm.cer" />
+      <arg line="-storepass password" />
+      <arg line="-keystore ${key.dir}/rhevm-keystore" />
+    </exec>
+    <exec executable="${java.home}/bin/keytool">
+      <arg value="-import"/>
+      <arg line="-v -trustcacerts -noprompt" />
+      <arg line="-alias rhevm" />
+      <arg line="-file ${key.dir}/rhevm.cer" />
+      <arg line="-keypass password -storepass password" />
+      <arg line="-keystore ${key.dir}/rhevm-truststore" />
+    </exec>
+    <filter token="KEY_DIR" value="${key.dir}"/>
+    <copy todir="${jboss.home}/server/default/deploy/jbossweb.sar" filtering="on">
+      <fileset dir="${basedir}/src/main/filtered-resources" includes="server.xml" />
+    </copy>
+  </target>
 
-  <target name="setup" depends="setup.xharness,setup.platform">
+  <target name="setup" depends="setup.xharness,setup.platform,setup.keys">
     <antcall target="setup.modes"/>
     <available file="${results.dir}" type="dir" property="have.old.results"/>
     <antcall target="archive.old.results"/>
