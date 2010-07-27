@@ -107,15 +107,15 @@ Unix:
   $ keytool -export -alias rhevm -file rhevm.cer \
       -keystore rhevm-keystore -storepass password
 
-  $ keytool -import -v -trustcacerts -alias rhevm -keypass password \
+  $ keytool -import -v -trustcacerts -noprompt -alias rhevm -keypass password \
       -file rhevm.cer -keystore rhevm-truststore -storepass password
 
 Windows:
 
-  $ keytool -export -alias rhevm -file rhevm.cer ^
+  > keytool -export -alias rhevm -file rhevm.cer ^
       -keystore rhevm-keystore -storepass password
 
-  $ keytool -import -v -trustcacerts -alias rhevm -keypass password ^
+  > keytool -import -v -trustcacerts -noprompt -alias rhevm -keypass password ^
       -file rhevm.cer -keystore rhevm-truststore -storepass password
 
 Additionally, if using rhevm-admin CLI, set the following environment
@@ -123,12 +123,12 @@ variables to identify the truststore:
 
 Unix:
 
-  $ export RHEVM_TRUSTSTORE_PATH=rhevm-truststore
+  $ export RHEVM_TRUSTSTORE_PATH=./rhevm-truststore
   $ export RHEVM_TRUSTSTORE_PASSWORD=password
 
 Windows:
 
-  > set RHEVM_TRUSTSTORE_PATH=rhevm-truststore
+  > set RHEVM_TRUSTSTORE_PATH=.\rhevm-truststore
   > set RHEVM_TRUSTSTORE_PASSWORD=password
 
 Assuming the rhevm-truststore generated earlier has been copied to the
