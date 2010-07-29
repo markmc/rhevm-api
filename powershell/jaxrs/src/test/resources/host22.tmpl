@@ -1,0 +1,32 @@
+  <!-- args: id, name, description, clusterId, address, port -->
+  <Object Type="RhevmCmd.CLIHost">
+    <Property Name="HostId" Type="System.Int32">{0}</Property>
+    <Property Name="HostClusterId" Type="System.Int32">0</Property>
+    <Property Name="Name" Type="System.String">{1}</Property>
+    <Property Name="Address" Type="System.String">{4}</Property>
+    <Property Name="HostType" Type="System.String">RHEL</Property>
+    <Property Name="Port" Type="System.Int32">{5}</Property>
+    <Property Name="HostVersion" Type="System.String">2.2.0.62</Property>
+    <Property Name="UseSecureConnection" Type="System.Boolean">True</Property>
+    <Property Name="Status" Type="System.String">Up</Property>
+    <Property Name="SpmStatus" Type="VdcDAL.VdsSpmStatus">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="HardwareAccelerationEnabled" Type="System.Boolean">True</Property>
+    <Property Name="Protocol" Type="System.Decimal">4.5</Property>
+    <Property Name="VmCount" Type="System.Int32">1</Property>
+    <Property Name="VmActive" Type="System.Int32">1</Property>
+    <Property Name="VmMigrating" Type="System.Int32">0</Property>
+    <Property Name="HostStrength" Type="System.Int32">100</Property>
+    <Property Name="PowerManagement" Type="RhevmCmd.CLIHostPowerManagement">
+      <Property Name="Enabled" Type="System.Boolean">True</Property>
+      <Property Name="Address" Type="System.String">10.4.81.151</Property>
+      <Property Name="Type" Type="System.String">ilo</Property>
+      <Property Name="UserName" Type="System.String">redhat</Property>
+      <Property Name="Password" Type="System.String">**********</Property>
+      <Property Name="Port" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+      <Property Name="Slot" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+      <Property Name="Secure" Type="System.Boolean">False</Property>
+      <Property Name="Options" Type="System.String">secure=false</Property>
+    </Property>
+  </Object>

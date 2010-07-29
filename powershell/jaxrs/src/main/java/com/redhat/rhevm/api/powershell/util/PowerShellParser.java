@@ -185,6 +185,10 @@ public class PowerShellParser {
             return properties.get(name).getValue(type);
         }
 
+        public Object get(String name, Class<?> current, Class<?> legacy) {
+            return properties.get(name).getValue(current, legacy);
+        }
+
         public String get(String name) {
             return properties.get(name).getValue(String.class);
         }
@@ -232,7 +236,15 @@ public class PowerShellParser {
         public <T> T getValue(Class<T> type) {
             return type.cast(value);
         }
-
+        public Object getValue(Class<?> current, Class<?> legacy) {
+            if (current.isAssignableFrom(value.getClass())) {
+                return current.cast(value);
+            } else if (legacy.isAssignableFrom(value.getClass())) {
+                return legacy.cast(value);
+            } else {
+                return null;
+            }
+        }
         public boolean isValueSet() {
             return value != null;
         }

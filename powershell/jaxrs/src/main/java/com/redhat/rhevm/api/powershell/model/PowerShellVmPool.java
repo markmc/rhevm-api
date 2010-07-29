@@ -34,7 +34,7 @@ public class PowerShellVmPool {
         for (PowerShellParser.Entity entity : parser.parse(output)) {
             VmPool pool = new VmPool();
 
-            pool.setId(entity.get("vmpoolid"));
+            pool.setId(entity.get("vmpoolid", String.class, Integer.class).toString());
             pool.setName(entity.get("name"));
             pool.setDescription(entity.get("description"));
             pool.setSize(entity.get("vmcount", Integer.class));

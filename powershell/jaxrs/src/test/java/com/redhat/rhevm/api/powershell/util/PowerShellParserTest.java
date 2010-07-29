@@ -19,6 +19,7 @@
 package com.redhat.rhevm.api.powershell.util;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -27,6 +28,16 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import com.redhat.rhevm.api.powershell.enums.EnumMapper;
 
 public class PowerShellParserTest extends Assert {
+
+    private PowerShellParser parser;
+
+    @Before
+    public void setUp() throws Exception {
+        parser = new PowerShellParser();
+
+        parser.setDocumentBuilder(DocumentBuilderFactory.newInstance().newDocumentBuilder());
+        parser.setEnumMapper(new EnumMapper());
+    }
 
     @Test
     public void testParse() throws Exception {
@@ -43,14 +54,32 @@ public class PowerShellParserTest extends Assert {
             "vm.xml"
         };
 
-        PowerShellParser p = new PowerShellParser();
-
-        p.setDocumentBuilder(DocumentBuilderFactory.newInstance().newDocumentBuilder());
-        p.setEnumMapper(new EnumMapper());
-
         for (int i = 0; i < files.length; i++) {
-            p.parse(PowerShellTestUtils.readClassPathFile(files[i]));
+            parser.parse(PowerShellTestUtils.readClassPathFile(files[i]));
         }
+    }
 
+    @Test
+    public void testParse22() throws Exception {
+
+        PowerShellParser.Entity cluster =
+            parser.parse(PowerShellTestUtils.readClassPathFile("cluster22.xml")).get(0);
+        verifyId(cluster, "clusterid", "0");
+
+        PowerShellParser.Entity host =
+            parser.parse(PowerShellTestUtils.readClassPathFile("host22.xml")).get(0);
+        verifyId(host, "hostid", "1");
+        verifyId(host, "hostclusterid", "0");
+
+        PowerShellParser.Entity vmpool =
+            parser.parse(PowerShellTestUtils.readClassPathFile("vmpool22.xml")).get(0);
+        verifyId(vmpool, "vmpoolid", "2");
+    }
+
+    private void verifyId(PowerShellParser.Entity entity, String property, String expected) {
+        assertEquals(expected,
+                     entity.get(property,
+                                String.class,
+                                Integer.class).toString());
     }
 }

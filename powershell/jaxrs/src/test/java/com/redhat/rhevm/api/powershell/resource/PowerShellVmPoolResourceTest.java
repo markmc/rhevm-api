@@ -54,13 +54,21 @@ public class PowerShellVmPoolResourceTest extends AbstractPowerShellResourceTest
     }
 
     protected String formatVmPool(String name) {
-        return formatXmlReturn("vmpool",
+        return formatVmPool("vmpool", name);
+    }
+
+    protected String formatVmPool(String type, String name) {
+        return formatXmlReturn(type,
                                new String[] { name },
                                new String[] { "" },
                                PowerShellVmPoolsResourceTest.extraArgs);
     }
 
     protected String formatCluster(String name) {
+        return formatCluster("cluster", name);
+    }
+
+    protected String formatCluster(String type, String name) {
         return formatXmlReturn("cluster",
                                new String[] { name },
                                new String[] { "" },
@@ -81,6 +89,20 @@ public class PowerShellVmPoolResourceTest extends AbstractPowerShellResourceTest
                                PowerShellVmPoolsResourceTest.LOOKUP_TEMPLATE_COMMAND };
         String [] returns  = { formatVmPool(POOL_NAME),
                                formatCluster(PowerShellVmPoolsResourceTest.CLUSTER_NAME),
+                               formatTemplate(PowerShellVmPoolsResourceTest.TEMPLATE_NAME) };
+
+        verifyVmPool(
+            resource.get(setUpVmPoolExpectations(commands, returns, POOL_NAME)),
+            POOL_NAME);
+    }
+
+    @Test
+    public void testGet22() throws Exception {
+        String [] commands = { GET_COMMAND,
+                               PowerShellVmPoolsResourceTest.LOOKUP_CLUSTER_COMMAND,
+                               PowerShellVmPoolsResourceTest.LOOKUP_TEMPLATE_COMMAND };
+        String [] returns  = { formatVmPool("vmpool22", POOL_NAME),
+                               formatCluster("cluster22", PowerShellVmPoolsResourceTest.CLUSTER_NAME),
                                formatTemplate(PowerShellVmPoolsResourceTest.TEMPLATE_NAME) };
 
         verifyVmPool(

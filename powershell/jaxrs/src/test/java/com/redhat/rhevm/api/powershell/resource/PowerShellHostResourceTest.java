@@ -60,7 +60,11 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
     }
 
     protected String formatHost(String name) {
-        String ret = formatXmlReturn("host",
+        return formatHost("host", name);
+    }
+
+    protected String formatHost(String type, String name) {
+        String ret = formatXmlReturn(type,
                                new String[] { name },
                                new String[] { "" },
                                PowerShellHostsResourceTest.extraArgs);
@@ -73,6 +77,15 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
         verifyHost(
             resource.get(setUpHostExpectations(GET_COMMAND,
                                                formatHost(HOST_NAME),
+                                               HOST_NAME)),
+            HOST_NAME);
+    }
+
+    @Test
+    public void testGet22() throws Exception {
+        verifyHost(
+            resource.get(setUpHostExpectations(GET_COMMAND,
+                                               formatHost("host22", HOST_NAME),
                                                HOST_NAME)),
             HOST_NAME);
     }

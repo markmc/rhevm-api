@@ -35,7 +35,7 @@ public class PowerShellCluster {
         for (PowerShellParser.Entity entity : parser.parse(output)) {
             Cluster cluster = new Cluster();
 
-            cluster.setId(entity.get("clusterid"));
+            cluster.setId(entity.get("clusterid", String.class, Integer.class).toString());
             cluster.setName(entity.get("name"));
             cluster.setDescription(entity.get("description"));
 

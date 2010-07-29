@@ -53,7 +53,7 @@ public class PowerShellHost {
         for (PowerShellParser.Entity entity : parser.parse(output)) {
             Host host = new Host();
 
-            host.setId(entity.get("hostid"));
+            host.setId(entity.get("hostid", String.class, Integer.class).toString());
             host.setName(entity.get("name"));
             host.setStatus(parseStatus(entity.get("status")));
 
