@@ -55,6 +55,13 @@ Copy the keystore generated earlier to $JBOSS_HOME/server/default/conf
 or whatever other directory is convenient to reference from the configuration
 above.
 
+If you run into a problem whereby plain old HTTP is being served out from
+the HTTPS port, it may be due to APR/OpenSSL being configured instead of
+JSSE. In that case, you'll need to add the following attribute to the
+Connector element given above:
+
+               protocol="org.apache.coyote.http11.Http11Protocol"
+
 Tomcat:
 -------
 
@@ -82,6 +89,13 @@ with:
 
 Copy the keystore generated earlier to $CATALINA_HOME/conf or whatever
 other directory is convenient to reference from the configuration above.
+
+If you run into a problem whereby plain old HTTP is being served out from
+the HTTPS port, it may be due to APR/OpenSSL being configured instead of
+JSSE. In that case, you'll need to add the following attribute to the
+Connector element given above:
+
+               protocol="org.apache.coyote.http11.Http11Protocol"
 
 
 == Client Configuration ==
