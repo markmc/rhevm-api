@@ -74,7 +74,14 @@ To run rhevm-api under Apache Tomcat 5.5.x, follow these steps:
 
   4) Ensure HTTPS is configured as described in README_HTTPS
 
-  5) Run Tomcat:
+  5) Ensure you have a full JDK installed, not just a client JRE.  In order
+     for Tomcat to use the server JVM with sufficient memory, set e.g.:
+
+       set JAVA_HOME=\Program Files\Java\jdk1.6.0_20
+       set JRE_HOME=\Program Files\Java\jdk1.6.0_20
+       set JAVA_OPTS=-server -Xmx1024M -XX:MaxPermSize=256M
+
+  6) Run Tomcat:
 
        apache-tomcat-5.5.29\bin\startup.bat
 
