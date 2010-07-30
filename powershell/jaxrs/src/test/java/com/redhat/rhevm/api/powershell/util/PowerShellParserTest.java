@@ -26,6 +26,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import com.redhat.rhevm.api.powershell.enums.EnumMapper;
+import com.redhat.rhevm.api.powershell.enums.PowerShellStorageDomainStatus;
 
 public class PowerShellParserTest extends Assert {
 
@@ -73,6 +74,10 @@ public class PowerShellParserTest extends Assert {
         PowerShellParser.Entity vmpool =
             parser.parse(PowerShellTestUtils.readClassPathFile("vmpool22.xml")).get(0);
         verifyId(vmpool, "vmpoolid", "2");
+
+        PowerShellParser.Entity storageDomain =
+            parser.parse(PowerShellTestUtils.readClassPathFile("storagedomain22.xml")).get(0);
+        assertNull(storageDomain.get("status", PowerShellStorageDomainStatus.class));
     }
 
     @Test

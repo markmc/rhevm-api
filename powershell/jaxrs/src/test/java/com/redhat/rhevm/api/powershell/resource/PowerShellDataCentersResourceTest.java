@@ -43,7 +43,11 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
     }
 
     protected String formatStorageDomain(String name) {
-        return formatXmlReturn("storagedomain", new String[] { name }, new String[] { "" }, new String[] {});
+        return formatStorageDomain("storagedomain", name);
+    }
+
+    protected String formatStorageDomain(String type, String name) {
+        return formatXmlReturn(type, new String[] { name }, new String[] { "" }, new String[] {});
     }
 
     @Test
@@ -56,6 +60,21 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
                                formatStorageDomain("mimas"),
                                formatStorageDomain("dione"),
                                formatStorageDomain("titan") };
+         verifyCollection(
+             resource.list(setUpResourceExpectations(4, commands, returns, false, null, NAMES)).getDataCenters(),
+             NAMES, DESCRIPTIONS);
+    }
+
+    @Test
+    public void testList22() throws Exception {
+        String [] commands = { getSelectCommand(),
+                               GET_STORAGE_COMMAND + "\"" + NAMES[0].hashCode() + "\"",
+                               GET_STORAGE_COMMAND + "\"" + NAMES[1].hashCode() + "\"",
+                               GET_STORAGE_COMMAND + "\"" + NAMES[2].hashCode() + "\"" };
+        String [] returns =  { getSelectReturn(),
+                               formatStorageDomain("storagedomain22", "mimas"),
+                               formatStorageDomain("storagedomain22", "dione"),
+                               formatStorageDomain("storagedomain22", "titan") };
          verifyCollection(
              resource.list(setUpResourceExpectations(4, commands, returns, false, null, NAMES)).getDataCenters(),
              NAMES, DESCRIPTIONS);

@@ -134,12 +134,12 @@ public class PowerShellVM extends VM {
 
             if (!entity.get("runningonhost").equals(UUID.EMPTY)) {
                 Host host = new Host();
-                host.setId(entity.get("runningonhost"));
+                host.setId(entity.get("runningonhost", String.class, Integer.class).toString());
                 vm.setHost(host);
             }
 
             Cluster cluster = new Cluster();
-            cluster.setId(entity.get("hostclusterid"));
+            cluster.setId(entity.get("hostclusterid", String.class, Integer.class).toString());
             vm.setCluster(cluster);
 
             Template template = new Template();

@@ -59,8 +59,17 @@ public class PowerShellStorageDomain extends StorageDomain {
             }
             storageDomain.setType(StorageDomainType.fromValue(domainType));
 
-            storageDomain.setStatus(entity.get("status", PowerShellStorageDomainStatus.class).map());
-            storageDomain.setSharedStatus(entity.get("sharedstatus", PowerShellStorageDomainSharedStatus.class).map());
+            PowerShellStorageDomainStatus status =
+                entity.get("status", PowerShellStorageDomainStatus.class);
+            if (status != null) {
+                storageDomain.setStatus(status.map());
+            }
+
+            PowerShellStorageDomainSharedStatus sharedStatus =
+                entity.get("sharedstatus", PowerShellStorageDomainSharedStatus.class);
+            if (sharedStatus != null) {
+                storageDomain.setSharedStatus(sharedStatus.map());
+            }
 
             Storage storage = new Storage();
 

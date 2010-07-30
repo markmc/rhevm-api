@@ -72,7 +72,7 @@ public class PowerShellTemplate extends Template {
             template.setOs(os);
 
             Cluster cluster = new Cluster();
-            cluster.setId(entity.get("hostclusterid"));
+            cluster.setId(entity.get("hostclusterid", String.class, Integer.class).toString());
             template.setCluster(cluster);
 
             ret.add(template);
