@@ -16,5 +16,12 @@ fi
 if [ "x$RHEVM_TRUSTSTORE_PASSWORD" = "x" ]; then
   RHEVM_TRUSTSTORE_PASSWORD=
 fi
-export JAVA_OPTS="-Drhevm.base.url=$RHEVM_API_URL -Drhevm.auth.username=$RHEVM_USERNAME -Drhevm.auth.password=$RHEVM_PASSWORD -Drhevm.truststore.path=$RHEVM_TRUSTSTORE_PATH -Drhevm.truststore.password=$RHEVM_TRUSTSTORE_PASSWORD"
+
+RHEVM_JAVA_OPTS="-Drhevm.base.url=$RHEVM_API_URL -Drhevm.auth.username=$RHEVM_USERNAME -Drhevm.auth.password=$RHEVM_PASSWORD -Drhevm.truststore.path=$RHEVM_TRUSTSTORE_PATH -Drhevm.truststore.password=$RHEVM_TRUSTSTORE_PASSWORD"
+if [ "x$JAVA_OPTS" = "x" ]; then
+  export JAVA_OPTS="$RHEVM_JAVA_OPTS"
+else
+  JAVA_OPTS="$JAVA_OPTS $RHEVM_JAVA_OPTS"
+fi
+
 $DIRNAME/karaf $@
