@@ -59,7 +59,7 @@ public class PowerShellParser {
         return contents.replaceAll("\r", "").replaceAll("\n", "");
     }
 
-    public List<Entity> parse(String contents) {
+    public synchronized List<Entity> parse(String contents) {
         log.info("Parsing powershell output '" + contents + "'");
         InputSource source = new InputSource(new StringReader(stripNewlines(contents)));
         Node doc;

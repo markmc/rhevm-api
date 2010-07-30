@@ -29,6 +29,19 @@ import com.redhat.rhevm.api.powershell.enums.EnumMapper;
 
 public class PowerShellParserTest extends Assert {
 
+    private static final String[] FILES = new String[] {
+        "cluster.xml",
+        "datacenter.xml",
+        "disks.xml",
+        "host.xml",
+        "network.xml",
+        "nics.xml",
+        "storagedomain.xml",
+        "template.xml",
+        "vmpool.xml",
+        "vm.xml"
+    };
+
     private PowerShellParser parser;
 
     @Before
@@ -41,27 +54,13 @@ public class PowerShellParserTest extends Assert {
 
     @Test
     public void testParse() throws Exception {
-        String[] files = new String[] {
-            "cluster.xml",
-            "datacenter.xml",
-            "disks.xml",
-            "host.xml",
-            "network.xml",
-            "nics.xml",
-            "storagedomain.xml",
-            "template.xml",
-            "vmpool.xml",
-            "vm.xml"
-        };
-
-        for (int i = 0; i < files.length; i++) {
-            parser.parse(PowerShellTestUtils.readClassPathFile(files[i]));
+        for (int i = 0; i < FILES.length; i++) {
+            parser.parse(PowerShellTestUtils.readClassPathFile(FILES[i]));
         }
     }
 
     @Test
     public void testParse22() throws Exception {
-
         PowerShellParser.Entity cluster =
             parser.parse(PowerShellTestUtils.readClassPathFile("cluster22.xml")).get(0);
         verifyId(cluster, "clusterid", "0");
@@ -74,6 +73,25 @@ public class PowerShellParserTest extends Assert {
         PowerShellParser.Entity vmpool =
             parser.parse(PowerShellTestUtils.readClassPathFile("vmpool22.xml")).get(0);
         verifyId(vmpool, "vmpoolid", "2");
+    }
+
+    @Test
+    public void testConurrentParse()  throws Exception {
+        Thread[] threads = new Thread[FILES.length * 10];
+        for (int i = 0 ; i < threads.length ; i++) {
+            final String file = FILES[i % 10];
+            threads[i] = new Thread(new Runnable() {
+                public void run() {
+                    parser.parse(PowerShellTestUtils.readClassPathFile(file));
+                }
+            });
+        }
+        for (int i = 0 ; i < threads.length ; i++) {
+            threads[i].start();
+        }
+        for (int i = 0 ; i < threads.length ; i++) {
+            threads[i].join();
+        }
     }
 
     private void verifyId(PowerShellParser.Entity entity, String property, String expected) {
