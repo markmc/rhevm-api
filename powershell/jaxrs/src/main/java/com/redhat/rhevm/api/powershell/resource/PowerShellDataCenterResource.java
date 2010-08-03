@@ -104,7 +104,7 @@ public class PowerShellDataCenterResource extends AbstractPowerShellActionableRe
             buf.append("$h.description = " + PowerShellUtils.escape(dataCenter.getDescription()) + ";");
         }
 
-        buf.append("update-datacenter -datacenterobject $v");
+        buf.append("update-datacenter -datacenterobject $h");
 
         return addLinks(runAndParseSingle(buf.toString()));
     }
