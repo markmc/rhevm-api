@@ -30,7 +30,7 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
 
     public static String TEMPLATE_ID = "template1";
     public static String TEMPLATE_NAME = "cookiecutter";
-    public static String CLUSTER_ID = "cluster1";
+    public static String CLUSTER_ID = "1";
     public static String CLUSTER_NAME = "pleiades";
 
     public static int MEMSIZE = 1024;
@@ -38,8 +38,10 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     public static int N_SOCKETS = 2;
     public static int N_CPUS = 4;
     public static String ISO_NAME = "foo.iso";
+    public static String HOST_ID = "2";
+    public static String POOL_ID = "3";
 
-    public static final String[] extraArgs = new String[] { CLUSTER_ID, TEMPLATE_ID, Integer.toString(MEMSIZE), Integer.toString(BOOTSEQUENCE), Integer.toString(N_SOCKETS), Integer.toString(N_CPUS), ISO_NAME };
+    public static final String[] extraArgs = new String[] { CLUSTER_ID, TEMPLATE_ID, Integer.toString(MEMSIZE), Integer.toString(BOOTSEQUENCE), Integer.toString(N_SOCKETS), Integer.toString(N_CPUS), ISO_NAME, HOST_ID, POOL_ID };
 
     private static final String ADD_COMMAND_PROLOG =
         "$templ = get-template -templateid \"" + TEMPLATE_ID + "\";";

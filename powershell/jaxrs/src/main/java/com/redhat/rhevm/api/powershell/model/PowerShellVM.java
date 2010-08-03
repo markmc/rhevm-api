@@ -132,9 +132,10 @@ public class PowerShellVM extends VM {
             }
             vm.setOs(os);
 
-            if (!entity.get("runningonhost").equals(UUID.EMPTY)) {
+            Object hostId = entity.get("runningonhost", String.class, Integer.class).toString();
+            if (!isEmptyId(hostId)) {
                 Host host = new Host();
-                host.setId(entity.get("runningonhost", String.class, Integer.class).toString());
+                host.setId(hostId.toString());
                 vm.setHost(host);
             }
 
@@ -146,9 +147,10 @@ public class PowerShellVM extends VM {
             template.setId(entity.get("templateid"));
             vm.setTemplate(template);
 
-            if (!entity.get("poolid").equals(UUID.EMPTY)) {
+            Object poolId = entity.get("poolid", String.class, Integer.class).toString();
+            if (!isEmptyId(poolId)) {
                 VmPool pool = new VmPool();
-                pool.setId(entity.get("poolid"));
+                pool.setId(poolId.toString());
                 vm.setVmPool(pool);
             }
 
@@ -233,5 +235,10 @@ public class PowerShellVM extends VM {
         }
 
         return nics;
+    }
+
+    private static boolean isEmptyId(Object id) {
+        return id instanceof String && id.equals(UUID.EMPTY)
+               || id instanceof Integer && id.equals(-1);
     }
 }

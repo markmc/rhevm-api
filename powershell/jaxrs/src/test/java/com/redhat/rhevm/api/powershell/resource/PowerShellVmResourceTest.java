@@ -70,7 +70,11 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     }
 
     protected String formatVm(String name) {
-        return formatXmlReturn("vm",
+        return formatVm("vm", name);
+    }
+
+    protected String formatVm(String type, String name) {
+        return formatXmlReturn(type,
                                new String[] { name },
                                new String[] { "" },
                                PowerShellVmsResourceTest.extraArgs);
@@ -81,6 +85,15 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
         verifyVM(
             resource.get(setUpVmExpectations("get-vm \"" + VM_ID + "\"",
                                              formatVm(VM_NAME),
+                                             VM_NAME)),
+            VM_NAME);
+    }
+
+    @Test
+    public void testGet22() throws Exception {
+        verifyVM(
+            resource.get(setUpVmExpectations("get-vm \"" + VM_ID + "\"",
+                                             formatVm("vm22", VM_NAME),
                                              VM_NAME)),
             VM_NAME);
     }

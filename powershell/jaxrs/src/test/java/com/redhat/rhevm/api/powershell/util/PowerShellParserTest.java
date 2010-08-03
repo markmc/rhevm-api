@@ -75,6 +75,10 @@ public class PowerShellParserTest extends Assert {
             parser.parse(PowerShellTestUtils.readClassPathFile("vmpool22.xml")).get(0);
         verifyId(vmpool, "vmpoolid", "2");
 
+        PowerShellParser.Entity vm =
+            parser.parse(PowerShellTestUtils.readClassPathFile("vm22.xml")).get(0);
+        verifyId(vm, "runningonhost", "-1");
+
         PowerShellParser.Entity storageDomain =
             parser.parse(PowerShellTestUtils.readClassPathFile("storagedomain22.xml")).get(0);
         assertNull(storageDomain.get("status", PowerShellStorageDomainStatus.class));
