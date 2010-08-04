@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.redhat.rhevm.api.model.DataCenter;
+import com.redhat.rhevm.api.model.DataCenterStatus;
 import com.redhat.rhevm.api.model.StorageType;
 import com.redhat.rhevm.api.powershell.enums.PowerShellStorageType;
 import com.redhat.rhevm.api.powershell.model.PowerShellDataCenter;
@@ -39,10 +40,22 @@ public class PowerShellDataCenter {
             dataCenter.setName(entity.get("name"));
             dataCenter.setDescription(entity.get("description"));
             dataCenter.setStorageType(entity.get("type", PowerShellStorageType.class).map());
+            dataCenter.setStatus(parseStatus(entity.get("status")));
 
             ret.add(dataCenter);
         }
 
         return ret;
+    }
+
+    private static DataCenterStatus parseStatus(String s) {
+        if (s.equals("Uninitialized"))   return DataCenterStatus.UNINITIALIZED;
+        if (s.equals("Up"))              return DataCenterStatus.UP;
+        if (s.equals("Maintenance"))     return DataCenterStatus.MAINTENANCE;
+        if (s.equals("Not Operational")) return DataCenterStatus.NOT_OPERATIONAL;
+        if (s.equals("Non-Responsive"))  return DataCenterStatus.PROBLEMATIC;
+        if (s.equals("Contend"))         return DataCenterStatus.CONTEND;
+        else assert false : s;
+        return null;
     }
 }

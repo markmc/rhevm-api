@@ -19,9 +19,11 @@
 package com.redhat.rhevm.api.powershell.resource;
 
 import java.text.MessageFormat;
+import java.util.List;
 
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.DataCenters;
+import com.redhat.rhevm.api.model.DataCenterStatus;
 import com.redhat.rhevm.api.model.StorageType;
 
 import com.redhat.rhevm.api.powershell.enums.PowerShellStorageType;
@@ -60,9 +62,10 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
                                formatStorageDomain("mimas"),
                                formatStorageDomain("dione"),
                                formatStorageDomain("titan") };
-         verifyCollection(
-             resource.list(setUpResourceExpectations(4, commands, returns, false, null, NAMES)).getDataCenters(),
-             NAMES, DESCRIPTIONS);
+         List<DataCenter> datacenters =
+             resource.list(setUpResourceExpectations(4, commands, returns, false, null, NAMES)).getDataCenters();
+         assertEquals(datacenters.get(0).getStatus(), DataCenterStatus.UP);
+         verifyCollection(datacenters, NAMES, DESCRIPTIONS);
     }
 
     @Test

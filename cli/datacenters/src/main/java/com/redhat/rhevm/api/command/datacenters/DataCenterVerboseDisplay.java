@@ -26,6 +26,9 @@ import com.redhat.rhevm.api.command.base.VerboseDisplay;
 public class DataCenterVerboseDisplay implements VerboseDisplay<DataCenter> {
     @Override
     public void expand(DataCenter model) {
+        if (model.isSetStatus()) {
+            System.out.println("  status: " + model.getStatus());
+        }
         if (model.isSetStorageType()) {
             System.out.println("  storage type: " + model.getStorageType());
         }
