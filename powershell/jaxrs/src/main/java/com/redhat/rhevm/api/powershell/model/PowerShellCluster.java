@@ -24,6 +24,7 @@ import java.util.List;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.DataCenter;
+import com.redhat.rhevm.api.model.Version;
 import com.redhat.rhevm.api.powershell.model.PowerShellCluster;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 
@@ -38,6 +39,7 @@ public class PowerShellCluster {
             cluster.setId(entity.get("clusterid", String.class, Integer.class).toString());
             cluster.setName(entity.get("name"));
             cluster.setDescription(entity.get("description"));
+            cluster.setVersion(entity.get("compatibilityversion", Version.class));
 
             CPU cpu = new CPU();
             cpu.setId(entity.get("cpuname"));

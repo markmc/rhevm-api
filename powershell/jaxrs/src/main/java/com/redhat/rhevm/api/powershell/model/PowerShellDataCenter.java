@@ -24,6 +24,7 @@ import java.util.List;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.DataCenterStatus;
 import com.redhat.rhevm.api.model.StorageType;
+import com.redhat.rhevm.api.model.Version;
 import com.redhat.rhevm.api.powershell.enums.PowerShellStorageType;
 import com.redhat.rhevm.api.powershell.model.PowerShellDataCenter;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
@@ -41,6 +42,7 @@ public class PowerShellDataCenter {
             dataCenter.setDescription(entity.get("description"));
             dataCenter.setStorageType(entity.get("type", PowerShellStorageType.class).map());
             dataCenter.setStatus(parseStatus(entity.get("status")));
+            dataCenter.setVersion(entity.get("compatibilityversion", Version.class));
 
             ret.add(dataCenter);
         }

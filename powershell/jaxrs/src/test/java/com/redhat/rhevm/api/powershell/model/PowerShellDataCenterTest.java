@@ -28,11 +28,14 @@ import com.redhat.rhevm.api.model.StorageType;
 
 public class PowerShellDataCenterTest extends PowerShellModelTest {
 
-    private void testDataCenter(DataCenter d, String id, String name, String description, StorageType type) {
+    private void testDataCenter(DataCenter d, String id, String name, String description, StorageType type, int major, int minor) {
         assertEquals(id, d.getId());
         assertEquals(name, d.getName());
         assertEquals(description, d.getDescription());
         assertEquals(type, d.getStorageType());
+        assertNotNull(d.getVersion());
+        assertEquals(major, d.getVersion().getMajor());
+        assertEquals(minor, d.getVersion().getMinor());
     }
 
     @Test
@@ -44,6 +47,6 @@ public class PowerShellDataCenterTest extends PowerShellModelTest {
 
         assertEquals(dataCenters.size(), 1);
 
-        testDataCenter(dataCenters.get(0), "bb0fd622-5b2a-4c69-bfc5-29493932844a", "Default", "The default Data Center", StorageType.NFS);
+        testDataCenter(dataCenters.get(0), "bb0fd622-5b2a-4c69-bfc5-29493932844a", "Default", "The default Data Center", StorageType.NFS, 2, 2);
     }
 }

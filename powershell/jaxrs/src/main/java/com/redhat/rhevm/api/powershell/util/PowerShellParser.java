@@ -38,6 +38,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import com.redhat.rhevm.api.model.Version;
 import com.redhat.rhevm.api.powershell.enums.EnumMapper;
 
 public class PowerShellParser {
@@ -273,7 +274,7 @@ public class PowerShellParser {
             } else if (enumMapper.isEnum(type)) {
                 return enumMapper.parseEnum(type, getProperty(node, enumMapper).getValue(Integer.class));
             } else if (type.contains("RhevmCmd.CLICompatibilityVersion")) {
-                return new Version(node, enumMapper);
+                return parseVersion(node, enumMapper);
             } else if (type.contains("RhevmCmd.CLIHostPowerManagement")) {
                 return new PowerManagement(node, enumMapper);
             } else if (type.startsWith("System.Collections.Generic.List")) {
@@ -289,35 +290,18 @@ public class PowerShellParser {
                 return null;
             }
         }
-    }
 
-    public static class Version {
-        private int major;
-        private int minor;
-
-        public Version(Node node, EnumMapper enumMapper) {
+        private static Version parseVersion(Node node, EnumMapper enumMapper) {
+            Version version = new Version();
             for (Property prop : getProperties(node, enumMapper)) {
                 if (prop.getName().equals("major")) {
-                    major = prop.getValue(Integer.class);
+                    version.setMajor(prop.getValue(Integer.class));
                 }
                 if (prop.getName().equals("minor")) {
-                    minor = prop.getValue(Integer.class);
+                    version.setMinor(prop.getValue(Integer.class));
                 }
             }
-        }
-
-        public int getMajor() {
-            return major;
-        }
-        public void setMajor(int major) {
-            this.major = major;
-        }
-
-        public int getMinor() {
-            return minor;
-        }
-        public void setMinor(int minor) {
-            this.minor = minor;
+            return version;
         }
     }
 

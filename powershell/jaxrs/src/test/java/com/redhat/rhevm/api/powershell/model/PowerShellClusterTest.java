@@ -27,7 +27,7 @@ import com.redhat.rhevm.api.model.Cluster;
 
 public class PowerShellClusterTest extends PowerShellModelTest {
 
-    private void testCluster(Cluster c, String id, String name, String description, String cpuName, String dataCenterId) {
+    private void testCluster(Cluster c, String id, String name, String description, String cpuName, String dataCenterId, int major, int minor) {
         assertEquals(c.getId(), id);
         assertEquals(c.getName(), name);
         assertEquals(c.getDescription(), description);
@@ -35,6 +35,9 @@ public class PowerShellClusterTest extends PowerShellModelTest {
         assertEquals(c.getCpu().getId(), cpuName);
         assertNotNull(c.getDataCenter());
         assertEquals(c.getDataCenter().getId(), dataCenterId);
+        assertNotNull(c.getVersion());
+        assertEquals(major, c.getVersion().getMajor());
+        assertEquals(minor, c.getVersion().getMinor());
     }
 
     @Test
@@ -46,6 +49,6 @@ public class PowerShellClusterTest extends PowerShellModelTest {
 
         assertEquals(clusters.size(), 1);
 
-        testCluster(clusters.get(0), "99408929-82cf-4dc7-a532-9d998063fa95", "Default", "The default server cluster", "Intel Xeon 45nm Core2", "bb0fd622-5b2a-4c69-bfc5-29493932844a");
+        testCluster(clusters.get(0), "99408929-82cf-4dc7-a532-9d998063fa95", "Default", "The default server cluster", "Intel Xeon 45nm Core2", "bb0fd622-5b2a-4c69-bfc5-29493932844a", 2, 2);
     }
 }

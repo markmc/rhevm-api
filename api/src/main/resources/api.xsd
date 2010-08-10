@@ -252,6 +252,7 @@
       <xs:enumeration value="CONTEND"/>
     </xs:restriction>
   </xs:simpleType>
+
   <!-- CPUs -->
 
   <xs:element name="cpu" type="CPU"/>
@@ -292,6 +293,14 @@
       </xs:annotation>
       <xs:element ref="cpu" maxOccurs="unbounded"/>
     </xs:sequence>
+  </xs:complexType>
+
+  <!-- Version numbers -->
+
+  <xs:complexType name="Version">
+    <xs:sequence/>
+    <xs:attribute name="major" type="xs:unsignedShort"/>
+    <xs:attribute name="minor" type="xs:unsignedShort"/>
   </xs:complexType>
 
   <!-- Common to all resources -->
@@ -355,6 +364,7 @@
       <xs:extension base="BaseResource">
         <xs:sequence>
           <xs:element name="storage_type" type="StorageType" minOccurs="0"/>
+          <xs:element name="version" type="Version" minOccurs="0"/>
           <xs:element name="attachments" type="Attachments" minOccurs="0"/>
           <xs:element name="status" type="DataCenterStatus" minOccurs="0"/>
           <!-- also a rel="isos" link, see Isos above -->
@@ -386,6 +396,7 @@
         <xs:sequence>
           <xs:element ref="cpu" minOccurs="0" maxOccurs="1"/>
           <xs:element ref="data_center" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="version" type="Version" minOccurs="0"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -418,6 +429,7 @@
           <!-- unsigned to avoid issues with port values greater than 32767,
                e.g. the standard VDSM port 54321 -->
           <xs:element name="port" type="xs:unsignedShort" minOccurs="0"/>
+          <xs:element name="version" type="Version" minOccurs="0"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
