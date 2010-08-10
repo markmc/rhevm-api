@@ -33,9 +33,15 @@ import java.util.Map;
  * the case with the java.util.WeakHashMap).
  *
  * Use this like a normal hash map, but when values need no longer be
- * retained they should be marked as reapable. The value may then be
- * freed either when the reapAfter timeout expires or at the discretion
- * of the garbage collector if the VM experiences memory pressure.
+ * retained they should be marked as reapable so that they are made eligible
+ * for garbage collection. Entries are finally evicted if not already GC'd
+ * before the expiry of the reapAfter timeout (calculated either from the
+ * point at which it was marked reapable or the last time of access).
+ * Freeing of the entry prior to this timeout expiring is at the discretion
+ * of the garbage collector and depends on whether the JVM is experiencing
+ * memory pressure, the type of JVM selected (the client JVM uses much more
+ * aggressive GC policies that the server variant) and also the JVM options
+ * controlling the heap size.
  *
  * REVISIT: does the world really need yet another hand-rolled cache type?
  * REVISIT: inherited entrySet() etc. don't take account of secondary
@@ -51,6 +57,7 @@ public class ReapedMap<K, V> extends HashMap<K, V> {
     private static Long DEFAULT_REAP_AFTER = 10 * 60 * 1000L; // 10 minutes
 
     private long reapAfter;
+    private boolean accessBasedAging;
     private ReferenceQueue<V> queue;
 
     // Secondary Map, note:
@@ -69,18 +76,28 @@ public class ReapedMap<K, V> extends HashMap<K, V> {
      * @param reapAfter entries become eligible for reaping after this duration (ms)
      */
     public ReapedMap(long reapAfter) {
-        this(reapAfter, new ReferenceQueue<V>());
+        this(reapAfter, false);
+    }
+
+    /**
+     * @param reapAfter entries become eligible for reaping after this duration (ms)
+     * @param accessBasedAging reset reapAfter timeout on each access
+     */
+    public ReapedMap(long reapAfter, boolean accessBasedAging) {
+        this(reapAfter, accessBasedAging, new ReferenceQueue<V>());
     }
 
     /**
      * Package-protected constructor intended for test use.
      *
      * @param reapAfter entries become eligible for reaping after this duration (ms)
+     * @param accessBasedAging reset reapAfter timeout on each access
      * @param queue reference queue to avoid leaked mappings in case where
      * aggressive GC eats referent before it is reaped
      */
-    ReapedMap(long reapAfter, ReferenceQueue<V> queue) {
+    ReapedMap(long reapAfter, boolean accessBasedAging, ReferenceQueue<V> queue) {
         this.reapAfter = reapAfter;
+        this.accessBasedAging = accessBasedAging;
         this.queue = queue;
         reapableMap = new LinkedHashMap<K, IdAwareReference<K, V>>();
     }
@@ -89,7 +106,7 @@ public class ReapedMap<K, V> extends HashMap<K, V> {
     public synchronized V get(Object key) {
         V ret = super.get(key);
         if (ret == null) {
-            IdAwareReference<K, V> ref = reapableMap.get(key);
+            IdAwareReference<K, V> ref = accessBasedAging ? reapableMap.remove(key) : reapableMap.get(key);
             if (ref != null) {
                 if (ref.isEnqueued()) {
                     ref.clear();
@@ -98,6 +115,10 @@ public class ReapedMap<K, V> extends HashMap<K, V> {
                     ret = ref.get();
                     if (ret == null) {
                         reapableMap.remove(key);
+                    } else if (accessBasedAging) {
+                        // re-insert on timestamp reset so
+                        // as to maintain insertion order
+                        reapableMap.put(ref.key, ref.reset());
                     }
                 }
             }
@@ -204,12 +225,13 @@ public class ReapedMap<K, V> extends HashMap<K, V> {
      */
     static class IdAwareReference<T, S> extends SoftReference<S> {
         long timestamp;
+        long last;
         T key;
 
         IdAwareReference(T key, S value, ReferenceQueue<S> queue) {
             super(value, queue);
             this.key = key;
-            timestamp = System.currentTimeMillis();
+            last = timestamp = System.currentTimeMillis();
         }
 
         public T getKey() {
@@ -230,5 +252,11 @@ public class ReapedMap<K, V> extends HashMap<K, V> {
             S one = get();
             return one != null ? one.hashCode() : 0;
         }
-    }
+
+        private IdAwareReference<T, S> reset() {
+            last = timestamp;
+            timestamp = System.currentTimeMillis();
+            return this;
+        }
+     }
 }

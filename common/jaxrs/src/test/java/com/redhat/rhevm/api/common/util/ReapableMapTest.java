@@ -73,7 +73,7 @@ public class ReapableMapTest extends Assert {
 
     @Test
     public void testReapingOnGetWithGC() throws Exception {
-        setUpGCExpectations();
+        setUpGCExpectations(5);
 
         populate(1, 2, 3);
         map.reapable("one");
@@ -87,8 +87,36 @@ public class ReapableMapTest extends Assert {
     }
 
     @Test
+    public void testReapingOnGetWithAccessBasedAging() throws Exception {
+        setUpAccessBaseAgingExpectations();
+
+        populate(1, 2, 3);
+        assertSizes(3, 0);
+        map.reapable("one");
+        map.reapable("three");
+        assertSizes(1, 2);
+        for (int i = 0 ; i < 6 ; i++) {
+            Thread.sleep(200);
+            assertExpected(i == 0 ? 1 : 3);
+        }
+        assertSizes(1, 1);
+        assertNull(map.get("one"));
+        assertExpected(3);
+        Thread.sleep(500);
+        assertExpected(3);
+        assertSizes(1, 1);
+
+        Thread.sleep(1200);
+        assertExpected(2);
+        assertSizes(1, 0);
+        assertNull(map.get("three"));
+
+        control.verify();
+    }
+
+    @Test
     public void testReapingOnPutWithGC() throws Exception {
-        setUpGCExpectations();
+        setUpGCExpectations(5);
 
         populate(1, 2, 3);
         map.reapable("one");
@@ -103,7 +131,7 @@ public class ReapableMapTest extends Assert {
 
     @Test
     public void testReapingOnRemoveWithGC() throws Exception {
-        setUpGCExpectations();
+        setUpGCExpectations(5);
 
         populate(1, 2, 3);
         map.reapable("one");
@@ -117,15 +145,13 @@ public class ReapableMapTest extends Assert {
     }
 
     @SuppressWarnings("unchecked")
-    private void setUpGCExpectations() {
+    private void setUpGCExpectations(int gcAfter) {
         ReferenceQueue<Integer> queue = (ReferenceQueue<Integer>)control.createMock(ReferenceQueue.class);
-        map = new ReapedMap<String, Integer>(10000, queue);
-        expect(queue.poll()).andReturn(null);
-        expect(queue.poll()).andReturn(null);
-        expect(queue.poll()).andReturn(null);
-        expect(queue.poll()).andReturn(null);
-        expect(queue.poll()).andReturn(null);
-        // the sixth queue poll simulates a GC event and triggers deletion
+        map = new ReapedMap<String, Integer>(10000, false, queue);
+        for (int i = 0 ; i < gcAfter ; i++) {
+            expect(queue.poll()).andReturn(null);
+        }
+        // the gcAfter^th queue poll simulates a GC event and triggers deletion
         // on the reapable map
         ReapedMap.IdAwareReference<String, Integer> ref = control.createMock(ReapedMap.IdAwareReference.class);
         // awkward syntax required to work around compilation error
@@ -134,6 +160,15 @@ public class ReapableMapTest extends Assert {
         ((IExpectationSetters<Reference<? extends Integer>>)qSetter).andReturn(ref);
         IExpectationSetters<? extends String> refSetter = expect(ref.getKey());
         ((IExpectationSetters<String>)refSetter).andReturn("three");
+
+        control.replay();
+    }
+
+    @SuppressWarnings("unchecked")
+    private void setUpAccessBaseAgingExpectations() {
+        ReferenceQueue<Integer> queue = (ReferenceQueue<Integer>)control.createMock(ReferenceQueue.class);
+        map = new ReapedMap<String, Integer>(1000, true, queue);
+        expect(queue.poll()).andReturn(null).anyTimes();
 
         control.replay();
     }
