@@ -33,7 +33,7 @@ public class PowerShellPoolMap extends ReapedMap<Principal, PowerShellPool> {
     private Current current;
 
     public PowerShellPoolMap() {
-        super(REAP_AFTER);
+        super(REAP_AFTER, true);
     }
 
     public void setExecutor(ExecutorService executor) {
