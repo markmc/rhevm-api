@@ -27,10 +27,12 @@ import com.redhat.rhevm.api.model.Attachments;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.Version;
+import com.redhat.rhevm.api.model.SupportedVersions;
 import com.redhat.rhevm.api.resource.DataCenterResource;
 import com.redhat.rhevm.api.resource.IsosResource;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellDataCenter;
+import com.redhat.rhevm.api.powershell.model.PowerShellVersion;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
@@ -64,7 +66,23 @@ public class PowerShellDataCenterResource extends AbstractPowerShellActionableRe
         return runAndParseSingle(getShell(), getParser(), command);
     }
 
+    private static DataCenter querySupportedVersions(PowerShellCmd shell, PowerShellParser parser, DataCenter dataCenter) {
+        String command = "get-datacentercompatibilityversions -datacenterid " + PowerShellUtils.escape(dataCenter.getId());
+
+        List<Version> supported = PowerShellVersion.parse(parser, PowerShellCmd.runCommand(shell, command));
+        if (!supported.isEmpty()) {
+            dataCenter.setSupportedVersions(new SupportedVersions());
+            for (Version v : supported) {
+                dataCenter.getSupportedVersions().getVersions().add(v);
+            }
+        }
+
+        return dataCenter;
+    }
+
     public static DataCenter addLinks(PowerShellCmd shell, PowerShellParser parser, DataCenter dataCenter) {
+        dataCenter = querySupportedVersions(shell, parser, dataCenter);
+
         dataCenter = LinkHelper.addLinks(dataCenter);
 
         Attachments attachments = PowerShellAttachmentsResource.getAttachmentsForDataCenter(shell,

@@ -24,10 +24,12 @@ import java.util.concurrent.Executor;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Cluster;
+import com.redhat.rhevm.api.model.SupportedVersions;
 import com.redhat.rhevm.api.model.Version;
 import com.redhat.rhevm.api.resource.ClusterResource;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellCluster;
+import com.redhat.rhevm.api.powershell.model.PowerShellVersion;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
@@ -61,6 +63,25 @@ public class PowerShellClusterResource extends AbstractPowerShellActionableResou
         return runAndParseSingle(getShell(), getParser(), command);
     }
 
+    private static Cluster querySupportedVersions(PowerShellCmd shell, PowerShellParser parser, Cluster cluster) {
+        String command = "get-clustercompatibilityversions -clusterid " + PowerShellUtils.escape(cluster.getId());
+
+        List<Version> supported = PowerShellVersion.parse(parser, PowerShellCmd.runCommand(shell, command));
+        if (!supported.isEmpty()) {
+            cluster.setSupportedVersions(new SupportedVersions());
+            for (Version v : supported) {
+                cluster.getSupportedVersions().getVersions().add(v);
+            }
+        }
+
+        return cluster;
+    }
+
+    public static Cluster addLinks(PowerShellCmd shell, PowerShellParser parser, Cluster cluster) {
+        cluster = querySupportedVersions(shell, parser, cluster);
+        return LinkHelper.addLinks(cluster);
+    }
+
     @Override
     public Cluster get(UriInfo uriInfo) {
         StringBuilder buf = new StringBuilder();
@@ -72,7 +93,7 @@ public class PowerShellClusterResource extends AbstractPowerShellActionableResou
         buf.append("  } ");
         buf.append("}");
 
-        return LinkHelper.addLinks(runAndParseSingle(buf.toString()));
+        return addLinks(getShell(), getParser(), runAndParseSingle(buf.toString()));
     }
 
     @Override
@@ -115,6 +136,6 @@ public class PowerShellClusterResource extends AbstractPowerShellActionableResou
 
         buf.append("} }");
 
-        return LinkHelper.addLinks(runAndParseSingle(buf.toString()));
+        return addLinks(getShell(), getParser(), runAndParseSingle(buf.toString()));
     }
 }

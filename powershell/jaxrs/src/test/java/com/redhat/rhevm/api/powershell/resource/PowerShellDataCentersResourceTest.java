@@ -56,12 +56,18 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
     @Test
     public void testList() throws Exception {
         String [] commands = { getSelectCommand(),
-                               GET_STORAGE_COMMAND + "\"" + NAMES[0].hashCode() + "\"",
-                               GET_STORAGE_COMMAND + "\"" + NAMES[1].hashCode() + "\"",
-                               GET_STORAGE_COMMAND + "\"" + NAMES[2].hashCode() + "\"" };
+                               getSupportedVersionCommand(NAMES[0]),
+                               getStorageCommand(NAMES[0]),
+                               getSupportedVersionCommand(NAMES[1]),
+                               getStorageCommand(NAMES[1]),
+                               getSupportedVersionCommand(NAMES[2]),
+                               getStorageCommand(NAMES[2]) };
         String [] returns =  { getSelectReturn(),
+                               formatVersion(MAJOR, MINOR),
                                formatStorageDomain("mimas"),
+                               formatVersion(MAJOR, MINOR),
                                formatStorageDomain("dione"),
+                               formatVersion(MAJOR, MINOR),
                                formatStorageDomain("titan") };
          List<DataCenter> datacenters =
              resource.list(setUpResourceExpectations(4, commands, returns, false, null, NAMES)).getDataCenters();
@@ -72,12 +78,18 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
     @Test
     public void testList22() throws Exception {
         String [] commands = { getSelectCommand(),
-                               GET_STORAGE_COMMAND + "\"" + NAMES[0].hashCode() + "\"",
-                               GET_STORAGE_COMMAND + "\"" + NAMES[1].hashCode() + "\"",
-                               GET_STORAGE_COMMAND + "\"" + NAMES[2].hashCode() + "\"" };
+                               getSupportedVersionCommand(NAMES[0]),
+                               getStorageCommand(NAMES[0]),
+                               getSupportedVersionCommand(NAMES[1]),
+                               getStorageCommand(NAMES[1]),
+                               getSupportedVersionCommand(NAMES[2]),
+                               getStorageCommand(NAMES[2]) };
         String [] returns =  { getSelectReturn(),
+                               formatVersion(MAJOR, MINOR),
                                formatStorageDomain("storagedomain22", "mimas"),
+                               formatVersion(MAJOR, MINOR),
                                formatStorageDomain("storagedomain22", "dione"),
+                               formatVersion(MAJOR, MINOR),
                                formatStorageDomain("storagedomain22", "titan") };
          verifyCollection(
              resource.list(setUpResourceExpectations(4, commands, returns, false, null, NAMES)).getDataCenters(),
@@ -87,10 +99,14 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
     @Test
     public void testQuery() throws Exception {
         String [] commands = { getQueryCommand(DataCenter.class),
-                               GET_STORAGE_COMMAND + "\"" + NAMES[1].hashCode() + "\"",
-                               GET_STORAGE_COMMAND + "\"" + NAMES[2].hashCode() + "\""};
+                               getSupportedVersionCommand(NAMES[1]),
+                               getStorageCommand(NAMES[1]),
+                               getSupportedVersionCommand(NAMES[2]),
+                               getStorageCommand(NAMES[2]) };
         String [] returns =  { getQueryReturn(),
+                               formatVersion(MAJOR, MINOR),
                                formatStorageDomain("mimas"),
+                               formatVersion(MAJOR, MINOR),
                                formatStorageDomain("dione") };
          verifyCollection(
              resource.list(setUpResourceExpectations(3, commands, returns, false, getQueryParam(), NAMES_SUBSET)).getDataCenters(),
@@ -100,8 +116,10 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
     @Test
     public void testAdd() throws Exception {
         String [] commands = { getAddCommand(),
-                               GET_STORAGE_COMMAND + "\"" + NEW_NAME.hashCode() + "\""};
+                               getSupportedVersionCommand(NEW_NAME),
+                               getStorageCommand(NEW_NAME) };
         String [] returns =  { getAddReturn(),
+                               formatVersion(MAJOR, MINOR),
                                formatStorageDomain("rhea") };
 
         DataCenter model = getModel(NEW_NAME, NEW_DESCRIPTION);
@@ -163,5 +181,24 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
         buf.append(" -compatibilityversion $version");
 
 	return buf.toString();
+    }
+
+    protected String getCommand(String cmd, String name) {
+        StringBuilder buf = new StringBuilder();
+
+        buf.append(cmd);
+        buf.append(" -datacenterid \"");
+        buf.append(Integer.toString(name.hashCode()));
+        buf.append("\"");
+
+        return buf.toString();
+    }
+
+    protected String getStorageCommand(String name) {
+        return getCommand("get-storagedomain", name);
+    }
+
+    protected String getSupportedVersionCommand(String name) {
+        return getCommand("get-datacentercompatibilityversions", name);
     }
 }

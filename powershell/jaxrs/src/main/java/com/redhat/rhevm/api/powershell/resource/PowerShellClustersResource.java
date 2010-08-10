@@ -51,7 +51,7 @@ public class PowerShellClustersResource
     public Clusters list(UriInfo uriInfo) {
         Clusters ret = new Clusters();
         for (Cluster cluster : runAndParse(getSelectCommand("select-cluster", uriInfo, Cluster.class))) {
-            ret.getClusters().add(LinkHelper.addLinks(cluster));
+            ret.getClusters().add(PowerShellClusterResource.addLinks(getShell(), getParser(), cluster));
         }
         return ret;
     }
@@ -89,7 +89,7 @@ public class PowerShellClustersResource
         buf.append(" -datacenterid " + PowerShellUtils.escape(cluster.getDataCenter().getId()));
         buf.append(" -compatibilityversion $version");
 
-        cluster = LinkHelper.addLinks(runAndParseSingle(buf.toString()));
+        cluster = PowerShellClusterResource.addLinks(getShell(), getParser(), runAndParseSingle(buf.toString()));
 
         UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(cluster.getId());
 

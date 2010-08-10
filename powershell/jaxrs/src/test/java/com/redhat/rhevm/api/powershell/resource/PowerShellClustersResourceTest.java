@@ -42,19 +42,33 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
 
     @Test
     public void testList() throws Exception {
+        String [] commands = { getSelectCommand(),
+                               getSupportedVersionCommand(NAMES[0]),
+                               getSupportedVersionCommand(NAMES[1]),
+                               getSupportedVersionCommand(NAMES[2]) };
+        String [] returns = { getSelectReturn(),
+                              formatVersion(MAJOR, MINOR),
+                              formatVersion(MAJOR, MINOR),
+                              formatVersion(MAJOR, MINOR) };
         verifyCollection(
-            resource.list(setUpResourceExpectations(getSelectCommand(),
-                                                    getSelectReturn(),
-                                                    NAMES)).getClusters(),
+            resource.list(setUpResourceExpectations(4, commands, returns, false, null, NAMES)).getClusters(),
             NAMES, DESCRIPTIONS);
     }
 
 
     @Test
     public void testQuery() throws Exception {
+        String [] commands = { getQueryCommand(Cluster.class),
+                               getSupportedVersionCommand(NAMES[1]),
+                               getSupportedVersionCommand(NAMES[2]) };
+        String [] returns = { getQueryReturn(),
+                              formatVersion(MAJOR, MINOR),
+                              formatVersion(MAJOR, MINOR) };
         verifyCollection(
-            resource.list(setUpResourceExpectations(getQueryCommand(Cluster.class),
-                                                    getQueryReturn(),
+            resource.list(setUpResourceExpectations(3,
+                                                    commands,
+                                                    returns,
+                                                    false,
                                                     getQueryParam(),
                                                     NAMES_SUBSET)).getClusters(),
             NAMES_SUBSET, DESCRIPTIONS_SUBSET);
@@ -62,22 +76,22 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
 
     @Test
     public void testAdd() throws Exception {
+        String [] commands = { getAddCommand(), getSupportedVersionCommand(NEW_NAME) };
+        String [] returns = { getAddReturn(), formatVersion(MAJOR, MINOR) };
         Cluster model = getModel(NEW_NAME, NEW_DESCRIPTION);
         model.setVersion(null);
         verifyResponse(
-            resource.add(setUpAddResourceExpectations(getAddCommand(),
-                                                      getAddReturn(),
-                                                      NEW_NAME),
+            resource.add(setUpResourceExpectations(2, commands, returns, true, null, NEW_NAME),
                          model),
             NEW_NAME, NEW_DESCRIPTION);
     }
 
     @Test
     public void testAddWithVersion() throws Exception {
+        String [] commands = { getAddCommand(true), getSupportedVersionCommand(NEW_NAME) };
+        String [] returns = { getAddReturn(), formatVersion(MAJOR, MINOR) };
         verifyResponse(
-            resource.add(setUpAddResourceExpectations(getAddCommand(true),
-                                                      getAddReturn(),
-                                                      NEW_NAME),
+            resource.add(setUpResourceExpectations(2, commands, returns, true, null, NEW_NAME),
                          getModel(NEW_NAME, NEW_DESCRIPTION)),
             NEW_NAME, NEW_DESCRIPTION);
     }
@@ -140,5 +154,15 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
         buf.append(" -compatibilityversion $version");
 
 	return buf.toString();
+    }
+
+    protected String getSupportedVersionCommand(String name) {
+        StringBuilder buf = new StringBuilder();
+
+        buf.append("get-clustercompatibilityversions -clusterid \"");
+        buf.append(Integer.toString(name.hashCode()));
+        buf.append("\"");
+
+        return buf.toString();
     }
 }
