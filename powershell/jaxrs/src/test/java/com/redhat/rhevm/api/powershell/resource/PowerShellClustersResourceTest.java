@@ -22,6 +22,7 @@ import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.Clusters;
 import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.DataCenter;
+import com.redhat.rhevm.api.model.Version;
 
 import org.junit.Test;
 
@@ -30,8 +31,10 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
 
     private static final String CLUSTER_CPU = "xeon";
     private static final String DATA_CENTER_ID = "12345";
+    private static final int MAJOR = 10;
+    private static final int MINOR = 16;
 
-    public static final String[] extraArgs = new String[] { CLUSTER_CPU, DATA_CENTER_ID };
+    public static final String[] extraArgs = new String[] { CLUSTER_CPU, DATA_CENTER_ID, Integer.toString(MAJOR), Integer.toString(MINOR) };
 
     public PowerShellClustersResourceTest() {
 	super(new PowerShellClusterResource("0", null, null, null), "clusters", "cluster", extraArgs);
@@ -59,8 +62,20 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
 
     @Test
     public void testAdd() throws Exception {
+        Cluster model = getModel(NEW_NAME, NEW_DESCRIPTION);
+        model.setVersion(null);
         verifyResponse(
             resource.add(setUpAddResourceExpectations(getAddCommand(),
+                                                      getAddReturn(),
+                                                      NEW_NAME),
+                         model),
+            NEW_NAME, NEW_DESCRIPTION);
+    }
+
+    @Test
+    public void testAddWithVersion() throws Exception {
+        verifyResponse(
+            resource.add(setUpAddResourceExpectations(getAddCommand(true),
                                                       getAddReturn(),
                                                       NEW_NAME),
                          getModel(NEW_NAME, NEW_DESCRIPTION)),
@@ -86,6 +101,11 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
     }
 
     protected void populateModel(Cluster cluster) {
+        Version version = new Version();
+        version.setMajor(MAJOR);
+        version.setMinor(MINOR);
+        cluster.setVersion(version);
+
         CPU cpu = new CPU();
         cpu.setId(CLUSTER_CPU);
         cluster.setCpu(cpu);
@@ -96,9 +116,20 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
     }
 
     protected String getAddCommand() {
+        return getAddCommand(false);
+    }
+
+    protected String getAddCommand(boolean withVersion) {
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$v = get-clustercompatibilityversions -datacenterid \"" + DATA_CENTER_ID + "\";");
+        buf.append("foreach ($v in get-clustercompatibilityversions -datacenterid \"" + DATA_CENTER_ID + "\") {");
+
+        if (withVersion) {
+            buf.append(" if ($v.major -eq " + Integer.toString(MAJOR) + " -and $v.minor -eq " + Integer.toString(MINOR) + ") {");
+            buf.append(" $version = $v; break } } ");
+        } else {
+            buf.append(" $version = $v; break } ");
+        }
 
         buf.append("add-cluster");
 
@@ -106,7 +137,7 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
         buf.append(" -clusterdescription \"" + NEW_DESCRIPTION + "\"");
         buf.append(" -clustercpuname \"" + CLUSTER_CPU + "\"");
         buf.append(" -datacenterid \"" + DATA_CENTER_ID + "\"");
-        buf.append(" -compatibilityversion $v");
+        buf.append(" -compatibilityversion $version");
 
 	return buf.toString();
     }

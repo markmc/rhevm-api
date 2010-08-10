@@ -26,6 +26,7 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.Clusters;
+import com.redhat.rhevm.api.model.Version;
 import com.redhat.rhevm.api.resource.ClusterResource;
 import com.redhat.rhevm.api.resource.ClustersResource;
 import com.redhat.rhevm.api.common.util.LinkHelper;
@@ -59,8 +60,24 @@ public class PowerShellClustersResource
     public Response add(UriInfo uriInfo, Cluster cluster) {
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$v = get-clustercompatibilityversions");
-        buf.append(" -datacenterid " + PowerShellUtils.escape(cluster.getDataCenter().getId()) + ";");
+        buf.append("foreach ($v in get-clustercompatibilityversions -datacenterid ");
+        buf.append(PowerShellUtils.escape(cluster.getDataCenter().getId()));
+        buf.append(") { ");
+        if (cluster.isSetVersion() &&
+            cluster.getVersion().isSetMajor() &&
+            cluster.getVersion().isSetMinor()) {
+            Version v = cluster.getVersion();
+            buf.append("if (");
+            buf.append("$v.major -eq " + Integer.toString(v.getMajor()));
+            buf.append(" -and ");
+            buf.append("$v.minor -eq " + Integer.toString(v.getMinor()));
+            buf.append(") { ");
+            buf.append("$version = $v; break");
+            buf.append(" }");
+        } else {
+            buf.append("$version = $v; break");
+        }
+        buf.append(" } ");
 
         buf.append("add-cluster");
 
@@ -70,7 +87,7 @@ public class PowerShellClustersResource
         }
         buf.append(" -clustercpuname " + PowerShellUtils.escape(cluster.getCpu().getId()));
         buf.append(" -datacenterid " + PowerShellUtils.escape(cluster.getDataCenter().getId()));
-        buf.append(" -compatibilityversion $v");
+        buf.append(" -compatibilityversion $version");
 
         cluster = LinkHelper.addLinks(runAndParseSingle(buf.toString()));
 

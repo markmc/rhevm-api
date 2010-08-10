@@ -24,6 +24,7 @@ import java.util.concurrent.Executor;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Cluster;
+import com.redhat.rhevm.api.model.Version;
 import com.redhat.rhevm.api.resource.ClusterResource;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellCluster;
@@ -82,22 +83,37 @@ public class PowerShellClusterResource extends AbstractPowerShellActionableResou
 
         buf.append("$l = select-cluster;");
         buf.append("foreach ($c in $l) { ");
-        buf.append("  if ($c.clusterid -eq " + PowerShellUtils.escape(getId()) + ") { ");
+        buf.append(" if ($c.clusterid -eq " + PowerShellUtils.escape(getId()) + ") { ");
 
         if (cluster.getName() != null) {
-            buf.append("    $c.name = " + PowerShellUtils.escape(cluster.getName()) + ";");
+            buf.append("$c.name = " + PowerShellUtils.escape(cluster.getName()) + "; ");
         }
         if (cluster.getCpu() != null) {
-            buf.append("    $c.cpuname = " + PowerShellUtils.escape(cluster.getCpu().getId()) + ";");
+            buf.append("$c.cpuname = " + PowerShellUtils.escape(cluster.getCpu().getId()) + "; ");
         }
         if (cluster.getDescription() != null) {
-            buf.append("    $c.description = " + PowerShellUtils.escape(cluster.getDescription()) + ";");
+            buf.append("$c.description = " + PowerShellUtils.escape(cluster.getDescription()) + "; ");
         }
 
-        buf.append("    update-datacenter -datacenterobject $v;");
+        if (cluster.isSetVersion() &&
+            cluster.getVersion().isSetMajor() &&
+            cluster.getVersion().isSetMinor()) {
+            Version v = cluster.getVersion();
+            buf.append("foreach ($v in get-clustercompatibilityversions -clusterid ");
+            buf.append(PowerShellUtils.escape(cluster.getId()));
+            buf.append(") { ");
+            buf.append("if (");
+            buf.append("$v.major -eq " + Integer.toString(v.getMajor()));
+            buf.append(" -and ");
+            buf.append("$v.minor -eq " + Integer.toString(v.getMinor()));
+            buf.append(") { ");
+            buf.append("$c.compatibilityversion = $v; break");
+            buf.append(" } } ");
+        }
 
-        buf.append("  } ");
-        buf.append("}");
+        buf.append("update-cluster -clusterobject $c; break ");
+
+        buf.append("} }");
 
         return LinkHelper.addLinks(runAndParseSingle(buf.toString()));
     }
