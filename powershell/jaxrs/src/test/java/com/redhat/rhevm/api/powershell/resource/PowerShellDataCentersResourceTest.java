@@ -25,6 +25,7 @@ import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.DataCenters;
 import com.redhat.rhevm.api.model.DataCenterStatus;
 import com.redhat.rhevm.api.model.StorageType;
+import com.redhat.rhevm.api.model.Version;
 
 import com.redhat.rhevm.api.powershell.enums.PowerShellStorageType;
 
@@ -33,10 +34,10 @@ import org.junit.Test;
 public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollectionResourceTest<DataCenter, PowerShellDataCenterResource, PowerShellDataCentersResource> {
 
     private static final String STORAGE_TYPE = Integer.toString(PowerShellStorageType.ISCSI.getValue());
+    private static final int MAJOR = 10;
+    private static final int MINOR = 16;
 
-    private static final String[] extraArgs = new String[] { STORAGE_TYPE };
-
-    private static final String ADD_COMMAND_EPILOG = "-datacentertype ISCSI";
+    private static final String[] extraArgs = new String[] { STORAGE_TYPE, Integer.toString(MAJOR), Integer.toString(MINOR) };
 
     private static final String GET_STORAGE_COMMAND = "get-storagedomain -datacenterid ";
 
@@ -98,13 +99,16 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
 
     @Test
     public void testAdd() throws Exception {
-        String [] commands = { getAddCommand() + ADD_COMMAND_EPILOG,
+        String [] commands = { getAddCommand(),
                                GET_STORAGE_COMMAND + "\"" + NEW_NAME.hashCode() + "\""};
         String [] returns =  { getAddReturn(),
                                formatStorageDomain("rhea") };
+
+        DataCenter model = getModel(NEW_NAME, NEW_DESCRIPTION);
+        model.setVersion(null);
+
         verifyResponse(
-            resource.add(setUpResourceExpectations(2, commands, returns, true, null, NEW_NAME),
-                         getModel(NEW_NAME, NEW_DESCRIPTION)),
+            resource.add(setUpResourceExpectations(2, commands, returns, true, null, NEW_NAME), model),
             NEW_NAME, NEW_DESCRIPTION);
     }
 
@@ -127,6 +131,37 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
     }
 
     protected void populateModel(DataCenter dataCenter) {
+        Version version = new Version();
+        version.setMajor(MAJOR);
+        version.setMinor(MINOR);
+        dataCenter.setVersion(version);
+
         dataCenter.setStorageType(StorageType.ISCSI);
+    }
+
+    protected String getAddCommand() {
+        return getAddCommand(false);
+    }
+
+    protected String getAddCommand(boolean withVersion) {
+        StringBuilder buf = new StringBuilder();
+
+        buf.append("foreach ($v in get-clustercompatibilityversions) {");
+
+        if (withVersion) {
+            buf.append(" if ($v.major -eq " + Integer.toString(MAJOR) + " -and $v.minor -eq " + Integer.toString(MINOR) + ") {");
+            buf.append(" $version = $v; break } } ");
+        } else {
+            buf.append(" $version = $v } ");
+        }
+
+        buf.append("add-datacenter");
+
+        buf.append(" -name \"" + NEW_NAME + "\"");
+        buf.append(" -description \"" + NEW_DESCRIPTION + "\"");
+        buf.append(" -datacentertype ISCSI");
+        buf.append(" -compatibilityversion $version");
+
+	return buf.toString();
     }
 }

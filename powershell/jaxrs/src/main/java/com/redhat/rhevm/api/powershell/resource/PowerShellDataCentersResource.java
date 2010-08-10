@@ -26,6 +26,7 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.DataCenters;
+import com.redhat.rhevm.api.model.Version;
 import com.redhat.rhevm.api.resource.DataCenterResource;
 import com.redhat.rhevm.api.resource.DataCentersResource;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
@@ -61,6 +62,23 @@ public class PowerShellDataCentersResource
     public Response add(UriInfo uriInfo, DataCenter dataCenter) {
         StringBuilder buf = new StringBuilder();
 
+        buf.append("foreach ($v in get-clustercompatibilityversions) { ");
+        if (dataCenter.isSetVersion() &&
+            dataCenter.getVersion().isSetMajor() &&
+            dataCenter.getVersion().isSetMinor()) {
+            Version v = dataCenter.getVersion();
+            buf.append("if (");
+            buf.append("$v.major -eq " + Integer.toString(v.getMajor()));
+            buf.append(" -and ");
+            buf.append("$v.minor -eq " + Integer.toString(v.getMinor()));
+            buf.append(") { ");
+            buf.append("$version = $v; break");
+            buf.append(" }");
+        } else {
+            buf.append("$version = $v");
+        }
+        buf.append(" } ");
+
         buf.append("add-datacenter");
 
         buf.append(" -name " + PowerShellUtils.escape(dataCenter.getName()));
@@ -68,6 +86,7 @@ public class PowerShellDataCentersResource
             buf.append(" -description " + PowerShellUtils.escape(dataCenter.getDescription()));
         }
         buf.append(" -datacentertype " + dataCenter.getStorageType().toString());
+        buf.append(" -compatibilityversion $version");
 
         dataCenter = addLinks(runAndParseSingle(buf.toString()));
 

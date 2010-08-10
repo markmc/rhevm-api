@@ -26,6 +26,7 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.Attachments;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.Link;
+import com.redhat.rhevm.api.model.Version;
 import com.redhat.rhevm.api.resource.DataCenterResource;
 import com.redhat.rhevm.api.resource.IsosResource;
 import com.redhat.rhevm.api.common.util.LinkHelper;
@@ -95,16 +96,30 @@ public class PowerShellDataCenterResource extends AbstractPowerShellActionableRe
 
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$h = get-datacenter " + PowerShellUtils.escape(getId()) + ";");
+        buf.append("$d = get-datacenter " + PowerShellUtils.escape(getId()) + "; ");
 
         if (dataCenter.getName() != null) {
-            buf.append("$h.name = " + PowerShellUtils.escape(dataCenter.getName()) + ";");
+            buf.append("$d.name = " + PowerShellUtils.escape(dataCenter.getName()) + ";");
         }
         if (dataCenter.getDescription() != null) {
-            buf.append("$h.description = " + PowerShellUtils.escape(dataCenter.getDescription()) + ";");
+            buf.append("$d.description = " + PowerShellUtils.escape(dataCenter.getDescription()) + "; ");
         }
 
-        buf.append("update-datacenter -datacenterobject $h");
+        if (dataCenter.isSetVersion() &&
+            dataCenter.getVersion().isSetMajor() &&
+            dataCenter.getVersion().isSetMinor()) {
+            Version v = dataCenter.getVersion();
+            buf.append("foreach ($v in get-clustercompatibilityversions) { ");
+            buf.append("if (");
+            buf.append("$v.major -eq " + Integer.toString(v.getMajor()));
+            buf.append(" -and ");
+            buf.append("$v.minor -eq " + Integer.toString(v.getMinor()));
+            buf.append(") { ");
+            buf.append("$d.compatibilityversion = $v; break");
+            buf.append(" } } ");
+        }
+
+        buf.append("update-datacenter -datacenterobject $d");
 
         return addLinks(runAndParseSingle(buf.toString()));
     }
