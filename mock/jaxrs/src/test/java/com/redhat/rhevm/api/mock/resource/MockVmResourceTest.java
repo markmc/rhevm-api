@@ -25,6 +25,7 @@ import com.redhat.rhevm.api.model.Fault;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
+import com.redhat.rhevm.api.model.VmType;
 
 public class MockVmResourceTest extends MockTestBase {
     private MockTestBase.VmsResource getService() {
@@ -90,6 +91,7 @@ public class MockVmResourceTest extends MockTestBase {
 
         VM update = new VM();
         update.setName("wonga");
+        update.setType(VmType.SERVER);
         VM updated = service.update("1", update);
         assertNotNull(updated);
         assertEquals(updated.getName(), "wonga");
@@ -97,13 +99,24 @@ public class MockVmResourceTest extends MockTestBase {
     }
 
     @Test
+    public void testVmBadIdUpdate() throws Exception {
+        VM update = new VM();
+        update.setId("fluffy");
+        doTestVmBadUpdate(update, "id");
+    }
+
+    @Test
+    public void testVmBadTypeUpdate() throws Exception {
+        VM update = new VM();
+        update.setType(VmType.DESKTOP);
+        doTestVmBadUpdate(update, "type");
+    }
+
     @SuppressWarnings("unchecked")
-    public void testVmBadUpdate() throws Exception {
+    private void doTestVmBadUpdate(VM update, String field) throws Exception {
         MockTestBase.VmsResource service = getService();
         assertNotNull(service);
 
-        VM update = new VM();
-        update.setId("fluffy");
         try {
             service.update("2", update);
             fail("expected ClientResponseFailure");
@@ -112,7 +125,8 @@ public class MockVmResourceTest extends MockTestBase {
             Fault fault = (Fault)cfe.getResponse().getEntity(Fault.class);
             assertNotNull(fault);
             assertEquals("Broken immutability constraint", fault.getReason());
-            assertEquals("Attempt to set immutable field: id", fault.getDetail());
+            assertEquals("Attempt to set immutable field: " + field, fault.getDetail());
         }
     }
+
 }

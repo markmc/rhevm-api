@@ -119,6 +119,10 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
         return addLinks(runAndParseSingle(buf.toString()));
     }
 
+    protected String[] getStrictlyImmutable() {
+        return addStrictlyImmutable("type");
+    }
+
     @Override
     public Response start(UriInfo uriInfo, Action action) {
         return doAction(uriInfo, new CommandRunner(action, "start-vm", "vm", getId(), getShell()));

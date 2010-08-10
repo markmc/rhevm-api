@@ -78,6 +78,13 @@ public abstract class AbstractUpdatableResource<R extends BaseResource> {
         return STRICTLY_IMMUTABLE;
     }
 
+    protected String[] addStrictlyImmutable(String... fields) {
+        String[] immutable = new String[STRICTLY_IMMUTABLE.length + fields.length];
+        System.arraycopy(STRICTLY_IMMUTABLE, 0, immutable, 0, STRICTLY_IMMUTABLE.length);
+        System.arraycopy(fields, 0, immutable, STRICTLY_IMMUTABLE.length, fields.length);
+        return immutable;
+    }
+
     /**
      * Refresh the current model state for update validity checking.
      *

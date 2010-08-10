@@ -29,6 +29,7 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.mock.util.SimpleQueryEvaluator;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
+import com.redhat.rhevm.api.model.VmType;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.resource.VmsResource;
 
@@ -53,6 +54,7 @@ public class MockVmsResource extends AbstractMockQueryableResource<VM> implement
             while (vms.size() < 10) {
                 MockVmResource resource = new MockVmResource(allocateId(VM.class), getExecutor());
                 resource.getModel().setName("vm" + resource.getModel().getId());
+                resource.getModel().setType(VmType.SERVER);
                 vms.put(resource.getModel().getId(), resource);
             }
         }

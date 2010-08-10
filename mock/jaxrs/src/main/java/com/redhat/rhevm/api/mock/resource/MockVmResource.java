@@ -84,6 +84,10 @@ public class MockVmResource extends AbstractMockResource<VM> implements VmResour
         return addLinks();
     }
 
+    protected String[] getStrictlyImmutable() {
+        return addStrictlyImmutable("type");
+    }
+
     @Override
     public Response start(UriInfo uriInfo, Action action) {
         return doAction(uriInfo, new VmStatusSetter(action, MockVmStatus.UP));

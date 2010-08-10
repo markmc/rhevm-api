@@ -28,6 +28,7 @@ import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Fault;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.model.VmType;
 
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellException;
@@ -109,15 +110,26 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     }
 
     @Test
-    public void testBadUpdate() throws Exception {
+    public void testBadIdUpdate() throws Exception {
+        VM update = getVM(BAD_ID, NEW_NAME);
+        doTestBadUpdate(update, "id");
+    }
+
+    @Test
+    public void testBadTypeUpdate() throws Exception {
+        VM update = getVM(NEW_NAME);
+        update.setType(VmType.DESKTOP);
+        doTestBadUpdate(update, "type");
+    }
+
+    public void doTestBadUpdate(VM update, String field) throws Exception {
         try {
             UriInfo uriInfo = createMock(UriInfo.class);
             replayAll();
-            resource.update(uriInfo,
-                            getVM(BAD_ID, NEW_NAME));
+            resource.update(uriInfo, update);
             fail("expected WebApplicationException on bad update");
         } catch (WebApplicationException wae) {
-            verifyUpdateException(wae);
+            verifyUpdateException(wae, field);
         }
     }
 
@@ -291,12 +303,12 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
         verifyActionResponse(r, "vms/" + VM_ID, async, reason, detailExerpt);
     }
 
-    private void verifyUpdateException(WebApplicationException wae) {
+    private void verifyUpdateException(WebApplicationException wae, String field) {
         assertEquals(409, wae.getResponse().getStatus());
         Fault fault = (Fault)wae.getResponse().getEntity();
         assertNotNull(fault);
         assertEquals("Broken immutability constraint", fault.getReason());
-        assertEquals("Attempt to set immutable field: id", fault.getDetail());
+        assertEquals("Attempt to set immutable field: " + field, fault.getDetail());
     }
 
     protected static String[] asArray(String s) {
