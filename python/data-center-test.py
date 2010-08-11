@@ -32,13 +32,24 @@ for fmt in [xmlfmt]:
 
    print "=== ", fmt.MEDIA_TYPE, " ==="
 
-   t.get(links['datacenters'])
+   v = None
+   for d in t.get(links['datacenters']):
+      v = d.supported_versions[0]
 
    d = fmt.DataCenter()
    d.name = randomName('dc')
    d.description = 'The %(name)s data center' % {'name' : d.name}
    d.storage_type = 'NFS'
+   if not v is None:
+      d.version = v
+   else:
+      d.version = fmt.Version()
+      d.version.major = '2'
+      d.version.minor = '2'
 
    d = t.create(links['datacenters'], d)
+
+   d.description += " (UPDATED!)"
+   d = t.update(d.href, d, 200)
 
    t.delete(d.href)

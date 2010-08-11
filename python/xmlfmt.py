@@ -111,6 +111,11 @@ class VLAN(Element):
     NAME = 'vlan'
     ATTRIBUTES = Element.ATTRIBUTES + ['id']
 
+class Version(Element):
+    NAME = 'version'
+    ATTRIBUTES = Element.ATTRIBUTES + ['major', 'minor']
+    COLLECTION = 'supported_versions'
+
 class Base(Element):
     ATTRIBUTES = Element.ATTRIBUTES + ["id", "href"]
     ELEMENTS = Element.ELEMENTS + ["name", "description", "actions", "link"]
@@ -128,12 +133,12 @@ class CdRom(Base):
 class Cluster(Base):
     NAME = "cluster"
     COLLECTION = "clusters"
-    ELEMENTS = Base.ELEMENTS + ["data_center", "cpu"]
+    ELEMENTS = Base.ELEMENTS + ["data_center", "cpu", "version", "supported_versions"]
 
 class DataCenter(Base):
     NAME = "data_center"
     COLLECTION = "data_centers"
-    ELEMENTS = Base.ELEMENTS + ["storage_type"]
+    ELEMENTS = Base.ELEMENTS + ["storage_type", "version", "supported_versions"]
 
 class Disk(Base):
     NAME = 'disk'
@@ -183,7 +188,7 @@ class Template(Base):
     COLLECTION = "templates"
     ELEMENTS = Base.ELEMENTS + ['type', 'status', 'memory', 'os', 'cpu', 'cluster', 'vm']
 
-TYPES = [ Action, Actions, Attachment, Boot, CdRom, Cluster, CPU, DataCenter, Disk, GracePeriod, Host, IP, Iso, Link, MAC, Network, NIC, OS, Storage, StorageDomain, Template, Topology, VLAN, VM, VmPool ]
+TYPES = [ Action, Actions, Attachment, Boot, CdRom, Cluster, CPU, DataCenter, Disk, GracePeriod, Host, IP, Iso, Link, MAC, Network, NIC, OS, Storage, StorageDomain, Template, Topology, Version, VLAN, VM, VmPool ]
 
 def findEntityType(name):
     for t in TYPES:

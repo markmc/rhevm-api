@@ -37,14 +37,23 @@ for fmt in [xmlfmt]:
 
    dc = t.get(links['datacenters'])[0]
 
+   v = None
    for cpu in t.get(links['cpus']):
       c = fmt.Cluster()
-      c.name = "foo"
+      c.name = randomName("c")
       c.cpu = fmt.CPU()
       c.cpu.id = cpu.id
       c.data_center = fmt.DataCenter()
       c.data_center.id = dc.id
 
+      if not v is None:
+         c.version = v
+
       c = t.create(links['clusters'], c)
 
+      c.name += "u"
+      c = t.update(c.href, c, 200)
+
       t.delete(c.href)
+
+      v = c.supported_versions[0]
