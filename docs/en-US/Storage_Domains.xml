@@ -79,7 +79,7 @@
   </screen>
 
   <para>
-    When creating a new storage domain, the <literal>name</literal>, <literal>type</literal>, <literal>storage</literal> and <literal>host</literal> elements are required. Only the <literal>name</literal> element may be updated post-creation.
+    When creating a new storage domain, the <literal>name</literal>, <literal>type</literal>, <literal>storage</literal> and <literal>host</literal> elements are required. The <literal>host</literal> may be identified by either <literal>id</literal> or <literal>name</literal>. Only the <literal>name</literal> element may be updated post-creation.
   </para>
 
   <para>
@@ -96,7 +96,7 @@
     </title>
 
     <para>
-      The teardown removes the storage domain from the physical storage. A <literal>host</literal> which has physical access to the storage must be supplied.
+      The teardown removes the storage domain from the physical storage. A <literal>host</literal> (identified by <literal>id</literal> or <literal>name</literal>) which has physical access to the storage must be supplied.
     </para>
 
     <screen>

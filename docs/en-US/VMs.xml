@@ -89,7 +89,7 @@
   </screen>
 
   <para>
-    When creating a new VM, the <literal>name</literal>, <literal>template id</literal> and <literal>cluster id</literal> elements are required. The <literal>name</literal>, <literal>description</literal>, <literal>type</literal>, <literal>memory</literal>, <literal>cpu topology</literal> and <literal>os boot dev</literal> properties may be updated post-creation.
+    When creating a new VM, the <literal>name</literal>, <literal>template</literal> and <literal>cluster</literal> elements are required. The  <literal>template</literal> and <literal>cluster</literal> may be identified by <literal>id</literal> or <literal>name</literal>. The <literal>name</literal>, <literal>description</literal>, <literal>type</literal>, <literal>memory</literal>, <literal>cpu topology</literal> and <literal>os boot dev</literal> properties may be updated post-creation.
   </para>
 
   <para>
@@ -365,7 +365,7 @@ Content-type: application/xml
     </title>
 
     <para>
-      Migrate a VM to another physical host. The destination host is a required parameter.
+      Migrate a VM to another physical host. The destination host id or name is a required parameter.
     </para>
 
     <screen>

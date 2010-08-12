@@ -133,7 +133,7 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
             resource.add(setUpResourceExpectations(new String[]{}, new String[]{}, false, null), model);
             fail("expected WebApplicationException on incomplete parameters");
         } catch (WebApplicationException wae) {
-             verifyIncompleteException(wae, "VM", "add", "template", "cluster");
+             verifyIncompleteException(wae, "VM", "add", "template.id|name", "cluster.id|name");
         }
     }
 

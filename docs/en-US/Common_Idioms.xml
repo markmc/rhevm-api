@@ -146,7 +146,7 @@ Content-Type: application/xml
     </para>
 
     <para>
-      Each resource type has its own specific required properties which the client must supply when creating a new resource. Refer to the indiviual resource type documentation for more details.
+      Each resource type has its own specific required properties which the client must supply when creating a new resource. Refer to the indiviual resource type documentation for more details. If a required property is absent, the creation will fail with a <literal>Fault</literal> representation indicating the missing elements.
     </para>
 
     <screen>
@@ -269,7 +269,7 @@ HTTP/1.1 204 No Content
         </tgroup>
       </informaltable>
 
-      Individual actions and their parameters are documented in the individual resource type's documentation.
+      Individual actions and their parameters are documented in the individual resource type's documentation. Some parameters are mandatory for specific actions, in which case their absence is indicated with a <literal>Fault</literal> response.
     </para>
 
 

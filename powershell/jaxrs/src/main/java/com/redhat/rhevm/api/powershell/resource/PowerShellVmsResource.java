@@ -59,7 +59,7 @@ public class PowerShellVmsResource
 
     @Override
     public Response add(UriInfo uriInfo, VM vm) {
-        validateParameters(vm, "name", "template", "cluster");
+        validateParameters(vm, "name", "template.id|name", "cluster.id|name");
         StringBuilder buf = new StringBuilder();
 
         String templateArg = null;
