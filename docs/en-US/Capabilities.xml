@@ -6,13 +6,25 @@
 <chapter id="chap-REST_API_Guide-Capabilities">
   <title>Capabilities</title>
   <para>
-    The <literal>rel="cpus"</literal> link obtained from the entry point URI (see <xref linkend="chap-REST_API_Guide-Entry_Point"/>) allows the information about the supported capabilities of this instance of RHEV-M to be queried. The <literal>capabilities</literal> element may contain the following information:
+    The <literal>rel="capabilities"</literal> link obtained from the entry point URI (see <xref linkend="chap-REST_API_Guide-Entry_Point"/>) allows information about the supported capabilities of this instance of RHEV-M to be queried. The <literal>capabilities</literal> element contains any number of <literal>version</literal> elements which describe capabilities which are dependent on the cluster version level. The <literal>version</literal> element may contain the following information:
 
     <informaltable frame="none">
       <tgroup cols="2">
         <colspec colwidth="2*"/>
         <colspec colwidth="5*"/>
         <tbody>
+          <row>
+            <entry><literal>major</literal></entry>
+            <entry>The major version number</entry>
+          </row>
+          <row>
+            <entry><literal>minor</literal></entry>
+            <entry>The minor version number</entry>
+          </row>
+          <row>
+            <entry><literal>current</literal></entry>
+            <entry>Whether this is the most recent supported cluster version level</entry>
+          </row>
           <row>
             <entry><literal>cpus</literal></entry>
             <entry>The list of supported CPU types. See <xref linkend="sect-REST_API_Guide-Capabilities-CPUs"/></entry>
@@ -32,10 +44,19 @@ HTTP/1.1 200 OK
 Content-Type: application/xml
 
 &lt;capabilities&gt;
-  &lt;cpus&gt;
+  &lt;version major="2" minor="2"&gt;
+    &lt;current/&gt;
+    &lt;cpus&gt;
+      ...
+    &lt;/cpus&gt;
     ...
-  &lt;/cpus&gt;
-  ...
+  &lt;/version&gt;
+  &lt;version major="2" minor="1"&gt;
+    &lt;cpus&gt;
+      ...
+    &lt;/cpus&gt;
+    ...
+  &lt;/version&gt;
 &lt;/capabilities&gt;
   </screen>
 
