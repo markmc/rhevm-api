@@ -50,10 +50,9 @@ public class MutabilityAssertor {
      * Validate update from an immutability point of view.
      *
      * @param <T>       representation type
-     * @param <T>       representation type
      * @param strict    array of strictly immutable field names
-     * @param incoming  the incoming Host representation
-     * @param existing  the existing Host representation
+     * @param incoming  the incoming representation
+     * @param existing  the existing representation
      * @throws WebApplicationException wrapping an appropriate response
      * iff an immutability constraint has been broken
      */
@@ -71,7 +70,6 @@ public class MutabilityAssertor {
      * @param strict    array of strictly immutable field names
      * @param incoming  incoming representation
      * @param existing  existing representation
-     * @param headers   the incoming HTTP headers
      * @return          error Response if appropriate
      */
     public static <T extends BaseResource> Response imposeConstraints(String[] strict, T incoming, T existing) {
