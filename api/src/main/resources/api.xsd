@@ -645,6 +645,9 @@
           <xs:attribute name="dev" type="BootDevice"/>
         </xs:complexType>
       </xs:element>
+      <xs:element name="kernel" type="xs:string" minOccurs="0"/>
+      <xs:element name="initrd" type="xs:string" minOccurs="0"/>
+      <xs:element name="cmdline" type="xs:string" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
 
