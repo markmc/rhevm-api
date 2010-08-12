@@ -317,12 +317,29 @@
 
   <xs:element name="capabilities" type="Capabilities"/>
 
+  <xs:complexType name="VersionCaps">
+    <xs:complexContent>
+      <xs:extension base="Version">
+        <xs:sequence>
+          <xs:element name="current" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="cpus" type="CPUs" minOccurs="0">
+            <xs:annotation>
+              <xs:appinfo>
+                <jaxb:property name="CPUs"/>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
   <xs:complexType name="Capabilities">
     <xs:sequence>
-      <xs:element name="cpus" type="CPUs" minOccurs="0">
+      <xs:element name="version" type="VersionCaps" maxOccurs="unbounded">
         <xs:annotation>
           <xs:appinfo>
-            <jaxb:property name="CPUs"/>
+            <jaxb:property name="Versions"/>
           </xs:appinfo>
         </xs:annotation>
       </xs:element>

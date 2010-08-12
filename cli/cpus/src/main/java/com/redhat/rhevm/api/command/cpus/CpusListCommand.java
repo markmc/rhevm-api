@@ -27,7 +27,7 @@ import com.redhat.rhevm.api.command.base.AbstractCommand;
 
 import com.redhat.rhevm.api.model.Capabilities;
 import com.redhat.rhevm.api.model.CPU;
-import com.redhat.rhevm.api.model.CPUs;
+import com.redhat.rhevm.api.model.VersionCaps;
 
 import static com.redhat.rhevm.api.command.base.BaseClient.pad;
 
@@ -38,22 +38,28 @@ import static com.redhat.rhevm.api.command.base.BaseClient.pad;
 public class CpusListCommand extends AbstractCommand {
 
     protected Object doExecute() throws Exception {
-        CPUs cpus = client.getRel("cpus", Capabilities.class).getCPUs();
-        if (cpus == null) {
-            return null;
-        }
-        List<CPU> collection = cpus.getCPUs();
-
-        int i = 0, widestId = 0;
-        for (CPU resource : collection) {
-            if (resource.getId() != null && resource.getId().length() > widestId) {
-                widestId = resource.getId().length();
+        for (VersionCaps version : client.getRel("capabilities", Capabilities.class).getVersions()) {
+            if (!version.isSetCurrent() || !version.isCurrent()) {
+                continue;
             }
-        }
-        for (CPU resource : collection) {
-            System.out.println(pad(resource.getId(), widestId)
-                               + pad(Integer.toString(resource.getLevel()), 0)
-                               + resource.getFlags().getFlags());
+
+            if (!version.isSetCPUs()) {
+                return null;
+            }
+
+            List<CPU> collection = version.getCPUs().getCPUs();
+
+            int i = 0, widestId = 0;
+            for (CPU resource : collection) {
+                if (resource.getId() != null && resource.getId().length() > widestId) {
+                    widestId = resource.getId().length();
+                }
+            }
+            for (CPU resource : collection) {
+                System.out.println(pad(resource.getId(), widestId)
+                                   + pad(Integer.toString(resource.getLevel()), 0)
+                                   + resource.getFlags().getFlags());
+            }
         }
         return null;
     }

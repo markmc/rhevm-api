@@ -23,6 +23,7 @@ import org.junit.Test;
 
 import com.redhat.rhevm.api.model.Capabilities;
 import com.redhat.rhevm.api.model.CPU;
+import com.redhat.rhevm.api.model.VersionCaps;
 import com.redhat.rhevm.api.resource.CapabilitiesResource;
 import com.redhat.rhevm.api.common.resource.DefaultCapabilitiesResource;
 
@@ -42,17 +43,29 @@ public class PowerShellCapabilitiesResourceTest extends BasePowerShellResourceTe
         assertNotNull(cpu.getFlags().getFlags().size() > 0);
     }
 
+    private void checkVersion(VersionCaps version, int major, int minor, Boolean current) {
+        assertEquals(major, version.getMajor());
+        assertEquals(minor, version.getMinor());
+        assertEquals(current, version.isCurrent());
+
+        assertNotNull(version.getCPUs());
+        assertNotNull(version.getCPUs().getCPUs());
+        assertTrue(version.getCPUs().getCPUs().size() > 0);
+
+        for (CPU cpu : version.getCPUs().getCPUs()) {
+            checkCpu(cpu);
+        }
+    }
+
     @Test
     public void testGet() {
         Capabilities caps = resource.get();
 
         assertNotNull(caps);
-        assertNotNull(caps.getCPUs());
-        assertNotNull(caps.getCPUs().getCPUs());
-        assertTrue(caps.getCPUs().getCPUs().size() > 0);
+        assertNotNull(caps.getVersions());
+        assertEquals(2, caps.getVersions().size());
 
-        for (CPU cpu : caps.getCPUs().getCPUs()) {
-            checkCpu(cpu);
-        }
+        checkVersion(caps.getVersions().get(0), 2, 2, true);
+        checkVersion(caps.getVersions().get(1), 2, 1, null);
     }
 }
