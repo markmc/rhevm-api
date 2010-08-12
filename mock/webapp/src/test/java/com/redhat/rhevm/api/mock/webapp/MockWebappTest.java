@@ -98,7 +98,7 @@ public class MockWebappTest extends Assert {
     private void doTestGet(String context, String expectedReponsePattern) throws Exception {
         ServletUnitClient client = runner.newClient();
         WebRequest request = new GetMethodWebRequest(BASE_URL + RHEVM_CONTEXT_PATH + context);
-        request.setHeaderField("Accept", "application/xml");
+        setClientHeaders(request);
 
         verify(client.getResponse(request), 200, expectedReponsePattern);
     }
@@ -129,7 +129,7 @@ public class MockWebappTest extends Assert {
             isPost
             ? new PostMethodWebRequest(BASE_URL + RHEVM_CONTEXT_PATH + context, requestBody, contentType)
             : new PutMethodWebRequest(BASE_URL + RHEVM_CONTEXT_PATH + context, requestBody, contentType);
-        request.setHeaderField("Accept", "application/xml");
+        setClientHeaders(request);
 
         verify(client.getResponse(request), expectedStatus, expectedReponsePattern);
     }
@@ -158,5 +158,10 @@ public class MockWebappTest extends Assert {
         }
         os.flush();
         return os.toString();
+    }
+
+    private void setClientHeaders(WebRequest request) {
+        request.setHeaderField("Accept", "application/xml");
+        request.setHeaderField("Authorization", "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==");
     }
 }
