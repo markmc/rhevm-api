@@ -18,9 +18,10 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import javax.ws.rs.WebApplicationException;
+
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.Host;
-import com.redhat.rhevm.api.model.Hosts;
 
 import org.junit.Test;
 
@@ -109,6 +110,18 @@ public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionRes
                                                       NEW_NAME),
                          model),
             NEW_NAME, NO_DESCRIPTION);
+    }
+
+    @Test
+    public void testAddIncompleteParameters() throws Exception {
+        Host model = new Host();
+        model.setName(NEW_NAME);
+        try {
+            resource.add(setUpResourceExpectations(new String[]{}, new String[]{}, false, null), model);
+            fail("expected WebApplicationException on incomplete parameters");
+        } catch (WebApplicationException wae) {
+             verifyIncompleteException(wae, "Host", "add", "address");
+        }
     }
 
     @Test

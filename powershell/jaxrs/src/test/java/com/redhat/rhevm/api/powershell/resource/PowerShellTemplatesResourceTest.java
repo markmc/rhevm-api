@@ -18,6 +18,8 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import javax.ws.rs.WebApplicationException;
+
 import org.junit.Test;
 
 import com.redhat.rhevm.api.model.Cluster;
@@ -127,6 +129,18 @@ public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectio
                                                       NEW_NAME),
                          model),
             NEW_NAME, NEW_DESCRIPTION);
+    }
+
+    @Test
+    public void testAddIncompleteParameters() throws Exception {
+        Template model = new Template();
+        model.setName(NEW_NAME);
+        try {
+            resource.add(setUpResourceExpectations(new String[]{}, new String[]{}, false, null), model);
+            fail("expected WebApplicationException on incomplete parameters");
+        } catch (WebApplicationException wae) {
+             verifyIncompleteException(wae, "Template", "add", "vm.id|name");
+        }
     }
 
     @Test

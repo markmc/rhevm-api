@@ -34,6 +34,8 @@ import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
+import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
+
 public class PowerShellTemplatesResource
     extends AbstractPowerShellCollectionResource<Template, PowerShellTemplateResource>
     implements TemplatesResource {
@@ -57,9 +59,9 @@ public class PowerShellTemplatesResource
 
     @Override
     public Response add(UriInfo uriInfo, Template template) {
+        validateParameters(template, "name", "vm.id|name");
         StringBuilder buf = new StringBuilder();
 
-        String vmArg = null;
         if (template.getVm().isSetId()) {
             buf.append("$v = get-vm " + PowerShellUtils.escape(template.getVm().getId())+ ";");
         } else {

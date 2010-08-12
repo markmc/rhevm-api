@@ -130,6 +130,16 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
     }
 
     @Test
+    public void testIncompleteInstall() throws Exception {
+        try {
+            resource.install(setUpActionExpectation(null, null, null, null), getAction());
+            fail("expected WebApplicationException on incomplete parameters");
+        } catch (WebApplicationException wae) {
+             verifyIncompleteException(wae, "Action", "install", "rootPassword");
+        }
+    }
+
+    @Test
     public void testActivate() throws Exception {
         verifyActionResponse(
             resource.activate(setUpActionExpectation("activate", "resume-host"), getAction()),

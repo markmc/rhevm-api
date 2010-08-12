@@ -18,10 +18,11 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import javax.ws.rs.WebApplicationException;
+
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VM;
-import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.powershell.enums.PowerShellBootSequence;
 
 import org.junit.Test;
@@ -122,6 +123,18 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
                                                       NEW_NAME),
                          model),
             NEW_NAME, NEW_DESCRIPTION);
+    }
+
+    @Test
+    public void testAddIncompleteParameters() throws Exception {
+        VM model = new VM();
+        model.setName(NEW_NAME);
+        try {
+            resource.add(setUpResourceExpectations(new String[]{}, new String[]{}, false, null), model);
+            fail("expected WebApplicationException on incomplete parameters");
+        } catch (WebApplicationException wae) {
+             verifyIncompleteException(wae, "VM", "add", "template", "cluster");
+        }
     }
 
     @Test

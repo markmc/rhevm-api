@@ -32,6 +32,8 @@ import com.redhat.rhevm.api.resource.StorageDomainResource;
 import com.redhat.rhevm.api.resource.StorageDomainsResource;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
+import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
+
 
 public class PowerShellStorageDomainsResource extends AbstractPowerShellCollectionResource<StorageDomain, PowerShellStorageDomainResource> implements StorageDomainsResource {
 
@@ -61,7 +63,7 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
 
         for (String id : tornDownDomains.keySet()) {
             PowerShellStorageDomainResource resource = tornDownDomains.get(id);
-            ret.getStorageDomains().add(resource.addLinks(resource.getTornDown()));
+            ret.getStorageDomains().add(PowerShellStorageDomainResource.addLinks(resource.getTornDown()));
         }
 
         return ret;
@@ -69,6 +71,7 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
 
     @Override
     public Response add(UriInfo uriInfo, StorageDomain storageDomain) {
+        validateParameters(storageDomain, "name", "host.id|name", "type", "storage.type");
         StringBuilder buf = new StringBuilder();
 
         String hostArg = null;

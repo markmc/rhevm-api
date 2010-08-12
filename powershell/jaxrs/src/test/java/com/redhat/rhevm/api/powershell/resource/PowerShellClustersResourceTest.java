@@ -18,8 +18,9 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import javax.ws.rs.WebApplicationException;
+
 import com.redhat.rhevm.api.model.Cluster;
-import com.redhat.rhevm.api.model.Clusters;
 import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.Version;
@@ -94,6 +95,18 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
             resource.add(setUpResourceExpectations(2, commands, returns, true, null, NEW_NAME),
                          getModel(NEW_NAME, NEW_DESCRIPTION)),
             NEW_NAME, NEW_DESCRIPTION);
+    }
+
+    @Test
+    public void testAddIncompleteParameters() throws Exception {
+        Cluster model = new Cluster();
+        model.setName(NEW_NAME);
+        try {
+            resource.add(setUpResourceExpectations(new String[]{}, new String[]{}, false, null), model);
+            fail("expected WebApplicationException on incomplete parameters");
+        } catch (WebApplicationException wae) {
+             verifyIncompleteException(wae, "Cluster", "add", "dataCenter.id", "cpu.id");
+        }
     }
 
     @Test

@@ -38,6 +38,8 @@ import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
+import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
+
 
 public class PowerShellVmResource extends AbstractPowerShellActionableResource<VM> implements VmResource {
 
@@ -106,8 +108,12 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
         }
         if (vm.getCpu() != null && vm.getCpu().getTopology() != null) {
             CpuTopology topology = vm.getCpu().getTopology();
-            buf.append(" $v.numofsockets = " + topology.getSockets() + ";");
-            buf.append(" $v.numofcpuspersocket = " + topology.getCores() + ";");
+            if (topology.isSetSockets()) {
+                buf.append(" $v.numofsockets = " + topology.getSockets() + ";");
+            }
+            if (topology.isSetCores()) {
+                buf.append(" $v.numofcpuspersocket = " + topology.getCores() + ";");
+            }
         }
         String bootSequence = PowerShellVM.buildBootSequence(vm.getOs());
         if (bootSequence != null) {
@@ -150,6 +156,7 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
 
     @Override
     public Response migrate(UriInfo uriInfo, Action action) {
+        validateParameters(action, "host.id|name");
         StringBuilder buf = new StringBuilder();
 
         String hostArg;

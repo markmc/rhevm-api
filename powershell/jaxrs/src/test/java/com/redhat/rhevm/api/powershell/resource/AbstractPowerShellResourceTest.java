@@ -85,15 +85,19 @@ public abstract class AbstractPowerShellResourceTest<R extends BaseResource,
     }
 
     protected UriInfo setUpActionExpectation(String baseUri, String verb, String command, Object ret) throws Exception {
-        mockStatic(PowerShellCmd.class);
-        if (ret instanceof Throwable) {
-            expect(PowerShellCmd.runCommand(setUpShellExpectations(), command)).andThrow((Throwable)ret);
-        } else  {
-            expect(PowerShellCmd.runCommand(setUpShellExpectations(), command)).andReturn((String)ret);
+        if (command != null) {
+            mockStatic(PowerShellCmd.class);
+            if (ret instanceof Throwable) {
+                expect(PowerShellCmd.runCommand(setUpShellExpectations(), command)).andThrow((Throwable)ret);
+            } else  {
+                expect(PowerShellCmd.runCommand(setUpShellExpectations(), command)).andReturn((String)ret);
+            }
         }
 
         UriInfo uriInfo = createMock(UriInfo.class);
-        expect(uriInfo.getPath()).andReturn(baseUri).times(2);
+        if (baseUri != null) {
+            expect(uriInfo.getPath()).andReturn(baseUri).times(2);
+        }
 
         replayAll();
 

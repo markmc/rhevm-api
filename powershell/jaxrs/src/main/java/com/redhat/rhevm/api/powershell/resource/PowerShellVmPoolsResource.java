@@ -30,6 +30,8 @@ import com.redhat.rhevm.api.resource.VmPoolsResource;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
+import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
+
 
 public class PowerShellVmPoolsResource
     extends AbstractPowerShellCollectionResource<VmPool, PowerShellVmPoolResource>
@@ -58,6 +60,7 @@ public class PowerShellVmPoolsResource
 
     @Override
     public Response add(UriInfo uriInfo, VmPool pool) {
+        validateParameters(pool, "name", "template.id|name", "cluster.id|name");
         StringBuilder buf = new StringBuilder();
 
         String templateArg = null;

@@ -189,6 +189,16 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     }
 
     @Test
+    public void testIncompleteMigrate() throws Exception {
+        try {
+            resource.migrate(setUpActionExpectation(null, null, null, null), getAction());
+            fail("expected WebApplicationException on incomplete parameters");
+        } catch (WebApplicationException wae) {
+             verifyIncompleteException(wae, "Action", "migrate", "host.id|name");
+        }
+    }
+
+    @Test
     public void testStartAsync() throws Exception {
         verifyActionResponse(
             resource.start(setUpActionExpectation("start", "start-vm"), getAction(true)),

@@ -27,7 +27,6 @@ import com.redhat.rhevm.api.model.CpuTopology;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.resource.TemplateResource;
-import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.common.util.ReflectionHelper;
@@ -112,8 +111,12 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
         }
         if (template.getCpu() != null && template.getCpu().getTopology() != null) {
             CpuTopology topology = template.getCpu().getTopology();
-            buf.append(" $t.numofsockets = " + topology.getSockets() + ";");
-            buf.append(" $t.numofcpuspersocket = " + topology.getCores() + ";");
+            if (topology.isSetSockets()) {
+                buf.append(" $t.numofsockets = " + topology.getSockets() + ";");
+            }
+            if (topology.isSetCores()) {
+                buf.append(" $t.numofcpuspersocket = " + topology.getCores() + ";");
+            }
         }
         String bootSequence = PowerShellVM.buildBootSequence(template.getOs());
         if (bootSequence != null) {

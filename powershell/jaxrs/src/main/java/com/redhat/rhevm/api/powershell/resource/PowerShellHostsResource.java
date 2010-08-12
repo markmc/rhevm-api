@@ -30,8 +30,9 @@ import com.redhat.rhevm.api.resource.HostResource;
 import com.redhat.rhevm.api.resource.HostsResource;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
-import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+
+import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
 
 
 public class PowerShellHostsResource
@@ -57,6 +58,7 @@ public class PowerShellHostsResource
 
     @Override
     public Response add(UriInfo uriInfo, Host host) {
+        validateParameters(host, "name", "address");
         StringBuilder buf = new StringBuilder();
 
         String clusterArg = getClusterArg(buf, host);

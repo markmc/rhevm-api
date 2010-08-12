@@ -32,6 +32,8 @@ import com.redhat.rhevm.api.resource.DataCentersResource;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
+import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
+
 
 public class PowerShellDataCentersResource
     extends AbstractPowerShellCollectionResource<DataCenter, PowerShellDataCenterResource>
@@ -60,6 +62,7 @@ public class PowerShellDataCentersResource
 
     @Override
     public Response add(UriInfo uriInfo, DataCenter dataCenter) {
+        validateParameters(dataCenter, "name", "storageType");
         StringBuilder buf = new StringBuilder();
 
         buf.append("foreach ($v in get-clustercompatibilityversions) { ");

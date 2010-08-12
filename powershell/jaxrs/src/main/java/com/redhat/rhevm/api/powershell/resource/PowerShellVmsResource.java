@@ -33,6 +33,7 @@ import com.redhat.rhevm.api.resource.VmsResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
+import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
 import static com.redhat.rhevm.api.powershell.util.PowerShellCmd.runCommand;
 
 public class PowerShellVmsResource
@@ -58,6 +59,7 @@ public class PowerShellVmsResource
 
     @Override
     public Response add(UriInfo uriInfo, VM vm) {
+        validateParameters(vm, "name", "template", "cluster");
         StringBuilder buf = new StringBuilder();
 
         String templateArg = null;

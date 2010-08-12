@@ -41,6 +41,8 @@ import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
+import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
+
 
 public class PowerShellStorageDomainResource extends AbstractPowerShellActionableResource<StorageDomain> implements StorageDomainResource {
 
@@ -176,12 +178,14 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
         StringBuilder buf = new StringBuilder();
         if (tornDown != null) {
             // update writable fields only
-            tornDown.setName(storageDomain.getName());
+            if (storageDomain.isSetName()) {
+                tornDown.setName(storageDomain.getName());
+            }
             storageDomain = tornDown;
         } else {
             buf.append("$h = get-storagedomain " + PowerShellUtils.escape(getId()) + ";");
 
-            if (storageDomain.getName() != null) {
+            if (storageDomain.isSetName()) {
                 buf.append("$h.name = " + PowerShellUtils.escape(storageDomain.getName()) + ";");
             }
 
@@ -194,6 +198,7 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
 
     @Override
     public Response teardown(UriInfo uriInfo, Action action) {
+        validateParameters(action, "host.id|name");
         return doAction(uriInfo, new StorageDomainTeardowner(action));
     }
 

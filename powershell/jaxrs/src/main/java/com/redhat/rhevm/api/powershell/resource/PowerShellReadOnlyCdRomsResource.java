@@ -23,10 +23,7 @@ import com.redhat.rhevm.api.model.CdRoms;
 import com.redhat.rhevm.api.model.Iso;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.common.util.LinkHelper;
-import com.redhat.rhevm.api.powershell.model.PowerShellVM;
-import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
-import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
 public class PowerShellReadOnlyCdRomsResource extends AbstractPowerShellDevicesResource<CdRom, CdRoms> {

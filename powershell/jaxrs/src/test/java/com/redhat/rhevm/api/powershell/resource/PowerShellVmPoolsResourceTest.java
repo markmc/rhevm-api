@@ -18,10 +18,11 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import javax.ws.rs.WebApplicationException;
+
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VmPool;
-import com.redhat.rhevm.api.model.VmPools;
 
 import org.junit.Test;
 
@@ -141,6 +142,20 @@ public class PowerShellVmPoolsResourceTest extends AbstractPowerShellCollectionR
             resource.add(setUpResourceExpectations(2, commands, returns, true, null, NEW_NAME),
                          model),
             NEW_NAME, NEW_DESCRIPTION);
+    }
+
+
+    @Test
+    public void testAddIncompleteParameters() throws Exception {
+        VmPool model = new VmPool();
+        model.setName(NEW_NAME);
+        model.setTemplate(new Template());
+        try {
+            resource.add(setUpResourceExpectations(new String[]{}, new String[]{}, false, null), model);
+            fail("expected WebApplicationException on incomplete parameters");
+        } catch (WebApplicationException wae) {
+             verifyIncompleteException(wae, "VmPool", "add", "template.id|name", "cluster.id|name");
+        }
     }
 
     @Test

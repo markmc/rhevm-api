@@ -18,6 +18,8 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import javax.ws.rs.WebApplicationException;
+
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.Network;
 
@@ -54,6 +56,18 @@ public class PowerShellNetworksResourceTest extends AbstractPowerShellCollection
                                                       NEW_NAME),
                          getModel(NEW_NAME, NEW_DESCRIPTION)),
             NEW_NAME, NEW_DESCRIPTION);
+    }
+
+    @Test
+    public void testAddIncompleteParameters() throws Exception {
+        Network model = new Network();
+        model.setName(NEW_NAME);
+        try {
+            resource.add(setUpResourceExpectations(new String[]{}, new String[]{}, false, null), model);
+            fail("expected WebApplicationException on incomplete parameters");
+        } catch (WebApplicationException wae) {
+             verifyIncompleteException(wae, "Network", "add", "dataCenter.id");
+        }
     }
 
     @Test

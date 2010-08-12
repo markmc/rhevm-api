@@ -19,8 +19,14 @@
 package com.redhat.rhevm.api.powershell.resource;
 
 import java.text.MessageFormat;
+import java.util.Arrays;
+
+import javax.ws.rs.WebApplicationException;
+
 import org.junit.Assert;
 import org.junit.Ignore;
+
+import com.redhat.rhevm.api.model.Fault;
 import com.redhat.rhevm.api.powershell.util.PowerShellTestUtils;
 
 @Ignore
@@ -46,9 +52,17 @@ public class BasePowerShellResourceTest extends Assert {
         StringBuilder buffer = new StringBuilder();
         buffer.append("<?xml version=\"1.0\"?>");
         buffer.append("<Objects>");
-        buffer.append(MessageFormat.format(tmpl, new String[] { Integer.toString(major), Integer.toString(minor) }));
+        buffer.append(MessageFormat.format(tmpl, new Object[] { Integer.toString(major), Integer.toString(minor) }));
         buffer.append("</Objects>");
         return buffer.toString();
+    }
+
+    protected void verifyIncompleteException(WebApplicationException wae, String type, String method, String... fields) {
+        assertEquals(400, wae.getResponse().getStatus());
+        Fault fault = (Fault)wae.getResponse().getEntity();
+        assertNotNull(fault);
+        assertEquals("Incomplete parameters", fault.getReason());
+        assertEquals(type + " " +  Arrays.asList(fields) + " required for " + method, fault.getDetail());
     }
 
     static Object[] buildArgs(String id, String name, String description, Object[] args) {

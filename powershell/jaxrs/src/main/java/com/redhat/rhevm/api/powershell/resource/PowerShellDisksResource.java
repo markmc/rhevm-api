@@ -31,6 +31,8 @@ import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 import com.redhat.rhevm.api.resource.DevicesResource;
 
+import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
+
 
 public class PowerShellDisksResource
     extends PowerShellReadOnlyDisksResource
@@ -45,6 +47,7 @@ public class PowerShellDisksResource
 
     @Override
     public Response add(UriInfo uriInfo, Disk disk) {
+        validateParameters(disk, "size");
         StringBuilder buf = new StringBuilder();
 
         buf.append("$d = new-disk");

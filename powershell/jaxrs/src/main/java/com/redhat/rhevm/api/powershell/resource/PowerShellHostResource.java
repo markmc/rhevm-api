@@ -34,6 +34,8 @@ import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
+import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
+
 
 public class PowerShellHostResource extends AbstractPowerShellActionableResource<Host> implements HostResource {
 
@@ -94,6 +96,7 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
 
     @Override
     public Response install(UriInfo uriInfo, Action action) {
+        validateParameters(action, "rootPassword");
         return doAction(uriInfo, new HostInstaller(action, action.getRootPassword(), getShell()));
     }
 

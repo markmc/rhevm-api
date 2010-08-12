@@ -18,11 +18,11 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import java.text.MessageFormat;
 import java.util.List;
 
+import javax.ws.rs.WebApplicationException;
+
 import com.redhat.rhevm.api.model.DataCenter;
-import com.redhat.rhevm.api.model.DataCenters;
 import com.redhat.rhevm.api.model.DataCenterStatus;
 import com.redhat.rhevm.api.model.StorageType;
 import com.redhat.rhevm.api.model.Version;
@@ -128,6 +128,18 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
         verifyResponse(
             resource.add(setUpResourceExpectations(2, commands, returns, true, null, NEW_NAME), model),
             NEW_NAME, NEW_DESCRIPTION);
+    }
+
+    @Test
+    public void testAddIncompleteParameters() throws Exception {
+        DataCenter model = new DataCenter();
+        model.setName(NEW_NAME);
+        try {
+            resource.add(setUpResourceExpectations(new String[]{}, new String[]{}, false, null), model);
+            fail("expected WebApplicationException on incomplete parameters");
+        } catch (WebApplicationException wae) {
+             verifyIncompleteException(wae, "DataCenter", "add", "storageType");
+        }
     }
 
     @Test

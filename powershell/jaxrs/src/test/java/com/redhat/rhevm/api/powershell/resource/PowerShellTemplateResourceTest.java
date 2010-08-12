@@ -22,7 +22,6 @@ import java.net.URI;
 import java.util.concurrent.Executor;
 
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 

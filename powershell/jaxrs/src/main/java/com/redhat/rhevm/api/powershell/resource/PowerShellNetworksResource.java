@@ -33,6 +33,8 @@ import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
+import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
+
 
 public class PowerShellNetworksResource
     extends AbstractPowerShellCollectionResource<Network, PowerShellNetworkResource>
@@ -57,6 +59,7 @@ public class PowerShellNetworksResource
 
     @Override
     public Response add(UriInfo uriInfo, Network network) {
+        validateParameters(network, "name", "dataCenter.id");
         StringBuilder buf = new StringBuilder();
 
         buf.append("add-network");

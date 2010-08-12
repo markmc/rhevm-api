@@ -38,6 +38,8 @@ import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
+import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
+
 
 public class PowerShellAttachmentsResource implements AttachmentsResource {
 
@@ -113,6 +115,7 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
 
     @Override
     public Response add(UriInfo uriInfo, Attachment attachment) {
+        validateParameters(attachment, "dataCenter.id");
         DataCenter dataCenter = attachment.getDataCenter();
 
         StringBuilder buf = new StringBuilder();

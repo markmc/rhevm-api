@@ -24,13 +24,13 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.NIC;
 import com.redhat.rhevm.api.model.Nics;
-import com.redhat.rhevm.api.model.Network;
-import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 import com.redhat.rhevm.api.resource.DevicesResource;
+
+import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
 
 
 public class PowerShellNicsResource
@@ -46,6 +46,7 @@ public class PowerShellNicsResource
 
     @Override
     public Response add(UriInfo uriInfo, NIC nic) {
+        validateParameters(nic, "name", "network.id");
         StringBuilder buf = new StringBuilder();
 
         buf.append("$v = get-vm " + PowerShellUtils.escape(parentId) + ";");

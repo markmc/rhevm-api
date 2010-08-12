@@ -29,6 +29,8 @@ import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 import com.redhat.rhevm.api.resource.DevicesResource;
 
+import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
+
 
 public class PowerShellCdRomsResource
     extends PowerShellReadOnlyCdRomsResource
@@ -52,6 +54,7 @@ public class PowerShellCdRomsResource
 
     @Override
     public Response add(UriInfo uriInfo, CdRom cdrom) {
+        validateParameters(cdrom, "iso");
         String cdIsoPath = cdrom.getIso().getId();
 
         updateCdRom(cdIsoPath);

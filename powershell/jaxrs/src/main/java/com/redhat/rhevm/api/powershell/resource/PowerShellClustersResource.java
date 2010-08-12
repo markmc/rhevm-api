@@ -29,10 +29,10 @@ import com.redhat.rhevm.api.model.Clusters;
 import com.redhat.rhevm.api.model.Version;
 import com.redhat.rhevm.api.resource.ClusterResource;
 import com.redhat.rhevm.api.resource.ClustersResource;
-import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
-import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+
+import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
 
 
 public class PowerShellClustersResource
@@ -58,6 +58,7 @@ public class PowerShellClustersResource
 
     @Override
     public Response add(UriInfo uriInfo, Cluster cluster) {
+        validateParameters(cluster, "name", "dataCenter.id", "cpu.id");
         StringBuilder buf = new StringBuilder();
 
         buf.append("foreach ($v in get-clustercompatibilityversions -datacenterid ");
