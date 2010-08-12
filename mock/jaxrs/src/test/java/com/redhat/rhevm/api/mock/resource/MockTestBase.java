@@ -46,9 +46,9 @@ import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.API;
+import com.redhat.rhevm.api.model.Capabilities;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.Clusters;
-import com.redhat.rhevm.api.model.CPUs;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.Hosts;
 import com.redhat.rhevm.api.model.LinkHeader;
@@ -63,7 +63,7 @@ import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.resource.MediaType;
 import com.redhat.rhevm.api.common.resource.DefaultApiResource;
-import com.redhat.rhevm.api.common.resource.DefaultCpusResource;
+import com.redhat.rhevm.api.common.resource.DefaultCapabilitiesResource;
 
 public class MockTestBase extends Assert {
     private final String host = "localhost";
@@ -149,12 +149,12 @@ public class MockTestBase extends Assert {
 
     @Path("/")
     @Produces(MediaType.APPLICATION_XML)
-    protected interface CpusResource {
-        @GET public CPUs list();
+    protected interface CapabilitiesResource {
+        @GET public Capabilities get();
     }
 
-    protected CpusResource createCpusResource(String uri) {
-        return ProxyFactory.create(CpusResource.class, uri);
+    protected CapabilitiesResource createCapabilitiesResource(String uri) {
+        return ProxyFactory.create(CapabilitiesResource.class, uri);
     }
 
     @Path("/")
@@ -218,8 +218,8 @@ public class MockTestBase extends Assert {
         clusters.setExecutor(executor);
         clusters.populate();
         server.getDeployment().getDispatcher().getRegistry().addSingletonResource(clusters);
-        DefaultCpusResource cpus = new DefaultCpusResource();
-        server.getDeployment().getDispatcher().getRegistry().addSingletonResource(cpus);
+        DefaultCapabilitiesResource caps = new DefaultCapabilitiesResource();
+        server.getDeployment().getDispatcher().getRegistry().addSingletonResource(caps);
         MockStorageDomainsResource storageDomains = new MockStorageDomainsResource();
         storageDomains.setExecutor(executor);
         storageDomains.populate();

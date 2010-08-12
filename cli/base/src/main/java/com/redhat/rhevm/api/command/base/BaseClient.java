@@ -113,6 +113,15 @@ public class BaseClient {
         return ret;
     }
 
+    public <S> S getRel(String rel, Class<S> clz) throws Exception {
+        String top = getTopLink(rel);
+        if (top != null) {
+            return get(getBaseUri(top, null), clz);
+        } else {
+            return clz.newInstance();
+        }
+    }
+
     public <S> S getCollection(String rel, Class<S> clz) throws Exception {
         return getCollection(rel, clz, null);
     }

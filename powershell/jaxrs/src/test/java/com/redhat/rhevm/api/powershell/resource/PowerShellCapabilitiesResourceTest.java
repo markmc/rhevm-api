@@ -16,16 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api.mock.resource;
+package com.redhat.rhevm.api.powershell.resource;
 
+import org.junit.Before;
 import org.junit.Test;
 
+import com.redhat.rhevm.api.model.Capabilities;
 import com.redhat.rhevm.api.model.CPU;
-import com.redhat.rhevm.api.model.CPUs;
+import com.redhat.rhevm.api.resource.CapabilitiesResource;
+import com.redhat.rhevm.api.common.resource.DefaultCapabilitiesResource;
 
-public class MockCpuResourceTest extends MockTestBase {
-    private MockTestBase.CpusResource getService() {
-        return createCpusResource(getEntryPoint("cpus").getHref());
+public class PowerShellCapabilitiesResourceTest extends BasePowerShellResourceTest {
+
+    protected CapabilitiesResource resource;
+
+    @Before
+    public void setUp() throws Exception {
+        resource = new DefaultCapabilitiesResource();
     }
 
     private void checkCpu(CPU cpu) {
@@ -36,15 +43,15 @@ public class MockCpuResourceTest extends MockTestBase {
     }
 
     @Test
-    public void testGetCpusList() throws Exception {
-        MockTestBase.CpusResource service = getService();
-        assertNotNull(service);
+    public void testGet() {
+        Capabilities caps = resource.get();
 
-        CPUs cpus = service.list();
-        assertNotNull(cpus);
-        assertTrue(cpus.getCPUs().size() > 0);
+        assertNotNull(caps);
+        assertNotNull(caps.getCPUs());
+        assertNotNull(caps.getCPUs().getCPUs());
+        assertTrue(caps.getCPUs().getCPUs().size() > 0);
 
-        for (CPU cpu : cpus.getCPUs()) {
+        for (CPU cpu : caps.getCPUs().getCPUs()) {
             checkCpu(cpu);
         }
     }

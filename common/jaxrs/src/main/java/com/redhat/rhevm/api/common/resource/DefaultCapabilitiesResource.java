@@ -18,11 +18,12 @@
  */
 package com.redhat.rhevm.api.common.resource;
 
+import com.redhat.rhevm.api.model.Capabilities;
 import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.CPUs;
-import com.redhat.rhevm.api.resource.CpusResource;
+import com.redhat.rhevm.api.resource.CapabilitiesResource;
 
-public class DefaultCpusResource implements CpusResource {
+public class DefaultCapabilitiesResource implements CapabilitiesResource {
 
     private CPUs cpus = new CPUs();
 
@@ -54,7 +55,9 @@ public class DefaultCpusResource implements CpusResource {
         cpus.getCPUs().add(cpu);
     }
 
-    public CPUs list() {
-        return cpus;
+    public Capabilities get() {
+        Capabilities caps = new Capabilities();
+        caps.setCPUs(cpus);
+        return caps;
     }
 }

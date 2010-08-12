@@ -39,8 +39,8 @@ public class DefaultApiResource implements ApiResource {
     private static API api = new API();
 
     static {
+        addLink("capabilities", false);
         addLink("clusters");
-        addLink("cpus");
         addLink("datacenters");
         addLink("hosts");
         addLink("networks", false); // powershell has no select-network command

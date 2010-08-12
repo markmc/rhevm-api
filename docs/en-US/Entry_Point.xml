@@ -40,12 +40,12 @@ Content-Length: 0
         <colspec colwidth="5*"/>
         <tbody>
           <row>
-            <entry><literal>clusters</literal></entry>
-            <entry>Host clusters</entry>
+            <entry><literal>capabilities</literal></entry>
+            <entry>Information about the supported capabilities of RHEV-M</entry>
           </row>
           <row>
-            <entry><literal>cpus</literal></entry>
-            <entry>Supported CPU types</entry>
+            <entry><literal>clusters</literal></entry>
+            <entry>Host clusters</entry>
           </row>
           <row>
             <entry><literal>datacenters</literal></entry>

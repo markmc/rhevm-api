@@ -40,9 +40,9 @@
         lazy-init="true"
         class="com.redhat.rhevm.api.mock.resource.MockClustersResource"/>
 
-  <bean id="mockCpusResource"
+  <bean id="mockCapabilitiesResource"
         lazy-init="true"
-        class="com.redhat.rhevm.api.common.resource.DefaultCpusResource"/>
+        class="com.redhat.rhevm.api.common.resource.DefaultCapabilitiesResource"/>
 
   <!-- Shared Executor -->
   <bean id="keepAliveUnit"

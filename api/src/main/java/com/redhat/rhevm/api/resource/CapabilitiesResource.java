@@ -23,14 +23,14 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
-import com.redhat.rhevm.api.model.CPUs;
+import com.redhat.rhevm.api.model.Capabilities;
 
 
-@Path("/cpus")
+@Path("/capabilities")
 @Produces(MediaType.APPLICATION_XML)
-public interface CpusResource {
+public interface CapabilitiesResource {
 
     @GET
     @Formatted
-    public CPUs list();
+    public Capabilities get();
 }

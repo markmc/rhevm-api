@@ -31,10 +31,9 @@ import com.redhat.rhevm.api.model.Link;
 public class MockApiResourceTest extends MockTestBase {
 
     private static final String[] relationships = {
+        "capabilities",
         "clusters",
         "clusters/search",
-        "cpus",
-        "cpus/search",
         "datacenters",
         "datacenters/search",
         "hosts",

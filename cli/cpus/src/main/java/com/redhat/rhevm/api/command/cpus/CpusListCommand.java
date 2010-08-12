@@ -25,6 +25,7 @@ import org.apache.felix.gogo.commands.Option;
 
 import com.redhat.rhevm.api.command.base.AbstractCommand;
 
+import com.redhat.rhevm.api.model.Capabilities;
 import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.CPUs;
 
@@ -37,7 +38,12 @@ import static com.redhat.rhevm.api.command.base.BaseClient.pad;
 public class CpusListCommand extends AbstractCommand {
 
     protected Object doExecute() throws Exception {
-        List<CPU> collection = client.getCollection("cpus", CPUs.class, null).getCPUs();
+        CPUs cpus = client.getRel("cpus", Capabilities.class).getCPUs();
+        if (cpus == null) {
+            return null;
+        }
+        List<CPU> collection = cpus.getCPUs();
+
         int i = 0, widestId = 0;
         for (CPU resource : collection) {
             if (resource.getId() != null && resource.getId().length() > widestId) {

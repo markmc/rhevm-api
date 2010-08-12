@@ -44,7 +44,8 @@
         lazy-init="true"
         class="com.redhat.rhevm.api.powershell.resource.PowerShellVmPoolsResource"/>
 
-  <bean id="powerShellCpusResource" class="com.redhat.rhevm.api.common.resource.DefaultCpusResource"/>
+  <bean id="powerShellCapabilitiesResource"
+        class="com.redhat.rhevm.api.common.resource.DefaultCapabilitiesResource"/>
 
   <!-- XML parser -->
   <bean id="documentBuilderFactory"

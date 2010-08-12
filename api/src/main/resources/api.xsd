@@ -257,8 +257,6 @@
 
   <xs:element name="cpu" type="CPU"/>
 
-  <xs:element name="cpus" type="CPUs"/>
-
   <xs:complexType name="CpuTopology">
     <xs:attribute name="sockets" type="xs:int"/>
     <xs:attribute name="cores" type="xs:int"/>
@@ -309,6 +307,22 @@
         <xs:annotation>
           <xs:appinfo>
             <jaxb:property name="Versions"/>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- Capabilities -->
+
+  <xs:element name="capabilities" type="Capabilities"/>
+
+  <xs:complexType name="Capabilities">
+    <xs:sequence>
+      <xs:element name="cpus" type="CPUs" minOccurs="0">
+        <xs:annotation>
+          <xs:appinfo>
+            <jaxb:property name="CPUs"/>
           </xs:appinfo>
         </xs:annotation>
       </xs:element>
