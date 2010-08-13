@@ -23,23 +23,12 @@ import org.junit.Test;
 import java.util.List;
 
 import com.redhat.rhevm.api.model.BootDevice;
-import com.redhat.rhevm.api.model.Disk;
-import com.redhat.rhevm.api.model.Disks;
-import com.redhat.rhevm.api.model.DiskFormat;
-import com.redhat.rhevm.api.model.DiskInterface;
-import com.redhat.rhevm.api.model.DiskStatus;
-import com.redhat.rhevm.api.model.DiskType;
-import com.redhat.rhevm.api.model.NIC;
-import com.redhat.rhevm.api.model.Nics;
-import com.redhat.rhevm.api.model.NicType;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VmStatus;
 import com.redhat.rhevm.api.model.VmType;
 
 
 public class PowerShellVmTest extends PowerShellModelTest {
-
-    private static final String VM_ID = "439c0c13-3e0a-489e-a514-1b07232ace41";
 
     private void testVM(PowerShellVM v, String id, String name, String description, VmType type, VmStatus status, Long memory, int sockets, int cores, String cdIsoPath, String hostId, String clusterId, String templateId) {
         assertEquals(id, v.getId());
@@ -90,84 +79,5 @@ public class PowerShellVmTest extends PowerShellModelTest {
 
         testVM(vms.get(3), "5114bb3e-a4e6-44b2-b783-b3eea7d84720", "testf13", null, VmType.DESKTOP, VmStatus.SHUTOFF, 536870912L, 1, 1, null, null, "99408929-82cf-4dc7-a532-9d998063fa95", "00000000-0000-0000-0000-000000000000");
         testBootDevices(vms.get(3), BootDevice.HD);
-    }
-
-    private void testDisk(Disk d, String id, String vmId, Long size, DiskType type, DiskStatus status, DiskInterface iface, DiskFormat format, Boolean sparse, Boolean bootable, Boolean wipeAfterDelete, Boolean propagateErrors) {
-        assertEquals(d.getId(), id);
-        assertNotNull(d.getVm());
-        assertEquals(d.getVm().getId(), vmId);
-        assertEquals(d.getSize(), size);
-        assertEquals(d.getType(), type);
-        assertEquals(d.getStatus(), status);
-        assertEquals(d.getInterface(), iface);
-        assertEquals(d.getFormat(), format);
-        assertEquals(d.isSparse(), sparse);
-        assertEquals(d.isBootable(), bootable);
-        assertEquals(d.isWipeAfterDelete(), wipeAfterDelete);
-        assertEquals(d.isPropagateErrors(), propagateErrors);
-    }
-
-    @Test
-    public void testParseDisks() throws Exception {
-        String data = readFileContents("disks.xml");
-        assertNotNull(data);
-
-        Disks disks = PowerShellVM.parseDisks(getParser(), VM_ID, data);
-
-        assertNotNull(disks);
-        assertEquals(disks.getDisks().size(), 1);
-
-        testDisk(disks.getDisks().get(0), "0b9318b4-e426-4380-9e6a-bb7f3a38a2ce", VM_ID, 1341231104L, DiskType.SYSTEM, DiskStatus.OK, DiskInterface.IDE, DiskFormat.RAW, true, true, null, null);
-    }
-
-    @Test
-    public void testParseDisks22() throws Exception {
-        String data = readFileContents("disks22.xml");
-        assertNotNull(data);
-
-        Disks disks = PowerShellVM.parseDisks(getParser(), VM_ID, data);
-
-        assertNotNull(disks);
-        assertEquals(disks.getDisks().size(), 2);
-
-        testDisk(disks.getDisks().get(0), "222ea10f-7c0a-4302-8e80-2834b8fa681a", VM_ID, 1073741824L, DiskType.DATA, DiskStatus.OK, DiskInterface.IDE, DiskFormat.COW, true, null, null, null);
-        testDisk(disks.getDisks().get(1), "0e833f37-3437-44f2-a04f-6f9692882431", VM_ID, 2147483648L, DiskType.SYSTEM, DiskStatus.OK, DiskInterface.VIRTIO, DiskFormat.RAW, null, true, true, null);
-    }
-
-    private void testNic(NIC n, String id, String name, String vmId, String network, NicType type, String macAddress, String ipAddress, String ipNetmask, String ipGateway) {
-        assertEquals(id, n.getId());
-        assertEquals(name, n.getName());
-        assertNotNull(n.getVm());
-        assertEquals(vmId, n.getVm().getId());
-        assertNotNull(n.getNetwork());
-        assertEquals(network, n.getNetwork().getName());
-        assertEquals(type, n.getType());
-        if (macAddress != null) {
-            assertNotNull(n.getMac());
-            assertEquals(macAddress, n.getMac().getAddress());
-        } else {
-            assertNull(n.getMac());
-        }
-        if (ipAddress != null || ipNetmask != null || ipGateway != null) {
-            assertNotNull(n.getIp());
-            assertEquals(ipAddress, n.getIp().getAddress());
-            assertEquals(ipNetmask, n.getIp().getNetmask());
-            assertEquals(ipGateway, n.getIp().getGateway());
-        } else {
-            assertNull(n.getIp());
-        }
-    }
-
-    @Test
-    public void testParseNics() throws Exception {
-        String data = readFileContents("nics.xml");
-        assertNotNull(data);
-
-        Nics nics = PowerShellVM.parseNics(getParser(), VM_ID, data);
-
-        assertNotNull(nics);
-        assertEquals(1, nics.getNics().size());
-
-        testNic(nics.getNics().get(0), "a34b8c24-f1cf-4b67-9912-3b04e9ce0a7b", "nic1", VM_ID, "rhevm", NicType.RTL_8139_PV, "00:1a:4a:16:84:02", null, null, null);
     }
 }

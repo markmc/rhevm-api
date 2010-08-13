@@ -18,6 +18,9 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.redhat.rhevm.api.model.CdRom;
 import com.redhat.rhevm.api.model.CdRoms;
 import com.redhat.rhevm.api.model.Iso;
@@ -48,12 +51,12 @@ public class PowerShellReadOnlyCdRomsResource extends AbstractPowerShellDevicesR
     }
 
     @Override
-    public CdRoms getDevices() {
-        CdRoms cdroms = new CdRoms();
+    public List<CdRom> getDevices() {
+        List<CdRom> cdroms = new ArrayList<CdRom>();
 
         String cdIsoPath = query.getCdIsoPath();
         if (cdIsoPath != null) {
-            cdroms.getCdRoms().add(buildCdRom(cdIsoPath));
+            cdroms.add(buildCdRom(cdIsoPath));
         }
 
         return cdroms;
@@ -66,9 +69,9 @@ public class PowerShellReadOnlyCdRomsResource extends AbstractPowerShellDevicesR
 
     @Override
     public CdRoms list() {
-        CdRoms cdroms = getDevices();
-        for (CdRom cdrom : cdroms.getCdRoms()) {
-            addLinks(cdrom);
+        CdRoms cdroms = new CdRoms();
+        for (CdRom cdrom : getDevices()) {
+            cdroms.getCdRoms().add(addLinks(cdrom));
         }
         return cdroms;
     }

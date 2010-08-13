@@ -18,11 +18,13 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.util.List;
+
 import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.Disks;
 
 import com.redhat.rhevm.api.common.util.LinkHelper;
-import com.redhat.rhevm.api.powershell.model.PowerShellVM;
+import com.redhat.rhevm.api.powershell.model.PowerShellDisk;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
@@ -41,18 +43,18 @@ public class PowerShellReadOnlyDisksResource extends AbstractPowerShellDevicesRe
         this.getCommand = getCommand;
     }
 
-    public Disks runAndParse(String command) {
-        return PowerShellVM.parseDisks(getParser(), parentId, PowerShellCmd.runCommand(getShell(), command));
+    public List<Disk> runAndParse(String command) {
+        return PowerShellDisk.parse(getParser(), parentId, PowerShellCmd.runCommand(getShell(), command));
     }
 
     public Disk runAndParseSingle(String command) {
-        Disks disks = runAndParse(command);
+        List<Disk> disks = runAndParse(command);
 
-        return (disks != null && !disks.getDisks().isEmpty()) ? disks.getDisks().get(0) : null;
+        return !disks.isEmpty() ? disks.get(0) : null;
     }
 
     @Override
-    public Disks getDevices() {
+    public List<Disk> getDevices() {
         StringBuilder buf = new StringBuilder();
 
         buf.append("$v = " + getCommand + " " + PowerShellUtils.escape(parentId) + ";");
@@ -68,9 +70,9 @@ public class PowerShellReadOnlyDisksResource extends AbstractPowerShellDevicesRe
 
     @Override
     public Disks list() {
-        Disks disks = getDevices();
-        for (Disk disk : disks.getDisks()) {
-            addLinks(disk);
+        Disks disks = new Disks();
+        for (Disk disk : getDevices()) {
+            disks.getDisks().add(addLinks(disk));
         }
         return disks;
     }

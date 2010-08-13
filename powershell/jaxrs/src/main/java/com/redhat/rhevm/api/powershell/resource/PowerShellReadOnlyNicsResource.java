@@ -18,11 +18,13 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.util.List;
+
 import com.redhat.rhevm.api.model.NIC;
 import com.redhat.rhevm.api.model.Nics;
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.common.util.LinkHelper;
-import com.redhat.rhevm.api.powershell.model.PowerShellVM;
+import com.redhat.rhevm.api.powershell.model.PowerShellNIC;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
@@ -41,18 +43,18 @@ public class PowerShellReadOnlyNicsResource extends AbstractPowerShellDevicesRes
         this.getCommand = getCommand;
     }
 
-    public Nics runAndParse(String command) {
-        return PowerShellVM.parseNics(getParser(), parentId, PowerShellCmd.runCommand(getShell(), command));
+    public List<NIC> runAndParse(String command) {
+        return PowerShellNIC.parse(getParser(), parentId, PowerShellCmd.runCommand(getShell(), command));
     }
 
     public NIC runAndParseSingle(String command) {
-        Nics nics = runAndParse(command);
+        List<NIC> nics = runAndParse(command);
 
-        return (nics != null && !nics.getNics().isEmpty()) ? nics.getNics().get(0) : null;
+        return !nics.isEmpty() ? nics.get(0) : null;
     }
 
     @Override
-    public Nics getDevices() {
+    public List<NIC> getDevices() {
         StringBuilder buf = new StringBuilder();
 
         buf.append("$v = " + getCommand + " " + PowerShellUtils.escape(parentId) + ";");
@@ -91,9 +93,9 @@ public class PowerShellReadOnlyNicsResource extends AbstractPowerShellDevicesRes
 
     @Override
     public Nics list() {
-        Nics nics = getDevices();
-        for (NIC nic : nics.getNics()) {
-            addLinks(nic);
+        Nics nics = new Nics();
+        for (NIC nic : getDevices()) {
+            nics.getNics().add(addLinks(nic));
         }
         return nics;
     }

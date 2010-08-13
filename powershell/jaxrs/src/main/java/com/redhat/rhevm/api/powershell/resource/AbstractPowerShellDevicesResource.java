@@ -18,6 +18,8 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.util.List;
+
 import javax.ws.rs.Produces;
 
 import com.redhat.rhevm.api.model.BaseDevice;
@@ -59,5 +61,5 @@ public abstract class AbstractPowerShellDevicesResource<D extends BaseDevice, C 
 
     public abstract D addLinks(D device);
 
-    public abstract C getDevices();
+    public abstract List<D> getDevices();
 }

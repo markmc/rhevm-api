@@ -39,35 +39,14 @@ public class PowerShellDeviceResource<D extends BaseDevice, C extends BaseDevice
 
     @Override
     public D get() {
-        C collection = parent.getDevices();
+        List<D> devices = parent.getDevices();
 
-        String name = collection.getClass().getSimpleName();
-
-        for (Method method : collection.getClass().getMethods()) {
-            if (method.getName().equals("get" + name) &&
-                List.class.isAssignableFrom(method.getReturnType())) {
-                List<D> devices;
-
-                try {
-                    devices = asDevices(method.invoke(collection));
-                } catch (Exception e) {
-                    // invocation target exception should not occur on simple getter
-                    continue;
-                }
-
-                for (D d : devices) {
-                    if (deviceId.equals(d.getId())) {
-                        return parent.addLinks(d);
-                    }
-                }
+        for (D d : devices) {
+            if (deviceId.equals(d.getId())) {
+                return parent.addLinks(d);
             }
         }
 
         return null;
-    }
-
-    @SuppressWarnings("unchecked")
-    private List<D> asDevices(Object o) {
-        return (List<D>)o;
     }
 }

@@ -26,32 +26,14 @@ import com.redhat.rhevm.api.model.BootDevice;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.CpuTopology;
-import com.redhat.rhevm.api.model.Disk;
-import com.redhat.rhevm.api.model.Disks;
-import com.redhat.rhevm.api.model.DiskFormat;
-import com.redhat.rhevm.api.model.DiskInterface;
-import com.redhat.rhevm.api.model.DiskStatus;
-import com.redhat.rhevm.api.model.DiskType;
 import com.redhat.rhevm.api.model.Host;
-import com.redhat.rhevm.api.model.NIC;
-import com.redhat.rhevm.api.model.Nics;
-import com.redhat.rhevm.api.model.NicType;
-import com.redhat.rhevm.api.model.IP;
-import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.OperatingSystem;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VmPool;
 import com.redhat.rhevm.api.model.VmStatus;
 import com.redhat.rhevm.api.powershell.enums.PowerShellBootSequence;
-import com.redhat.rhevm.api.powershell.enums.PowerShellDiskType;
-import com.redhat.rhevm.api.powershell.enums.PowerShellImageStatus;
-import com.redhat.rhevm.api.powershell.enums.PowerShellPropagateErrors;
 import com.redhat.rhevm.api.powershell.enums.PowerShellVmType;
-import com.redhat.rhevm.api.powershell.enums.PowerShellVolumeFormat;
-import com.redhat.rhevm.api.powershell.enums.PowerShellVolumeFormat22;
-import com.redhat.rhevm.api.powershell.enums.PowerShellVolumeType;
-import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.UUID;
 
@@ -158,83 +140,6 @@ public class PowerShellVM extends VM {
         }
 
         return ret;
-    }
-
-    public static Disks parseDisks(PowerShellParser parser, String vmId, String output) {
-        Disks disks = new Disks();
-
-        for (PowerShellParser.Entity entity : parser.parse(output)) {
-            Disk disk = new Disk();
-
-            disk.setId(entity.get("snapshotid"));
-
-            disk.setVm(new VM());
-            disk.getVm().setId(vmId);
-
-            disk.setSize(entity.get("actualsizeinbytes", Double.class).longValue());
-            disk.setType(entity.get("disktype", PowerShellDiskType.class).map());
-            disk.setStatus(entity.get("status", PowerShellImageStatus.class).map());
-            disk.setInterface(DiskInterface.fromValue(entity.get("diskinterface").toUpperCase()));
-            try {
-                disk.setFormat(entity.get("volumeformat", PowerShellVolumeFormat.class).map());
-            } catch (ClassCastException ex) {
-                disk.setFormat(entity.get("volumeformat", PowerShellVolumeFormat22.class).map());
-            }
-            if (entity.get("volumetype", PowerShellVolumeType.class).map()) {
-                disk.setSparse(true);
-            }
-            if (entity.get("boot", Boolean.class)) {
-                disk.setBootable(true);
-            }
-            if (entity.get("wipeafterdelete", Boolean.class)) {
-                disk.setWipeAfterDelete(true);
-            }
-            if (entity.get("propagateerrors", PowerShellPropagateErrors.class).map()) {
-                disk.setPropagateErrors(true);
-            }
-
-            disks.getDisks().add(disk);
-        }
-
-        return disks;
-    }
-
-    public static Nics parseNics(PowerShellParser parser, String vmId, String output) {
-        Nics nics = new Nics();
-
-        for (PowerShellParser.Entity entity : parser.parse(output)) {
-            NIC nic = new NIC();
-
-            nic.setId(entity.get("id"));
-            nic.setName(entity.get("name"));
-
-            nic.setVm(new VM());
-            nic.getVm().setId(vmId);
-
-            Network network = new Network();
-            network.setName(entity.get("network"));
-            nic.setNetwork(network);
-
-            nic.setType(NicType.fromValue(entity.get("type").toUpperCase()));
-
-            NIC.Mac mac = new NIC.Mac();
-            mac.setAddress(entity.get("macaddress"));
-            nic.setMac(mac);
-
-            if (entity.get("address") != null ||
-                entity.get("subnet") != null ||
-                entity.get("gateway") != null) {
-                IP ip = new IP();
-                ip.setAddress(entity.get("address"));
-                ip.setNetmask(entity.get("subnet"));
-                ip.setGateway(entity.get("gateway"));
-                nic.setIp(ip);
-            }
-
-            nics.getNics().add(nic);
-        }
-
-        return nics;
     }
 
     private static boolean isEmptyId(Object id) {
