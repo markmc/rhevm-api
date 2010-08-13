@@ -18,6 +18,7 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.text.MessageFormat;
 import java.util.concurrent.Executor;
 
 import javax.ws.rs.WebApplicationException;
@@ -25,6 +26,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Action;
+import com.redhat.rhevm.api.model.Display;
+import com.redhat.rhevm.api.model.DisplayType;
 import com.redhat.rhevm.api.model.Fault;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.VM;
@@ -57,7 +60,9 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     private static final String FAILURE = "replace with realistic powershell failure";
     private static final String REASON = "Powershell command \"start-vm -vmid \"" + VM_ID + "\"\" failed with " + FAILURE;
     private static final String DETAIL = "at com.redhat.rhevm.api.powershell.util.PowerShellCmd.runCommand(";
-    private static final String UPDATE_COMMAND = "$v = get-vm \"" + VM_ID + "\";$v.name = \"" + NEW_NAME + "\";update-vm -vmobject $v";
+    private static final String UPDATE_COMMAND_TEMPLATE = "$v = get-vm \"" + VM_ID + "\";$v.name = \"" + NEW_NAME + "\";{0}update-vm -vmobject $v";
+    private static final String UPDATE_COMMAND = MessageFormat.format(UPDATE_COMMAND_TEMPLATE, "");
+    private static final String UPDATE_DISPLAY_COMMAND = MessageFormat.format(UPDATE_COMMAND_TEMPLATE, " $v.numofmonitors = 4; $v.displaytype = 'VNC';");
 
     private static final String DEST_HOST_ID = "1337";
     private static final String DEST_HOST_NAME = "farawaysoclose";
@@ -106,6 +111,16 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
                                                 formatVm(NEW_NAME),
                                                 NEW_NAME),
                             getVM(NEW_NAME)),
+            NEW_NAME);
+    }
+
+    @Test
+    public void testUpdateDisplay() throws Exception {
+        verifyVM(
+            resource.update(setUpVmExpectations(UPDATE_DISPLAY_COMMAND,
+                                                formatVm(NEW_NAME),
+                                                NEW_NAME),
+                            updateDisplay(getVM(NEW_NAME))),
             NEW_NAME);
     }
 
@@ -299,10 +314,21 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
         return vm;
     }
 
+    private VM updateDisplay(VM vm) {
+        vm.setDisplay(new Display());
+        vm.getDisplay().setType(DisplayType.VNC);
+        vm.getDisplay().setMonitors(4);
+        return vm;
+    }
+
     private void verifyVM(VM vm, String name) {
         assertNotNull(vm);
         assertEquals(Integer.toString(name.hashCode()), vm.getId());
         assertEquals(name, vm.getName());
+        assertTrue(vm.isSetDisplay());
+        assertEquals(DisplayType.SPICE, vm.getDisplay().getType());
+        assertEquals(Integer.valueOf(1), vm.getDisplay().getMonitors());
+        assertTrue(vm.getDisplay().getPort() == null || vm.getDisplay().getPort() != -1);
     }
 
     private void verifyActionResponse(Response r, boolean async) throws Exception {

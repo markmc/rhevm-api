@@ -26,6 +26,7 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.common.util.ReflectionHelper;
 import com.redhat.rhevm.api.model.CpuTopology;
+import com.redhat.rhevm.api.model.Display;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.resource.VmResource;
@@ -89,6 +90,18 @@ public class PowerShellVmsResource
         buf.append(" -name " + PowerShellUtils.escape(vm.getName()) + "");
         if (vm.getDescription() != null) {
             buf.append(" -description " + PowerShellUtils.escape(vm.getDescription()));
+        }
+        if (vm.isSetDisplay()) {
+            Display display = vm.getDisplay();
+            if (display.isSetMonitors()) {
+                buf.append(" -numofmonitors " + display.getMonitors());
+            }
+            if (display.isSetType()) {
+                buf.append(" -displaytype " + PowerShellVM.asString(display.getType()));
+            }
+            // display port cannot be specified on creation, but the value
+            // provided may in fact be correct (we won't know until we create
+            // the VM) so for now we silently ignore a client-specified value
         }
         buf.append(" -templateobject $templ");
         buf.append(" -hostclusterid " + clusterArg);

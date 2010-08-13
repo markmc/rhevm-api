@@ -21,6 +21,8 @@ package com.redhat.rhevm.api.powershell.resource;
 import javax.ws.rs.WebApplicationException;
 
 import com.redhat.rhevm.api.model.Cluster;
+import com.redhat.rhevm.api.model.Display;
+import com.redhat.rhevm.api.model.DisplayType;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.powershell.enums.PowerShellBootSequence;
@@ -60,6 +62,9 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
 
     private static final String CLUSTER_BY_NAME_ADD_COMMAND_EPILOG =
         "-templateobject $templ -hostclusterid $c.ClusterId";
+
+    private static final String DISPLAY_ADD_COMMAND_EPILOG =
+        "-numofmonitors 4 -displaytype VNC " + ADD_COMMAND_EPILOG;
 
     public PowerShellVmsResourceTest() {
         super(new PowerShellVmResource("0", null, null, null), "vms", "vm", extraArgs);
@@ -126,6 +131,16 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     }
 
     @Test
+    public void testAddWithDisplay() throws Exception {
+        verifyResponse(
+            resource.add(setUpAddResourceExpectations(ADD_COMMAND_PROLOG + getAddCommand() + DISPLAY_ADD_COMMAND_EPILOG,
+                                                      getAddReturn(),
+                                                      NEW_NAME),
+                         updateDisplay(getModel(NEW_NAME, NEW_DESCRIPTION))),
+            NEW_NAME, NEW_DESCRIPTION);
+    }
+
+    @Test
     public void testAddIncompleteParameters() throws Exception {
         VM model = new VM();
         model.setName(NEW_NAME);
@@ -163,5 +178,12 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
         Cluster cluster = new Cluster();
         cluster.setId(CLUSTER_ID);
         vm.setCluster(cluster);
+    }
+
+    private VM updateDisplay(VM vm) {
+        vm.setDisplay(new Display());
+        vm.getDisplay().setType(DisplayType.VNC);
+        vm.getDisplay().setMonitors(4);
+        return vm;
     }
 }

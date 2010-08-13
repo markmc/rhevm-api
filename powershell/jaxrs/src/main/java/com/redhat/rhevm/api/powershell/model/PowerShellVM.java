@@ -19,13 +19,14 @@
 package com.redhat.rhevm.api.powershell.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import com.redhat.rhevm.api.model.BootDevice;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.CpuTopology;
+
+import com.redhat.rhevm.api.model.Display;
+import com.redhat.rhevm.api.model.DisplayType;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.OperatingSystem;
 import com.redhat.rhevm.api.model.Template;
@@ -71,6 +72,17 @@ public class PowerShellVM extends VM {
             }
         }
         return !bootSequence.isEmpty() ? bootSequence : null;
+    }
+
+    public static String asString(DisplayType type) {
+        return DisplayType.VNC.equals(type) ? "VNC" : "Spice";
+    }
+
+    private static DisplayType parseDisplayType(String s) {
+        if (s == null) return null;
+        else if (s.equals("VNC"))   return DisplayType.VNC;
+        else if (s.equals("Spice")) return DisplayType.SPICE;
+        else return null;
     }
 
     private static VmStatus parseStatus(String s) {
@@ -134,6 +146,18 @@ public class PowerShellVM extends VM {
                 VmPool pool = new VmPool();
                 pool.setId(poolId.toString());
                 vm.setVmPool(pool);
+            }
+
+            DisplayType displayType = parseDisplayType(entity.get("displaytype"));
+            if (displayType != null) {
+                Display display = new Display();
+                display.setType(displayType);
+                display.setMonitors(entity.get("numofmonitors", Integer.class));
+                int port = entity.get("displayport", Integer.class);
+                if (port != -1) {
+                    display.setPort(port);
+                }
+                vm.setDisplay(display);
             }
 
             ret.add(vm);

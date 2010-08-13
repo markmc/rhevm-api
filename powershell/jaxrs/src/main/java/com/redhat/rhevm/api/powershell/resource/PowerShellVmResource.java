@@ -26,6 +26,7 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.CpuTopology;
+import com.redhat.rhevm.api.model.Display;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.resource.VmResource;
@@ -117,6 +118,17 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
         String bootSequence = PowerShellVM.buildBootSequence(vm.getOs());
         if (bootSequence != null) {
             buf.append(" $v.defaultbootsequence = '" + bootSequence + "';");
+        }
+        if (vm.isSetDisplay()) {
+            Display display = vm.getDisplay();
+            if (display.isSetMonitors()) {
+                buf.append(" $v.numofmonitors = " + display.getMonitors() + ";");
+            }
+            if (display.isSetType()) {
+                buf.append(" $v.displaytype = '" + PowerShellVM.asString(display.getType()) + "';");
+            }
+            // REVISIT display port a read-only property => extend immutability
+            // assertion to support "display.port" style syntax
         }
 
         buf.append("update-vm -vmobject $v");

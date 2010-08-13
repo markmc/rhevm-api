@@ -668,6 +668,21 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:simpleType name="DisplayType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="VNC"/>
+      <xs:enumeration value="SPICE"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="Display">
+    <xs:sequence>
+      <xs:element name="type" type="DisplayType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="port" type="xs:unsignedShort" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="monitors" type="xs:int" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:element name="vms" type="VMs"/>
 
   <xs:element name="vm">
@@ -685,6 +700,7 @@
             <xs:element name="memory" type="xs:long" minOccurs="0"/>
             <xs:element name="cpu" type="CPU" minOccurs="0"/>
             <xs:element name="os" type="OperatingSystem" minOccurs="0"/>
+            <xs:element name="display" type="Display" minOccurs="0" maxOccurs="1"/>
             <xs:element ref="host" minOccurs="0" maxOccurs="1"/>
             <xs:element ref="cluster" minOccurs="0" maxOccurs="1"/>
             <xs:element ref="template" minOccurs="0" maxOccurs="1"/>
