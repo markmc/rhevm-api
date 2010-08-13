@@ -869,6 +869,8 @@
 
   <xs:element name="snapshot" type="Snapshot"/>
 
+  <xs:element name="snapshots" type="Snapshots"/>
+
   <xs:complexType name="Snapshot">
     <xs:complexContent>
       <xs:extension base="BaseResource">
