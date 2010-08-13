@@ -52,7 +52,7 @@ public class PowerShellDiskTest extends PowerShellModelTest {
         String data = readFileContents("disks.xml");
         assertNotNull(data);
 
-        List<Disk> disks = PowerShellDisk.parse(getParser(), VM_ID, data);
+        List<PowerShellDisk> disks = PowerShellDisk.parse(getParser(), VM_ID, data);
 
         assertNotNull(disks);
         assertEquals(disks.size(), 1);
@@ -65,7 +65,7 @@ public class PowerShellDiskTest extends PowerShellModelTest {
         String data = readFileContents("disks22.xml");
         assertNotNull(data);
 
-        List<Disk> disks = PowerShellDisk.parse(getParser(), VM_ID, data);
+        List<PowerShellDisk> disks = PowerShellDisk.parse(getParser(), VM_ID, data);
 
         assertNotNull(disks);
         assertEquals(disks.size(), 2);

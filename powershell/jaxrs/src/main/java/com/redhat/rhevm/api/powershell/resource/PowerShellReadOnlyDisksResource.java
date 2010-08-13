@@ -18,11 +18,13 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.Disks;
 
+import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellDisk;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
@@ -44,7 +46,11 @@ public class PowerShellReadOnlyDisksResource extends AbstractPowerShellDevicesRe
     }
 
     public List<Disk> runAndParse(String command) {
-        return PowerShellDisk.parse(getParser(), parentId, PowerShellCmd.runCommand(getShell(), command));
+        List<Disk> ret = new ArrayList<Disk>();
+        for (Disk disk : PowerShellDisk.parse(getParser(), parentId, PowerShellCmd.runCommand(getShell(), command))) {
+            ret.add(disk);
+        }
+        return ret;
     }
 
     public Disk runAndParseSingle(String command) {
@@ -65,6 +71,7 @@ public class PowerShellReadOnlyDisksResource extends AbstractPowerShellDevicesRe
 
     @Override
     public Disk addLinks(Disk disk) {
+        disk = JAXBHelper.clone("disk", Disk.class, disk);
         return LinkHelper.addLinks(disk);
     }
 

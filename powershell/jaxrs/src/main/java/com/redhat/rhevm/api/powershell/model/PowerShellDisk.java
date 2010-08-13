@@ -35,13 +35,22 @@ import com.redhat.rhevm.api.powershell.enums.PowerShellVolumeFormat22;
 import com.redhat.rhevm.api.powershell.enums.PowerShellVolumeType;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 
-public class PowerShellDisk {
+public class PowerShellDisk extends Disk {
 
-    public static List<Disk> parse(PowerShellParser parser, String vmId, String output) {
-        List<Disk> ret = new ArrayList<Disk>();
+    private String vmSnapshotId;
+
+    public String getVmSnapshotId() {
+        return vmSnapshotId;
+    }
+    public void setVmSnapshotId(String vmSnapshotId) {
+        this.vmSnapshotId = vmSnapshotId;
+    }
+
+    public static List<PowerShellDisk> parse(PowerShellParser parser, String vmId, String output) {
+        List<PowerShellDisk> ret = new ArrayList<PowerShellDisk>();
 
         for (PowerShellParser.Entity entity : parser.parse(output)) {
-            Disk disk = new Disk();
+            PowerShellDisk disk = new PowerShellDisk();
 
             disk.setId(entity.get("snapshotid"));
 
@@ -69,6 +78,8 @@ public class PowerShellDisk {
             if (entity.get("propagateerrors", PowerShellPropagateErrors.class).map()) {
                 disk.setPropagateErrors(true);
             }
+
+            disk.setVmSnapshotId(entity.get("vmsnapshotid"));
 
             ret.add(disk);
         }
