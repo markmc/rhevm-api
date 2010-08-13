@@ -95,4 +95,7 @@ public interface VmResource extends UpdatableResource<VM> {
 
     @Path("nics")
     public DevicesResource<NIC, Nics> getNicsResource();
+
+    @Path("snapshots")
+    public SnapshotsResource getSnapshotsResource();
 }

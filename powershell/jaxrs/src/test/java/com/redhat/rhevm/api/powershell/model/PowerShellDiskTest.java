@@ -22,7 +22,6 @@ import org.junit.Test;
 
 import java.util.List;
 
-import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.DiskFormat;
 import com.redhat.rhevm.api.model.DiskInterface;
 import com.redhat.rhevm.api.model.DiskStatus;
@@ -32,19 +31,23 @@ public class PowerShellDiskTest extends PowerShellModelTest {
 
     private static final String VM_ID = "439c0c13-3e0a-489e-a514-1b07232ace41";
 
-    private void testDisk(Disk d, String id, String vmId, Long size, DiskType type, DiskStatus status, DiskInterface iface, DiskFormat format, Boolean sparse, Boolean bootable, Boolean wipeAfterDelete, Boolean propagateErrors) {
-        assertEquals(d.getId(), id);
+    private void testDisk(PowerShellDisk d, String id, String vmId, Long size, DiskType type, DiskStatus status, DiskInterface iface, DiskFormat format, Boolean sparse, Boolean bootable, Boolean wipeAfterDelete, Boolean propagateErrors, String vmSnapshotId, String parentId, String internalDriveMapping, String lastModified) {
+        assertEquals(id, d.getId());
         assertNotNull(d.getVm());
-        assertEquals(d.getVm().getId(), vmId);
-        assertEquals(d.getSize(), size);
-        assertEquals(d.getType(), type);
-        assertEquals(d.getStatus(), status);
-        assertEquals(d.getInterface(), iface);
-        assertEquals(d.getFormat(), format);
-        assertEquals(d.isSparse(), sparse);
-        assertEquals(d.isBootable(), bootable);
-        assertEquals(d.isWipeAfterDelete(), wipeAfterDelete);
-        assertEquals(d.isPropagateErrors(), propagateErrors);
+        assertEquals(vmId, d.getVm().getId());
+        assertEquals(size, d.getSize());
+        assertEquals(type, d.getType());
+        assertEquals(status, d.getStatus());
+        assertEquals(iface, d.getInterface());
+        assertEquals(format, d.getFormat());
+        assertEquals(sparse, d.isSparse());
+        assertEquals(bootable, d.isBootable());
+        assertEquals(wipeAfterDelete, d.isWipeAfterDelete());
+        assertEquals(propagateErrors, d.isPropagateErrors());
+        assertEquals(vmSnapshotId, d.getVmSnapshotId());
+        assertEquals(parentId, d.getParentId());
+        assertEquals(internalDriveMapping, d.getInternalDriveMapping());
+        assertEquals(lastModified, d.getLastModified());
     }
 
     @Test
@@ -57,7 +60,7 @@ public class PowerShellDiskTest extends PowerShellModelTest {
         assertNotNull(disks);
         assertEquals(disks.size(), 1);
 
-        testDisk(disks.get(0), "0b9318b4-e426-4380-9e6a-bb7f3a38a2ce", VM_ID, 1341231104L, DiskType.SYSTEM, DiskStatus.OK, DiskInterface.IDE, DiskFormat.RAW, true, true, null, null);
+        testDisk(disks.get(0), "0b9318b4-e426-4380-9e6a-bb7f3a38a2ce", VM_ID, 1341231104L, DiskType.SYSTEM, DiskStatus.OK, DiskInterface.IDE, DiskFormat.RAW, true, true, null, null, "563055c6-b1ec-4f31-85a1-6354a916a0b5", "00000000-0000-0000-0000-000000000000", "1", "10/12/1969 17:29:35");
     }
 
     @Test
@@ -70,7 +73,7 @@ public class PowerShellDiskTest extends PowerShellModelTest {
         assertNotNull(disks);
         assertEquals(disks.size(), 2);
 
-        testDisk(disks.get(0), "222ea10f-7c0a-4302-8e80-2834b8fa681a", VM_ID, 1073741824L, DiskType.DATA, DiskStatus.OK, DiskInterface.IDE, DiskFormat.COW, true, null, null, null);
-        testDisk(disks.get(1), "0e833f37-3437-44f2-a04f-6f9692882431", VM_ID, 2147483648L, DiskType.SYSTEM, DiskStatus.OK, DiskInterface.VIRTIO, DiskFormat.RAW, null, true, true, null);
+        testDisk(disks.get(0), "222ea10f-7c0a-4302-8e80-2834b8fa681a", VM_ID, 1073741824L, DiskType.DATA, DiskStatus.OK, DiskInterface.IDE, DiskFormat.COW, true, null, null, null, "22a659ab-29a3-4160-9647-bb07753c612e", "00000000-0000-0000-0000-000000000000", "2", "7/22/2010 10:40:27 AM");
+        testDisk(disks.get(1), "0e833f37-3437-44f2-a04f-6f9692882431", VM_ID, 2147483648L, DiskType.SYSTEM, DiskStatus.OK, DiskInterface.VIRTIO, DiskFormat.RAW, null, true, true, null, "1d122de8-1aa2-4b07-9d42-937333ea577d", "00000000-0000-0000-0000-000000000000", "1", "7/21/2010 10:59:42 AM");
     }
 }

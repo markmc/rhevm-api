@@ -33,6 +33,14 @@ import com.redhat.rhevm.api.powershell.util.PowerShellTestUtils;
 public class BasePowerShellResourceTest extends Assert {
 
     protected String formatXmlReturn(String type, String[] names, String[] descriptions, String[] args) {
+        String[][] perNameArgs = new String[names.length][];
+        for (int i = 0; i < names.length; i++) {
+            perNameArgs[i] = args;
+        }
+        return formatXmlReturn(type, names, descriptions, perNameArgs);
+    }
+
+    protected String formatXmlReturn(String type, String[] names, String[] descriptions, String[][] args) {
         String tmpl = PowerShellTestUtils.readClassPathFile(type + ".tmpl");
         StringBuilder buffer = new StringBuilder();
         buffer.append("<?xml version=\"1.0\"?>");
@@ -41,7 +49,7 @@ public class BasePowerShellResourceTest extends Assert {
             buffer.append(MessageFormat.format(tmpl, buildArgs(Integer.toString(names[i].hashCode()),
                                                                names[i],
                                                                descriptions[i],
-                                                               args)));
+                                                               args[i])));
         }
         buffer.append("</Objects>");
         return buffer.toString();

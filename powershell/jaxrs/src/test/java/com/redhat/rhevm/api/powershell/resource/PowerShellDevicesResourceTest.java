@@ -80,7 +80,7 @@ public class PowerShellDevicesResourceTest
     private static final long DISK_SIZE = 10;
     private static final long DISK_SIZE_BYTES = DISK_SIZE * 1024 * 1024 * 1024;
 
-    private static final String[] diskArgs = new String[] { Long.toString(DISK_SIZE_BYTES) };
+    private static final String[] diskArgs = new String[] { Long.toString(DISK_SIZE_BYTES), "", "", "", "" };
     private static final String[] networkArgs = new String[] { DATA_CENTER_ID};
     private static final String[] nicArgs = new String[] { NETWORK_NAME };
 

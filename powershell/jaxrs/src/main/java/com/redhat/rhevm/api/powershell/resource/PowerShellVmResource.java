@@ -40,7 +40,6 @@ import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
 
-
 public class PowerShellVmResource extends AbstractPowerShellActionableResource<VM> implements VmResource {
 
     public PowerShellVmResource(String id,
@@ -67,7 +66,7 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
     public static VM addLinks(PowerShellVM vm) {
         VM ret = JAXBHelper.clone("vm", VM.class, vm);
 
-        String [] deviceCollections = { "cdroms", "disks", "nics" };
+        String [] deviceCollections = { "cdroms", "disks", "nics", "snapshots" };
 
         ret.getLinks().clear();
 
@@ -198,5 +197,10 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
     @Override
     public PowerShellNicsResource getNicsResource() {
         return new PowerShellNicsResource(getId(), shellPools, getParser(), "get-vm");
+    }
+
+    @Override
+    public PowerShellSnapshotsResource getSnapshotsResource() {
+        return new PowerShellSnapshotsResource(getId(), shellPools, getParser());
     }
 }

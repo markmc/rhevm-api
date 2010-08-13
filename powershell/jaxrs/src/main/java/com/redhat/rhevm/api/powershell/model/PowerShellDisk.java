@@ -38,12 +38,36 @@ import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 public class PowerShellDisk extends Disk {
 
     private String vmSnapshotId;
+    private String parentId;
+    private String lastModified;
+    private String internalDriveMapping;
 
     public String getVmSnapshotId() {
         return vmSnapshotId;
     }
     public void setVmSnapshotId(String vmSnapshotId) {
         this.vmSnapshotId = vmSnapshotId;
+    }
+
+    public String getParentId() {
+        return parentId;
+    }
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
+    }
+
+    public String getLastModified() {
+        return lastModified;
+    }
+    public void setLastModified(String lastModified) {
+        this.lastModified = lastModified;
+    }
+
+    public String getInternalDriveMapping() {
+        return internalDriveMapping;
+    }
+    public void setInternalDriveMapping(String internalDriveMapping) {
+        this.internalDriveMapping = internalDriveMapping;
     }
 
     public static List<PowerShellDisk> parse(PowerShellParser parser, String vmId, String output) {
@@ -53,6 +77,7 @@ public class PowerShellDisk extends Disk {
             PowerShellDisk disk = new PowerShellDisk();
 
             disk.setId(entity.get("snapshotid"));
+            disk.setDescription(entity.get("description"));
 
             disk.setVm(new VM());
             disk.getVm().setId(vmId);
@@ -80,6 +105,9 @@ public class PowerShellDisk extends Disk {
             }
 
             disk.setVmSnapshotId(entity.get("vmsnapshotid"));
+            disk.setParentId(entity.get("parentid"));
+            disk.setLastModified(entity.get("lastmodified"));
+            disk.setInternalDriveMapping(entity.get("internaldrivemapping"));
 
             ret.add(disk);
         }
