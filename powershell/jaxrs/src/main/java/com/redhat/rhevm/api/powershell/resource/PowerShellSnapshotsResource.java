@@ -75,7 +75,25 @@ public class PowerShellSnapshotsResource implements SnapshotsResource {
         return !disks.isEmpty() ? disks.get(0) : null;
     }
 
-    public Snapshot addLinks(Snapshot snapshot) {
+    public Snapshot buildFromDisk(PowerShellDisk disk) {
+        Snapshot snapshot = new Snapshot();
+
+        snapshot.setId(disk.getVmSnapshotId());
+        snapshot.setDescription(disk.getDescription());
+        snapshot.setDate(disk.getLastModified());
+
+        snapshot.setVm(new VM());
+        snapshot.getVm().setId(vmId);
+
+        if (!disk.getParentId().equals(UUID.EMPTY)) {
+            UriBuilder uriBuilder = LinkHelper.getUriBuilder(snapshot.getVm()).path("snapshots");
+
+            Link prev = new Link();
+            prev.setRel("prev");
+            prev.setHref(uriBuilder.clone().path(disk.getParentId()).build().toString());
+            snapshot.getLinks().add(prev);
+        }
+
         return LinkHelper.addLinks(snapshot);
     }
 
@@ -96,35 +114,17 @@ public class PowerShellSnapshotsResource implements SnapshotsResource {
     public Snapshots list() {
         Map<String, Snapshot> snapshots = new HashMap<String, Snapshot>();
 
-        VM vm = new VM();
-        vm.setId(vmId);
-
-        UriBuilder uriBuilder = LinkHelper.getUriBuilder(vm).path("snapshots");
-
         for (PowerShellDisk disk : getDiskSnapshots()) {
             if (snapshots.containsKey(disk.getVmSnapshotId())) {
                 continue;
             }
 
-            Snapshot snapshot = new Snapshot();
-            snapshot.setVm(vm);
-            snapshot.setId(disk.getVmSnapshotId());
-            snapshot.setDescription(disk.getDescription());
-            snapshot.setDate(disk.getLastModified());
-
-            if (!disk.getParentId().equals(UUID.EMPTY)) {
-                Link prev = new Link();
-                prev.setRel("prev");
-                prev.setHref(uriBuilder.clone().path(disk.getParentId()).build().toString());
-                snapshot.getLinks().add(prev);
-            }
-
-            snapshots.put(snapshot.getId(), snapshot);
+            snapshots.put(disk.getVmSnapshotId(), buildFromDisk(disk));
         }
 
         Snapshots ret = new Snapshots();
         for (String id : sortedKeys(snapshots)) {
-            ret.getSnapshots().add(addLinks(snapshots.get(id)));
+            ret.getSnapshots().add(snapshots.get(id));
         }
         return ret;
     }
