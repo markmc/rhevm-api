@@ -77,6 +77,7 @@
   &lt;link rel="cdroms" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/cdroms"/&gt;
   &lt;link rel="disks" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/disks"/&gt;
   &lt;link rel="nics" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/nics"/&gt;
+  &lt;link rel="snapshots" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/snapshots"/&gt;
   &lt;actions&gt;
     &lt;link rel="shutdown" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/shutdown"/&gt;
     &lt;link rel="start" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/start"/&gt;
@@ -276,6 +277,73 @@
 &lt;/nic&gt;
       </screen>
     </section>
+
+  </section>
+
+  <section id="sect-REST_API_Guide-VMs-Snapshots">
+    <title>
+      Snapshots
+    </title>
+
+    <para>
+      A VM may have any number of snapshots of its disk state and these are represented and managed through a collection which behaves similarly to other collections, as described by <xref linkend="chap-REST_API_Guide-Common_Idioms"/>.
+    </para>
+
+    <para>
+      VM snapshots are represented by a <literal>snapshot</literal> element containing the following snapshot-specific properties:
+
+      <informaltable frame="none">
+        <tgroup cols="2">
+          <colspec colwidth="2*"/>
+          <colspec colwidth="5*"/>
+          <tbody>
+            <row>
+              <entry><literal>vm</literal></entry>
+              <entry>The ID and URI of the VM to which this snapshot pertains</entry>
+            </row>
+            <row>
+              <entry><literal>date</literal></entry>
+              <entry>The date and time which this snapshot was created (using the <literal>xsd:dateTime</literal> format, i.e. <literal>YYYY-MM-DDThh:mm:ss</literal>)</entry>
+            </row>
+            <row>
+              <entry><literal>link rel="prev"</literal></entry>
+              <entry>A link to the previous snapshot of this VM</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+    </para>
+
+    <para>
+      When adding a new disk, only the <literal>description</literal> property may be specified.
+    </para>
+
+    <note>
+      <para>
+        Note that it is not possible to modify snapshot properties using <literal>PUT</literal>.
+      </para>
+    </note>
+
+    <screen>
+&lt;snapshot id="f5288fd5-5178-4b7d-b87c-c01a40e40168" href="vms/5114bb3e-a4e6-44b2-b783-b3eea7d84720/snapshots/f5288fd5-5178-4b7d-b87c-c01a40e40168"&gt;
+  &lt;description&gt;foobar&lt;/description&gt;
+  &lt;actions&gt;
+    &lt;link rel="restore" href="vms/5114bb3e-a4e6-44b2-b783-b3eea7d84720/snapshots/f5288fd5-5178-4b7d-b87c-c01a40e40168/restore"/&gt;
+  &lt;/actions&gt;
+  &lt;link rel="prev" href="vms/5114bb3e-a4e6-44b2-b783-b3eea7d84720/snapshots/ce411b3e-e4e0-4482-8b2f-d1ed998b9130"/&gt;
+  &lt;vm id="5114bb3e-a4e6-44b2-b783-b3eea7d84720" href="vms/5114bb3e-a4e6-44b2-b783-b3eea7d84720"/&gt;
+  &lt;date&gt;2010-08-16T14:24:29&lt;/date&gt;
+&lt;/snapshot&gt;
+    </screen>
+
+    <para>
+      A VM may be restored to a given snapshot using the <literal>rel="restore"</literal> action link in the snapshot description e.g.
+    </para>
+
+    <screen>
+POST /vms/5114bb3e-a4e6-44b2-b783-b3eea7d84720/snapshots/f5288fd5-5178-4b7d-b87c-c01a40e40168/restore HTTP/1.1
+Content-type: application/xml
+    </screen>
 
   </section>
 
