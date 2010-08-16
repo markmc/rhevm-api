@@ -25,7 +25,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.resource.MediaType;
 
@@ -140,6 +142,37 @@ public class PowerShellSnapshotsResource implements SnapshotsResource {
             ret.getSnapshots().add(snapshots.get(id));
         }
         return ret;
+    }
+
+    @Override
+    public Response add(UriInfo uriInfo, Snapshot snapshot) {
+        StringBuilder buf = new StringBuilder();
+
+        buf.append("$vm = create-snapshot");
+        buf.append(" -vmid " + PowerShellUtils.escape(vmId));
+        if (snapshot.isSetDescription()) {
+            buf.append(" -description " + PowerShellUtils.escape(snapshot.getDescription()));
+        }
+        buf.append(" -async; ");
+        buf.append("$vm.getdiskimages()");
+
+        snapshot = buildFromDisk(runAndParseSingle(buf.toString()));
+
+        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(snapshot.getId());
+
+        return Response.created(uriBuilder.build()).entity(snapshot).build();
+    }
+
+    @Override
+    public void remove(String id) {
+        StringBuilder buf = new StringBuilder();
+
+        buf.append("remove-snapshot");
+        buf.append(" -vmid " + PowerShellUtils.escape(vmId));
+        buf.append(" -vmsnapshotid " + PowerShellUtils.escape(id));
+        buf.append(" -async");
+
+        PowerShellCmd.runCommand(getShell(), buf.toString());
     }
 
     @Override

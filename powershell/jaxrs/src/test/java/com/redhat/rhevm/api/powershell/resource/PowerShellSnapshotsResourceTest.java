@@ -66,6 +66,8 @@ public class PowerShellSnapshotsResourceTest
 
     private static final String GET_SNAPSHOT_CMD = "$vm = get-vm \"" + VM_ID + "\"; foreach ($d in $vm.getdiskimages()) { foreach ($s in get-snapshot -vmid $vm.vmid -drive $d.internaldrivemapping) { if ($s.vmsnapshotid -eq \"" + asId(SNAPSHOTS[0]) + "\") { $s; break } } }";
     private static final String GET_SNAPSHOTS_CMD = "$snaps = @(); $vm = get-vm \"" + VM_ID + "\"; foreach ($d in $vm.getdiskimages()) { $snaps += get-snapshot -vmid $vm.vmid -drive $d.internaldrivemapping } $snaps";
+    private static final String ADD_SNAPSHOT_CMD = "$vm = create-snapshot -vmid \"" + VM_ID + "\" -async; $vm.getdiskimages()";
+    private static final String REMOVE_SNAPSHOT_CMD = "remove-snapshot -vmid \"" + VM_ID + "\" -vmsnapshotid \"" + asId(SNAPSHOTS[0]) + "\" -async";
 
     protected PowerShellVmResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser) {
         return new PowerShellVmResource(VM_ID, executor, poolMap, parser);
@@ -112,28 +114,59 @@ public class PowerShellSnapshotsResourceTest
     }
 
     @Test
-    public void testSnapshotGet() throws Exception {
+    public void testSnapshotGet() {
         PowerShellSnapshotsResource parent = new PowerShellSnapshotsResource(VM_ID, poolMap, parser);
         PowerShellSnapshotResource resource = new PowerShellSnapshotResource(parent, asId(SNAPSHOTS[0]));
 
         setUpCmdExpectations(GET_SNAPSHOT_CMD, formatDisk(SNAPSHOTS[0], buildDiskArgs(0, 0)));
+        replayAll();
 
         verifySnapshot(resource.get(), 0);
     }
 
     @Test
-    public void testSnapshotsList() throws Exception {
+    public void testSnapshotsList() {
         PowerShellSnapshotsResource resource = new PowerShellSnapshotsResource(VM_ID, poolMap, parser);
 
         setUpCmdExpectations(GET_SNAPSHOTS_CMD, formatDisks(buildNames(), buildDiskArgs()));
+        replayAll();
 
         verifySnapshots(resource.list());
     }
 
-    private void setUpCmdExpectations(String command, String ret) throws Exception {
+    @Test
+    public void testSnapshotAdd() throws Exception {
+        PowerShellSnapshotsResource resource = new PowerShellSnapshotsResource(VM_ID, poolMap, parser);
+
+        setUpCmdExpectations(ADD_SNAPSHOT_CMD, formatDisk(SNAPSHOTS[0], buildDiskArgs(0, 0)));
+        UriInfo uriInfo = setUpUriInfoExpections(asId(SNAPSHOTS[0]));
+        replayAll();
+
+        verifySnapshot((Snapshot)resource.add(uriInfo, new Snapshot()).getEntity(), 0);
+    }
+
+    @Test
+    public void testSnapshotRemove() {
+        PowerShellSnapshotsResource resource = new PowerShellSnapshotsResource(VM_ID, poolMap, parser);
+
+        setUpCmdExpectations(REMOVE_SNAPSHOT_CMD, "");
+        replayAll();
+
+        resource.remove(asId(SNAPSHOTS[0]));
+    }
+
+    private UriInfo setUpUriInfoExpections(String id) throws Exception {
+        UriInfo uriInfo = createMock(UriInfo.class);
+        UriBuilder uriBuilder = createMock(UriBuilder.class);
+        expect(uriInfo.getAbsolutePathBuilder()).andReturn(uriBuilder);
+        expect(uriBuilder.path(id)).andReturn(uriBuilder);
+        expect(uriBuilder.build()).andReturn(new URI("vms/" + VM_ID + "/snapshots/" + id)).anyTimes();
+        return uriInfo;
+    }
+
+    private void setUpCmdExpectations(String command, String ret) {
         mockStatic(PowerShellCmd.class);
         expect(PowerShellCmd.runCommand(setUpShellExpectations(), command)).andReturn(ret);
-        replayAll();
     }
 
     protected PowerShellCmd setUpShellExpectations() {
