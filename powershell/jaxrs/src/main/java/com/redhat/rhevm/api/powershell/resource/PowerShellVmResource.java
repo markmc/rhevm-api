@@ -28,11 +28,13 @@ import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.CpuTopology;
 import com.redhat.rhevm.api.model.Display;
 import com.redhat.rhevm.api.model.Link;
+import com.redhat.rhevm.api.model.Ticket;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.common.util.ReflectionHelper;
+import com.redhat.rhevm.api.powershell.model.PowerShellTicket;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
@@ -185,6 +187,30 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
         buf.append(" -desthostid " + hostArg);
 
         return doAction(uriInfo, new CommandRunner(action, buf.toString(), getShell()));
+    }
+
+    @Override
+    public Response ticket(UriInfo uriInfo, Action action) {
+        StringBuilder buf = new StringBuilder();
+
+        buf.append("set-vmticket");
+        buf.append(" -vmid " + PowerShellUtils.escape(getId()));
+        if (action.isSetTicket()) {
+            Ticket ticket = action.getTicket();
+            if (ticket.isSetValue()) {
+                buf.append(" -ticket " + PowerShellUtils.escape(ticket.getValue()));
+            }
+            if (ticket.isSetExpiry()) {
+                buf.append(" -validtime " + PowerShellUtils.escape(Long.toString(ticket.getExpiry())));
+            }
+        }
+
+        return doAction(uriInfo,
+                        new CommandRunner(action, buf.toString(), getShell()) {
+                            protected void handleOutput(String output) {
+                                action.setTicket(PowerShellTicket.parse(getParser(), output));
+                            }
+                        });
     }
 
     public class CdRomQuery extends PowerShellCdRomsResource.CdRomQuery {

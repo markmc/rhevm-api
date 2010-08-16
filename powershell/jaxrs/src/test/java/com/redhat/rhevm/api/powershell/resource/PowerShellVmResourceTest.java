@@ -30,6 +30,7 @@ import com.redhat.rhevm.api.model.Display;
 import com.redhat.rhevm.api.model.DisplayType;
 import com.redhat.rhevm.api.model.Fault;
 import com.redhat.rhevm.api.model.Host;
+import com.redhat.rhevm.api.model.Ticket;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VmType;
 
@@ -55,6 +56,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     private static final String CLUSTER_ID = PowerShellVmsResourceTest.CLUSTER_ID;
     private static final String TEMPLATE_ID = PowerShellVmsResourceTest.TEMPLATE_ID;
     private static final String BAD_ID = "98765";
+    private static final String TICKET_VALUE = "flibbertigibbet";
 
     private static final String ACTION_RETURN = "replace with realistic powershell return";
     private static final String FAILURE = "replace with realistic powershell failure";
@@ -63,6 +65,12 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     private static final String UPDATE_COMMAND_TEMPLATE = "$v = get-vm \"" + VM_ID + "\";$v.name = \"" + NEW_NAME + "\";{0}update-vm -vmobject $v";
     private static final String UPDATE_COMMAND = MessageFormat.format(UPDATE_COMMAND_TEMPLATE, "");
     private static final String UPDATE_DISPLAY_COMMAND = MessageFormat.format(UPDATE_COMMAND_TEMPLATE, " $v.numofmonitors = 4; $v.displaytype = 'VNC';");
+    private static final String TICKET_COMMAND = "set-vmticket -vmid \"" + VM_ID + "\" -ticket \"" + TICKET_VALUE + "\"";
+    private static final String TICKET_EXPIRY_COMMAND = "set-vmticket -vmid \"" + VM_ID + "\" -validtime \"360\"";
+    private static final String TICKET_RETURN = "<Objects><Object Type=\"RhevmCmd.CLIVmTicket\">"
+        + "<Property Name=\"VmId\" Type=\"System.Guid\">" + VM_ID + "</Property>"
+        + "<Property Name=\"Ticket\" Type=\"System.String\">" + TICKET_VALUE + "</Property>"
+        + "<Property Name=\"ValidTime\" Type=\"System.Int32\">360</Property></Object></Objects>";
 
     private static final String DEST_HOST_ID = "1337";
     private static final String DEST_HOST_NAME = "farawaysoclose";
@@ -214,6 +222,16 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     }
 
     @Test
+    public void testTicket() throws Exception {
+        Action action = getAction();
+        action.setTicket(new Ticket());
+        action.getTicket().setValue(TICKET_VALUE);
+        Response response = resource.ticket(setUpActionExpectation("ticket", TICKET_COMMAND, TICKET_RETURN, false, null), action);
+        verifyActionResponse(response, false);
+        verifyTicketResponse(response);
+    }
+
+    @Test
     public void testStartAsync() throws Exception {
         verifyActionResponse(
             resource.start(setUpActionExpectation("start", "start-vm"), getAction(true)),
@@ -277,6 +295,16 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
             true);
     }
 
+    @Test
+    public void testTicketAsync() throws Exception {
+        Action action = getAction(true);
+        action.setTicket(new Ticket());
+        action.getTicket().setExpiry(360L);
+        verifyActionResponse(
+            resource.ticket(setUpActionExpectation("ticket", TICKET_EXPIRY_COMMAND, TICKET_RETURN, false, null), action),
+            true);
+    }
+
     private UriInfo setUpVmExpectations(String command, String ret, String name) throws Exception {
         mockStatic(PowerShellCmd.class);
         expect(PowerShellCmd.runCommand(setUpShellExpectations(), command)).andReturn(ret);
@@ -285,11 +313,15 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     }
 
     private UriInfo setUpActionExpectation(String verb, String command, boolean appendVmId, Throwable t) throws Exception {
+        return setUpActionExpectation(verb, command, ACTION_RETURN, appendVmId, t);
+    }
+
+    private UriInfo setUpActionExpectation(String verb, String command, String ret, boolean appendVmId, Throwable t) throws Exception {
         if (appendVmId) {
             command += " -vmid \"" + VM_ID + "\"";
         }
         if (t == null) {
-            return setUpActionExpectation("/vms/" + VM_ID + "/", verb, command, ACTION_RETURN);
+            return setUpActionExpectation("/vms/" + VM_ID + "/", verb, command, ret);
         } else {
             return setUpActionExpectation("/vms/" + VM_ID + "/", verb, command, t);
         }
@@ -337,6 +369,12 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
 
     private void verifyActionResponse(Response r, boolean async, String reason, String detailExerpt) throws Exception {
         verifyActionResponse(r, "vms/" + VM_ID, async, reason, detailExerpt);
+    }
+
+    private void verifyTicketResponse(Response r) {
+        Action action = (Action)r.getEntity();
+        assertTrue(action.isSetTicket());
+        assertEquals(TICKET_VALUE, action.getTicket().getValue());
     }
 
     private void verifyUpdateException(WebApplicationException wae, String field) {

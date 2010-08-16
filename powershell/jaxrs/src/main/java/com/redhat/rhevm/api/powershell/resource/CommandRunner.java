@@ -41,6 +41,10 @@ class CommandRunner extends AbstractPowerShellActionTask {
     }
 
     public void execute() {
-        PowerShellCmd.runCommand(shell, command);
+        handleOutput(PowerShellCmd.runCommand(shell, command));
+    }
+
+    protected void handleOutput(String output) {
+        // no-op by default
     }
 }

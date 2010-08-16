@@ -63,6 +63,8 @@
       <xs:element name="host" type="Host" minOccurs="0"/>
       <!-- when installing a host, a root password is required -->
       <xs:element name="root_password" type="xs:string" minOccurs="0" maxOccurs="1"/>
+      <!-- for VM ticket actions -->
+      <xs:element name="ticket" type="Ticket" minOccurs="0"/>
       <!-- ... etc., explicitly enumerate all the parameter types -->
     </xs:sequence>
   </xs:group>
@@ -680,6 +682,13 @@
       <xs:element name="type" type="DisplayType" minOccurs="0" maxOccurs="1"/>
       <xs:element name="port" type="xs:unsignedShort" minOccurs="0" maxOccurs="1"/>
       <xs:element name="monitors" type="xs:int" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Ticket">
+    <xs:sequence>
+      <xs:element name="value" type="xs:string" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="expiry" type="xs:unsignedInt" minOccurs="0" maxOccurs="1"/>
     </xs:sequence>
   </xs:complexType>
 
