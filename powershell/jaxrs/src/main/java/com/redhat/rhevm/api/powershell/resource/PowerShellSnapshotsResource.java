@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executor;
 
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
@@ -49,15 +50,22 @@ import com.redhat.rhevm.api.resource.SnapshotsResource;
 public class PowerShellSnapshotsResource implements SnapshotsResource {
 
     protected String vmId;
+    protected Executor executor;
     protected PowerShellPoolMap shellPools;
     protected PowerShellParser parser;
 
     public PowerShellSnapshotsResource(String vmId,
+                                       Executor executor,
                                        PowerShellPoolMap shellPools,
                                        PowerShellParser parser) {
         this.vmId = vmId;
+        this.executor = executor;
         this.shellPools = shellPools;
         this.parser = parser;
+    }
+
+    public Executor getExecutor() {
+        return executor;
     }
 
     public PowerShellCmd getShell() {
@@ -66,6 +74,10 @@ public class PowerShellSnapshotsResource implements SnapshotsResource {
 
     public PowerShellParser getParser() {
         return parser;
+    }
+
+    public String getVmId() {
+        return vmId;
     }
 
     public List<PowerShellDisk> runAndParse(String command) {
@@ -177,7 +189,7 @@ public class PowerShellSnapshotsResource implements SnapshotsResource {
 
     @Override
     public SnapshotResource getSnapshotSubResource(String id) {
-        return new PowerShellSnapshotResource(this, id);
+        return new PowerShellSnapshotResource(id, getExecutor(), shellPools, getParser(), this);
     }
 
     private List<String> sortedKeys(Map<String, Snapshot> map) {

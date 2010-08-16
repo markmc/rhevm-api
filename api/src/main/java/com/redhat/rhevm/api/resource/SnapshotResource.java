@@ -18,10 +18,19 @@
  */
 package com.redhat.rhevm.api.resource;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.Response;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
+import com.redhat.rhevm.api.model.Action;
+import com.redhat.rhevm.api.model.Actionable;
 import com.redhat.rhevm.api.model.Snapshot;
 
 
@@ -31,4 +40,14 @@ public interface SnapshotResource {
     @GET
     @Formatted
     public Snapshot get();
+
+    @Path("{action: (restore)}/{oid}")
+    public ActionResource getActionSubresource(@PathParam("action") String action, @PathParam("oid") String oid);
+
+    @POST
+    @Formatted
+    @Consumes(MediaType.APPLICATION_XML)
+    @Actionable
+    @Path("restore")
+    public Response restore(@Context UriInfo uriInfo, Action action);
 }

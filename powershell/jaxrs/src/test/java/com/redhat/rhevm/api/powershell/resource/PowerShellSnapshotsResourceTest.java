@@ -26,10 +26,12 @@ import java.util.concurrent.Executor;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.UriBuilder;
 
+import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Snapshot;
 import com.redhat.rhevm.api.model.Snapshots;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellException;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
@@ -68,6 +70,13 @@ public class PowerShellSnapshotsResourceTest
     private static final String GET_SNAPSHOTS_CMD = "$snaps = @(); $vm = get-vm \"" + VM_ID + "\"; foreach ($d in $vm.getdiskimages()) { $snaps += get-snapshot -vmid $vm.vmid -drive $d.internaldrivemapping } $snaps";
     private static final String ADD_SNAPSHOT_CMD = "$vm = create-snapshot -vmid \"" + VM_ID + "\" -async; $vm.getdiskimages()";
     private static final String REMOVE_SNAPSHOT_CMD = "remove-snapshot -vmid \"" + VM_ID + "\" -vmsnapshotid \"" + asId(SNAPSHOTS[0]) + "\" -async";
+    private static final String RESTORE_SNAPSHOT_CMD = "restore-vm -vmid \"" + VM_ID + "\" -vmsnapshotid \"" + asId(SNAPSHOTS[0]) + "\"";
+
+    private static final String SNAPSHOT_URI = "vms/" + VM_ID + "/snapshots/" + asId(SNAPSHOTS[0]);
+    private static final String ACTION_RETURN = "replace with realistic powershell return";
+    private static final String FAILURE = "replace with realistic powershell failure";
+    private static final String REASON = "Powershell command \"" + RESTORE_SNAPSHOT_CMD + "\" failed with " + FAILURE;
+    private static final String DETAIL = "at com.redhat.rhevm.api.powershell.util.PowerShellCmd.runCommand(";
 
     protected PowerShellVmResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser) {
         return new PowerShellVmResource(VM_ID, executor, poolMap, parser);
@@ -115,8 +124,8 @@ public class PowerShellSnapshotsResourceTest
 
     @Test
     public void testSnapshotGet() {
-        PowerShellSnapshotsResource parent = new PowerShellSnapshotsResource(VM_ID, poolMap, parser);
-        PowerShellSnapshotResource resource = new PowerShellSnapshotResource(parent, asId(SNAPSHOTS[0]));
+        PowerShellSnapshotsResource parent = new PowerShellSnapshotsResource(VM_ID, executor, poolMap, parser);
+        PowerShellSnapshotResource resource = new PowerShellSnapshotResource(asId(SNAPSHOTS[0]), executor, poolMap, parser, parent);
 
         setUpCmdExpectations(GET_SNAPSHOT_CMD, formatDisk(SNAPSHOTS[0], buildDiskArgs(0, 0)));
         replayAll();
@@ -126,7 +135,7 @@ public class PowerShellSnapshotsResourceTest
 
     @Test
     public void testSnapshotsList() {
-        PowerShellSnapshotsResource resource = new PowerShellSnapshotsResource(VM_ID, poolMap, parser);
+        PowerShellSnapshotsResource resource = new PowerShellSnapshotsResource(VM_ID, executor, poolMap, parser);
 
         setUpCmdExpectations(GET_SNAPSHOTS_CMD, formatDisks(buildNames(), buildDiskArgs()));
         replayAll();
@@ -136,7 +145,7 @@ public class PowerShellSnapshotsResourceTest
 
     @Test
     public void testSnapshotAdd() throws Exception {
-        PowerShellSnapshotsResource resource = new PowerShellSnapshotsResource(VM_ID, poolMap, parser);
+        PowerShellSnapshotsResource resource = new PowerShellSnapshotsResource(VM_ID, executor, poolMap, parser);
 
         setUpCmdExpectations(ADD_SNAPSHOT_CMD, formatDisk(SNAPSHOTS[0], buildDiskArgs(0, 0)));
         UriInfo uriInfo = setUpUriInfoExpections(asId(SNAPSHOTS[0]));
@@ -147,12 +156,50 @@ public class PowerShellSnapshotsResourceTest
 
     @Test
     public void testSnapshotRemove() {
-        PowerShellSnapshotsResource resource = new PowerShellSnapshotsResource(VM_ID, poolMap, parser);
+        PowerShellSnapshotsResource resource = new PowerShellSnapshotsResource(VM_ID, executor, poolMap, parser);
 
         setUpCmdExpectations(REMOVE_SNAPSHOT_CMD, "");
         replayAll();
 
         resource.remove(asId(SNAPSHOTS[0]));
+    }
+
+    @Test
+    public void testRestore() throws Exception {
+        PowerShellSnapshotsResource parent = new PowerShellSnapshotsResource(VM_ID, executor, poolMap, parser);
+        PowerShellSnapshotResource resource = new PowerShellSnapshotResource(asId(SNAPSHOTS[0]), executor, poolMap, parser, parent);
+
+        verifyActionResponse(
+            resource.restore(setUpActionExpectation(SNAPSHOT_URI, "restore", RESTORE_SNAPSHOT_CMD, ACTION_RETURN),
+                             getAction()),
+            SNAPSHOT_URI,
+            false);
+    }
+
+    @Test
+    public void testRestoreAsync() throws Exception {
+        PowerShellSnapshotsResource parent = new PowerShellSnapshotsResource(VM_ID, executor, poolMap, parser);
+        PowerShellSnapshotResource resource = new PowerShellSnapshotResource(asId(SNAPSHOTS[0]), executor, poolMap, parser, parent);
+
+        verifyActionResponse(
+            resource.restore(setUpActionExpectation(SNAPSHOT_URI, "restore", RESTORE_SNAPSHOT_CMD, ACTION_RETURN),
+                             getAction(true)),
+            SNAPSHOT_URI,
+            true);
+    }
+
+    @Test
+    public void testRestoreAsyncFailed() throws Exception {
+        PowerShellSnapshotsResource parent = new PowerShellSnapshotsResource(VM_ID, executor, poolMap, parser);
+        PowerShellSnapshotResource resource = new PowerShellSnapshotResource(asId(SNAPSHOTS[0]), executor, poolMap, parser, parent);
+
+        verifyActionResponse(
+            resource.restore(setUpActionExpectation(SNAPSHOT_URI, "restore", RESTORE_SNAPSHOT_CMD, new PowerShellException(FAILURE)),
+                             getAction(true)),
+            SNAPSHOT_URI,
+            true,
+            REASON,
+            DETAIL);
     }
 
     private UriInfo setUpUriInfoExpections(String id) throws Exception {

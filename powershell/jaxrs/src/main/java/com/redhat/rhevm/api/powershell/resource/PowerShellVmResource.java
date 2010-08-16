@@ -201,6 +201,6 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
 
     @Override
     public PowerShellSnapshotsResource getSnapshotsResource() {
-        return new PowerShellSnapshotsResource(getId(), shellPools, getParser());
+        return new PowerShellSnapshotsResource(getId(), getExecutor(), shellPools, getParser());
     }
 }
