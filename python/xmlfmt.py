@@ -188,7 +188,12 @@ class Template(Base):
     COLLECTION = "templates"
     ELEMENTS = Base.ELEMENTS + ['type', 'status', 'memory', 'os', 'cpu', 'cluster', 'vm']
 
-TYPES = [ Action, Actions, Attachment, Boot, CdRom, Cluster, CPU, DataCenter, Disk, GracePeriod, Host, IP, Iso, Link, MAC, Network, NIC, OS, Storage, StorageDomain, Template, Topology, Version, VLAN, VM, VmPool ]
+class Snapshot(Base):
+    NAME = "snapshot"
+    COLLECTION = "snapshots"
+    ELEMENTS = Base.ELEMENTS + ['vm', 'date']
+
+TYPES = [ Action, Actions, Attachment, Boot, CdRom, Cluster, CPU, DataCenter, Disk, GracePeriod, Host, IP, Iso, Link, MAC, Network, NIC, OS, Storage, StorageDomain, Snapshot, Template, Topology, Version, VLAN, VM, VmPool]
 
 def findEntityType(name):
     for t in TYPES:
