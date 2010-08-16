@@ -124,7 +124,7 @@ public class PowerShellSnapshotsResource implements SnapshotsResource {
 
         Snapshots ret = new Snapshots();
         for (String id : sortedKeys(snapshots)) {
-            ret.getSnapshots().add(snapshots.get(id));
+            ret.getSnapshots().add(addLinks(snapshots.get(id)));
         }
         return ret;
     }
