@@ -64,6 +64,7 @@ public class PowerShellSnapshotsResourceTest
 
     private static final String DATE = "the time has come";
 
+    private static final String GET_SNAPSHOT_CMD = "$vm = get-vm \"" + VM_ID + "\"; foreach ($d in $vm.getdiskimages()) { foreach ($s in get-snapshot -vmid $vm.vmid -drive $d.internaldrivemapping) { if ($s.vmsnapshotid -eq \"" + asId(SNAPSHOTS[0]) + "\") { $s; break } } }";
     private static final String GET_SNAPSHOTS_CMD = "$snaps = @(); $vm = get-vm \"" + VM_ID + "\"; foreach ($d in $vm.getdiskimages()) { $snaps += get-snapshot -vmid $vm.vmid -drive $d.internaldrivemapping } $snaps";
 
     protected PowerShellVmResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser) {
@@ -75,6 +76,10 @@ public class PowerShellSnapshotsResourceTest
         return formatXmlReturn("disk", names, descriptions, diskArgs);
     }
 
+    protected String formatDisk(String name, String[]diskArgs) {
+        return formatDisks(asArray(name), asArray(diskArgs));
+    }
+
     protected String[] buildNames() {
         int nDiskSnapshots = SNAPSHOTS.length * DISKS.length;
         String[] names = new String[SNAPSHOTS.length * DISKS.length];
@@ -84,23 +89,36 @@ public class PowerShellSnapshotsResourceTest
         return names;
     }
 
+    protected String[] buildDiskArgs(int snapshotIndex, int diskIndex) {
+        String[] args = new String[5];
+        args[0] = Long.toString(DISK_SIZE_BYTES);
+        args[1] = asId(SNAPSHOTS[snapshotIndex]);
+        if (snapshotIndex == 0) {
+            args[2] = UUID.EMPTY;
+        } else {
+            args[2] = asId(SNAPSHOTS[snapshotIndex-1]);
+        }
+        args[3] = DATE;
+        args[4] = Integer.toString(diskIndex + 1);
+        return args;
+    }
+
     protected String[][] buildDiskArgs() {
-        int nDiskSnapshots = SNAPSHOTS.length * DISKS.length;
-        String[][] args = new String[nDiskSnapshots][];
-        for (int i = 0; i < nDiskSnapshots; i++) {
-            int snapshotIndex = i / DISKS.length;
-            args[i] = new String[5];
-            args[i][0] = Long.toString(DISK_SIZE_BYTES);
-            args[i][1] = asId(SNAPSHOTS[snapshotIndex]);
-            if (snapshotIndex == 0) {
-                args[i][2] = UUID.EMPTY;
-            } else {
-                args[i][2] = asId(SNAPSHOTS[snapshotIndex-1]);
-            }
-            args[i][3] = DATE;
-            args[i][4] = Integer.toString((i % DISKS.length) + 1);
+        String[][] args = new String[SNAPSHOTS.length * DISKS.length][];
+        for (int i = 0; i < SNAPSHOTS.length * DISKS.length; i++) {
+            args[i] = buildDiskArgs(i / DISKS.length, i % DISKS.length);
         }
         return args;
+    }
+
+    @Test
+    public void testSnapshotGet() throws Exception {
+        PowerShellSnapshotsResource parent = new PowerShellSnapshotsResource(VM_ID, poolMap, parser);
+        PowerShellSnapshotResource resource = new PowerShellSnapshotResource(parent, asId(SNAPSHOTS[0]));
+
+        setUpCmdExpectations(GET_SNAPSHOT_CMD, formatDisk(SNAPSHOTS[0], buildDiskArgs(0, 0)));
+
+        verifySnapshot(resource.get(), 0);
     }
 
     @Test
@@ -141,7 +159,15 @@ public class PowerShellSnapshotsResourceTest
         }
     }
 
-    private String asId(String name) {
+    private static String asId(String name) {
         return Integer.toString(name.hashCode());
+    }
+
+    protected static String[] asArray(String s) {
+        return new String[] { s };
+    }
+
+    protected static String[][] asArray(String[] a) {
+        return new String[][] { a };
     }
 }

@@ -97,6 +97,19 @@ public class PowerShellSnapshotsResource implements SnapshotsResource {
         return LinkHelper.addLinks(snapshot);
     }
 
+    public PowerShellDisk getDiskSnapshot(String vmSnapshotId) {
+        StringBuilder buf = new StringBuilder();
+
+        buf.append("$vm = get-vm " + PowerShellUtils.escape(vmId) + "; ");
+        buf.append("foreach ($d in $vm.getdiskimages()) { ");
+        buf.append("foreach ($s in get-snapshot -vmid $vm.vmid -drive $d.internaldrivemapping) { ");
+        buf.append("if ($s.vmsnapshotid -eq " + PowerShellUtils.escape(vmSnapshotId) + ") { ");
+        buf.append("$s; break");
+        buf.append(" } } }");
+
+        return runAndParseSingle(buf.toString());
+    }
+
     private List<PowerShellDisk> getDiskSnapshots() {
         StringBuilder buf = new StringBuilder();
 
@@ -131,7 +144,7 @@ public class PowerShellSnapshotsResource implements SnapshotsResource {
 
     @Override
     public SnapshotResource getSnapshotSubResource(String id) {
-        return null;
+        return new PowerShellSnapshotResource(this, id);
     }
 
     private List<String> sortedKeys(Map<String, Snapshot> map) {
