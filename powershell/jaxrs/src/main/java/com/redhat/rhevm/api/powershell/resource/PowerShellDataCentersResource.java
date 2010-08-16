@@ -40,15 +40,15 @@ public class PowerShellDataCentersResource
     implements DataCentersResource {
 
     public List<DataCenter> runAndParse(String command) {
-        return PowerShellDataCenterResource.runAndParse(getShell(), getParser(), command);
+        return PowerShellDataCenterResource.runAndParse(getPool(), getParser(), command);
     }
 
     public DataCenter runAndParseSingle(String command) {
-        return PowerShellDataCenterResource.runAndParseSingle(getShell(), getParser(), command);
+        return PowerShellDataCenterResource.runAndParseSingle(getPool(), getParser(), command);
     }
 
     public DataCenter addLinks(DataCenter dataCenter) {
-        return PowerShellDataCenterResource.addLinks(getShell(), getParser(), dataCenter);
+        return PowerShellDataCenterResource.addLinks(getPool(), getParser(), dataCenter);
     }
 
     @Override
@@ -100,7 +100,7 @@ public class PowerShellDataCentersResource
 
     @Override
     public void remove(String id) {
-        PowerShellCmd.runCommand(getShell(), "remove-datacenter -datacenterid " + PowerShellUtils.escape(id));
+        PowerShellCmd.runCommand(getPool(), "remove-datacenter -datacenterid " + PowerShellUtils.escape(id));
         removeSubResource(id);
     }
 

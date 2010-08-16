@@ -44,11 +44,11 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
         new HashMap<String, PowerShellStorageDomainResource>();
 
     public List<StorageDomain> runAndParse(String command, boolean sharedStatus) {
-        return PowerShellStorageDomainResource.runAndParse(getShell(), getParser(), command, sharedStatus);
+        return PowerShellStorageDomainResource.runAndParse(getPool(), getParser(), command, sharedStatus);
     }
 
     public StorageDomain runAndParseSingle(String command, boolean sharedStatus) {
-        return PowerShellStorageDomainResource.runAndParseSingle(getShell(), getParser(), command, sharedStatus);
+        return PowerShellStorageDomainResource.runAndParseSingle(getPool(), getParser(), command, sharedStatus);
     }
 
     @Override

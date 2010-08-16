@@ -30,6 +30,7 @@ import com.redhat.rhevm.api.resource.HostResource;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellHost;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
@@ -49,22 +50,22 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
     /* needed because there are two get-host commands */
     private static final String CMD_PREFIX = "rhevmpssnapin\\";
 
-    public static List<Host> runAndParse(PowerShellCmd shell, PowerShellParser parser, String command) {
-        return PowerShellHost.parse(parser, PowerShellCmd.runCommand(shell, command));
+    public static List<Host> runAndParse(PowerShellPool pool, PowerShellParser parser, String command) {
+        return PowerShellHost.parse(parser, PowerShellCmd.runCommand(pool, command));
     }
 
-    public static Host runAndParseSingle(PowerShellCmd shell, PowerShellParser parser, String command) {
-        List<Host> hosts = runAndParse(shell, parser, command);
+    public static Host runAndParseSingle(PowerShellPool pool, PowerShellParser parser, String command) {
+        List<Host> hosts = runAndParse(pool, parser, command);
 
         return !hosts.isEmpty() ? hosts.get(0) : null;
     }
 
     public List<Host> runAndParse(String command) {
-        return runAndParse(getShell(), getParser(), command);
+        return runAndParse(getPool(), getParser(), command);
     }
 
     public Host runAndParseSingle(String command) {
-        return runAndParseSingle(getShell(), getParser(), command);
+        return runAndParseSingle(getPool(), getParser(), command);
     }
 
     @Override
@@ -91,34 +92,34 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
 
     @Override
     public Response approve(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new CommandRunner(action, "approve-host", "host", getId(), getShell()));
+        return doAction(uriInfo, new CommandRunner(action, "approve-host", "host", getId(), getPool()));
     }
 
     @Override
     public Response install(UriInfo uriInfo, Action action) {
         validateParameters(action, "rootPassword");
-        return doAction(uriInfo, new HostInstaller(action, action.getRootPassword(), getShell()));
+        return doAction(uriInfo, new HostInstaller(action, action.getRootPassword(), getPool()));
     }
 
     @Override
     public Response activate(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new CommandRunner(action, "resume-host", "host", getId(), getShell()));
+        return doAction(uriInfo, new CommandRunner(action, "resume-host", "host", getId(), getPool()));
     }
 
     @Override
     public Response deactivate(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new CommandRunner(action, "suspend-host", "host", getId(), getShell()));
+        return doAction(uriInfo, new CommandRunner(action, "suspend-host", "host", getId(), getPool()));
     }
 
     class HostInstaller extends AbstractPowerShellActionTask {
 
         private String rootPassword;
-        private PowerShellCmd shell;
+        private PowerShellPool pool;
 
-        HostInstaller(Action action, String rootPassword, PowerShellCmd shell) {
+        HostInstaller(Action action, String rootPassword, PowerShellPool pool) {
             super(action, "$h = " + CMD_PREFIX + "get-host ");
             this.rootPassword = rootPassword;
-            this.shell = shell;
+            this.pool = pool;
         }
 
         public void execute() {
@@ -132,7 +133,7 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
             buf.append(" -install");
             buf.append(" -rootpassword " + PowerShellUtils.escape(rootPassword));
 
-            PowerShellCmd.runCommand(shell, buf.toString());
+            PowerShellCmd.runCommand(pool, buf.toString());
         }
     }
 }

@@ -87,6 +87,6 @@ public class PowerShellNicsResource
         buf.append("}");
         buf.append("remove-networkadapter -vmobject $v -networkadapterobject $n");
 
-        PowerShellCmd.runCommand(getShell(), buf.toString());
+        PowerShellCmd.runCommand(getPool(), buf.toString());
     }
 }

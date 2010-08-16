@@ -19,8 +19,9 @@
 package com.redhat.rhevm.api.powershell.util;
 
 import java.io.File;
-import java.io.InputStream;
-import java.util.Scanner;
+
+import expectj.ExpectJ;
+import expectj.Spawn;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,51 +31,54 @@ import com.redhat.rhevm.api.common.security.auth.Principal;
 public class PowerShellCmd {
     private static final Log log = LogFactory.getLog(PowerShellCmd.class);
 
+    private static final String QUOTE = "'";
+
     private Principal principal;
-    private Process p;
-    private String stdout, stderr;
+    private ExpectJ expectj;
+
+    // REVISIT: if the stdout/stderr buffers go over a
+    //          certain size we should re-create it
+
+    private Spawn process;
+    private OutputBuffer stdout = new OutputBuffer();
+    private OutputBuffer stderr = new OutputBuffer();
+
+    public PowerShellCmd(Principal principal, ExpectJ expectj) {
+        this.principal = principal;
+        this.expectj = expectj;
+    }
 
     public PowerShellCmd(Principal principal) {
-        this.principal = principal;
+        this(principal, new ExpectJ());
     }
 
     public PowerShellCmd() {
         this(null);
     }
 
-    public int runAndWait(String script) {
+    public int run(String script) {
+        log.info("Running '" + script + "'");
+
+        script = addConvertToXml(script);
+
         try {
-            p.getOutputStream().write(script.getBytes());
-            p.getOutputStream().close();
+            process.send(script.toString());
         } catch (java.io.IOException ex) {
             throw new PowerShellException("Writing to powershell process failed", ex);
         }
 
-        StreamReader stdoutThread = new StreamReader(p.getInputStream());
-        StreamReader stderrThread = new StreamReader(p.getErrorStream());
-
-        stdoutThread.start();
-        stderrThread.start();
-
-        while (true) {
-            try {
-                p.waitFor();
-                stdoutThread.join();
-                stderrThread.join();
-                break;
-            } catch	(java.lang.InterruptedException ex) {
-                /* with waitFor(), this is needed to clear
-                 * the interrupted status flag:
-                 *   http://bugs.sun.com/view_bug.do?bug_id=6420270
-                 */
-                Thread.interrupted();
-            }
+        try {
+            process.expect("</output>");
+        } catch (expectj.TimeoutException te) {
+            // should never happen
+        } catch (java.io.IOException ex) {
+            throw new PowerShellException("Reading from powershell process failed", ex);
         }
 
-        stdout = stdoutThread.getOutput();
-        stderr = stderrThread.getOutput();
+        stdout.update(process.getCurrentStandardOutContents());
+        stderr.update(process.getCurrentStandardErrContents());
 
-        return p.exitValue();
+        return stdout.getStatus();
     }
 
     /* On Windows 2008 R2, which is always 64-bit, the PowerShell bindings
@@ -109,89 +113,36 @@ public class PowerShellCmd {
     }
 
     public void start() {
-        ProcessBuilder pb = new ProcessBuilder(findPowerShell(), "-command", "-");
+        String command = findPowerShell() + " -command -";
 
         try {
-            p = pb.start();
-        } catch	(java.io.IOException ex) {
+            process = expectj.spawn(command);
+        } catch (java.io.IOException ex) {
             throw new PowerShellException("Launching powershell failed", ex);
         }
 
         if (principal != null && !principal.equals(Principal.NONE)) {
             try {
-                p.getOutputStream().write(buildLogin().getBytes());
+                process.send(buildLogin());
             } catch (java.io.IOException ex) {
                 throw new PowerShellException("Writing login-user to powershell process failed", ex);
             }
         }
     }
 
-    public void destroy() {
-        if (p != null) {
-            p.destroy();
-            p = null;
+    public void stop() {
+        if (process != null) {
+            process.stop();
+            process = null;
         }
     }
 
-    public int run(String script) {
-        if (p == null) {
-            start();
-        }
-
-        log.info("Running '" + script + "'");
-
-        try {
-            return runAndWait(script);
-        } finally {
-            destroy();
-        }
-    }
-
-    public String getStdOut() {
-        return this.stdout;
-    }
-
-    public String getStdErr() {
-        return this.stderr;
-    }
-
-    private class StreamReader extends Thread {
-        private InputStream is;
-
-        public StreamReader(InputStream is) {
-            this.is = is;
-        }
-
-        private StringBuilder outputBuffer = new StringBuilder();
-        public String getOutput() {
-            return outputBuffer.toString();
-        }
-
-        @Override
-        public void run() {
-            try {
-                Scanner sc = new Scanner(is);
-                while (sc.hasNext()) {
-                    outputBuffer.append(sc.nextLine() + "\n");
-                }
-            } finally {
-                try {
-                    this.is.close();
-                } catch (java.io.IOException ex) {
-                    log.error("Exception while closing input stream", ex);
-                }
-            }
-        }
-    }
-
-    private static final String QUOTE = "'";
-
-    private static String escape(String arg) {
+    private String escape(String arg) {
         arg = arg.replace(QUOTE, QUOTE + QUOTE);
         return new StringBuffer(QUOTE).append(arg).append(QUOTE).toString();
     }
 
-    private static String addConvertToXml(String command) {
+    private String addConvertToXml(String command) {
         // REVIST: I can't get the commented out bits to work
         StringBuilder buf = new StringBuilder();
         buf.append("Write-Host \"<output>\";\n");
@@ -207,35 +158,63 @@ public class PowerShellCmd {
         return buf.toString();
     }
 
+    private class OutputBuffer {
+        private String buf;
+        private int index;
+        private int status;
+
+        public void update(String contents) {
+            buf = contents.substring(index);
+            index = contents.length();
+
+            if (buf.contains("<output>")) {
+                buf = buf.substring(buf.indexOf("<output>") + 8);
+            }
+            if (buf.contains("</output>")) {
+                int i = buf.indexOf("</output>");
+                status = Integer.parseInt(buf.substring(i + 10, i + 11));
+                buf = buf.substring(0, i);
+            }
+        }
+
+        public String get() {
+            return buf;
+        }
+
+        public int getStatus() {
+            return status;
+        }
+    }
+
+    public String getStdOut() {
+        return stdout.get().trim();
+    }
+
+    public String getStdErr() {
+        return stderr.get().trim();
+    }
+
     private static void handleExitStatus(int exitstatus, String command) {
         if (exitstatus != 0) {
             throw new PowerShellException("Command '" + command + "' exited with status=" + exitstatus);
         }
     }
 
-    public static String runCommand(PowerShellCmd runner, String command) {
-        int exitstatus = runner.run(addConvertToXml(command));
+    public static String runCommand(PowerShellPool pool, String command) {
+        PowerShellCmd runner = pool.get();
 
-        if (!runner.getStdErr().isEmpty()) {
-            log.warn(runner.getStdErr());
-        }
+        try {
+            int exitstatus = runner.run(command);
 
-        handleExitStatus(exitstatus, command);
+            if (!runner.getStdErr().isEmpty()) {
+                log.warn(runner.getStdErr());
+            }
 
-        String output = runner.getStdOut();
-        if (output.contains("<output>")) {
-            output = output.substring(output.indexOf("<output>") + 8);
-        }
-        if (output.contains("</output>")) {
-            int i = output.indexOf("</output>");
-            exitstatus = Integer.parseInt(output.substring(i + 10, i + 11));
-            output = output.substring(0, i);
-        }
-        if (exitstatus != 0) {
-            log.warn(output);
             handleExitStatus(exitstatus, command);
-        }
 
-        return output.trim();
+            return runner.getStdOut();
+        } finally {
+            pool.add(runner);
+        }
     }
 }

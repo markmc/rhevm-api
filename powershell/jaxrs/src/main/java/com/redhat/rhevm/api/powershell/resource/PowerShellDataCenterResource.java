@@ -35,6 +35,7 @@ import com.redhat.rhevm.api.powershell.model.PowerShellDataCenter;
 import com.redhat.rhevm.api.powershell.model.PowerShellVersion;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
+import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
@@ -48,28 +49,28 @@ public class PowerShellDataCenterResource extends AbstractPowerShellActionableRe
         super(id, executor, shellPools, parser);
     }
 
-    public static List<DataCenter> runAndParse(PowerShellCmd shell, PowerShellParser parser, String command) {
-        return PowerShellDataCenter.parse(parser, PowerShellCmd.runCommand(shell, command));
+    public static List<DataCenter> runAndParse(PowerShellPool pool, PowerShellParser parser, String command) {
+        return PowerShellDataCenter.parse(parser, PowerShellCmd.runCommand(pool, command));
     }
 
-    public static DataCenter runAndParseSingle(PowerShellCmd shell, PowerShellParser parser, String command) {
-        List<DataCenter> dataCenters = runAndParse(shell, parser, command);
+    public static DataCenter runAndParseSingle(PowerShellPool pool, PowerShellParser parser, String command) {
+        List<DataCenter> dataCenters = runAndParse(pool, parser, command);
 
         return !dataCenters.isEmpty() ? dataCenters.get(0) : null;
     }
 
     public List<DataCenter> runAndParse(String command) {
-        return runAndParse(getShell(), getParser(), command);
+        return runAndParse(getPool(), getParser(), command);
     }
 
     public DataCenter runAndParseSingle(String command) {
-        return runAndParseSingle(getShell(), getParser(), command);
+        return runAndParseSingle(getPool(), getParser(), command);
     }
 
-    private static DataCenter querySupportedVersions(PowerShellCmd shell, PowerShellParser parser, DataCenter dataCenter) {
+    private static DataCenter querySupportedVersions(PowerShellPool pool, PowerShellParser parser, DataCenter dataCenter) {
         String command = "get-datacentercompatibilityversions -datacenterid " + PowerShellUtils.escape(dataCenter.getId());
 
-        List<Version> supported = PowerShellVersion.parse(parser, PowerShellCmd.runCommand(shell, command));
+        List<Version> supported = PowerShellVersion.parse(parser, PowerShellCmd.runCommand(pool, command));
         if (!supported.isEmpty()) {
             dataCenter.setSupportedVersions(new SupportedVersions());
             for (Version v : supported) {
@@ -80,12 +81,12 @@ public class PowerShellDataCenterResource extends AbstractPowerShellActionableRe
         return dataCenter;
     }
 
-    public static DataCenter addLinks(PowerShellCmd shell, PowerShellParser parser, DataCenter dataCenter) {
-        dataCenter = querySupportedVersions(shell, parser, dataCenter);
+    public static DataCenter addLinks(PowerShellPool pool, PowerShellParser parser, DataCenter dataCenter) {
+        dataCenter = querySupportedVersions(pool, parser, dataCenter);
 
         dataCenter = LinkHelper.addLinks(dataCenter);
 
-        Attachments attachments = PowerShellAttachmentsResource.getAttachmentsForDataCenter(shell,
+        Attachments attachments = PowerShellAttachmentsResource.getAttachmentsForDataCenter(pool,
                                                                                             parser,
                                                                                             dataCenter.getId());
         dataCenter.setAttachments(attachments);
@@ -100,7 +101,7 @@ public class PowerShellDataCenterResource extends AbstractPowerShellActionableRe
     }
 
     public DataCenter addLinks(DataCenter dataCenter) {
-        return addLinks(getShell(), getParser(), dataCenter);
+        return addLinks(getPool(), getParser(), dataCenter);
     }
 
     @Override

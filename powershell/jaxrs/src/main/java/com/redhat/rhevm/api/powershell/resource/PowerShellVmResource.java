@@ -38,6 +38,7 @@ import com.redhat.rhevm.api.powershell.model.PowerShellTicket;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
+import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
@@ -52,18 +53,18 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
         super(id, executor, shellPools, parser);
     }
 
-    public static List<PowerShellVM> runAndParse(PowerShellCmd shell, PowerShellParser parser, String command) {
-        return PowerShellVM.parse(parser, PowerShellCmd.runCommand(shell, command));
+    public static List<PowerShellVM> runAndParse(PowerShellPool pool, PowerShellParser parser, String command) {
+        return PowerShellVM.parse(parser, PowerShellCmd.runCommand(pool, command));
     }
 
-    public static PowerShellVM runAndParseSingle(PowerShellCmd shell, PowerShellParser parser, String command) {
-        List<PowerShellVM> vms = runAndParse(shell, parser, command);
+    public static PowerShellVM runAndParseSingle(PowerShellPool pool, PowerShellParser parser, String command) {
+        List<PowerShellVM> vms = runAndParse(pool, parser, command);
 
         return !vms.isEmpty() ? vms.get(0) : null;
     }
 
     public PowerShellVM runAndParseSingle(String command) {
-        return runAndParseSingle(getShell(), getParser(), command);
+        return runAndParseSingle(getPool(), getParser(), command);
     }
 
     public static VM addLinks(PowerShellVM vm) {
@@ -144,27 +145,27 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
 
     @Override
     public Response start(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new CommandRunner(action, "start-vm", "vm", getId(), getShell()));
+        return doAction(uriInfo, new CommandRunner(action, "start-vm", "vm", getId(), getPool()));
     }
 
     @Override
     public Response stop(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new CommandRunner(action, "stop-vm", "vm", getId(), getShell()));
+        return doAction(uriInfo, new CommandRunner(action, "stop-vm", "vm", getId(), getPool()));
     }
 
     @Override
     public Response shutdown(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new CommandRunner(action, "shutdown-vm", "vm", getId(), getShell()));
+        return doAction(uriInfo, new CommandRunner(action, "shutdown-vm", "vm", getId(), getPool()));
     }
 
     @Override
     public Response suspend(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new CommandRunner(action, "suspend-vm", "vm", getId(), getShell()));
+        return doAction(uriInfo, new CommandRunner(action, "suspend-vm", "vm", getId(), getPool()));
     }
 
     @Override
     public Response detach(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new CommandRunner(action, "detach-vm", "vm", getId(), getShell()));
+        return doAction(uriInfo, new CommandRunner(action, "detach-vm", "vm", getId(), getPool()));
     }
 
     @Override
@@ -186,7 +187,7 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
         buf.append(" -vmid " + PowerShellUtils.escape(getId()));
         buf.append(" -desthostid " + hostArg);
 
-        return doAction(uriInfo, new CommandRunner(action, buf.toString(), getShell()));
+        return doAction(uriInfo, new CommandRunner(action, buf.toString(), getPool()));
     }
 
     @Override
@@ -206,7 +207,7 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
         }
 
         return doAction(uriInfo,
-                        new CommandRunner(action, buf.toString(), getShell()) {
+                        new CommandRunner(action, buf.toString(), getPool()) {
                             protected void handleOutput(String output) {
                                 action.setTicket(PowerShellTicket.parse(getParser(), output));
                             }

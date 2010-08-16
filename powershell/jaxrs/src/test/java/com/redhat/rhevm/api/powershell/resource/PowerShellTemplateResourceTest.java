@@ -94,7 +94,7 @@ public class PowerShellTemplateResourceTest extends AbstractPowerShellResourceTe
 
     private UriInfo setUpTemplateExpectations(String command, String ret) throws Exception {
         mockStatic(PowerShellCmd.class);
-        expect(PowerShellCmd.runCommand(setUpShellExpectations(), command)).andReturn(ret);
+        expect(PowerShellCmd.runCommand(setUpPoolExpectations(), command)).andReturn(ret);
         UriInfo uriInfo = createMock(UriInfo.class);
         UriBuilder uriBuilder = createMock(UriBuilder.class);
         expect(uriInfo.getRequestUriBuilder()).andReturn(uriBuilder).anyTimes();

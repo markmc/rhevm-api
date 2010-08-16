@@ -307,7 +307,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
 
     private UriInfo setUpVmExpectations(String command, String ret, String name) throws Exception {
         mockStatic(PowerShellCmd.class);
-        expect(PowerShellCmd.runCommand(setUpShellExpectations(), command)).andReturn(ret);
+        expect(PowerShellCmd.runCommand(setUpPoolExpectations(), command)).andReturn(ret);
         replayAll();
         return null;
     }

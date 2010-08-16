@@ -185,7 +185,7 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
 
     private UriInfo setUpHostExpectations(String command, String ret, String name) throws Exception {
         mockStatic(PowerShellCmd.class);
-        expect(PowerShellCmd.runCommand(setUpShellExpectations(), command)).andReturn(ret);
+        expect(PowerShellCmd.runCommand(setUpPoolExpectations(), command)).andReturn(ret);
         String href = "hosts/" + Integer.toString(name.hashCode());
         UriInfo uriInfo = createMock(UriInfo.class);
         UriBuilder uriBuilder = createMock(UriBuilder.class);

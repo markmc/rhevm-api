@@ -40,6 +40,11 @@
     </dependency>
 
     <dependency>
+      <groupId>net.sourceforge.expectj</groupId>
+      <artifactId>expectj</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>

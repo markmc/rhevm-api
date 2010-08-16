@@ -28,6 +28,7 @@ import com.redhat.rhevm.api.model.VmPool;
 
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
+import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 
 import org.junit.Test;
@@ -142,10 +143,10 @@ public class PowerShellVmPoolResourceTest extends AbstractPowerShellResourceTest
         if (commands != null) {
             mockStatic(PowerShellCmd.class);
             int times = Math.min(commands.length, rets.length);
-            PowerShellCmd cmd = setUpShellExpectations(times - 1);
+            PowerShellPool pool = setUpPoolExpectations(times - 1);
             for (int i = 0 ; i < times ; i++) {
                 if (commands[i] != null) {
-                    expect(PowerShellCmd.runCommand(cmd, commands[i])).andReturn(rets[i]);
+                    expect(PowerShellCmd.runCommand(pool, commands[i])).andReturn(rets[i]);
                 }
             }
         }

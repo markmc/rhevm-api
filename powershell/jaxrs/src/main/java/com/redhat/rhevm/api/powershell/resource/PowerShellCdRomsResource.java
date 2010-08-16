@@ -49,7 +49,7 @@ public class PowerShellCdRomsResource
         buf.append("$v.cdisopath = " + PowerShellUtils.escape(cdIsoPath) + ";");
         buf.append("update-vm -vmobject $v");
 
-        PowerShellCmd.runCommand(getShell(), buf.toString());
+        PowerShellCmd.runCommand(getPool(), buf.toString());
     }
 
     @Override

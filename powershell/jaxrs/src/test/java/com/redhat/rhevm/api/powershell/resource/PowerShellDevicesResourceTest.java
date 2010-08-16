@@ -288,7 +288,7 @@ public class PowerShellDevicesResourceTest
         mockStatic(PowerShellCmd.class);
         for (int i = 0 ; i < Math.min(commands.length, returns.length) ; i++) {
             if (commands[i] != null) {
-                expect(PowerShellCmd.runCommand(setUpShellExpectations(), commands[i])).andReturn(returns[i]);
+                expect(PowerShellCmd.runCommand(setUpPoolExpectations(), commands[i])).andReturn(returns[i]);
             }
         }
 
@@ -306,12 +306,10 @@ public class PowerShellDevicesResourceTest
         return uriInfo;
     }
 
-    protected PowerShellCmd setUpShellExpectations() {
+    protected PowerShellPool setUpPoolExpectations() {
         PowerShellPool pool = createMock(PowerShellPool.class);
-        PowerShellCmd cmd = createMock(PowerShellCmd.class);
-        expect(pool.get()).andReturn(cmd);
         expect(poolMap.get()).andReturn(pool);
-        return cmd;
+        return pool;
     }
 
     private void setUpCmdExpectations(String[] commands, String[] returns) throws Exception {

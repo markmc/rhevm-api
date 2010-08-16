@@ -213,15 +213,13 @@ public class PowerShellSnapshotsResourceTest
 
     private void setUpCmdExpectations(String command, String ret) {
         mockStatic(PowerShellCmd.class);
-        expect(PowerShellCmd.runCommand(setUpShellExpectations(), command)).andReturn(ret);
+        expect(PowerShellCmd.runCommand(setUpPoolExpectations(), command)).andReturn(ret);
     }
 
-    protected PowerShellCmd setUpShellExpectations() {
+    protected PowerShellPool setUpPoolExpectations() {
         PowerShellPool pool = createMock(PowerShellPool.class);
-        PowerShellCmd cmd = createMock(PowerShellCmd.class);
-        expect(pool.get()).andReturn(cmd);
         expect(poolMap.get()).andReturn(pool);
-        return cmd;
+        return pool;
     }
 
     private void verifySnapshot(Snapshot snapshot, int i) {

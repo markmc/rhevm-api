@@ -111,6 +111,6 @@ public class PowerShellDisksResource
         buf.append(" -vmid " + PowerShellUtils.escape(parentId));
         buf.append(" -diskids " + PowerShellUtils.escape(id));
 
-        PowerShellCmd.runCommand(getShell(), buf.toString());
+        PowerShellCmd.runCommand(getPool(), buf.toString());
     }
 }

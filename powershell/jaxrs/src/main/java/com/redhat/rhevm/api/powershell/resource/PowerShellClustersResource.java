@@ -40,18 +40,18 @@ public class PowerShellClustersResource
     implements ClustersResource {
 
     public List<Cluster> runAndParse(String command) {
-        return PowerShellClusterResource.runAndParse(getShell(), getParser(), command);
+        return PowerShellClusterResource.runAndParse(getPool(), getParser(), command);
     }
 
     public Cluster runAndParseSingle(String command) {
-        return PowerShellClusterResource.runAndParseSingle(getShell(), getParser(), command);
+        return PowerShellClusterResource.runAndParseSingle(getPool(), getParser(), command);
     }
 
     @Override
     public Clusters list(UriInfo uriInfo) {
         Clusters ret = new Clusters();
         for (Cluster cluster : runAndParse(getSelectCommand("select-cluster", uriInfo, Cluster.class))) {
-            ret.getClusters().add(PowerShellClusterResource.addLinks(getShell(), getParser(), cluster));
+            ret.getClusters().add(PowerShellClusterResource.addLinks(getPool(), getParser(), cluster));
         }
         return ret;
     }
@@ -90,7 +90,7 @@ public class PowerShellClustersResource
         buf.append(" -datacenterid " + PowerShellUtils.escape(cluster.getDataCenter().getId()));
         buf.append(" -compatibilityversion $version");
 
-        cluster = PowerShellClusterResource.addLinks(getShell(), getParser(), runAndParseSingle(buf.toString()));
+        cluster = PowerShellClusterResource.addLinks(getPool(), getParser(), runAndParseSingle(buf.toString()));
 
         UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(cluster.getId());
 
@@ -99,7 +99,7 @@ public class PowerShellClustersResource
 
     @Override
     public void remove(String id) {
-        PowerShellCmd.runCommand(getShell(), "remove-cluster -clusterid " + PowerShellUtils.escape(id));
+        PowerShellCmd.runCommand(getPool(), "remove-cluster -clusterid " + PowerShellUtils.escape(id));
         removeSubResource(id);
     }
 

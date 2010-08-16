@@ -44,7 +44,7 @@ public class PowerShellReadOnlyNicsResource extends AbstractPowerShellDevicesRes
     }
 
     public List<NIC> runAndParse(String command) {
-        return PowerShellNIC.parse(getParser(), parentId, PowerShellCmd.runCommand(getShell(), command));
+        return PowerShellNIC.parse(getParser(), parentId, PowerShellCmd.runCommand(getPool(), command));
     }
 
     public NIC runAndParseSingle(String command) {
@@ -80,7 +80,7 @@ public class PowerShellReadOnlyNicsResource extends AbstractPowerShellDevicesRes
         buf.append("}");
 
         Network network = new Network();
-        network.setId(PowerShellNetworkResource.runAndParseSingle(getShell(), getParser(), buf.toString()).getId());
+        network.setId(PowerShellNetworkResource.runAndParseSingle(getPool(), getParser(), buf.toString()).getId());
         nic.setNetwork(network);
 
         return nic;

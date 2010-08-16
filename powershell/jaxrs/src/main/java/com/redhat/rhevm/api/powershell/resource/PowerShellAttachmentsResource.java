@@ -35,6 +35,7 @@ import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.util.PowerShellException;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
+import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
@@ -87,7 +88,7 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
 
         List<DataCenter> dataCenters;
         try {
-            dataCenters = PowerShellDataCenterResource.runAndParse(getShell(), getParser(), buf.toString());
+            dataCenters = PowerShellDataCenterResource.runAndParse(getPool(), getParser(), buf.toString());
         } catch (PowerShellException e) {
             // Ignore 'Can not find any DataCenter by StorageDomainId' error
             // i.e. the storage domain isn't attached to any data center
@@ -101,7 +102,7 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
             buf.append(" -datacenterid " + PowerShellUtils.escape(dataCenter.getId()));
             buf.append(" -storagedomainid " + PowerShellUtils.escape(storageDomainId));
 
-            StorageDomain storageDomain = PowerShellStorageDomainResource.runAndParseSingle(getShell(),
+            StorageDomain storageDomain = PowerShellStorageDomainResource.runAndParseSingle(getPool(),
                                                                                             getParser(),
                                                                                             buf.toString());
 
@@ -124,7 +125,7 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
         buf.append(" -datacenterid " + PowerShellUtils.escape(dataCenter.getId()));
         buf.append(" -storagedomainid " + PowerShellUtils.escape(storageDomainId));
 
-        StorageDomain storageDomain = PowerShellStorageDomainResource.runAndParseSingle(getShell(),
+        StorageDomain storageDomain = PowerShellStorageDomainResource.runAndParseSingle(getPool(),
                                                                                         getParser(),
                                                                                         buf.toString());
 
@@ -144,7 +145,7 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
         buf.append(" -datacenterid " + PowerShellUtils.escape(id));
         buf.append(" -storagedomainid " + PowerShellUtils.escape(storageDomainId));
 
-        PowerShellCmd.runCommand(getShell(), buf.toString());
+        PowerShellCmd.runCommand(getPool(), buf.toString());
     }
 
     @Override
@@ -158,7 +159,7 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
      * @param dataCenterId  the ID of the data center
      * @return  an encapsulation of the attachments
      */
-    public static Attachments getAttachmentsForDataCenter(PowerShellCmd shell,
+    public static Attachments getAttachmentsForDataCenter(PowerShellPool pool,
                                                           PowerShellParser parser,
                                                           String dataCenterId) {
         Attachments attachments = new Attachments();
@@ -170,7 +171,7 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
 
         List<StorageDomain> storageDomains;
         try {
-            storageDomains = PowerShellStorageDomainResource.runAndParse(shell, parser, buf.toString());
+            storageDomains = PowerShellStorageDomainResource.runAndParse(pool, parser, buf.toString());
         } catch (PowerShellException e) {
             // Ignore 'There is no Storage Domains in DataCenter' error
             // i.e. no storage domains are attached to this data center
@@ -193,8 +194,8 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
         this.executor = executor;
     }
 
-    protected PowerShellCmd getShell() {
-        return shellPools.get().get();
+    protected PowerShellPool getPool() {
+        return shellPools.get();
     }
 
     protected PowerShellParser getParser() {

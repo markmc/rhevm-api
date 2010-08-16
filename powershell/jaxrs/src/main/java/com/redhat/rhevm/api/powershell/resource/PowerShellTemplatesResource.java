@@ -41,11 +41,11 @@ public class PowerShellTemplatesResource
     implements TemplatesResource {
 
     public List<PowerShellTemplate> runAndParse(String command) {
-        return PowerShellTemplateResource.runAndParse(getShell(), getParser(), command);
+        return PowerShellTemplateResource.runAndParse(getPool(), getParser(), command);
     }
 
     public PowerShellTemplate runAndParseSingle(String command) {
-        return PowerShellTemplateResource.runAndParseSingle(getShell(), getParser(), command);
+        return PowerShellTemplateResource.runAndParseSingle(getPool(), getParser(), command);
     }
 
     @Override
@@ -119,7 +119,7 @@ public class PowerShellTemplatesResource
 
     @Override
     public void remove(String id) {
-        PowerShellCmd.runCommand(getShell(), "remove-template -templateid " + PowerShellUtils.escape(id));
+        PowerShellCmd.runCommand(getPool(), "remove-template -templateid " + PowerShellUtils.escape(id));
         removeSubResource(id);
     }
 

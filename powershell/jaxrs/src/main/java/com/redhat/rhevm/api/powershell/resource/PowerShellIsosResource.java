@@ -27,6 +27,7 @@ import com.redhat.rhevm.api.resource.IsosResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellIso;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
+import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
@@ -51,7 +52,7 @@ public class PowerShellIsosResource implements IsosResource {
         buf.append("get-isoimages");
         buf.append(" -datacenterid " + PowerShellUtils.escape(dataCenterId));
         Isos ret = new Isos();
-        for (Iso iso : PowerShellIso.parse(parser, PowerShellCmd.runCommand(getShell(), buf.toString()))) {
+        for (Iso iso : PowerShellIso.parse(parser, PowerShellCmd.runCommand(getPool(), buf.toString()))) {
             ret.getIsos().add(PowerShellIsoResource.addLinks(iso, dataCenterId));
         }
         return ret;
@@ -62,7 +63,7 @@ public class PowerShellIsosResource implements IsosResource {
         return new PowerShellIsoResource(id, dataCenterId);
     }
 
-    protected PowerShellCmd getShell() {
-        return shellPools.get().get();
+    protected PowerShellPool getPool() {
+        return shellPools.get();
     }
 }

@@ -28,6 +28,7 @@ import com.redhat.rhevm.api.resource.MediaType;
 
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
+import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.resource.ReadOnlyDevicesResource;
 
@@ -51,8 +52,8 @@ public abstract class AbstractPowerShellDevicesResource<D extends BaseDevice, C 
         this(parentId, shellPools, null);
     }
 
-    public PowerShellCmd getShell() {
-        return shellPools.get().get();
+    public PowerShellPool getPool() {
+        return shellPools.get();
     }
 
     public PowerShellParser getParser() {

@@ -38,15 +38,15 @@ public class PowerShellVmPoolsResource
     implements VmPoolsResource {
 
     public List<VmPool> runAndParse(String command) {
-        return PowerShellVmPoolResource.runAndParse(getShell(), getParser(), command);
+        return PowerShellVmPoolResource.runAndParse(getPool(), getParser(), command);
     }
 
     public VmPool runAndParseSingle(String command) {
-        return PowerShellVmPoolResource.runAndParseSingle(getShell(), getParser(), command);
+        return PowerShellVmPoolResource.runAndParseSingle(getPool(), getParser(), command);
     }
 
     public VmPool addLinks(VmPool pool) {
-        return PowerShellVmPoolResource.addLinks(getShell(), getParser(), pool);
+        return PowerShellVmPoolResource.addLinks(getPool(), getParser(), pool);
     }
 
     @Override
@@ -110,7 +110,7 @@ public class PowerShellVmPoolsResource
         buf.append("$p = get-vmpool -vmpoolid " + PowerShellUtils.escape(id) + ";");
         buf.append("remove-vmpool -name $p.name");
 
-        PowerShellCmd.runCommand(getShell(), buf.toString());
+        PowerShellCmd.runCommand(getPool(), buf.toString());
 
         removeSubResource(id);
     }

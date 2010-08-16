@@ -22,6 +22,7 @@ import java.text.MessageFormat;
 
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
@@ -29,19 +30,19 @@ class CommandRunner extends AbstractPowerShellActionTask {
 
     private static final String COMMAND = "{0} -{1}id {2}";
 
-    private PowerShellCmd shell;
+    private PowerShellPool pool;
 
-    CommandRunner(Action action, String command, PowerShellCmd shell) {
+    CommandRunner(Action action, String command, PowerShellPool pool) {
         super(action, command);
-        this.shell = shell;
+        this.pool = pool;
     }
 
-    CommandRunner(Action action, String command, String type, String id, PowerShellCmd shell) {
-        this(action, MessageFormat.format(COMMAND, command, type, PowerShellUtils.escape(id)), shell);
+    CommandRunner(Action action, String command, String type, String id, PowerShellPool pool) {
+        this(action, MessageFormat.format(COMMAND, command, type, PowerShellUtils.escape(id)), pool);
     }
 
     public void execute() {
-        handleOutput(PowerShellCmd.runCommand(shell, command));
+        handleOutput(PowerShellCmd.runCommand(pool, command));
     }
 
     protected void handleOutput(String output) {

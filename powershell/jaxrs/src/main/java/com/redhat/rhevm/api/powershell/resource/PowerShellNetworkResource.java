@@ -29,6 +29,7 @@ import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellNetwork;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
+import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
@@ -42,22 +43,22 @@ public class PowerShellNetworkResource extends AbstractPowerShellActionableResou
         super(id, executor, shellPools, parser);
     }
 
-    public static List<Network> runAndParse(PowerShellCmd shell, PowerShellParser parser, String command) {
-        return PowerShellNetwork.parse(parser, PowerShellCmd.runCommand(shell, command));
+    public static List<Network> runAndParse(PowerShellPool pool, PowerShellParser parser, String command) {
+        return PowerShellNetwork.parse(parser, PowerShellCmd.runCommand(pool, command));
     }
 
-    public static Network runAndParseSingle(PowerShellCmd shell, PowerShellParser parser, String command) {
-        List<Network> networks = runAndParse(shell, parser, command);
+    public static Network runAndParseSingle(PowerShellPool pool, PowerShellParser parser, String command) {
+        List<Network> networks = runAndParse(pool, parser, command);
 
         return !networks.isEmpty() ? networks.get(0) : null;
     }
 
     public List<Network> runAndParse(String command) {
-        return runAndParse(getShell(), getParser(), command);
+        return runAndParse(getPool(), getParser(), command);
     }
 
     public Network runAndParseSingle(String command) {
-        return runAndParseSingle(getShell(), getParser(), command);
+        return runAndParseSingle(getPool(), getParser(), command);
     }
 
     @Override

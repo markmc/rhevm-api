@@ -40,11 +40,11 @@ public class PowerShellHostsResource
     implements HostsResource {
 
     public List<Host> runAndParse(String command) {
-        return PowerShellHostResource.runAndParse(getShell(), getParser(), command);
+        return PowerShellHostResource.runAndParse(getPool(), getParser(), command);
     }
 
     public Host runAndParseSingle(String command) {
-        return PowerShellHostResource.runAndParseSingle(getShell(), getParser(), command);
+        return PowerShellHostResource.runAndParseSingle(getPool(), getParser(), command);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class PowerShellHostsResource
 
     @Override
     public void remove(String id) {
-        PowerShellCmd.runCommand(getShell(), "remove-host -hostid " + PowerShellUtils.escape(id));
+        PowerShellCmd.runCommand(getPool(), "remove-host -hostid " + PowerShellUtils.escape(id));
         removeSubResource(id);
     }
 

@@ -34,6 +34,7 @@ import com.redhat.rhevm.api.powershell.model.PowerShellTemplate;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
+import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
@@ -47,20 +48,20 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
         super(id, executor, shellPools, parser);
     }
 
-    public static List<PowerShellTemplate> runAndParse(PowerShellCmd shell,
+    public static List<PowerShellTemplate> runAndParse(PowerShellPool pool,
                                                        PowerShellParser parser,
                                                        String command) {
-        return PowerShellTemplate.parse(parser, PowerShellCmd.runCommand(shell, command));
+        return PowerShellTemplate.parse(parser, PowerShellCmd.runCommand(pool, command));
     }
 
-    public static PowerShellTemplate runAndParseSingle(PowerShellCmd shell, PowerShellParser parser, String command) {
-        List<PowerShellTemplate> templates = runAndParse(shell, parser, command);
+    public static PowerShellTemplate runAndParseSingle(PowerShellPool pool, PowerShellParser parser, String command) {
+        List<PowerShellTemplate> templates = runAndParse(pool, parser, command);
 
         return !templates.isEmpty() ? templates.get(0) : null;
     }
 
     public PowerShellTemplate runAndParseSingle(String command) {
-        return runAndParseSingle(getShell(), getParser(), command);
+        return runAndParseSingle(getPool(), getParser(), command);
     }
 
     public static Template addLinks(PowerShellTemplate template) {

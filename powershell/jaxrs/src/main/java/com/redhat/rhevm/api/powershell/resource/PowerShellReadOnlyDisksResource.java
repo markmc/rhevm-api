@@ -47,7 +47,7 @@ public class PowerShellReadOnlyDisksResource extends AbstractPowerShellDevicesRe
 
     public List<Disk> runAndParse(String command) {
         List<Disk> ret = new ArrayList<Disk>();
-        for (Disk disk : PowerShellDisk.parse(getParser(), parentId, PowerShellCmd.runCommand(getShell(), command))) {
+        for (Disk disk : PowerShellDisk.parse(getParser(), parentId, PowerShellCmd.runCommand(getPool(), command))) {
             ret.add(disk);
         }
         return ret;

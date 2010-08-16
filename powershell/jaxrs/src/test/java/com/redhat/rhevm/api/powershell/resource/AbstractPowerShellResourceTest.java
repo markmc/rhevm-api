@@ -88,9 +88,9 @@ public abstract class AbstractPowerShellResourceTest<R extends BaseResource,
         if (command != null) {
             mockStatic(PowerShellCmd.class);
             if (ret instanceof Throwable) {
-                expect(PowerShellCmd.runCommand(setUpShellExpectations(), command)).andThrow((Throwable)ret);
+                expect(PowerShellCmd.runCommand(setUpPoolExpectations(), command)).andThrow((Throwable)ret);
             } else  {
-                expect(PowerShellCmd.runCommand(setUpShellExpectations(), command)).andReturn((String)ret);
+                expect(PowerShellCmd.runCommand(setUpPoolExpectations(), command)).andReturn((String)ret);
             }
         }
 
@@ -104,16 +104,14 @@ public abstract class AbstractPowerShellResourceTest<R extends BaseResource,
         return uriInfo;
     }
 
-    protected PowerShellCmd setUpShellExpectations() {
-        return setUpShellExpectations(1);
+    protected PowerShellPool setUpPoolExpectations() {
+        return setUpPoolExpectations(1);
     }
 
-    protected PowerShellCmd setUpShellExpectations(int times) {
+    protected PowerShellPool setUpPoolExpectations(int times) {
         PowerShellPool pool = createMock(PowerShellPool.class);
-        PowerShellCmd cmd = createMock(PowerShellCmd.class);
-        expect(pool.get()).andReturn(cmd).times(times);
         expect(poolMap.get()).andReturn(pool).times(times);
-        return cmd;
+        return pool;
     }
 
     protected void verifyActionResponse(Response r, String baseUri, boolean async) throws Exception {

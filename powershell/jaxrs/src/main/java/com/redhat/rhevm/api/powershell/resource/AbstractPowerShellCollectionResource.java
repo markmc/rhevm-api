@@ -26,8 +26,8 @@ import com.redhat.rhevm.api.common.resource.AbstractUpdatableResource;
 import com.redhat.rhevm.api.common.util.QueryHelper;
 import com.redhat.rhevm.api.common.util.ReapedMap;
 import com.redhat.rhevm.api.model.BaseResource;
-import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
+import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
@@ -93,8 +93,8 @@ public abstract class AbstractPowerShellCollectionResource<R extends BaseResourc
         this.shellPools = shellPools;
     }
 
-    protected PowerShellCmd getShell() {
-        return shellPools.get().get();
+    protected PowerShellPool getPool() {
+        return shellPools.get();
     }
 
     protected abstract U createSubResource(String id);

@@ -54,7 +54,7 @@ public class PowerShellPoolTest extends Assert {
 
         ControllableExecutor executor = new ControllableExecutor();
 
-        PowerShellPool pool = new PowerShellPool(executor, principal, 10);
+        PowerShellPool pool = new PowerShellPool(executor, principal, 10, 20);
 
         assertEquals(10, executor.taskCount());
 
@@ -83,7 +83,7 @@ public class PowerShellPoolTest extends Assert {
         expectNew(PowerShellCmd.class, principal).andReturn(cmd).anyTimes();
         cmd.start();
         expectLastCall().anyTimes();
-        cmd.destroy();
+        cmd.stop();
         expectLastCall().anyTimes();
         replayAll();
     }

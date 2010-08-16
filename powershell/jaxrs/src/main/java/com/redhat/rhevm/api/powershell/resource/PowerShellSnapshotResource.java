@@ -66,6 +66,6 @@ public class PowerShellSnapshotResource
         buf.append(" -vmid " + PowerShellUtils.escape(parent.getVmId()));
         buf.append(" -vmsnapshotid " + PowerShellUtils.escape(getId()));
 
-        return doAction(uriInfo, new CommandRunner(action, buf.toString(), getShell()));
+        return doAction(uriInfo, new CommandRunner(action, buf.toString(), getPool()));
     }
 }

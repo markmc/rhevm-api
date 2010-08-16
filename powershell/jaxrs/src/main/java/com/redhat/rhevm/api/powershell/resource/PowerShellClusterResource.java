@@ -32,6 +32,7 @@ import com.redhat.rhevm.api.powershell.model.PowerShellCluster;
 import com.redhat.rhevm.api.powershell.model.PowerShellVersion;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
+import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
@@ -45,28 +46,28 @@ public class PowerShellClusterResource extends AbstractPowerShellActionableResou
         super(id, executor, shellPools, parser);
     }
 
-    public static List<Cluster> runAndParse(PowerShellCmd shell, PowerShellParser parser, String command) {
-        return PowerShellCluster.parse(parser, PowerShellCmd.runCommand(shell, command));
+    public static List<Cluster> runAndParse(PowerShellPool pool, PowerShellParser parser, String command) {
+        return PowerShellCluster.parse(parser, PowerShellCmd.runCommand(pool, command));
     }
 
-    public static Cluster runAndParseSingle(PowerShellCmd shell, PowerShellParser parser, String command) {
-        List<Cluster> clusters = runAndParse(shell, parser, command);
+    public static Cluster runAndParseSingle(PowerShellPool pool, PowerShellParser parser, String command) {
+        List<Cluster> clusters = runAndParse(pool, parser, command);
 
         return !clusters.isEmpty() ? clusters.get(0) : null;
     }
 
     public List<Cluster> runAndParse(String command) {
-        return runAndParse(getShell(), getParser(), command);
+        return runAndParse(getPool(), getParser(), command);
     }
 
     public Cluster runAndParseSingle(String command) {
-        return runAndParseSingle(getShell(), getParser(), command);
+        return runAndParseSingle(getPool(), getParser(), command);
     }
 
-    private static Cluster querySupportedVersions(PowerShellCmd shell, PowerShellParser parser, Cluster cluster) {
+    private static Cluster querySupportedVersions(PowerShellPool pool, PowerShellParser parser, Cluster cluster) {
         String command = "get-clustercompatibilityversions -clusterid " + PowerShellUtils.escape(cluster.getId());
 
-        List<Version> supported = PowerShellVersion.parse(parser, PowerShellCmd.runCommand(shell, command));
+        List<Version> supported = PowerShellVersion.parse(parser, PowerShellCmd.runCommand(pool, command));
         if (!supported.isEmpty()) {
             cluster.setSupportedVersions(new SupportedVersions());
             for (Version v : supported) {
@@ -77,8 +78,8 @@ public class PowerShellClusterResource extends AbstractPowerShellActionableResou
         return cluster;
     }
 
-    public static Cluster addLinks(PowerShellCmd shell, PowerShellParser parser, Cluster cluster) {
-        cluster = querySupportedVersions(shell, parser, cluster);
+    public static Cluster addLinks(PowerShellPool pool, PowerShellParser parser, Cluster cluster) {
+        cluster = querySupportedVersions(pool, parser, cluster);
         return LinkHelper.addLinks(cluster);
     }
 
@@ -93,7 +94,7 @@ public class PowerShellClusterResource extends AbstractPowerShellActionableResou
         buf.append("  } ");
         buf.append("}");
 
-        return addLinks(getShell(), getParser(), runAndParseSingle(buf.toString()));
+        return addLinks(getPool(), getParser(), runAndParseSingle(buf.toString()));
     }
 
     @Override
@@ -136,6 +137,6 @@ public class PowerShellClusterResource extends AbstractPowerShellActionableResou
 
         buf.append("} }");
 
-        return addLinks(getShell(), getParser(), runAndParseSingle(buf.toString()));
+        return addLinks(getPool(), getParser(), runAndParseSingle(buf.toString()));
     }
 }

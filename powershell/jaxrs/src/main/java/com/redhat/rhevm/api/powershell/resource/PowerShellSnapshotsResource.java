@@ -40,6 +40,7 @@ import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellDisk;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
+import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 import com.redhat.rhevm.api.powershell.util.UUID;
@@ -68,8 +69,8 @@ public class PowerShellSnapshotsResource implements SnapshotsResource {
         return executor;
     }
 
-    public PowerShellCmd getShell() {
-        return shellPools.get().get();
+    public PowerShellPool getPool() {
+        return shellPools.get();
     }
 
     public PowerShellParser getParser() {
@@ -81,7 +82,7 @@ public class PowerShellSnapshotsResource implements SnapshotsResource {
     }
 
     public List<PowerShellDisk> runAndParse(String command) {
-        return PowerShellDisk.parse(getParser(), vmId, PowerShellCmd.runCommand(getShell(), command));
+        return PowerShellDisk.parse(getParser(), vmId, PowerShellCmd.runCommand(getPool(), command));
     }
 
     public PowerShellDisk runAndParseSingle(String command) {
@@ -184,7 +185,7 @@ public class PowerShellSnapshotsResource implements SnapshotsResource {
         buf.append(" -vmsnapshotid " + PowerShellUtils.escape(id));
         buf.append(" -async");
 
-        PowerShellCmd.runCommand(getShell(), buf.toString());
+        PowerShellCmd.runCommand(getPool(), buf.toString());
     }
 
     @Override

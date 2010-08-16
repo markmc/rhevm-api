@@ -32,21 +32,21 @@ import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.resource.VmsResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
+import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
-import static com.redhat.rhevm.api.powershell.util.PowerShellCmd.runCommand;
 
 public class PowerShellVmsResource
     extends AbstractPowerShellCollectionResource<VM, PowerShellVmResource>
     implements VmsResource {
 
     public List<PowerShellVM> runAndParse(String command) {
-        return PowerShellVmResource.runAndParse(getShell(), getParser(), command);
+        return PowerShellVmResource.runAndParse(getPool(), getParser(), command);
     }
 
     public PowerShellVM runAndParseSingle(String command) {
-        return PowerShellVmResource.runAndParseSingle(getShell(), getParser(), command);
+        return PowerShellVmResource.runAndParseSingle(getPool(), getParser(), command);
     }
 
     @Override
@@ -132,7 +132,7 @@ public class PowerShellVmsResource
 
     @Override
     public void remove(String id) {
-        runCommand(getShell(), "remove-vm -vmid " + PowerShellUtils.escape(id));
+        PowerShellCmd.runCommand(getPool(), "remove-vm -vmid " + PowerShellUtils.escape(id));
         removeSubResource(id);
     }
 

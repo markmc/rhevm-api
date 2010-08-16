@@ -151,7 +151,7 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
             mockStatic(PowerShellCmd.class);
             for (int i = 0 ; i < Math.min(commands.length, rets.length) ; i++) {
                 if (commands[i] != null) {
-                    expect(PowerShellCmd.runCommand(setUpShellExpectations(), commands[i])).andReturn(rets[i]);
+                    expect(PowerShellCmd.runCommand(setUpPoolExpectations(), commands[i])).andReturn(rets[i]);
                 }
             }
         }
@@ -180,10 +180,10 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
     protected UriInfo setUpResourceExpectations(int shells, String[] commands, String[] rets, boolean add, QueryParam query, String ... names) throws Exception {
         if (commands != null) {
             mockStatic(PowerShellCmd.class);
-            PowerShellCmd cmd = setUpShellExpectations(shells);
+            PowerShellPool pool = setUpPoolExpectations(shells);
             for (int i = 0 ; i < Math.min(commands.length, rets.length) ; i++) {
                 if (commands[i] != null) {
-                    expect(PowerShellCmd.runCommand(cmd, commands[i])).andReturn(rets[i]);
+                    expect(PowerShellCmd.runCommand(pool, commands[i])).andReturn(rets[i]);
                 }
             }
         }
@@ -208,19 +208,17 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
         return uriInfo;
     }
 
-    protected PowerShellCmd setUpShellExpectations() {
-        return setUpShellExpectations(1);
+    protected PowerShellPool setUpPoolExpectations() {
+        return setUpPoolExpectations(1);
     }
 
 
-    protected PowerShellCmd setUpShellExpectations(int times) {
+    protected PowerShellPool setUpPoolExpectations(int times) {
         PowerShellPoolMap poolMap = createMock(PowerShellPoolMap.class);
         resource.setPowerShellPoolMap(poolMap);
         PowerShellPool pool = createMock(PowerShellPool.class);
-        PowerShellCmd cmd = createMock(PowerShellCmd.class);
-        expect(pool.get()).andReturn(cmd).times(times);
         expect(poolMap.get()).andReturn(pool).times(times);
-        return cmd;
+        return pool;
     }
 
     protected String getSelectCommand() {

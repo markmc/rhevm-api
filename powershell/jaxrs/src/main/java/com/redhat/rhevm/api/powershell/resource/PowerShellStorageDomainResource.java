@@ -38,6 +38,7 @@ import com.redhat.rhevm.api.resource.StorageDomainResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellStorageDomain;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
+import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
@@ -77,12 +78,12 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
      * @param sharedStatus whether the 'sharedStatus' property is needed
      * @return a list of storage domains
      */
-    public static List<StorageDomain> runAndParse(PowerShellCmd shell,
+    public static List<StorageDomain> runAndParse(PowerShellPool pool,
                                                   PowerShellParser parser,
                                                   String command,
                                                   boolean sharedStatus) {
         List<PowerShellStorageDomain> storageDomains =
-            PowerShellStorageDomain.parse(parser, PowerShellCmd.runCommand(shell, command));
+            PowerShellStorageDomain.parse(parser, PowerShellCmd.runCommand(pool, command));
         List<StorageDomain> ret = new ArrayList<StorageDomain>();
 
         for (PowerShellStorageDomain storageDomain : storageDomains) {
@@ -103,8 +104,8 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
      * @param command the powershell command to execute
      * @return a list of storage domains
      */
-    public static List<StorageDomain> runAndParse(PowerShellCmd shell, PowerShellParser parser, String command) {
-        return runAndParse(shell, parser, command, false);
+    public static List<StorageDomain> runAndParse(PowerShellPool pool, PowerShellParser parser, String command) {
+        return runAndParse(pool, parser, command, false);
     }
 
     /**
@@ -115,11 +116,11 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
      * @param whether the 'sharedStatus' property is needed
      * @return a single storage domain, or null
      */
-    public static StorageDomain runAndParseSingle(PowerShellCmd shell,
+    public static StorageDomain runAndParseSingle(PowerShellPool pool,
                                                   PowerShellParser parser,
                                                   String command,
                                                   boolean sharedStatus) {
-        List<StorageDomain> storageDomains = runAndParse(shell, parser, command, sharedStatus);
+        List<StorageDomain> storageDomains = runAndParse(pool, parser, command, sharedStatus);
 
         return !storageDomains.isEmpty() ? storageDomains.get(0) : null;
     }
@@ -132,12 +133,12 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
      * @param command the powershell command to execute
      * @return a single storage domain, or null
      */
-    public static StorageDomain runAndParseSingle(PowerShellCmd shell, PowerShellParser parser, String command) {
-        return runAndParseSingle(shell, parser, command, false);
+    public static StorageDomain runAndParseSingle(PowerShellPool pool, PowerShellParser parser, String command) {
+        return runAndParseSingle(pool, parser, command, false);
     }
 
     public StorageDomain runAndParseSingle(String command, boolean sharedStatus) {
-        return runAndParseSingle(getShell(), getParser(), command, sharedStatus);
+        return runAndParseSingle(getPool(), getParser(), command, sharedStatus);
     }
 
     public static StorageDomain addLinks(StorageDomain storageDomain) {
@@ -237,7 +238,7 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
 
             buf.append(" -hostid " + hostArg);
 
-            PowerShellCmd.runCommand(getShell(), buf.toString());
+            PowerShellCmd.runCommand(getPool(), buf.toString());
 
             storageDomain.setStatus(StorageDomainStatus.TORNDOWN);
             PowerShellStorageDomainResource.this.tornDown = storageDomain;

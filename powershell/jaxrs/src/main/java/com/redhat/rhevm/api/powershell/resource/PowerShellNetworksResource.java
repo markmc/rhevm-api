@@ -41,11 +41,11 @@ public class PowerShellNetworksResource
     implements NetworksResource {
 
     public List<Network> runAndParse(String command) {
-        return PowerShellNetworkResource.runAndParse(getShell(), getParser(), command);
+        return PowerShellNetworkResource.runAndParse(getPool(), getParser(), command);
     }
 
     public Network runAndParseSingle(String command) {
-        return PowerShellNetworkResource.runAndParseSingle(getShell(), getParser(), command);
+        return PowerShellNetworkResource.runAndParseSingle(getPool(), getParser(), command);
     }
 
     @Override
@@ -111,7 +111,7 @@ public class PowerShellNetworksResource
         buf.append("  }");
         buf.append("}");
 
-        PowerShellCmd.runCommand(getShell(), buf.toString());
+        PowerShellCmd.runCommand(getPool(), buf.toString());
 
         removeSubResource(id);
     }

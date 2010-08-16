@@ -97,7 +97,7 @@ public class PowerShellAttachmentResourceTest extends AbstractPowerShellResource
 
     private UriInfo setUpAttachmentExpectations() throws Exception {
         mockStatic(PowerShellCmd.class);
-        expect(PowerShellCmd.runCommand(setUpShellExpectations(),
+        expect(PowerShellCmd.runCommand(setUpPoolExpectations(),
                                         GET_COMMAND)).andReturn(formatStorageDomain(STORAGE_DOMAIN_NAME));
         replayAll();
         return null;

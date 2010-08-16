@@ -85,7 +85,7 @@ public class PowerShellAttachmentResource extends AbstractPowerShellActionableRe
         buf.append(" -datacenterid " + PowerShellUtils.escape(getId()));
         buf.append(" -storagedomainid " + PowerShellUtils.escape(storageDomainId));
 
-        StorageDomain storageDomain = PowerShellStorageDomainResource.runAndParseSingle(getShell(),
+        StorageDomain storageDomain = PowerShellStorageDomainResource.runAndParseSingle(getPool(),
                                                                                         getParser(),
                                                                                         buf.toString());
 
@@ -118,7 +118,7 @@ public class PowerShellAttachmentResource extends AbstractPowerShellActionableRe
             buf.append(" -datacenterid " + PowerShellUtils.escape(getId()));
             buf.append(" -storagedomainid " + PowerShellUtils.escape(storageDomainId));
 
-            PowerShellCmd.runCommand(getShell(), buf.toString());
+            PowerShellCmd.runCommand(getPool(), buf.toString());
         }
     }
 }

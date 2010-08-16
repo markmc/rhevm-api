@@ -26,24 +26,39 @@ import com.redhat.rhevm.api.common.security.auth.Principal;
 
 public class PowerShellPool {
 
-    private static final int DEFAULT_POOL_SIZE = 4;
+    // REVISIT: add a timeout after which we will reduce
+    //          the pool to the low watermark
+
+    private static final int DEFAULT_SIZE_LOW = 2;
+    private static final int DEFAULT_SIZE_HIGH = 6;
 
     private ExecutorService executor;
     private Principal principal;
 
     private BlockingQueue<PowerShellCmd> cmds = new LinkedBlockingQueue<PowerShellCmd>();
 
-    public PowerShellPool(ExecutorService executor, Principal principal, int initialSize) {
+    private int lowSize;
+    private int highSize;
+    private int spawned;
+
+    public PowerShellPool(ExecutorService executor, Principal principal, int lowSize, int highSize) {
         this.executor = executor;
         this.principal = principal;
+        this.lowSize = lowSize;
+        this.highSize = highSize;
 
-        for (int i = 0; i < initialSize; i++) {
-            executor.execute(new PowerShellLauncher());
+        for (int i = 0; i < lowSize; i++) {
+            spawn();
         }
     }
 
     public PowerShellPool(ExecutorService executor, Principal principal) {
-        this(executor, principal, DEFAULT_POOL_SIZE);
+        this(executor, principal, DEFAULT_SIZE_LOW, DEFAULT_SIZE_HIGH);
+    }
+
+    private void spawn() {
+        executor.execute(new PowerShellLauncher());
+        ++spawned;
     }
 
     public PowerShellCmd get() {
@@ -56,7 +71,9 @@ public class PowerShellPool {
                 // ignore and block again
             }
         }
-        executor.execute(new PowerShellLauncher());
+        if (cmds.size() < lowSize && spawned < highSize) {
+            spawn();
+        }
         return cmd;
     }
 
@@ -69,7 +86,7 @@ public class PowerShellPool {
 
         PowerShellCmd cmd;
         while ((cmd = cmds.poll()) != null) {
-            cmd.destroy();
+            cmd.stop();
         }
     }
 

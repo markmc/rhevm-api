@@ -164,6 +164,7 @@
     <xharness.version>1.0-beta-5</xharness.version>
     <ant.version>1.7.1</ant.version>
     <spring.version>2.5.6</spring.version>
+    <expectj.version>2.0.7</expectj.version>
   </properties>
 
   <repositories>
@@ -217,6 +218,12 @@
         <groupId>org.apache.cxf</groupId>
         <artifactId>cxf-rt-frontend-jaxrs</artifactId>
         <version>${cxf.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>net.sourceforge.expectj</groupId>
+        <artifactId>expectj</artifactId>
+        <version>${expectj.version}</version>
       </dependency>
 
       <dependency>
