@@ -18,6 +18,8 @@
  */
 package com.redhat.rhevm.api.command.storagedomains;
 
+import com.redhat.rhevm.api.model.LogicalUnit;
+import com.redhat.rhevm.api.model.Storage;
 import com.redhat.rhevm.api.model.StorageDomain;
 
 import com.redhat.rhevm.api.command.base.VerboseDisplay;
@@ -35,21 +37,28 @@ public class StorageDomainVerboseDisplay implements VerboseDisplay<StorageDomain
             System.out.println("  type: " + model.getType());
         }
         if (model.isSetStorage()) {
-            System.out.println("  storage type: " + model.getStorage().getType());
-            if (model.getStorage().isSetAddress()) {
-                System.out.println("  storage address: " + model.getStorage().getAddress());
+            Storage storage = model.getStorage();
+            System.out.println("  storage type: " + storage.getType());
+            if (storage.isSetAddress()) {
+                System.out.println("  storage address: " + storage.getAddress());
             }
-            if (model.getStorage().isSetPath()) {
-                System.out.println("  storage path: " + model.getStorage().getPath());
+            if (storage.isSetPath()) {
+                System.out.println("  storage path: " + storage.getPath());
             }
-            if (model.getStorage().isSetLUN()) {
-                System.out.println("  storage LUN: " + model.getStorage().getLUN());
-            }
-            if (model.getStorage().isSetIP()) {
-                System.out.println("  storage IP: " + model.getStorage().getIP());
-            }
-            if (model.getStorage().isSetPort()) {
-                System.out.println("  storage port: " + model.getStorage().getPort());
+            if (storage.isSetLogicalUnits()) {
+                System.out.println("  Logical Units:");
+                for (LogicalUnit lu : storage.getLogicalUnits()) {
+                    if (lu.isSetId()) {
+                        System.out.println("    ID: " + lu.getId());
+                    }
+                    if (lu.isSetAddress()) {
+                        System.out.println("    Portal: " + lu.getAddress());
+                    }
+                    if (lu.isSetTarget()) {
+                        System.out.println("    Target: " + lu.getTarget());
+                    }
+                    System.out.println();
+                }
             }
         }
     }

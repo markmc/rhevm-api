@@ -28,27 +28,16 @@ from testutils import *
 
 opts = parseOptions()
 
-(host, address, path) = (None, None, None)
-if len(opts['oargs']) >= 3:
-   (host, address, path) = opts['oargs'][0:3]
+(host, portal, target, lun) = (None, None, None, None)
+if len(opts['oargs']) >= 4:
+   (host, portal, target, lun) = opts['oargs'][0:4]
 
 links = http.HEAD_for_links(opts)
-
-def find_data_center(t, name):
-   datacenters = filter(lambda d: d.name == name, t.get(links['datacenters']))
-   if len(datacenters) == 0:
-      raise RuntimeError("data center '%s' not found" % name)
-   return datacenters[0]
 
 for fmt in [xmlfmt]:
     t = TestUtils(opts, fmt)
 
     print "=== ", fmt.MEDIA_TYPE, " ==="
-
-    for dom in t.get(links['storagedomains']):
-        t.get(dom.href)
-        for att in t.get(dom.link['attachments'].href):
-            t.get(att.href)
 
     if host is None:
         continue
@@ -57,29 +46,16 @@ for fmt in [xmlfmt]:
     h.name = host
 
     dom = fmt.StorageDomain()
-    dom.name = randomName("sd")
+    dom.name = randomName("iscsi")
     dom.type = 'DATA'
     dom.storage = fmt.Storage()
-    dom.storage.type = 'NFS'
-    dom.storage.address = address
-    dom.storage.path = path
+    dom.storage.type = 'ISCSI'
+    dom.storage.logical_unit = fmt.LogicalUnit()
+    dom.storage.logical_unit.address = portal
+    dom.storage.logical_unit.target = target
+    dom.storage.logical_unit.id = lun
     dom.host = h
     dom = t.create(links['storagedomains'], dom)
-
-    attachment = fmt.Attachment()
-    attachment.data_center = fmt.DataCenter()
-    attachment.data_center.id = find_data_center(t, 'Default').id
-    attachment = t.create(dom.link['attachments'].href, attachment)
-
-    t.syncAction(attachment.actions, "activate")
-
-    attachment = t.get(attachment.href)
-
-    t.syncAction(attachment.actions, "deactivate")
-
-    t.delete(attachment.href)
-
-    dom = t.get(dom.href)
 
     t.syncAction(dom.actions, "teardown", host=h)
 

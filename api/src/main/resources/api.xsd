@@ -576,11 +576,25 @@
     </xs:sequence>
   </xs:group>
 
+  <xs:element name="logical_unit" type="LogicalUnit"/>
+
+  <xs:complexType name="LogicalUnit">
+    <xs:sequence>
+      <xs:element name="address" type="xs:string"/>
+      <xs:element name="target" type="xs:string"/>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:string"/>
+  </xs:complexType>
+
   <xs:group name="IscsiStorage">
     <xs:sequence>
-      <xs:element name="LUN" type="xs:int"/>
-      <xs:element name="IP" type="xs:string"/>
-      <xs:element name="port" type="xs:short"/>
+      <xs:element ref="logical_unit" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <jaxb:property name="LogicalUnits"/>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
     </xs:sequence>
   </xs:group>
 

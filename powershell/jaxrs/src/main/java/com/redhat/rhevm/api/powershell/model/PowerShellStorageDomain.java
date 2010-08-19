@@ -82,6 +82,7 @@ public class PowerShellStorageDomain extends StorageDomain {
                 storage.setPath(parts[1]);
                 break;
             case ISCSI:
+                break;
             case FCP:
             default:
                 assert false : storage.getType();

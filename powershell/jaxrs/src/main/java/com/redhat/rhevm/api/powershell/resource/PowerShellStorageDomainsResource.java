@@ -25,9 +25,11 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.model.LogicalUnit;
 import com.redhat.rhevm.api.model.Storage;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.StorageDomains;
+import com.redhat.rhevm.api.model.StorageType;
 import com.redhat.rhevm.api.resource.StorageDomainResource;
 import com.redhat.rhevm.api.resource.StorageDomainsResource;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
@@ -72,6 +74,24 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
     @Override
     public Response add(UriInfo uriInfo, StorageDomain storageDomain) {
         validateParameters(storageDomain, "name", "host.id|name", "type", "storage.type");
+
+        Storage storage = storageDomain.getStorage();
+
+        switch (storage.getType()) {
+        case NFS:
+            validateParameters(storage, "address", "path");
+            break;
+        case ISCSI:
+            for (LogicalUnit lu : storage.getLogicalUnits()) {
+                validateParameters(lu, "address", "target", "id");
+            }
+            break;
+        case FCP:
+        default:
+            assert false : storage.getType();
+            break;
+        }
+
         StringBuilder buf = new StringBuilder();
 
         String hostArg = null;
@@ -82,6 +102,25 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
             buf.append(PowerShellUtils.escape("name=" +  storageDomain.getHost().getName()));
             buf.append(";");
             hostArg = "$h.hostid";
+        }
+
+        if (storage.getType() == StorageType.ISCSI) {
+            buf.append("$lunids = new-object System.Collections.ArrayList;");
+
+            for (LogicalUnit lu : storage.getLogicalUnits()) {
+                buf.append("$cnx = new-storageserverconnection");
+                buf.append(" -storagetype ISCSI");
+                buf.append(" -connection " + PowerShellUtils.escape(lu.getAddress()));
+                buf.append(" -iqn " + PowerShellUtils.escape(lu.getTarget()));
+                buf.append(";");
+
+                buf.append("$cnx = connect-storagetohost");
+                buf.append(" -hostid " + hostArg);
+                buf.append(" -storageserverconnectionobject $cnx");
+                buf.append(";");
+
+                buf.append("$lunids.add(" + PowerShellUtils.escape(lu.getId()) + ") | out-null;");
+            }
         }
 
         buf.append("add-storagedomain");
@@ -106,19 +145,18 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
             break;
         }
 
-        Storage storage = storageDomain.getStorage();
-
         buf.append(" -storagetype " + storage.getType().toString());
-        buf.append(" -storage ");
 
         switch (storage.getType()) {
         case NFS:
+            buf.append(" -storage ");
             buf.append(PowerShellUtils.escape(storage.getAddress() + ":" + storage.getPath()));
             break;
         case ISCSI:
+            buf.append(" -lunidlist $lunids");
+            break;
         case FCP:
         default:
-            assert false : storage.getType();
             break;
         }
 

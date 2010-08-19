@@ -164,9 +164,14 @@ class NIC(Base):
     COLLECTION = 'nics'
     ELEMENTS = Base.ELEMENTS + ['network', 'type', 'mac', 'ip', 'vm']
 
+class LogicalUnit(Element):
+    NAME = 'logical_unit'
+    ATTRIBUTES = Element.ATTRIBUTES + ['id']
+    ELEMENTS = Element.ELEMENTS + ['address', 'target']
+
 class Storage(Element):
     NAME = 'storage'
-    ELEMENTS = Element.ELEMENTS + ['type', 'address', 'path']
+    ELEMENTS = Element.ELEMENTS + ['type', 'address', 'path', 'logical_unit']
 
 class StorageDomain(Base):
     NAME = "storage_domain"
@@ -193,7 +198,7 @@ class Snapshot(Base):
     COLLECTION = "snapshots"
     ELEMENTS = Base.ELEMENTS + ['vm', 'date']
 
-TYPES = [ Action, Actions, Attachment, Boot, CdRom, Cluster, CPU, DataCenter, Disk, GracePeriod, Host, IP, Iso, Link, MAC, Network, NIC, OS, Storage, StorageDomain, Snapshot, Template, Topology, Version, VLAN, VM, VmPool]
+TYPES = [ Action, Actions, Attachment, Boot, CdRom, Cluster, CPU, DataCenter, Disk, GracePeriod, Host, IP, Iso, Link, LogicalUnit, MAC, Network, NIC, OS, Storage, StorageDomain, Snapshot, Template, Topology, Version, VLAN, VM, VmPool]
 
 def findEntityType(name):
     for t in TYPES:

@@ -51,6 +51,15 @@ public class PowerShellStorageDomainTest extends PowerShellModelTest {
         assertEquals(path, storage.getPath());
     }
 
+    private void testIscsiStorageDomain(PowerShellStorageDomain s, String id, String name, StorageDomainType type, Boolean isMaster, StorageDomainStatus status, StorageDomainStatus sharedStatus) {
+        testStorageDomain(s, id, name, type, isMaster, status, sharedStatus);
+
+        Storage storage = s.getStorage();
+        assertNotNull(storage);
+
+        assertEquals(StorageType.ISCSI, storage.getType());
+    }
+
     @Test
     public void testParse() throws Exception {
         String data = readFileContents("storagedomain.xml");
@@ -58,7 +67,7 @@ public class PowerShellStorageDomainTest extends PowerShellModelTest {
 
         List<PowerShellStorageDomain> storageDomains = PowerShellStorageDomain.parse(getParser(), data);
 
-        assertEquals(storageDomains.size(), 3);
+        assertEquals(storageDomains.size(), 4);
 
         testNfsStorageDomain(storageDomains.get(0),
                              "788cd1e6-aa2b-412e-bcaf-0b37b96f00b2", "foo222",
@@ -74,5 +83,9 @@ public class PowerShellStorageDomainTest extends PowerShellModelTest {
                              "4fa5e14f-8404-4dee-a16f-172279376f0c", "iso0",
                              StorageDomainType.ISO, null, null, StorageDomainStatus.INACTIVE,
                              "172.31.0.6", "/exports/RHEVX/markmc/iso/0");
+
+        testIscsiStorageDomain(storageDomains.get(3),
+                               "746afd39-0229-4686-8ee6-7c1900848d00", "iscsi252",
+                               StorageDomainType.DATA, null, null, StorageDomainStatus.UNATTACHED);
     }
 }

@@ -24,6 +24,7 @@ import org.apache.felix.gogo.commands.Option;
 
 import com.redhat.rhevm.api.command.base.AbstractAddCommand;
 import com.redhat.rhevm.api.model.Host;
+import com.redhat.rhevm.api.model.LogicalUnit;
 import com.redhat.rhevm.api.model.Storage;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.StorageDomainType;
@@ -53,14 +54,17 @@ public class StorageDomainsAddCommand extends AbstractAddCommand<StorageDomain> 
     @Option(name = "-s", aliases = { "--storage-type" }, description = "Storage type (ISCSI, FCP or NFS)", required = true, multiValued = false)
     private String storageType;
 
-    @Option(name = "-a", aliases = { "--address" }, description = "Storage address", required = true, multiValued = false)
+    @Option(name = "-a", aliases = { "--address" }, description = "Storage address", required = false, multiValued = false)
     private String address;
 
-    @Option(name = "-p", aliases = { "--path" }, description = "Storage path", required = true, multiValued = false)
+    @Option(name = "-p", aliases = { "--path" }, description = "Storage path", required = false, multiValued = false)
     private String path;
 
-    @Option(name = "-l", aliases = { "--lun" }, description = "LUN", required = false, multiValued = false)
-    private int lun = -1;
+    @Option(name = "-t", aliases = { "--target" }, description = "iSCSI target", required = false, multiValued = false)
+    private String target;
+
+    @Option(name = "-l", aliases = { "--lunid" }, description = "LUN ID", required = false, multiValued = false)
+    private String lunId;
 
     protected Object doExecute() throws Exception {
         display(doAdd(getModel(), StorageDomain.class, "storagedomains", "storage_domain"));
@@ -76,10 +80,20 @@ public class StorageDomainsAddCommand extends AbstractAddCommand<StorageDomain> 
         model.setType(StorageDomainType.valueOf(domainType));
         model.setStorage(new Storage());
         model.getStorage().setType(StorageType.valueOf(storageType));
-        model.getStorage().setAddress(address);
-        model.getStorage().setPath(path);
-        if (lun != -1) {
-            model.getStorage().setLUN(lun);
+        switch (model.getStorage().getType()) {
+        case NFS:
+            model.getStorage().setAddress(address);
+            model.getStorage().setPath(path);
+            break;
+        case ISCSI:
+            model.getStorage().getLogicalUnits().add(new LogicalUnit());
+            model.getStorage().getLogicalUnits().get(0).setId(lunId);
+            model.getStorage().getLogicalUnits().get(0).setAddress(address);
+            model.getStorage().getLogicalUnits().get(0).setTarget(target);
+            break;
+        case FCP:
+        default:
+            break;
         }
         return model;
     }
