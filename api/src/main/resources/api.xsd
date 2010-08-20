@@ -530,6 +530,18 @@
     <xs:attribute name="gateway" type="xs:string"/>
   </xs:complexType>
 
+  <xs:element name="mac" type="MAC"/>
+
+  <xs:complexType name="MAC">
+    <xs:attribute name="address" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:element name="vlan" type="VLAN"/>
+
+  <xs:complexType name="VLAN">
+    <xs:attribute name="id" type="xs:string"/>
+  </xs:complexType>
+
   <xs:element name="network" type="Network"/>
 
   <xs:element name="networks" type="Networks"/>
@@ -540,11 +552,7 @@
         <xs:sequence>
           <xs:element ref="data_center" minOccurs="0"/>
           <xs:element ref="ip" minOccurs="0"/>
-          <xs:element name="vlan" minOccurs="0">
-            <xs:complexType>
-              <xs:attribute name="id" type="xs:string"/>
-            </xs:complexType>
-          </xs:element>
+          <xs:element ref="vlan" minOccurs="0"/>
           <xs:element name="stp" type="xs:boolean" minOccurs="0"/>
           <xs:element name="status" type="NetworkStatus" minOccurs="0"/>
         </xs:sequence>
@@ -877,11 +885,7 @@
         <xs:sequence>
           <xs:element ref="network" minOccurs="0" maxOccurs="1"/>
           <xs:element name="type" type="NicType" minOccurs="0"/>
-          <xs:element name="mac" minOccurs="0">
-            <xs:complexType>
-              <xs:attribute name="address" type="xs:string"/>
-            </xs:complexType>
-          </xs:element>
+          <xs:element ref="mac" minOccurs="0"/>
           <xs:element ref="ip" minOccurs="0"/>
         </xs:sequence>
       </xs:extension>

@@ -25,6 +25,7 @@ import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.IP;
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.NetworkStatus;
+import com.redhat.rhevm.api.model.VLAN;
 import com.redhat.rhevm.api.powershell.enums.PowerShellNetworkStatus;
 import com.redhat.rhevm.api.powershell.model.PowerShellNetwork;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
@@ -57,7 +58,7 @@ public class PowerShellNetwork {
             }
 
             if (entity.isSet("vlanid")) {
-                Network.Vlan vlan = new Network.Vlan();
+                VLAN vlan = new VLAN();
                 vlan.setId(entity.get("vlanid"));
                 network.setVlan(vlan);
             }

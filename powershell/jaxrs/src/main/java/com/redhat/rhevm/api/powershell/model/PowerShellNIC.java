@@ -22,9 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.redhat.rhevm.api.model.Network;
+import com.redhat.rhevm.api.model.IP;
+import com.redhat.rhevm.api.model.MAC;
 import com.redhat.rhevm.api.model.NIC;
 import com.redhat.rhevm.api.model.NicType;
-import com.redhat.rhevm.api.model.IP;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 
@@ -48,7 +49,7 @@ public class PowerShellNIC {
 
             nic.setType(NicType.fromValue(entity.get("type").toUpperCase()));
 
-            NIC.Mac mac = new NIC.Mac();
+            MAC mac = new MAC();
             mac.setAddress(entity.get("macaddress"));
             nic.setMac(mac);
 
