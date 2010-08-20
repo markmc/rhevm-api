@@ -35,3 +35,7 @@ for fmt in [xmlfmt]:
 
    for net in t.get(links['networks']):
       t.get(net.href)
+
+   for host in t.get(links['hosts']):
+      for nic in t.get(host.link['nics'].href):
+         t.get(nic.href)

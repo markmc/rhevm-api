@@ -27,6 +27,7 @@ import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.HostStatus;
 import com.redhat.rhevm.api.resource.HostResource;
+import com.redhat.rhevm.api.resource.HostNicsResource;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 
@@ -107,4 +108,6 @@ public class MockHostResource extends AbstractMockResource<Host> implements Host
             MockHostResource.this.getModel().setStatus(status);
         }
     }
+
+    @Override public HostNicsResource getHostNicsResource() { return null; }
 }

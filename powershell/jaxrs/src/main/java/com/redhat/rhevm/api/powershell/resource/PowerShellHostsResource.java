@@ -51,7 +51,7 @@ public class PowerShellHostsResource
     public Hosts list(UriInfo uriInfo) {
         Hosts ret = new Hosts();
         for (Host host : runAndParse(getSelectCommand("select-host", uriInfo, Host.class))) {
-            ret.getHosts().add(LinkHelper.addLinks(host));
+            ret.getHosts().add(PowerShellHostResource.addLinks(host));
         }
         return ret;
     }
@@ -77,7 +77,7 @@ public class PowerShellHostsResource
             buf.append(" -port " + host.getPort());
         }
 
-        host = LinkHelper.addLinks(runAndParseSingle(buf.toString()));
+        host = PowerShellHostResource.addLinks(runAndParseSingle(buf.toString()));
 
         UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(host.getId());
 

@@ -26,6 +26,7 @@ import com.redhat.rhevm.api.command.base.AbstractAddCommand;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.IP;
 import com.redhat.rhevm.api.model.Network;
+import com.redhat.rhevm.api.model.VLAN;
 
 /**
  * Add a new Network.
@@ -72,7 +73,7 @@ public class NetworksAddCommand extends AbstractAddCommand<Network> {
             model.getIp().setGateway(gateway);
         }
         if (vlan != null) {
-            model.setVlan(new Network.Vlan());
+            model.setVlan(new VLAN());
             model.getVlan().setId(vlan);
         }
         model.setStp(stp);

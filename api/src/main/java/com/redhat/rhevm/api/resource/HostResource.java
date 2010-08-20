@@ -61,4 +61,7 @@ public interface HostResource extends UpdatableResource<Host> {
     @Actionable
     @Path("deactivate")
     public Response deactivate(@Context UriInfo uriInfo, Action action);
+
+    @Path("nics")
+    public HostNicsResource getHostNicsResource();
 }

@@ -26,7 +26,9 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Host;
+import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.resource.HostResource;
+import com.redhat.rhevm.api.resource.HostNicsResource;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellHost;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
@@ -68,9 +70,20 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
         return runAndParseSingle(getPool(), getParser(), command);
     }
 
+    public static Host addLinks(Host host) {
+        Link link = new Link();
+        link.setRel("nics");
+        link.setHref(LinkHelper.getUriBuilder(host).path("nics").build().toString());
+
+        host.getLinks().clear();
+        host.getLinks().add(link);
+
+        return LinkHelper.addLinks(host);
+    }
+
     @Override
     public Host get(UriInfo uriInfo) {
-        return LinkHelper.addLinks(runAndParseSingle(CMD_PREFIX + "get-host " + PowerShellUtils.escape(getId())));
+        return addLinks(runAndParseSingle(CMD_PREFIX + "get-host " + PowerShellUtils.escape(getId())));
     }
 
     @Override
@@ -87,7 +100,7 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
 
         buf.append("update-host -hostobject $h");
 
-        return LinkHelper.addLinks(runAndParseSingle(buf.toString()));
+        return addLinks(runAndParseSingle(buf.toString()));
     }
 
     @Override
@@ -135,5 +148,10 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
 
             PowerShellCmd.runCommand(pool, buf.toString());
         }
+    }
+
+    @Override
+    public HostNicsResource getHostNicsResource() {
+        return new PowerShellHostNicsResource(getId(), getExecutor(), shellPools, getParser());
     }
 }
