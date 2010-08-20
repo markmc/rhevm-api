@@ -635,7 +635,7 @@
     </xs:sequence>
   </xs:complexType>
 
-  <!-- Virtual Machines -->
+  <!-- Virtual Machine Templates -->
 
   <xs:element name="templates" type="Templates"/>
 
