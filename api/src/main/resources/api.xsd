@@ -938,4 +938,36 @@
     </xs:sequence>
   </xs:complexType>
 
+  <!-- Host NICs -->
+
+  <xs:element name="host_nic" type="HostNIC"/>
+
+  <xs:element name="host_nics" type="HostNics"/>
+
+  <xs:complexType name="HostNIC">
+    <xs:complexContent>
+      <xs:extension base="BaseResource">
+        <xs:sequence>
+          <xs:element ref="host" minOccurs="0" maxOccurs="1"/>
+          <xs:element ref="network" minOccurs="0" maxOccurs="1"/>
+          <xs:element ref="mac" minOccurs="0"/>
+          <xs:element ref="ip" minOccurs="0"/>
+          <xs:element ref="vlan" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="HostNics">
+    <xs:sequence>
+      <xs:element ref="host_nic" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <jaxb:property name="HostNics"/>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
 </xs:schema>
