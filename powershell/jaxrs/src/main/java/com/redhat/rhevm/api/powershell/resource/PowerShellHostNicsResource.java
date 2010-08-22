@@ -145,6 +145,6 @@ public class PowerShellHostNicsResource implements HostNicsResource {
 
     @Override
     public HostNicResource getHostNicSubResource(String id) {
-        return new PowerShellHostNicResource(id, this);
+        return new PowerShellHostNicResource(id, getExecutor(), shellPools, getParser(), this);
     }
 }

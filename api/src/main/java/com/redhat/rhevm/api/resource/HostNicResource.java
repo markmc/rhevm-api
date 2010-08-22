@@ -18,10 +18,19 @@
  */
 package com.redhat.rhevm.api.resource;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.POST;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.UriInfo;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
+import javax.ws.rs.core.Response;
 
+import com.redhat.rhevm.api.model.Actionable;
+import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.HostNIC;
 
 
@@ -31,4 +40,21 @@ public interface HostNicResource {
     @GET
     @Formatted
     public HostNIC get();
+
+    @Path("{action: (attach|detach)}/{oid}")
+    public ActionResource getActionSubresource(@PathParam("action") String action, @PathParam("oid") String oid);
+
+    @POST
+    @Formatted
+    @Consumes(MediaType.APPLICATION_XML)
+    @Actionable
+    @Path("attach")
+    public Response attach(@Context UriInfo uriInfo, Action action);
+
+    @POST
+    @Formatted
+    @Consumes(MediaType.APPLICATION_XML)
+    @Actionable
+    @Path("detach")
+    public Response detach(@Context UriInfo uriInfo, Action action);
 }

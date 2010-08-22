@@ -61,6 +61,8 @@
       <xs:element name="grace_period" type="GracePeriod" minOccurs="0"/>
       <!-- for StorageDomain teardown and VM migrate actions -->
       <xs:element name="host" type="Host" minOccurs="0"/>
+      <!-- for host NIC attach action -->
+      <xs:element name="network" type="Network" minOccurs="0"/>
       <!-- when installing a host, a root password is required -->
       <xs:element name="root_password" type="xs:string" minOccurs="0" maxOccurs="1"/>
       <!-- for VM ticket actions -->

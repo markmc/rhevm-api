@@ -31,7 +31,19 @@ public abstract class AbstractPowerShellActionTask extends AbstractActionTask {
     protected String command;
 
     protected AbstractPowerShellActionTask(Action action, String command) {
-        super(action, MessageFormat.format(REASON, command) + "{0}");
+        super(action, MessageFormat.format(REASON, escape(command)) + "{0}");
         this.command = command;
+    }
+
+    private static final String QUOTE = "'";
+    private static final String OPEN_BRACE = "{";
+    private static final String CLOSE_BRACE = "}";
+
+    private static String escape(String arg) {
+        String[] toEscape = { OPEN_BRACE, CLOSE_BRACE };
+        for (String c : toEscape) {
+            arg = arg.replace(c, QUOTE + c + QUOTE);
+        }
+        return arg;
     }
 }
