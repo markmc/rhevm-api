@@ -54,6 +54,7 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
     private static final String UPDATE_COMMAND = "$h = rhevmpssnapin\\get-host \"" + HOST_ID + "\";$h.name = \"eris\";update-host -hostobject $h";
     private static final String INSTALL_PASSWORD = "boldlygoingnowhere";
     private static final String INSTALL_COMMAND = "$h = rhevmpssnapin\\get-host \"" + HOST_ID + "\";update-host -hostobject $h -install -rootpassword \"" + INSTALL_PASSWORD + "\"";
+    private static final String COMMIT_NET_CONFIG_COMMAND = "$h = get-host \"" + HOST_ID + "\"; commit-configurationchanges -hostobject $h";
 
     protected PowerShellHostResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser) {
         return new PowerShellHostResource(HOST_ID, executor, poolMap, parser);
@@ -154,6 +155,17 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
     }
 
     @Test
+    public void testCommitNetConfig() throws Exception {
+        verifyActionResponse(
+            resource.commitNetConfig(setUpActionExpectation("/hosts/"+ HOST_ID + "/",
+                                                            "commitnetconfig",
+                                                            COMMIT_NET_CONFIG_COMMAND,
+                                                            ACTION_RETURN),
+                                     getAction()),
+            false);
+    }
+
+    @Test
     public void testApproveAsync() throws Exception {
         verifyActionResponse(
             resource.approve(setUpActionExpectation("approve", "approve-host"), getAction(true)),
@@ -166,6 +178,17 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
         action.setRootPassword(INSTALL_PASSWORD);
         verifyActionResponse(
             resource.install(setUpActionExpectation("hosts/" + HOST_ID, "install", INSTALL_COMMAND, ACTION_RETURN), action),
+            true);
+    }
+
+    @Test
+    public void testCommitNetConfigAsync() throws Exception {
+        verifyActionResponse(
+            resource.commitNetConfig(setUpActionExpectation("/hosts/"+ HOST_ID + "/",
+                                                            "commitnetconfig",
+                                                            COMMIT_NET_CONFIG_COMMAND,
+                                                            ACTION_RETURN),
+                                     getAction(true)),
             true);
     }
 

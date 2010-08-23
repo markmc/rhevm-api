@@ -95,6 +95,11 @@ public class MockHostResource extends AbstractMockResource<Host> implements Host
         return doAction(uriInfo, new HostStatusSetter(action, HostStatus.MAINTENANCE));
     }
 
+    @Override
+    public Response commitNetConfig(UriInfo uriInfo, Action action) {
+        return null;
+    }
+
     private class HostStatusSetter extends AbstractActionTask {
         private HostStatus status;
         HostStatusSetter(Action action, HostStatus status) {

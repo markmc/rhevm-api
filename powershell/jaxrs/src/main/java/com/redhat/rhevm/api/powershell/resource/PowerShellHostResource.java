@@ -124,6 +124,17 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
         return doAction(uriInfo, new CommandRunner(action, "suspend-host", "host", getId(), getPool()));
     }
 
+    @Override
+    public Response commitNetConfig(UriInfo uriInfo, Action action) {
+        StringBuilder buf = new StringBuilder();
+
+        buf.append("$h = get-host " + PowerShellUtils.escape(getId()) + "; ");
+        buf.append("commit-configurationchanges");
+        buf.append(" -hostobject $h");
+
+        return doAction(uriInfo, new CommandRunner(action, buf.toString(), getPool()));
+    }
+
     class HostInstaller extends AbstractPowerShellActionTask {
 
         private String rootPassword;
