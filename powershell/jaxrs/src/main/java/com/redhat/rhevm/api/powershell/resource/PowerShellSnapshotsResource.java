@@ -194,7 +194,7 @@ public class PowerShellSnapshotsResource implements SnapshotsResource {
     }
 
     private List<String> sortedKeys(Map<String, Snapshot> map) {
-        List<String> keys = new ArrayList(map.keySet());
+        List<String> keys = new ArrayList<String>(map.keySet());
         Collections.sort(keys);
         return keys;
     }

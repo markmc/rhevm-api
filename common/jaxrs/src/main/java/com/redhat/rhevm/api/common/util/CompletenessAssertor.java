@@ -73,13 +73,17 @@ public class CompletenessAssertor {
         List<String> missing = new ArrayList<String>();
         for (String r : required) {
             if (topLevel(r)) {
-                if (!isSet(model, capitalize(r))) {
+                if (!assertFields(model, subField(r))) {
                     missing.add(r);
                 }
-            } else {
-                if (!(isSet(model, superField(r)) && assertSubFields(model, superField(r), subField(r)))) {
-                    missing.add(r);
+            } else if (isList(model, superField(r))) {
+                for (Object item : asList(model, superField(r))) {
+                    if (!assertFields(item, subField(r))) {
+                        missing.add(r);
+                    }
                 }
+            } else if (!(isSet(model, superField(r)) && assertFields(model, superField(r), subField(r)))) {
+                missing.add(r);
             }
         }
 
@@ -100,11 +104,15 @@ public class CompletenessAssertor {
         return response;
     }
 
-    private static boolean assertSubFields(Object model, String superField, String subFields) {
+    private static boolean assertFields(Object model, String fields) {
+        return assertFields(model, null, fields);
+    }
+
+    private static boolean assertFields(Object model, String superField, String subFields) {
         String[] splitFields = subFields.split("\\|");
         boolean found = false;
         for (String subField : splitFields) {
-            found = found || isSet(get(model, superField), capitalize(subField));
+            found = found || isSet(superField != null ? get(model, superField) : model, capitalize(subField));
         }
         return found;
     }
@@ -119,5 +127,17 @@ public class CompletenessAssertor {
 
     private static String subField(String required) {
         return required.substring(required.indexOf(".") + 1);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static boolean isList(Object model, String superField) {
+        return isSet(model, superField)
+               && isSet(get(model, superField), superField)
+               && get(get(model, superField), superField) instanceof List;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static List<Object> asList(Object model, String superField) {
+        return (List<Object>)get(get(model, superField), superField);
     }
 }

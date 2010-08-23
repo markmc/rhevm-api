@@ -24,6 +24,9 @@ import javax.ws.rs.WebApplicationException;
 
 import com.redhat.rhevm.api.model.Fault;
 import com.redhat.rhevm.api.model.Host;
+import com.redhat.rhevm.api.model.Role;
+import com.redhat.rhevm.api.model.Roles;
+import com.redhat.rhevm.api.model.User;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VmStatus;
 
@@ -57,12 +60,40 @@ public class CompletenessAssertorTest extends Assert {
     }
 
     @Test
+    public void testMissingParameterAlteratives() throws Exception {
+        VM vm = new VM();
+        vm.setDescription("incomplete");
+        try {
+            CompletenessAssertor.validateParameters(vm, "status|host|name");
+            fail("expected WebApplicationException on incomplete model");
+        } catch (WebApplicationException wae) {
+            verifyIncompleteException(wae, "VM", "status|host|name");
+        }
+    }
+
+    @Test
     public void testCompleteParameters() throws Exception {
         VM vm = new VM();
         vm.setName("foo");
         vm.setStatus(VmStatus.RUNNING);
         vm.setHost(new Host());
         CompletenessAssertor.validateParameters(vm, "name", "host", "status");
+    }
+
+    @Test
+    public void testCompleteParametersAlternativesFirst() throws Exception {
+        VM vm = new VM();
+        vm.setName("foo");
+        vm.setHost(new Host());
+        CompletenessAssertor.validateParameters(vm, "name", "host|status");
+    }
+
+    @Test
+    public void testCompleteParametersAlternativesSecond() throws Exception {
+        VM vm = new VM();
+        vm.setName("foo");
+        vm.setStatus(VmStatus.RUNNING);
+        CompletenessAssertor.validateParameters(vm, "name", "host|status");
     }
 
     @Test
@@ -117,6 +148,60 @@ public class CompletenessAssertorTest extends Assert {
         vm.setHost(new Host());
         vm.getHost().setName("zog");
         CompletenessAssertor.validateParameters(vm, "host.id|name");
+    }
+
+    @Test
+    public void testCompleteListSubField() throws Exception {
+        User user = new User();
+        user.setRoles(new Roles());
+        user.getRoles().getRoles().add(new Role());
+        user.getRoles().getRoles().get(0).setId("0");
+        user.getRoles().getRoles().add(new Role());
+        user.getRoles().getRoles().get(1).setId("0");
+        CompletenessAssertor.validateParameters(user, "roles.id");
+    }
+
+    @Test
+    public void testCompleteListSubFieldAlternatives() throws Exception {
+        User user = new User();
+        user.setRoles(new Roles());
+        user.getRoles().getRoles().add(new Role());
+        user.getRoles().getRoles().get(0).setId("0");
+        user.getRoles().getRoles().add(new Role());
+        user.getRoles().getRoles().get(1).setName("0");
+        CompletenessAssertor.validateParameters(user, "roles.id|name");
+    }
+
+    @Test
+    public void testMissingListSubField() throws Exception {
+        User user = new User();
+        user.setRoles(new Roles());
+        user.getRoles().getRoles().add(new Role());
+        user.getRoles().getRoles().get(0).setId("0");
+        user.getRoles().getRoles().add(new Role());
+        user.getRoles().getRoles().get(1).setName("0");
+        try {
+            CompletenessAssertor.validateParameters(user, "roles.id");
+            fail("expected WebApplicationException on incomplete model");
+        } catch (WebApplicationException wae) {
+            verifyIncompleteException(wae, "User", "roles.id");
+        }
+    }
+
+    @Test
+    public void testMissingListSubFieldAlternatives() throws Exception {
+        User user = new User();
+        user.setRoles(new Roles());
+        user.getRoles().getRoles().add(new Role());
+        user.getRoles().getRoles().get(0).setId("0");
+        user.getRoles().getRoles().add(new Role());
+        user.getRoles().getRoles().get(1).setDescription("0");
+        try {
+            CompletenessAssertor.validateParameters(user, "roles.id|name");
+            fail("expected WebApplicationException on incomplete model");
+        } catch (WebApplicationException wae) {
+            verifyIncompleteException(wae, "User", "roles.id|name");
+        }
     }
 
     private void verifyIncompleteException(WebApplicationException wae, String type,  String... fields) {
