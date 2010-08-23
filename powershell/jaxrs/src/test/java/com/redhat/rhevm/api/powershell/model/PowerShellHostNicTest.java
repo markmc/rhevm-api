@@ -22,13 +22,11 @@ import org.junit.Test;
 
 import java.util.List;
 
-import com.redhat.rhevm.api.model.HostNIC;
-
 public class PowerShellHostNicTest extends PowerShellModelTest {
 
     private static final String HOST_ID = "439c0c13-3e0a-489e-a514-1b07232ace41";
 
-    private void testHostNic(HostNIC n, String id, String name, String hostId, String network, String macAddress, String vlanId, String ipAddress, String ipNetmask, String ipGateway) {
+    private void testHostNic(PowerShellHostNIC n, String id, String name, String hostId, String network, String macAddress, String vlanId, String ipAddress, String ipNetmask, String ipGateway) {
         assertEquals(id, n.getId());
         assertEquals(name, n.getName());
         assertNotNull(n.getHost());
@@ -66,7 +64,7 @@ public class PowerShellHostNicTest extends PowerShellModelTest {
         String data = readFileContents("hostnic.xml");
         assertNotNull(data);
 
-        List<HostNIC> nics = PowerShellHostNIC.parse(getParser(), HOST_ID, data);
+        List<PowerShellHostNIC> nics = PowerShellHostNIC.parse(getParser(), HOST_ID, data);
 
         assertNotNull(nics);
         assertEquals(4, nics.size());

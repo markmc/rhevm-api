@@ -28,6 +28,7 @@ import com.redhat.rhevm.api.resource.MediaType;
 import com.redhat.rhevm.api.model.HostNIC;
 import com.redhat.rhevm.api.model.HostNics;
 import com.redhat.rhevm.api.model.Network;
+import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellHostNIC;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
@@ -72,12 +73,12 @@ public class PowerShellHostNicsResource implements HostNicsResource {
         return hostId;
     }
 
-    public List<HostNIC> runAndParse(String command) {
+    public List<PowerShellHostNIC> runAndParse(String command) {
         return PowerShellHostNIC.parse(getParser(), hostId, PowerShellCmd.runCommand(getPool(), command));
     }
 
-    public HostNIC runAndParseSingle(String command) {
-        List<HostNIC> nics = runAndParse(command);
+    public PowerShellHostNIC runAndParseSingle(String command) {
+        List<PowerShellHostNIC> nics = runAndParse(command);
         return !nics.isEmpty() ? nics.get(0) : null;
     }
 
@@ -104,11 +105,13 @@ public class PowerShellHostNicsResource implements HostNicsResource {
         return nic;
     }
 
-    public HostNIC addLinks(HostNIC nic) {
-        return LinkHelper.addLinks(lookupNetworkId(nic));
+    public HostNIC addLinks(PowerShellHostNIC nic) {
+        HostNIC ret = JAXBHelper.clone("host_nic", HostNIC.class, nic);
+
+        return LinkHelper.addLinks(lookupNetworkId(ret));
     }
 
-    public HostNIC getHostNic(String nicId) {
+    public PowerShellHostNIC getHostNic(String nicId) {
         StringBuilder buf = new StringBuilder();
 
         buf.append("$h = get-host " + PowerShellUtils.escape(hostId) + "; ");
@@ -129,7 +132,7 @@ public class PowerShellHostNicsResource implements HostNicsResource {
         buf.append("$h.getnetworkadapters()");
 
         HostNics ret = new HostNics();
-        for (HostNIC nic : runAndParse(buf.toString())) {
+        for (PowerShellHostNIC nic : runAndParse(buf.toString())) {
             ret.getHostNics().add(addLinks(nic));
         }
         return ret;

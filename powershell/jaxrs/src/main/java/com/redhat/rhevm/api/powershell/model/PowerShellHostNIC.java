@@ -28,13 +28,13 @@ import com.redhat.rhevm.api.model.MAC;
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 
-public class PowerShellHostNIC {
+public class PowerShellHostNIC extends HostNIC {
 
-    public static List<HostNIC> parse(PowerShellParser parser, String hostId, String output) {
-        List<HostNIC> ret = new ArrayList<HostNIC>();
+    public static List<PowerShellHostNIC> parse(PowerShellParser parser, String hostId, String output) {
+        List<PowerShellHostNIC> ret = new ArrayList<PowerShellHostNIC>();
 
         for (PowerShellParser.Entity entity : parser.parse(output)) {
-            HostNIC nic = new HostNIC();
+            PowerShellHostNIC nic = new PowerShellHostNIC();
 
             nic.setId(entity.get("id"));
             nic.setName(entity.get("name"));
