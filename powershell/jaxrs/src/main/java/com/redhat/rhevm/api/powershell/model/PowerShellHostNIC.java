@@ -30,6 +30,26 @@ import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 
 public class PowerShellHostNIC extends HostNIC {
 
+    private String bondName;
+    private List<String> bondInterfaces;
+
+    public String getBondName() {
+        return bondName;
+    }
+    public void setBondName(String bondName) {
+        this.bondName = bondName;
+    }
+
+    public List<String> getBondInterfaces() {
+        if (bondInterfaces == null) {
+            bondInterfaces = new ArrayList<String>();
+        }
+        return bondInterfaces;
+    }
+    public void unsetBondInterfaces() {
+        bondInterfaces = null;
+    }
+
     public static List<PowerShellHostNIC> parse(PowerShellParser parser, String hostId, String output) {
         List<PowerShellHostNIC> ret = new ArrayList<PowerShellHostNIC>();
 
@@ -62,6 +82,13 @@ public class PowerShellHostNIC extends HostNIC {
                 ip.setNetmask(entity.get("subnet"));
                 ip.setGateway(entity.get("gateway"));
                 nic.setIp(ip);
+            }
+
+            nic.setBondName(entity.get("bondname"));
+
+            List<String> ifaces = entity.get("bondinterfaces", List.class);
+            for (String iface : ifaces) {
+                nic.getBondInterfaces().add(iface);
             }
 
             ret.add(nic);
