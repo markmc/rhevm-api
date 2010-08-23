@@ -22,10 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.redhat.rhevm.api.model.Disk;
-import com.redhat.rhevm.api.model.DiskFormat;
 import com.redhat.rhevm.api.model.DiskInterface;
-import com.redhat.rhevm.api.model.DiskStatus;
-import com.redhat.rhevm.api.model.DiskType;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.powershell.enums.PowerShellDiskType;
 import com.redhat.rhevm.api.powershell.enums.PowerShellImageStatus;

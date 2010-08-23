@@ -22,7 +22,6 @@ import org.junit.Test;
 
 import java.util.List;
 
-import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.TemplateStatus;
 import com.redhat.rhevm.api.model.VmType;
 

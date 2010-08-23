@@ -25,13 +25,10 @@ import expectj.Spawn;
 
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import org.junit.runner.RunWith;
 
-import static org.easymock.classextension.EasyMock.aryEq;
 import static org.easymock.classextension.EasyMock.expect;
 import static org.easymock.classextension.EasyMock.expectLastCall;
 

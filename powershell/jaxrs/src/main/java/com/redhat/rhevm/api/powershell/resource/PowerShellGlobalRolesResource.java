@@ -19,24 +19,11 @@
 package com.redhat.rhevm.api.powershell.resource;
 
 import java.util.List;
-import java.util.concurrent.Executor;
-
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
-
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.model.Role;
 import com.redhat.rhevm.api.model.Roles;
-import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
-import com.redhat.rhevm.api.powershell.util.PowerShellParser;
-import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
-import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 import com.redhat.rhevm.api.resource.GlobalRolesResource;
 import com.redhat.rhevm.api.resource.RoleResource;
-
-import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
-import static com.redhat.rhevm.api.powershell.resource.PowerShellUsersResource.getRoleArg;
 
 public class PowerShellGlobalRolesResource extends AbstractPowerShellResource implements GlobalRolesResource {
 

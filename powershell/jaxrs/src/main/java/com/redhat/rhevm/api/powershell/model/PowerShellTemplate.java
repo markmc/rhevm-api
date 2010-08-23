@@ -21,13 +21,11 @@ package com.redhat.rhevm.api.powershell.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.redhat.rhevm.api.model.BootDevice;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.CpuTopology;
 import com.redhat.rhevm.api.model.OperatingSystem;
 import com.redhat.rhevm.api.model.Template;
-import com.redhat.rhevm.api.model.TemplateStatus;
 import com.redhat.rhevm.api.powershell.enums.PowerShellBootSequence;
 import com.redhat.rhevm.api.powershell.enums.PowerShellVmTemplateStatus;
 import com.redhat.rhevm.api.powershell.enums.PowerShellVmType;

@@ -26,7 +26,6 @@ import com.redhat.rhevm.api.model.HostNIC;
 import com.redhat.rhevm.api.model.IP;
 import com.redhat.rhevm.api.model.MAC;
 import com.redhat.rhevm.api.model.Network;
-import com.redhat.rhevm.api.model.NIC;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 
 public class PowerShellHostNIC {

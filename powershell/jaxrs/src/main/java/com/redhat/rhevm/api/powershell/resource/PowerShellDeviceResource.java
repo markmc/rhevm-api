@@ -18,7 +18,6 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import java.lang.reflect.Method;
 import java.util.List;
 
 import com.redhat.rhevm.api.model.BaseDevice;

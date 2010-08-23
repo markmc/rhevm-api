@@ -24,7 +24,6 @@ import org.junit.Test;
 
 import org.junit.runner.RunWith;
 
-import static org.easymock.classextension.EasyMock.expect;
 import static org.easymock.classextension.EasyMock.expectLastCall;
 
 import org.powermock.core.classloader.annotations.PrepareForTest;

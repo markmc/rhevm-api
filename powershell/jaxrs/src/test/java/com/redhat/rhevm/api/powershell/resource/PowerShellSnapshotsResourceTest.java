@@ -19,14 +19,12 @@
 package com.redhat.rhevm.api.powershell.resource;
 
 import java.net.URI;
-import java.text.MessageFormat;
 
 import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.UriBuilder;
 
-import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Snapshot;
 import com.redhat.rhevm.api.model.Snapshots;
 import com.redhat.rhevm.api.model.VM;
