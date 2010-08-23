@@ -29,6 +29,7 @@ import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.Template;
+import com.redhat.rhevm.api.model.User;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VmPool;
 
@@ -61,6 +62,7 @@ public class QueryHelper {
         RETURN_TYPES.put(DataCenter.class, "Datacenter" + RETURN_TYPE_SEPARTOR);
         RETURN_TYPES.put(StorageDomain.class, "Storage" + RETURN_TYPE_SEPARTOR);
         RETURN_TYPES.put(Template.class, "Template" + RETURN_TYPE_SEPARTOR);
+        RETURN_TYPES.put(User.class, "");
         RETURN_TYPES.put(VmPool.class, "Pools" + RETURN_TYPE_SEPARTOR);
     }
 

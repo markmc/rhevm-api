@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<Objects>
+  <Object Type="RhevmCmd.CLIRole">
+    <Property Name="Id" Type="System.String">00000000-0000-0000-0001-000000000001</Property>
+    <Property Name="Description" Type="System.String">RHEVM user</Property>
+    <Property Name="Name" Type="System.String">RHEVMUser</Property>
+  </Object>
+</Objects>

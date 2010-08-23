@@ -18,27 +18,16 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import java.util.concurrent.Executor;
-
-import javax.ws.rs.core.UriInfo;
-
 import com.redhat.rhevm.api.common.resource.AbstractUpdatableResource;
-import com.redhat.rhevm.api.common.util.QueryHelper;
 import com.redhat.rhevm.api.common.util.ReapedMap;
 import com.redhat.rhevm.api.model.BaseResource;
-import com.redhat.rhevm.api.powershell.util.PowerShellParser;
-import com.redhat.rhevm.api.powershell.util.PowerShellPool;
-import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
-import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
 public abstract class AbstractPowerShellCollectionResource<R extends BaseResource,
-                                                           U extends AbstractUpdatableResource<R>> {
+                                                           U extends AbstractUpdatableResource<R>>
+    extends AbstractPowerShellResource {
+
     private ReapedMap<String, U> resources;
-    private Executor executor;
-    private PowerShellParser parser;
-    protected PowerShellPoolMap shellPools;
-    private final static String SEARCH_TEXT = " -searchtext ";
 
     public AbstractPowerShellCollectionResource() {
         resources = new ReapedMap<String, U>();
@@ -60,41 +49,6 @@ public abstract class AbstractPowerShellCollectionResource<R extends BaseResourc
         synchronized (resources) {
             resources.remove(id);
         }
-    }
-
-    protected String getSelectCommand(String root, UriInfo uriInfo, Class<?> collectionType) {
-        String ret = root;
-        String constraint = QueryHelper.getConstraint(uriInfo, collectionType);
-        if (constraint != null) {
-            ret = new StringBuffer(root).append(SEARCH_TEXT)
-                                        .append(PowerShellUtils.escape(constraint))
-                                        .toString();
-        }
-        return ret;
-    }
-
-    public Executor getExecutor() {
-        return executor;
-    }
-
-    public void setExecutor(Executor executor) {
-        this.executor = executor;
-    }
-
-    public PowerShellParser getParser() {
-        return parser;
-    }
-
-    public void setParser(PowerShellParser parser) {
-        this.parser = parser;
-    }
-
-    public void setPowerShellPoolMap(PowerShellPoolMap shellPools) {
-        this.shellPools = shellPools;
-    }
-
-    protected PowerShellPool getPool() {
-        return shellPools.get();
     }
 
     protected abstract U createSubResource(String id);

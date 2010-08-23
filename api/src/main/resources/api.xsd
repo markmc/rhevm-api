@@ -495,6 +495,80 @@
     </xs:sequence>
   </xs:complexType>
 
+  <!-- Users & Roles -->
+
+  <xs:element name="role" type="Role"/>
+
+  <xs:element name="roles" type="Roles"/>
+
+  <xs:complexType name="Role">
+    <xs:complexContent>
+      <xs:extension base="BaseResource">
+        <xs:sequence>
+          <xs:element name="user" type="User" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Roles">
+    <xs:sequence>
+      <xs:annotation>
+        <xs:appinfo>
+            <jaxb:property name="Roles"/>
+        </xs:appinfo>
+      </xs:annotation>
+      <xs:element ref="role" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="user" type="User"/>
+
+  <xs:element name="users" type="Users"/>
+
+  <xs:complexType name="User">
+    <xs:complexContent>
+      <xs:extension base="BaseResource">
+        <xs:sequence>
+          <xs:element name="domain" type="xs:string" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="department" type="xs:string" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="logged_in" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="last_name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+          <!-- generally name@domain -->
+          <xs:element name="user_name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="email" type="xs:string" minOccurs="0" maxOccurs="1"/>
+          <!-- used only to represent the initial role assignments for a
+               new user, therafter modification of role assignments are
+               only supported via the rel="roles" sub-collection -->
+          <xs:element name="roles" type="Roles" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="groups" minOccurs="0">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:annotation>
+                  <xs:appinfo>
+                    <jaxb:property name="Groups"/>
+                  </xs:appinfo>
+                </xs:annotation>
+                <xs:element name="group" type="xs:string" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Users">
+    <xs:sequence>
+      <xs:annotation>
+        <xs:appinfo>
+            <jaxb:property name="Users"/>
+        </xs:appinfo>
+      </xs:annotation>
+      <xs:element ref="user" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <!-- ISOs -->
 
   <xs:element name="iso" type="Iso"/>

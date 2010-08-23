@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<Objects>
+  <Object Type="RhevmCmd.CLIUser">
+    <Property Name="UserId" Type="System.String">cca00b9f-4492-4a82-b71e-082dcdf0fc66</Property>
+    <Property Name="Department" Type="System.String" />
+    <Property Name="Domain" Type="System.String">some_domain.local</Property>
+    <Property Name="Email" Type="System.String">jim@beam.net</Property>
+    <Property Name="Groups" Type="System.String[]">
+      <Property Type="System.String">Group Policy Creator Owners@some_domain.local/Users</Property>
+      <Property Type="System.String">Domain Admins@some_domain.local/Users</Property>
+      <Property Type="System.String">Enterprise Admins@some_domain.local/Users</Property>
+      <Property Type="System.String">Schema Admins@some_domain.local/Users</Property>
+      <Property Type="System.String">Administrators@some_domain.local/Builtin</Property>
+    </Property>
+    <Property Name="Name" Type="System.String">jim</Property>
+    <Property Name="Status" Type="System.String">Active</Property>
+    <Property Name="LastName" Type="System.String">beam</Property>
+    <Property Name="UserName" Type="System.String">jimbeam@some_domain.local</Propert
+y>
+    <Property Name="IsLoggedIn" Type="System.Boolean">False</Property>
+  </Object>
+</Objects>

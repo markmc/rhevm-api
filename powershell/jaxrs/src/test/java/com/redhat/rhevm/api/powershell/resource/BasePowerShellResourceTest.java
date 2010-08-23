@@ -18,9 +18,11 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.lang.annotation.Annotation;
 import java.text.MessageFormat;
 import java.util.Arrays;
 
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 
 import org.junit.Assert;
@@ -31,6 +33,8 @@ import com.redhat.rhevm.api.powershell.util.PowerShellTestUtils;
 
 @Ignore
 public class BasePowerShellResourceTest extends Assert {
+
+    protected static final String QUERY = "name=*r*s";
 
     protected String formatXmlReturn(String type, String[] names, String[] descriptions, String[] args) {
         String[][] perNameArgs = new String[names.length][];
@@ -81,4 +85,17 @@ public class BasePowerShellResourceTest extends Assert {
         System.arraycopy(args, 0, newArgs, 3, args.length);
         return newArgs;
     }
+
+    protected QueryParam getQueryParam() {
+        return new QueryParam() {
+            public String value() {
+                return QUERY;
+            }
+            @Override
+            public Class<? extends Annotation> annotationType() {
+                return null;
+            }
+        };
+    }
+
 }

@@ -22,9 +22,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.core.UriBuilder;
@@ -32,35 +30,24 @@ import javax.ws.rs.core.UriBuilder;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.BaseResource;
 import com.redhat.rhevm.api.model.Attachment;
-import com.redhat.rhevm.api.model.Attachments;
 import com.redhat.rhevm.api.model.CdRom;
-import com.redhat.rhevm.api.model.CdRoms;
 import com.redhat.rhevm.api.model.Cluster;
-import com.redhat.rhevm.api.model.Clusters;
 import com.redhat.rhevm.api.model.DataCenter;
-import com.redhat.rhevm.api.model.DataCenters;
 import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.Disks;
 import com.redhat.rhevm.api.model.HostNIC;
 import com.redhat.rhevm.api.model.HostNics;
 import com.redhat.rhevm.api.model.Host;
-import com.redhat.rhevm.api.model.Hosts;
 import com.redhat.rhevm.api.model.Iso;
-import com.redhat.rhevm.api.model.Isos;
 import com.redhat.rhevm.api.model.Network;
-import com.redhat.rhevm.api.model.Networks;
 import com.redhat.rhevm.api.model.NIC;
-import com.redhat.rhevm.api.model.Nics;
+import com.redhat.rhevm.api.model.Role;
 import com.redhat.rhevm.api.model.Snapshot;
-import com.redhat.rhevm.api.model.Snapshots;
 import com.redhat.rhevm.api.model.StorageDomain;
-import com.redhat.rhevm.api.model.StorageDomains;
 import com.redhat.rhevm.api.model.Template;
-import com.redhat.rhevm.api.model.Templates;
+import com.redhat.rhevm.api.model.User;
 import com.redhat.rhevm.api.model.VmPool;
-import com.redhat.rhevm.api.model.VmPools;
 import com.redhat.rhevm.api.model.VM;
-import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.resource.AttachmentResource;
 import com.redhat.rhevm.api.resource.AttachmentsResource;
 import com.redhat.rhevm.api.resource.ClusterResource;
@@ -69,6 +56,7 @@ import com.redhat.rhevm.api.resource.DataCenterResource;
 import com.redhat.rhevm.api.resource.DataCentersResource;
 import com.redhat.rhevm.api.resource.DeviceResource;
 import com.redhat.rhevm.api.resource.DevicesResource;
+import com.redhat.rhevm.api.resource.GlobalRolesResource;
 import com.redhat.rhevm.api.resource.HostResource;
 import com.redhat.rhevm.api.resource.HostsResource;
 import com.redhat.rhevm.api.resource.HostNicResource;
@@ -77,12 +65,16 @@ import com.redhat.rhevm.api.resource.IsoResource;
 import com.redhat.rhevm.api.resource.IsosResource;
 import com.redhat.rhevm.api.resource.NetworkResource;
 import com.redhat.rhevm.api.resource.NetworksResource;
+import com.redhat.rhevm.api.resource.RoleResource;
+import com.redhat.rhevm.api.resource.RolesResource;
 import com.redhat.rhevm.api.resource.SnapshotResource;
 import com.redhat.rhevm.api.resource.SnapshotsResource;
 import com.redhat.rhevm.api.resource.StorageDomainResource;
 import com.redhat.rhevm.api.resource.StorageDomainsResource;
 import com.redhat.rhevm.api.resource.TemplateResource;
 import com.redhat.rhevm.api.resource.TemplatesResource;
+import com.redhat.rhevm.api.resource.UserResource;
+import com.redhat.rhevm.api.resource.UsersResource;
 import com.redhat.rhevm.api.resource.VmPoolResource;
 import com.redhat.rhevm.api.resource.VmPoolsResource;
 import com.redhat.rhevm.api.resource.VmResource;
@@ -107,9 +99,11 @@ public class LinkHelper {
         TYPES.put(Iso.class,           new ResourceType(IsoResource.class,           IsosResource.class,        DataCenter.class));
         TYPES.put(Network.class,       new ResourceType(NetworkResource.class,       NetworksResource.class));
         TYPES.put(NIC.class,           new ResourceType(DeviceResource.class,        DevicesResource.class,     VM.class));
+        TYPES.put(Role.class,          new ResourceType(RoleResource.class,          RolesResource.class,       User.class, GlobalRolesResource.class));
         TYPES.put(Snapshot.class,      new ResourceType(SnapshotResource.class,      SnapshotsResource.class,   VM.class));
         TYPES.put(StorageDomain.class, new ResourceType(StorageDomainResource.class, StorageDomainsResource.class));
         TYPES.put(Template.class,      new ResourceType(TemplateResource.class,      TemplatesResource.class));
+        TYPES.put(User.class,          new ResourceType(UserResource.class,          UsersResource.class));
         TYPES.put(VM.class,            new ResourceType(VmResource.class,            VmsResource.class));
         TYPES.put(VmPool.class,        new ResourceType(VmPoolResource.class,        VmPoolsResource.class));
     }
@@ -138,7 +132,7 @@ public class LinkHelper {
     }
 
     private static Collection<BaseResource> getInlineResources(Object obj) {
-        ArrayList ret = new ArrayList();
+        ArrayList<BaseResource> ret = new ArrayList<BaseResource>();
 
         for (Method method : obj.getClass().getMethods()) {
             if (method.getName().startsWith("get") &&
@@ -176,9 +170,15 @@ public class LinkHelper {
                                   model.getClass());
             BaseResource parent = getParentModel(model, type.getParentType());
             if (parent == null) {
-                return null;
+                if (type.getAltCollectionType() != null) {
+                    path = getPath(type.getAltCollectionType());
+                    uriBuilder = UriBuilder.fromPath(path);
+                } else {
+                    return null;
+                }
+            } else {
+                uriBuilder = getUriBuilder(parent).path(path);
             }
-            uriBuilder = getUriBuilder(parent).path(path);
         } else {
             String path = getPath(type.getCollectionType());
             uriBuilder = UriBuilder.fromPath(path);
@@ -220,18 +220,24 @@ public class LinkHelper {
         private final Class<?> resourceType;
         private final Class<?> collectionType;
         private final Class<?> parentType;
+        private final Class<?> alternativeCollectionType;
 
-        public ResourceType(Class<?> resourceType, Class<?> collectionType, Class<?> parentType) {
+        public ResourceType(Class<?> resourceType, Class<?> collectionType, Class<?> parentType, Class<?> alternativeCollectionType) {
             this.resourceType = resourceType;
             this.collectionType = collectionType;
             this.parentType = parentType;
+            this.alternativeCollectionType = alternativeCollectionType;
+        }
+        public ResourceType(Class<?> resourceType, Class<?> collectionType, Class<?> parentType) {
+            this(resourceType, collectionType,  parentType, null);
         }
         public ResourceType(Class<?> resourceType, Class<?> collectionType) {
             this(resourceType, collectionType, null);
         }
 
-        public Class<?> getResourceType()   { return resourceType; }
-        public Class<?> getCollectionType() { return collectionType; }
-        public Class<?> getParentType()     { return parentType; }
+        public Class<?> getResourceType()      { return resourceType; }
+        public Class<?> getCollectionType()    { return collectionType; }
+        public Class<?> getParentType()        { return parentType; }
+        public Class<?> getAltCollectionType() { return alternativeCollectionType; }
     }
 }

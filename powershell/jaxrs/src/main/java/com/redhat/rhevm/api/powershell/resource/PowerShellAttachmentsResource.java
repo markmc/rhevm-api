@@ -19,7 +19,6 @@
 package com.redhat.rhevm.api.powershell.resource;
 
 import java.util.List;
-import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -42,19 +41,15 @@ import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
 
 
-public class PowerShellAttachmentsResource implements AttachmentsResource {
+public class PowerShellAttachmentsResource extends AbstractPowerShellResource implements AttachmentsResource {
 
     private String storageDomainId;
-    private Executor executor;
-    private PowerShellPoolMap shellPools;
-    private PowerShellParser parser;
 
     public PowerShellAttachmentsResource(String storageDomainId,
                                          PowerShellPoolMap shellPools,
                                          PowerShellParser parser) {
+        super(shellPools, parser);
         this.storageDomainId = storageDomainId;
-        this.shellPools = shellPools;
-        this.parser = parser;
     }
 
     public static Attachment buildAttachment(DataCenter dataCenter, StorageDomain storageDomain) {
@@ -188,17 +183,5 @@ public class PowerShellAttachmentsResource implements AttachmentsResource {
         }
 
         return attachments;
-    }
-
-    public void setExecutor(Executor executor) {
-        this.executor = executor;
-    }
-
-    protected PowerShellPool getPool() {
-        return shellPools.get();
-    }
-
-    protected PowerShellParser getParser() {
-        return parser;
     }
 }

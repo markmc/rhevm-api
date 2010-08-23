@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<Objects>
+  <Object Type="RhevmCmd.CLIPermission">
+    <Property Name="AdElementId" Type="System.String">cca00b9f-4492-4a82-b71e-082dcdf0fc66</Property>
+    <Property Name="Id" Type="System.String">c2019d88-aa09-45e8-85a8-4db10b033170</Property>
+    <Property Name="IsReadOnly" Type="System.Boolean">False</Property>
+    <Property Name="roleId" Type="System.String">00000000-0000-0000-0001-000000000001</Property>
+    <Property Name="RoleName" Type="System.String">RHEVMUser</Property>
+    <Property Name="Tags" Type="System.Collections.Generic.List`1[[RhevmCmd.CLITag, RHEVMCmd, Version=4.5.0.0, Culture=neutral, PublicKeyToken=8b4f8b6c06b68ee3]]" />
+  </Object>
+</Objects>

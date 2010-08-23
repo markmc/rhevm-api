@@ -1,0 +1,20 @@
+  <!-- args: id, name, unused description, last name, email, domain -->
+  <Object Type="RhevmCmd.CLIUser">
+    <Property Name="UserId" Type="System.String">{0}</Property>
+    <Property Name="Department" Type="System.String" />
+    <Property Name="Domain" Type="System.String">{5}</Property>
+    <Property Name="Email" Type="System.String">{4}</Property>
+    <Property Name="Groups" Type="System.String[]">
+      <Property Type="System.String">Group Policy Creator Owners@some_domain.local/Users</Property>
+      <Property Type="System.String">Domain Admins@some_domain.local/Users</Property>
+      <Property Type="System.String">Enterprise Admins@some_domain.local/Users</Property>
+      <Property Type="System.String">Schema Admins@some_domain.local/Users</Property>
+      <Property Type="System.String">Administrators@some_domain.local/Builtin</Property>
+    </Property>
+    <Property Name="Name" Type="System.String">{1}</Property>
+    <Property Name="Status" Type="System.String">Active</Property>
+    <Property Name="LastName" Type="System.String">{3}</Property>
+    <Property Name="UserName" Type="System.String">{1}@{5}</Propert
+y>
+    <Property Name="IsLoggedIn" Type="System.Boolean">False</Property>
+  </Object>

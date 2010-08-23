@@ -44,6 +44,14 @@
         lazy-init="true"
         class="com.redhat.rhevm.api.powershell.resource.PowerShellVmPoolsResource"/>
 
+  <bean id="powerShellGlobalRolesResource"
+        lazy-init="true"
+        class="com.redhat.rhevm.api.powershell.resource.PowerShellGlobalRolesResource"/>
+
+  <bean id="powerShellUsersResource"
+        lazy-init="true"
+        class="com.redhat.rhevm.api.powershell.resource.PowerShellUsersResource"/>
+
   <bean id="powerShellCapabilitiesResource"
         class="com.redhat.rhevm.api.common.resource.DefaultCapabilitiesResource"/>
 

@@ -18,7 +18,6 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import java.lang.annotation.Annotation;
 import java.net.URI;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -88,7 +87,6 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
     private static final String REMOVE_COMMAND = "remove-{0} -{0}id \"" + "eris".hashCode() + "\"";
 
     private static final String SEARCH_OPTION = " -searchtext ";
-    private static final String QUERY = "name=*r*s";
 
     private static final String SLASH = "/";
     protected static final String[] NOTHING = null;
@@ -212,7 +210,6 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
         return setUpPoolExpectations(1);
     }
 
-
     protected PowerShellPool setUpPoolExpectations(int times) {
         PowerShellPoolMap poolMap = createMock(PowerShellPoolMap.class);
         resource.setPowerShellPoolMap(poolMap);
@@ -242,18 +239,6 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
 
     protected String getQueryCommand(Class<?> clz) {
         return getSelectCommand() + SEARCH_OPTION + "\"" + QueryHelper.RETURN_TYPES.get(clz) + QUERY + "\"";
-    }
-
-    protected QueryParam getQueryParam() {
-        return new QueryParam() {
-            public String value() {
-                return QUERY;
-            }
-            @Override
-            public Class<? extends Annotation> annotationType() {
-                return null;
-            }
-        };
     }
 
     protected String getAddCommand(boolean async) {
