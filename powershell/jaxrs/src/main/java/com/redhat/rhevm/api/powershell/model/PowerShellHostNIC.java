@@ -42,13 +42,17 @@ public class PowerShellHostNIC {
             nic.setHost(new Host());
             nic.getHost().setId(hostId);
 
-            Network network = new Network();
-            network.setName(entity.get("network"));
-            nic.setNetwork(network);
+            if (entity.get("network") != null) {
+                Network network = new Network();
+                network.setName(entity.get("network"));
+                nic.setNetwork(network);
+            }
 
-            MAC mac = new MAC();
-            mac.setAddress(entity.get("macaddress"));
-            nic.setMac(mac);
+            if (entity.get("macaddress") != null) {
+                MAC mac = new MAC();
+                mac.setAddress(entity.get("macaddress"));
+                nic.setMac(mac);
+            }
 
             if (entity.get("address") != null ||
                 entity.get("subnet") != null ||

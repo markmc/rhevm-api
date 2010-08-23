@@ -17,4 +17,58 @@
     <Property Name="IsBond" Type="System.Boolean">False</Property>
     <Property Name="BondInterfaces" Type="System.String[]" />
   </Object>
+  <Object Type="RhevmCmd.CLIHostNetworkAdapter">
+    <Property Name="Id" Type="System.String">69f21fcc-87a0-4f3b-8e7c-9919a5844283</Property>
+    <Property Name="Gateway" Type="System.String" />
+    <Property Name="Subnet" Type="System.String" />
+    <Property Name="Address" Type="System.String" />
+    <Property Name="Speed" Type="System.Int32">10</Property>
+    <Property Name="VlanId" Type="System.Int32">0</Property>
+    <Property Name="BondType" Type="System.Int32">0</Property>
+    <Property Name="BondName" Type="System.String">bond0</Property>
+    <Property Name="MacAddress" Type="System.String">2E:C2:E3:BF:9E:27</Property>
+    <Property Name="Name" Type="System.String">dummy0</Property>
+    <Property Name="Network" Type="System.String" />
+    <Property Name="LineSpeed" Type="System.Int32">10</Property>
+    <Property Name="TxDropped" Type="System.Double">56</Property>
+    <Property Name="IsBond" Type="System.Boolean">False</Property>
+    <Property Name="BondInterfaces" Type="System.String[]" />
+  </Object>
+  <Object Type="RhevmCmd.CLIHostNetworkAdapter">
+    <Property Name="Id" Type="System.String">c7d29e94-036b-4c99-ad2d-344497ed5d37</Property>
+    <Property Name="Gateway" Type="System.String" />
+    <Property Name="Subnet" Type="System.String" />
+    <Property Name="Address" Type="System.String" />
+    <Property Name="Speed" Type="System.Int32">10</Property>
+    <Property Name="VlanId" Type="System.Int32">0</Property>
+    <Property Name="BondType" Type="System.Int32">0</Property>
+    <Property Name="BondName" Type="System.String">bond0</Property>
+    <Property Name="MacAddress" Type="System.String">2E:C2:E3:BF:9E:27</Property>
+    <Property Name="Name" Type="System.String">dummy1</Property>
+    <Property Name="Network" Type="System.String" />
+    <Property Name="LineSpeed" Type="System.Int32">10</Property>
+    <Property Name="TxDropped" Type="System.Double">55</Property>
+    <Property Name="IsBond" Type="System.Boolean">False</Property>
+    <Property Name="BondInterfaces" Type="System.String[]" />
+  </Object>
+  <Object Type="RhevmCmd.CLIHostNetworkAdapter">
+    <Property Name="Id" Type="System.String">041f8795-b157-400d-ae20-d544f8d8c1d0</Property>
+    <Property Name="Gateway" Type="System.String" />
+    <Property Name="Subnet" Type="System.String" />
+    <Property Name="Address" Type="System.String" />
+    <Property Name="Speed" Type="System.Int32">0</Property>
+    <Property Name="VlanId" Type="System.Int32">0</Property>
+    <Property Name="BondType" Type="System.Int32">0</Property>
+    <Property Name="BondName" Type="System.String" />
+    <Property Name="MacAddress" Type="System.String" />
+    <Property Name="Name" Type="System.String">bond0</Property>
+    <Property Name="Network" Type="System.String">test</Property>
+    <Property Name="LineSpeed" Type="System.Int32">0</Property>
+    <Property Name="TxDropped" Type="System.Double">0</Property>
+    <Property Name="IsBond" Type="System.Boolean">True</Property>
+    <Property Name="BondInterfaces" Type="System.String[]">
+      <Property Type="System.String">dummy1</Property>
+      <Property Type="System.String">dummy0</Property>
+    </Property>
+  </Object>
 </Objects>
