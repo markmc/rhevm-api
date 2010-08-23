@@ -49,9 +49,6 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
         super(id, executor, shellPools, parser);
     }
 
-    /* needed because there are two get-host commands */
-    private static final String CMD_PREFIX = "rhevmpssnapin\\";
-
     public static List<Host> runAndParse(PowerShellPool pool, PowerShellParser parser, String command) {
         return PowerShellHost.parse(parser, PowerShellCmd.runCommand(pool, command));
     }
@@ -83,7 +80,7 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
 
     @Override
     public Host get(UriInfo uriInfo) {
-        return addLinks(runAndParseSingle(CMD_PREFIX + "get-host " + PowerShellUtils.escape(getId())));
+        return addLinks(runAndParseSingle("get-host " + PowerShellUtils.escape(getId())));
     }
 
     @Override
@@ -92,7 +89,7 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
 
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$h = " + CMD_PREFIX + "get-host " + PowerShellUtils.escape(getId()) + ";");
+        buf.append("$h = get-host " + PowerShellUtils.escape(getId()) + ";");
 
         if (host.getName() != null) {
             buf.append("$h.name = " + PowerShellUtils.escape(host.getName()) + ";");
@@ -141,7 +138,7 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
         private PowerShellPool pool;
 
         HostInstaller(Action action, String rootPassword, PowerShellPool pool) {
-            super(action, "$h = " + CMD_PREFIX + "get-host ");
+            super(action, "$h = get-host ");
             this.rootPassword = rootPassword;
             this.pool = pool;
         }

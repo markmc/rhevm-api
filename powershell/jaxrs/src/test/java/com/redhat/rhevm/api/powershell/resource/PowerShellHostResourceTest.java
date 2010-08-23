@@ -49,11 +49,11 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
     private static final String HOST_NAME = "sedna";
     private static final String HOST_ID = Integer.toString(HOST_NAME.hashCode());
 
-    private static final String GET_COMMAND = "rhevmpssnapin\\get-host \"" + HOST_ID + "\"";
+    private static final String GET_COMMAND = "get-host \"" + HOST_ID + "\"";
     private static final String ACTION_RETURN = "replace with realistic powershell return";
-    private static final String UPDATE_COMMAND = "$h = rhevmpssnapin\\get-host \"" + HOST_ID + "\";$h.name = \"eris\";update-host -hostobject $h";
+    private static final String UPDATE_COMMAND = "$h = get-host \"" + HOST_ID + "\";$h.name = \"eris\";update-host -hostobject $h";
     private static final String INSTALL_PASSWORD = "boldlygoingnowhere";
-    private static final String INSTALL_COMMAND = "$h = rhevmpssnapin\\get-host \"" + HOST_ID + "\";update-host -hostobject $h -install -rootpassword \"" + INSTALL_PASSWORD + "\"";
+    private static final String INSTALL_COMMAND = "$h = get-host \"" + HOST_ID + "\";update-host -hostobject $h -install -rootpassword \"" + INSTALL_PASSWORD + "\"";
     private static final String COMMIT_NET_CONFIG_COMMAND = "$h = get-host \"" + HOST_ID + "\"; commit-configurationchanges -hostobject $h";
 
     protected PowerShellHostResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser) {
