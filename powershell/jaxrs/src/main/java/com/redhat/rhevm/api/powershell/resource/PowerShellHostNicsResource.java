@@ -22,11 +22,13 @@ import java.util.List;
 import java.util.concurrent.Executor;
 
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.UriBuilder;
 
 import com.redhat.rhevm.api.resource.MediaType;
 
 import com.redhat.rhevm.api.model.HostNIC;
 import com.redhat.rhevm.api.model.HostNics;
+import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
@@ -89,6 +91,10 @@ public class PowerShellHostNicsResource implements HostNicsResource {
      * @return     the modified host NIC
      */
     private HostNIC lookupNetworkId(HostNIC nic) {
+        if (!nic.isSetNetwork()) {
+            return nic;
+        }
+
         StringBuilder buf = new StringBuilder();
 
         buf.append("$n = get-networks; ");
@@ -105,10 +111,63 @@ public class PowerShellHostNicsResource implements HostNicsResource {
         return nic;
     }
 
+    private PowerShellHostNIC lookupBonds(PowerShellHostNIC nic) {
+        if (nic.getBondName() == null && nic.getBondInterfaces().size() == 0) {
+            return nic;
+        }
+
+        StringBuilder buf = new StringBuilder();
+
+        buf.append("$h = get-host " + PowerShellUtils.escape(hostId) + "; ");
+        buf.append("foreach ($n in $h.getnetworkadapters()) { ");
+        if (nic.getBondName() != null) {
+            buf.append("if ($n.name -eq " + PowerShellUtils.escape(nic.getBondName()) + ") { $n } ");
+        } else {
+            for (String name : nic.getBondInterfaces()) {
+                buf.append("if ($n.name -eq " + PowerShellUtils.escape(name) + ") { $n } ");
+            }
+        }
+        buf.append("}");
+
+        List<PowerShellHostNIC> bondNics = runAndParse(buf.toString());
+
+        if (nic.getBondName() != null) {
+            String masterId = bondNics.get(0).getId();
+
+            UriBuilder uriBuilder = LinkHelper.getUriBuilder(nic.getHost()).path("nics");
+
+            Link master = new Link();
+            master.setRel("master");
+            master.setHref(uriBuilder.clone().path(masterId).build().toString());
+            nic.getLinks().add(master);
+        } else {
+            nic.setSlaves(new HostNics());
+            for (PowerShellHostNIC bond : bondNics) {
+                HostNIC slave = new HostNIC();
+                slave.setId(bond.getId());
+                slave.setHost(bond.getHost());
+                nic.getSlaves().getHostNics().add(slave);
+            }
+        }
+
+        return nic;
+    }
+
     public HostNIC addLinks(PowerShellHostNIC nic) {
+        nic = lookupBonds(nic);
+
         HostNIC ret = JAXBHelper.clone("host_nic", HostNIC.class, nic);
 
-        return LinkHelper.addLinks(lookupNetworkId(ret));
+        ret = LinkHelper.addLinks(lookupNetworkId(ret));
+
+        if (ret.getSlaves() != null) {
+            /* Host reference was only needed for link building above */
+            for (HostNIC slave : ret.getSlaves().getHostNics()) {
+                slave.setHost(null);
+            }
+        }
+
+        return ret;
     }
 
     public PowerShellHostNIC getHostNic(String nicId) {

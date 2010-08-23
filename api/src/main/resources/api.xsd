@@ -1019,6 +1019,7 @@
   <xs:element name="host_nic" type="HostNIC"/>
 
   <xs:element name="host_nics" type="HostNics"/>
+  <xs:element name="slaves" type="HostNics"/>
 
   <xs:complexType name="HostNIC">
     <xs:complexContent>
@@ -1029,6 +1030,8 @@
           <xs:element ref="mac" minOccurs="0"/>
           <xs:element ref="ip" minOccurs="0"/>
           <xs:element ref="vlan" minOccurs="0"/>
+          <xs:element ref="slaves" minOccurs="0"/>
+          <!-- Also a rel="master" link for bonded nics -->
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
