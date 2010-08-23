@@ -56,8 +56,7 @@ public class PowerShellUsersResource extends AbstractPowerShellResource implemen
 
     @Override
     public Response add(UriInfo uriInfo, User user) {
-        // REVISIT support alternatives on top-level fields, list types
-        // validateParameters(user, "userName|id", "roles.roles.id|name");
+        validateParameters(user, "userName|id", "roles.id|name");
         StringBuilder buf = new StringBuilder();
 
         String userArg = null;

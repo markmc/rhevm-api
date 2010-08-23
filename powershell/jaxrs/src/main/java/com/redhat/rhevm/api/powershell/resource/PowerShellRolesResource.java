@@ -75,8 +75,7 @@ public class PowerShellRolesResource extends AbstractPowerShellResource implemen
 
     @Override
     public Response add(UriInfo uriInfo, Role role) {
-        // REVISIT support alternatives on top-level fields,
-        // validateParameters(role, "name|id");
+        validateParameters(role, "name|id");
         StringBuilder buf = new StringBuilder();
 
         String roleArg = getRoleArg(role, buf);
