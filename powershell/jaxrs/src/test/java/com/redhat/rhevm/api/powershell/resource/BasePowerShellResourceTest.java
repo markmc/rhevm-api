@@ -24,16 +24,20 @@ import java.util.Arrays;
 
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 
 import org.junit.Assert;
 import org.junit.Ignore;
 
+import com.redhat.rhevm.api.model.BaseResource;
 import com.redhat.rhevm.api.model.Fault;
 import com.redhat.rhevm.api.powershell.util.PowerShellTestUtils;
 
 @Ignore
 public class BasePowerShellResourceTest extends Assert {
 
+    protected static final String URI_ROOT = "http://localhost:8099";
+    protected static final String SLASH = "/";
     protected static final String QUERY = "name=*r*s";
 
     protected String formatXmlReturn(String type, String[] names, String[] descriptions, String[] args) {
@@ -98,4 +102,35 @@ public class BasePowerShellResourceTest extends Assert {
         };
     }
 
+    protected void verifyResponse(Response r, String name, String description, String collectionName) {
+        assertEquals("unexpected status", 201, r.getStatus());
+        Object entity = r.getEntity();
+        assertTrue("expect response entity", entity instanceof BaseResource);
+        BaseResource model = (BaseResource)entity;
+        assertEquals(Integer.toString(name.hashCode()), model.getId());
+        assertEquals(name, model.getName());
+        assertEquals(description, model.getDescription());
+        assertNotNull(r.getMetadata().get("Location"));
+        assertTrue("expected location header",
+                   r.getMetadata().get("Location").size() > 0);
+        assertEquals("unexpected location header",
+                     URI_ROOT + SLASH + collectionName + SLASH + name.hashCode(),
+                     r.getMetadata().get("Location").get(0).toString());
+    }
+
+    protected static String[] asArray(String s) {
+        return new String[] { s };
+    }
+
+    protected static String[] asArrayV(String... s) {
+        return s ;
+    }
+
+    protected static String[][] asArray(String[] a) {
+        return new String[][] { a };
+    }
+
+    protected static String asId(String name) {
+        return Integer.toString(name.hashCode());
+    }
 }

@@ -1,4 +1,3 @@
-
 /*
  * Copyright © 2010 Red Hat, Inc.
  *
@@ -19,12 +18,14 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Link;
@@ -36,8 +37,6 @@ import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 
-import org.junit.Test;
-
 import static org.easymock.EasyMock.expect;
 
 import static org.powermock.api.easymock.PowerMock.createMock;
@@ -45,7 +44,7 @@ import static org.powermock.api.easymock.PowerMock.mockStatic;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 
 
-public class PowerShellUsersResourceTest extends AbstractPowerShellSimpleResourceTest<Role, PowerShellUsersResource> {
+public abstract class AbstractPowerShellUsersResourceTest<A extends AbstractPowerShellResource>  extends AbstractPowerShellSimpleResourceTest<Role, A> {
 
     static final String FIRST_NAME = "Sylvester";
     static final String LAST_NAME = "McMonkey McBean";
@@ -55,8 +54,6 @@ public class PowerShellUsersResourceTest extends AbstractPowerShellSimpleResourc
     static final String DOMAIN_NAME = "sneetch.beach";
     static final String[] FORMAT_ARGS = { LAST_NAME, EMAIL, DOMAIN_NAME } ;
 
-    protected static final String SELECT_COMMAND = "select-user -searchtext \"" + QUERY + "\"";
-
     protected String formatUser(String name) {
         return formatXmlReturn("user",
                                new String[] { name },
@@ -64,27 +61,28 @@ public class PowerShellUsersResourceTest extends AbstractPowerShellSimpleResourc
                                FORMAT_ARGS);
     }
 
-    protected PowerShellUsersResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser) {
-        PowerShellUsersResource resource = new PowerShellUsersResource();
-        resource.setExecutor(executor);
-        resource.setPowerShellPoolMap(poolMap);
-        resource.setParser(parser);
-        return resource;
+    protected abstract A getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser);
+
+    protected void setUpUserExpectations(String[] commands, String[] returns) throws Exception {
+        setUpUserExpectations(commands, returns, false);
     }
 
-    @Test
-    public void testList() throws Exception {
-        setUpUserExpectations(SELECT_COMMAND, formatUser(USER_NAME));
-        verifyUsers(resource.list(setUpUriExpectations(getQueryParam())));
-    }
-
-    protected void setUpUserExpectations(String command, String ret) throws Exception {
+    protected void setUpUserExpectations(String[] commands, String[] returns, boolean replay) throws Exception {
         mockStatic(PowerShellCmd.class);
-        expect(PowerShellCmd.runCommand(setUpPoolExpectations(), command)).andReturn(ret);
+        for (int i = 0 ; i < commands.length ; i++) {
+            expect(PowerShellCmd.runCommand(setUpPoolExpectations(), commands[i])).andReturn(returns[i]);
+        }
+        if (replay) {
+            replayAll();
+        }
+    }
+
+    protected UriInfo setUpUriExpectations(QueryParam query) throws Exception {
+        return setUpUriExpectations(query, false);
     }
 
     @SuppressWarnings("unchecked")
-    protected UriInfo setUpUriExpectations(QueryParam query) throws Exception {
+    protected UriInfo setUpUriExpectations(QueryParam query, boolean add) throws Exception {
         UriInfo uriInfo = createMock(UriInfo.class);
         if (query != null) {
             MultivaluedMap<String, String> queries = createMock(MultivaluedMap.class);
@@ -94,6 +92,13 @@ public class PowerShellUsersResourceTest extends AbstractPowerShellSimpleResourc
             expect(uriInfo.getQueryParameters()).andReturn(queries).anyTimes();
         } else {
             expect(uriInfo.getQueryParameters()).andReturn(null).anyTimes();
+        }
+        if (add) {
+            String href = URI_ROOT + SLASH + "users" + SLASH + USER_ID;
+            UriBuilder uriBuilder = createMock(UriBuilder.class);
+            expect(uriInfo.getAbsolutePathBuilder()).andReturn(uriBuilder);
+            expect(uriBuilder.path(USER_ID)).andReturn(uriBuilder);
+            expect(uriBuilder.build()).andReturn(new URI(href)).anyTimes();
         }
         replayAll();
         return uriInfo;
@@ -129,4 +134,3 @@ public class PowerShellUsersResourceTest extends AbstractPowerShellSimpleResourc
         assertTrue(hasRoles);
     }
 }
-

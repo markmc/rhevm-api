@@ -64,8 +64,6 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
                                                                T extends AbstractPowerShellCollectionResource<R, U>>
     extends BasePowerShellResourceTest {
 
-    private static final String URI_ROOT = "http://localhost:8099";
-
     protected static final String[] NAMES = {"sedna", "eris", "orcus"};
     protected static final String[] NAMES_SUBSET = {"eris", "orcus"};
     protected static final String NEW_NAME = "ceres";
@@ -88,7 +86,6 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
 
     private static final String SEARCH_OPTION = " -searchtext ";
 
-    private static final String SLASH = "/";
     protected static final String[] NOTHING = null;
 
     protected T resource;
@@ -263,19 +260,7 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
     }
 
     protected void verifyResponse(Response r, String name, String description) {
-        assertEquals("unexpected status", 201, r.getStatus());
-        Object entity = r.getEntity();
-        assertTrue("expect response entity", entity instanceof BaseResource);
-        BaseResource model = (BaseResource)entity;
-        assertEquals(Integer.toString(name.hashCode()), model.getId());
-        assertEquals(name, model.getName());
-        assertEquals(description, model.getDescription());
-        assertNotNull(r.getMetadata().get("Location"));
-        assertTrue("expected location header",
-                   r.getMetadata().get("Location").size() > 0);
-        assertEquals("unexpected location header",
-                     URI_ROOT + SLASH + collectionName + SLASH + name.hashCode(),
-                     r.getMetadata().get("Location").get(0).toString());
+        verifyResponse(r, name, description, collectionName);
     }
 
     protected void verifyCollection(List<R> collection, String[] names, String[] descriptions) {
@@ -293,10 +278,6 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
         assertNotNull(resource);
         assertEquals(resource.getId(), Integer.toString(name.hashCode()));
         assertSame(resource.getExecutor(), executor);
-    }
-
-    protected static String[] asArray(String s) {
-        return new String[] { s };
     }
 
     protected abstract T getResource();

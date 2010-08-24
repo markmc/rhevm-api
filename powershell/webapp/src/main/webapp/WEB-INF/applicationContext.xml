@@ -48,9 +48,9 @@
         lazy-init="true"
         class="com.redhat.rhevm.api.powershell.resource.PowerShellGlobalRolesResource"/>
 
-  <bean id="powerShellUsersResource"
+  <bean id="powerShellGlobalUsersResource"
         lazy-init="true"
-        class="com.redhat.rhevm.api.powershell.resource.PowerShellUsersResource"/>
+        class="com.redhat.rhevm.api.powershell.resource.PowerShellGlobalUsersResource"/>
 
   <bean id="powerShellCapabilitiesResource"
         class="com.redhat.rhevm.api.common.resource.DefaultCapabilitiesResource"/>

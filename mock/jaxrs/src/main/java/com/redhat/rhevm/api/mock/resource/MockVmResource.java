@@ -28,6 +28,7 @@ import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.resource.DevicesResource;
 import com.redhat.rhevm.api.resource.SnapshotsResource;
+import com.redhat.rhevm.api.resource.UsersResource;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
@@ -145,4 +146,5 @@ public class MockVmResource extends AbstractMockResource<VM> implements VmResour
     @Override public DevicesResource   getDisksResource()     { return null; }
     @Override public DevicesResource   getNicsResource()      { return null; }
     @Override public SnapshotsResource getSnapshotsResource() { return null; }
+    @Override public UsersResource     getUsersResource()     { return null; }
 }

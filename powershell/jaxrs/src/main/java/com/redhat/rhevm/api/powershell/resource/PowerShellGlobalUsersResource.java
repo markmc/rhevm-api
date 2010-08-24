@@ -31,11 +31,11 @@ import com.redhat.rhevm.api.model.Users;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 import com.redhat.rhevm.api.resource.UserResource;
-import com.redhat.rhevm.api.resource.UsersResource;
+import com.redhat.rhevm.api.resource.GlobalUsersResource;
 
 import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
 
-public class PowerShellUsersResource extends AbstractPowerShellResource implements UsersResource {
+public class PowerShellGlobalUsersResource extends AbstractPowerShellResource implements GlobalUsersResource {
 
     public List<User> runAndParse(String command) {
         return PowerShellUserResource.runAndParse(getPool(), getParser(), command);
@@ -61,10 +61,11 @@ public class PowerShellUsersResource extends AbstractPowerShellResource implemen
 
         String userArg = null;
         if (user.isSetId()) {
+            System.out.println("id is set");
             userArg = PowerShellUtils.escape(user.getId());
         } else {
             buf.append("$u = select-user -AD").append(SEARCH_TEXT);
-            buf.append(PowerShellUtils.escape(user.getUserName())).append(";");
+            buf.append(PowerShellUtils.escape(user.getUserName())).append("; ");
             userArg = "$u.UserId";
         }
 

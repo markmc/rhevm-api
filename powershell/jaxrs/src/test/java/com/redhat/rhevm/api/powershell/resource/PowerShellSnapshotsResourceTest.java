@@ -234,16 +234,4 @@ public class PowerShellSnapshotsResourceTest
             verifySnapshot(snapshots.getSnapshots().get(i), i);
         }
     }
-
-    private static String asId(String name) {
-        return Integer.toString(name.hashCode());
-    }
-
-    protected static String[] asArray(String s) {
-        return new String[] { s };
-    }
-
-    protected static String[][] asArray(String[] a) {
-        return new String[][] { a };
-    }
 }

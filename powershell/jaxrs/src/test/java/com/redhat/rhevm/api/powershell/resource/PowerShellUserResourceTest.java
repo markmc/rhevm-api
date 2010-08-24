@@ -32,10 +32,10 @@ import static org.easymock.EasyMock.expect;
 
 import static org.powermock.api.easymock.PowerMock.mockStatic;
 import static org.powermock.api.easymock.PowerMock.replayAll;
-import static com.redhat.rhevm.api.powershell.resource.PowerShellUsersResourceTest.FORMAT_ARGS;
-import static com.redhat.rhevm.api.powershell.resource.PowerShellUsersResourceTest.USER_ID;
-import static com.redhat.rhevm.api.powershell.resource.PowerShellUsersResourceTest.USER_NAME;
-import static com.redhat.rhevm.api.powershell.resource.PowerShellUsersResourceTest.verifyUser;
+import static com.redhat.rhevm.api.powershell.resource.AbstractPowerShellUsersResourceTest.FORMAT_ARGS;
+import static com.redhat.rhevm.api.powershell.resource.AbstractPowerShellUsersResourceTest.USER_ID;
+import static com.redhat.rhevm.api.powershell.resource.AbstractPowerShellUsersResourceTest.USER_NAME;
+import static com.redhat.rhevm.api.powershell.resource.AbstractPowerShellUsersResourceTest.verifyUser;
 
 public class PowerShellUserResourceTest extends AbstractPowerShellSimpleResourceTest<User, PowerShellUserResource> {
 
@@ -61,30 +61,4 @@ public class PowerShellUserResourceTest extends AbstractPowerShellSimpleResource
         expect(PowerShellCmd.runCommand(setUpPoolExpectations(), command)).andReturn(ret);
         replayAll();
     }
-
-    /*
-    private void verifyUser(User user) {
-        assertNotNull(user);
-        assertEquals(USER_ID, user.getId());
-        assertEquals(USER_NAME, user.getName());
-        assertEquals(USER_NAME + "@" + DOMAIN_NAME, user.getUserName());
-        assertEquals(LAST_NAME, user.getLastName());
-        assertEquals(EMAIL, user.getEmail());
-        assertEquals(DOMAIN_NAME, user.getDomain());
-        verifyRoles(user.getLinks());
-    }
-
-    private void verifyRoles(List<Link> links) {
-        assertNotNull(links);
-        assertTrue(!links.isEmpty());
-        boolean hasRoles = false;
-        for (Link link : links) {
-            assertTrue(link.isSetHref());
-            if (hasRoles = "roles".equals(link.getRel())) {
-                break;
-            }
-        }
-        assertTrue(hasRoles);
-    }
-    */
 }

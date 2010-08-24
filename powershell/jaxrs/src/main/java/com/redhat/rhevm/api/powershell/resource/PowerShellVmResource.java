@@ -30,6 +30,7 @@ import com.redhat.rhevm.api.model.Display;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.Ticket;
 import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.model.VmType;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
@@ -75,10 +76,11 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
         ret.getLinks().clear();
 
         for (String collection : deviceCollections) {
-            Link link = new Link();
-            link.setRel(collection);
-            link.setHref(LinkHelper.getUriBuilder(ret).path(collection).build().toString());
-            ret.getLinks().add(link);
+            addSubCollection(ret, collection);
+        }
+
+        if (VmType.DESKTOP.equals(ret.getType())) {
+            addSubCollection(ret, "users");
         }
 
         return LinkHelper.addLinks(ret);
@@ -241,5 +243,17 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
     @Override
     public PowerShellSnapshotsResource getSnapshotsResource() {
         return new PowerShellSnapshotsResource(getId(), getExecutor(), shellPools, getParser());
+    }
+
+    @Override
+    public PowerShellUsersSubResource getUsersResource() {
+        return new PowerShellUsersSubResource(getId(), getExecutor(), shellPools, getParser());
+    }
+
+    private static void addSubCollection(VM vm, String collection) {
+        Link link = new Link();
+        link.setRel(collection);
+        link.setHref(LinkHelper.getUriBuilder(vm).path(collection).build().toString());
+        vm.getLinks().add(link);
     }
 }

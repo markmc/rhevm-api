@@ -36,7 +36,7 @@ import com.redhat.rhevm.api.resource.RoleResource;
 import com.redhat.rhevm.api.resource.RolesResource;
 
 import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
-import static com.redhat.rhevm.api.powershell.resource.PowerShellUsersResource.getRoleArg;
+import static com.redhat.rhevm.api.powershell.resource.PowerShellGlobalUsersResource.getRoleArg;
 
 public class PowerShellRolesResource extends AbstractPowerShellResource implements RolesResource {
 

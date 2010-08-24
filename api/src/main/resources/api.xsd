@@ -820,6 +820,7 @@
             </xs:element>
             <!-- also rel="cdroms/disks/nics" links, see Devices below -->
             <!-- also rel="snapshots" links, see Snapshots below -->
+            <!-- also rel="users" links, see Users above -->
           </xs:sequence>
         </xs:extension>
       </xs:complexContent>

@@ -72,6 +72,7 @@ import com.redhat.rhevm.api.resource.StorageDomainsResource;
 import com.redhat.rhevm.api.resource.TemplateResource;
 import com.redhat.rhevm.api.resource.TemplatesResource;
 import com.redhat.rhevm.api.resource.UserResource;
+import com.redhat.rhevm.api.resource.GlobalUsersResource;
 import com.redhat.rhevm.api.resource.UsersResource;
 import com.redhat.rhevm.api.resource.VmPoolResource;
 import com.redhat.rhevm.api.resource.VmPoolsResource;
@@ -97,11 +98,12 @@ public class LinkHelper {
         TYPES.put(Iso.class,           new ResourceType(IsoResource.class,           IsosResource.class,        DataCenter.class));
         TYPES.put(Network.class,       new ResourceType(NetworkResource.class,       NetworksResource.class));
         TYPES.put(NIC.class,           new ResourceType(DeviceResource.class,        DevicesResource.class,     VM.class));
-        TYPES.put(Role.class,          new ResourceType(RoleResource.class,          RolesResource.class,       User.class, GlobalRolesResource.class));
+        TYPES.put(Role.class,          new ResourceType(RoleResource.class,          RolesResource.class,       User.class,       GlobalRolesResource.class));
         TYPES.put(Snapshot.class,      new ResourceType(SnapshotResource.class,      SnapshotsResource.class,   VM.class));
         TYPES.put(StorageDomain.class, new ResourceType(StorageDomainResource.class, StorageDomainsResource.class));
         TYPES.put(Template.class,      new ResourceType(TemplateResource.class,      TemplatesResource.class));
-        TYPES.put(User.class,          new ResourceType(UserResource.class,          UsersResource.class));
+        // REVISIT: will need the concept of multiple parent types, both VM and VmPool for User
+        TYPES.put(User.class,          new ResourceType(UserResource.class,          UsersResource.class,       VM.class,         GlobalUsersResource.class));
         TYPES.put(VM.class,            new ResourceType(VmResource.class,            VmsResource.class));
         TYPES.put(VmPool.class,        new ResourceType(VmPoolResource.class,        VmPoolsResource.class));
     }

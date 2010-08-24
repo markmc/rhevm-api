@@ -33,8 +33,9 @@ import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 import com.redhat.rhevm.api.model.User;
 import com.redhat.rhevm.api.model.Users;
 
-
-@Path("/users")
+/**
+ * Represents a users sub-collection, for example scoped by VM.
+ */
 @Produces(MediaType.APPLICATION_XML)
 public interface UsersResource {
 

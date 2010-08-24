@@ -30,35 +30,34 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
-import com.redhat.rhevm.api.model.Role;
-import com.redhat.rhevm.api.model.Roles;
+import com.redhat.rhevm.api.model.User;
+import com.redhat.rhevm.api.model.Users;
 
-/**
- * Represents a roles sub-collection, for example scoped by User.
- */
+
+@Path("/users")
 @Produces(MediaType.APPLICATION_XML)
-public interface RolesResource {
+public interface GlobalUsersResource {
 
     @GET
     @Formatted
-    public Roles list();
+    public Users list(@Context UriInfo uriInfo);
 
     @POST
     @Formatted
     @Consumes(MediaType.APPLICATION_XML)
-    public Response add(@Context UriInfo uriInfo, Role role);
+    public Response add(@Context UriInfo uriInfo, User User);
 
     @DELETE
     @Path("{id}")
     public void remove(@PathParam("id") String id);
 
     /**
-     * Sub-resource locator method, returns individual RoleResource on which the
+     * Sub-resource locator method, returns individual UserResource on which the
      * remainder of the URI is dispatched.
      *
-     * @param id  the Role ID
+     * @param id  the User ID
      * @return    matching subresource if found
      */
     @Path("{id}")
-    public RoleResource getRoleSubResource(@PathParam("id") String id);
+    public UserResource getUserSubResource(@Context UriInfo uriInfo, @PathParam("id") String id);
 }
