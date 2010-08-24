@@ -66,7 +66,7 @@ public class PowerShellHostNicResource
 
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$host = get-host " + PowerShellUtils.escape(parent.getHostId()) + "; ");
+        buf.append("$h = get-host " + PowerShellUtils.escape(parent.getHostId()) + "; ");
 
         buf.append("foreach ($n in get-networks) { ");
         if (action.getNetwork().isSetId()) {
@@ -78,14 +78,14 @@ public class PowerShellHostNicResource
         buf.append("} ");
         buf.append("} ");
 
-        buf.append("foreach ($n in $host.getnetworkadapters()) { ");
+        buf.append("foreach ($n in $h.getnetworkadapters()) { ");
         buf.append("if ($n.id -eq " + PowerShellUtils.escape(getId()) + ") { ");
         buf.append("$nic = $n; break ");
         buf.append("} ");
         buf.append("} ");
 
         buf.append(command);
-        buf.append(" -hostobject $host");
+        buf.append(" -hostobject $h");
         buf.append(" -network $net");
         buf.append(" -networkadapter $nic");
 

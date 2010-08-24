@@ -1,4 +1,4 @@
-  <!-- args: id, name, description, network, mac, ip, subnet -->
+  <!-- args: id, name, description, network, mac, ip, subnet, isBond, bondXml -->
   <Object Type="RhevmCmd.CLIHostNetworkAdapter">
     <Property Name="Id" Type="System.String">{0}</Property>
     <Property Name="Gateway" Type="System.String" />
@@ -13,6 +13,6 @@
     <Property Name="Network" Type="System.String">{3}</Property>
     <Property Name="LineSpeed" Type="System.Int32">100</Property>
     <Property Name="TxDropped" Type="System.Double">0</Property>
-    <Property Name="IsBond" Type="System.Boolean">False</Property>
-    <Property Name="BondInterfaces" Type="System.String[]" />
+    <Property Name="IsBond" Type="System.Boolean">{7}</Property>
+    {8}
   </Object>

@@ -22,7 +22,9 @@ import java.util.List;
 import java.util.concurrent.Executor;
 
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.resource.MediaType;
 
@@ -41,6 +43,8 @@ import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 import com.redhat.rhevm.api.resource.HostNicResource;
 import com.redhat.rhevm.api.resource.HostNicsResource;
+
+import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
 
 @Produces(MediaType.APPLICATION_XML)
 public class PowerShellHostNicsResource implements HostNicsResource {
@@ -196,6 +200,75 @@ public class PowerShellHostNicsResource implements HostNicsResource {
             ret.getHostNics().add(addLinks(nic));
         }
         return ret;
+    }
+
+    @Override
+    public Response add(UriInfo uriInfo, HostNIC nic) {
+        validateParameters(nic, "name", "network.id|name", "slaves.id|name");
+
+        StringBuilder buf = new StringBuilder();
+
+        buf.append("$h = get-host " + PowerShellUtils.escape(hostId) + "; ");
+
+        buf.append("foreach ($n in get-networks) { ");
+        if (nic.getNetwork().isSetId()) {
+            buf.append("if ($n.networkid -eq " + PowerShellUtils.escape(nic.getNetwork().getId()) + ") { ");
+        } else {
+            buf.append("if ($n.name -eq " + PowerShellUtils.escape(nic.getNetwork().getName()) + ") { ");
+        }
+        buf.append("$net = $n; break ");
+        buf.append("} ");
+        buf.append("} ");
+
+        buf.append("$nics = @(); ");
+        buf.append("foreach ($nic in $h.getnetworkadapters()) { ");
+        for (HostNIC slave : nic.getSlaves().getSlaves()) {
+            if (slave.isSetId()) {
+                buf.append("if ($nic.id -eq " + PowerShellUtils.escape(slave.getId()) + ") { ");
+            } else {
+                buf.append("if ($nic.name -eq " + PowerShellUtils.escape(slave.getName()) + ") { ");
+            }
+            buf.append("$nics += $nic ");
+            buf.append("} ");
+        }
+        buf.append("} ");
+
+        buf.append("$h = add-bond");
+        buf.append(" -bondname " + PowerShellUtils.escape(nic.getName()));
+        buf.append(" -hostobject $h");
+        buf.append(" -network $net");
+        buf.append(" -networkadapters $nics");
+        buf.append("; ");
+        buf.append("foreach ($nic in $h.getnetworkadapters()) { ");
+        buf.append("if ($nic.name -eq " + PowerShellUtils.escape(nic.getName()) + ") { ");
+        buf.append("$nic; break ");
+        buf.append("} ");
+        buf.append("}");
+
+        nic = addLinks(runAndParseSingle(buf.toString()));
+
+        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(nic.getId());
+
+        return Response.created(uriBuilder.build()).entity(nic).build();
+    }
+
+    @Override
+    public void remove(String id) {
+        StringBuilder buf = new StringBuilder();
+
+        buf.append("$h = get-host " + PowerShellUtils.escape(hostId) + "; ");
+
+        buf.append("foreach ($nic in $h.getnetworkadapters()) { ");
+        buf.append("if ($nic.id -eq " + PowerShellUtils.escape(id) + ") { ");
+        buf.append("$bond = $nic; break ");
+        buf.append("} ");
+        buf.append("} ");
+
+        buf.append("remove-bond");
+        buf.append(" -hostobject $h");
+        buf.append(" -bondobject $bond");
+
+        PowerShellCmd.runCommand(getPool(), buf.toString());
     }
 
     @Override

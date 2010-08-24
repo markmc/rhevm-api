@@ -18,9 +18,12 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.net.URI;
 import java.text.MessageFormat;
-
 import java.util.concurrent.Executor;
+
+import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.UriBuilder;
 
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Host;
@@ -55,6 +58,7 @@ public class PowerShellHostNicsResourceTest
     private static final String HOST_NAME = "1234";
 
     private static final String[] NICS = { "eth0", "eth1" };
+    private static final String BOND_NAME = "bond0";
     private static final String[] NETS = { "net0", "net1" };
     private static final String[] MACS = { "00:31:20:5F:F9:DD", "00:31:20:5F:F9:EE" };
     private static final String[] IPS = { "192.168.1.7", "192.168.2.10" };
@@ -64,19 +68,29 @@ public class PowerShellHostNicsResourceTest
     private static final String GET_NICS_CMD = "$h = get-host \"" + asId(HOST_NAME) + "\"; $h.getnetworkadapters()";
 
     public static final String LOOKUP_NETWORK_ID_COMMAND = "$n = get-networks; foreach ($i in $n) '{' if ($i.name -eq \"{0}\") '{' $i; break '} }'";
+    public static final String LOOKUP_SLAVE_ID_COMMAND = "$h = get-host \"" + asId(HOST_NAME) + "\"; foreach ($n in $h.getnetworkadapters()) { if ($n.name -eq \"" + NICS[0] + "\") { $n } if ($n.name -eq \"" + NICS[1] + "\") { $n } }";
+
+    private static final String EMPTY_BOND_INTERFACES_XML = "<Property Name=\"BondInterfaces\" Type=\"System.String[]\" />";
+    private static final String BOND_INTERFACES_XML = "<Property Name=\"BondInterfaces\" Type=\"System.String[]\">\n      <Property Type=\"System.String\">" + NICS[0] + "</Property>\n      <Property Type=\"System.String\">" + NICS[1] + "</Property>\n    </Property>";
 
     public static final String[][] extraArgs = new String[][] {
-        { NETS[0], MACS[0], IPS[0], SUBNETS[0] },
-        { NETS[1], MACS[1], IPS[1], SUBNETS[1] },
+        { NETS[0], MACS[0], IPS[0], SUBNETS[0], "False", EMPTY_BOND_INTERFACES_XML },
+        { NETS[1], MACS[1], IPS[1], SUBNETS[1], "False", EMPTY_BOND_INTERFACES_XML  },
+    };
+
+    private static final String[] bondArgs = new String[] {
+        NETS[0], MACS[0], IPS[0], SUBNETS[0], "True", BOND_INTERFACES_XML
     };
 
     private static final String DATA_CENTER_ID = "999";
 
     private static final String[] networkArgs = new String[] { DATA_CENTER_ID };
 
-    private static final String ATTACH_NETWORK_CMD = "$host = get-host \"" + asId(HOST_NAME) + "\"; foreach ($n in get-networks) { if ($n.networkid -eq \"" + asId(NETS[0]) + "\") { $net = $n; break } } foreach ($n in $host.getnetworkadapters()) { if ($n.id -eq \"" + asId(NICS[0]) + "\") { $nic = $n; break } } attach-logicalnetworktonetworkadapter -hostobject $host -network $net -networkadapter $nic";
-    private static final String ATTACH_NETWORK_BY_NAME_CMD = "$host = get-host \"" + asId(HOST_NAME) + "\"; foreach ($n in get-networks) { if ($n.name -eq \"" + NETS[0] + "\") { $net = $n; break } } foreach ($n in $host.getnetworkadapters()) { if ($n.id -eq \"" + asId(NICS[0]) + "\") { $nic = $n; break } } attach-logicalnetworktonetworkadapter -hostobject $host -network $net -networkadapter $nic";
-    private static final String DETACH_NETWORK_CMD = "$host = get-host \"" + asId(HOST_NAME) + "\"; foreach ($n in get-networks) { if ($n.networkid -eq \"" + asId(NETS[0]) + "\") { $net = $n; break } } foreach ($n in $host.getnetworkadapters()) { if ($n.id -eq \"" + asId(NICS[0]) + "\") { $nic = $n; break } } detach-logicalnetworkfromnetworkadapter -hostobject $host -network $net -networkadapter $nic";
+    private static final String ATTACH_NETWORK_CMD = "$h = get-host \"" + asId(HOST_NAME) + "\"; foreach ($n in get-networks) { if ($n.networkid -eq \"" + asId(NETS[0]) + "\") { $net = $n; break } } foreach ($n in $h.getnetworkadapters()) { if ($n.id -eq \"" + asId(NICS[0]) + "\") { $nic = $n; break } } attach-logicalnetworktonetworkadapter -hostobject $h -network $net -networkadapter $nic";
+    private static final String ATTACH_NETWORK_BY_NAME_CMD = "$h = get-host \"" + asId(HOST_NAME) + "\"; foreach ($n in get-networks) { if ($n.name -eq \"" + NETS[0] + "\") { $net = $n; break } } foreach ($n in $h.getnetworkadapters()) { if ($n.id -eq \"" + asId(NICS[0]) + "\") { $nic = $n; break } } attach-logicalnetworktonetworkadapter -hostobject $h -network $net -networkadapter $nic";
+    private static final String DETACH_NETWORK_CMD = "$h = get-host \"" + asId(HOST_NAME) + "\"; foreach ($n in get-networks) { if ($n.networkid -eq \"" + asId(NETS[0]) + "\") { $net = $n; break } } foreach ($n in $h.getnetworkadapters()) { if ($n.id -eq \"" + asId(NICS[0]) + "\") { $nic = $n; break } } detach-logicalnetworkfromnetworkadapter -hostobject $h -network $net -networkadapter $nic";
+    private static final String ADD_BOND_CMD = "$h = get-host \"" + asId(HOST_NAME) + "\"; foreach ($n in get-networks) { if ($n.networkid -eq \"" + asId(NETS[0]) + "\") { $net = $n; break } } $nics = @(); foreach ($nic in $h.getnetworkadapters()) { if ($nic.id -eq \"" + asId(NICS[0]) + "\") { $nics += $nic } if ($nic.id -eq \"" + asId(NICS[1]) + "\") { $nics += $nic } } $h = add-bond -bondname \"" + BOND_NAME + "\" -hostobject $h -network $net -networkadapters $nics; foreach ($nic in $h.getnetworkadapters()) { if ($nic.name -eq \"" + BOND_NAME + "\") { $nic; break } }";
+    private static final String REMOVE_BOND_CMD = "$h = get-host \"" + asId(HOST_NAME) + "\"; foreach ($nic in $h.getnetworkadapters()) { if ($nic.id -eq \"" + asId(BOND_NAME) + "\") { $bond = $nic; break } } remove-bond -hostobject $h -bondobject $bond";
 
     private static final String NIC_URI = "hosts/" + asId(HOST_NAME) + "/nics/" + asId(NICS[0]);
     private static final String ACTION_RETURN = "replace with realistic powershell return";
@@ -119,6 +133,7 @@ public class PowerShellHostNicsResourceTest
                              formatNetwork(NETS[0]) };
 
         setUpCmdExpectations(commands, returns);
+        replayAll();
 
         verifyHostNic(resource.get(), 0);
     }
@@ -135,8 +150,51 @@ public class PowerShellHostNicsResourceTest
                              formatNetwork(NETS[1]) };
 
         setUpCmdExpectations(commands, returns);
+        replayAll();
 
         verifyHostNics(resource.list());
+    }
+
+    @Test
+    public void testHostNicAdd() throws Exception {
+        PowerShellHostNicsResource resource = new PowerShellHostNicsResource(asId(HOST_NAME), executor, poolMap, parser);
+
+        String[] commands = { ADD_BOND_CMD,
+                              LOOKUP_SLAVE_ID_COMMAND,
+                              formatLookupNetworkCmd(0) };
+        String[] returns = { formatNic(BOND_NAME, bondArgs),
+                             formatNics(NICS, extraArgs),
+                             formatNetwork(NETS[0]) };
+
+        setUpCmdExpectations(commands, returns);
+        UriInfo uriInfo = setUpUriInfoExpections(asId(BOND_NAME));
+        replayAll();
+
+        HostNIC bond = new HostNIC();
+        bond.setName(BOND_NAME);
+        bond.setNetwork(new Network());
+        bond.getNetwork().setId(asId(NETS[0]));
+        bond.setSlaves(new Slaves());
+
+        HostNIC slave = new HostNIC();
+        slave.setId(asId(NICS[0]));
+        bond.getSlaves().getSlaves().add(slave);
+
+        slave = new HostNIC();
+        slave.setId(asId(NICS[1]));
+        bond.getSlaves().getSlaves().add(slave);
+
+        verifyBond((HostNIC)resource.add(uriInfo, bond).getEntity());
+    }
+
+    @Test
+    public void testHostNicRemove() {
+        PowerShellHostNicsResource resource = new PowerShellHostNicsResource(asId(HOST_NAME), executor, poolMap, parser);
+
+        setUpCmdExpectations(REMOVE_BOND_CMD, "");
+        replayAll();
+
+        resource.remove(asId(BOND_NAME));
     }
 
     @Test
@@ -221,6 +279,15 @@ public class PowerShellHostNicsResourceTest
             DETAIL);
     }
 
+    private UriInfo setUpUriInfoExpections(String id) throws Exception {
+        UriInfo uriInfo = createMock(UriInfo.class);
+        UriBuilder uriBuilder = createMock(UriBuilder.class);
+        expect(uriInfo.getAbsolutePathBuilder()).andReturn(uriBuilder);
+        expect(uriBuilder.path(id)).andReturn(uriBuilder);
+        expect(uriBuilder.build()).andReturn(new URI("hosts/" + asId(HOST_NAME) + "/nics/" + id)).anyTimes();
+        return uriInfo;
+    }
+
     private void setUpCmdExpectations(String command, String ret) {
         setUpCmdExpectations(asArray(command), asArray(ret));
     }
@@ -232,7 +299,6 @@ public class PowerShellHostNicsResourceTest
                 expect(PowerShellCmd.runCommand(setUpPoolExpectations(), commands[i])).andReturn(returns[i]);
             }
         }
-        replayAll();
     }
 
     protected PowerShellPool setUpPoolExpectations() {
@@ -241,11 +307,9 @@ public class PowerShellHostNicsResourceTest
         return pool;
     }
 
-    private void verifyHostNic(HostNIC nic, int i) {
-        assertNotNull(nic);
+    private void verifyHostNicDetails(HostNIC nic, int i) {
         assertNotNull(nic.getHost());
         assertEquals(asId(HOST_NAME), nic.getHost().getId());
-        assertEquals(asId(NICS[i]), nic.getId());
         assertNotNull(nic.getNetwork());
         assertEquals(asId(NETS[i]), nic.getNetwork().getId());
         assertNotNull(nic.getMac());
@@ -253,6 +317,22 @@ public class PowerShellHostNicsResourceTest
         assertNotNull(nic.getIp());
         assertEquals(IPS[i], nic.getIp().getAddress());
         assertEquals(SUBNETS[i], nic.getIp().getNetmask());
+    }
+
+    private void verifyBond(HostNIC nic) {
+        assertNotNull(nic);
+        assertEquals(asId(BOND_NAME), nic.getId());
+        verifyHostNicDetails(nic, 0);
+        assertNotNull(nic.getSlaves());
+        assertEquals(2, nic.getSlaves().getSlaves().size());
+        assertEquals(asId(NICS[0]), nic.getSlaves().getSlaves().get(0).getId());
+        assertEquals(asId(NICS[1]), nic.getSlaves().getSlaves().get(1).getId());
+    }
+
+    private void verifyHostNic(HostNIC nic, int i) {
+        assertNotNull(nic);
+        assertEquals(asId(NICS[i]), nic.getId());
+        verifyHostNicDetails(nic, i);
     }
 
     private void verifyHostNics(HostNics nics) {
