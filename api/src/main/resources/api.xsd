@@ -1020,7 +1020,6 @@
   <xs:element name="host_nic" type="HostNIC"/>
 
   <xs:element name="host_nics" type="HostNics"/>
-  <xs:element name="slaves" type="HostNics"/>
 
   <xs:complexType name="HostNIC">
     <xs:complexContent>
@@ -1044,6 +1043,20 @@
         <xs:annotation>
           <xs:appinfo>
             <jaxb:property name="HostNics"/>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="slaves" type="Slaves"/>
+
+  <xs:complexType name="Slaves">
+    <xs:sequence>
+      <xs:element ref="host_nic" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <jaxb:property name="Slaves"/>
           </xs:appinfo>
         </xs:annotation>
       </xs:element>

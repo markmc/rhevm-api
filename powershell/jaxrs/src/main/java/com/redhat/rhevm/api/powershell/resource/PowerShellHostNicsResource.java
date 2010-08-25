@@ -30,6 +30,7 @@ import com.redhat.rhevm.api.model.HostNIC;
 import com.redhat.rhevm.api.model.HostNics;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.Network;
+import com.redhat.rhevm.api.model.Slaves;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellHostNIC;
@@ -141,12 +142,12 @@ public class PowerShellHostNicsResource implements HostNicsResource {
             master.setHref(uriBuilder.clone().path(masterId).build().toString());
             nic.getLinks().add(master);
         } else {
-            nic.setSlaves(new HostNics());
+            nic.setSlaves(new Slaves());
             for (PowerShellHostNIC bond : bondNics) {
                 HostNIC slave = new HostNIC();
                 slave.setId(bond.getId());
                 slave.setHost(bond.getHost());
-                nic.getSlaves().getHostNics().add(slave);
+                nic.getSlaves().getSlaves().add(slave);
             }
         }
 
@@ -162,7 +163,7 @@ public class PowerShellHostNicsResource implements HostNicsResource {
 
         if (ret.getSlaves() != null) {
             /* Host reference was only needed for link building above */
-            for (HostNIC slave : ret.getSlaves().getHostNics()) {
+            for (HostNIC slave : ret.getSlaves().getSlaves()) {
                 slave.setHost(null);
             }
         }
