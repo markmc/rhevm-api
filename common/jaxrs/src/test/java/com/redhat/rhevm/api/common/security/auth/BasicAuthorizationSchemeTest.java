@@ -39,7 +39,8 @@ import static org.easymock.classextension.EasyMock.expect;
 public class BasicAuthorizationSchemeTest extends Assert {
 
     private static final String SHORT_CREDENTIALS = "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==";
-    private static final String LONG_CREDENTIALS = "Basic TWFnaHJlYlxBbGFkZGluOm9wZW4gc2VzYW1l";
+    private static final String UPN_LONG_CREDENTIALS = "Basic QWxhZGRpbkBNYWdocmViOm9wZW4gc2VzYW1l";
+    private static final String LEGACY_LONG_CREDENTIALS = "Basic TWFnaHJlYlxBbGFkZGluOm9wZW4gc2VzYW1l";
     private static final String BAD_CREDENTIALS = "Basic 123456";
     private static final String DIGEST_CREDENTIALS =
         "Digest username=\"Mufasa\",realm=\"testrealm@host.com\","
@@ -77,8 +78,18 @@ public class BasicAuthorizationSchemeTest extends Assert {
     }
 
     @Test
-    public void testDecodeLongCredentials() {
-        Principal principal = scheme.decode(setUpHeadersExpectation(LONG_CREDENTIALS));
+    public void testDecodeUpnLongCredentials() {
+        Principal principal = scheme.decode(setUpHeadersExpectation(UPN_LONG_CREDENTIALS));
+        assertNotNull(principal);
+        assertEquals(USER, principal.getUser());
+        assertEquals(SECRET, principal.getSecret());
+        assertEquals(DOMAIN, principal.getDomain());
+        control.verify();
+    }
+
+    @Test
+    public void testDecodeLegacyLongCredentials() {
+        Principal principal = scheme.decode(setUpHeadersExpectation(LEGACY_LONG_CREDENTIALS));
         assertNotNull(principal);
         assertEquals(USER, principal.getUser());
         assertEquals(SECRET, principal.getSecret());
