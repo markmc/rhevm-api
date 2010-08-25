@@ -26,7 +26,7 @@ class Element:
     ATTRIBUTES = []
     ELEMENTS = []
     NAME = None
-    COLLECTION = None
+    COLLECTIONS = [ None, ]
     KEY = None
 
     def __str__(self):
@@ -48,6 +48,8 @@ class Element:
                     s += '>'
                     close_tag = False
                 l = getattr(self, e)
+                if findCollectionType(e) != None:
+                    s += '<' + e + '>'
                 if isinstance(l, dict):
                     l = l.values()
                 if not isinstance(l, list):
@@ -57,6 +59,8 @@ class Element:
                         s += obj.dump()
                     else:
                         s += '<' + e + '>' + str(obj) + '</' + e + '>'
+                if findCollectionType(e) != None:
+                    s += '</' + e + '>'
         if close_tag:
             s += '/>'
         else:
@@ -83,7 +87,7 @@ class Boot(Element):
 
 class CPU(Element):
     NAME = 'cpu'
-    COLLECTION = 'cpus'
+    COLLECTIONS = [ 'cpus', ]
     ATTRIBUTES = Element.ATTRIBUTES + ["id"]
     ELEMENTS = Element.ELEMENTS + ["level", "topology"] # FIXME: flags
 
@@ -114,7 +118,7 @@ class VLAN(Element):
 class Version(Element):
     NAME = 'version'
     ATTRIBUTES = Element.ATTRIBUTES + ['major', 'minor']
-    COLLECTION = 'supported_versions'
+    COLLECTIONS = [ 'supported_versions', ]
 
 class Base(Element):
     ATTRIBUTES = Element.ATTRIBUTES + ["id", "href"]
@@ -122,52 +126,52 @@ class Base(Element):
 
 class Attachment(Base):
     NAME = 'attachment'
-    COLLECTION = 'attachments'
+    COLLECTIONS = [ 'attachments', ]
     ELEMENTS = Base.ELEMENTS + ['data_center', 'storage_domain', 'status', 'master']
 
 class CdRom(Base):
     NAME = 'cdrom'
-    COLLECTION = 'cdroms'
+    COLLECTIONS = [ 'cdroms', ]
     ELEMENTS = Base.ELEMENTS + ['iso', 'vm']
 
 class Cluster(Base):
     NAME = "cluster"
-    COLLECTION = "clusters"
+    COLLECTIONS = [ "clusters", ]
     ELEMENTS = Base.ELEMENTS + ["data_center", "cpu", "version", "supported_versions"]
 
 class DataCenter(Base):
     NAME = "data_center"
-    COLLECTION = "data_centers"
+    COLLECTIONS = [ "data_centers", ]
     ELEMENTS = Base.ELEMENTS + ["storage_type", "version", "supported_versions"]
 
 class Disk(Base):
     NAME = 'disk'
-    COLLECTION = 'disks'
+    COLLECTIONS = [ 'disks', ]
     ELEMENTS = Base.ELEMENTS + ['size', 'type', 'status', 'interface', 'format', 'sparse', 'bootable', 'wipe_after_delete', 'propagate_errors', 'vm']
 
 class Host(Base):
     NAME = "host"
-    COLLECTION = "hosts"
+    COLLECTIONS = [ "hosts", ]
     ELEMENTS = Base.ELEMENTS + ["address", "status"]
 
 class Iso(Base):
     NAME = 'iso'
-    COLLECTION = 'isos'
+    COLLECTIONS = [ 'isos', ]
 
 class Network(Base):
     NAME = "network"
-    COLLECTION = "networks"
-    ELEMENTS = Base.ELEMENTS + ['data_center', 'ip', 'vlan', 'stp', 'status']
+    COLLECTIONS = [ "networks", ]
+    ELEMENTS = Base.ELEMENTS + ['data_center', 'cluster', 'ip', 'vlan', 'stp', 'status']
 
 class NIC(Base):
     NAME = 'nic'
-    COLLECTION = 'nics'
+    COLLECTIONS = [ 'nics', ]
     ELEMENTS = Base.ELEMENTS + ['network', 'type', 'mac', 'ip', 'vm']
 
 class HostNIC(Base):
     NAME = 'host_nic'
-    COLLECTION = 'host_nics'
-    ELEMENTS = Base.ELEMENTS + ['network', 'mac', 'ip', 'vlan', 'host']
+    COLLECTIONS = [ 'host_nics', 'slaves' ]
+    ELEMENTS = Base.ELEMENTS + ['network', 'mac', 'ip', 'vlan', 'host', 'slaves']
 
 class LogicalUnit(Element):
     NAME = 'logical_unit'
@@ -180,27 +184,27 @@ class Storage(Element):
 
 class StorageDomain(Base):
     NAME = "storage_domain"
-    COLLECTION = "storage_domains"
+    COLLECTIONS = [ "storage_domains", ]
     ELEMENTS = Base.ELEMENTS + ['type', 'status', 'master', 'storage', 'host'] # FIXME: attachments
 
 class VM(Base):
     NAME = "vm"
-    COLLECTION = "vms"
+    COLLECTIONS = [ "vms", ]
     ELEMENTS = Base.ELEMENTS + ['type', 'status', 'memory', 'os', 'cpu', 'cluster', 'template', 'vmpool']
 
 class VmPool(Base):
     NAME = "vmpool"
-    COLLECTION = "vmpools"
+    COLLECTIONS = [ "vmpools", ]
     ELEMENTS = Base.ELEMENTS + ['size', 'cluster', 'template']
 
 class Template(Base):
     NAME = "template"
-    COLLECTION = "templates"
+    COLLECTIONS = [ "templates", ]
     ELEMENTS = Base.ELEMENTS + ['type', 'status', 'memory', 'os', 'cpu', 'cluster', 'vm']
 
 class Snapshot(Base):
     NAME = "snapshot"
-    COLLECTION = "snapshots"
+    COLLECTIONS = [ "snapshots", ]
     ELEMENTS = Base.ELEMENTS + ['vm', 'date']
 
 class Role(Base):
@@ -224,8 +228,9 @@ def findEntityType(name):
 
 def findCollectionType(name):
     for t in TYPES:
-        if t.COLLECTION == name:
-            return t
+        for ct in t.COLLECTIONS:
+            if ct == name:
+                return t
     return None
 
 def getText(nodelist):
