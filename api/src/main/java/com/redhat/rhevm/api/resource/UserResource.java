@@ -35,5 +35,5 @@ public interface UserResource {
     public User get();
 
     @Path("roles")
-    public RolesResource getRolesResource();
+    public AssignedRolesResource getRolesResource();
 }

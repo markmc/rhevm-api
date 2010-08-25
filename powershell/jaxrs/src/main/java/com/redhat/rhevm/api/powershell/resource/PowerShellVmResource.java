@@ -246,8 +246,8 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
     }
 
     @Override
-    public PowerShellUsersSubResource getUsersResource() {
-        return new PowerShellUsersSubResource(getId(), getExecutor(), shellPools, getParser());
+    public PowerShellAttachedUsersResource getUsersResource() {
+        return new PowerShellAttachedUsersResource(getId(), getExecutor(), shellPools, getParser());
     }
 
     private static void addSubCollection(VM vm, String collection) {

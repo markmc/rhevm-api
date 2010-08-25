@@ -107,6 +107,6 @@ public interface VmResource extends UpdatableResource<VM> {
     public SnapshotsResource getSnapshotsResource();
 
     @Path("users")
-    public UsersResource getUsersResource();
+    public AttachedUsersResource getUsersResource();
 
 }

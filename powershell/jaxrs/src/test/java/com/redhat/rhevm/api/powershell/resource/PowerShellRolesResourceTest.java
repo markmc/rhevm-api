@@ -28,11 +28,14 @@ import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 
 public class PowerShellRolesResourceTest extends AbstractPowerShellRolesResourceTest<PowerShellRolesResource> {
 
-    protected static final String USER_ID = "cca00b9f-4492-4a82-b71e-082dcdf0fc66";
-    protected static final String SELECT_COMMAND = "$u = get-user -userid \"" + USER_ID + "\";$u.getroles()";
+    protected static final String SELECT_COMMAND = "get-roles";
 
     protected PowerShellRolesResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser) {
-        return new PowerShellRolesResource(USER_ID, executor, poolMap, parser);
+        PowerShellRolesResource resource = new PowerShellRolesResource();
+        resource.setExecutor(executor);
+        resource.setPowerShellPoolMap(poolMap);
+        resource.setParser(parser);
+        return resource;
     }
 
     protected String getSelectCommand() {
@@ -44,7 +47,6 @@ public class PowerShellRolesResourceTest extends AbstractPowerShellRolesResource
     }
 
     protected void verifyUser(User user) {
-        assertNotNull(user);
-        assertEquals(USER_ID, user.getId());
+        assertNull(user);
     }
 }
