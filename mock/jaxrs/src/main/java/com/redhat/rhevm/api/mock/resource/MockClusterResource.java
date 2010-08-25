@@ -25,6 +25,7 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.CPU;
+import com.redhat.rhevm.api.resource.AssignedNetworksResource;
 import com.redhat.rhevm.api.resource.ClusterResource;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
@@ -79,5 +80,10 @@ public class MockClusterResource extends AbstractMockResource<Cluster> implement
         validateUpdate(cluster);
         updateModel(cluster);
         return addLinks();
+    }
+
+    @Override
+    public AssignedNetworksResource getAssignedNetworksSubResource() {
+        return null;
     }
 }

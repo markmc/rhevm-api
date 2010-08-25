@@ -46,6 +46,8 @@ import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.User;
 import com.redhat.rhevm.api.model.VmPool;
 import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.resource.AssignedNetworkResource;
+import com.redhat.rhevm.api.resource.AssignedNetworksResource;
 import com.redhat.rhevm.api.resource.AttachmentResource;
 import com.redhat.rhevm.api.resource.AttachmentsResource;
 import com.redhat.rhevm.api.resource.ClusterResource;
@@ -88,24 +90,24 @@ public class LinkHelper {
         new HashMap<Class<? extends BaseResource>, ResourceType>();
 
     static {
-        TYPES.put(Attachment.class,    new ResourceType(AttachmentResource.class,    AttachmentsResource.class, StorageDomain.class));
-        TYPES.put(CdRom.class,         new ResourceType(DeviceResource.class,        DevicesResource.class,     VM.class));
-        TYPES.put(Cluster.class,       new ResourceType(ClusterResource.class,       ClustersResource.class));
-        TYPES.put(DataCenter.class,    new ResourceType(DataCenterResource.class,    DataCentersResource.class));
-        TYPES.put(Disk.class,          new ResourceType(DeviceResource.class,        DevicesResource.class,     VM.class));
-        TYPES.put(Host.class,          new ResourceType(HostResource.class,          HostsResource.class));
-        TYPES.put(HostNIC.class,       new ResourceType(HostNicResource.class,       HostNicsResource.class,    Host.class));
-        TYPES.put(Iso.class,           new ResourceType(IsoResource.class,           IsosResource.class,        DataCenter.class));
-        TYPES.put(Network.class,       new ResourceType(NetworkResource.class,       NetworksResource.class));
-        TYPES.put(NIC.class,           new ResourceType(DeviceResource.class,        DevicesResource.class,     VM.class));
-        TYPES.put(Role.class,          new ResourceType(RoleResource.class,          AssignedRolesResource.class,       User.class,       RolesResource.class));
-        TYPES.put(Snapshot.class,      new ResourceType(SnapshotResource.class,      SnapshotsResource.class,   VM.class));
-        TYPES.put(StorageDomain.class, new ResourceType(StorageDomainResource.class, StorageDomainsResource.class));
-        TYPES.put(Template.class,      new ResourceType(TemplateResource.class,      TemplatesResource.class));
+        TYPES.put(Attachment.class,    new ResourceType(AttachmentResource.class,      AttachmentsResource.class,      StorageDomain.class));
+        TYPES.put(CdRom.class,         new ResourceType(DeviceResource.class,          DevicesResource.class,          VM.class));
+        TYPES.put(Cluster.class,       new ResourceType(ClusterResource.class,         ClustersResource.class));
+        TYPES.put(DataCenter.class,    new ResourceType(DataCenterResource.class,      DataCentersResource.class));
+        TYPES.put(Disk.class,          new ResourceType(DeviceResource.class,          DevicesResource.class,          VM.class));
+        TYPES.put(Host.class,          new ResourceType(HostResource.class,            HostsResource.class));
+        TYPES.put(HostNIC.class,       new ResourceType(HostNicResource.class,         HostNicsResource.class,         Host.class));
+        TYPES.put(Iso.class,           new ResourceType(IsoResource.class,             IsosResource.class,             DataCenter.class));
+        TYPES.put(Network.class,       new ResourceType(AssignedNetworkResource.class, AssignedNetworksResource.class, Cluster.class, NetworksResource.class));
+        TYPES.put(NIC.class,           new ResourceType(DeviceResource.class,          DevicesResource.class,          VM.class));
+        TYPES.put(Role.class,          new ResourceType(RoleResource.class,            AssignedRolesResource.class,    User.class,    RolesResource.class));
+        TYPES.put(Snapshot.class,      new ResourceType(SnapshotResource.class,        SnapshotsResource.class,        VM.class));
+        TYPES.put(StorageDomain.class, new ResourceType(StorageDomainResource.class,   StorageDomainsResource.class));
+        TYPES.put(Template.class,      new ResourceType(TemplateResource.class,        TemplatesResource.class));
         // REVISIT: will need the concept of multiple parent types, both VM and VmPool for User
-        TYPES.put(User.class,          new ResourceType(UserResource.class,          AttachedUsersResource.class,       VM.class,         UsersResource.class));
-        TYPES.put(VM.class,            new ResourceType(VmResource.class,            VmsResource.class));
-        TYPES.put(VmPool.class,        new ResourceType(VmPoolResource.class,        VmPoolsResource.class));
+        TYPES.put(User.class,          new ResourceType(UserResource.class,            AttachedUsersResource.class,    VM.class,      UsersResource.class));
+        TYPES.put(VM.class,            new ResourceType(VmResource.class,              VmsResource.class));
+        TYPES.put(VmPool.class,        new ResourceType(VmPoolResource.class,          VmPoolsResource.class));
     }
 
     private static String getPath(Class<?> clz) {

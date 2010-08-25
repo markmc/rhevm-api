@@ -26,6 +26,7 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.SupportedVersions;
 import com.redhat.rhevm.api.model.Version;
+import com.redhat.rhevm.api.resource.AssignedNetworksResource;
 import com.redhat.rhevm.api.resource.ClusterResource;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellCluster;
@@ -138,5 +139,10 @@ public class PowerShellClusterResource extends AbstractPowerShellActionableResou
         buf.append("} }");
 
         return addLinks(getPool(), getParser(), runAndParseSingle(buf.toString()));
+    }
+
+    @Override
+    public AssignedNetworksResource getAssignedNetworksSubResource() {
+        return null;
     }
 }

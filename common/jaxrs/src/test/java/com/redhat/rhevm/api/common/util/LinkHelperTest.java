@@ -60,6 +60,7 @@ public class LinkHelperTest extends Assert {
     private static final String HOST_HREF = "hosts/" + HOST_ID;
     private static final String DATA_CENTER_HREF = "datacenters/" + DATA_CENTER_ID;
     private static final String NETWORK_HREF = "networks/" + NETWORK_ID;
+    private static final String CLUSTER_NETWORK_HREF = "clusters/" + CLUSTER_ID + "/networks/" + NETWORK_ID;
     private static final String ISO_HREF = "datacenters/" + DATA_CENTER_ID + "/isos/" + ISO_ID;
     private static final String ATTACHMENT_HREF = STORAGE_DOMAIN_HREF + "/attachments/" + DATA_CENTER_ID;
     private static final String CDROM_HREF = VM_HREF + "/cdroms/" + CDROM_ID;
@@ -136,6 +137,18 @@ public class LinkHelperTest extends Assert {
         LinkHelper.addLinks(network);
 
         assertEquals(network.getHref(), NETWORK_HREF);
+    }
+
+    @Test
+    public void testClusterNetworkLinks() throws Exception {
+        Network network = new Network();
+        network.setId(NETWORK_ID);
+        network.setCluster(new Cluster());
+        network.getCluster().setId(CLUSTER_ID);
+
+        LinkHelper.addLinks(network);
+
+        assertEquals(network.getHref(), CLUSTER_NETWORK_HREF);
     }
 
     @Test

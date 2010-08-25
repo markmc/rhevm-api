@@ -18,15 +18,17 @@
  */
 package com.redhat.rhevm.api.resource;
 
-import javax.ws.rs.Path;
+import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
-import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
-import com.redhat.rhevm.api.model.Cluster;
 
+import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
+
+import com.redhat.rhevm.api.model.Network;
 
 @Produces(MediaType.APPLICATION_XML)
-public interface ClusterResource extends UpdatableResource<Cluster> {
+public interface AssignedNetworkResource {
 
-    @Path("networks")
-    public AssignedNetworksResource getAssignedNetworksSubResource();
+    @GET
+    @Formatted
+    public Network get();
 }
