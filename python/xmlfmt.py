@@ -203,7 +203,18 @@ class Snapshot(Base):
     COLLECTION = "snapshots"
     ELEMENTS = Base.ELEMENTS + ['vm', 'date']
 
-TYPES = [ Action, Actions, Attachment, Boot, CdRom, Cluster, CPU, DataCenter, Disk, GracePeriod, Host, HostNIC, IP, Iso, Link, LogicalUnit, MAC, Network, NIC, OS, Storage, StorageDomain, Snapshot, Template, Topology, Version, VLAN, VM, VmPool]
+class Role(Base):
+    NAME = "role"
+    COLLECTION = "roles"
+    ELEMENTS = Base.ELEMENTS + ['user']
+
+class User(Base):
+    NAME = "user"
+    COLLECTION = "users"
+    ELEMENTS = Base.ELEMENTS + ['domain', 'department', 'logged_in', 'last_name', 'user_name', 'groups', 'roles']
+
+
+TYPES = [ Action, Actions, Attachment, Boot, CdRom, Cluster, CPU, DataCenter, Disk, GracePeriod, Host, HostNIC, IP, Iso, Link, LogicalUnit, MAC, Network, NIC, OS, Role, Storage, StorageDomain, Snapshot, Template, Topology, User, Version, VLAN, VM, VmPool]
 
 def findEntityType(name):
     for t in TYPES:
