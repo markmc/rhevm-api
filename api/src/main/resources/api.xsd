@@ -446,6 +446,7 @@
           <xs:element ref="data_center" minOccurs="0" maxOccurs="1"/>
           <xs:element name="version" type="Version" minOccurs="0"/>
           <xs:element name="supported_versions" type="SupportedVersions" minOccurs="0"/>
+          <!-- Also a rel="networks" link -->
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>

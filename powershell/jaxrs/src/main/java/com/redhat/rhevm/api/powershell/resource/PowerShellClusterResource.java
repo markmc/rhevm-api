@@ -24,6 +24,7 @@ import java.util.concurrent.Executor;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Cluster;
+import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.SupportedVersions;
 import com.redhat.rhevm.api.model.Version;
 import com.redhat.rhevm.api.resource.AssignedNetworksResource;
@@ -81,6 +82,14 @@ public class PowerShellClusterResource extends AbstractPowerShellActionableResou
 
     public static Cluster addLinks(PowerShellPool pool, PowerShellParser parser, Cluster cluster) {
         cluster = querySupportedVersions(pool, parser, cluster);
+
+        Link link = new Link();
+        link.setRel("networks");
+        link.setHref(LinkHelper.getUriBuilder(cluster).path("networks").build().toString());
+
+        cluster.getLinks().clear();
+        cluster.getLinks().add(link);
+
         return LinkHelper.addLinks(cluster);
     }
 
@@ -143,6 +152,6 @@ public class PowerShellClusterResource extends AbstractPowerShellActionableResou
 
     @Override
     public AssignedNetworksResource getAssignedNetworksSubResource() {
-        return null;
+        return new PowerShellClusterNetworksResource(getId(), getExecutor(), shellPools, getParser());
     }
 }
