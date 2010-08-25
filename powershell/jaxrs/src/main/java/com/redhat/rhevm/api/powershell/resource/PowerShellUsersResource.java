@@ -102,13 +102,7 @@ public class PowerShellUsersResource extends AbstractPowerShellResource implemen
         if (role.isSetId()) {
             roleArg = PowerShellUtils.escape(role.getId());
         } else {
-            // no get-roles -searchtext option
-            buf.append("$roles = get-roles;");
-            buf.append("foreach ($r in $roles) {");
-            buf.append("  if ($r.Name -eq ").append(PowerShellUtils.escape(role.getName())).append(") {");
-            buf.append("    $role = get-role -roleid $r.Id");
-            buf.append("  }");
-            buf.append("};");
+            buf.append("$role = get-roles | ? { $_.Name -eq " + PowerShellUtils.escape(role.getName()) + " }; ");
             roleArg = "$role.Id";
         }
         return roleArg;

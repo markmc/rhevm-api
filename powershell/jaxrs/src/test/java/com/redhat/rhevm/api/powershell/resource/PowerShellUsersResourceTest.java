@@ -39,7 +39,7 @@ public class PowerShellUsersResourceTest extends AbstractPowerShellUsersResource
     protected static final String GET_USER_BY_NAME = "$u = select-user -AD -searchtext \"" + USER_NAME + "\"; ";
     protected static final String ADD_USER_BY_NAME = "add-user -userid $u.UserId -userroleid {0}";
     protected static final String ADD_USER_BY_ID = "add-user -userid \"" + USER_ID + "\" -userroleid {0}";
-    protected static final String GET_ROLE_BY_NAME = "$roles = get-roles;foreach ($r in $roles) '{'  if ($r.Name -eq \"{0}\") '{'    $role = get-role -roleid $r.Id  '}}';";
+    protected static final String GET_ROLE_BY_NAME = "$role = get-roles | ? '{' $_.Name -eq \"{0}\" '}'; ";
     protected static final String ROLE_BY_NAME_ARG = "$role.Id";
     protected static final String ATTACH_ROLE_COMMAND = "attach-role -roleid \"" + ROLE_ID + "\" -elementid " + USER_ID;
 
