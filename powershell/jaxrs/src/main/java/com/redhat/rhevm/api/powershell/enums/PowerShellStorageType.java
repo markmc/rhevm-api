@@ -52,7 +52,6 @@ public enum PowerShellStorageType {
         case NFS:
             return StorageType.NFS;
         default:
-            assert false : this;
             return null;
         }
     }
