@@ -20,6 +20,9 @@ package com.redhat.rhevm.api.powershell.util;
 
 import java.io.File;
 
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+
 import expectj.ExpectJ;
 import expectj.Spawn;
 
@@ -40,6 +43,8 @@ import static org.powermock.api.easymock.PowerMock.expectNew;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
 
+import com.redhat.rhevm.api.common.invocation.Current;
+import com.redhat.rhevm.api.common.security.auth.Challenger;
 import com.redhat.rhevm.api.common.security.auth.Principal;
 
 @RunWith(PowerMockRunner.class)
@@ -55,6 +60,7 @@ public class PowerShellCmdTest extends Assert {
     private static final String USER = "Jackie";
     private static final String PASSWORD = "HealyRae";
     private static final String LOGIN_USER = "login-user -domain \"" + DOMAIN + "\" -username \"" + USER + "\" -password \"" + PASSWORD + "\";\n";
+    private static final String LOGIN_FAILED = "Login failed. Please verify your login information";
     private static final String LOGIN_USER_NO_DOMAIN = "login-user -username \"" + USER + "\" -password \"" + PASSWORD + "\";\n";
 
     @After
@@ -64,9 +70,7 @@ public class PowerShellCmdTest extends Assert {
 
     @Test
     public void testSimple() throws Exception {
-        setupExpectations(null, false);
-
-        PowerShellCmd cmd = new PowerShellCmd();
+        PowerShellCmd cmd = new PowerShellCmd(null, setupExpectations(null, false));
 
         cmd.start();
 
@@ -79,9 +83,7 @@ public class PowerShellCmdTest extends Assert {
 
     @Test
     public void testSysWow64() throws Exception {
-        setupExpectations(null, true);
-
-        PowerShellCmd cmd = new PowerShellCmd();
+        PowerShellCmd cmd = new PowerShellCmd(null, setupExpectations(null, true));
 
         cmd.start();
 
@@ -94,9 +96,7 @@ public class PowerShellCmdTest extends Assert {
 
     @Test
     public void testAuth() throws Exception {
-        setupExpectations(LOGIN_USER, false);
-
-        PowerShellCmd cmd = new PowerShellCmd(new Principal(USER, PASSWORD, DOMAIN));
+        PowerShellCmd cmd = new PowerShellCmd(new Principal(USER, PASSWORD, DOMAIN), setupExpectations(LOGIN_USER, false));
 
         cmd.start();
 
@@ -108,10 +108,25 @@ public class PowerShellCmdTest extends Assert {
     }
 
     @Test
-    public void testAuthNoDomain() throws Exception {
-        setupExpectations(LOGIN_USER_NO_DOMAIN, false);
+    public void testUnAuth() throws Exception {
+        PowerShellCmd cmd = new PowerShellCmd(new Principal(USER, PASSWORD, DOMAIN), setupExpectations(LOGIN_USER, false, LOGIN_FAILED));
+        cmd.start();
 
-        PowerShellCmd cmd = new PowerShellCmd(new Principal(USER, PASSWORD));
+        assertEquals(EXIT_STATUS, cmd.run(SCRIPT));
+        assertEquals(OUTPUT, cmd.getStdOut());
+        assertEquals(LOGIN_FAILED, cmd.getStdErr());
+
+        try {
+            cmd.complete(EXIT_STATUS, SCRIPT);
+            fail("expected WebApplicationException on login failure");
+        } catch (WebApplicationException wae) {
+            assertNotNull(wae.getResponse());
+        }
+    }
+
+    @Test
+    public void testAuthNoDomain() throws Exception {
+        PowerShellCmd cmd = new PowerShellCmd(new Principal(USER, PASSWORD), setupExpectations(LOGIN_USER_NO_DOMAIN, false));
 
         cmd.start();
 
@@ -130,7 +145,18 @@ public class PowerShellCmdTest extends Assert {
         return "<output>\n" + OUTPUT + "</output> " + Integer.toString(EXIT_STATUS) + "\n";
     }
 
-    public void setupExpectations(String login, boolean syswow64) throws Exception {
+    public Current setupExpectations(String login, boolean syswow64) throws Exception {
+        return setupExpectations(login, syswow64, ERROR);
+    }
+
+    public Current setupExpectations(String login, boolean syswow64, String error) throws Exception {
+        Current current = createMock(Current.class);
+        if (LOGIN_FAILED.equals(error)) {
+            Challenger challenger = createMock(Challenger.class);
+            expect(current.get(Challenger.class)).andReturn(challenger);
+            Response response = createMock(Response.class);
+            expect(challenger.getChallenge()).andReturn(response);
+        }
         File f = createMock(File.class);
         expectNew(File.class, SYSWOW64_PATH).andReturn(f);
         expect(f.exists()).andReturn(syswow64);
@@ -154,8 +180,9 @@ public class PowerShellCmdTest extends Assert {
         expectLastCall();
 
         expect(spawn.getCurrentStandardOutContents()).andReturn(getOutput());
-        expect(spawn.getCurrentStandardErrContents()).andReturn(ERROR);
+        expect(spawn.getCurrentStandardErrContents()).andReturn(error);
 
         replayAll();
+        return current;
     }
 }

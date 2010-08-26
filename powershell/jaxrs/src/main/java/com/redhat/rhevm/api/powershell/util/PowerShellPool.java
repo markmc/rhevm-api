@@ -22,6 +22,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import com.redhat.rhevm.api.common.invocation.Current;
 import com.redhat.rhevm.api.common.security.auth.Principal;
 
 public class PowerShellPool {
@@ -34,6 +35,7 @@ public class PowerShellPool {
 
     private ExecutorService executor;
     private Principal principal;
+    private Current current;
 
     private BlockingQueue<PowerShellCmd> cmds = new LinkedBlockingQueue<PowerShellCmd>();
 
@@ -41,9 +43,10 @@ public class PowerShellPool {
     private int highSize;
     private int spawned;
 
-    public PowerShellPool(ExecutorService executor, Principal principal, int lowSize, int highSize) {
+    public PowerShellPool(ExecutorService executor, Principal principal, Current current, int lowSize, int highSize) {
         this.executor = executor;
         this.principal = principal;
+        this.current = current;
         this.lowSize = lowSize;
         this.highSize = highSize;
 
@@ -52,8 +55,8 @@ public class PowerShellPool {
         }
     }
 
-    public PowerShellPool(ExecutorService executor, Principal principal) {
-        this(executor, principal, DEFAULT_SIZE_LOW, DEFAULT_SIZE_HIGH);
+    public PowerShellPool(ExecutorService executor, Principal principal, Current current) {
+        this(executor, principal, current, DEFAULT_SIZE_LOW, DEFAULT_SIZE_HIGH);
     }
 
     private void spawn() {
@@ -92,7 +95,7 @@ public class PowerShellPool {
 
     private class PowerShellLauncher implements Runnable {
         @Override public void run() {
-            PowerShellCmd cmd = new PowerShellCmd(principal);
+            PowerShellCmd cmd = new PowerShellCmd(principal, current);
             cmd.start();
             PowerShellPool.this.add(cmd);
         }

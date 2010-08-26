@@ -20,20 +20,27 @@ package com.redhat.rhevm.api.powershell.util;
 
 import java.io.File;
 
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response.Status;
+
 import expectj.ExpectJ;
 import expectj.Spawn;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.redhat.rhevm.api.common.invocation.Current;
+import com.redhat.rhevm.api.common.security.auth.Challenger;
 import com.redhat.rhevm.api.common.security.auth.Principal;
 
 public class PowerShellCmd {
     private static final Log log = LogFactory.getLog(PowerShellCmd.class);
 
+    private static final String LOGIN_FAILED = "Login failed. Please verify your login information";
     private static final String QUOTE = "'";
 
     private Principal principal;
+    private Current current;
     private ExpectJ expectj;
 
     // REVISIT: if the stdout/stderr buffers go over a
@@ -43,17 +50,18 @@ public class PowerShellCmd {
     private OutputBuffer stdout = new OutputBuffer();
     private OutputBuffer stderr = new OutputBuffer();
 
-    public PowerShellCmd(Principal principal, ExpectJ expectj) {
+    public PowerShellCmd(Principal principal, ExpectJ expectj, Current current) {
         this.principal = principal;
         this.expectj = expectj;
+        this.current = current;
     }
 
-    public PowerShellCmd(Principal principal) {
-        this(principal, new ExpectJ());
+    public PowerShellCmd(Principal principal, Current current) {
+        this(principal, new ExpectJ(), current);
     }
 
     public PowerShellCmd() {
-        this(null);
+        this(null, null);
     }
 
     public int run(String script) {
@@ -194,9 +202,36 @@ public class PowerShellCmd {
         return stderr.get().trim();
     }
 
+    public void complete(int exitstatus, String command) {
+        if (!getStdErr().isEmpty()) {
+            log.warn(getStdErr());
+            handleAuth(this);
+        }
+
+        handleExitStatus(exitstatus, command);
+    }
+
     private static void handleExitStatus(int exitstatus, String command) {
         if (exitstatus != 0) {
             throw new PowerShellException("Command '" + command + "' exited with status=" + exitstatus);
+        }
+    }
+
+    private static void handleAuth(PowerShellCmd runner) {
+        if (runner.getStdErr().contains(LOGIN_FAILED)) {
+            runner.process.stop();
+            // allow pool to drain for this Principal, starvation
+            // will not occur even if the user persists in using the
+            // same (currently invalid) credentials, as the
+            // low-water-mark logic will ensure further shells are
+            // created on demand
+            if (runner.current != null) {
+                Challenger challenger = runner.current.get(Challenger.class);
+                if (challenger != null) {
+                    throw new WebApplicationException(challenger.getChallenge());
+                }
+            }
+            throw new WebApplicationException(Status.UNAUTHORIZED);
         }
     }
 
@@ -204,14 +239,7 @@ public class PowerShellCmd {
         PowerShellCmd runner = pool.get();
 
         try {
-            int exitstatus = runner.run(command);
-
-            if (!runner.getStdErr().isEmpty()) {
-                log.warn(runner.getStdErr());
-            }
-
-            handleExitStatus(exitstatus, command);
-
+            runner.complete(runner.run(command), command);
             return runner.getStdOut();
         } finally {
             pool.add(runner);

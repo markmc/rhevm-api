@@ -62,6 +62,19 @@ public class Challenger implements PreProcessInterceptor {
         this.current = current;
     }
 
+    /**
+     * Issue 401 challenge on missing or invalid credentials.
+     * May be called further up the call-stack if supplied credentials are
+     * found to be invalid.
+     *
+     * @return ServerResponse containing challenge
+     */
+    public Response getChallenge() {
+        return Response.status(Status.UNAUTHORIZED)
+                       .header(HttpHeaders.WWW_AUTHENTICATE, scheme.getChallenge(realm))
+	               .build();
+    }
+
     @Override
     public ServerResponse preProcess(HttpRequest request, ResourceMethod method) throws Failure, WebApplicationException {
         ServerResponse response = null;
@@ -73,6 +86,7 @@ public class Challenger implements PreProcessInterceptor {
             Principal principal = scheme.decode(headers);
             if (validator == null || validator.validate(principal)) {
                 current.set(principal);
+                current.set(this);
             } else {
                 response = challenge();
             }
@@ -93,14 +107,9 @@ public class Challenger implements PreProcessInterceptor {
     }
 
     /**
-     * Issue 401 challenge on missing or invalid credentials.
-     *
-     * @return ServerResponse containing challenge
+     * Helper method to copy the challenge response
      */
     private ServerResponse challenge() {
-        return ServerResponse.copyIfNotServerResponse(
-                   Response.status(Status.UNAUTHORIZED)
-                           .header(HttpHeaders.WWW_AUTHENTICATE, scheme.getChallenge(realm))
-                           .build());
+        return ServerResponse.copyIfNotServerResponse(getChallenge());
     }
 }

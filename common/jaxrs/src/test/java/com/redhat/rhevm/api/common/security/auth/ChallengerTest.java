@@ -115,6 +115,8 @@ public class ChallengerTest extends Assert {
             if (valid) {
                 current.set(principal);
                 EasyMock.expectLastCall();
+                current.set(challenger);
+                EasyMock.expectLastCall();
             }
         }
         control.replay();

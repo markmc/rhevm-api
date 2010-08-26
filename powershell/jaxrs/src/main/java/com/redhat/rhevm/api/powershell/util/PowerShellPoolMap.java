@@ -50,7 +50,7 @@ public class PowerShellPoolMap extends ReapedMap<Principal, PowerShellPool> {
         if (principal != null) {
             pool = super.get(principal);
             if (pool == null) {
-                pool = new PowerShellPool(executor, principal);
+                pool = new PowerShellPool(executor, principal, current);
                 super.put(principal, pool);
                 super.reapable(principal);
             }

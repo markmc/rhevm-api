@@ -34,6 +34,7 @@ import static org.powermock.api.easymock.PowerMock.expectNew;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
 
+import com.redhat.rhevm.api.common.invocation.Current;
 import com.redhat.rhevm.api.common.security.auth.Principal;
 
 @RunWith(PowerMockRunner.class)
@@ -49,11 +50,9 @@ public class PowerShellPoolTest extends Assert {
     public void test() throws Exception {
         Principal principal = new Principal("joe", "schmoe");
 
-        setupExpectations(principal);
-
         ControllableExecutor executor = new ControllableExecutor();
 
-        PowerShellPool pool = new PowerShellPool(executor, principal, 10, 20);
+        PowerShellPool pool = new PowerShellPool(executor, principal, setupExpectations(principal), 10, 20);
 
         assertEquals(10, executor.taskCount());
 
@@ -77,13 +76,15 @@ public class PowerShellPoolTest extends Assert {
         pool.shutdown();
     }
 
-    private void setupExpectations(Principal principal) throws Exception {
+    private Current setupExpectations(Principal principal) throws Exception {
         PowerShellCmd cmd = createMock(PowerShellCmd.class);
-        expectNew(PowerShellCmd.class, principal).andReturn(cmd).anyTimes();
+        Current current = createMock(Current.class);
+        expectNew(PowerShellCmd.class, principal, current).andReturn(cmd).anyTimes();
         cmd.start();
         expectLastCall().anyTimes();
         cmd.stop();
         expectLastCall().anyTimes();
         replayAll();
+        return current;
     }
 }
