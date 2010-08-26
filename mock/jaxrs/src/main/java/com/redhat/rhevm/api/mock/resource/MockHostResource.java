@@ -28,6 +28,7 @@ import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.HostStatus;
 import com.redhat.rhevm.api.resource.HostResource;
 import com.redhat.rhevm.api.resource.HostNicsResource;
+import com.redhat.rhevm.api.resource.HostStorageResource;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 
@@ -115,4 +116,5 @@ public class MockHostResource extends AbstractMockResource<Host> implements Host
     }
 
     @Override public HostNicsResource getHostNicsResource() { return null; }
+    @Override public HostStorageResource getHostStorageResource() { return null; }
 }

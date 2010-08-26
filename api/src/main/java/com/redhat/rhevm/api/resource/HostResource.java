@@ -70,4 +70,7 @@ public interface HostResource extends UpdatableResource<Host> {
 
     @Path("nics")
     public HostNicsResource getHostNicsResource();
+
+    @Path("storage")
+    public HostStorageResource getHostStorageResource();
 }

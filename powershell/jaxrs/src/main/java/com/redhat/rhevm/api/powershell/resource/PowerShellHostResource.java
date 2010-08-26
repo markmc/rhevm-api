@@ -29,6 +29,7 @@ import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.resource.HostResource;
 import com.redhat.rhevm.api.resource.HostNicsResource;
+import com.redhat.rhevm.api.resource.HostStorageResource;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellHost;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
@@ -161,5 +162,10 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
     @Override
     public HostNicsResource getHostNicsResource() {
         return new PowerShellHostNicsResource(getId(), getExecutor(), shellPools, getParser());
+    }
+
+    @Override
+    public HostStorageResource getHostStorageResource() {
+        return null;
     }
 }

@@ -31,6 +31,7 @@ import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.Iso;
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.NIC;
+import com.redhat.rhevm.api.model.Storage;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VmPool;
@@ -51,6 +52,7 @@ public class LinkHelperTest extends Assert {
     private static final String CDROM_ID = "wonderful";
     private static final String DISK_ID = "fantastic";
     private static final String NIC_ID = "super";
+    private static final String STORAGE_ID = "sensational";
 
     private static final String VM_HREF = "vms/" + VM_ID;
     private static final String CLUSTER_HREF = "clusters/" + CLUSTER_ID;
@@ -66,6 +68,7 @@ public class LinkHelperTest extends Assert {
     private static final String CDROM_HREF = VM_HREF + "/cdroms/" + CDROM_ID;
     private static final String DISK_HREF = VM_HREF + "/disks/" + DISK_ID;
     private static final String NIC_HREF = VM_HREF + "/nics/" + NIC_ID;
+    private static final String STORAGE_HREF = HOST_HREF + "/storage/" + STORAGE_ID;
 
     @Test
     public void testVmLinks() throws Exception {
@@ -114,9 +117,13 @@ public class LinkHelperTest extends Assert {
         StorageDomain storageDomain = new StorageDomain();
         storageDomain.setId(STORAGE_DOMAIN_ID);
 
+        storageDomain.setStorage(new Storage());
+        storageDomain.getStorage().setPath("foo");
+
         LinkHelper.addLinks(storageDomain);
 
         assertEquals(STORAGE_DOMAIN_HREF, storageDomain.getHref());
+        assertNull(storageDomain.getStorage().getHref());
     }
 
     @Test
@@ -224,5 +231,19 @@ public class LinkHelperTest extends Assert {
         LinkHelper.addLinks(attachment);
 
         assertNull(attachment.getHref());
+    }
+
+    @Test
+    public void testStorageLinks() throws Exception {
+        Storage storage = new Storage();
+        storage.setId(STORAGE_ID);
+
+        storage.setHost(new Host());
+        storage.getHost().setId(HOST_ID);
+
+        LinkHelper.addLinks(storage);
+
+        assertEquals(STORAGE_HREF, storage.getHref());
+        assertEquals(HOST_HREF, storage.getHost().getHref());
     }
 }
