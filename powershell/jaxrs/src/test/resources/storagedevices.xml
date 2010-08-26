@@ -11,7 +11,7 @@
       <Property Type="RhevmCmd.CLILunConnection">
         <Property Name="Connection" Type="System.String">192.168.1.6</Property>
         <Property Name="Id" Type="System.String" />
-        <Property Name="Iqn" Type="System.String">iqn.2009-08.org.boldlygoingnowhere.rhevm:markmc.test1</Property>
+        <Property Name="Iqn" Type="System.String">iqn.2009-08.com.mycorp:mysan.foobar</Property>
         <Property Name="Port" Type="System.String">3260</Property>
         <Property Name="Portal" Type="System.String">1</Property>
         <Property Name="StorageType" Type="VdcCommon.BusinessEntities.StorageType">
@@ -33,7 +33,7 @@
       <Property Type="RhevmCmd.CLILunConnection">
         <Property Name="Connection" Type="System.String">192.168.1.6</Property>
         <Property Name="Id" Type="System.String" />
-        <Property Name="Iqn" Type="System.String">iqn.2009-08.org.boldlygoingnowhere.rhevm:markmc.test1</Property>
+        <Property Name="Iqn" Type="System.String">iqn.2009-08.com.mycorp:mysan.foobar</Property>
         <Property Name="Port" Type="System.String">3260</Property>
         <Property Name="Portal" Type="System.String">1</Property>
         <Property Name="StorageType" Type="VdcCommon.BusinessEntities.StorageType">
@@ -55,7 +55,7 @@
       <Property Type="RhevmCmd.CLILunConnection">
         <Property Name="Connection" Type="System.String">192.168.1.6</Property>
         <Property Name="Id" Type="System.String" />
-        <Property Name="Iqn" Type="System.String">iqn.2009-08.org.boldlygoingnowhere.rhevm:markmc.test1</Property>
+        <Property Name="Iqn" Type="System.String">iqn.2009-08.com.mycorp:mysan.foobar</Property>
         <Property Name="Port" Type="System.String">3260</Property>
         <Property Name="Portal" Type="System.String">1</Property>
         <Property Name="StorageType" Type="VdcCommon.BusinessEntities.StorageType">

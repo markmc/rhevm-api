@@ -1,0 +1,23 @@
+  <!-- args: id, name, description -->
+  <Object Type="RhevmCmd.CLIStorageDevice">
+    <Property Name="Id" Type="System.String">{0}</Property>
+    <Property Name="LunType" Type="VdcCommon.BusinessEntities.StorageType">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="PhysicalVolumeId" Type="System.String" />
+    <Property Name="VolumeGroupId" Type="System.String" />
+    <Property Name="LunConnections" Type="System.Collections.Generic.List`1[RhevmCmd.CLILunConnection]">
+      <Property Type="RhevmCmd.CLILunConnection">
+        <Property Name="Connection" Type="System.String">192.168.1.6</Property>
+        <Property Name="Id" Type="System.String" />
+        <Property Name="Iqn" Type="System.String">iqn.2009-08.com.mycorp:mysan.foobar</Property>
+        <Property Name="Port" Type="System.String">3260</Property>
+        <Property Name="Portal" Type="System.String">1</Property>
+        <Property Name="StorageType" Type="VdcCommon.BusinessEntities.StorageType">
+          <Property Name="value__" Type="System.Int32">0</Property>
+        </Property>
+        <Property Name="UserName" Type="System.String" />
+        <Property Name="Password" Type="System.String" />
+      </Property>
+    </Property>
+  </Object>

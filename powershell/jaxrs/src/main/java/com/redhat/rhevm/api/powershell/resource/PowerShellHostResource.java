@@ -166,6 +166,6 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
 
     @Override
     public HostStorageResource getHostStorageResource() {
-        return null;
+        return new PowerShellHostStorageResource(getId(), getExecutor(), shellPools, getParser());
     }
 }

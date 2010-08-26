@@ -40,6 +40,10 @@ public class BasePowerShellResourceTest extends Assert {
     protected static final String SLASH = "/";
     protected static final String QUERY = "name=*r*s";
 
+    protected String formatXmlReturn(String type, String[] names, String[] descriptions) {
+        return formatXmlReturn(type, names, descriptions, new String[]{});
+    }
+
     protected String formatXmlReturn(String type, String[] names, String[] descriptions, String[] args) {
         String[][] perNameArgs = new String[names.length][];
         for (int i = 0; i < names.length; i++) {

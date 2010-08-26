@@ -34,12 +34,20 @@ import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 public class PowerShellStorageDomain extends StorageDomain {
 
     private StorageDomainStatus sharedStatus;
+    private String vgId;
 
     public StorageDomainStatus getSharedStatus() {
         return sharedStatus;
     }
     public void setSharedStatus(StorageDomainStatus sharedStatus) {
         this.sharedStatus = sharedStatus;
+    }
+
+    public String getVgId() {
+        return vgId;
+    }
+    public void setVgId(String vgId) {
+        this.vgId = vgId;
     }
 
     public static List<PowerShellStorageDomain> parse(PowerShellParser parser, String output) {
@@ -50,6 +58,7 @@ public class PowerShellStorageDomain extends StorageDomain {
 
             storageDomain.setId(entity.get("storagedomainid"));
             storageDomain.setName(entity.get("name"));
+            storageDomain.setVgId(entity.get("vgid"));
 
             String domainType = entity.get("domaintype").toUpperCase();
             if (domainType.endsWith(" (MASTER)")) {
