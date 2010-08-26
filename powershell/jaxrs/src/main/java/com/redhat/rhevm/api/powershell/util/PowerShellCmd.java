@@ -37,6 +37,7 @@ public class PowerShellCmd {
     private static final Log log = LogFactory.getLog(PowerShellCmd.class);
 
     private static final String LOGIN_FAILED = "Login failed. Please verify your login information";
+    private static final String TIMED_OUT = "Service is down, or timeout exceeded.";
     private static final String QUOTE = "'";
 
     private Principal principal;
@@ -69,8 +70,12 @@ public class PowerShellCmd {
 
         script = addConvertToXml(script);
 
+        String command = isTimedOut(process)
+                         ? buildLogin() + script.toString()
+                         : script.toString();
+
         try {
-            process.send(script.toString());
+            process.send(command);
         } catch (java.io.IOException ex) {
             throw new PowerShellException("Writing to powershell process failed", ex);
         }
@@ -87,6 +92,19 @@ public class PowerShellCmd {
         stderr.update(process.getCurrentStandardErrContents());
 
         return stdout.getStatus();
+    }
+
+    private static boolean isTimedOut(Spawn process) {
+        boolean timeout = false;
+        String out = process.getCurrentStandardOutContents();
+        if (out.length() > TIMED_OUT.length()) {
+            int tail = out.length() - TIMED_OUT.length() - 2;
+            timeout = out.substring(tail)
+                         .replaceAll("\\r", "")
+                         .replaceAll("\\n", "")
+                         .endsWith(TIMED_OUT);
+        }
+        return timeout;
     }
 
     /* On Windows 2008 R2, which is always 64-bit, the PowerShell bindings

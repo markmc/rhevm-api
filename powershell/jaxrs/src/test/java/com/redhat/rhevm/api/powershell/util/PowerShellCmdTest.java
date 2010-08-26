@@ -55,6 +55,7 @@ public class PowerShellCmdTest extends Assert {
     private static final String SCRIPT = "hello";
     private static final String OUTPUT = "hello there!";
     private static final String ERROR = "Hello!\nHello!\nIs this thing on?";
+    private static final String TIMEOUT = "Service is down, or timeout exceeded.\r\n";
     private static final int EXIT_STATUS = 9;
     private static final String DOMAIN = "LeinsterHouse";
     private static final String USER = "Jackie";
@@ -109,7 +110,7 @@ public class PowerShellCmdTest extends Assert {
 
     @Test
     public void testUnAuth() throws Exception {
-        PowerShellCmd cmd = new PowerShellCmd(new Principal(USER, PASSWORD, DOMAIN), setupExpectations(LOGIN_USER, false, LOGIN_FAILED));
+        PowerShellCmd cmd = new PowerShellCmd(new Principal(USER, PASSWORD, DOMAIN), setupExpectations(LOGIN_USER, false, "", LOGIN_FAILED));
         cmd.start();
 
         assertEquals(EXIT_STATUS, cmd.run(SCRIPT));
@@ -137,6 +138,18 @@ public class PowerShellCmdTest extends Assert {
         cmd.stop();
     }
 
+    @Test
+    public void testTimeout() throws Exception {
+        PowerShellCmd cmd = new PowerShellCmd(new Principal(USER, PASSWORD, DOMAIN), setupExpectations(LOGIN_USER, false, OUTPUT + TIMEOUT, ERROR));
+        cmd.start();
+
+        assertEquals(EXIT_STATUS, cmd.run(SCRIPT));
+        assertEquals(OUTPUT, cmd.getStdOut());
+        assertEquals(ERROR, cmd.getStdErr());
+
+        cmd.stop();
+    }
+
     private String getScript() {
         return "Write-Host \"<output>\";\n  $result = Invoke-Expression '" + SCRIPT + "';\n  $result | ConvertTo-XML -As String -Depth 5;\n  $status = 0;\nWrite-Host \"</output> $status\";\n";
     }
@@ -146,10 +159,10 @@ public class PowerShellCmdTest extends Assert {
     }
 
     public Current setupExpectations(String login, boolean syswow64) throws Exception {
-        return setupExpectations(login, syswow64, ERROR);
+        return setupExpectations(login, syswow64, "", ERROR);
     }
 
-    public Current setupExpectations(String login, boolean syswow64, String error) throws Exception {
+    public Current setupExpectations(String login, boolean syswow64, String previousOutput, String error) throws Exception {
         Current current = createMock(Current.class);
         if (LOGIN_FAILED.equals(error)) {
             Challenger challenger = createMock(Challenger.class);
@@ -171,7 +184,7 @@ public class PowerShellCmdTest extends Assert {
             expectLastCall();
         }
 
-        spawn.send(getScript());
+        spawn.send(previousOutput.endsWith(TIMEOUT) ? LOGIN_USER + getScript() : getScript());
         expectLastCall();
 
         spawn.expect("</output>");
@@ -179,6 +192,7 @@ public class PowerShellCmdTest extends Assert {
         spawn.stop();
         expectLastCall();
 
+        expect(spawn.getCurrentStandardOutContents()).andReturn(previousOutput);
         expect(spawn.getCurrentStandardOutContents()).andReturn(getOutput());
         expect(spawn.getCurrentStandardErrContents()).andReturn(error);
 
