@@ -80,10 +80,10 @@ public class LinkHelperTest extends Assert {
 
         LinkHelper.addLinks(vm);
 
-        assertEquals(vm.getHref(), VM_HREF);
-        assertEquals(vm.getCluster().getHref(), CLUSTER_HREF);
-        assertEquals(vm.getTemplate().getHref(), TEMPLATE_HREF);
-        assertEquals(vm.getVmPool().getHref(), VM_POOL_HREF);
+        assertEquals(VM_HREF, vm.getHref());
+        assertEquals(CLUSTER_HREF, vm.getCluster().getHref());
+        assertEquals(TEMPLATE_HREF, vm.getTemplate().getHref());
+        assertEquals(VM_POOL_HREF, vm.getVmPool().getHref());
     }
 
     @Test
@@ -95,8 +95,8 @@ public class LinkHelperTest extends Assert {
 
         LinkHelper.addLinks(cluster);
 
-        assertEquals(cluster.getHref(), CLUSTER_HREF);
-        assertEquals(cluster.getDataCenter().getHref(), DATA_CENTER_HREF);
+        assertEquals(CLUSTER_HREF, cluster.getHref());
+        assertEquals(DATA_CENTER_HREF, cluster.getDataCenter().getHref());
     }
 
     @Test
@@ -106,7 +106,7 @@ public class LinkHelperTest extends Assert {
 
         LinkHelper.addLinks(host);
 
-        assertEquals(host.getHref(), HOST_HREF);
+        assertEquals(HOST_HREF, host.getHref());
     }
 
     @Test
@@ -116,7 +116,7 @@ public class LinkHelperTest extends Assert {
 
         LinkHelper.addLinks(storageDomain);
 
-        assertEquals(storageDomain.getHref(), STORAGE_DOMAIN_HREF);
+        assertEquals(STORAGE_DOMAIN_HREF, storageDomain.getHref());
     }
 
     @Test
@@ -126,7 +126,7 @@ public class LinkHelperTest extends Assert {
 
         LinkHelper.addLinks(dataCenter);
 
-        assertEquals(dataCenter.getHref(), DATA_CENTER_HREF);
+        assertEquals(DATA_CENTER_HREF, dataCenter.getHref());
     }
 
     @Test
@@ -136,7 +136,7 @@ public class LinkHelperTest extends Assert {
 
         LinkHelper.addLinks(network);
 
-        assertEquals(network.getHref(), NETWORK_HREF);
+        assertEquals(NETWORK_HREF, network.getHref());
     }
 
     @Test
@@ -148,7 +148,7 @@ public class LinkHelperTest extends Assert {
 
         LinkHelper.addLinks(network);
 
-        assertEquals(network.getHref(), CLUSTER_NETWORK_HREF);
+        assertEquals(CLUSTER_NETWORK_HREF, network.getHref());
     }
 
     @Test
@@ -161,7 +161,7 @@ public class LinkHelperTest extends Assert {
 
         LinkHelper.addLinks(iso);
 
-        assertEquals(iso.getHref(), ISO_HREF);
+        assertEquals(ISO_HREF, iso.getHref());
     }
 
     @Test
@@ -174,7 +174,7 @@ public class LinkHelperTest extends Assert {
 
         LinkHelper.addLinks(cdrom);
 
-        assertEquals(cdrom.getHref(), CDROM_HREF);
+        assertEquals(CDROM_HREF, cdrom.getHref());
     }
 
     @Test
@@ -187,7 +187,7 @@ public class LinkHelperTest extends Assert {
 
         LinkHelper.addLinks(disk);
 
-        assertEquals(disk.getHref(), DISK_HREF);
+        assertEquals(DISK_HREF, disk.getHref());
     }
 
     @Test
@@ -200,7 +200,7 @@ public class LinkHelperTest extends Assert {
 
         LinkHelper.addLinks(nic);
 
-        assertEquals(nic.getHref(), NIC_HREF);
+        assertEquals(NIC_HREF, nic.getHref());
     }
 
     @Test
@@ -212,8 +212,8 @@ public class LinkHelperTest extends Assert {
 
         LinkHelper.addLinks(attachment);
 
-        assertEquals(attachment.getHref(), ATTACHMENT_HREF);
-        assertEquals(attachment.getStorageDomain().getHref(), STORAGE_DOMAIN_HREF);
+        assertEquals(ATTACHMENT_HREF, attachment.getHref());
+        assertEquals(STORAGE_DOMAIN_HREF, attachment.getStorageDomain().getHref());
     }
 
     @Test
