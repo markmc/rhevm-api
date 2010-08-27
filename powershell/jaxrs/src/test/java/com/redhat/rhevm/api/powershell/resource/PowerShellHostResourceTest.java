@@ -29,10 +29,11 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Fault;
 import com.redhat.rhevm.api.model.Host;
-
+import com.redhat.rhevm.api.model.IscsiParameters;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
+import com.redhat.rhevm.api.powershell.util.PowerShellTestUtils;
 
 import org.junit.Test;
 
@@ -56,6 +57,11 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
     private static final String INSTALL_COMMAND = "$h = get-host \"" + HOST_ID + "\";update-host -hostobject $h -install -rootpassword \"" + INSTALL_PASSWORD + "\"";
     private static final String COMMIT_NET_CONFIG_COMMAND = "$h = get-host \"" + HOST_ID + "\"; commit-configurationchanges -hostobject $h";
 
+    private static String ISCSI_PORTAL = "192.168.1.6";
+    private static String ISCSI_TARGET = "iqn.2009-08.com.mycorp:mysan.foobar";
+    private static String ISCSI_DISCOVER_COMMAND = "$cnx = new-storageserverconnection -storagetype ISCSI -connection \"" + ISCSI_PORTAL + "\" -portal \"" + ISCSI_PORTAL + "\"; get-storageserversendtargets -hostid \"" + HOST_ID + "\" -storageserverconnectionobject $cnx";
+    private static String ISCSI_LOGIN_COMMAND = "$cnx = new-storageserverconnection -storagetype ISCSI -connection \"" + ISCSI_PORTAL + "\" -portal \"" + ISCSI_PORTAL + "\" -iqn \"" + ISCSI_TARGET + "\"; connect-storagetohost -hostid \"" + HOST_ID + "\" -storageserverconnectionobject $cnx";
+
     protected PowerShellHostResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser) {
         return new PowerShellHostResource(HOST_ID, executor, poolMap, parser);
     }
@@ -71,6 +77,10 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
                                PowerShellHostsResourceTest.extraArgs);
         System.out.println(ret);
         return ret;
+    }
+
+    protected String formatStorageConnection() {
+        return PowerShellTestUtils.readClassPathFile("storagecnx.xml");
     }
 
     @Test
@@ -166,6 +176,36 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
     }
 
     @Test
+    public void testIscsiDiscover() throws Exception {
+        Action action = getAction();
+        action.setIscsi(new IscsiParameters());
+        action.getIscsi().setAddress(ISCSI_PORTAL);
+        Response response =
+            resource.iscsiDiscover(setUpActionExpectation("/hosts/" + HOST_ID + "/",
+                                                          "iscsidiscover",
+                                                          ISCSI_DISCOVER_COMMAND,
+                                                          formatStorageConnection()),
+                                   action);
+        verifyActionResponse(response, false);
+        verifyIscsiTargets(response);
+    }
+
+    @Test
+    public void testIscsiLogin() throws Exception {
+        Action action = getAction();
+        action.setIscsi(new IscsiParameters());
+        action.getIscsi().setAddress(ISCSI_PORTAL);
+        action.getIscsi().setTarget(ISCSI_TARGET);
+        verifyActionResponse(
+            resource.iscsiLogin(setUpActionExpectation("/hosts/" + HOST_ID + "/",
+                                                       "iscsilogin",
+                                                       ISCSI_LOGIN_COMMAND,
+                                                       ACTION_RETURN),
+                                action),
+            false);
+    }
+
+    @Test
     public void testApproveAsync() throws Exception {
         verifyActionResponse(
             resource.approve(setUpActionExpectation("approve", "approve-host"), getAction(true)),
@@ -245,6 +285,14 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
         assertNotNull(host);
         assertEquals(Integer.toString(name.hashCode()), host.getId());
         assertEquals(name, host.getName());
+    }
+
+    private void verifyIscsiTargets(Response response) {
+        assertNotNull(response);
+        Action action = (Action)response.getEntity();
+        assertTrue(action.isSetIscsiTargets());
+        assertEquals(1, action.getIscsiTargets().size());
+        assertEquals(ISCSI_TARGET, action.getIscsiTargets().get(0));
     }
 
     private void verifyActionResponse(Response r, boolean async) throws Exception {

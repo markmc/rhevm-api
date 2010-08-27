@@ -18,6 +18,7 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 
@@ -26,12 +27,14 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Host;
+import com.redhat.rhevm.api.model.IscsiParameters;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.resource.HostResource;
 import com.redhat.rhevm.api.resource.HostNicsResource;
 import com.redhat.rhevm.api.resource.HostStorageResource;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellHost;
+import com.redhat.rhevm.api.powershell.model.PowerShellStorageConnection;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
@@ -134,14 +137,74 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
         return doAction(uriInfo, new CommandRunner(action, buf.toString(), getPool()));
     }
 
+    private List<String> parseIscsiTargets(String output) {
+        List<String> targets = new ArrayList<String>();
+        for (PowerShellStorageConnection cnx : PowerShellStorageConnection.parse(getParser(), output)) {
+            targets.add(cnx.getIqn());
+        }
+        return targets;
+    }
+
     @Override
     public Response iscsiDiscover(UriInfo uriInfo, Action action) {
-        return null;
+        validateParameters(action, "iscsi.address");
+
+        IscsiParameters params = action.getIscsi();
+
+        StringBuilder buf = new StringBuilder();
+
+        buf.append("$cnx = new-storageserverconnection");
+        buf.append(" -storagetype ISCSI");
+        buf.append(" -connection " + PowerShellUtils.escape(params.getAddress()));
+        buf.append(" -portal " + PowerShellUtils.escape(params.getAddress()));
+        if (params.isSetPort() && params.getPort() != 0) {
+            buf.append(" -port " + params.getPort());
+        }
+        buf.append("; ");
+
+        buf.append("get-storageserversendtargets");
+        buf.append(" -hostid " + PowerShellUtils.escape(getId()));
+        buf.append(" -storageserverconnectionobject $cnx");
+
+        return doAction(uriInfo,
+                        new CommandRunner(action, buf.toString(), getPool()) {
+                            protected void handleOutput(String output) {
+                                for (String target : parseIscsiTargets(output)) {
+                                    action.getIscsiTargets().add(target);
+                                }
+                            }
+                        });
     }
 
     @Override
     public Response iscsiLogin(UriInfo uriInfo, Action action) {
-        return null;
+        validateParameters(action, "iscsi.address", "iscsi.target");
+
+        IscsiParameters params = action.getIscsi();
+
+        StringBuilder buf = new StringBuilder();
+
+        buf.append("$cnx = new-storageserverconnection");
+        buf.append(" -storagetype ISCSI");
+        buf.append(" -connection " + PowerShellUtils.escape(params.getAddress()));
+        buf.append(" -portal " + PowerShellUtils.escape(params.getAddress()));
+        buf.append(" -iqn " + PowerShellUtils.escape(params.getTarget()));
+        if (params.isSetPort() && params.getPort() != 0) {
+            buf.append(" -port " + params.getPort());
+        }
+        if (params.isSetUsername()) {
+            buf.append(" -username " + PowerShellUtils.escape(params.getUsername()));
+        }
+        if (params.isSetPassword()) {
+            buf.append(" -password " + PowerShellUtils.escape(params.getPassword()));
+        }
+        buf.append("; ");
+
+        buf.append("connect-storagetohost");
+        buf.append(" -hostid " + PowerShellUtils.escape(getId()));
+        buf.append(" -storageserverconnectionobject $cnx");
+
+        return doAction(uriInfo, new CommandRunner(action, buf.toString(), getPool()));
     }
 
     class HostInstaller extends AbstractPowerShellActionTask {
