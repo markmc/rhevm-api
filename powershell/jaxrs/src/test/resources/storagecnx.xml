@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<Objects>
+  <Object Type="RhevmCmd.CLIStorageServerConnection">
+    <Property Name="ConnectionId" Type="System.String" />
+    <Property Name="Connection" Type="System.String">192.168.1.6</Property>
+    <Property Name="Iqn" Type="System.String">iqn.2009-08.com.mycorp:mysan.foobar</Property>
+    <Property Name="UserName" Type="System.String" />
+    <Property Name="Password" Type="System.String" />
+    <Property Name="Type" Type="VdcCommon.BusinessEntities.StorageType">
+      <Property Name="value__" Type="System.Int32">3</Property>
+    </Property>
+    <Property Name="Port" Type="System.String">3260</Property>
+    <Property Name="Portal" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Guid">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="DataCenterId" Type="System.Guid">00000000-0000-0000-0000-000000000000</Property>
+  </Object>
+</Objects>
