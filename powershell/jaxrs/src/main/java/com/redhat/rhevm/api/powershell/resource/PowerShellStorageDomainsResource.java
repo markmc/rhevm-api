@@ -82,11 +82,15 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
             validateParameters(storage, "address", "path");
             break;
         case ISCSI:
+        case FCP:
+            // REVISIT: validate that a logical unit or volume group supplied
             for (LogicalUnit lu : storage.getLogicalUnits()) {
-                validateParameters(lu, "address", "target", "id");
+                validateParameters(lu, "id");
+            }
+            if (storage.isSetVolumeGroup()) {
+                validateParameters(storage.getVolumeGroup(), "id");
             }
             break;
-        case FCP:
         default:
             assert false : storage.getType();
             break;
@@ -104,24 +108,31 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
             hostArg = "$h.hostid";
         }
 
-        if (storage.getType() == StorageType.ISCSI) {
+        if (storage.getType() == StorageType.ISCSI ||
+            storage.getType() == StorageType.FCP &&
+            storage.isSetLogicalUnits()) {
             buf.append("$lunids = new-object System.Collections.ArrayList;");
 
             for (LogicalUnit lu : storage.getLogicalUnits()) {
-                buf.append("$cnx = new-storageserverconnection");
-                buf.append(" -storagetype ISCSI");
-                buf.append(" -connection " + PowerShellUtils.escape(lu.getAddress()));
-                buf.append(" -iqn " + PowerShellUtils.escape(lu.getTarget()));
-                buf.append(";");
+                if (storage.getType() == StorageType.ISCSI && lu.isSetAddress() && lu.isSetTarget()) {
+                    // REVIST: port no., username, password
+                    buf.append("$cnx = new-storageserverconnection");
+                    buf.append(" -storagetype ISCSI");
+                    buf.append(" -connection " + PowerShellUtils.escape(lu.getAddress()));
+                    buf.append(" -iqn " + PowerShellUtils.escape(lu.getTarget()));
+                    buf.append(";");
 
-                buf.append("$cnx = connect-storagetohost");
-                buf.append(" -hostid " + hostArg);
-                buf.append(" -storageserverconnectionobject $cnx");
-                buf.append(";");
+                    buf.append("$cnx = connect-storagetohost");
+                    buf.append(" -hostid " + hostArg);
+                    buf.append(" -storageserverconnectionobject $cnx");
+                    buf.append(";");
+                }
 
                 buf.append("$lunids.add(" + PowerShellUtils.escape(lu.getId()) + ") | out-null;");
             }
         }
+
+        // REVIST: add support for logging in to ISCSI targets specified for a volume group
 
         buf.append("add-storagedomain");
 
@@ -153,9 +164,13 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
             buf.append(PowerShellUtils.escape(storage.getAddress() + ":" + storage.getPath()));
             break;
         case ISCSI:
-            buf.append(" -lunidlist $lunids");
-            break;
         case FCP:
+            if (storage.isSetLogicalUnits()) {
+                buf.append(" -lunidlist $lunids");
+            } else {
+                buf.append(" -volumegroup " + PowerShellUtils.escape(storage.getVolumeGroup().getId()));
+            }
+            break;
         default:
             break;
         }
