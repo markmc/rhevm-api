@@ -692,7 +692,7 @@
     <xs:sequence>
       <xs:element ref="logical_unit" maxOccurs="unbounded">
         <xs:annotation>
-          <xs:appinfo>n
+          <xs:appinfo>
             <jaxb:property name="LogicalUnits"/>
           </xs:appinfo>
         </xs:annotation>
