@@ -69,12 +69,13 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
     }
 
     public static Host addLinks(Host host) {
-        Link link = new Link();
-        link.setRel("nics");
-        link.setHref(LinkHelper.getUriBuilder(host).path("nics").build().toString());
+        String [] subCollections = { "nics", "storage" };
 
         host.getLinks().clear();
-        host.getLinks().add(link);
+
+        for (String collection : subCollections) {
+            addSubCollection(host, collection);
+        }
 
         return LinkHelper.addLinks(host);
     }
@@ -167,5 +168,12 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
     @Override
     public HostStorageResource getHostStorageResource() {
         return new PowerShellHostStorageResource(getId(), getExecutor(), shellPools, getParser());
+    }
+
+    private static void addSubCollection(Host host, String collection) {
+        Link link = new Link();
+        link.setRel(collection);
+        link.setHref(LinkHelper.getUriBuilder(host).path(collection).build().toString());
+        host.getLinks().add(link);
     }
 }
