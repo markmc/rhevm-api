@@ -35,7 +35,7 @@ import com.redhat.rhevm.api.model.Host;
 @Produces(MediaType.APPLICATION_XML)
 public interface HostResource extends UpdatableResource<Host> {
 
-    @Path("{action: (approve|fence|resume)}/{oid}")
+    @Path("{action: (approve|install|activate|deactivate|commitnetconfig)}/{oid}")
     public ActionResource getActionSubresource(@PathParam("action")String action, @PathParam("oid")String oid);
 
     @POST
