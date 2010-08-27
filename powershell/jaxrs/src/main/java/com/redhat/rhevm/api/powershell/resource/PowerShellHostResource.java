@@ -134,6 +134,16 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
         return doAction(uriInfo, new CommandRunner(action, buf.toString(), getPool()));
     }
 
+    @Override
+    public Response iscsiDiscover(UriInfo uriInfo, Action action) {
+        return null;
+    }
+
+    @Override
+    public Response iscsiLogin(UriInfo uriInfo, Action action) {
+        return null;
+    }
+
     class HostInstaller extends AbstractPowerShellActionTask {
 
         private String rootPassword;

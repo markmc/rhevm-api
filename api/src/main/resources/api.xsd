@@ -56,6 +56,12 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="IscsiParameters">
+    <xs:sequence>
+      <xs:group ref="IscsiTarget"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:group name="ActionParameterGroup">
     <xs:sequence>
       <xs:element name="grace_period" type="GracePeriod" minOccurs="0"/>
@@ -67,7 +73,23 @@
       <xs:element name="root_password" type="xs:string" minOccurs="0" maxOccurs="1"/>
       <!-- for VM ticket actions -->
       <xs:element name="ticket" type="Ticket" minOccurs="0"/>
+      <!-- for Host ISCSI actions -->
+      <xs:element name="iscsi" type="IscsiParameters" minOccurs="0"/>
       <!-- ... etc., explicitly enumerate all the parameter types -->
+    </xs:sequence>
+  </xs:group>
+
+  <xs:group name="ActionResponseGroup">
+    <xs:sequence>
+      <!-- for Host ISCSI discovery action -->
+      <xs:element name="iscsi_target" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <jaxb:property name="IscsiTargets"/>
+          </xs:appinfo>
+        </xs:annotation>
+      <!-- ... etc., explicitly enumerate all the response types -->
+      </xs:element>
     </xs:sequence>
   </xs:group>
 
@@ -90,6 +112,8 @@
           <xs:element ref="link" minOccurs="1" maxOccurs="unbounded"/>
           <!-- Fault describing failure case -->
           <xs:element ref="fault" minOccurs="0" maxOccurs="1"/>
+          <!-- action-specific response(s) for the operation (if required) -->
+          <xs:group ref="ActionResponseGroup"/>
       </xs:sequence>
       <xs:attribute name="href" type="xs:string"/>
       <xs:attribute name="id" type="xs:string"/>

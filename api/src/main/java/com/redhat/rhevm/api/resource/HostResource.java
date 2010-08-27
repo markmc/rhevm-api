@@ -35,7 +35,7 @@ import com.redhat.rhevm.api.model.Host;
 @Produces(MediaType.APPLICATION_XML)
 public interface HostResource extends UpdatableResource<Host> {
 
-    @Path("{action: (approve|install|activate|deactivate|commitnetconfig)}/{oid}")
+    @Path("{action: (approve|install|activate|deactivate|commitnetconfig|iscsidiscover|iscsilogin)}/{oid}")
     public ActionResource getActionSubresource(@PathParam("action")String action, @PathParam("oid")String oid);
 
     @POST
@@ -67,6 +67,18 @@ public interface HostResource extends UpdatableResource<Host> {
     @Actionable
     @Path("commitnetconfig")
     public Response commitNetConfig(@Context UriInfo uriInfo, Action action);
+
+    @POST
+    @Formatted
+    @Actionable
+    @Path("iscsidiscover")
+    public Response iscsiDiscover(@Context UriInfo uriInfo, Action action);
+
+    @POST
+    @Formatted
+    @Actionable
+    @Path("iscsilogin")
+    public Response iscsiLogin(@Context UriInfo uriInfo, Action action);
 
     @Path("nics")
     public HostNicsResource getHostNicsResource();

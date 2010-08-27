@@ -101,6 +101,16 @@ public class MockHostResource extends AbstractMockResource<Host> implements Host
         return null;
     }
 
+    @Override
+    public Response iscsiDiscover(UriInfo uriInfo, Action action) {
+        return null;
+    }
+
+    @Override
+    public Response iscsiLogin(UriInfo uriInfo, Action action) {
+        return null;
+    }
+
     private class HostStatusSetter extends AbstractActionTask {
         private HostStatus status;
         HostStatusSetter(Action action, HostStatus status) {
