@@ -662,12 +662,21 @@
     </xs:sequence>
   </xs:group>
 
+  <xs:group name="IscsiTarget">
+    <xs:sequence>
+      <xs:element name="address" type="xs:string"/>
+      <xs:element name="port" type="xs:unsignedShort"/>
+      <xs:element name="target" type="xs:string"/>
+      <xs:element name="username" type="xs:string"/>
+      <xs:element name="password" type="xs:string"/>
+    </xs:sequence>
+  </xs:group>
+
   <xs:element name="logical_unit" type="LogicalUnit"/>
 
   <xs:complexType name="LogicalUnit">
     <xs:sequence>
-      <xs:element name="address" type="xs:string"/>
-      <xs:element name="target" type="xs:string"/>
+      <xs:group ref="IscsiTarget"/>
     </xs:sequence>
     <xs:attribute name="id" type="xs:string"/>
   </xs:complexType>
