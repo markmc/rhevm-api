@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "REST_API_Guide.ent">
+%BOOK_ENTITIES;
+]>
+<chapter id="chap-REST_API_Guide-Cluster_Level_Versions">
+  <title>Compatibility Level Versions</title>
+  <para>
+    Each host managed by RHEV-M has a version of <literal>VDSM</literal> installed. A more recent version of RHEV-M can manage hosts with a version of VDSM from an older version of RHEV-M installed. However, since a VM may be migrated from host to host within a cluster, RHEV-M will not use features from a given version of VDSM until all hosts within a cluster have that VDSM version (or more recent) installed.
+  </para>
+  <para>
+    This concept is represented in the API by each host being said to be at a <literal>compatibility level</literal>, corresponding to the version of VDSM installed. A <literal>version</literal> element containing <literal>major</literal> and <literal>minor</literal> attributes describes a compatibility level.
+  </para>
+  <para>
+    Once all hosts within a cluster have been upgraded to a certain level, that level's <literal>version</literal> will appear under a <literal>supported_versions</literal> element. This indicates that the cluster's <literal>version</literal> may now be updated to that level. Likewise, once all clusters within a data center have been updated to a given level, the data center may then be updated to that level.
+  </para>
+  <para>
+    For example, if you have a RHEV-M <literal>2.1</literal> instance and you update to <literal>2.2</literal>, the API will report:
+  </para>
+  <screen>
+&lt;host ...&gt;
+  ...
+  &lt;version major="2" minor="1"/&gt;
+  ...
+&lt;/host&gt;
+
+&lt;cluster ...&gt;
+  ...
+  &lt;version major="2" minor="1"/&gt;
+  &lt;supported_versions/&gt;
+  ...
+&lt;/cluster&gt;
+
+&lt;data_center ...&gt;
+  ...
+  &lt;version major="2" minor="1"/&gt;
+  &lt;supported_versions/&gt;
+  ...
+&lt;/data_center&gt;
+  </screen>
+  <para>
+    Once all hosts within a cluster have been updated to VDSM from <literal>2.2</literal>, the API will report:
+  </para>
+  <screen>
+&lt;host ...&gt;
+  ...
+  &lt;version major="2" minor="2"/&gt;
+  ...
+&lt;/host&gt;
+
+&lt;cluster ...&gt;
+  ...
+  &lt;version major="2" minor="1"/&gt;
+  &lt;supported_versions&gt;
+    &lt;version major="2" minor="2"/&gt;
+  &lt;/supported_versions&gt;
+  ...
+&lt;/cluster&gt;
+
+&lt;data_center ...&gt;
+  ...
+  &lt;version major="2" minor="1"/&gt;
+  &lt;supported_versions/&gt;
+  ...
+&lt;/data_center&gt;
+  </screen>
+  <para>
+    The cluster may then updated to <literal>2.2</literal> and the API will report:
+  </para>
+  <screen>
+&lt;cluster ...&gt;
+  ...
+  &lt;version major="2" minor="2"/&gt;
+  &lt;supported_versions/&gt;
+  ...
+&lt;/cluster&gt;
+
+&lt;data_center ...&gt;
+  ...
+  &lt;version major="2" minor="1"/&gt;
+  &lt;supported_versions&gt;
+    &lt;version major="2" minor="2"/&gt;
+  &lt;/supported_versions&gt;
+  ...
+&lt;/data_center&gt;
+  </screen>
+  <para>
+    This indicates that the data center may be updated to <literal>2.2</literal>
+  </para>
+</chapter>

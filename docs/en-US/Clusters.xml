@@ -22,6 +22,14 @@
             <entry><literal>data_center</literal></entry>
             <entry>A reference to the data center of which this cluster is a member. See <xref linkend="chap-REST_API_Guide-Data_Centers"/></entry>
           </row>
+          <row>
+            <entry><literal>version</literal></entry>
+            <entry>The compatibility level of the cluster (see <xref linkend="chap-REST_API_Guide-Cluster_Level_Versions"/>)</entry>
+          </row>
+          <row>
+            <entry><literal>supported_versions</literal></entry>
+            <entry>A list of the <literal>version</literal>s to which the cluster may be updated (see <xref linkend="chap-REST_API_Guide-Cluster_Level_Versions"/>)</entry>
+          </row>
         </tbody>
       </tgroup>
     </informaltable>
@@ -35,6 +43,10 @@
   &lt;description&gt;The default server cluster&lt;/description&gt;
   &lt;cpu id="Intel Xeon 45nm Core2"/&gt;
   &lt;data_center id="d70d5e2d-b8ad-494a-a4d2-c7a5631073c4" href="datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4"/&gt;
+  &lt;version major="2" minor="1"/&gt;
+  &lt;supported_versions&gt;
+    &lt;version major="2" minor="2"/&gt;
+  &lt;/supported_versions&gt;
 &lt;/cluster&gt;
   </screen>
 

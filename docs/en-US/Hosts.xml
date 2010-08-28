@@ -21,6 +21,10 @@
             <entry><literal>address</literal></entry>
             <entry>The IP address or hostname of the host</entry>
           </row>
+          <row>
+            <entry><literal>version</literal></entry>
+            <entry>The compatibility level of the host (see <xref linkend="chap-REST_API_Guide-Cluster_Level_Versions"/>)</entry>
+          </row>
         </tbody>
       </tgroup>
     </informaltable>
@@ -32,6 +36,7 @@
 &lt;host id="0" href="hosts/0"&gt;
   &lt;name&gt;zig&lt;/name&gt;
   &lt;status&gt;UP&lt;/status&gt;
+  &lt;version major="2" minor="2"/&gt;
   &lt;actions&gt;
     &lt;link rel="install" href="hosts/0/install"/&gt;
     &lt;link rel="approve" href="hosts/0/approve"/&gt;

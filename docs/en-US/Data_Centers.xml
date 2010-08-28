@@ -25,6 +25,14 @@
             <entry><literal>link rel="isos"</literal></entry>
             <entry>A link to a description of the ISO images available in this data center</entry>
           </row>
+          <row>
+            <entry><literal>version</literal></entry>
+            <entry>The compatibility level of the data center (see <xref linkend="chap-REST_API_Guide-Cluster_Level_Versions"/>)</entry>
+          </row>
+          <row>
+            <entry><literal>supported_versions</literal></entry>
+            <entry>A list of the <literal>version</literal>s to which the data center may be updated (see <xref linkend="chap-REST_API_Guide-Cluster_Level_Versions"/>)</entry>
+          </row>
         </tbody>
       </tgroup>
     </informaltable>
@@ -42,6 +50,10 @@
     &lt;attachment href="storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/attachments/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4"/&gt;
   &lt;/attachments&gt;
   &lt;link rel="isos" href="datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/isos"/&gt;
+  &lt;version major="2" minor="1"/&gt;
+  &lt;supported_versions&gt;
+    &lt;version major="2" minor="2"/&gt;
+  &lt;/supported_versions&gt;
 &lt;/data_center&gt;
   </screen>
 

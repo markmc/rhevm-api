@@ -8,6 +8,7 @@
 	<xi:include href="Preface.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 	<xi:include href="Introduction.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 	<xi:include href="Entry_Point.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="Compatibility_Level_Versions.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 	<xi:include href="Capabilities.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 	<xi:include href="Authentication.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 	<xi:include href="Common_Idioms.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
