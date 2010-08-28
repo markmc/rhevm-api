@@ -7,16 +7,22 @@
   <title>API Entry Point</title>
 
   <para>
-    Users of the API should begin by issuing a <literal>HEAD</literal> request on the entry point URI (consisting of <varname>{host}</varname> and <varname>{base}</varname>).
+    Users of the API should begin by issuing a <literal>GET</literal> request on the entry point URI (consisting of <varname>{host}</varname> and <varname>{base}</varname>).
   </para>
 
   <screen>
-HEAD {base} HTTP/1.1
+GET {base} HTTP/1.1
 Host: {host}
 
 HTTP/1.1 200 OK
 Link: &lt;http://{host}/{base}/hosts&gt;; rel=hosts, &lt;http://{host}/{base}/vms&gt;; rel=vms
-Content-Length: 0
+Content-Type: application/xml
+
+&lt;api&gt;
+  &lt;link rel="hosts" href="hosts"/&gt;
+  &lt;link rel="vms" href="vms"/&gt;
+  ...
+&lt;/api&gt;
   </screen>
 
   <note>
@@ -32,7 +38,7 @@ Content-Length: 0
         The Internet-Draft describing the format of the Link header is available at <ulink url="http://tools.ietf.org/html/draft-nottingham-http-link-header-10">http://tools.ietf.org/html/draft-nottingham-http-link-header-10</ulink>.
       </para>
     </footnote>
-    in the response provides the client with URIs for the resource collections exposed by the API. Each collection is identified by a relation type which the client must use to find the URI it needs. The following relation types are available:
+    and the <literal>link</literal> elements in the response provides the client with URIs for all of the resource collections exposed by the API. Each collection is identified by a relation type which the client must use to find the URI it needs. The following relation types are available:
 
     <informaltable frame="none">
       <tgroup cols="2">
