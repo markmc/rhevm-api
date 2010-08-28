@@ -47,6 +47,7 @@
   &lt;supported_versions&gt;
     &lt;version major="2" minor="2"/&gt;
   &lt;/supported_versions&gt;
+  &lt;link rel="networks" href="clusters/0/networks"/&gt;
 &lt;/cluster&gt;
   </screen>
 
@@ -54,5 +55,49 @@
     When creating a new cluster, the <literal>name</literal>, <literal>cpu id</literal> and <literal>datacenter id</literal> properties are required. Only the <literal>name</literal>, <literal>description</literal> and <literal>cpu id</literal> elements may be updated post-creation.
   </para>
 
+  <section id="sect-REST_API_Guide-Clusters-Networks">
+    <title>
+      Associating Networks With a Cluster
+    </title>
+
+    <para>
+      The collection referenced by <literal>link rel="networks"</literal> represents the set of networks associated with a given cluster. Every host within the cluster must have a network interface attached to that network in order for the network to be operational.
+    </para>
+
+    <para>
+      The <literal>network</literal> representations are as described in <xref linkend="chap-REST_API_Guide-Networks"/>, except they also contain a <literal>cluster id</literal> reference to the cluster in question.
+    </para>
+
+    <para>
+      The networks collection may be manipulated as described in <xref linkend="chap-REST_API_Guide-Common_Idioms"/>. Associating a network with the cluster is achieved by <literal>POST</literal>ing a network reference (identifying the network either by its <literal>id</literal> or <literal>name</literal>) to the collection. Removing an association is achieved by <literal>DELETE</literal>ing the appropriate element in the collection.
+    </para>
+
+    <screen>
+POST /clusters/0/networks HTTP/1.1
+Accept: application/xml
+Content-Type: application/xml
+
+&lt;network&gt;&lt;name&gt;display&lt;/name&gt;&lt;/network&gt;
+
+HTTP/1.1 201 Created
+Location: http://{host}/clusters/0/networks/da05ac09-00be-45a1-b0b5-4a6a2438665f
+Content-Type: application/xml
+
+&lt;network id="da05ac09-00be-45a1-b0b5-4a6a2438665f" href="clusters/0/networks/da05ac09-00be-45a1-b0b5-4a6a2438665f"&gt;
+  &lt;name&gt;display&lt;/name&gt;
+  &lt;status&gt;OPERATIONAL&lt;/status&gt;
+  &lt;description&gt;Display Network&lt;/description&gt;
+  &lt;cluster id="0" href="clusters/0"/&gt;
+  &lt;data_center id="d70d5e2d-b8ad-494a-a4d2-c7a5631073c4" href="datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4"/&gt;
+&lt;/network&gt;
+    </screen>
+
+    <screen>
+DELETE /clusters/0/networks/da05ac09-00be-45a1-b0b5-4a6a2438665f HTTP/1.1
+
+HTTP/1.1 204 No Content
+    </screen>
+
+  </section>
 
 </chapter>
