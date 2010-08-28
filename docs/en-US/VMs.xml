@@ -30,8 +30,20 @@
             <entry>The CPU <literal>topology</literal> (i.e. number of <literal>sockets</literal> and <literal>cores</literal> available to the guest)</entry>
           </row>
           <row>
-            <entry><literal>os</literal></entry>
-            <entry>A list of boot devices (using <literal>boot dev</literal>) - either <literal>cdrom</literal>, <literal>hd</literal> or <literal>network</literal></entry>
+            <entry><literal>os</literal> <literal>boot dev="cdrom|hd|network"</literal></entry>
+            <entry>A list of boot devices (described by a <literal>dev</literal> attribute on a <literal>boot</literal> element) - either <literal>cdrom</literal>, <literal>hd</literal> or <literal>network</literal></entry>
+          </row>
+          <row>
+            <entry><literal>os</literal> <literal>kernel</literal></entry>
+            <entry>A path to a kernel image which the VM is configured to boot from</entry>
+          </row>
+          <row>
+            <entry><literal>os</literal> <literal>initrd</literal></entry>
+            <entry>A path to an initrd image to be used with the kernel above</entry>
+          </row>
+          <row>
+            <entry><literal>os</literal> <literal>cmdline</literal></entry>
+            <entry>A kernel command line parameter string to be used with the kernel above</entry>
           </row>
           <row>
             <entry><literal>host</literal></entry>
@@ -90,7 +102,7 @@
   </screen>
 
   <para>
-    When creating a new VM, the <literal>name</literal>, <literal>template</literal> and <literal>cluster</literal> elements are required. The  <literal>template</literal> and <literal>cluster</literal> may be identified by <literal>id</literal> or <literal>name</literal>. The <literal>name</literal>, <literal>description</literal>, <literal>type</literal>, <literal>memory</literal>, <literal>cpu topology</literal> and <literal>os boot dev</literal> properties may be updated post-creation.
+    When creating a new VM, the <literal>name</literal>, <literal>template</literal> and <literal>cluster</literal> elements are required. The  <literal>template</literal> and <literal>cluster</literal> may be identified by <literal>id</literal> or <literal>name</literal>. The <literal>name</literal>, <literal>description</literal>, <literal>type</literal>, <literal>memory</literal>, <literal>cpu topology</literal> and <literal>os</literal> properties may be updated post-creation.
   </para>
 
   <para>

@@ -31,8 +31,20 @@
             <entry>The CPU <literal>topology</literal> (i.e. number of <literal>sockets</literal> and <literal>cores</literal>) available to the guest</entry>
           </row>
           <row>
-            <entry><literal>os</literal></entry>
-            <entry>A list of boot devices (using <literal>boot dev</literal>) - either <literal>cdrom</literal>, <literal>hd</literal> or <literal>network</literal></entry>
+            <entry><literal>os</literal> <literal>boot dev="cdrom|hd|network"</literal></entry>
+            <entry>A list of boot devices (described by a <literal>dev</literal> attribute on a <literal>boot</literal> element) - either <literal>cdrom</literal>, <literal>hd</literal> or <literal>network</literal></entry>
+          </row>
+          <row>
+            <entry><literal>os</literal> <literal>kernel</literal></entry>
+            <entry>A path to a kernel image which the template is configured to boot from</entry>
+          </row>
+          <row>
+            <entry><literal>os</literal> <literal>initrd</literal></entry>
+            <entry>A path to an initrd image to be used with the kernel above</entry>
+          </row>
+          <row>
+            <entry><literal>os</literal> <literal>cmdline</literal></entry>
+            <entry>A kernel command line parameter string to be used with the kernel above</entry>
           </row>
           <row>
             <entry><literal>cluster</literal></entry>
