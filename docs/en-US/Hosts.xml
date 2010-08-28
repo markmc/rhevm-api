@@ -38,11 +38,15 @@
   &lt;status&gt;UP&lt;/status&gt;
   &lt;version major="2" minor="2"/&gt;
   &lt;link rel="nics" href="hosts/0/nics"/&gt;
+  &lt;link rel="storage" href="hosts/0/storage"/&gt;
   &lt;actions&gt;
     &lt;link rel="install" href="hosts/0/install"/&gt;
     &lt;link rel="approve" href="hosts/0/approve"/&gt;
     &lt;link rel="activate" href="hosts/0/activate"/&gt;
     &lt;link rel="deactivate" href="hosts/0/deactivate"/&gt;
+    &lt;link rel="commitnetconfig" href="hosts/0/commitnetconfig"/&gt;
+    &lt;link rel="iscsidiscover" href="hosts/0/iscsidiscover"/&gt;
+    &lt;link rel="iscsilogin" href="hosts/0/iscsilogin"/&gt;
   &lt;/actions&gt;
 &lt;/host&gt;
   </screen>
@@ -238,6 +242,121 @@ Content-type: application/xml
 
   </section>
 
+  <section id="sect-REST_API_Guide-Hosts-Storage">
+    <title>
+      iSCSI and FCP Storage
+    </title>
+
+    <para>
+      The collection referenced by <literal>link rel="storage"</literal> describes the iSCSI and FCP storage available on the host. This storage may be used to create storage domains, as described in <xref linkend="chap-REST_API_Guide-Storage_Domains"/>.
+    </para>
+
+    <para>
+      Each <literal>storage</literal> description in the collection represents either a SCSI LUN or an LVM volume group. A <literal>logical_unit</literal> representation may contain:
+    </para>
+
+    <para>
+      <informaltable frame="none">
+        <tgroup cols="2">
+          <colspec colwidth="2*"/>
+          <colspec colwidth="5*"/>
+          <tbody>
+            <row>
+              <entry><literal>id</literal></entry>
+              <entry>An opaque identifier for the logical unit</entry>
+            </row>
+            <row>
+              <entry><literal>address</literal></entry>
+              <entry>The address of the iSCSI portal containing the LUN, in the case of iSCSI</entry>
+            </row>
+            <row>
+              <entry><literal>port</literal></entry>
+              <entry>The port number of the iSCSI portal</entry>
+            </row>
+            <row>
+              <entry><literal>target</literal></entry>
+              <entry>The iSCSI target IQN</entry>
+            </row>
+            <row>
+              <entry><literal>username</literal></entry>
+              <entry>A CHAP user name for logging into an iSCSI target</entry>
+            </row>
+            <row>
+              <entry><literal>password</literal></entry>
+              <entry>A CHAP password for logging into an iSCSI target</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+    </para>
+
+    <para>
+      A <literal>volume_group</literal> representation may contain:
+    </para>
+
+    <para>
+      <informaltable frame="none">
+        <tgroup cols="2">
+          <colspec colwidth="2*"/>
+          <colspec colwidth="5*"/>
+          <tbody>
+            <row>
+              <entry><literal>id</literal></entry>
+              <entry>An opaque identifier for the volume group</entry>
+            </row>
+            <row>
+              <entry><literal>name</literal></entry>
+              <entry>An volume group name</entry>
+            </row>
+            <row>
+              <entry><literal>logical_unit</literal></entry>
+              <entry>Details of any SCSI LUNs on which the volume group is based</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+    </para>
+
+    <para>
+      For example:
+    </para>
+
+    <screen>
+&lt;host_storage&gt;
+  &lt;storage id="5678" href="hosts/1234/storage/5678"&gt;
+    &lt;name&gt;LUN0&lt;/name&gt;
+    &lt;type&gt;ISCSI&lt;/type&gt;
+    &lt;logical_unit id="LUN0"&gt;
+      &lt;address&gt;mysan.mycorp.com&lt;/address&gt;
+      &lt;target&gt;iqn.2009-08.com.mycorp:mysan.foobar&lt;/target&gt;
+    &lt;/logical_unit&gt;
+  &lt;/storage&gt;
+  &lt;storage id="999" href="hosts/1234/storage/999"&gt;
+    &lt;name&gt;FooVG&lt;/name&gt;
+    &lt;type&gt;ISCSI&lt;/type&gt;
+    &lt;volume_group id="5432"&gt;
+      &lt;name&gt;FooVG&lt;/name&gt;
+      &lt;logical_unit id="LUN1"&gt;
+        &lt;address&gt;mysan.mycorp.com&lt;/address&gt;
+        &lt;target&gt;iqn.2009-08.com.mycorp:mysan.foobar&lt;/target&gt;
+      &lt;/logical_unit&gt;
+      &lt;logical_unit id="LUN2"&gt;
+        &lt;address&gt;mysan.mycorp.com&lt;/address&gt;
+        &lt;target&gt;iqn.2009-08.com.mycorp:mysan.foobar&lt;/target&gt;
+      &lt;/logical_unit&gt;
+    &lt;/volume_group&gt;
+  &lt;/storage&gt;
+&lt;/host_storage&gt;
+    </screen>
+
+    <note>
+      <para>
+        The <literal>host_storage</literal> collection is read-only.
+      </para>
+    </note>
+
+  </section>
+
   <section id="sect-REST_API_Guide-Hosts-Install">
     <title>
       Install Action
@@ -324,6 +443,63 @@ Content-type: application/xml
         Networking configuration should only be committed after it has been established that host connectivity has not been lost as a result of the configuration changes. If host connectivity has been lost, the host should be rebooted and will automatically revert to the previous networking configuration.
       </para>
     </warning>
+
+  </section>
+
+  <section id="sect-REST_API_Guide-Hosts-iSCSI_Discovery">
+    <title>
+      iSCSI Discover Action
+    </title>
+
+    <para>
+      The <literal>iscsidiscover</literal> action enables an iSCSI portal to be query for its list of LUNs.
+    </para>
+
+    <screen>
+POST /hosts/0/iscsidiscover HTTP/1.1
+Content-Type: application/xml
+Accept: application/xml
+
+&lt;action&gt;
+  &lt;iscsi&gt;
+    &lt;address&gt;mysan.mycorp.com&lt;/address&gt;
+  &lt;/iscsi&gt;
+&lt;/action&gt;
+
+HTTP/1.1 202 Accept
+Content-Type: application/xml
+
+&lt;action id="e9126d04-0f74-4e1a-9139-13f11fcbb4ab" href="hosts/0/iscsidiscover/e9126d04-0f74-4e1a-9139-13f11fcbb4ab"&gt;
+  &lt;iscsi_target&gt;iqn.2009-08.com.mycorp:mysan.foobar&lt;/iscsi_target&gt;
+  ...
+&lt;action&gt;
+    </screen>
+
+  </section>
+
+  <section id="sect-REST_API_Guide-Hosts-iSCSI_Login">
+    <title>
+      iSCSI Login Action
+    </title>
+
+    <para>
+      The <literal>iscsilogin</literal> action enables a host to login to an iSCSI target. Logging into a target makes the LUNs it contains available in the <literal>host_storage</literal> collection. See <xref linkend="sect-REST_API_Guide-Hosts-Storage"/>.
+    </para>
+
+    <screen>
+POST /hosts/0/iscsilogin HTTP/1.1
+Content-Type: application/xml
+Accept: application/xml
+
+&lt;action&gt;
+  &lt;iscsi&gt;
+    &lt;address&gt;mysan.mycorp.com&lt;/address&gt;
+    &lt;target&gt;iqn.2009-08.com.mycorp:mysan.foobar&lt;/target&gt;
+    &lt;username&gt;jimmy&lt;/username&gt;
+    &lt;password&gt;s3kr37&lt;/password&gt;
+  &lt;/iscsi&gt;
+&lt;/action&gt;
+    </screen>
 
   </section>
 

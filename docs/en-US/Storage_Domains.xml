@@ -90,6 +90,40 @@
     The storage domain actions block may report the availability of a <literal>teardown</literal> action, which must be invoked before the storage domain can be deleted.
   </para>
 
+  <section id="sect-REST_API_Guide-Storage_Domains-iSCSI_and_FCP">
+    <title>
+      iSCSI and FCP
+    </title>
+
+    <para>
+      The <literal>iSCSI</literal> and <literal>FCP</literal> specific elements in a <literal>storage</literal> description are:
+
+      <informaltable frame="none">
+        <tgroup cols="2">
+          <colspec colwidth="2*"/>
+          <colspec colwidth="5*"/>
+          <tbody>
+            <row>
+              <entry><literal>logical_unit id</literal></entry>
+              <entry>A storage domain may be composed of multiple iSCSI or FCP logical units</entry>
+            </row>
+            <row>
+              <entry><literal>volume_group id</literal></entry>
+              <entry>Alternatively, a storage domain may be based on a single LVM Volume Group which, in turn, may be composed of multiple iSCSI or FCP logical units</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+
+      See <xref linkend="sect-REST_API_Guide-Hosts-Storage"/> for more details.
+    </para>
+
+    <para>
+      In the case of iSCSI, if a <literal>logical_unit</literal> description also contains details of the iSCSI target containing the LUN in question, the target will be automatically logged into when the storage domain is created.
+    </para>
+
+  </section>
+
   <section id="sect-REST_API_Guide-Storage_Domains-Teardown">
     <title>
       Teardown Action
