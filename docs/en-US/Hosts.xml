@@ -37,6 +37,7 @@
   &lt;name&gt;zig&lt;/name&gt;
   &lt;status&gt;UP&lt;/status&gt;
   &lt;version major="2" minor="2"/&gt;
+  &lt;link rel="nics" href="hosts/0/nics"/&gt;
   &lt;actions&gt;
     &lt;link rel="install" href="hosts/0/install"/&gt;
     &lt;link rel="approve" href="hosts/0/approve"/&gt;
@@ -53,6 +54,189 @@
   <para>
     There are four possible actions for hosts - <literal>install</literal>, <literal>approve</literal>, <literal>activate</literal> and <literal>deactivate</literal>.
   </para>
+
+  <section id="sect-REST_API_Guide-Hosts-Network_Interfaces">
+    <title>
+      Network Interfaces
+    </title>
+
+    <para>
+      A host's physical network interfaces are represented by a collection obtained via <literal>link rel="nics"</literal> in the host's representation.
+    </para>
+
+    <para>
+      Each network interface is represented by a <literal>host_nic</literal> element which may contain the following properties:
+      <informaltable frame="none">
+        <tgroup cols="2">
+          <colspec colwidth="2*"/>
+          <colspec colwidth="5*"/>
+          <tbody>
+            <row>
+              <entry><literal>name</literal></entry>
+              <entry>The name of the host network interface, e.g. <literal>eth0</literal></entry>
+            </row>
+            <row>
+              <entry><literal>host id</literal></entry>
+              <entry>A reference to the host</entry>
+            </row>
+            <row>
+              <entry><literal>network id</literal></entry>
+              <entry>A reference to the network, if any, that the interface is attached to</entry>
+            </row>
+            <row>
+              <entry><literal>mac address</literal></entry>
+              <entry>The MAC address of the interface</entry>
+            </row>
+            <row>
+              <entry><literal>ip address/netmask/gateway</literal></entry>
+              <entry>The IP level configuration of the interface</entry>
+            </row>
+            <row>
+              <entry><literal>vlan id</literal></entry>
+              <entry>The VLAN which this interface represents, if any</entry>
+            </row>
+            <row>
+              <entry><literal>slaves</literal></entry>
+              <entry>A list of slave <literal>host_nic</literal> elements, if this is a bonded interface</entry>
+            </row>
+            <row>
+              <entry><literal>link rel="master"</literal></entry>
+              <entry>A reference to the master bonded interface, if this is a slave interface</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+
+      For example:
+    </para>
+
+    <screen>
+&lt;host_nic id="e8f02fdf-3d7b-4135-86e1-1bf185570cd8" href="hosts/0/nics/e8f02fdf-3d7b-4135-86e1-1bf185570cd8"&gt;
+  &lt;name&gt;bond0&lt;/name&gt;
+  &lt;host id="0" href="hosts/0"/&gt;
+  &lt;network id="e657d631-657d-42bb-a536-73501a085d85" href="networks/e657d631-657d-42bb-a536-73501a085d85"/&gt;
+  &lt;mac address="D6:76:F1:3A:AF:74"/&gt;
+  &lt;ip address="192.168.0.128" netmask="255.255.255.0" gateway="192.168.0.1"/&gt;
+  &lt;slaves&gt;
+    &lt;host_nic id="eb14e154-5e73-4f7f-bf6b-7f52609d94ec" href="hosts/0/nics/eb14e154-5e73-4f7f-bf6b-7f52609d94ec"/&gt;
+    &lt;host_nic id="6aede5ca-4c54-4b37-a81b-c0d6b53558ea" href="hosts/0/nics/6aede5ca-4c54-4b37-a81b-c0d6b53558ea"/&gt;
+  &lt;/slaves&gt;
+  &lt;actions&gt;
+    &lt;link rel="attach" href="hosts/0/nics/e8f02fdf-3d7b-4135-86e1-1bf185570cd8/attach"/&gt;
+    &lt;link rel="detach" href="hosts/0/nics/e8f02fdf-3d7b-4135-86e1-1bf185570cd8/detach"/&gt;
+  &lt;/actions&gt;
+&lt;/host_nic&gt;
+    </screen>
+
+    <note>
+      <para>
+        With the exception of bonded interfaces (see <xref linkend="sect-REST_API_Guide-Hosts-Network_Interfaces-Bonds"/>), network interfaces are read-only. Interfaces cannot be added, updated or removed.
+      </para>
+    </note>
+
+    <section id="sect-REST_API_Guide-Hosts-Network_Interfaces-Bonds">
+      <title>
+        Bonded Interfaces
+      </title>
+
+      <para>
+        A bonded interface is represented by a <literal>host_nic</literal> with a <literal>slaves</literal> element containing a <literal>host_nic</literal> reference for each of the interfaces enslaved to the bond. Each slave <literal>host_nic</literal> contains a <literal>link rel="master"</literal> reference back to the bonded interface.
+      </para>
+
+      <para>
+        A new bond may be created by <literal>POST</literal>ing a <literal>host_nic</literal> describing which interfaces should be enslaved. For example:
+      </para>
+
+      <screen>
+POST /hosts/0/nics HTTP/1.1
+Accept: application/xml
+Content-Type: application/xml
+
+&lt;host_nic&gt;
+  &lt;name&gt;bond4&lt;/name&gt;
+  &lt;network id="e657d631-657d-42bb-a536-73501a085d85"/&gt;
+  &lt;slaves&gt;
+    &lt;host_nic id="eb14e154-5e73-4f7f-bf6b-7f52609d94ec"/&gt;
+    &lt;host_nic id="6aede5ca-4c54-4b37-a81b-c0d6b53558ea"/&gt;
+  &lt;/slaves&gt;
+&lt;/host_nic&gt;
+      </screen>
+
+      <para>
+        The <literal>name</literal>, <literal>network</literal> and slave <literal>host_nic</literal> elements are required when creating a new bonded interface. The <literal>network</literal> and slave <literal>host_nic</literal>s may be identified by <literal>id</literal> or <literal>name</literal>.
+      </para>
+
+      <note>
+        <para>
+          <literal>bond0</literal>, <literal>bond1</literal>, <literal>bond2</literal>, <literal>bond3</literal> and <literal>bond4</literal> are the only valid names for a bonded interface.
+        </para>
+      </note>
+
+      <para>
+        Like other resources, a bonded interface may be deleted by issuing a <literal>DELETE</literal> request to its URI.
+      </para>
+
+      <warning>
+        <para>
+          Changes to bonded interface configuration must be explicitly committed. See <xref linkend="sect-REST_API_Guide-Hosts-Commit_Network_Configuration"/>.
+        </para>
+      </warning>
+
+    </section>
+
+    <section id="sect-REST_API_Guide-Hosts-Network_Interfaces-Attach">
+      <title>
+        Attach Action
+      </title>
+
+      <para>
+        A host network interface may be attached to a network, indicating that the given network is accessible over the interface. The <literal>network</literal> may be identified by <literal>id</literal> or <literal>name</literal>.
+      </para>
+
+      <screen>
+POST /hosts/0/nics/e8f02fdf-3d7b-4135-86e1-1bf185570cd8/attach HTTP/1.1
+Content-type: application/xml
+
+&lt;action&gt;
+  &lt;network id="e657d631-657d-42bb-a536-73501a085d85"/&gt;
+&lt;/action&gt;
+      </screen>
+
+      <warning>
+        <para>
+          This networking configuration change must be explicitly committed. See <xref linkend="sect-REST_API_Guide-Hosts-Commit_Network_Configuration"/>.
+        </para>
+      </warning>
+
+    </section>
+
+    <section id="sect-REST_API_Guide-Hosts-Network_Interfaces-Detach">
+      <title>
+        Detach Action
+      </title>
+
+      <para>
+        Detach an interface from a network. The <literal>network</literal> may be identified by <literal>id</literal> or <literal>name</literal>.
+      </para>
+
+      <screen>
+POST /hosts/0/nics/e8f02fdf-3d7b-4135-86e1-1bf185570cd8/detach HTTP/1.1
+Content-type: application/xml
+
+&lt;action&gt;
+  &lt;network id="e657d631-657d-42bb-a536-73501a085d85"/&gt;
+&lt;/action&gt;
+      </screen>
+
+      <warning>
+        <para>
+          This networking configuration change must be explicitly committed. See <xref linkend="sect-REST_API_Guide-Hosts-Commit_Network_Configuration"/>.
+        </para>
+      </warning>
+
+    </section>
+
+  </section>
 
   <section id="sect-REST_API_Guide-Hosts-Install">
     <title>
@@ -118,6 +302,28 @@ Content-type: application/xml
 POST /hosts/0/deactivate HTTP/1.1
 Content-type: application/xml
     </screen>
+
+  </section>
+
+  <section id="sect-REST_API_Guide-Hosts-Commit_Network_Configuration">
+    <title>
+      Commit Network Configuration Action
+    </title>
+
+    <para>
+      In order to persist a host network interface attach or detach, or persist the creation/deletion of a bonded interface, the network configuration must explicitly be committed.
+    </para>
+
+    <screen>
+POST /hosts/0/commitnetconfig HTTP/1.1
+Content-type: application/xml
+    </screen>
+
+    <warning>
+      <para>
+        Networking configuration should only be committed after it has been established that host connectivity has not been lost as a result of the configuration changes. If host connectivity has been lost, the host should be rebooted and will automatically revert to the previous networking configuration.
+      </para>
+    </warning>
 
   </section>
 
