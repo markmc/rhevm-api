@@ -1,0 +1,7 @@
+Requirements:
+
+  $> yum install -y PyYAML python-tpg
+
+Copy config.py.example to config.py, edit as appropriate and run runtests.py
+
+You can also try stuff like 'python -m unittest cluster'

@@ -22,7 +22,7 @@ def sub_prefix(variables, arg, values, varorder):
     elif type(value) == type([]):
         return arg + arg.join(value)
     else:
-        return arg + value                        
+        return arg + value
 
 
 def sub_postfix(variables, arg, values, varorder):
@@ -33,7 +33,7 @@ def sub_postfix(variables, arg, values, varorder):
     elif type(value) == type([]):
         return arg.join(value) + arg
     else:
-        return value + arg               
+        return value + arg
 
 
 # Is order important?
@@ -55,7 +55,7 @@ def sub_if_non_zero(variables, arg, values, varorder):
     value = values.get(key, None)
     if None != value:
       if (getattr(value, '__iter__', False) and len(value) == 0):
-        continue 
+        continue
       else:
         return arg
   return ""
@@ -165,7 +165,7 @@ class URITemplate(object):
         self.parsed_templates.append(DummyParsed(p))
 
   def variables(self):
-    retval = set() 
+    retval = set()
     for p in self.parsed_templates:
       retval.update(set(p.variables()))
     return retval
@@ -213,7 +213,7 @@ if __name__ == "__main__":
       ( "-prefix||foo=wilma", {},                 "wilma" ),
       ( "-prefix|&|foo=wilma", {"foo": "barney"},  "&barney" ),
       ( "-prefix|&|foo", {"foo": ["wilma", "barney"]},  "&wilma&barney" ),
- 
+
       ( "-suffix|/|foo",        {},                 "" ),
       ( "-suffix|#|foo=wilma",  {},                 "wilma#" ),
       ( "-suffix|&?|foo=wilma", {"foo": "barney"},  "barney&?" ),

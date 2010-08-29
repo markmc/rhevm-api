@@ -6,3 +6,4 @@
 .settings
 target
 docs/tmp
+tests/config.py

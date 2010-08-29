@@ -1,0 +1,30 @@
+scheme = 'http'
+host = 'localhost'
+port = 8099
+impl = 'mock'
+debug = False
+user = 'anyuser'
+secret = 'anysecret'
+
+uri = '%(scheme)s://%(address)s:%(port)s/rhevm-api%(urisuffix)s/' % {
+    'scheme' : scheme,
+    'address' : address,
+    'port' : port,
+    'urisuffix' : ('-' + impl) if (not impl is None) else '',
+    }
+
+data_center = 'Default'
+default_cpu = 'Intel Xeon'
+
+# A host already register with RHEV-M for storage domain tests
+host = 'myhost'
+
+# A set of NFS mounts for storage domain testing
+# Note that each of these directories must be empty
+nfs_address = 'myfiler'
+nfs_paths = [ ('/exports/test/%d' % i) for i in range(0, 10) ]
+
+# A set of iSCSI LUNs under a single target
+iscsi_portal = 'myportal'
+iscsi_target = 'iqn.2009-08.com.mycorp:mysan.foobar'
+iscsi_luns = [ ('1IET_0001000%d' % i) for i in range(1, 8) ]

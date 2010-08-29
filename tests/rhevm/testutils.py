@@ -28,48 +28,8 @@ import copy
 
 random.seed()
 
-def parseOptions():
-    opts = {
-        'scheme' : 'http',
-        'host' : 'localhost',
-        'port' : 8080,
-        'impl' : None,
-        'debug' : False,
-        'user' : None,
-        'secret' : None,
-        }
-
-    oargs = []
-    if len(sys.argv) > 1:
-        options, oargs = getopt.getopt(sys.argv[1:], "h:p:i:u:s:de", ["host=", "port=", "impl=", "user=", "secret=", "debug", "encrypt"])
-        for opt, a in options:
-            if opt in ("-h", "--host"):
-                opts['host'] = a
-            if opt in ("-p", "--port"):
-                opts['port'] = a
-            if opt in ("-i", "--impl"):
-                opts['impl'] = a
-            if opt in ("-u", "--user"):
-                opts['user'] = a
-            if opt in ("-s", "--secret"):
-                opts['secret'] = a
-            if opt in ("-d", "--debug"):
-                opts['debug'] = True
-            if opt in ("-e", "--encrypt"):
-                opts['scheme'] = 'https'
-
-    if opts['impl'] is None:
-        opts['urisuffix'] = ''
-    else:
-        opts['urisuffix'] = '-' + opts['impl']
-
-    opts['uri'] = '%(scheme)s://%(host)s:%(port)s/rhevm-api%(urisuffix)s/' % opts
-    opts['oargs'] = oargs
-
-    return opts
-
-def debug(opts, fmt, *args):
-    if opts['debug']:
+def debug(config, fmt, *args):
+    if config.debug:
         print fmt % args
 
 def randomName(prefix):
@@ -91,44 +51,47 @@ def expectedActionLink(actions, verb):
     assert verb in actions.link, "Expected action verb %s, got %s" % (verb, actions.link.keys())
 
 class TestUtils:
-    def __init__(self, opts, fmt):
-        self.opts = opts
+    def __init__(self, config, fmt):
+        self.config = config
         self.fmt = fmt
 
     def abs(self, href):
-        return urlparse.urljoin(self.opts['uri'], href);
+        return urlparse.urljoin(self.config.uri, href);
+
+    def HEAD_for_links(self):
+        return http.HEAD_for_links(self.config)
 
     def get(self, href):
-        ret = http.GET(self.opts, self.abs(href), self.fmt.MEDIA_TYPE)
+        ret = http.GET(self.config, self.abs(href), self.fmt.MEDIA_TYPE)
         expectedStatusCode(ret, 200)
         return self.fmt.parse(ret['body'])
 
     def unauth(self, href):
-        unauth_opts = copy.deepcopy(self.opts)
-        unauth_opts['user'] = None
-        unauth_opts['secret'] = None
-        ret = http.GET(unauth_opts, self.abs(href), self.fmt.MEDIA_TYPE)
+        (user, secret) = (self.config.user, self.config.secret)
+        (self.config.user, self.config.secret) = (None, None)
+        ret = http.GET(self.config, self.abs(href), self.fmt.MEDIA_TYPE)
         expectedStatusCode(ret, 401)
+        (self.config.user, self.config.secret) = (user, secret)
 
     def query(self, href, constraint):
         t = template_parser.URITemplate(self.abs(href))
         qhref = t.sub({"query": constraint})
-        ret = http.GET(self.opts, qhref, self.fmt.MEDIA_TYPE)
+        ret = http.GET(self.config, qhref, self.fmt.MEDIA_TYPE)
         expectedStatusCode(ret, 200)
         return self.fmt.parse(ret['body'])
 
     def create(self, href, entity):
-        ret = http.POST(self.opts, self.abs(href), entity.dump(), self.fmt.MEDIA_TYPE)
+        ret = http.POST(self.config, self.abs(href), entity.dump(), self.fmt.MEDIA_TYPE)
         expectedStatusCode(ret, 201)
         return self.fmt.parse(ret['body'])
 
     def update(self, href, entity, expected):
-        ret = http.PUT(self.opts, self.abs(href), entity.dump(), self.fmt.MEDIA_TYPE)
+        ret = http.PUT(self.config, self.abs(href), entity.dump(), self.fmt.MEDIA_TYPE)
         expectedStatusCode(ret, expected)
         return self.fmt.parse(ret['body'])
 
     def delete(self, href):
-        ret = http.DELETE(self.opts, self.abs(href))
+        ret = http.DELETE(self.config, self.abs(href))
         expectedStatusCode(ret, 204)
 
     def makeAction(self, async, expiry, **params):
@@ -143,7 +106,7 @@ class TestUtils:
 
     def asyncAction(self, actions, verb, **params):
         expectedActionLink(actions, verb)
-        ret = http.POST(self.opts,
+        ret = http.POST(self.config,
                         self.abs(actions.link[verb].href),
                         self.makeAction('true', '5000', **params).dump(),
                         self.fmt.MEDIA_TYPE)
@@ -152,20 +115,20 @@ class TestUtils:
         unexpectedActionStatus(resp_action.status, "COMPLETE")
         for i in range(1, 3):
             time.sleep(1)
-            resp = http.GET(self.opts, self.abs(resp_action.href), self.fmt.MEDIA_TYPE)
+            resp = http.GET(self.config, self.abs(resp_action.href), self.fmt.MEDIA_TYPE)
             expectedStatusCode(resp, 200)
             resp_action = self.fmt.parse(resp['body'])
             unexpectedActionStatus(resp_action.status, "COMPLETE")
 
         time.sleep(4)
-        resp = http.GET(self.opts, self.abs(resp_action.href), self.fmt.MEDIA_TYPE)
+        resp = http.GET(self.config, self.abs(resp_action.href), self.fmt.MEDIA_TYPE)
         expectedStatusCode(resp, 200)
         resp_action = self.fmt.parse(resp['body'])
         expectedActionStatus(resp_action.status, "COMPLETE")
 
     def syncAction(self, actions, verb, **params):
         expectedActionLink(actions, verb)
-        ret = http.POST(self.opts,
+        ret = http.POST(self.config,
                         self.abs(actions.link[verb].href),
                         self.makeAction('false', '10', **params).dump(),
                         self.fmt.MEDIA_TYPE)

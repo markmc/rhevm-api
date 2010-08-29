@@ -19,25 +19,25 @@
 
 import httplib
 import base64
-from testutils import debug
+import testutils
 
-def open_connection(opts):
-    if opts['scheme'] == 'https':
-        cnx = httplib.HTTPSConnection(opts['host'], opts['port'])
+def open_connection(config):
+    if config.scheme == 'https':
+        cnx = httplib.HTTPSConnection(config.address, config.port)
     else:
-        cnx = httplib.HTTPConnection(opts['host'], opts['port'])
-    if opts['debug']:
+        cnx = httplib.HTTPConnection(config.address, config.port)
+    if config.debug:
         cnx.set_debuglevel(1)
     return cnx
 
-def basic_auth(opts):
-    credentials = base64.encodestring('%s:%s' % (opts['user'], opts['secret']))[:-1]
+def basic_auth(config):
+    credentials = base64.encodestring('%s:%s' % (config.user, config.secret))[:-1]
     return "Basic %s" % credentials
 
-def basic_headers(opts):
+def basic_headers(config):
     headers = {}
-    if not (opts['user'] is None or opts['secret'] is None):
-        headers['Authorization'] = basic_auth(opts)
+    if not (config.user is None or config.secret is None):
+        headers['Authorization'] = basic_auth(config)
     return headers
 
 #
@@ -52,10 +52,10 @@ def parse_link(s, links):
     links[rel] = url
     return links
 
-def HEAD_for_links(opts):
-    cnx = open_connection(opts)
+def HEAD_for_links(config):
+    cnx = open_connection(config)
     try:
-        cnx.request('HEAD', opts['uri'], headers = basic_headers(opts))
+        cnx.request('HEAD', config.uri, headers = basic_headers(config))
         links = {}
         for s in cnx.getresponse().getheader('Link').split(','):
             parse_link(s, links)
@@ -63,10 +63,10 @@ def HEAD_for_links(opts):
     finally:
         cnx.close()
 
-def GET(opts, uri, type = None):
-    cnx = open_connection(opts)
+def GET(config, uri, type = None):
+    cnx = open_connection(config)
     try:
-        headers = basic_headers(opts)
+        headers = basic_headers(config)
         if not type is None:
             headers['Accept'] = type
         cnx.request('GET', uri, headers = headers)
@@ -74,15 +74,15 @@ def GET(opts, uri, type = None):
         resp = cnx.getresponse()
         ret['status'] = resp.status
         ret['body'] = resp.read()
-        debug(opts, "body: %s", ret['body'])
+        testutils.debug(config, "body: %s", ret['body'])
         return ret
     finally:
         cnx.close()
 
-def POST(opts, uri, body = None, type = None):
-    cnx = open_connection(opts)
+def POST(config, uri, body = None, type = None):
+    cnx = open_connection(config)
     try:
-        headers = basic_headers(opts)
+        headers = basic_headers(config)
         if not type is None:
             headers['Content-type'] = type
             headers['Accept'] = type
@@ -91,15 +91,15 @@ def POST(opts, uri, body = None, type = None):
         resp = cnx.getresponse()
         ret['status'] = resp.status
         ret['body'] = resp.read()
-        debug(opts, "body: %s", ret['body'])
+        testutils.debug(config, "body: %s", ret['body'])
         return ret
     finally:
         cnx.close()
 
-def PUT(opts, uri, body, type = None):
-    cnx = open_connection(opts)
+def PUT(config, uri, body, type = None):
+    cnx = open_connection(config)
     try:
-        headers = basic_headers(opts)
+        headers = basic_headers(config)
         if not type is None:
             headers['Content-type'] = type
             headers['Accept'] = type
@@ -108,15 +108,15 @@ def PUT(opts, uri, body, type = None):
         resp = cnx.getresponse()
         ret['status'] = resp.status
         ret['body'] = resp.read()
-        debug(opts, "body: %s", ret['body'])
+        testutils.debug(config, "body: %s", ret['body'])
         return ret
     finally:
         cnx.close()
 
-def DELETE(opts, uri):
-    cnx = open_connection(opts)
+def DELETE(config, uri):
+    cnx = open_connection(config)
     try:
-        cnx.request('DELETE', uri, headers = basic_headers(opts))
+        cnx.request('DELETE', uri, headers = basic_headers(config))
         ret = { 'status' : 0, 'body' : None }
         resp = cnx.getresponse()
         ret['status'] = resp.status
