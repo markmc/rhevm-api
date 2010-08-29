@@ -89,11 +89,22 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
 
         for (LogicalUnit lu : logicalUnits) {
             if (lu.isSetAddress() && lu.isSetTarget()) {
-                // REVISIT: port no., username, password
                 buf.append("$cnx = new-storageserverconnection");
                 buf.append(" -storagetype ISCSI");
                 buf.append(" -connection " + PowerShellUtils.escape(lu.getAddress()));
                 buf.append(" -iqn " + PowerShellUtils.escape(lu.getTarget()));
+                if (lu.isSetPort() && lu.getPort() != 0) {
+                    buf.append(" -portal " + PowerShellUtils.escape(lu.getAddress() + ":" + lu.getPort()));
+                    buf.append(" -port " + lu.getPort());
+                } else {
+                    buf.append(" -portal " + PowerShellUtils.escape(lu.getAddress()));
+               }
+                if (lu.isSetUsername()) {
+                    buf.append(" -username " + PowerShellUtils.escape(lu.getUsername()));
+                }
+                if (lu.isSetPassword()) {
+                    buf.append(" -password " + PowerShellUtils.escape(lu.getPassword()));
+                }
                 buf.append(";");
 
                 buf.append("$cnx = connect-storagetohost");
