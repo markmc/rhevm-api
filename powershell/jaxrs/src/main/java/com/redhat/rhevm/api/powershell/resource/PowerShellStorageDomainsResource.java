@@ -57,7 +57,7 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
     public StorageDomains list(UriInfo uriInfo) {
         StorageDomains ret = new StorageDomains();
 
-        List<StorageDomain> storageDomains = runAndParse("select-storagedomain", true);
+        List<StorageDomain> storageDomains = runAndParse(getSelectCommand("select-storagedomain", uriInfo, StorageDomain.class), true);
 
         for (StorageDomain storageDomain : storageDomains) {
             ret.getStorageDomains().add(PowerShellStorageDomainResource.addLinks(storageDomain));
