@@ -151,7 +151,8 @@ public class PowerShellHostNicsResource implements HostNicsResource {
                 HostNIC slave = new HostNIC();
                 slave.setId(bond.getId());
                 slave.setHost(bond.getHost());
-                nic.getSlaves().getSlaves().add(slave);
+                nic.getSlaves().getSlaves().add(LinkHelper.addLinks(slave));
+                slave.setHost(null);
             }
         }
 
@@ -163,16 +164,7 @@ public class PowerShellHostNicsResource implements HostNicsResource {
 
         HostNIC ret = JAXBHelper.clone("host_nic", HostNIC.class, nic);
 
-        ret = LinkHelper.addLinks(lookupNetworkId(ret));
-
-        if (ret.getSlaves() != null) {
-            /* Host reference was only needed for link building above */
-            for (HostNIC slave : ret.getSlaves().getSlaves()) {
-                slave.setHost(null);
-            }
-        }
-
-        return ret;
+        return LinkHelper.addLinks(lookupNetworkId(ret));
     }
 
     public PowerShellHostNIC getHostNic(String nicId) {

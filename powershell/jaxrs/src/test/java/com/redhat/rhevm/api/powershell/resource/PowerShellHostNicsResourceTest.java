@@ -322,11 +322,14 @@ public class PowerShellHostNicsResourceTest
     private void verifyBond(HostNIC nic) {
         assertNotNull(nic);
         assertEquals(asId(BOND_NAME), nic.getId());
+        assertNotNull(nic.getHref());
         verifyHostNicDetails(nic, 0);
         assertNotNull(nic.getSlaves());
         assertEquals(2, nic.getSlaves().getSlaves().size());
         assertEquals(asId(NICS[0]), nic.getSlaves().getSlaves().get(0).getId());
+        assertNotNull(nic.getSlaves().getSlaves().get(0).getHref());
         assertEquals(asId(NICS[1]), nic.getSlaves().getSlaves().get(1).getId());
+        assertNotNull(nic.getSlaves().getSlaves().get(0).getHref());
     }
 
     private void verifyHostNic(HostNIC nic, int i) {
