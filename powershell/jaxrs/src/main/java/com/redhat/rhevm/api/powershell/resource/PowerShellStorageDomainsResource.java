@@ -71,6 +71,41 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
         return ret;
     }
 
+    private String getIscsiConnections(Storage storage, String hostArg) {
+        List<LogicalUnit> logicalUnits = null;
+
+        if (storage.isSetLogicalUnits()) {
+            logicalUnits = storage.getLogicalUnits();
+        } else if (storage.isSetVolumeGroup() &&
+                   storage.getVolumeGroup().isSetLogicalUnits()) {
+            logicalUnits = storage.getVolumeGroup().getLogicalUnits();
+        }
+
+        if (logicalUnits == null) {
+            return "";
+        }
+
+        StringBuilder buf = new StringBuilder();
+
+        for (LogicalUnit lu : logicalUnits) {
+            if (lu.isSetAddress() && lu.isSetTarget()) {
+                // REVISIT: port no., username, password
+                buf.append("$cnx = new-storageserverconnection");
+                buf.append(" -storagetype ISCSI");
+                buf.append(" -connection " + PowerShellUtils.escape(lu.getAddress()));
+                buf.append(" -iqn " + PowerShellUtils.escape(lu.getTarget()));
+                buf.append(";");
+
+                buf.append("$cnx = connect-storagetohost");
+                buf.append(" -hostid " + hostArg);
+                buf.append(" -storageserverconnectionobject $cnx");
+                buf.append(";");
+            }
+        }
+
+        return buf.toString();
+    }
+
     @Override
     public Response add(UriInfo uriInfo, StorageDomain storageDomain) {
         validateParameters(storageDomain, "name", "host.id|name", "type", "storage.type");
@@ -108,31 +143,18 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
             hostArg = "$h.hostid";
         }
 
-        if (storage.getType() == StorageType.ISCSI ||
-            storage.getType() == StorageType.FCP &&
-            storage.isSetLogicalUnits()) {
-            buf.append("$lunids = new-object System.Collections.ArrayList;");
-
-            for (LogicalUnit lu : storage.getLogicalUnits()) {
-                if (storage.getType() == StorageType.ISCSI && lu.isSetAddress() && lu.isSetTarget()) {
-                    // REVIST: port no., username, password
-                    buf.append("$cnx = new-storageserverconnection");
-                    buf.append(" -storagetype ISCSI");
-                    buf.append(" -connection " + PowerShellUtils.escape(lu.getAddress()));
-                    buf.append(" -iqn " + PowerShellUtils.escape(lu.getTarget()));
-                    buf.append(";");
-
-                    buf.append("$cnx = connect-storagetohost");
-                    buf.append(" -hostid " + hostArg);
-                    buf.append(" -storageserverconnectionobject $cnx");
-                    buf.append(";");
-                }
-
-                buf.append("$lunids.add(" + PowerShellUtils.escape(lu.getId()) + ") | out-null;");
-            }
+        if (storage.getType() == StorageType.ISCSI) {
+            buf.append(getIscsiConnections(storage, hostArg));
         }
 
-        // REVIST: add support for logging in to ISCSI targets specified for a volume group
+        if (storage.getType() == StorageType.ISCSI || storage.getType() == StorageType.FCP) {
+            if (storage.isSetLogicalUnits()) {
+                buf.append("$lunids = new-object System.Collections.ArrayList;");
+                for (LogicalUnit lu : storage.getLogicalUnits()) {
+                    buf.append("$lunids.add(" + PowerShellUtils.escape(lu.getId()) + ") | out-null;");
+                }
+            }
+        }
 
         buf.append("add-storagedomain");
 
