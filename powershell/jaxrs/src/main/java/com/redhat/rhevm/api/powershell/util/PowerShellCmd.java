@@ -48,7 +48,7 @@ public class PowerShellCmd {
     //          certain size we should re-create it
 
     private Spawn process;
-    private OutputBuffer stdout = new OutputBuffer();
+    private OutputBuffer stdout = new OutputBuffer(true);
     private OutputBuffer stderr = new OutputBuffer();
 
     public PowerShellCmd(Principal principal, ExpectJ expectj, Current current) {
@@ -88,7 +88,10 @@ public class PowerShellCmd {
             throw new PowerShellException("Reading from powershell process failed", ex);
         }
 
-        stdout.update(process.getCurrentStandardOutContents());
+        /* REVISIT: this ugly hack is needed because ExpectJ seems to sometimes
+         *          return before the </output> marker has been written.
+         */
+        while (!stdout.update(process.getCurrentStandardOutContents())) {}
         stderr.update(process.getCurrentStandardErrContents());
 
         return stdout.getStatus();
@@ -169,18 +172,17 @@ public class PowerShellCmd {
     }
 
     private String addConvertToXml(String command) {
-        // REVIST: I can't get the commented out bits to work
         StringBuilder buf = new StringBuilder();
-        buf.append("Write-Host \"<output>\";\n");
-        //buf.append("try {\n");
-        buf.append("  $result = Invoke-Expression " + escape(command) + ";\n");
-        buf.append("  $result | ConvertTo-XML -As String -Depth 5;\n");
-        buf.append("  $status = 0;\n");
-        //buf.append("} catch {\n");
-        //buf.append("  ConvertTo-XML $_ -As String -Depth 1;\n");
-        //buf.append("  $status = 1;\n");
-        //buf.append("}\n");
-        buf.append("Write-Host \"</output> $status\";\n");
+        buf.append("write-host \"<output>\"; ");
+        buf.append("try { ");
+        buf.append("$result = invoke-expression " + escape(command) + "; ");
+        buf.append("$result | convertto-xml -as String -depth 5; ");
+        buf.append("$status = 0 ");
+        buf.append("} catch { ");
+        buf.append("convertto-xml -as String -depth 1 $_; ");
+        buf.append("$status = 1 ");
+        buf.append("} ");
+        buf.append("write-host \"</output> $status\"\n");
         return buf.toString();
     }
 
@@ -188,9 +190,24 @@ public class PowerShellCmd {
         private String buf;
         private int index;
         private int status;
+        private boolean requireOutputMarker;
 
-        public void update(String contents) {
-            buf = contents.substring(index);
+        public OutputBuffer(boolean requireOutputMarker) {
+            this.requireOutputMarker = requireOutputMarker;
+        }
+
+        public OutputBuffer() {
+            this(false);
+        }
+
+        public boolean update(String contents) {
+            String tmp = contents.substring(index);
+
+            if (requireOutputMarker && !tmp.contains("</output>")) {
+                return false;
+            }
+
+            buf = tmp;
             index = contents.length();
 
             if (buf.contains("<output>")) {
@@ -201,6 +218,8 @@ public class PowerShellCmd {
                 status = Integer.parseInt(buf.substring(i + 10, i + 11));
                 buf = buf.substring(0, i);
             }
+
+            return true;
         }
 
         public String get() {

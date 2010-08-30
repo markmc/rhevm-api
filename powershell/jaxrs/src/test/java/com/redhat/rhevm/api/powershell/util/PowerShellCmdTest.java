@@ -151,7 +151,7 @@ public class PowerShellCmdTest extends Assert {
     }
 
     private String getScript() {
-        return "Write-Host \"<output>\";\n  $result = Invoke-Expression '" + SCRIPT + "';\n  $result | ConvertTo-XML -As String -Depth 5;\n  $status = 0;\nWrite-Host \"</output> $status\";\n";
+        return "write-host \"<output>\"; try { $result = invoke-expression '" + SCRIPT + "'; $result | convertto-xml -as String -depth 5; $status = 0 } catch { convertto-xml -as String -depth 1 $_; $status = 1 } write-host \"</output> $status\"\n";
     }
 
     private String getOutput() {
