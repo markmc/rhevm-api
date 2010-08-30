@@ -18,5 +18,7 @@
     <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-templates/${project.version}</bundle>
     <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-vmpools/${project.version}</bundle>
     <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-networks/${project.version}</bundle>
+    <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-roles/${project.version}</bundle>
+    <bundle>mvn:com.redhat.rhevm.api/rhevm-api-cli-users/${project.version}</bundle>
   </feature>
 </features>

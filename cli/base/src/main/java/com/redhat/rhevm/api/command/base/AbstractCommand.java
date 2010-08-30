@@ -86,4 +86,15 @@ public abstract class AbstractCommand extends OsgiCommandSupport {
         return ret;
     }
 
+    protected Link findLink(List<Link> links, String rel) {
+        Link ret = null;
+        for (Link link : links) {
+            if (rel.equals((link.getRel()))) {
+                ret = link;
+                break;
+            }
+        }
+        return ret;
+    }
+
 }

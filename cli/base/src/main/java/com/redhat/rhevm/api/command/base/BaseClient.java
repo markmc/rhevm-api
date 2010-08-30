@@ -152,6 +152,28 @@ public class BaseClient {
         return ret;
     }
 
+    public <S> S getCollection(Link link, Class<S> clz) throws Exception {
+        S ret = clz.newInstance();
+        Response r = null;
+        Exception failure = null;
+
+        try {
+            WebClient get = getClient(getBaseUri(link.getHref(), null));
+            r = get.path("/").accept("application/xml").get();
+        } catch (Exception e) {
+            failure = e;
+        }
+
+        if (failure != null || r.getStatus() != 200) {
+            String baseError = "cannot follow " + link.getHref() + ", failed with ";
+            diagnose(baseError, failure, r, 200);
+        } else {
+            ret = unmarshall(r, clz);
+        }
+
+        return ret;
+    }
+
     public void doAction(String verb, Action action, Link link, boolean detail) throws Exception {
         Response r = null;
         Exception failure = null;

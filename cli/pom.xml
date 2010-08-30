@@ -25,6 +25,8 @@
     <module>templates</module>
     <module>networks</module>
     <module>vmpools</module>
+    <module>roles</module>
+    <module>users</module>
     <module>feature</module>
     <module>branding</module>
   </modules>
