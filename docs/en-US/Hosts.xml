@@ -22,6 +22,14 @@
             <entry>The IP address or hostname of the host</entry>
           </row>
           <row>
+            <entry><literal>cluster</literal></entry>
+            <entry>The cluster that includes this host</entry>
+          </row>
+          <row>
+            <entry><literal>port</literal></entry>
+            <entry>The listen port of the VDSM daemon running on this host</entry>
+          </row>
+          <row>
             <entry><literal>version</literal></entry>
             <entry>The compatibility level of the host (see <xref linkend="chap-REST_API_Guide-Cluster_Level_Versions"/>)</entry>
           </row>
@@ -37,6 +45,8 @@
   &lt;name&gt;zig&lt;/name&gt;
   &lt;status&gt;UP&lt;/status&gt;
   &lt;version major="2" minor="2"/&gt;
+  &lt;cluster id="0" href="clusters/0"/&gt;
+  &lt;port&gt;54321&lt;/port&gt;
   &lt;link rel="nics" href="hosts/0/nics"/&gt;
   &lt;link rel="storage" href="hosts/0/storage"/&gt;
   &lt;actions&gt;
