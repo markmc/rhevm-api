@@ -32,6 +32,10 @@
               <entry><literal>description</literal></entry>
               <entry>A free-text description of the role</entry>
             </row>
+            <row>
+              <entry><literal>user</literal></entry>
+              <entry>A reference to the associated user (only present in the context of the role represented being assigned to an individual user)</entry>
+            </row>
           </tbody>
         </tgroup>
       </informaltable>
@@ -47,19 +51,23 @@ HTTP/1.1 200 OK
 Content-Type: application/xml
 
 &lt;roles&gt;
-  &lt;role id="00000000-0000-0000-0000-000000000001" href="roles/00000000-0000-0000-0000-000000000001"&gt;
+  &lt;role id="00000000-0000-0000-0000-000000000001"
+        href="roles/00000000-0000-0000-0000-000000000001"&gt;
     &lt;name&gt;SuperUser&lt;/name&gt;
     &lt;description&gt;Roles management administrator&lt;/description&gt;
   &lt;/role&gt;
-  &lt;role id="00000000-0000-0000-0001-000000000001" href="roles/00000000-0000-0000-0001-000000000001"&gt;
+  &lt;role id="00000000-0000-0000-0001-000000000001"
+        href="roles/00000000-0000-0000-0001-000000000001"&gt;
     &lt;name&gt;RHEVMUser&lt;/name&gt;
     &lt;description&gt;RHEVM user&lt;/description&gt;
   &lt;/role&gt;
-  &lt;role id="00000000-0000-0000-0001-000000000002" href="roles/00000000-0000-0000-0001-000000000002"&gt;
+  &lt;role id="00000000-0000-0000-0001-000000000002"
+        href="roles/00000000-0000-0000-0001-000000000002"&gt;
     &lt;name&gt;RHEVMPowerUser&lt;/name&gt;
     &lt;description&gt;RHEVM power user&lt;/description&gt;
   &lt;/role&gt;
-  &lt;role id="00000000-0000-0000-0001-000000000003" href="roles/00000000-0000-0000-0001-000000000003"&gt;
+  &lt;role id="00000000-0000-0000-0001-000000000003"
+        href="roles/00000000-0000-0000-0001-000000000003"&gt;
     &lt;name&gt;RHEVMVDIUser&lt;/name&gt;
     &lt;description&gt;RHEVM VDI user&lt;/description&gt;
   &lt;/role&gt;
