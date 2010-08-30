@@ -184,13 +184,13 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
             }
             storageDomain = tornDown;
         } else {
-            buf.append("$h = get-storagedomain " + PowerShellUtils.escape(getId()) + ";");
+            buf.append("$d = get-storagedomain " + PowerShellUtils.escape(getId()) + ";");
 
             if (storageDomain.isSetName()) {
-                buf.append("$h.name = " + PowerShellUtils.escape(storageDomain.getName()) + ";");
+                buf.append("$d.name = " + PowerShellUtils.escape(storageDomain.getName()) + ";");
             }
 
-            buf.append("update-storagedomain -storagedomainobject $v");
+            buf.append("update-storagedomain -storagedomainobject $d");
 
             storageDomain = runAndParseSingle(buf.toString(), true);
         }
