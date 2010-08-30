@@ -47,22 +47,22 @@ HTTP/1.1 200 OK
 Content-Type: application/xml
 
 &lt;roles&gt;
-      &lt;role id="00000000-0000-0000-0000-000000000001" href="roles/00000000-0000-0000-0000-000000000001"&gt;
-          &lt;name&gt;SuperUser&lt;/name&gt;
-          &lt;description&gt;Roles management administrator&lt;/description&gt;
-      &lt;/role&gt;
-      &lt;role id="00000000-0000-0000-0001-000000000001" href="roles/00000000-0000-0000-0001-000000000001"&gt;
-          &lt;name&gt;RHEVMUser&lt;/name&gt;
-          &lt;description&gt;RHEVM user&lt;/description&gt;
-      &lt;/role&gt;
-      &lt;role id="00000000-0000-0000-0001-000000000002" href="roles/00000000-0000-0000-0001-000000000002"&gt;
-          &lt;name&gt;RHEVMPowerUser&lt;/name&gt;
-          &lt;description&gt;RHEVM power user&lt;/description&gt;
-      &lt;/role&gt;
-      &lt;role id="00000000-0000-0000-0001-000000000003" href="roles/00000000-0000-0000-0001-000000000003"&gt;
-          &lt;name&gt;RHEVMVDIUser&lt;/name&gt;
-          &lt;description&gt;RHEVM VDI user&lt;/description&gt;
-      &lt;/role&gt;
+  &lt;role id="00000000-0000-0000-0000-000000000001" href="roles/00000000-0000-0000-0000-000000000001"&gt;
+    &lt;name&gt;SuperUser&lt;/name&gt;
+    &lt;description&gt;Roles management administrator&lt;/description&gt;
+  &lt;/role&gt;
+  &lt;role id="00000000-0000-0000-0001-000000000001" href="roles/00000000-0000-0000-0001-000000000001"&gt;
+    &lt;name&gt;RHEVMUser&lt;/name&gt;
+    &lt;description&gt;RHEVM user&lt;/description&gt;
+  &lt;/role&gt;
+  &lt;role id="00000000-0000-0000-0001-000000000002" href="roles/00000000-0000-0000-0001-000000000002"&gt;
+    &lt;name&gt;RHEVMPowerUser&lt;/name&gt;
+    &lt;description&gt;RHEVM power user&lt;/description&gt;
+  &lt;/role&gt;
+  &lt;role id="00000000-0000-0000-0001-000000000003" href="roles/00000000-0000-0000-0001-000000000003"&gt;
+    &lt;name&gt;RHEVMVDIUser&lt;/name&gt;
+    &lt;description&gt;RHEVM VDI user&lt;/description&gt;
+  &lt;/role&gt;
 &lt;/roles&gt;
     </screen>
 
@@ -158,13 +158,13 @@ Content-Type: application/xml
 Accept: application/xml
 
 &lt;user&gt;
-    &lt;user_name&gt;joe@black.qumranet.com&lt;/user_name&gt;
-    &lt;roles&gt;
-      &lt;role&gt;
-        &lt;name&gt;RHEVMPowerUser&lt;/name&gt;
-      &lt;/role&gt;
-      &lt;role id="00000000-0000-0000-0001-000000000003"/&gt;
-    &lt;/roles&gt;
+  &lt;user_name&gt;joe@black.qumranet.com&lt;/user_name&gt;
+  &lt;roles&gt;
+    &lt;role&gt;
+      &lt;name&gt;RHEVMPowerUser&lt;/name&gt;
+    &lt;/role&gt;
+    &lt;role id="00000000-0000-0000-0001-000000000003"/&gt;
+  &lt;/roles&gt;
 &lt;/user&gt;
     </screen>
 
