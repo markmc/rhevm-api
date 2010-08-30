@@ -31,5 +31,11 @@ public class HostVerboseDisplay implements VerboseDisplay<Host> {
         if (model.isSetAddress()) {
             System.out.println("  address: " + model.getAddress());
         }
+        if (model.isSetCluster()) {
+            System.out.println("  cluster: " + model.getCluster().getId());
+        }
+        if (model.isSetPort()) {
+            System.out.println("  port: " + model.getPort());
+        }
     }
 }

@@ -21,6 +21,7 @@ package com.redhat.rhevm.api.powershell.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.HostStatus;
 import com.redhat.rhevm.api.powershell.model.PowerShellHost;
@@ -54,6 +55,9 @@ public class PowerShellHost {
             Host host = new Host();
 
             host.setId(entity.get("hostid", String.class, Integer.class).toString());
+            host.setCluster(new Cluster());
+            host.getCluster().setId(entity.get("hostclusterid", String.class, Integer.class).toString());
+            host.setPort(entity.get("port", Integer.class));
             host.setName(entity.get("name"));
             host.setStatus(parseStatus(entity.get("status")));
 

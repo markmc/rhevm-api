@@ -28,10 +28,13 @@ import com.redhat.rhevm.api.model.HostStatus;
 
 public class PowerShellHostTest extends PowerShellModelTest {
 
-    private void testHost(Host h, String id, String name, HostStatus status) {
+    private void testHost(Host h, String id, String name, HostStatus status, String clusterId, int port) {
         assertEquals(h.getId(), id);
         assertEquals(h.getName(), name);
         assertEquals(h.getStatus(), status);
+        assertTrue(h.isSetCluster());
+        assertEquals(clusterId, h.getCluster().getId());
+        assertEquals(Integer.valueOf(port), h.getPort());
     }
 
     @Test
@@ -43,6 +46,6 @@ public class PowerShellHostTest extends PowerShellModelTest {
 
         assertEquals(hosts.size(), 1);
 
-        testHost(hosts.get(0), "5f38363b-7457-4884-831e-78c27cebb31d", "zig", HostStatus.UP);
+        testHost(hosts.get(0), "5f38363b-7457-4884-831e-78c27cebb31d", "zig", HostStatus.UP, "99408929-82cf-4dc7-a532-9d998063fa95", 54321);
     }
 }
