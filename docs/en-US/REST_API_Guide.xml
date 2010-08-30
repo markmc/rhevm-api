@@ -20,5 +20,6 @@
 	<xi:include href="VMs.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 	<xi:include href="Templates.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 	<xi:include href="VM_Pools.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="Users_and_Roles.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 	<xi:include href="Revision_History.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 </book>
