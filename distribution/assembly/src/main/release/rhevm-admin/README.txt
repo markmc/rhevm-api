@@ -54,9 +54,10 @@ following variables are set:
   > set RHEVM_USERNAME=username
   > set RHEVM_PASSWORD=password
 
-The Windows domain may be embedded in the username via the usual convention:
+The Active Directory domain may be embedded in the username via the usual
+convention:
 
-  domainname\username
+  username@domainname
 
 See ..\README_HTTPS.txt for further details on HTTPS setup.
 

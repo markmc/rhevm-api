@@ -53,9 +53,10 @@ following variables are set:
   $> export RHEVM_USERNAME=username
   $> export RHEVM_PASSWORD=password
 
-The Windows domain may be embedded in the username via the usual convention:
+The Active Directory domain may be embedded in the username via the usual
+convention:
 
-  domainname\username
+  username@domainname
 
 See ../README_HTTPS for further details on HTTPS setup.
 
