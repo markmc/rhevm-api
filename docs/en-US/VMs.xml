@@ -75,7 +75,7 @@
   <screen>
 &lt;vm id="082c794b-771f-452f-83c9-b2b5a19c0399" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399"&gt;
   &lt;name&gt;vm1&lt;/name&gt;
-  &lt;type&gt;SERVER&lt;/type&gt;
+  &lt;type&gt;DESKTOP&lt;/type&gt;
   &lt;status&gt;SHUTOFF&lt;/status&gt;
   &lt;memory&gt;536870912&lt;/memory&gt;
   &lt;cpu&gt;
@@ -90,6 +90,7 @@
   &lt;link rel="disks" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/disks"/&gt;
   &lt;link rel="nics" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/nics"/&gt;
   &lt;link rel="snapshots" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/snapshots"/&gt;
+  &lt;link rel="users" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/users"/&gt;
   &lt;actions&gt;
     &lt;link rel="shutdown" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/shutdown"/&gt;
     &lt;link rel="start" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/start"/&gt;
@@ -355,6 +356,32 @@
     <screen>
 POST /vms/5114bb3e-a4e6-44b2-b783-b3eea7d84720/snapshots/f5288fd5-5178-4b7d-b87c-c01a40e40168/restore HTTP/1.1
 Content-type: application/xml
+    </screen>
+
+  </section>
+
+  <section id="sect-REST_API_Guide-VMs-Users">
+    <title>
+      Users
+    </title>
+
+    <para>
+      A desktop VM may have a set of users attached to it, represented  via the <literal>users</literal> sub-collection. As per the usual idiom, <literal>POST</literal>ing to this collection attaches a user to the VM, whereas <literal>DELETE</literal>ing from it has the effect of detaching that user.
+    </para>
+
+    <note>
+      <para>
+      Users referenced in this way must already exist in the RHEVM user database, and may be identified either via their RHEVM ID or by user prinicpal name (see <xref linkend="chap-REST_API_Guide-Users-and-Roles"/>). In the example below, the latter approach is taken.
+      </para>
+    </note>
+
+    <screen>
+POST /vms/0/users HTTP/1.1
+Content-type: application/xml
+Accept: application/xml
+&lt;user&gt;
+  &lt;user_name&gt;rhevmadmin@black.qumranet.com&lt;/user_name&gt;
+&lt;/user&gt;
     </screen>
 
   </section>
