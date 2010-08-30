@@ -66,12 +66,20 @@ Content-Type: application/xml
             <entry>Virtual networks</entry>
           </row>
           <row>
+            <entry><literal>roles</literal></entry>
+            <entry>Roles</entry>
+          </row>
+          <row>
             <entry><literal>storagedomains</literal></entry>
             <entry>Storage domains</entry>
           </row>
           <row>
             <entry><literal>templates</literal></entry>
             <entry>Templates</entry>
+          </row>
+          <row>
+            <entry><literal>users</literal></entry>
+            <entry>Users</entry>
           </row>
           <row>
             <entry><literal>vmpools</literal></entry>
@@ -141,6 +149,10 @@ Content-Type: application/xml
           <row>
             <entry><literal>templates/search</literal></entry>
             <entry>Query templates</entry>
+          </row>
+          <row>
+            <entry><literal>users/search</literal></entry>
+            <entry>Query users</entry>
           </row>
           <row>
             <entry><literal>vmpools/search</literal></entry>
