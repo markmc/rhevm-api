@@ -55,19 +55,38 @@
     </snapshotRepository>
   </distributionManagement>
 
-  <modules>
-    <module>api</module>
-    <module>common</module>
-    <module>powershell</module>
-    <module>mock</module>
-    <module>cli</module>
-  </modules>
-
   <profiles>
+
+    <profile>
+      <id>api</id>
+      <modules>
+        <module>api</module>
+        <module>common</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>normal</id>
+      <modules>
+        <module>api</module>
+        <module>common</module>
+        <module>powershell</module>
+        <module>mock</module>
+        <module>cli</module>
+      </modules>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+    </profile>
 
     <profile>
       <id>all</id>
       <modules>
+        <module>api</module>
+        <module>common</module>
+        <module>powershell</module>
+        <module>mock</module>
+        <module>cli</module>
         <module>distribution</module>
       </modules>
     </profile>
