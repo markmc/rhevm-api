@@ -85,10 +85,6 @@ Content-Type: application/xml
               <entry><literal>level</literal></entry>
               <entry>An indication as to the relative priority/preference for the CPUs in the list. Higher is better</entry>
             </row>
-            <row>
-              <entry><literal>flags</literal></entry>
-              <entry>A list of the CPU flags supported by the CPU</entry>
-            </row>
           </tbody>
         </tgroup>
       </informaltable>
@@ -101,18 +97,9 @@ Content-Type: application/xml
   &lt;cpus&gt;
     &lt;cpu id="Intel Xeon w/o XD/NX"&gt;
       &lt;level&gt;2&lt;/level&gt;
-      &lt;flags&gt;
-        &lt;flag&gt;vmx&lt;/flag&gt;
-        &lt;flag&gt;sse2&lt;/flag&gt;
-      &lt;/flags&gt;
     &lt;/cpu&gt;
     &lt;cpu id="Intel Xeon"&gt;
       &lt;level&gt;3&lt;/level&gt;
-      &lt;flags&gt;
-        &lt;flag&gt;vmx&lt;/flag&gt;
-        &lt;flag&gt;sse2&lt;/flag&gt;
-        &lt;flag&gt;nx&lt;/flag&gt;
-      &lt;/flags&gt;
     &lt;/cpu&gt;
     ...
   &lt;/cpus&gt;

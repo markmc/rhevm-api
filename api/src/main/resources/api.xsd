@@ -294,18 +294,6 @@
     <xs:sequence>
       <xs:element name="topology" type="CpuTopology" minOccurs="0"/>
       <xs:element name="level" type="xs:int" minOccurs="0"/>
-      <xs:element name="flags" minOccurs="0">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:annotation>
-              <xs:appinfo>
-                <jaxb:property name="Flags"/>
-              </xs:appinfo>
-            </xs:annotation>
-            <xs:element name="flag" type="xs:string" maxOccurs="unbounded"/>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
     </xs:sequence>
     <xs:attribute name="id" type="xs:string"/>
   </xs:complexType>

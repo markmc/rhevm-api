@@ -43,33 +43,28 @@ public class DefaultCapabilitiesResource implements CapabilitiesResource {
     private CPUs cpus = new CPUs();
 
     {
-        addCpu(VERSION21, "Intel Xeon w/o XD/NX",  2, "vmx", "sse2");
-        addCpu(VERSION21, "Intel Xeon",            3, "vmx", "sse2", "nx");
-        addCpu(VERSION22, "Intel Xeon Core2",      4, "vmx", "sse2", "nx", "cx16", "ssse3");
-        addCpu(VERSION22, "Intel Xeon 45nm Core2", 5, "vmx", "sse2", "nx", "cx16", "ssse3", "sse4_1");
-        addCpu(VERSION22, "Intel Xeon Core i7",    6, "vmx", "sse2", "nx", "cx16", "ssse3", "sse4_1", "sse4_2", "popcnt");
+        addCpu(VERSION21, "Intel Xeon w/o XD/NX",  2);
+        addCpu(VERSION21, "Intel Xeon",            3);
+        addCpu(VERSION22, "Intel Xeon Core2",      4);
+        addCpu(VERSION22, "Intel Xeon 45nm Core2", 5);
+        addCpu(VERSION22, "Intel Xeon Core i7",    6);
 
-        addCpu(VERSION21, "AMD Opteron G1 w/o NX", 2, "svm", "sse2");
-        addCpu(VERSION21, "AMD Opteron G1",        3, "svm", "sse2", "nx");
-        addCpu(VERSION22, "AMD Opteron G2",        4, "svm", "sse2", "nx", "cx16");
-        addCpu(VERSION22, "AMD Opteron G3",        5, "svm", "sse2", "nx", "cx16", "sse4a", "misalignsse", "popcnt", "abm");
+        addCpu(VERSION21, "AMD Opteron G1 w/o NX", 2);
+        addCpu(VERSION21, "AMD Opteron G1",        3);
+        addCpu(VERSION22, "AMD Opteron G2",        4);
+        addCpu(VERSION22, "AMD Opteron G3",        5);
     }
 
-    private void addCpu(VersionCaps version, String id, int level, String... flags) {
+    private void addCpu(VersionCaps version, String id, int level) {
         CPU cpu = new CPU();
 
         cpu.setId(id);
         cpu.setLevel(level);
 
-        cpu.setFlags(new CPU.Flags());
-        for (String flag : flags) {
-            cpu.getFlags().getFlags().add(flag);
-        }
-
         version.getCPUs().getCPUs().add(cpu);
 
         if (version == VERSION21) {
-            addCpu(VERSION22, id, level, flags);
+            addCpu(VERSION22, id, level);
         }
     }
 

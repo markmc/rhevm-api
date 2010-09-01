@@ -39,8 +39,6 @@ public class PowerShellCapabilitiesResourceTest extends BasePowerShellResourceTe
     private void checkCpu(CPU cpu) {
         assertNotNull(cpu.getId());
         assertNotNull(cpu.getLevel());
-        assertNotNull(cpu.getFlags());
-        assertNotNull(cpu.getFlags().getFlags().size() > 0);
     }
 
     private void checkVersion(VersionCaps version, int major, int minor, Boolean current) {

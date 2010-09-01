@@ -89,7 +89,7 @@ class CPU(Element):
     NAME = 'cpu'
     COLLECTIONS = [ 'cpus', ]
     ATTRIBUTES = Element.ATTRIBUTES + ["id"]
-    ELEMENTS = Element.ELEMENTS + ["level", "topology"] # FIXME: flags
+    ELEMENTS = Element.ELEMENTS + ["level", "topology"]
 
 class GracePeriod(Element):
     NAME = 'grace_period'

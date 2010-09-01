@@ -57,8 +57,7 @@ public class CpusListCommand extends AbstractCommand {
             }
             for (CPU resource : collection) {
                 System.out.println(pad(resource.getId(), widestId)
-                                   + pad(Integer.toString(resource.getLevel()), 0)
-                                   + resource.getFlags().getFlags());
+                                   + pad(Integer.toString(resource.getLevel()), 0));
             }
         }
         return null;
