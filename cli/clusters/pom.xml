@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.redhat.rhevm.api</groupId>
     <artifactId>cli-parent</artifactId>
-    <version>0.9-SNAPSHOT</version>
+    <version>0.9-milestone3.2</version>
   </parent>
 
   <artifactId>rhevm-api-cli-clusters</artifactId>
