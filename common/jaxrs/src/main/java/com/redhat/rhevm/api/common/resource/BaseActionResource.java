@@ -36,7 +36,7 @@ public class BaseActionResource<R extends BaseResource> implements ActionResourc
     private Action action;
     private R parent;
 
-    BaseActionResource(UriInfo uriInfo, Action action, R parent) {
+    public BaseActionResource(UriInfo uriInfo, Action action, R parent) {
         this.action = action;
         this.parent = parent;
         action.setId(UUID.randomUUID().toString());
