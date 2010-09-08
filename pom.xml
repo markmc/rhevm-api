@@ -4,7 +4,7 @@
   <groupId>com.redhat.rhevm.api</groupId>
   <artifactId>parent</artifactId>
   <packaging>pom</packaging>
-  <version>0.9-SNAPSHOT</version>
+  <version>0.9-milestone3.3</version>
 
   <name>RHEV-M API Parent POM</name>
   <url>http://fedorahosted.org/rhevm-api/</url>
