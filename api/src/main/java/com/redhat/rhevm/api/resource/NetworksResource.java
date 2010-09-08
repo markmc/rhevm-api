@@ -40,7 +40,7 @@ public interface NetworksResource {
 
     @GET
     @Formatted
-    public Networks list(@Context UriInfo uriInfo);
+    public Networks list();
 
     @POST
     @Formatted

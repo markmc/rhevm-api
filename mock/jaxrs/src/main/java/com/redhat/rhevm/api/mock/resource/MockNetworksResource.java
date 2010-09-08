@@ -61,11 +61,11 @@ public class MockNetworksResource extends AbstractMockQueryableResource<Network>
     }
 
     @Override
-    public Networks list(UriInfo uriInfo) {
+    public Networks list() {
         Networks ret = new Networks();
 
         for (MockNetworkResource network : networks.values()) {
-            if (filter(network.getModel(), uriInfo, Network.class)) {
+            if (filter(network.getModel(), null, Network.class)) {
                 ret.getNetworks().add(network.addLinks());
             }
         }

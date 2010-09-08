@@ -41,10 +41,10 @@ public class PowerShellNetworksResourceTest extends AbstractPowerShellCollection
 
     @Test
     public void testList() throws Exception {
+        setUpResourceExpectations("get-networks", getSelectReturn(), NAMES);
+
         verifyCollection(
-            resource.list(setUpResourceExpectations("get-networks",
-                                                    getSelectReturn(),
-                                                    NAMES)).getNetworks(),
+            resource.list().getNetworks(),
             NAMES, DESCRIPTIONS);
     }
 

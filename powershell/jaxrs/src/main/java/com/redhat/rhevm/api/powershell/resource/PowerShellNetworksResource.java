@@ -49,7 +49,7 @@ public class PowerShellNetworksResource
     }
 
     @Override
-    public Networks list(UriInfo uriInfo) {
+    public Networks list() {
         Networks ret = new Networks();
         for (Network network : runAndParse("get-networks")) {
             ret.getNetworks().add(LinkHelper.addLinks(network));

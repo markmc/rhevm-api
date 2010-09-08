@@ -32,7 +32,7 @@ public class AbstractMockQueryableResource<R extends BaseResource> extends Abstr
     }
 
     protected boolean filter(R resource, UriInfo uriInfo, Class<?> clz) {
-        String constraint = QueryHelper.getConstraint(uriInfo, clz);
+        String constraint = uriInfo != null ? QueryHelper.getConstraint(uriInfo, clz) : null;
         return constraint != null ? evaluator.satisfies(resource, constraint) : true;
     }
 }
