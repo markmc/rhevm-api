@@ -95,6 +95,17 @@ Content-Type: application/xml
 
   </para>
 
+  <para>
+    <figure id="figu-REST_API_Guide_API">
+      <title> The relationship between the API entry point and the resource collections exposed by the API</title>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/api_diag.png" format="PNG" />
+        </imageobject>
+      </mediaobject>
+    </figure>
+  </para>
+
   <note>
     <title>URIs</title>
     <para>
