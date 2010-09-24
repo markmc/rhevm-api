@@ -46,6 +46,7 @@ public class DefaultApiResource implements ApiResource {
         addLink("networks", false); // powershell has no select-network command
         addLink("roles", false);
         addLink("storagedomains");
+        addLink("tags", false);
         addLink("templates");
         addLink("users");
         addLink("vmpools");
