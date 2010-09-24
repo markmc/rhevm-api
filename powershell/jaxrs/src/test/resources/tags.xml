@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<Objects>
+  <Object Type="RhevmCmd.CLITag">
+    <Property Name="TagID" Type="System.Int32">0</Property>
+    <Property Name="Name" Type="System.String">foo</Property>
+    <Property Name="Description" Type="System.String">Foo tag</Property>
+    <Property Name="ParentId" Type="System.Int32">-1</Property>
+    <Property Name="ReadOnly" Type="System.Boolean">False</Property>
+  </Object>
+  <Object Type="RhevmCmd.CLITag">
+    <Property Name="TagID" Type="System.Int32">1</Property>
+    <Property Name="Name" Type="System.String">bar</Property>
+    <Property Name="Description" Type="System.String">Bar tag</Property>
+    <Property Name="ParentId" Type="System.Int32">-1</Property>
+    <Property Name="ReadOnly" Type="System.Boolean">False</Property>
+  </Object>
+</Objects>
