@@ -52,6 +52,10 @@
         lazy-init="true"
         class="com.redhat.rhevm.api.powershell.resource.PowerShellUsersResource"/>
 
+  <bean id="powerShellTagsResource"
+        lazy-init="true"
+        class="com.redhat.rhevm.api.powershell.resource.PowerShellTagsResource"/>
+
   <bean id="powerShellCapabilitiesResource"
         class="com.redhat.rhevm.api.common.resource.DefaultCapabilitiesResource"/>
 
