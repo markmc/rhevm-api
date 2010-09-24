@@ -1120,4 +1120,33 @@
     </xs:sequence>
   </xs:complexType>
 
+  <!-- Tags -->
+
+  <xs:element name="tag" type="Tag"/>
+
+  <xs:element name="tags" type="Tags"/>
+
+  <xs:complexType name="Tag">
+    <xs:complexContent>
+      <xs:extension base="BaseResource">
+        <xs:sequence>
+          <xs:element ref="host" minOccurs="0"/>
+          <xs:element ref="vm" minOccurs="0"/>
+          <xs:element ref="user" minOccurs="0"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Tags">
+    <xs:sequence>
+      <xs:annotation>
+        <xs:appinfo>
+            <jaxb:property name="Tags"/>
+        </xs:appinfo>
+      </xs:annotation>
+      <xs:element ref="tag" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
 </xs:schema>
