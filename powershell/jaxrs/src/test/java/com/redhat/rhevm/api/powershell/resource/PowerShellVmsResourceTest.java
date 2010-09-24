@@ -49,7 +49,7 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     private static final String ADD_COMMAND_PROLOG =
         "$templ = get-template -templateid \"" + TEMPLATE_ID + "\";";
     private static final String ADD_COMMAND_EPILOG =
-        "-templateobject $templ -hostclusterid \"" + CLUSTER_ID + "\"";
+        " -templateobject $templ -hostclusterid \"" + CLUSTER_ID + "\"";
 
     private static final String TEMPLATE_BY_NAME_ADD_COMMAND_PROLOG =
         "$t = select-template -searchtext \"name=" + TEMPLATE_NAME + "\";" +
@@ -61,10 +61,10 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
         "$templ = get-template -templateid $t.TemplateId;";
 
     private static final String CLUSTER_BY_NAME_ADD_COMMAND_EPILOG =
-        "-templateobject $templ -hostclusterid $c.ClusterId";
+        " -templateobject $templ -hostclusterid $c.ClusterId";
 
     private static final String DISPLAY_ADD_COMMAND_EPILOG =
-        "-numofmonitors 4 -displaytype VNC " + ADD_COMMAND_EPILOG;
+        " -numofmonitors 4 -displaytype VNC" + ADD_COMMAND_EPILOG;
 
     public PowerShellVmsResourceTest() {
         super(new PowerShellVmResource("0", null, null, null), "vms", "vm", extraArgs);

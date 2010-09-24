@@ -31,7 +31,7 @@ public class PowerShellNetworksResourceTest extends AbstractPowerShellCollection
 
     public static final String[] extraArgs = new String[] { DATA_CENTER_ID };
 
-    private static final String ADD_COMMAND_EPILOG = "-datacenterid \"" + DATA_CENTER_ID + "\"";
+    private static final String ADD_COMMAND_EPILOG = " -datacenterid \"" + DATA_CENTER_ID + "\"";
 
     private static final String REMOVE_COMMAND = "$n = get-networks;foreach ($i in $n) {  if ($i.networkid -eq \"" + Integer.toString(NAMES[1].hashCode()) + "\") {    remove-network -networkobject $i -datacenterid $i.datacenterid  }}";
 

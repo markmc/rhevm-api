@@ -80,7 +80,7 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
 
     private static final String ADD_COMMAND =
         "add-{0}{1} -name \"" + NEW_NAME +
-                "\" -description \"" + NEW_DESCRIPTION + "\" ";
+                "\" -description \"" + NEW_DESCRIPTION + "\"";
 
     private static final String REMOVE_COMMAND = "remove-{0} -{0}id \"" + "eris".hashCode() + "\"";
 

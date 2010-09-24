@@ -43,7 +43,7 @@ public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectio
     public static final String[] extraArgs = new String[] { CLUSTER_ID, Integer.toString(MEMSIZE), Integer.toString(BOOTSEQUENCE), Integer.toString(N_SOCKETS), Integer.toString(N_CPUS) };
 
     private static final String ADD_COMMAND_PROLOG = "$v = get-vm \"" + VM_ID + "\";";
-    private static final String ADD_COMMAND_NO_CLUSTER_EPILOG = "-mastervm $v";
+    private static final String ADD_COMMAND_NO_CLUSTER_EPILOG = " -mastervm $v";
     private static final String ADD_COMMAND_EPILOG =
         ADD_COMMAND_NO_CLUSTER_EPILOG + " -hostclusterid \"" + CLUSTER_ID + "\"";
 
