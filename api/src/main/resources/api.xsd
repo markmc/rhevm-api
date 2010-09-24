@@ -1110,7 +1110,7 @@
     </xs:sequence>
   </xs:complexType>
 
-  <!-- Host NICs -->
+  <!-- Host Storage -->
 
   <xs:element name="host_storage" type="HostStorage"/>
 
