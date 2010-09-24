@@ -43,6 +43,7 @@ import com.redhat.rhevm.api.model.Role;
 import com.redhat.rhevm.api.model.Snapshot;
 import com.redhat.rhevm.api.model.Storage;
 import com.redhat.rhevm.api.model.StorageDomain;
+import com.redhat.rhevm.api.model.Tag;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.User;
 import com.redhat.rhevm.api.model.VmPool;
@@ -74,6 +75,8 @@ import com.redhat.rhevm.api.resource.SnapshotsResource;
 import com.redhat.rhevm.api.resource.StorageResource;
 import com.redhat.rhevm.api.resource.StorageDomainResource;
 import com.redhat.rhevm.api.resource.StorageDomainsResource;
+import com.redhat.rhevm.api.resource.TagResource;
+import com.redhat.rhevm.api.resource.TagsResource;
 import com.redhat.rhevm.api.resource.TemplateResource;
 import com.redhat.rhevm.api.resource.TemplatesResource;
 import com.redhat.rhevm.api.resource.UserResource;
@@ -107,6 +110,7 @@ public class LinkHelper {
         TYPES.put(Snapshot.class,      new ResourceType(SnapshotResource.class,        SnapshotsResource.class,        VM.class));
         TYPES.put(Storage.class,       new ResourceType(StorageResource.class,         HostStorageResource.class,      Host.class));
         TYPES.put(StorageDomain.class, new ResourceType(StorageDomainResource.class,   StorageDomainsResource.class));
+        TYPES.put(Tag.class,           new ResourceType(TagResource.class,             TagsResource.class));
         TYPES.put(Template.class,      new ResourceType(TemplateResource.class,        TemplatesResource.class));
         // REVISIT: will need the concept of multiple parent types, both VM and VmPool for User
         TYPES.put(User.class,          new ResourceType(UserResource.class,            AttachedUsersResource.class,    VM.class,      UsersResource.class));

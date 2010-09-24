@@ -33,6 +33,7 @@ import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.NIC;
 import com.redhat.rhevm.api.model.Storage;
 import com.redhat.rhevm.api.model.StorageDomain;
+import com.redhat.rhevm.api.model.Tag;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VmPool;
 import com.redhat.rhevm.api.model.VM;
@@ -48,6 +49,7 @@ public class LinkHelperTest extends Assert {
     private static final String HOST_ID = "magnificent";
     private static final String DATA_CENTER_ID = "majestic";
     private static final String NETWORK_ID = "stupendous";
+    private static final String TAG_ID = "outstanding";
     private static final String ISO_ID = "faroutdude";
     private static final String CDROM_ID = "wonderful";
     private static final String DISK_ID = "fantastic";
@@ -62,6 +64,7 @@ public class LinkHelperTest extends Assert {
     private static final String HOST_HREF = "hosts/" + HOST_ID;
     private static final String DATA_CENTER_HREF = "datacenters/" + DATA_CENTER_ID;
     private static final String NETWORK_HREF = "networks/" + NETWORK_ID;
+    private static final String TAG_HREF = "tags/" + TAG_ID;
     private static final String CLUSTER_NETWORK_HREF = "clusters/" + CLUSTER_ID + "/networks/" + NETWORK_ID;
     private static final String ISO_HREF = "datacenters/" + DATA_CENTER_ID + "/isos/" + ISO_ID;
     private static final String ATTACHMENT_HREF = STORAGE_DOMAIN_HREF + "/attachments/" + DATA_CENTER_ID;
@@ -156,6 +159,16 @@ public class LinkHelperTest extends Assert {
         LinkHelper.addLinks(network);
 
         assertEquals(CLUSTER_NETWORK_HREF, network.getHref());
+    }
+
+    @Test
+    public void testTagLinks() throws Exception {
+        Tag tag = new Tag();
+        tag.setId(TAG_ID);
+
+        LinkHelper.addLinks(tag);
+
+        assertEquals(TAG_HREF, tag.getHref());
     }
 
     @Test
