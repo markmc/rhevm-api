@@ -18,16 +18,18 @@
  */
 package com.redhat.rhevm.api.powershell.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.CpuTopology;
-
+import com.redhat.rhevm.api.model.CpuStatistics;
 import com.redhat.rhevm.api.model.Display;
 import com.redhat.rhevm.api.model.DisplayType;
 import com.redhat.rhevm.api.model.Host;
+import com.redhat.rhevm.api.model.MemoryStatistics;
 import com.redhat.rhevm.api.model.OperatingSystem;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VM;
@@ -39,6 +41,10 @@ import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.UUID;
 
 public class PowerShellVM extends VM {
+
+    private static final String VM_TYPE = "RhevmCmd.CLIVm";
+    private static final String MEMORY_STATS_TYPE = "RhevmCmd.MemoryStatistics";
+    private static final String CPU_STATS_TYPE = "RhevmCmd.CLICpu";
 
     private String cdIsoPath;
     public String getCdIsoPath() {
@@ -99,71 +105,102 @@ public class PowerShellVM extends VM {
         List<PowerShellVM> ret = new ArrayList<PowerShellVM>();
 
         for (PowerShellParser.Entity entity : parser.parse(output)) {
-            PowerShellVM vm = new PowerShellVM();
-
-            vm.setId(entity.get("vmid"));
-            vm.setName(entity.get("name"));
-            vm.setDescription(entity.get("description"));
-            vm.setType(entity.get("vmtype", PowerShellVmType.class).map());
-            vm.setMemory(entity.get("memorysize", Integer.class) * 1024L * 1024L);
-            vm.setCdIsoPath(entity.get("cdisopath"));
-
-            VmStatus status = parseStatus(entity.get("status"));
-            if (status != null) {
-                vm.setStatus(status);
+            if (VM_TYPE.equals(entity.getType())) {
+                ret.add(parseVm(entity));
+            } else if (MEMORY_STATS_TYPE.equals(entity.getType())) {
+                parseMemoryStats(entity, last(ret));
+            } else if (CPU_STATS_TYPE.equals(entity.getType())) {
+                parseCpuStats(entity, last(ret));
             }
-
-            CpuTopology topo = new CpuTopology();
-            topo.setSockets(entity.get("numofsockets", Integer.class));
-            topo.setCores(entity.get("numofcpuspersocket", Integer.class));
-            CPU cpu = new CPU();
-            cpu.setTopology(topo);
-            vm.setCpu(cpu);
-
-            OperatingSystem os = new OperatingSystem();
-            for (OperatingSystem.Boot boot : entity.get("defaultbootsequence", PowerShellBootSequence.class).map()) {
-                os.getBoot().add(boot);
-            }
-            vm.setOs(os);
-
-            Object hostId = entity.get("runningonhost", String.class, Integer.class).toString();
-            if (!isEmptyId(hostId)) {
-                Host host = new Host();
-                host.setId(hostId.toString());
-                vm.setHost(host);
-            }
-
-            Cluster cluster = new Cluster();
-            cluster.setId(entity.get("hostclusterid", String.class, Integer.class).toString());
-            vm.setCluster(cluster);
-
-            Template template = new Template();
-            template.setId(entity.get("templateid"));
-            vm.setTemplate(template);
-
-            Object poolId = entity.get("poolid", String.class, Integer.class).toString();
-            if (!isEmptyId(poolId)) {
-                VmPool pool = new VmPool();
-                pool.setId(poolId.toString());
-                vm.setVmPool(pool);
-            }
-
-            DisplayType displayType = parseDisplayType(entity.get("displaytype"));
-            if (displayType != null) {
-                Display display = new Display();
-                display.setType(displayType);
-                display.setMonitors(entity.get("numofmonitors", Integer.class));
-                int port = entity.get("displayport", Integer.class);
-                if (port != -1) {
-                    display.setPort(port);
-                }
-                vm.setDisplay(display);
-            }
-
-            ret.add(vm);
         }
 
         return ret;
+    }
+
+    private static PowerShellVM last(List<PowerShellVM> list) {
+        return list.get(list.size() - 1);
+    }
+
+    private static PowerShellVM parseVm(PowerShellParser.Entity entity) {
+        PowerShellVM vm = new PowerShellVM();
+
+        vm.setId(entity.get("vmid"));
+        vm.setName(entity.get("name"));
+        vm.setDescription(entity.get("description"));
+        vm.setType(entity.get("vmtype", PowerShellVmType.class).map());
+        vm.setMemory(entity.get("memorysize", Integer.class) * 1024L * 1024L);
+        vm.setCdIsoPath(entity.get("cdisopath"));
+
+        VmStatus status = parseStatus(entity.get("status"));
+        if (status != null) {
+            vm.setStatus(status);
+        }
+
+        CpuTopology topo = new CpuTopology();
+        topo.setSockets(entity.get("numofsockets", Integer.class));
+        topo.setCores(entity.get("numofcpuspersocket", Integer.class));
+        CPU cpu = new CPU();
+        cpu.setTopology(topo);
+        vm.setCpu(cpu);
+
+        OperatingSystem os = new OperatingSystem();
+        for (OperatingSystem.Boot boot : entity.get("defaultbootsequence", PowerShellBootSequence.class).map()) {
+            os.getBoot().add(boot);
+        }
+        vm.setOs(os);
+
+        Object hostId = entity.get("runningonhost", String.class, Integer.class).toString();
+        if (!isEmptyId(hostId)) {
+            Host host = new Host();
+            host.setId(hostId.toString());
+            vm.setHost(host);
+        }
+
+        Cluster cluster = new Cluster();
+        cluster.setId(entity.get("hostclusterid", String.class, Integer.class).toString());
+        vm.setCluster(cluster);
+
+        Template template = new Template();
+        template.setId(entity.get("templateid"));
+        vm.setTemplate(template);
+
+        Object poolId = entity.get("poolid", String.class, Integer.class).toString();
+        if (!isEmptyId(poolId)) {
+            VmPool pool = new VmPool();
+            pool.setId(poolId.toString());
+            vm.setVmPool(pool);
+        }
+
+        DisplayType displayType = parseDisplayType(entity.get("displaytype"));
+        if (displayType != null) {
+            Display display = new Display();
+            display.setType(displayType);
+            display.setMonitors(entity.get("numofmonitors", Integer.class));
+            int port = entity.get("displayport", Integer.class);
+            if (port != -1) {
+                display.setPort(port);
+            }
+            vm.setDisplay(display);
+        }
+        return vm;
+    }
+
+    private static void parseMemoryStats(PowerShellParser.Entity entity, PowerShellVM vm) {
+        if (!vm.isSetMemoryStatistics()) {
+            vm.setMemoryStatistics(new MemoryStatistics());
+        }
+        vm.getMemoryStatistics().setSize((long)entity.get("memsizemb", Integer.class));
+        vm.getMemoryStatistics().setUtilization((long)entity.get("usagemempercent", Integer.class));
+    }
+
+    private static void parseCpuStats(PowerShellParser.Entity entity, PowerShellVM vm) {
+        if (!vm.isSetCpuStatistics()) {
+            vm.setCpuStatistics(new CpuStatistics());
+        }
+        vm.getCpuStatistics().setUser(entity.get("user", BigDecimal.class));
+        vm.getCpuStatistics().setSystem(entity.get("system", BigDecimal.class));
+        vm.getCpuStatistics().setIdle(entity.get("idle", BigDecimal.class));
+        vm.getCpuStatistics().setLoad(entity.get("load", BigDecimal.class));
     }
 
     private static boolean isEmptyId(Object id) {

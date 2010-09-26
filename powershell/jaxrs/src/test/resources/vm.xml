@@ -57,6 +57,20 @@
     <Property Name="TimeZone" Type="System.String" />
     <Property Name="PoolId" Type="System.Guid">1de2d827-4569-47cb-a3c7-643124ecc083</Property>
   </Object>
+  <Object Type="RhevmCmd.MemoryStatistics">
+    <Property Name="memSizeMb" Type="System.Int32">1024</Property>
+    <Property Name="usageMemPercent" Type="System.Int32">50</Property>
+  </Object>
+  <Object Type="RhevmCmd.CLICpu">
+    <Property Name="Name" Type="System.String">Virtual CPU</Property>
+    <Property Name="Model" Type="System.String">Virtual CPU</Property>
+    <Property Name="Cores" Type="System.Int32">1</Property>
+    <Property Name="Speed" Type="System.Decimal">0</Property>
+    <Property Name="User" Type="System.Decimal">10</Property>
+    <Property Name="System" Type="System.Decimal">20</Property>
+    <Property Name="Idle" Type="System.Decimal">30</Property>
+    <Property Name="Load" Type="System.Decimal">40</Property>
+  </Object>
   <Object Type="RhevmCmd.CLIVm">
     <Property Name="VmId" Type="System.String">f9e37917-8382-486f-875d-4045be045d85</Property>
     <Property Name="Name" Type="System.String">foo-2</Property>
@@ -111,6 +125,20 @@
     <Property Name="HighlyAvailable" Type="System.Boolean">False</Property>
     <Property Name="TimeZone" Type="System.String" />
     <Property Name="PoolId" Type="System.Guid">1de2d827-4569-47cb-a3c7-643124ecc083</Property>
+  </Object>
+  <Object Type="RhevmCmd.MemoryStatistics">
+    <Property Name="memSizeMb" Type="System.Int32">1024</Property>
+    <Property Name="usageMemPercent" Type="System.Int32">50</Property>
+  </Object>
+  <Object Type="RhevmCmd.CLICpu">
+    <Property Name="Name" Type="System.String">Virtual CPU</Property>
+    <Property Name="Model" Type="System.String">Virtual CPU</Property>
+    <Property Name="Cores" Type="System.Int32">1</Property>
+    <Property Name="Speed" Type="System.Decimal">0</Property>
+    <Property Name="User" Type="System.Decimal">10</Property>
+    <Property Name="System" Type="System.Decimal">20</Property>
+    <Property Name="Idle" Type="System.Decimal">30</Property>
+    <Property Name="Load" Type="System.Decimal">40</Property>
   </Object>
   <Object Type="RhevmCmd.CLIVm">
     <Property Name="VmId" Type="System.String">aa0e6522-5baf-4f92-86d3-716883de4359</Property>
@@ -169,6 +197,20 @@
     <Property Name="TimeZone" Type="System.String">GMT Standard Time</Property>
     <Property Name="PoolId" Type="System.Guid">00000000-0000-0000-0000-000000000000</Property>
   </Object>
+  <Object Type="RhevmCmd.MemoryStatistics">
+    <Property Name="memSizeMb" Type="System.Int32">1024</Property>
+    <Property Name="usageMemPercent" Type="System.Int32">50</Property>
+  </Object>
+  <Object Type="RhevmCmd.CLICpu">
+    <Property Name="Name" Type="System.String">Virtual CPU</Property>
+    <Property Name="Model" Type="System.String">Virtual CPU</Property>
+    <Property Name="Cores" Type="System.Int32">1</Property>
+    <Property Name="Speed" Type="System.Decimal">0</Property>
+    <Property Name="User" Type="System.Decimal">10</Property>
+    <Property Name="System" Type="System.Decimal">20</Property>
+    <Property Name="Idle" Type="System.Decimal">30</Property>
+    <Property Name="Load" Type="System.Decimal">40</Property>
+  </Object>
   <Object Type="RhevmCmd.CLIVm">
     <Property Name="VmId" Type="System.String">5114bb3e-a4e6-44b2-b783-b3eea7d84720</Property>
     <Property Name="Name" Type="System.String">testf13</Property>
@@ -225,5 +267,19 @@
     <Property Name="HighlyAvailable" Type="System.Boolean">False</Property>
     <Property Name="TimeZone" Type="System.String" />
     <Property Name="PoolId" Type="System.Guid">00000000-0000-0000-0000-000000000000</Property>
+  </Object>
+  <Object Type="RhevmCmd.MemoryStatistics">
+    <Property Name="memSizeMb" Type="System.Int32">1024</Property>
+    <Property Name="usageMemPercent" Type="System.Int32">50</Property>
+  </Object>
+  <Object Type="RhevmCmd.CLICpu">
+    <Property Name="Name" Type="System.String">Virtual CPU</Property>
+    <Property Name="Model" Type="System.String">Virtual CPU</Property>
+    <Property Name="Cores" Type="System.Int32">1</Property>
+    <Property Name="Speed" Type="System.Decimal">0</Property>
+    <Property Name="User" Type="System.Decimal">10</Property>
+    <Property Name="System" Type="System.Decimal">20</Property>
+    <Property Name="Idle" Type="System.Decimal">30</Property>
+    <Property Name="Load" Type="System.Decimal">40</Property>
   </Object>
 </Objects>

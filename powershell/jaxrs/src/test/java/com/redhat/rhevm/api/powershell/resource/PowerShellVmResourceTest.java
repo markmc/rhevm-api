@@ -18,6 +18,7 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.concurrent.Executor;
 
@@ -47,6 +48,7 @@ import static org.powermock.api.easymock.PowerMock.createMock;
 import static org.powermock.api.easymock.PowerMock.mockStatic;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 
+import static com.redhat.rhevm.api.powershell.resource.PowerShellVmsResourceTest.GET_STATS;
 
 public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM, PowerShellVmResource> {
 
@@ -97,7 +99,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     @Test
     public void testGet() throws Exception {
         verifyVM(
-            resource.get(setUpVmExpectations("get-vm \"" + VM_ID + "\"",
+            resource.get(setUpVmExpectations("get-vm \"" + VM_ID + "\"" + GET_STATS,
                                              formatVm(VM_NAME),
                                              VM_NAME)),
             VM_NAME);
@@ -106,7 +108,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     @Test
     public void testGet22() throws Exception {
         verifyVM(
-            resource.get(setUpVmExpectations("get-vm \"" + VM_ID + "\"",
+            resource.get(setUpVmExpectations("get-vm \"" + VM_ID + "\"" + GET_STATS,
                                              formatVm("vm22", VM_NAME),
                                              VM_NAME)),
             VM_NAME);
@@ -361,6 +363,14 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
         assertEquals(DisplayType.SPICE, vm.getDisplay().getType());
         assertEquals(Integer.valueOf(1), vm.getDisplay().getMonitors());
         assertTrue(vm.getDisplay().getPort() == null || vm.getDisplay().getPort() != -1);
+        assertTrue(vm.isSetMemoryStatistics());
+        assertEquals(Long.valueOf(1024L), vm.getMemoryStatistics().getSize());
+        assertEquals(Long.valueOf(50L), vm.getMemoryStatistics().getUtilization());
+        assertTrue(vm.isSetCpuStatistics());
+        assertEquals(BigDecimal.valueOf(10L), vm.getCpuStatistics().getUser());
+        assertEquals(BigDecimal.valueOf(20L), vm.getCpuStatistics().getSystem());
+        assertEquals(BigDecimal.valueOf(30L), vm.getCpuStatistics().getIdle());
+        assertEquals(BigDecimal.valueOf(40L), vm.getCpuStatistics().getLoad());
     }
 
     private void verifyActionResponse(Response r, boolean async) throws Exception {

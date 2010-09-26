@@ -44,6 +44,7 @@ import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
+import static com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource.GET_STATS;
 
 public class PowerShellVmResource extends AbstractPowerShellActionableResource<VM> implements VmResource {
 
@@ -88,7 +89,7 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
 
     @Override
     public VM get(UriInfo uriInfo) {
-        return addLinks(runAndParseSingle("get-vm " + PowerShellUtils.escape(getId())));
+        return addLinks(runAndParseSingle("get-vm " + PowerShellUtils.escape(getId()) + GET_STATS));
     }
 
     @Override

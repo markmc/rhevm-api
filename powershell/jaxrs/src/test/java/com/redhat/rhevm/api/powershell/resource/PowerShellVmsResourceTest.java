@@ -66,6 +66,9 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     private static final String DISPLAY_ADD_COMMAND_EPILOG =
         " -numofmonitors 4 -displaytype VNC" + ADD_COMMAND_EPILOG;
 
+    static final String GET_STATS = "|foreach {$_;$_.getmemorystatistics();$_.getcpustatistics()}";
+
+
     public PowerShellVmsResourceTest() {
         super(new PowerShellVmResource("0", null, null, null), "vms", "vm", extraArgs);
     }
@@ -73,7 +76,7 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     @Test
     public void testList() throws Exception {
         verifyCollection(
-            resource.list(setUpResourceExpectations(getSelectCommand(),
+            resource.list(setUpResourceExpectations(getSelectCommand() + GET_STATS,
                                                     getSelectReturn(),
                                                     null,
                                                     NAMES)).getVMs(),
@@ -83,7 +86,7 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     @Test
     public void testQuery() throws Exception {
         verifyCollection(
-            resource.list(setUpResourceExpectations(getQueryCommand(VM.class),
+            resource.list(setUpResourceExpectations(getQueryCommand(VM.class) + GET_STATS,
                                                     getQueryReturn(),
                                                     getQueryParam(),
                                                     NAMES_SUBSET)).getVMs(),

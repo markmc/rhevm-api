@@ -41,6 +41,8 @@ public class PowerShellVmsResource
     extends AbstractPowerShellCollectionResource<VM, PowerShellVmResource>
     implements VmsResource {
 
+    static final String GET_STATS = "|foreach {$_;$_.getmemorystatistics();$_.getcpustatistics()}";
+
     public List<PowerShellVM> runAndParse(String command) {
         return PowerShellVmResource.runAndParse(getPool(), getParser(), command);
     }
@@ -52,7 +54,7 @@ public class PowerShellVmsResource
     @Override
     public VMs list(UriInfo uriInfo) {
         VMs ret = new VMs();
-        for (PowerShellVM vm : runAndParse(getSelectCommand("select-vm", uriInfo, VM.class))) {
+        for (PowerShellVM vm : runAndParse(getSelectCommand("select-vm", uriInfo, VM.class) + GET_STATS)) {
             ret.getVMs().add(PowerShellVmResource.addLinks(vm));
         }
         return ret;
