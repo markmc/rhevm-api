@@ -750,6 +750,9 @@
           <!-- also a rel="attachments" link, see Attachments above -->
           <!-- host is only relevant at creation time -->
           <xs:element ref="host" minOccurs="0"/>
+          <xs:element name="available" type="xs:unsignedInt" minOccurs="0"/>
+          <xs:element name="used" type="xs:unsignedInt" minOccurs="0"/>
+          <xs:element name="committed" type="xs:unsignedInt" minOccurs="0"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>

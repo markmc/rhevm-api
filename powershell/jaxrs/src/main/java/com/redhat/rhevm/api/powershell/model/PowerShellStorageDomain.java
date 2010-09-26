@@ -18,6 +18,7 @@
  */
 package com.redhat.rhevm.api.powershell.model;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,9 +100,25 @@ public class PowerShellStorageDomain extends StorageDomain {
 
             storageDomain.setStorage(storage);
 
+            parseUnsignedInt(entity, storageDomain, "availabledisksize", "Available");
+            parseUnsignedInt(entity, storageDomain, "useddisksize", "Used");
+            parseUnsignedInt(entity, storageDomain, "committeddisksize", "Committed");
+
             ret.add(storageDomain);
         }
 
         return ret;
+    }
+
+    private static void parseUnsignedInt(PowerShellParser.Entity entity, PowerShellStorageDomain storageDomain, String property, String field) {
+        Integer value = entity.get(property, Integer.class);
+        if (value != null) {
+            try {
+                Method m = storageDomain.getClass().getMethod("set" + field, Long.class);
+                m.invoke(storageDomain, Long.valueOf(value));
+            } catch (Exception e) {
+                // simple setter shouldn't fail
+            }
+        }
     }
 }
