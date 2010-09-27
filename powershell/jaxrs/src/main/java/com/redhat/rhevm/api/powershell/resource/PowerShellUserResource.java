@@ -60,7 +60,7 @@ public class PowerShellUserResource extends AbstractPowerShellResource implement
     }
 
     public static User addLinks(User user) {
-        String [] subCollections = { "roles" };
+        String [] subCollections = { "roles", "tags" };
 
         user.getLinks().clear();
 
