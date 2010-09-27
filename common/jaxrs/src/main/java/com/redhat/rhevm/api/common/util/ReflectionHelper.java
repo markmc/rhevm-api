@@ -46,6 +46,21 @@ public class ReflectionHelper {
         return newModel((Class<R>)((ParameterizedType)resource.getClass().getGenericSuperclass()).getActualTypeArguments()[0]);
     }
 
+    public static <R extends BaseResource> R assignChildModel(BaseResource parent, Class<R> childType) {
+        Method setter = getMethod(parent,
+                                  SET_ROOT + capitalize(childType.getSimpleName().toLowerCase()));
+
+        R child = newModel(childType);
+        try {
+            setter.invoke(parent, child);
+        } catch (Exception e) {
+            // InvocationTargetException etc. should never occur
+            // as this is a simple setter
+        }
+
+        return child;
+    }
+
     public static String capitalize(String s) {
         return Character.isLowerCase(s.charAt(0))
                ? s.substring(0, 1).toUpperCase() + s.substring(1)
