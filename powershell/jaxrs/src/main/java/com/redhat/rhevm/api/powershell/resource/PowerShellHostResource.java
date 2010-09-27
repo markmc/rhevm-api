@@ -73,7 +73,7 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
     }
 
     public static Host addLinks(Host host) {
-        String [] subCollections = { "nics", "storage" };
+        String [] subCollections = { "nics", "storage", "tags" };
 
         host.getLinks().clear();
 
@@ -246,7 +246,7 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
 
     @Override
     public AssignedTagsResource getTagsResource() {
-        return null;
+        return new PowerShellAssignedTagsResource(Host.class, getId(), shellPools, getParser());
     }
 
     private static void addSubCollection(Host host, String collection) {

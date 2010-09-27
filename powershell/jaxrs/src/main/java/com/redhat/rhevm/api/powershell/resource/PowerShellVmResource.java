@@ -73,7 +73,7 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
     public static VM addLinks(PowerShellVM vm) {
         VM ret = JAXBHelper.clone("vm", VM.class, vm);
 
-        String [] deviceCollections = { "cdroms", "disks", "nics", "snapshots" };
+        String [] deviceCollections = { "cdroms", "disks", "nics", "snapshots", "tags" };
 
         ret.getLinks().clear();
 
@@ -249,7 +249,7 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
 
     @Override
     public AssignedTagsResource getTagsResource() {
-        return null;
+        return new PowerShellAssignedTagsResource(VM.class, getId(), shellPools, getParser());
     }
 
     @Override

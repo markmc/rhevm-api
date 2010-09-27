@@ -85,7 +85,7 @@ public class PowerShellUserResource extends AbstractPowerShellResource implement
 
     @Override
     public AssignedTagsResource getTagsResource() {
-        return null;
+        return new PowerShellAssignedTagsResource(User.class, id, shellPools, getParser());
     }
 
     private static void addSubCollection(User user, String collection) {
