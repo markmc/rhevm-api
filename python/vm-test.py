@@ -85,11 +85,11 @@ for fmt in [xmlfmt]:
          continue
       return vm
 
-   vm = waitFor(vm, 'RUNNING')
+   vm = waitFor(vm, 'UP')
 
    t.syncAction(vm.actions, "stop")
 
-   vm = waitFor(vm, 'SHUTOFF')
+   vm = waitFor(vm, 'DOWN')
 
    t.delete(cdrom.href)
    t.delete(disk.href)
