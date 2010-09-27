@@ -50,6 +50,8 @@ import com.redhat.rhevm.api.model.VmPool;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.resource.AssignedNetworkResource;
 import com.redhat.rhevm.api.resource.AssignedNetworksResource;
+import com.redhat.rhevm.api.resource.AssignedTagResource;
+import com.redhat.rhevm.api.resource.AssignedTagsResource;
 import com.redhat.rhevm.api.resource.AttachmentResource;
 import com.redhat.rhevm.api.resource.AttachmentsResource;
 import com.redhat.rhevm.api.resource.ClusterResource;
@@ -110,7 +112,7 @@ public class LinkHelper {
         TYPES.put(Snapshot.class,      new ResourceType(SnapshotResource.class,        SnapshotsResource.class,        VM.class));
         TYPES.put(Storage.class,       new ResourceType(StorageResource.class,         HostStorageResource.class,      Host.class));
         TYPES.put(StorageDomain.class, new ResourceType(StorageDomainResource.class,   StorageDomainsResource.class));
-        TYPES.put(Tag.class,           new ResourceType(TagResource.class,             TagsResource.class));
+        TYPES.put(Tag.class,           new ResourceType(AssignedTagResource.class,     AssignedTagsResource.class,     VM.class,      TagsResource.class));
         TYPES.put(Template.class,      new ResourceType(TemplateResource.class,        TemplatesResource.class));
         // REVISIT: will need the concept of multiple parent types, both VM and VmPool for User
         TYPES.put(User.class,          new ResourceType(UserResource.class,            AttachedUsersResource.class,    VM.class,      UsersResource.class));

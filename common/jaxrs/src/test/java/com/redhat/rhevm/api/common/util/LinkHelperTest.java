@@ -19,6 +19,7 @@
 package com.redhat.rhevm.api.common.util;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.redhat.rhevm.api.model.Attachment;
@@ -35,6 +36,7 @@ import com.redhat.rhevm.api.model.Storage;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.Tag;
 import com.redhat.rhevm.api.model.Template;
+import com.redhat.rhevm.api.model.User;
 import com.redhat.rhevm.api.model.VmPool;
 import com.redhat.rhevm.api.model.VM;
 
@@ -55,6 +57,7 @@ public class LinkHelperTest extends Assert {
     private static final String DISK_ID = "fantastic";
     private static final String NIC_ID = "super";
     private static final String STORAGE_ID = "sensational";
+    private static final String USER_ID = "doublerainbowalltheway";
 
     private static final String VM_HREF = "vms/" + VM_ID;
     private static final String CLUSTER_HREF = "clusters/" + CLUSTER_ID;
@@ -65,6 +68,9 @@ public class LinkHelperTest extends Assert {
     private static final String DATA_CENTER_HREF = "datacenters/" + DATA_CENTER_ID;
     private static final String NETWORK_HREF = "networks/" + NETWORK_ID;
     private static final String TAG_HREF = "tags/" + TAG_ID;
+    private static final String VM_TAG_HREF = "vms/" + VM_ID + "/tags/" + TAG_ID;
+    private static final String HOST_TAG_HREF = "hosts/" + HOST_ID + "/tags/" + TAG_ID;
+    private static final String USER_TAG_HREF = "users/" + USER_ID + "/tags/" + TAG_ID;
     private static final String CLUSTER_NETWORK_HREF = "clusters/" + CLUSTER_ID + "/networks/" + NETWORK_ID;
     private static final String ISO_HREF = "datacenters/" + DATA_CENTER_ID + "/isos/" + ISO_ID;
     private static final String ATTACHMENT_HREF = STORAGE_DOMAIN_HREF + "/attachments/" + DATA_CENTER_ID;
@@ -169,6 +175,46 @@ public class LinkHelperTest extends Assert {
         LinkHelper.addLinks(tag);
 
         assertEquals(TAG_HREF, tag.getHref());
+    }
+
+    @Test
+    public void testVmTagLinks() throws Exception {
+        Tag tag = new Tag();
+        tag.setId(TAG_ID);
+        tag.setVm(new VM());
+        tag.getVm().setId(VM_ID);
+
+        LinkHelper.addLinks(tag);
+
+        assertEquals(VM_TAG_HREF, tag.getHref());
+    }
+
+    // FIXME
+    @Ignore
+    @Test
+    public void testHostTagLinks() throws Exception {
+        Tag tag = new Tag();
+        tag.setId(TAG_ID);
+        tag.setHost(new Host());
+        tag.getHost().setId(VM_ID);
+
+        LinkHelper.addLinks(tag);
+
+        assertEquals(HOST_TAG_HREF, tag.getHref());
+    }
+
+    // FIXME
+    @Ignore
+    @Test
+    public void testUserTagLinks() throws Exception {
+        Tag tag = new Tag();
+        tag.setId(TAG_ID);
+        tag.setUser(new User());
+        tag.getUser().setId(VM_ID);
+
+        LinkHelper.addLinks(tag);
+
+        assertEquals(USER_TAG_HREF, tag.getHref());
     }
 
     @Test
