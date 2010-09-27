@@ -93,11 +93,24 @@ public class PowerShellVM extends VM {
 
     private static VmStatus parseStatus(String s) {
         if (s == null) return null;
-        else if (s.equals("Down"))         return VmStatus.SHUTOFF;
-        else if (s.equals("Paused"))       return VmStatus.PAUSED;
-        else if (s.equals("PoweringDown")) return VmStatus.SHUTDOWN;
-        else if (s.equals("Up") ||
-                 s.equals("Powering Up"))  return VmStatus.RUNNING;
+        else if (s.equals("Unassigned"))       return VmStatus.UNASSIGNED;
+        else if (s.equals("Down"))             return VmStatus.DOWN;
+        else if (s.equals("Up"))               return VmStatus.UP;
+        else if (s.equals("PoweringUp"))       return VmStatus.POWERING_UP;
+        else if (s.equals("PoweredDown"))      return VmStatus.POWERED_DOWN;
+        else if (s.equals("Paused"))           return VmStatus.PAUSED;
+        else if (s.equals("MigratingFrom"))    return VmStatus.MIGRATING_FROM;
+        else if (s.equals("MigratingTo"))      return VmStatus.MIGRATING_TO;
+        else if (s.equals("Unknown"))          return VmStatus.UNKNOWN;
+        else if (s.equals("NotResponding"))    return VmStatus.NOT_RESPONDING;
+        else if (s.equals("WaitForLaunch"))    return VmStatus.WAIT_FOR_LAUNCH;
+        else if (s.equals("RebootInProgress")) return VmStatus.REBOOT_IN_PROGRESS;
+        else if (s.equals("SavingState"))      return VmStatus.SAVING_STATE;
+        else if (s.equals("RestoringState"))   return VmStatus.RESTORING_STATE;
+        else if (s.equals("Suspended"))        return VmStatus.SUSPENDED;
+        else if (s.equals("ImageIllegal"))     return VmStatus.IMAGE_ILLEGAL;
+        else if (s.equals("ImageLocked"))      return VmStatus.IMAGE_LOCKED;
+        else if (s.equals("PoweringDown"))     return VmStatus.POWERING_DOWN;
         else return null;
     }
 

@@ -263,10 +263,24 @@
 
   <xs:simpleType name="VmStatus">
     <xs:restriction base="xs:string">
+      <xs:enumeration value="UNASSIGNED"/>
+      <xs:enumeration value="DOWN"/>
+      <xs:enumeration value="UP"/>
+      <xs:enumeration value="POWERING_UP"/>
+      <xs:enumeration value="POWERED_DOWN"/>
       <xs:enumeration value="PAUSED"/>
-      <xs:enumeration value="RUNNING"/>
-      <xs:enumeration value="SHUTDOWN"/>
-      <xs:enumeration value="SHUTOFF"/>
+      <xs:enumeration value="MIGRATING_FROM"/>
+      <xs:enumeration value="MIGRATING_TO"/>
+      <xs:enumeration value="UNKNOWN"/>
+      <xs:enumeration value="NOT_RESPONDING"/>
+      <xs:enumeration value="WAIT_FOR_LAUNCH"/>
+      <xs:enumeration value="REBOOT_IN_PROGRESS"/>
+      <xs:enumeration value="SAVING_STATE"/>
+      <xs:enumeration value="RESTORING_STATE"/>
+      <xs:enumeration value="SUSPENDED"/>
+      <xs:enumeration value="IMAGE_ILLEGAL"/>
+      <xs:enumeration value="IMAGE_LOCKED"/>
+      <xs:enumeration value="POWERING_DOWN"/>
     </xs:restriction>
   </xs:simpleType>
 

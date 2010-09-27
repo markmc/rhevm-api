@@ -77,16 +77,16 @@ public class PowerShellVmTest extends PowerShellModelTest {
 
         assertEquals(vms.size(), 4);
 
-        testVM(vms.get(0), "142bf5b1-04fb-4221-9360-0f9b7dab3013", "foo-1", null, VmType.DESKTOP, VmStatus.RUNNING, 536870912L, 1, 1, null, "5f38363b-7457-4884-831e-78c27cebb31d", "99408929-82cf-4dc7-a532-9d998063fa95", "3ee77811-f1eb-4d3f-991e-e539dbb2f1f9");
+        testVM(vms.get(0), "142bf5b1-04fb-4221-9360-0f9b7dab3013", "foo-1", null, VmType.DESKTOP, VmStatus.UP, 536870912L, 1, 1, null, "5f38363b-7457-4884-831e-78c27cebb31d", "99408929-82cf-4dc7-a532-9d998063fa95", "3ee77811-f1eb-4d3f-991e-e539dbb2f1f9");
         testBootDevices(vms.get(0), BootDevice.HD);
 
-        testVM(vms.get(1), "f9e37917-8382-486f-875d-4045be045d85", "foo-2", null, VmType.DESKTOP, VmStatus.SHUTOFF, 536870912L, 1, 1, null, null, "99408929-82cf-4dc7-a532-9d998063fa95", "3ee77811-f1eb-4d3f-991e-e539dbb2f1f9");
+        testVM(vms.get(1), "f9e37917-8382-486f-875d-4045be045d85", "foo-2", null, VmType.DESKTOP, VmStatus.DOWN, 536870912L, 1, 1, null, null, "99408929-82cf-4dc7-a532-9d998063fa95", "3ee77811-f1eb-4d3f-991e-e539dbb2f1f9");
         testBootDevices(vms.get(1), BootDevice.HD);
 
-        testVM(vms.get(2), "aa0e6522-5baf-4f92-86d3-716883de4359", "test", null, VmType.SERVER, VmStatus.SHUTOFF, 536870912L, 1, 1, null, null, "99408929-82cf-4dc7-a532-9d998063fa95", "00000000-0000-0000-0000-000000000000");
+        testVM(vms.get(2), "aa0e6522-5baf-4f92-86d3-716883de4359", "test", null, VmType.SERVER, VmStatus.DOWN, 536870912L, 1, 1, null, null, "99408929-82cf-4dc7-a532-9d998063fa95", "00000000-0000-0000-0000-000000000000");
         testBootDevices(vms.get(2), BootDevice.HD);
 
-        testVM(vms.get(3), "5114bb3e-a4e6-44b2-b783-b3eea7d84720", "testf13", null, VmType.DESKTOP, VmStatus.SHUTOFF, 536870912L, 1, 1, null, null, "99408929-82cf-4dc7-a532-9d998063fa95", "00000000-0000-0000-0000-000000000000");
+        testVM(vms.get(3), "5114bb3e-a4e6-44b2-b783-b3eea7d84720", "testf13", null, VmType.DESKTOP, VmStatus.DOWN, 536870912L, 1, 1, null, null, "99408929-82cf-4dc7-a532-9d998063fa95", "00000000-0000-0000-0000-000000000000");
         testBootDevices(vms.get(3), BootDevice.HD);
     }
 }
