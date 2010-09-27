@@ -36,8 +36,6 @@ import com.redhat.rhevm.api.resource.UserResource;
 
 public class PowerShellUserResource extends AbstractPowerShellResource implements UserResource {
 
-    protected final static String ROLES_REL = "roles";
-
     protected String id;
 
     public PowerShellUserResource(String id,
@@ -49,16 +47,7 @@ public class PowerShellUserResource extends AbstractPowerShellResource implement
     }
 
     public static List<User> runAndParse(PowerShellPool pool, PowerShellParser parser, String command) {
-        List<User> users = PowerShellUser.parse(parser, PowerShellCmd.runCommand(pool, command));
-        for (User user : users) {
-            // add link to roles sub-collection
-            user.getLinks().clear();
-            Link link = new Link();
-            link.setRel(ROLES_REL);
-            link.setHref(LinkHelper.getUriBuilder(user).path(ROLES_REL).build().toString());
-            user.getLinks().add(link);
-        }
-        return users;
+        return PowerShellUser.parse(parser, PowerShellCmd.runCommand(pool, command));
     }
 
     public static User runAndParseSingle(PowerShellPool pool, PowerShellParser parser, String command) {
@@ -70,11 +59,23 @@ public class PowerShellUserResource extends AbstractPowerShellResource implement
         return runAndParseSingle(getPool(), getParser(), command);
     }
 
+    public static User addLinks(User user) {
+        String [] subCollections = { "roles" };
+
+        user.getLinks().clear();
+
+        for (String collection : subCollections) {
+            addSubCollection(user, collection);
+        }
+
+        return LinkHelper.addLinks(user);
+    }
+
     @Override
     public User get() {
         StringBuilder getUser = new StringBuilder();
         getUser.append("get-user -userid ").append(PowerShellUtils.escape(id));
-        return LinkHelper.addLinks(runAndParseSingle(getUser.toString()));
+        return addLinks(runAndParseSingle(getUser.toString()));
     }
 
     @Override
@@ -85,5 +86,12 @@ public class PowerShellUserResource extends AbstractPowerShellResource implement
     @Override
     public AssignedTagsResource getTagsResource() {
         return null;
+    }
+
+    private static void addSubCollection(User user, String collection) {
+        Link link = new Link();
+        link.setRel(collection);
+        link.setHref(LinkHelper.getUriBuilder(user).path(collection).build().toString());
+        user.getLinks().add(link);
     }
 }

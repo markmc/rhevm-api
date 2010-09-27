@@ -26,7 +26,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.model.User;
 import com.redhat.rhevm.api.model.Users;
 import com.redhat.rhevm.api.model.VM;
@@ -75,7 +74,7 @@ public class PowerShellAttachedUsersResource extends AbstractPowerShellResource 
         getUsers.append("select-user").append(MessageFormat.format(PARENT_SEARCH, vm.getName()));
 
         for (User user : runAndParse(getUsers.toString())) {
-            ret.getUsers().add(LinkHelper.addLinks(user));
+            ret.getUsers().add(PowerShellUserResource.addLinks(user));
         }
         return ret;
     }
@@ -95,7 +94,7 @@ public class PowerShellAttachedUsersResource extends AbstractPowerShellResource 
 
         attachUser.append("attach-user -userobject $u")
                   .append(PARENT_ID).append(parentId);
-        User newUser = LinkHelper.addLinks(runAndParseSingle(attachUser.toString()));
+        User newUser = PowerShellUserResource.addLinks(runAndParseSingle(attachUser.toString()));
         UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(newUser.getId());
         return Response.created(uriBuilder.build()).entity(newUser).build();
     }

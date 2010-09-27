@@ -24,7 +24,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.model.Role;
 import com.redhat.rhevm.api.model.User;
 import com.redhat.rhevm.api.model.Users;
@@ -49,7 +48,7 @@ public class PowerShellUsersResource extends AbstractPowerShellResource implemen
     public Users list(UriInfo uriInfo) {
         Users ret = new Users();
         for (User user : runAndParse(getSelectCommand("select-user", uriInfo, User.class))) {
-            ret.getUsers().add(LinkHelper.addLinks(user));
+            ret.getUsers().add(PowerShellUserResource.addLinks(user));
         }
         return ret;
     }
@@ -72,7 +71,7 @@ public class PowerShellUsersResource extends AbstractPowerShellResource implemen
         String roleArg = getRoleArg(user.getRoles().getRoles().get(0), buf);
 
         buf.append("add-user -userid ").append(userArg).append(" -userroleid ").append(roleArg);
-        User newUser = LinkHelper.addLinks(runAndParseSingle(buf.toString()));
+        User newUser = PowerShellUserResource.addLinks(runAndParseSingle(buf.toString()));
         UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(newUser.getId());
 
         if (user.getRoles().getRoles().size() > 1) {
