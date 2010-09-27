@@ -109,4 +109,6 @@ public interface VmResource extends UpdatableResource<VM> {
     @Path("users")
     public AttachedUsersResource getUsersResource();
 
+    @Path("tags")
+    public AssignedTagsResource getTagsResource();
 }

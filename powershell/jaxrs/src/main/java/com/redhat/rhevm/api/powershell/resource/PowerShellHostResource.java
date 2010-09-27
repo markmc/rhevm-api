@@ -29,6 +29,7 @@ import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.IscsiParameters;
 import com.redhat.rhevm.api.model.Link;
+import com.redhat.rhevm.api.resource.AssignedTagsResource;
 import com.redhat.rhevm.api.resource.HostResource;
 import com.redhat.rhevm.api.resource.HostNicsResource;
 import com.redhat.rhevm.api.resource.HostStorageResource;
@@ -241,6 +242,11 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
     @Override
     public HostStorageResource getHostStorageResource() {
         return new PowerShellHostStorageResource(getId(), getExecutor(), shellPools, getParser());
+    }
+
+    @Override
+    public AssignedTagsResource getTagsResource() {
+        return null;
     }
 
     private static void addSubCollection(Host host, String collection) {

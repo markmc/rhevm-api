@@ -26,6 +26,7 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.HostStatus;
+import com.redhat.rhevm.api.resource.AssignedTagsResource;
 import com.redhat.rhevm.api.resource.HostResource;
 import com.redhat.rhevm.api.resource.HostNicsResource;
 import com.redhat.rhevm.api.resource.HostStorageResource;
@@ -125,6 +126,7 @@ public class MockHostResource extends AbstractMockResource<Host> implements Host
         }
     }
 
-    @Override public HostNicsResource getHostNicsResource() { return null; }
-    @Override public HostStorageResource getHostStorageResource() { return null; }
+    @Override public HostNicsResource     getHostNicsResource()    { return null; }
+    @Override public HostStorageResource  getHostStorageResource() { return null; }
+    @Override public AssignedTagsResource getTagsResource()        { return null; }
 }

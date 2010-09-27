@@ -85,4 +85,7 @@ public interface HostResource extends UpdatableResource<Host> {
 
     @Path("storage")
     public HostStorageResource getHostStorageResource();
+
+    @Path("tags")
+    public AssignedTagsResource getTagsResource();
 }

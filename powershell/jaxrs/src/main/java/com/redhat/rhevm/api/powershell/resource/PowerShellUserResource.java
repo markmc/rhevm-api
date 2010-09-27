@@ -31,6 +31,7 @@ import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 import com.redhat.rhevm.api.resource.AssignedRolesResource;
+import com.redhat.rhevm.api.resource.AssignedTagsResource;
 import com.redhat.rhevm.api.resource.UserResource;
 
 public class PowerShellUserResource extends AbstractPowerShellResource implements UserResource {
@@ -79,5 +80,10 @@ public class PowerShellUserResource extends AbstractPowerShellResource implement
     @Override
     public AssignedRolesResource getRolesResource() {
         return new PowerShellAssignedRolesResource(id, getExecutor(), shellPools, getParser());
+    }
+
+    @Override
+    public AssignedTagsResource getTagsResource() {
+        return null;
     }
 }

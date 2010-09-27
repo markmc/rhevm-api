@@ -19,24 +19,16 @@
 package com.redhat.rhevm.api.resource;
 
 import javax.ws.rs.GET;
-import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
-import com.redhat.rhevm.api.model.User;
-
+import com.redhat.rhevm.api.model.Tag;
 
 @Produces(MediaType.APPLICATION_XML)
-public interface UserResource {
+public interface AssignedTagResource {
 
     @GET
     @Formatted
-    public User get();
-
-    @Path("roles")
-    public AssignedRolesResource getRolesResource();
-
-    @Path("tags")
-    public AssignedTagsResource getTagsResource();
+    public Tag get();
 }

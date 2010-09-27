@@ -31,6 +31,7 @@ import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.Ticket;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VmType;
+import com.redhat.rhevm.api.resource.AssignedTagsResource;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
@@ -244,6 +245,11 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
     @Override
     public PowerShellSnapshotsResource getSnapshotsResource() {
         return new PowerShellSnapshotsResource(getId(), getExecutor(), shellPools, getParser());
+    }
+
+    @Override
+    public AssignedTagsResource getTagsResource() {
+        return null;
     }
 
     @Override

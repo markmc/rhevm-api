@@ -18,25 +18,37 @@
  */
 package com.redhat.rhevm.api.resource;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
-
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
-import com.redhat.rhevm.api.model.User;
-
+import com.redhat.rhevm.api.model.Tag;
+import com.redhat.rhevm.api.model.Tags;
 
 @Produces(MediaType.APPLICATION_XML)
-public interface UserResource {
+public interface AssignedTagsResource {
 
     @GET
     @Formatted
-    public User get();
+    public Tags list();
 
-    @Path("roles")
-    public AssignedRolesResource getRolesResource();
+    @POST
+    @Formatted
+    @Consumes(MediaType.APPLICATION_XML)
+    public Response add(@Context UriInfo uriInfo, Tag network);
 
-    @Path("tags")
-    public AssignedTagsResource getTagsResource();
+    @DELETE
+    @Path("{id}")
+    public void remove(@PathParam("id") String id);
+
+    @Path("{id}")
+    public AssignedTagResource getAssignedTagSubResource(@PathParam("id") String id);
 }
