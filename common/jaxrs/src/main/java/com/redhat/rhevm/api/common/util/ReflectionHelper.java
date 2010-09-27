@@ -33,13 +33,17 @@ public class ReflectionHelper {
     private ReflectionHelper() {}
 
     @SuppressWarnings("unchecked")
-    public static <R extends BaseResource> R newModel(AbstractUpdatableResource<R> resource) {
+    public static <R extends BaseResource> R newModel(Class<R> clz) {
         R ret = null;
         try {
-            ret = ((Class<R>)((ParameterizedType)resource.getClass().getGenericSuperclass()).getActualTypeArguments()[0]).newInstance();
+            ret = clz.newInstance();
         } catch (Exception e) {
         }
         return ret;
+    }
+
+    public static <R extends BaseResource> R newModel(AbstractUpdatableResource<R> resource) {
+        return newModel((Class<R>)((ParameterizedType)resource.getClass().getGenericSuperclass()).getActualTypeArguments()[0]);
     }
 
     public static String capitalize(String s) {
