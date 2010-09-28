@@ -170,6 +170,8 @@ public class LinkHelper {
         TYPES.put(StorageDomain.class, map);
 
         map = new ParentToCollectionMap(TagResource.class, TagsResource.class);
+        map.add(AssignedTagResource.class, AssignedTagsResource.class, Host.class);
+        map.add(AssignedTagResource.class, AssignedTagsResource.class, User.class);
         map.add(AssignedTagResource.class, AssignedTagsResource.class, VM.class);
         TYPES.put(Tag.class, map);
 

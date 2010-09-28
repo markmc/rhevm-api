@@ -19,7 +19,6 @@
 package com.redhat.rhevm.api.common.util;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.redhat.rhevm.api.model.Attachment;
@@ -189,28 +188,24 @@ public class LinkHelperTest extends Assert {
         assertEquals(VM_TAG_HREF, tag.getHref());
     }
 
-    // FIXME
-    @Ignore
     @Test
     public void testHostTagLinks() throws Exception {
         Tag tag = new Tag();
         tag.setId(TAG_ID);
         tag.setHost(new Host());
-        tag.getHost().setId(VM_ID);
+        tag.getHost().setId(HOST_ID);
 
         LinkHelper.addLinks(tag);
 
         assertEquals(HOST_TAG_HREF, tag.getHref());
     }
 
-    // FIXME
-    @Ignore
     @Test
     public void testUserTagLinks() throws Exception {
         Tag tag = new Tag();
         tag.setId(TAG_ID);
         tag.setUser(new User());
-        tag.getUser().setId(VM_ID);
+        tag.getUser().setId(USER_ID);
 
         LinkHelper.addLinks(tag);
 
