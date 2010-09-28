@@ -97,26 +97,65 @@ public class LinkHelper {
     private static ModelToCollectionsMap TYPES = new ModelToCollectionsMap();
 
     static {
-        TYPES.put(Attachment.class,    new Collection(AttachmentResource.class,      AttachmentsResource.class,      StorageDomain.class));
-        TYPES.put(CdRom.class,         new Collection(DeviceResource.class,          DevicesResource.class,          VM.class));
-        TYPES.put(Cluster.class,       new Collection(ClusterResource.class,         ClustersResource.class));
-        TYPES.put(DataCenter.class,    new Collection(DataCenterResource.class,      DataCentersResource.class));
-        TYPES.put(Disk.class,          new Collection(DeviceResource.class,          DevicesResource.class,          VM.class));
-        TYPES.put(Host.class,          new Collection(HostResource.class,            HostsResource.class));
-        TYPES.put(HostNIC.class,       new Collection(HostNicResource.class,         HostNicsResource.class,         Host.class));
-        TYPES.put(Iso.class,           new Collection(IsoResource.class,             IsosResource.class,             DataCenter.class));
-        TYPES.put(Network.class,       new Collection(AssignedNetworkResource.class, AssignedNetworksResource.class, Cluster.class, NetworksResource.class));
-        TYPES.put(NIC.class,           new Collection(DeviceResource.class,          DevicesResource.class,          VM.class));
-        TYPES.put(Role.class,          new Collection(RoleResource.class,            AssignedRolesResource.class,    User.class,    RolesResource.class));
-        TYPES.put(Snapshot.class,      new Collection(SnapshotResource.class,        SnapshotsResource.class,        VM.class));
-        TYPES.put(Storage.class,       new Collection(StorageResource.class,         HostStorageResource.class,      Host.class));
-        TYPES.put(StorageDomain.class, new Collection(StorageDomainResource.class,   StorageDomainsResource.class));
-        TYPES.put(Tag.class,           new Collection(AssignedTagResource.class,     AssignedTagsResource.class,     VM.class,      TagsResource.class));
-        TYPES.put(Template.class,      new Collection(TemplateResource.class,        TemplatesResource.class));
+        Collection map;
+
+        map = new Collection(AttachmentResource.class, AttachmentsResource.class, StorageDomain.class);
+        TYPES.put(Attachment.class, map);
+
+        map = new Collection(DeviceResource.class, DevicesResource.class, VM.class);
+        TYPES.put(CdRom.class, map);
+
+        map = new Collection(ClusterResource.class, ClustersResource.class);
+        TYPES.put(Cluster.class, map);
+
+        map = new Collection(DataCenterResource.class, DataCentersResource.class);
+        TYPES.put(DataCenter.class, map);
+
+        map = new Collection(DeviceResource.class, DevicesResource.class, VM.class);
+        TYPES.put(Disk.class, map);
+
+        map = new Collection(HostResource.class, HostsResource.class);
+        TYPES.put(Host.class, map);
+
+        map = new Collection(HostNicResource.class, HostNicsResource.class, Host.class);
+        TYPES.put(HostNIC.class, map);
+
+        map = new Collection(IsoResource.class, IsosResource.class, DataCenter.class);
+        TYPES.put(Iso.class, map);
+
+        map = new Collection(AssignedNetworkResource.class, AssignedNetworksResource.class, Cluster.class, NetworksResource.class);
+        TYPES.put(Network.class, map);
+
+        map = new Collection(DeviceResource.class, DevicesResource.class, VM.class);
+        TYPES.put(NIC.class, map);
+
+        map = new Collection(RoleResource.class, AssignedRolesResource.class, User.class, RolesResource.class);
+        TYPES.put(Role.class, map);
+
+        map = new Collection(SnapshotResource.class, SnapshotsResource.class, VM.class);
+        TYPES.put(Snapshot.class, map);
+
+        map = new Collection(StorageResource.class, HostStorageResource.class, Host.class);
+        TYPES.put(Storage.class, map);
+
+        map = new Collection(StorageDomainResource.class, StorageDomainsResource.class);
+        TYPES.put(StorageDomain.class, map);
+
+        map = new Collection(AssignedTagResource.class, AssignedTagsResource.class, VM.class, TagsResource.class);
+        TYPES.put(Tag.class, map);
+
+        map = new Collection(TemplateResource.class, TemplatesResource.class);
+        TYPES.put(Template.class, map);
+
         // REVISIT: will need the concept of multiple parent types, both VM and VmPool for User
-        TYPES.put(User.class,          new Collection(UserResource.class,            AttachedUsersResource.class,    VM.class,      UsersResource.class));
-        TYPES.put(VM.class,            new Collection(VmResource.class,              VmsResource.class));
-        TYPES.put(VmPool.class,        new Collection(VmPoolResource.class,          VmPoolsResource.class));
+        map = new Collection(UserResource.class, AttachedUsersResource.class, VM.class, UsersResource.class);
+        TYPES.put(User.class, map);
+
+        map = new Collection(VmResource.class, VmsResource.class);
+        TYPES.put(VM.class, map);
+
+        map = new Collection(VmPoolResource.class, VmPoolsResource.class);
+        TYPES.put(VmPool.class, map);
     }
 
     private static String getPath(Class<?> clz) {
