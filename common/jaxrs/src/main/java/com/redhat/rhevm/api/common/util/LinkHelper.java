@@ -90,12 +90,36 @@ import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.resource.VmsResource;
 
 /**
- * Contains static methods related to Link addition.
+ * Contains a static addLinks() method which constructs any href attributes
+ * and action links required by a representation.
+ *
+ * The information used to build links is obtained from the annotations on
+ * the API definition interfaces.
+
+ * For example, a link to a VM is the combination of the @Path attribute on
+ * VmsResource and the VM id - i.e. 'vms/{vm_id}'
+ *
+ * Resource collections which are a sub-resource of a parent collection
+ * present a more difficult challenge. For example, the link to a VM tag
+ * is the combination of the @Path attribute on VmsResource, the VM id,
+ * the @Path attribute on VmResource.getTagsResource() and the tag id -
+ * i.e. 'vms/{vm_id}/tags/{tag_id}'
+ *
+ * To be able to do this we need, for each collection, the collection type
+ * (e.g. AssignedTagsResource), the resource type (e.g. AssignedTagResource)
+ * and the parent model type (e.g. VM). The TYPES map below is populated
+ * with this information for every resource type.
  */
 public class LinkHelper {
 
+    /**
+     * A constant representing the pseudo-parent of a top-level collection
+     */
     private static final Class<? extends BaseResource> NO_PARENT = BaseResource.class;
 
+    /**
+     * A map describing every possible collection
+     */
     private static ModelToCollectionsMap TYPES = new ModelToCollectionsMap();
 
     static {
@@ -163,6 +187,15 @@ public class LinkHelper {
         TYPES.put(VmPool.class, map);
     }
 
+    /**
+     * Obtain the relative path to a top-level collection
+     *
+     * The path is simply the value of the @Path annotation on the
+     * supplied collection resource type
+     *
+     * @param clz the collection resource type
+     * @return    the relative path to the collection
+     */
     private static String getPath(Class<?> clz) {
         Path pathAnnotation = (Path)clz.getAnnotation(Path.class);
 
@@ -174,6 +207,22 @@ public class LinkHelper {
         return path;
     }
 
+    /**
+     * Obtain the relative path to a sub-collection
+     *
+     * The path is obtained from the @Path annotation on the method on @parent
+     * which returns an instance of @clz
+     *
+     * A case-insensitive check for @type's name as a substring of the method
+     * is also performed to guard against the case where @parent has multiple
+     * methods returning instances of @clz, e.g. VmResource has multiple
+     * methods return DevicesResource instances
+     *
+     * @param clz    the collection resource type (e.g. AssignedTagsResource)
+     * @param parent the parent resource type (e.g. VmResource)
+     * @param type   the model type (e.g. Tag)
+     * @return       the relative path to the collection
+     */
     private static String getPath(Class<?> clz, Class<?> parent, Class<?> type) {
         for (Method method : parent.getMethods()) {
             if (method.getName().startsWith("get") &&
@@ -186,6 +235,15 @@ public class LinkHelper {
         return null;
     }
 
+    /**
+     * Obtain a set of inline BaseResource objects from @obj
+     *
+     * i.e. return the value of any properties on @obj which are a
+     * sub-type of BaseResource
+     *
+     * @param obj the object to check
+     * @return    a list of any inline BaseResource objects
+     */
     private static List<BaseResource> getInlineResources(Object obj) {
         ArrayList<BaseResource> ret = new ArrayList<BaseResource>();
 
@@ -206,6 +264,15 @@ public class LinkHelper {
         return ret;
     }
 
+    /**
+     * Return any parent object set on @model
+     *
+     * i.e. return the value of any bean property whose type matches @parentType
+     *
+     * @param model      object to check
+     * @param parentType the type of the parent
+     * @return           the parent object, or null if not set
+     */
     private static <R extends BaseResource> BaseResource getParentModel(R model, Class<?> parentType) {
         for (BaseResource inline : getInlineResources(model)) {
             if (parentType.isAssignableFrom(inline.getClass())) {
@@ -215,6 +282,16 @@ public class LinkHelper {
         return null;
     }
 
+    /**
+     * Lookup the #Collection instance which represents this object
+     *
+     * i.e. for a VM tag (i.e. a Tag object which its VM property set)
+     * return the #Collection instance which encapsulates AssignedTagResource,
+     * AssignedTagsResource and VM.
+     *
+     * @param model the object to query for
+     * @return      the #Collection instance representing the object's collection
+     */
     private static Collection getCollection(BaseResource model) {
         ParentToCollectionMap collections = TYPES.get(model.getClass());
 
@@ -228,6 +305,15 @@ public class LinkHelper {
         return collections.get(NO_PARENT);
     }
 
+    /**
+     * Create a #UriBuilder which encapsulates the path to an object
+     *
+     * i.e. for a VM tag, return a UriBuilder which encapsulates
+     * 'vms/{vm_id}/tags/{tag_id}'
+     *
+     * @param model the object
+     * @return      the #UriBuilder encapsulating the object's path
+     */
     public static <R extends BaseResource> UriBuilder getUriBuilder(R model) {
         Collection collection = getCollection(model);
         if (collection == null) {
@@ -254,6 +340,14 @@ public class LinkHelper {
         return uriBuilder.path(model.getId());
     }
 
+    /**
+     * Set the href attribute on the supplied object
+     *
+     * e.g. set href = 'vms/{vm_id}/tags/{tag_id}' on a VM tag
+     *
+     * @param model the object
+     * @return      the model, with the href attribute set
+     */
     private static <R extends BaseResource> void setHref(R model) {
         UriBuilder uriBuilder = getUriBuilder(model);
         if (uriBuilder != null) {
@@ -261,6 +355,12 @@ public class LinkHelper {
         }
     }
 
+    /**
+     * Construct the set of action links for an object
+     *
+     * @param model the object
+     * @return      the object, including its set of action links
+     */
     private static <R extends BaseResource> void setActions(R model) {
         Collection collection = getCollection(model);
         UriBuilder uriBuilder = getUriBuilder(model);
@@ -270,6 +370,13 @@ public class LinkHelper {
         }
     }
 
+    /**
+     * Set the href attribute on the object (and its inline objects)
+     * and construct its set of action links
+     *
+     * @param model the object
+     * @return      the object, with href attributes and action links
+     */
     public static <R extends BaseResource> R addLinks(R model) {
         setHref(model);
         setActions(model);
@@ -283,8 +390,21 @@ public class LinkHelper {
         return model;
     }
 
+    /**
+     * A #Map sub-class which maps a model type (e.g. Tag.class) to a
+     * set of suitable collection definitions.
+     */
     private static class ModelToCollectionsMap extends HashMap<Class<? extends BaseResource>, ParentToCollectionMap> { }
 
+    /**
+     * A #Map sub-class which maps a parent model type to collection
+     * definition.
+     *
+     * e.g. the map for Tag contains a collection definition for the
+     * describing the VM, Host and User tags sub-collections. It also
+     * contains a collection definition describing the top-level
+     * tags collection which is keyed on the NO_PARENT key.
+     */
     private static class ParentToCollectionMap extends HashMap<Class<? extends BaseResource>, Collection> {
         public ParentToCollectionMap(Class<?> resourceType,
                                      Class<?> collectionType,
@@ -305,6 +425,13 @@ public class LinkHelper {
         }
     }
 
+    /**
+     * A description of a collection type, its resource type and the parent
+     * resource which contains it, if any.
+     *
+     * e.g. for the VM tags collection, resourceType is AssignedTagResource,
+     * collectionType is AssignedTagsResource and parentType is VM
+     */
     private static class Collection {
         private final Class<?> resourceType;
         private final Class<?> collectionType;
