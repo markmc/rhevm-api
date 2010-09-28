@@ -20,8 +20,8 @@ package com.redhat.rhevm.api.common.util;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.Path;
@@ -94,30 +94,30 @@ import com.redhat.rhevm.api.resource.VmsResource;
  */
 public class LinkHelper {
 
-    private static Map<Class<? extends BaseResource>, ResourceType> TYPES =
-        new HashMap<Class<? extends BaseResource>, ResourceType>();
+    private static Map<Class<? extends BaseResource>, Collection> TYPES =
+        new HashMap<Class<? extends BaseResource>, Collection>();
 
     static {
-        TYPES.put(Attachment.class,    new ResourceType(AttachmentResource.class,      AttachmentsResource.class,      StorageDomain.class));
-        TYPES.put(CdRom.class,         new ResourceType(DeviceResource.class,          DevicesResource.class,          VM.class));
-        TYPES.put(Cluster.class,       new ResourceType(ClusterResource.class,         ClustersResource.class));
-        TYPES.put(DataCenter.class,    new ResourceType(DataCenterResource.class,      DataCentersResource.class));
-        TYPES.put(Disk.class,          new ResourceType(DeviceResource.class,          DevicesResource.class,          VM.class));
-        TYPES.put(Host.class,          new ResourceType(HostResource.class,            HostsResource.class));
-        TYPES.put(HostNIC.class,       new ResourceType(HostNicResource.class,         HostNicsResource.class,         Host.class));
-        TYPES.put(Iso.class,           new ResourceType(IsoResource.class,             IsosResource.class,             DataCenter.class));
-        TYPES.put(Network.class,       new ResourceType(AssignedNetworkResource.class, AssignedNetworksResource.class, Cluster.class, NetworksResource.class));
-        TYPES.put(NIC.class,           new ResourceType(DeviceResource.class,          DevicesResource.class,          VM.class));
-        TYPES.put(Role.class,          new ResourceType(RoleResource.class,            AssignedRolesResource.class,    User.class,    RolesResource.class));
-        TYPES.put(Snapshot.class,      new ResourceType(SnapshotResource.class,        SnapshotsResource.class,        VM.class));
-        TYPES.put(Storage.class,       new ResourceType(StorageResource.class,         HostStorageResource.class,      Host.class));
-        TYPES.put(StorageDomain.class, new ResourceType(StorageDomainResource.class,   StorageDomainsResource.class));
-        TYPES.put(Tag.class,           new ResourceType(AssignedTagResource.class,     AssignedTagsResource.class,     VM.class,      TagsResource.class));
-        TYPES.put(Template.class,      new ResourceType(TemplateResource.class,        TemplatesResource.class));
+        TYPES.put(Attachment.class,    new Collection(AttachmentResource.class,      AttachmentsResource.class,      StorageDomain.class));
+        TYPES.put(CdRom.class,         new Collection(DeviceResource.class,          DevicesResource.class,          VM.class));
+        TYPES.put(Cluster.class,       new Collection(ClusterResource.class,         ClustersResource.class));
+        TYPES.put(DataCenter.class,    new Collection(DataCenterResource.class,      DataCentersResource.class));
+        TYPES.put(Disk.class,          new Collection(DeviceResource.class,          DevicesResource.class,          VM.class));
+        TYPES.put(Host.class,          new Collection(HostResource.class,            HostsResource.class));
+        TYPES.put(HostNIC.class,       new Collection(HostNicResource.class,         HostNicsResource.class,         Host.class));
+        TYPES.put(Iso.class,           new Collection(IsoResource.class,             IsosResource.class,             DataCenter.class));
+        TYPES.put(Network.class,       new Collection(AssignedNetworkResource.class, AssignedNetworksResource.class, Cluster.class, NetworksResource.class));
+        TYPES.put(NIC.class,           new Collection(DeviceResource.class,          DevicesResource.class,          VM.class));
+        TYPES.put(Role.class,          new Collection(RoleResource.class,            AssignedRolesResource.class,    User.class,    RolesResource.class));
+        TYPES.put(Snapshot.class,      new Collection(SnapshotResource.class,        SnapshotsResource.class,        VM.class));
+        TYPES.put(Storage.class,       new Collection(StorageResource.class,         HostStorageResource.class,      Host.class));
+        TYPES.put(StorageDomain.class, new Collection(StorageDomainResource.class,   StorageDomainsResource.class));
+        TYPES.put(Tag.class,           new Collection(AssignedTagResource.class,     AssignedTagsResource.class,     VM.class,      TagsResource.class));
+        TYPES.put(Template.class,      new Collection(TemplateResource.class,        TemplatesResource.class));
         // REVISIT: will need the concept of multiple parent types, both VM and VmPool for User
-        TYPES.put(User.class,          new ResourceType(UserResource.class,            AttachedUsersResource.class,    VM.class,      UsersResource.class));
-        TYPES.put(VM.class,            new ResourceType(VmResource.class,              VmsResource.class));
-        TYPES.put(VmPool.class,        new ResourceType(VmPoolResource.class,          VmPoolsResource.class));
+        TYPES.put(User.class,          new Collection(UserResource.class,            AttachedUsersResource.class,    VM.class,      UsersResource.class));
+        TYPES.put(VM.class,            new Collection(VmResource.class,              VmsResource.class));
+        TYPES.put(VmPool.class,        new Collection(VmPoolResource.class,          VmPoolsResource.class));
     }
 
     private static String getPath(Class<?> clz) {
@@ -143,7 +143,7 @@ public class LinkHelper {
         return null;
     }
 
-    private static Collection<BaseResource> getInlineResources(Object obj) {
+    private static List<BaseResource> getInlineResources(Object obj) {
         ArrayList<BaseResource> ret = new ArrayList<BaseResource>();
 
         for (Method method : obj.getClass().getMethods()) {
@@ -173,7 +173,7 @@ public class LinkHelper {
     }
 
     public static <R extends BaseResource> UriBuilder getUriBuilder(R model) {
-        ResourceType type = TYPES.get(model.getClass());
+        Collection type = TYPES.get(model.getClass());
 
         UriBuilder uriBuilder;
         if (type.getParentType() != null) {
@@ -207,7 +207,7 @@ public class LinkHelper {
     }
 
     private static <R extends BaseResource> void setActions(R model) {
-        ResourceType type = TYPES.get(model.getClass());
+        Collection type = TYPES.get(model.getClass());
         UriBuilder uriBuilder = getUriBuilder(model);
         if (uriBuilder != null) {
             ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, type.getResourceType());
@@ -228,22 +228,22 @@ public class LinkHelper {
         return model;
     }
 
-    private static class ResourceType {
+    private static class Collection {
         private final Class<?> resourceType;
         private final Class<?> collectionType;
         private final Class<?> parentType;
         private final Class<?> alternativeCollectionType;
 
-        public ResourceType(Class<?> resourceType, Class<?> collectionType, Class<?> parentType, Class<?> alternativeCollectionType) {
+        public Collection(Class<?> resourceType, Class<?> collectionType, Class<?> parentType, Class<?> alternativeCollectionType) {
             this.resourceType = resourceType;
             this.collectionType = collectionType;
             this.parentType = parentType;
             this.alternativeCollectionType = alternativeCollectionType;
         }
-        public ResourceType(Class<?> resourceType, Class<?> collectionType, Class<?> parentType) {
-            this(resourceType, collectionType,  parentType, null);
+        public Collection(Class<?> resourceType, Class<?> collectionType, Class<?> parentType) {
+            this(resourceType, collectionType, parentType, null);
         }
-        public ResourceType(Class<?> resourceType, Class<?> collectionType) {
+        public Collection(Class<?> resourceType, Class<?> collectionType) {
             this(resourceType, collectionType, null);
         }
 
