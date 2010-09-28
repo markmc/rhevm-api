@@ -94,8 +94,7 @@ import com.redhat.rhevm.api.resource.VmsResource;
  */
 public class LinkHelper {
 
-    private static Map<Class<? extends BaseResource>, Collection> TYPES =
-        new HashMap<Class<? extends BaseResource>, Collection>();
+    private static ModelToCollectionsMap TYPES = new ModelToCollectionsMap();
 
     static {
         TYPES.put(Attachment.class,    new Collection(AttachmentResource.class,      AttachmentsResource.class,      StorageDomain.class));
@@ -227,6 +226,8 @@ public class LinkHelper {
 
         return model;
     }
+
+    private static class ModelToCollectionsMap extends HashMap<Class<? extends BaseResource>, Collection> { }
 
     private static class Collection {
         private final Class<?> resourceType;
