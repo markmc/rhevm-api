@@ -94,67 +94,72 @@ import com.redhat.rhevm.api.resource.VmsResource;
  */
 public class LinkHelper {
 
+    private static final Class<? extends BaseResource> NO_PARENT = BaseResource.class;
+
     private static ModelToCollectionsMap TYPES = new ModelToCollectionsMap();
 
     static {
-        Collection map;
+        ParentToCollectionMap map;
 
-        map = new Collection(AttachmentResource.class, AttachmentsResource.class, StorageDomain.class);
+        map = new ParentToCollectionMap(AttachmentResource.class, AttachmentsResource.class, StorageDomain.class);
         TYPES.put(Attachment.class, map);
 
-        map = new Collection(DeviceResource.class, DevicesResource.class, VM.class);
+        map = new ParentToCollectionMap(DeviceResource.class, DevicesResource.class, VM.class);
         TYPES.put(CdRom.class, map);
 
-        map = new Collection(ClusterResource.class, ClustersResource.class);
+        map = new ParentToCollectionMap(ClusterResource.class, ClustersResource.class);
         TYPES.put(Cluster.class, map);
 
-        map = new Collection(DataCenterResource.class, DataCentersResource.class);
+        map = new ParentToCollectionMap(DataCenterResource.class, DataCentersResource.class);
         TYPES.put(DataCenter.class, map);
 
-        map = new Collection(DeviceResource.class, DevicesResource.class, VM.class);
+        map = new ParentToCollectionMap(DeviceResource.class, DevicesResource.class, VM.class);
         TYPES.put(Disk.class, map);
 
-        map = new Collection(HostResource.class, HostsResource.class);
+        map = new ParentToCollectionMap(HostResource.class, HostsResource.class);
         TYPES.put(Host.class, map);
 
-        map = new Collection(HostNicResource.class, HostNicsResource.class, Host.class);
+        map = new ParentToCollectionMap(HostNicResource.class, HostNicsResource.class, Host.class);
         TYPES.put(HostNIC.class, map);
 
-        map = new Collection(IsoResource.class, IsosResource.class, DataCenter.class);
+        map = new ParentToCollectionMap(IsoResource.class, IsosResource.class, DataCenter.class);
         TYPES.put(Iso.class, map);
 
-        map = new Collection(AssignedNetworkResource.class, AssignedNetworksResource.class, Cluster.class, NetworksResource.class);
+        map = new ParentToCollectionMap(NetworkResource.class, NetworksResource.class);
+        map.add(AssignedNetworkResource.class, AssignedNetworksResource.class, Cluster.class);
         TYPES.put(Network.class, map);
 
-        map = new Collection(DeviceResource.class, DevicesResource.class, VM.class);
+        map = new ParentToCollectionMap(DeviceResource.class, DevicesResource.class, VM.class);
         TYPES.put(NIC.class, map);
 
-        map = new Collection(RoleResource.class, AssignedRolesResource.class, User.class, RolesResource.class);
+        map = new ParentToCollectionMap(RoleResource.class, RolesResource.class);
+        map.add(RoleResource.class, AssignedRolesResource.class, User.class);
         TYPES.put(Role.class, map);
 
-        map = new Collection(SnapshotResource.class, SnapshotsResource.class, VM.class);
+        map = new ParentToCollectionMap(SnapshotResource.class, SnapshotsResource.class, VM.class);
         TYPES.put(Snapshot.class, map);
 
-        map = new Collection(StorageResource.class, HostStorageResource.class, Host.class);
+        map = new ParentToCollectionMap(StorageResource.class, HostStorageResource.class, Host.class);
         TYPES.put(Storage.class, map);
 
-        map = new Collection(StorageDomainResource.class, StorageDomainsResource.class);
+        map = new ParentToCollectionMap(StorageDomainResource.class, StorageDomainsResource.class);
         TYPES.put(StorageDomain.class, map);
 
-        map = new Collection(AssignedTagResource.class, AssignedTagsResource.class, VM.class, TagsResource.class);
+        map = new ParentToCollectionMap(TagResource.class, TagsResource.class);
+        map.add(AssignedTagResource.class, AssignedTagsResource.class, VM.class);
         TYPES.put(Tag.class, map);
 
-        map = new Collection(TemplateResource.class, TemplatesResource.class);
+        map = new ParentToCollectionMap(TemplateResource.class, TemplatesResource.class);
         TYPES.put(Template.class, map);
 
-        // REVISIT: will need the concept of multiple parent types, both VM and VmPool for User
-        map = new Collection(UserResource.class, AttachedUsersResource.class, VM.class, UsersResource.class);
+        map = new ParentToCollectionMap(UserResource.class, UsersResource.class);
+        map.add(UserResource.class, AttachedUsersResource.class, VM.class);
         TYPES.put(User.class, map);
 
-        map = new Collection(VmResource.class, VmsResource.class);
+        map = new ParentToCollectionMap(VmResource.class, VmsResource.class);
         TYPES.put(VM.class, map);
 
-        map = new Collection(VmPoolResource.class, VmPoolsResource.class);
+        map = new ParentToCollectionMap(VmPoolResource.class, VmPoolsResource.class);
         TYPES.put(VmPool.class, map);
     }
 
@@ -210,27 +215,39 @@ public class LinkHelper {
         return null;
     }
 
+    private static Collection getCollection(BaseResource model) {
+        ParentToCollectionMap collections = TYPES.get(model.getClass());
+
+        for (Class<? extends BaseResource> parentType : collections.keySet()) {
+            if (parentType != NO_PARENT &&
+                getParentModel(model, parentType) != null) {
+                return collections.get(parentType);
+            }
+        }
+
+        return collections.get(NO_PARENT);
+    }
+
     public static <R extends BaseResource> UriBuilder getUriBuilder(R model) {
-        Collection type = TYPES.get(model.getClass());
+        Collection collection = getCollection(model);
+        if (collection == null) {
+            return null;
+        }
 
         UriBuilder uriBuilder;
-        if (type.getParentType() != null) {
-            String path = getPath(type.getCollectionType(),
-                                  TYPES.get(type.getParentType()).getResourceType(),
+
+        if (collection.getParentType() != NO_PARENT) {
+            BaseResource parent = getParentModel(model, collection.getParentType());
+
+            Collection parentCollection = getCollection(parent);
+
+            String path = getPath(collection.getCollectionType(),
+                                  parentCollection.getResourceType(),
                                   model.getClass());
-            BaseResource parent = getParentModel(model, type.getParentType());
-            if (parent == null) {
-                if (type.getAltCollectionType() != null) {
-                    path = getPath(type.getAltCollectionType());
-                    uriBuilder = UriBuilder.fromPath(path);
-                } else {
-                    return null;
-                }
-            } else {
-                uriBuilder = getUriBuilder(parent).path(path);
-            }
+
+            uriBuilder = getUriBuilder(parent).path(path);
         } else {
-            String path = getPath(type.getCollectionType());
+            String path = getPath(collection.getCollectionType());
             uriBuilder = UriBuilder.fromPath(path);
         }
 
@@ -245,10 +262,10 @@ public class LinkHelper {
     }
 
     private static <R extends BaseResource> void setActions(R model) {
-        Collection type = TYPES.get(model.getClass());
+        Collection collection = getCollection(model);
         UriBuilder uriBuilder = getUriBuilder(model);
         if (uriBuilder != null) {
-            ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, type.getResourceType());
+            ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, collection.getResourceType());
             model.setActions(actionsBuilder.build());
         }
     }
@@ -266,30 +283,41 @@ public class LinkHelper {
         return model;
     }
 
-    private static class ModelToCollectionsMap extends HashMap<Class<? extends BaseResource>, Collection> { }
+    private static class ModelToCollectionsMap extends HashMap<Class<? extends BaseResource>, ParentToCollectionMap> { }
+
+    private static class ParentToCollectionMap extends HashMap<Class<? extends BaseResource>, Collection> {
+        public ParentToCollectionMap(Class<?> resourceType,
+                                     Class<?> collectionType,
+                                     Class<? extends BaseResource> parentType) {
+            super();
+            add(resourceType, collectionType, parentType);
+        }
+
+        public ParentToCollectionMap(Class<?> resourceType,
+                                     Class<?> collectionType) {
+            this(resourceType, collectionType, NO_PARENT);
+        }
+
+        public void add(Class<?> resourceType,
+                        Class<?> collectionType,
+                        Class<? extends BaseResource> parentType) {
+            put(parentType, new Collection(resourceType, collectionType, parentType));
+        }
+    }
 
     private static class Collection {
         private final Class<?> resourceType;
         private final Class<?> collectionType;
         private final Class<?> parentType;
-        private final Class<?> alternativeCollectionType;
 
-        public Collection(Class<?> resourceType, Class<?> collectionType, Class<?> parentType, Class<?> alternativeCollectionType) {
+        public Collection(Class<?> resourceType, Class<?> collectionType, Class<?> parentType) {
             this.resourceType = resourceType;
             this.collectionType = collectionType;
             this.parentType = parentType;
-            this.alternativeCollectionType = alternativeCollectionType;
-        }
-        public Collection(Class<?> resourceType, Class<?> collectionType, Class<?> parentType) {
-            this(resourceType, collectionType, parentType, null);
-        }
-        public Collection(Class<?> resourceType, Class<?> collectionType) {
-            this(resourceType, collectionType, null);
         }
 
         public Class<?> getResourceType()      { return resourceType; }
         public Class<?> getCollectionType()    { return collectionType; }
         public Class<?> getParentType()        { return parentType; }
-        public Class<?> getAltCollectionType() { return alternativeCollectionType; }
     }
 }
