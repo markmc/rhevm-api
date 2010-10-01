@@ -100,6 +100,7 @@
   &lt;link rel="nics" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/nics"/&gt;
   &lt;link rel="snapshots" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/snapshots"/&gt;
   &lt;link rel="users" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/users"/&gt;
+  &lt;link rel="tags" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/tags"/&gt;
   &lt;actions&gt;
     &lt;link rel="shutdown" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/shutdown"/&gt;
     &lt;link rel="start" href="vms/082c794b-771f-452f-83c9-b2b5a19c0399/start"/&gt;

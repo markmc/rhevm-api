@@ -1,0 +1,109 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "REST_API_Guide.ent">
+%BOOK_ENTITIES;
+]>
+<chapter id="chap-REST_API_Guide-Tags">
+  <title>Tags</title>
+
+  <para>
+    The tag specific elements which may be contained in the tag description are as follows:
+
+    <informaltable frame="none">
+      <tgroup cols="2">
+        <colspec colwidth="2*"/>
+        <colspec colwidth="5*"/>
+        <tbody>
+          <row>
+            <entry><literal>host</literal></entry>
+            <entry>A reference to the host which the tag is attached. See <xref linkend="chap-REST_API_Guide-Hosts"/></entry>
+          </row>
+          <row>
+            <entry><literal>user</literal></entry>
+            <entry>A reference to the user which the tag is attached. See <xref linkend="chap-REST_API_Guide-Users-and-Roles"/></entry>
+          </row>
+          <row>
+            <entry><literal>vm</literal></entry>
+            <entry>A reference to the VM which the tag is attached. See <xref linkend="chap-REST_API_Guide-VMs"/></entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+
+    For example:
+  </para>
+
+  <screen>
+&lt;tag id="f436ebfc-67f2-41bd-8ec6-902b6f7dcb5e" href="tags/f436ebfc-67f2-41bd-8ec6-902b6f7dcb5e"&gt;
+  &lt;name&gt;Finance&lt;/name&gt;
+  &lt;description&gt;Resources for the Finance department&lt;/description&gt;
+&lt;/tag&gt;
+  </screen>
+
+  <para>
+    When creating a new tag the <literal>name</literal> property is required. The <literal>name</literal> and <literal>description</literal> elements may be updated post-creation.
+  </para>
+
+  <section id="sect-REST_API_Guide-Tags-Hosts_Users_and_VMs">
+    <title>
+      Associating Tags With a Host, User or VM
+    </title>
+
+    <para>
+      The collection referenced by <literal>link rel="tags"</literal> from a <literal>host</literal>, <literal>user</literal> or <literal>vms</literal> represents the set of tags associated with the entity.
+    </para>
+
+    <para>
+      The <literal>tag</literal> representations are as described in <xref linkend="chap-REST_API_Guide-Tags"/>, except they also contain a <literal>host id</literal>, <literal>user id</literal> or <literal>vm id</literal> reference to the entity in question.
+    </para>
+
+    <para>
+      Each tags collection may be manipulated as described in <xref linkend="chap-REST_API_Guide-Common_Idioms"/>. Associating a tag with an entity is achieved by <literal>POST</literal>ing a tag reference (identifying the tag either by its <literal>id</literal> or <literal>name</literal>) to the collection. Removing an association is achieved by <literal>DELETE</literal>ing the appropriate element in the collection.
+    </para>
+
+    <screen>
+POST /vms/0/tags HTTP/1.1
+Accept: application/xml
+Content-Type: application/xml
+
+&lt;tag&gt;&lt;name&gt;Finance&lt;/name&gt;&lt;/tag&gt;
+
+HTTP/1.1 201 Created
+Location: http://{host}/vms/0/tags/f436ebfc-67f2-41bd-8ec6-902b6f7dcb5e
+Content-Type: application/xml
+
+&lt;tag id="f436ebfc-67f2-41bd-8ec6-902b6f7dcb5e" href="vms/0/tags/f436ebfc-67f2-41bd-8ec6-902b6f7dcb5e"&gt;
+  &lt;name&gt;Finance&lt;/name&gt;
+  &lt;description&gt;Resources for the Finance department&lt;/description&gt;
+  &lt;vm id="0" href="vms/0"/&gt;
+&lt;/tag&gt;
+    </screen>
+
+    <screen>
+DELETE /vms/0/tags/f436ebfc-67f2-41bd-8ec6-902b6f7dcb5e HTTP/1.1
+
+HTTP/1.1 204 No Content
+    </screen>
+
+    <para>
+      To query the set of entities associated with a given tag, the <literal>collection/search</literal> URI template for the appropriate collection should be used to search for entities matching <literal>tag=MyTag</literal>.
+    </para>
+
+    <screen>
+GET /vms?search=tag%3DFinance HTTP/1.1
+Accept: application/xml
+
+HTTP/1.1 200 OK
+Content-Type: application/xml
+
+&lt;vms&gt;
+  &lt;vm id="0" href="vms/0"&gt;
+    ...
+  &lt;/vm&gt;
+  ...
+&lt;/vms&gt;
+    </screen>
+
+  </section>
+
+</chapter>

@@ -74,6 +74,10 @@ Content-Type: application/xml
             <entry>Storage domains</entry>
           </row>
           <row>
+            <entry><literal>tags</literal></entry>
+            <entry>tags</entry>
+          </row>
+          <row>
             <entry><literal>templates</literal></entry>
             <entry>Templates</entry>
           </row>

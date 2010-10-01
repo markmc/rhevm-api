@@ -49,6 +49,7 @@
   &lt;port&gt;54321&lt;/port&gt;
   &lt;link rel="nics" href="hosts/0/nics"/&gt;
   &lt;link rel="storage" href="hosts/0/storage"/&gt;
+  &lt;link rel="tags" href="hosts/0/tags"/&gt;
   &lt;actions&gt;
     &lt;link rel="install" href="hosts/0/install"/&gt;
     &lt;link rel="approve" href="hosts/0/approve"/&gt;
