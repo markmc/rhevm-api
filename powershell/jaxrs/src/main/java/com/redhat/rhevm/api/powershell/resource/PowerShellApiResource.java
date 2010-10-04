@@ -18,18 +18,32 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.util.concurrent.Executor;
+
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.model.API;
-import com.redhat.rhevm.api.model.LinkHeader;
-import com.redhat.rhevm.api.model.Link;
-import com.redhat.rhevm.api.model.ObjectFactory;
-import com.redhat.rhevm.api.resource.ApiResource;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
+import com.redhat.rhevm.api.model.API;
+import com.redhat.rhevm.api.model.ApiSummary;
+import com.redhat.rhevm.api.model.Hosts;
+import com.redhat.rhevm.api.model.Link;
+import com.redhat.rhevm.api.model.LinkHeader;
+import com.redhat.rhevm.api.model.ObjectFactory;
+import com.redhat.rhevm.api.model.StorageDomains;
+import com.redhat.rhevm.api.model.Users;
+import com.redhat.rhevm.api.model.VMs;
+import com.redhat.rhevm.api.powershell.model.PowerShellSystemStats;
+import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
+import com.redhat.rhevm.api.powershell.util.PowerShellPool;
+import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
+import com.redhat.rhevm.api.resource.ApiResource;
 
-public class PowerShellApiResource implements ApiResource {
+public class PowerShellApiResource
+    extends AbstractPowerShellResource
+    implements ApiResource {
 
     private static final String SEARCH_RELATION = "/search";
     private static final String SEARCH_TEMPLATE = "?search={query}";
@@ -65,6 +79,15 @@ public class PowerShellApiResource implements ApiResource {
             link.setHref(rel + "/" + SEARCH_TEMPLATE);
             api.getLinks().add(link);
         }
+    }
+
+    public PowerShellApiResource() {
+    }
+
+    public PowerShellApiResource(Executor executor,
+                                 PowerShellPoolMap shellPools,
+                                 PowerShellParser parser) {
+        super(executor, shellPools, parser);
     }
 
     private static void addLink(String rel) {
@@ -120,6 +143,38 @@ public class PowerShellApiResource implements ApiResource {
 
     @Override
     public Response get(UriInfo uriInfo) {
-        return getResponseBuilder(uriInfo).entity(api).build();
+        API ret = JAXBHelper.clone(OBJECT_FACTORY.createApi(api));
+        ret = addSummary(ret);
+        return getResponseBuilder(uriInfo).entity(ret).build();
+    }
+
+    private PowerShellSystemStats runAndParse(String command) {
+        return PowerShellSystemStats.parse(getParser(), PowerShellCmd.runCommand(getPool(), command));
+    }
+
+    private API addSummary(API api) {
+        PowerShellSystemStats stats = runAndParse("get-systemstatistics");
+
+        ApiSummary summary = new ApiSummary();
+
+        summary.setVMs(new VMs());
+        summary.getVMs().setTotal(stats.totalVms);
+        summary.getVMs().setActive(stats.activeVms);
+
+        summary.setHosts(new Hosts());
+        summary.getHosts().setTotal(stats.totalHosts);
+        summary.getHosts().setActive(stats.activeHosts);
+
+        summary.setUsers(new Users());
+        summary.getUsers().setTotal(stats.totalUsers);
+        summary.getUsers().setActive(stats.activeUsers);
+
+        summary.setStorageDomains(new StorageDomains());
+        summary.getStorageDomains().setTotal(stats.totalStorageDomains);
+        summary.getStorageDomains().setActive(stats.activeStorageDomains);
+
+        api.setSummary(summary);
+
+        return api;
     }
 }
