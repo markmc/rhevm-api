@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<Objects>
+  <Object Type="RhevmCmd.CLISystemStatistics">
+    <Property Name="TotalVms" Type="System.Int32">1</Property>
+    <Property Name="ActiveVms" Type="System.Int32">0</Property>
+    <Property Name="TotalHosts" Type="System.Int32">1</Property>
+    <Property Name="ActiveHosts" Type="System.Int32">0</Property>
+    <Property Name="TotalUsers" Type="System.Int32">1</Property>
+    <Property Name="ActiveUsers" Type="System.Int32">0</Property>
+    <Property Name="TotalStorageDomains" Type="System.Int32">2</Property>
+    <Property Name="ActiveStorageDomains" Type="System.Int32">0</Property>
+  </Object>
+</Objects>
