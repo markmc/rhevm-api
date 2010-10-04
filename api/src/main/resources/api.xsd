@@ -396,6 +396,10 @@
     <xs:attribute name="id" type="xs:string"/>
   </xs:complexType>
 
+  <xs:complexType name="BaseResources">
+    <xs:sequence/>
+  </xs:complexType>
+
   <!-- Attachments, representing a Storage Domain attached to a Data Center -->
 
   <xs:element name="attachment" type="Attachment"/>
@@ -416,14 +420,18 @@
   </xs:complexType>
 
   <xs:complexType name="Attachments">
-    <xs:sequence>
-      <xs:annotation>
-        <xs:appinfo>
-            <jaxb:property name="Attachments"/>
-        </xs:appinfo>
-      </xs:annotation>
-      <xs:element ref="attachment" maxOccurs="unbounded"/>
-    </xs:sequence>
+    <xs:complexContent>
+      <xs:extension base="BaseResources">
+        <xs:sequence>
+          <xs:annotation>
+            <xs:appinfo>
+                <jaxb:property name="Attachments"/>
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:element ref="attachment" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <!-- Data Centers -->
@@ -448,14 +456,18 @@
   </xs:complexType>
 
   <xs:complexType name="DataCenters">
-    <xs:sequence>
-      <xs:annotation>
-        <xs:appinfo>
-            <jaxb:property name="DataCenters"/>
-        </xs:appinfo>
-      </xs:annotation>
-      <xs:element ref="data_center" maxOccurs="unbounded"/>
-    </xs:sequence>
+    <xs:complexContent>
+      <xs:extension base="BaseResources">
+        <xs:sequence>
+          <xs:annotation>
+            <xs:appinfo>
+                <jaxb:property name="DataCenters"/>
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:element ref="data_center" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <!-- Clusters -->
@@ -479,14 +491,18 @@
   </xs:complexType>
 
   <xs:complexType name="Clusters">
-    <xs:sequence>
-      <xs:annotation>
-        <xs:appinfo>
-            <jaxb:property name="Clusters"/>
-        </xs:appinfo>
-      </xs:annotation>
-      <xs:element ref="cluster" maxOccurs="unbounded"/>
-    </xs:sequence>
+    <xs:complexContent>
+      <xs:extension base="BaseResources">
+        <xs:sequence>
+          <xs:annotation>
+            <xs:appinfo>
+              <jaxb:property name="Clusters"/>
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:element ref="cluster" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <!-- Hosts -->
@@ -512,14 +528,18 @@
   </xs:complexType>
 
   <xs:complexType name="Hosts">
-    <xs:sequence>
-      <xs:annotation>
-        <xs:appinfo>
-            <jaxb:property name="Hosts"/>
-        </xs:appinfo>
-      </xs:annotation>
-      <xs:element ref="host" maxOccurs="unbounded"/>
-    </xs:sequence>
+    <xs:complexContent>
+      <xs:extension base="BaseResources">
+        <xs:sequence>
+          <xs:annotation>
+            <xs:appinfo>
+                <jaxb:property name="Hosts"/>
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:element ref="host" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <!-- Users & Roles -->
@@ -539,14 +559,18 @@
   </xs:complexType>
 
   <xs:complexType name="Roles">
-    <xs:sequence>
-      <xs:annotation>
-        <xs:appinfo>
-            <jaxb:property name="Roles"/>
-        </xs:appinfo>
-      </xs:annotation>
-      <xs:element ref="role" maxOccurs="unbounded"/>
-    </xs:sequence>
+    <xs:complexContent>
+      <xs:extension base="BaseResources">
+        <xs:sequence>
+          <xs:annotation>
+            <xs:appinfo>
+                <jaxb:property name="Roles"/>
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:element ref="role" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <xs:element name="user" type="User"/>
@@ -586,14 +610,18 @@
   </xs:complexType>
 
   <xs:complexType name="Users">
-    <xs:sequence>
-      <xs:annotation>
-        <xs:appinfo>
-            <jaxb:property name="Users"/>
-        </xs:appinfo>
-      </xs:annotation>
-      <xs:element ref="user" maxOccurs="unbounded"/>
-    </xs:sequence>
+    <xs:complexContent>
+      <xs:extension base="BaseResources">
+        <xs:sequence>
+          <xs:annotation>
+            <xs:appinfo>
+                <jaxb:property name="Users"/>
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:element ref="user" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <!-- ISOs -->
@@ -613,14 +641,18 @@
   </xs:complexType>
 
   <xs:complexType name="Isos">
-    <xs:sequence>
-      <xs:annotation>
-        <xs:appinfo>
-            <jaxb:property name="Isos"/>
-        </xs:appinfo>
-      </xs:annotation>
-      <xs:element ref="iso" maxOccurs="unbounded"/>
-    </xs:sequence>
+    <xs:complexContent>
+      <xs:extension base="BaseResources">
+        <xs:sequence>
+          <xs:annotation>
+            <xs:appinfo>
+                <jaxb:property name="Isos"/>
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:element ref="iso" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <!-- Networks -->
@@ -665,14 +697,18 @@
   </xs:complexType>
 
   <xs:complexType name="Networks">
-    <xs:sequence>
-      <xs:annotation>
-        <xs:appinfo>
-            <jaxb:property name="Networks"/>
-        </xs:appinfo>
-      </xs:annotation>
-      <xs:element ref="network" maxOccurs="unbounded"/>
-    </xs:sequence>
+    <xs:complexContent>
+      <xs:extension base="BaseResources">
+        <xs:sequence>
+          <xs:annotation>
+            <xs:appinfo>
+                <jaxb:property name="Networks"/>
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:element ref="network" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <!-- Storage Domains -->
@@ -773,14 +809,18 @@
   </xs:complexType>
 
   <xs:complexType name="StorageDomains">
-    <xs:sequence>
-      <xs:annotation>
-        <xs:appinfo>
-            <jaxb:property name="StorageDomains"/>
-        </xs:appinfo>
-      </xs:annotation>
-      <xs:element ref="storage_domain" maxOccurs="unbounded"/>
-    </xs:sequence>
+    <xs:complexContent>
+      <xs:extension base="BaseResources">
+        <xs:sequence>
+          <xs:annotation>
+            <xs:appinfo>
+                <jaxb:property name="StorageDomains"/>
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:element ref="storage_domain" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <!-- Virtual Machine Templates -->
@@ -807,14 +847,18 @@
   </xs:element>
 
   <xs:complexType name="Templates">
-    <xs:sequence>
-      <xs:annotation>
-        <xs:appinfo>
-            <jaxb:property name="Templates"/>
-        </xs:appinfo>
-      </xs:annotation>
-      <xs:element ref="template" maxOccurs="unbounded"/>
-    </xs:sequence>
+    <xs:complexContent>
+      <xs:extension base="BaseResources">
+        <xs:sequence>
+          <xs:annotation>
+            <xs:appinfo>
+                <jaxb:property name="Templates"/>
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:element ref="template" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <!-- Virtual Machines -->
@@ -925,14 +969,18 @@
   </xs:element>
 
   <xs:complexType name="VMs">
-    <xs:sequence>
-      <xs:annotation>
-        <xs:appinfo>
-            <jaxb:property name="VMs"/>
-        </xs:appinfo>
-      </xs:annotation>
-      <xs:element ref="vm" maxOccurs="unbounded"/>
-    </xs:sequence>
+    <xs:complexContent>
+      <xs:extension base="BaseResources">
+        <xs:sequence>
+          <xs:annotation>
+            <xs:appinfo>
+                <jaxb:property name="VMs"/>
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:element ref="vm" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <!-- Virtual Machine Pools -->
@@ -954,14 +1002,18 @@
   </xs:complexType>
 
   <xs:complexType name="VmPools">
-    <xs:sequence>
-      <xs:annotation>
-        <xs:appinfo>
-            <jaxb:property name="VmPools"/>
-        </xs:appinfo>
-      </xs:annotation>
-      <xs:element ref="vmpool" maxOccurs="unbounded"/>
-    </xs:sequence>
+    <xs:complexContent>
+      <xs:extension base="BaseResources">
+        <xs:sequence>
+          <xs:annotation>
+            <xs:appinfo>
+                <jaxb:property name="VmPools"/>
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:element ref="vmpool" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <!-- Devices -->
@@ -977,7 +1029,11 @@
   </xs:complexType>
 
   <xs:complexType name="BaseDevices">
-    <xs:sequence/>
+    <xs:complexContent>
+      <xs:extension base="BaseResources">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <xs:element name="cdrom" type="CdRom"/>
@@ -1102,14 +1158,18 @@
   </xs:complexType>
 
   <xs:complexType name="Snapshots">
-    <xs:sequence>
-      <xs:annotation>
-        <xs:appinfo>
-            <jaxb:property name="Snapshots"/>
-        </xs:appinfo>
-      </xs:annotation>
-      <xs:element ref="snapshot" maxOccurs="unbounded"/>
-    </xs:sequence>
+    <xs:complexContent>
+      <xs:extension base="BaseResources">
+        <xs:sequence>
+          <xs:annotation>
+            <xs:appinfo>
+                <jaxb:property name="Snapshots"/>
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:element ref="snapshot" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <!-- Host NICs -->
@@ -1135,15 +1195,19 @@
   </xs:complexType>
 
   <xs:complexType name="HostNics">
-    <xs:sequence>
-      <xs:element ref="host_nic" maxOccurs="unbounded">
-        <xs:annotation>
-          <xs:appinfo>
-            <jaxb:property name="HostNics"/>
-          </xs:appinfo>
-        </xs:annotation>
-      </xs:element>
-    </xs:sequence>
+    <xs:complexContent>
+      <xs:extension base="BaseResources">
+        <xs:sequence>
+          <xs:element ref="host_nic" maxOccurs="unbounded">
+            <xs:annotation>
+              <xs:appinfo>
+                <jaxb:property name="HostNics"/>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <xs:element name="slaves" type="Slaves"/>
@@ -1165,9 +1229,13 @@
   <xs:element name="host_storage" type="HostStorage"/>
 
   <xs:complexType name="HostStorage">
-    <xs:sequence>
-      <xs:element ref="storage" maxOccurs="unbounded"/>
-    </xs:sequence>
+    <xs:complexContent>
+      <xs:extension base="BaseResources">
+        <xs:sequence>
+          <xs:element ref="storage" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <!-- Tags -->
@@ -1189,14 +1257,18 @@
   </xs:complexType>
 
   <xs:complexType name="Tags">
-    <xs:sequence>
-      <xs:annotation>
-        <xs:appinfo>
-            <jaxb:property name="Tags"/>
-        </xs:appinfo>
-      </xs:annotation>
-      <xs:element ref="tag" maxOccurs="unbounded"/>
-    </xs:sequence>
+    <xs:complexContent>
+      <xs:extension base="BaseResources">
+        <xs:sequence>
+          <xs:annotation>
+            <xs:appinfo>
+                <jaxb:property name="Tags"/>
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:element ref="tag" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
 </xs:schema>
