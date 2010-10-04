@@ -397,7 +397,10 @@
   </xs:complexType>
 
   <xs:complexType name="BaseResources">
-    <xs:sequence/>
+    <xs:sequence>
+      <xs:element name="total" type="xs:unsignedInt" minOccurs="0"/>
+      <xs:element name="active" type="xs:unsignedInt" minOccurs="0"/>
+    </xs:sequence>
   </xs:complexType>
 
   <!-- Attachments, representing a Storage Domain attached to a Data Center -->
