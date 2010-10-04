@@ -33,6 +33,24 @@
           </xs:appinfo>
         </xs:annotation>
       </xs:element>
+      <xs:element ref="summary"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="summary" type="ApiSummary"/>
+
+  <xs:complexType name="ApiSummary">
+    <xs:sequence>
+      <xs:element ref="vms" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:appinfo>
+            <jaxb:property name="VMs"/>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element ref="hosts" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="users" minOccurs="0" maxOccurs="1"/>
+      <xs:element ref="storage_domains" minOccurs="0" maxOccurs="1"/>
     </xs:sequence>
   </xs:complexType>
 
