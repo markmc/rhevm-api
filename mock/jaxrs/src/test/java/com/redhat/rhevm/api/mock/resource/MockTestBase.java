@@ -62,7 +62,6 @@ import com.redhat.rhevm.api.model.Templates;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.resource.MediaType;
-import com.redhat.rhevm.api.common.resource.DefaultApiResource;
 import com.redhat.rhevm.api.common.resource.DefaultCapabilitiesResource;
 
 public class MockTestBase extends Assert {
@@ -197,7 +196,7 @@ public class MockTestBase extends Assert {
             new ThreadPoolExecutor(5, 100, 3600, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
         server.setPort(port);
         server.start();
-        server.getDeployment().getDispatcher().getRegistry().addSingletonResource(new DefaultApiResource());
+        server.getDeployment().getDispatcher().getRegistry().addSingletonResource(new MockApiResource());
         MockVmsResource vms = new MockVmsResource();
         vms.setExecutor(executor);
         vms.populate();

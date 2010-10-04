@@ -10,7 +10,7 @@
   <!-- Top-level Resources -->
   <bean id="mockApiResource"
         lazy-init="true"
-        class="com.redhat.rhevm.api.common.resource.DefaultApiResource"/>
+        class="com.redhat.rhevm.api.mock.resource.MockApiResource"/>
 
   <bean id="mockVmsResource"
         lazy-init="true"
