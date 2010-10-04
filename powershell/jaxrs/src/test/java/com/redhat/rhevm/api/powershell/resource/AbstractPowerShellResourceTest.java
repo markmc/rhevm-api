@@ -51,8 +51,8 @@ import static org.powermock.api.easymock.PowerMock.verifyAll;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest( { PowerShellCmd.class })
 @Ignore
-public abstract class AbstractPowerShellResourceTest<R extends BaseResource,
-                                                     A extends AbstractPowerShellActionableResource<R>>
+public abstract class AbstractPowerShellResourceTest<R /* extends BaseResource */,
+                                                     A /* extends AbstractPowerShellActionableResource<R> */>
     extends BasePowerShellResourceTest {
 
     protected A resource;
