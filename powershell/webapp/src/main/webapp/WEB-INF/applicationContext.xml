@@ -10,7 +10,7 @@
   <!-- Top-level Resources -->
   <bean id="powerShellApiResource"
         lazy-init="true"
-        class="com.redhat.rhevm.api.common.resource.DefaultApiResource"/>
+        class="com.redhat.rhevm.api.powershell.resource.PowerShellApiResource"/>
 
   <bean id="powerShellVmsResource"
         lazy-init="true"

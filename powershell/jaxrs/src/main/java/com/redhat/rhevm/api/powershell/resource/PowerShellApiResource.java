@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api.common.resource;
+package com.redhat.rhevm.api.powershell.resource;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -29,7 +29,7 @@ import com.redhat.rhevm.api.model.ObjectFactory;
 import com.redhat.rhevm.api.resource.ApiResource;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 
-public class DefaultApiResource implements ApiResource {
+public class PowerShellApiResource implements ApiResource {
 
     private static final String SEARCH_RELATION = "/search";
     private static final String SEARCH_TEMPLATE = "?search={query}";
