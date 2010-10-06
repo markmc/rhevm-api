@@ -32,28 +32,33 @@ public class PowerShellTagsResourceTest
     public static final String[] extraArgs = new String[]{};
 
     public PowerShellTagsResourceTest() {
-        super(new PowerShellTagResource("0", null, null, null), "tags", "tag", extraArgs);
+        super(new PowerShellTagResource("0", null, null, null, null), "tags", "tag", extraArgs);
     }
 
     @Test
     public void testList() throws Exception {
-        setUpResourceExpectations("get-tags", getSelectReturn(), NAMES);
+        resource.setUriInfo(setUpResourceExpectations("get-tags", getSelectReturn(), NAMES));
         List<Tag> tags = resource.list().getTags();
         verifyCollection(tags, NAMES, DESCRIPTIONS);
     }
 
     @Test
     public void testAdd() throws Exception {
-        verifyResponse(
-            resource.add(setUpResourceExpectations(asArray(getAddCommand()), asArray(getAddReturn()), true, null, NEW_NAME),
-                         getModel(NEW_NAME, NEW_DESCRIPTION)),
-            NEW_NAME, NEW_DESCRIPTION);
+        resource.setUriInfo(setUpResourceExpectations(asArray(getAddCommand()),
+                                                      asArray(getAddReturn()),
+                                                      true,
+                                                      null,
+                                                      NEW_NAME));
+        verifyResponse(resource.add(getModel(NEW_NAME, NEW_DESCRIPTION)),
+                       NEW_NAME,
+                       NEW_DESCRIPTION);
     }
 
     @Test
     public void testAddIncompleteParameters() throws Exception {
+        resource.setUriInfo(setUpResourceExpectations(new String[]{}, new String[]{}, false, null));
         try {
-            resource.add(setUpResourceExpectations(new String[]{}, new String[]{}, false, null), new Tag());
+            resource.add(new Tag());
             fail("expected WebApplicationException on incomplete parameters");
         } catch (WebApplicationException wae) {
              verifyIncompleteException(wae, "Tag", "add", "name");
@@ -68,6 +73,7 @@ public class PowerShellTagsResourceTest
 
     @Test
     public void testGetSubResource() throws Exception {
+        resource.setUriInfo(setUpResourceExpectations(new String[]{}, new String[]{}, false, null));
         verifyResource(
             (PowerShellTagResource)resource.getTagSubResource(Integer.toString(NEW_NAME.hashCode())),
             NEW_NAME);

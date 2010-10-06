@@ -20,10 +20,10 @@ package com.redhat.rhevm.api.powershell.resource;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.Disks;
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.ReflectionHelper;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
@@ -41,12 +41,13 @@ public class PowerShellDisksResource
     public PowerShellDisksResource(String parentId,
                                    PowerShellPoolMap shellPools,
                                    PowerShellParser parser,
-                                   String getCommand) {
-        super(parentId, shellPools, parser, getCommand);
+                                   String getCommand,
+                                   UriInfoProvider uriProvider) {
+        super(parentId, shellPools, parser, getCommand, uriProvider);
     }
 
     @Override
-    public Response add(UriInfo uriInfo, Disk disk) {
+    public Response add(Disk disk) {
         validateParameters(disk, "size");
         StringBuilder buf = new StringBuilder();
 
@@ -98,7 +99,7 @@ public class PowerShellDisksResource
 
         disk = addLinks(runAndParseSingle(buf.toString()));
 
-        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(disk.getId());
+        UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(disk.getId());
 
         return Response.created(uriBuilder.build()).entity(disk).build();
     }

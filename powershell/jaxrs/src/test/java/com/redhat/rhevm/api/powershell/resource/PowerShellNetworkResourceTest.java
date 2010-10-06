@@ -23,6 +23,7 @@ import java.util.concurrent.Executor;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.Fault;
 import com.redhat.rhevm.api.model.Network;
@@ -49,8 +50,8 @@ public class PowerShellNetworkResourceTest extends AbstractPowerShellResourceTes
     private static final String GET_COMMAND = "$n = get-networks;foreach ($i in $n) {  if ($i.networkid -eq \"" + NETWORK_ID + "\") {    $i  }}";
     private static final String UPDATE_COMMAND = "foreach ($i in $n) {  if ($i.networkid -eq \"" + NETWORK_ID + "\") {    $i.name = \"eris\";    update-network -networkobject $i -datacenterid \"" + DATA_CENTER_ID + "\"  }}";
 
-    protected PowerShellNetworkResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser) {
-        return new PowerShellNetworkResource(NETWORK_ID, executor, poolMap, parser);
+    protected PowerShellNetworkResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider) {
+        return new PowerShellNetworkResource(NETWORK_ID, executor, uriProvider, poolMap, parser);
     }
 
     protected String formatNetwork(String name) {
@@ -62,30 +63,26 @@ public class PowerShellNetworkResourceTest extends AbstractPowerShellResourceTes
 
     @Test
     public void testGet() throws Exception {
-        verifyNetwork(
-            resource.get(setUpNetworkExpectations(GET_COMMAND,
-                                                  formatNetwork(NETWORK_NAME),
-                                                  NETWORK_NAME)),
-            NETWORK_NAME);
+        setUriInfo(setUpNetworkExpectations(GET_COMMAND,
+                                            formatNetwork(NETWORK_NAME),
+                                            NETWORK_NAME));
+        verifyNetwork(resource.get(), NETWORK_NAME);
     }
 
     @Test
     public void testGoodUpdate() throws Exception {
-        verifyNetwork(
-            resource.update(setUpNetworkExpectations(UPDATE_COMMAND,
-                                                     formatNetwork("eris"),
-                                                     "eris"),
-                            getNetwork("eris")),
-            "eris");
+        setUriInfo(setUpNetworkExpectations(UPDATE_COMMAND,
+                                            formatNetwork("eris"),
+                                            "eris"));
+        verifyNetwork(resource.update(getNetwork("eris")), "eris");
     }
 
     @Test
     public void testBadUpdate() throws Exception {
         try {
-            UriInfo uriInfo = createMock(UriInfo.class);
+            setUriInfo(createMock(UriInfo.class));
             replayAll();
-            resource.update(uriInfo,
-                            getNetwork("98765", "eris"));
+            resource.update(getNetwork("98765", "eris"));
             fail("expected WebApplicationException on bad update");
         } catch (WebApplicationException wae) {
             verifyUpdateException(wae);
@@ -95,8 +92,9 @@ public class PowerShellNetworkResourceTest extends AbstractPowerShellResourceTes
     private UriInfo setUpNetworkExpectations(String command, String ret, String name) throws Exception {
         mockStatic(PowerShellCmd.class);
         expect(PowerShellCmd.runCommand(setUpPoolExpectations(), command)).andReturn(ret);
+        UriInfo uriInfo = setUpBasicUriExpectations();
         replayAll();
-        return null;
+        return uriInfo;
     }
 
     private Network getNetwork(String name) {
@@ -119,6 +117,7 @@ public class PowerShellNetworkResourceTest extends AbstractPowerShellResourceTes
         assertEquals(network.getName(), name);
         assertNotNull(network.getDataCenter());
         assertEquals(network.getDataCenter().getId(), DATA_CENTER_ID);
+        verifyLinks(network);
     }
 
     private void verifyUpdateException(WebApplicationException wae) {

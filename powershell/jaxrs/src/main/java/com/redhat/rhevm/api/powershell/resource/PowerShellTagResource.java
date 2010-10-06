@@ -21,10 +21,10 @@ package com.redhat.rhevm.api.powershell.resource;
 import java.util.List;
 import java.util.concurrent.Executor;
 
-import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Tag;
 import com.redhat.rhevm.api.resource.TagResource;
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellTag;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
@@ -37,9 +37,10 @@ public class PowerShellTagResource extends AbstractPowerShellActionableResource<
 
     public PowerShellTagResource(String id,
                                  Executor executor,
+                                 UriInfoProvider uriProvider,
                                  PowerShellPoolMap shellPools,
                                  PowerShellParser parser) {
-        super(id, executor, shellPools, parser);
+        super(id, executor, uriProvider, shellPools, parser);
     }
 
     public static List<Tag> runAndParse(PowerShellPool pool, PowerShellParser parser, String command) {
@@ -61,12 +62,12 @@ public class PowerShellTagResource extends AbstractPowerShellActionableResource<
     }
 
     @Override
-    public Tag get(UriInfo uriInfo) {
-        return LinkHelper.addLinks(runAndParseSingle("get-tag " + PowerShellUtils.escape(getId())));
+    public Tag get() {
+        return LinkHelper.addLinks(getUriInfo(), runAndParseSingle("get-tag " + PowerShellUtils.escape(getId())));
     }
 
     @Override
-    public Tag update(UriInfo uriInfo, Tag tag) {
+    public Tag update(Tag tag) {
         validateUpdate(tag);
 
         StringBuilder buf = new StringBuilder();
@@ -82,6 +83,6 @@ public class PowerShellTagResource extends AbstractPowerShellActionableResource<
 
         buf.append("update-tag -tagobject $t");
 
-        return LinkHelper.addLinks(runAndParseSingle(buf.toString()));
+        return LinkHelper.addLinks(getUriInfo(), runAndParseSingle(buf.toString()));
     }
 }

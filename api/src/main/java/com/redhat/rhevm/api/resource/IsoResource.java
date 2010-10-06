@@ -20,8 +20,6 @@ package com.redhat.rhevm.api.resource;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 import com.redhat.rhevm.api.model.Iso;
@@ -32,5 +30,5 @@ public interface IsoResource {
 
     @GET
     @Formatted
-    public Iso get(@Context UriInfo uriInfo);
+    public Iso get();
 }

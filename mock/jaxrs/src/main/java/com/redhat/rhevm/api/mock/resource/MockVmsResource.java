@@ -24,7 +24,6 @@ import java.util.Map;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.mock.util.SimpleQueryEvaluator;
 import com.redhat.rhevm.api.model.VM;
@@ -37,10 +36,6 @@ import static com.redhat.rhevm.api.mock.resource.AbstractMockResource.allocateId
 
 
 public class MockVmsResource extends AbstractMockQueryableResource<VM> implements VmsResource {
-    /* REVISIT: Singleton lifecycle probably requires that UriInfo
-     * must be modelled as a method parameter, as there would be
-     * concurrency issues around injection into a data member
-     */
 
     private static Map<String, MockVmResource> vms =
         Collections.synchronizedMap(new HashMap<String, MockVmResource>());
@@ -52,7 +47,7 @@ public class MockVmsResource extends AbstractMockQueryableResource<VM> implement
     public void populate() {
         synchronized (vms) {
             while (vms.size() < 10) {
-                MockVmResource resource = new MockVmResource(allocateId(VM.class), getExecutor());
+                MockVmResource resource = new MockVmResource(allocateId(VM.class), getExecutor(), this);
                 resource.getModel().setName("vm" + resource.getModel().getId());
                 resource.getModel().setType(VmType.SERVER);
                 vms.put(resource.getModel().getId(), resource);
@@ -61,11 +56,11 @@ public class MockVmsResource extends AbstractMockQueryableResource<VM> implement
     }
 
     @Override
-    public VMs list(UriInfo uriInfo) {
+    public VMs list() {
         VMs ret = new VMs();
 
         for (MockVmResource vm : vms.values()) {
-            if (filter(vm.getModel(), uriInfo, VM.class)) {
+            if (filter(vm.getModel(), getUriInfo(), VM.class)) {
                 ret.getVMs().add(vm.addLinks());
             }
         }
@@ -74,15 +69,15 @@ public class MockVmsResource extends AbstractMockQueryableResource<VM> implement
     }
 
     @Override
-    public Response add(UriInfo uriInfo, VM vm) {
-        MockVmResource resource = new MockVmResource(allocateId(VM.class), getExecutor());
+    public Response add(VM vm) {
+        MockVmResource resource = new MockVmResource(allocateId(VM.class), getExecutor(), this);
 
         resource.updateModel(vm);
 
         String id = resource.getId();
         vms.put(id, resource);
 
-        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(id);
+        UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(id);
 
         vm = resource.addLinks();
 
@@ -95,7 +90,7 @@ public class MockVmsResource extends AbstractMockQueryableResource<VM> implement
     }
 
     @Override
-    public VmResource getVmSubResource(UriInfo uriInfo, String id) {
+    public VmResource getVmSubResource(String id) {
         return vms.get(id);
     }
 }

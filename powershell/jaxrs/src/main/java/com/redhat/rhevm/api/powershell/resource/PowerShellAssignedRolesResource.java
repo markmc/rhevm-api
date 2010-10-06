@@ -23,8 +23,8 @@ import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.model.Role;
 import com.redhat.rhevm.api.model.Roles;
@@ -38,15 +38,16 @@ import com.redhat.rhevm.api.resource.AssignedRolesResource;
 import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
 import static com.redhat.rhevm.api.powershell.resource.PowerShellUsersResource.getRoleArg;
 
-public class PowerShellAssignedRolesResource extends AbstractPowerShellResource implements AssignedRolesResource {
+public class PowerShellAssignedRolesResource extends UriProviderWrapper implements AssignedRolesResource {
 
     private String userId;
 
     public PowerShellAssignedRolesResource(String userId,
-                                   Executor executor,
-                                   PowerShellPoolMap shellPools,
-                                   PowerShellParser parser) {
-        super(executor, shellPools, parser);
+                                           Executor executor,
+                                           PowerShellPoolMap shellPools,
+                                           PowerShellParser parser,
+                                           UriInfoProvider uriProvider) {
+        super(executor, shellPools, parser, uriProvider);
         this.userId = userId;
     }
 
@@ -68,21 +69,21 @@ public class PowerShellAssignedRolesResource extends AbstractPowerShellResource 
                 .append(PowerShellUtils.escape(userId))
                 .append(";$u.getroles()");
         for (Role Role : runAndParse(getRoles.toString())) {
-            ret.getRoles().add(LinkHelper.addLinks(Role));
+            ret.getRoles().add(LinkHelper.addLinks(getUriInfo(), Role));
         }
         return ret;
     }
 
     @Override
-    public Response add(UriInfo uriInfo, Role role) {
+    public Response add(Role role) {
         validateParameters(role, "name|id");
         StringBuilder buf = new StringBuilder();
 
         String roleArg = getRoleArg(role, buf);
 
         buf.append("attach-role -roleid ").append(roleArg).append(" -elementid ").append(userId);
-        Role newRole = LinkHelper.addLinks(runAndParseSingle(buf.toString()));
-        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(newRole.getId());
+        Role newRole = LinkHelper.addLinks(getUriInfo(), runAndParseSingle(buf.toString()));
+        UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(newRole.getId());
 
         return Response.created(uriBuilder.build()).entity(newRole).build();
     }
@@ -98,6 +99,6 @@ public class PowerShellAssignedRolesResource extends AbstractPowerShellResource 
 
     @Override
     public RoleResource getRoleSubResource(String roleId) {
-        return new PowerShellRoleResource(roleId, userId, executor, shellPools, parser);
+        return new PowerShellRoleResource(roleId, userId, executor, shellPools, parser, getUriProvider());
     }
 }

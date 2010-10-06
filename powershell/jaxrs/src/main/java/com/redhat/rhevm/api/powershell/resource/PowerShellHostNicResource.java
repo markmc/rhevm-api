@@ -21,8 +21,8 @@ package com.redhat.rhevm.api.powershell.resource;
 import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.HostNIC;
@@ -43,8 +43,9 @@ public class PowerShellHostNicResource
                                      Executor executor,
                                      PowerShellPoolMap shellPools,
                                      PowerShellParser parser,
-                                     PowerShellHostNicsResource parent) {
-        super(id, executor, shellPools);
+                                     PowerShellHostNicsResource parent,
+                                     UriInfoProvider uriProvider) {
+        super(id, executor, uriProvider, shellPools);
         this.parent = parent;
     }
 
@@ -61,7 +62,7 @@ public class PowerShellHostNicResource
         return actionParent;
     }
 
-    private Response doNetworkAdapterAction(UriInfo uriInfo, Action action, String command) {
+    private Response doNetworkAdapterAction(Action action, String command) {
         validateParameters(action, "network.id|name");
 
         StringBuilder buf = new StringBuilder();
@@ -89,16 +90,16 @@ public class PowerShellHostNicResource
         buf.append(" -network $net");
         buf.append(" -networkadapter $nic");
 
-        return doAction(uriInfo, new CommandRunner(action, buf.toString(), getPool()));
+        return doAction(getUriInfo(), new CommandRunner(action, buf.toString(), getPool()));
     }
 
     @Override
-    public Response attach(UriInfo uriInfo, Action action) {
-        return doNetworkAdapterAction(uriInfo, action, "attach-logicalnetworktonetworkadapter");
+    public Response attach(Action action) {
+        return doNetworkAdapterAction(action, "attach-logicalnetworktonetworkadapter");
     }
 
     @Override
-    public Response detach(UriInfo uriInfo, Action action) {
-        return doNetworkAdapterAction(uriInfo, action, "detach-logicalnetworkfromnetworkadapter");
+    public Response detach(Action action) {
+        return doNetworkAdapterAction(action, "detach-logicalnetworkfromnetworkadapter");
     }
 }

@@ -20,6 +20,7 @@ package com.redhat.rhevm.api.powershell.resource;
 
 import java.util.concurrent.Executor;
 
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.User;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
@@ -44,14 +45,15 @@ public class PowerShellAttachedUsersResourceTest extends AbstractPowerShellUsers
                                PowerShellVmsResourceTest.extraArgs);
     }
 
-    protected PowerShellAttachedUsersResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser) {
-        return new PowerShellAttachedUsersResource(PARENT_ID, executor, poolMap, parser);
+    protected PowerShellAttachedUsersResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider) {
+        return new PowerShellAttachedUsersResource(PARENT_ID, executor, poolMap, parser, uriProvider);
     }
 
     @Test
     public void testList() throws Exception {
         setUpUserExpectations(asArrayV(GET_VM_COMMAND, SELECT_COMMAND), asArrayV(formatVm(VM_NAME), formatUser(USER_NAME)));
-        verifyUsers(resource.list(setUpUriExpectations(getQueryParam())));
+        setUriInfo(setUpUriExpectations(getQueryParam()));
+        verifyUsers(resource.list());
     }
 
     @Test
@@ -59,7 +61,8 @@ public class PowerShellAttachedUsersResourceTest extends AbstractPowerShellUsers
         User user = new User();
         user.setId(USER_ID);
         setUpUserExpectations(asArray(GET_USER_BY_ID + ATTACH_USER_COMMAND), asArray(formatUser(USER_NAME)));
-        verifyResponse(resource.add(setUpUriExpectations(null, true), user), USER_NAME, null, "users");
+        setUriInfo(setUpUriExpectations(null, true));
+        verifyResponse(resource.add(user), USER_NAME, null, "users");
     }
 
     @Test
@@ -67,7 +70,8 @@ public class PowerShellAttachedUsersResourceTest extends AbstractPowerShellUsers
         User user = new User();
         user.setUserName(USER_NAME);
         setUpUserExpectations(asArray(GET_USER_BY_NAME + ATTACH_USER_COMMAND), asArray(formatUser(USER_NAME)));
-        verifyResponse(resource.add(setUpUriExpectations(null, true), user), USER_NAME, null, "users");
+        setUriInfo(setUpUriExpectations(null, true));
+        verifyResponse(resource.add(user), USER_NAME, null, "users");
     }
 
     @Test

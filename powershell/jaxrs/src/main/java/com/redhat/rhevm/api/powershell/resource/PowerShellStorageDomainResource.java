@@ -54,7 +54,7 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
                                            PowerShellStorageDomainsResource parent,
                                            PowerShellPoolMap shellPools,
                                            PowerShellParser parser) {
-        super(id, parent.getExecutor(), shellPools, parser);
+        super(id, parent.getExecutor(), parent, shellPools, parser);
         this.parent = parent;
     }
 
@@ -141,20 +141,20 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
         return runAndParseSingle(getPool(), getParser(), command, sharedStatus);
     }
 
-    public static StorageDomain addLinks(StorageDomain storageDomain) {
+    public static StorageDomain addLinks(UriInfo uriInfo, StorageDomain storageDomain) {
         storageDomain = JAXBHelper.clone("storage_domain", StorageDomain.class, storageDomain);
 
-        storageDomain = LinkHelper.addLinks(storageDomain);
+        storageDomain = LinkHelper.addLinks(uriInfo, storageDomain);
 
         ActionValidator actionValidator = new StorageDomainActionValidator(storageDomain);
-        ActionsBuilder actionsBuilder = new ActionsBuilder(LinkHelper.getUriBuilder(storageDomain),
+        ActionsBuilder actionsBuilder = new ActionsBuilder(LinkHelper.getUriBuilder(uriInfo, storageDomain),
                                                            StorageDomainResource.class,
                                                            actionValidator);
         storageDomain.setActions(actionsBuilder.build());
 
         Link link = new Link();
         link.setRel("attachments");
-        link.setHref(LinkHelper.getUriBuilder(storageDomain).path("attachments").build().toString());
+        link.setHref(LinkHelper.getUriBuilder(uriInfo, storageDomain).path("attachments").build().toString());
         storageDomain.getLinks().clear();
         storageDomain.getLinks().add(link);
 
@@ -162,18 +162,18 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
     }
 
     @Override
-    public StorageDomain get(UriInfo uriInfo) {
+    public StorageDomain get() {
         StorageDomain storageDomain;
         if (tornDown != null) {
             storageDomain = tornDown;
         } else {
             storageDomain = runAndParseSingle("get-storagedomain " + PowerShellUtils.escape(getId()), true);
         }
-        return addLinks(storageDomain);
+        return addLinks(getUriInfo(), storageDomain);
     }
 
     @Override
-    public StorageDomain update(final UriInfo uriInfo, StorageDomain storageDomain) {
+    public StorageDomain update(StorageDomain storageDomain) {
         validateUpdate(storageDomain);
 
         StringBuilder buf = new StringBuilder();
@@ -194,18 +194,21 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
 
             storageDomain = runAndParseSingle(buf.toString(), true);
         }
-        return addLinks(storageDomain);
+        return addLinks(getUriInfo(), storageDomain);
     }
 
     @Override
-    public Response teardown(UriInfo uriInfo, Action action) {
+    public Response teardown(Action action) {
         validateParameters(action, "host.id|name");
-        return doAction(uriInfo, new StorageDomainTeardowner(action));
+        return doAction(getUriInfo(), new StorageDomainTeardowner(action));
     }
 
     @Override
     public AttachmentsResource getAttachmentsResource() {
-        return new PowerShellAttachmentsResource(getId(), shellPools, getParser());
+        PowerShellAttachmentsResource resource =
+            new PowerShellAttachmentsResource(getId(), shellPools, getParser());
+        resource.setUriInfo(getUriInfo());
+        return resource;
     }
 
     private class StorageDomainTeardowner extends AbstractPowerShellActionTask {

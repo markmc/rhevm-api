@@ -20,6 +20,9 @@ package com.redhat.rhevm.api.powershell.resource;
 
 import java.util.concurrent.Executor;
 
+import javax.ws.rs.core.UriInfo;
+
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.Roles;
 import com.redhat.rhevm.api.model.User;
 
@@ -31,8 +34,8 @@ public class PowerShellAssignedRolesResourceTest extends AbstractPowerShellRoles
     protected static final String USER_ID = "cca00b9f-4492-4a82-b71e-082dcdf0fc66";
     protected static final String SELECT_COMMAND = "$u = get-user -userid \"" + USER_ID + "\";$u.getroles()";
 
-    protected PowerShellAssignedRolesResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser) {
-        return new PowerShellAssignedRolesResource(USER_ID, executor, poolMap, parser);
+    protected PowerShellAssignedRolesResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider) {
+        return new PowerShellAssignedRolesResource(USER_ID, executor, poolMap, parser, uriProvider);
     }
 
     protected String getSelectCommand() {
@@ -47,4 +50,9 @@ public class PowerShellAssignedRolesResourceTest extends AbstractPowerShellRoles
         assertNotNull(user);
         assertEquals(USER_ID, user.getId());
     }
+
+    protected void cacheUriInfo(UriInfo uriInfo) {
+        ((PlaceHolderUriInfoProvider)resource.getUriProvider()).setUriInfo(uriInfo);
+    }
 }
+

@@ -38,7 +38,7 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
     public static final String[] extraArgs = new String[] { CLUSTER_CPU, DATA_CENTER_ID, Integer.toString(MAJOR), Integer.toString(MINOR) };
 
     public PowerShellClustersResourceTest() {
-	super(new PowerShellClusterResource("0", null, null, null), "clusters", "cluster", extraArgs);
+        super(new PowerShellClusterResource("0", null, null, null, null), "clusters", "cluster", extraArgs);
     }
 
     @Test
@@ -51,9 +51,8 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
                               formatVersion(MAJOR, MINOR),
                               formatVersion(MAJOR, MINOR),
                               formatVersion(MAJOR, MINOR) };
-        verifyCollection(
-            resource.list(setUpResourceExpectations(4, commands, returns, false, null, NAMES)).getClusters(),
-            NAMES, DESCRIPTIONS);
+        resource.setUriInfo(setUpResourceExpectations(4, commands, returns, false, null, NAMES));
+        verifyCollection(resource.list().getClusters(), NAMES, DESCRIPTIONS);
     }
 
 
@@ -65,14 +64,13 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
         String [] returns = { getQueryReturn(),
                               formatVersion(MAJOR, MINOR),
                               formatVersion(MAJOR, MINOR) };
-        verifyCollection(
-            resource.list(setUpResourceExpectations(3,
-                                                    commands,
-                                                    returns,
-                                                    false,
-                                                    getQueryParam(),
-                                                    NAMES_SUBSET)).getClusters(),
-            NAMES_SUBSET, DESCRIPTIONS_SUBSET);
+        resource.setUriInfo(setUpResourceExpectations(3,
+                                                      commands,
+                                                      returns,
+                                                      false,
+                                                      getQueryParam(),
+                                                      NAMES_SUBSET));
+        verifyCollection(resource.list().getClusters(), NAMES_SUBSET, DESCRIPTIONS_SUBSET);
     }
 
     @Test
@@ -81,28 +79,25 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
         String [] returns = { getAddReturn(), formatVersion(MAJOR, MINOR) };
         Cluster model = getModel(NEW_NAME, NEW_DESCRIPTION);
         model.setVersion(null);
-        verifyResponse(
-            resource.add(setUpResourceExpectations(2, commands, returns, true, null, NEW_NAME),
-                         model),
-            NEW_NAME, NEW_DESCRIPTION);
+        resource.setUriInfo(setUpResourceExpectations(2, commands, returns, true, null, NEW_NAME));
+        verifyResponse(resource.add(model), NEW_NAME, NEW_DESCRIPTION);
     }
 
     @Test
     public void testAddWithVersion() throws Exception {
         String [] commands = { getAddCommand(true), getSupportedVersionCommand(NEW_NAME) };
         String [] returns = { getAddReturn(), formatVersion(MAJOR, MINOR) };
-        verifyResponse(
-            resource.add(setUpResourceExpectations(2, commands, returns, true, null, NEW_NAME),
-                         getModel(NEW_NAME, NEW_DESCRIPTION)),
-            NEW_NAME, NEW_DESCRIPTION);
+        resource.setUriInfo(setUpResourceExpectations(2, commands, returns, true, null, NEW_NAME));
+        verifyResponse(resource.add(getModel(NEW_NAME, NEW_DESCRIPTION)), NEW_NAME, NEW_DESCRIPTION);
     }
 
     @Test
     public void testAddIncompleteParameters() throws Exception {
         Cluster model = new Cluster();
         model.setName(NEW_NAME);
+        resource.setUriInfo(setUpResourceExpectations(new String[]{}, new String[]{}, false, null));
         try {
-            resource.add(setUpResourceExpectations(new String[]{}, new String[]{}, false, null), model);
+            resource.add(model);
             fail("expected WebApplicationException on incomplete parameters");
         } catch (WebApplicationException wae) {
              verifyIncompleteException(wae, "Cluster", "add", "dataCenter.id", "cpu.id");
@@ -117,9 +112,9 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
 
     @Test
     public void testGetSubResource() throws Exception {
+        resource.setUriInfo(setUpResourceExpectations(null, null));
         verifyResource(
-            (PowerShellClusterResource)resource.getClusterSubResource(setUpResourceExpectations(null, null),
-                                                                      Integer.toString(NEW_NAME.hashCode())),
+            (PowerShellClusterResource)resource.getClusterSubResource(Integer.toString(NEW_NAME.hashCode())),
             NEW_NAME);
     }
 

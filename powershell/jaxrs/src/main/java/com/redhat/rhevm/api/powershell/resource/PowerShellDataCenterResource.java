@@ -30,6 +30,7 @@ import com.redhat.rhevm.api.model.Version;
 import com.redhat.rhevm.api.model.SupportedVersions;
 import com.redhat.rhevm.api.resource.DataCenterResource;
 import com.redhat.rhevm.api.resource.IsosResource;
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellDataCenter;
 import com.redhat.rhevm.api.powershell.model.PowerShellVersion;
@@ -44,9 +45,10 @@ public class PowerShellDataCenterResource extends AbstractPowerShellActionableRe
 
     public PowerShellDataCenterResource(String id,
                                         Executor executor,
+                                        UriInfoProvider uriProvider,
                                         PowerShellPoolMap shellPools,
                                         PowerShellParser parser) {
-        super(id, executor, shellPools, parser);
+        super(id, executor, uriProvider, shellPools, parser);
     }
 
     public static List<DataCenter> runAndParse(PowerShellPool pool, PowerShellParser parser, String command) {
@@ -81,19 +83,20 @@ public class PowerShellDataCenterResource extends AbstractPowerShellActionableRe
         return dataCenter;
     }
 
-    public static DataCenter addLinks(PowerShellPool pool, PowerShellParser parser, DataCenter dataCenter) {
+    public static DataCenter addLinks(UriInfo uriInfo, PowerShellPool pool, PowerShellParser parser, DataCenter dataCenter) {
         dataCenter = querySupportedVersions(pool, parser, dataCenter);
 
-        dataCenter = LinkHelper.addLinks(dataCenter);
+        dataCenter = LinkHelper.addLinks(uriInfo, dataCenter);
 
-        Attachments attachments = PowerShellAttachmentsResource.getAttachmentsForDataCenter(pool,
+        Attachments attachments = PowerShellAttachmentsResource.getAttachmentsForDataCenter(uriInfo,
+                                                                                            pool,
                                                                                             parser,
                                                                                             dataCenter.getId());
         dataCenter.setAttachments(attachments);
 
         Link link = new Link();
         link.setRel("isos");
-        link.setHref(LinkHelper.getUriBuilder(dataCenter).path("isos").build().toString());
+        link.setHref(LinkHelper.getUriBuilder(uriInfo, dataCenter).path("isos").build().toString());
         dataCenter.getLinks().clear();
         dataCenter.getLinks().add(link);
 
@@ -101,16 +104,16 @@ public class PowerShellDataCenterResource extends AbstractPowerShellActionableRe
     }
 
     public DataCenter addLinks(DataCenter dataCenter) {
-        return addLinks(getPool(), getParser(), dataCenter);
+        return addLinks(getUriInfo(), getPool(), getParser(), dataCenter);
     }
 
     @Override
-    public DataCenter get(UriInfo uriInfo) {
+    public DataCenter get() {
         return addLinks(runAndParseSingle("get-datacenter " + PowerShellUtils.escape(getId())));
     }
 
     @Override
-    public DataCenter update(UriInfo uriInfo, DataCenter dataCenter) {
+    public DataCenter update(DataCenter dataCenter) {
         validateUpdate(dataCenter);
 
         StringBuilder buf = new StringBuilder();
@@ -144,6 +147,6 @@ public class PowerShellDataCenterResource extends AbstractPowerShellActionableRe
     }
 
     public IsosResource getIsosResource() {
-        return new PowerShellIsosResource(getId(), shellPools, getParser());
+        return new PowerShellIsosResource(getId(), shellPools, getParser(), uriProvider);
     }
 }

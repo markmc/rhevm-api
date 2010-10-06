@@ -19,17 +19,16 @@
 package com.redhat.rhevm.api.powershell.resource;
 
 import java.net.URI;
-import java.text.MessageFormat;
 import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.UriBuilder;
 
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.Networks;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
-import com.redhat.rhevm.api.powershell.util.PowerShellException;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
@@ -79,8 +78,8 @@ public class PowerShellClusterNetworksResourceTest
 
     private static final String ADD_NETWORK_BY_NAME_CMD = LOOKUP_CLUSTER + LOOKUP_NETWORK_BY_NAME + "$cluster = add-networktocluster" + ADD_EPILOG;
 
-    protected  PowerShellClusterResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser) {
-        return new PowerShellClusterResource(asId(CLUSTER_NAME), executor, poolMap, parser);
+    protected  PowerShellClusterResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider) {
+        return new PowerShellClusterResource(asId(CLUSTER_NAME), executor, uriProvider, poolMap, parser);
     }
 
     protected String formatNetworks(String[] names, String[][] args) {
@@ -94,57 +93,59 @@ public class PowerShellClusterNetworksResourceTest
 
     @Test
     public void testGet() {
-        PowerShellClusterNetworksResource parent = new PowerShellClusterNetworksResource(asId(CLUSTER_NAME), executor, poolMap, parser);
-        PowerShellClusterNetworkResource resource = new PowerShellClusterNetworkResource(asId(NETWORKS[0]), parent);
-
+        PowerShellClusterNetworksResource parent = new PowerShellClusterNetworksResource(asId(CLUSTER_NAME), executor, poolMap, parser, uriProvider);
+        PowerShellClusterNetworkResource networkResource = new PowerShellClusterNetworkResource(asId(NETWORKS[0]), parent);
+        setUriInfo(setUpBasicUriExpectations());
         setUpCmdExpectations(GET_NETWORK_CMD,
                              formatNetwork(NETWORKS[0], extraArgs[0]));
+
         replayAll();
 
-        verifyNetwork(resource.get(), 0);
+        verifyNetwork(networkResource.get(), 0);
     }
 
     @Test
     public void testList() {
-        PowerShellClusterNetworksResource resource = new PowerShellClusterNetworksResource(asId(CLUSTER_NAME), executor, poolMap, parser);
+        PowerShellClusterNetworksResource networkResource = new PowerShellClusterNetworksResource(asId(CLUSTER_NAME), executor, poolMap, parser, uriProvider);
 
         setUpCmdExpectations(GET_NETWORKS_CMD, formatNetworks(NETWORKS, extraArgs));
+        setUriInfo(setUpBasicUriExpectations());
         replayAll();
 
-        verifyNetworks(resource.list());
+        verifyNetworks(networkResource.list());
     }
 
     @Test
     public void testAdd() throws Exception {
-        PowerShellClusterNetworksResource resource = new PowerShellClusterNetworksResource(asId(CLUSTER_NAME), executor, poolMap, parser);
+        PowerShellClusterNetworksResource networkResource = new PowerShellClusterNetworksResource(asId(CLUSTER_NAME), executor, poolMap, parser, uriProvider);
 
         setUpCmdExpectations(ADD_NETWORK_CMD, formatNetwork(NETWORKS[0], extraArgs[0]));
-        UriInfo uriInfo = setUpUriInfoExpections(asId(NETWORKS[0]));
+        setUriInfo(setUpUriInfoExpections(asId(NETWORKS[0])));
         replayAll();
 
         Network network = new Network();
         network.setId(asId(NETWORKS[0]));
 
-        verifyNetwork((Network)resource.add(uriInfo, network).getEntity(), 0);
+        verifyNetwork((Network)networkResource.add(network).getEntity(), 0);
     }
 
     @Test
     public void testAddByName() throws Exception {
-        PowerShellClusterNetworksResource resource = new PowerShellClusterNetworksResource(asId(CLUSTER_NAME), executor, poolMap, parser);
+        PowerShellClusterNetworksResource networkResource = new PowerShellClusterNetworksResource(asId(CLUSTER_NAME), executor, poolMap, parser, uriProvider);
 
         setUpCmdExpectations(ADD_NETWORK_BY_NAME_CMD, formatNetwork(NETWORKS[0], extraArgs[0]));
-        UriInfo uriInfo = setUpUriInfoExpections(asId(NETWORKS[0]));
+        setUriInfo(setUpUriInfoExpections(asId(NETWORKS[0])));
         replayAll();
 
         Network network = new Network();
         network.setName(NETWORKS[0]);
 
-        verifyNetwork((Network)resource.add(uriInfo, network).getEntity(), 0);
+        verifyNetwork((Network)networkResource.add(network).getEntity(), 0);
     }
 
     @Test
     public void testRemove() {
-        PowerShellClusterNetworksResource resource = new PowerShellClusterNetworksResource(asId(CLUSTER_NAME), executor, poolMap, parser);
+        PowerShellClusterNetworksResource resource = new PowerShellClusterNetworksResource(asId(CLUSTER_NAME), executor, poolMap, parser, uriProvider);
 
         setUpCmdExpectations(REMOVE_NETWORK_CMD, "");
         replayAll();
@@ -153,7 +154,7 @@ public class PowerShellClusterNetworksResourceTest
     }
 
     private UriInfo setUpUriInfoExpections(String id) throws Exception {
-        UriInfo uriInfo = createMock(UriInfo.class);
+        UriInfo uriInfo = setUpBasicUriExpectations();
         UriBuilder uriBuilder = createMock(UriBuilder.class);
         expect(uriInfo.getAbsolutePathBuilder()).andReturn(uriBuilder);
         expect(uriBuilder.path(id)).andReturn(uriBuilder);
@@ -183,6 +184,7 @@ public class PowerShellClusterNetworksResourceTest
     private void verifyNetwork(Network network, int i) {
         assertNotNull(network);
         assertEquals(asId(NETWORKS[i]), network.getId());
+        verifyLinks(network);
     }
 
     private void verifyNetworks(Networks networks) {

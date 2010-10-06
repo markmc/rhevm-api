@@ -18,8 +18,9 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import javax.ws.rs.core.UriInfo;
-
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
+import com.redhat.rhevm.api.common.util.LinkHelper;
+import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.Iso;
 import com.redhat.rhevm.api.model.Isos;
 import com.redhat.rhevm.api.resource.IsoResource;
@@ -27,43 +28,44 @@ import com.redhat.rhevm.api.resource.IsosResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellIso;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
-import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 
-public class PowerShellIsosResource implements IsosResource {
+public class PowerShellIsosResource extends UriProviderWrapper implements IsosResource {
 
     private String dataCenterId;
-    private PowerShellPoolMap shellPools;
-    private PowerShellParser parser;
 
     public PowerShellIsosResource(String dataCenterId,
                                   PowerShellPoolMap shellPools,
-                                  PowerShellParser parser) {
+                                  PowerShellParser parser,
+                                  UriInfoProvider uriProvider) {
+        super(null, shellPools, parser, uriProvider);
         this.dataCenterId = dataCenterId;
-        this.shellPools = shellPools;
-        this.parser = parser;
     }
 
     @Override
-    public Isos list(UriInfo uriInfo) {
+    public Isos list() {
         StringBuilder buf = new StringBuilder();
         buf.append("get-isoimages");
         buf.append(" -datacenterid " + PowerShellUtils.escape(dataCenterId));
         Isos ret = new Isos();
         for (Iso iso : PowerShellIso.parse(parser, PowerShellCmd.runCommand(getPool(), buf.toString()))) {
-            ret.getIsos().add(PowerShellIsoResource.addLinks(iso, dataCenterId));
+            ret.getIsos().add(addLinks(iso, dataCenterId));
         }
         return ret;
     }
 
     @Override
-    public IsoResource getIsoSubResource(UriInfo uriInfo, String id) {
-        return new PowerShellIsoResource(id, dataCenterId);
+    public IsoResource getIsoSubResource(String id) {
+        return new PowerShellIsoResource(id, dataCenterId, this);
     }
 
-    protected PowerShellPool getPool() {
-        return shellPools.get();
+    public Iso addLinks(Iso iso, String dataCenterId) {
+        iso.setDataCenter(new DataCenter());
+        iso.getDataCenter().setId(dataCenterId);
+
+        return LinkHelper.addLinks(getUriInfo(), iso);
     }
+
 }

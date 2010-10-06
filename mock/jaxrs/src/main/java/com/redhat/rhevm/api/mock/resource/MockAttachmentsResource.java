@@ -23,7 +23,6 @@ import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Attachment;
 import com.redhat.rhevm.api.model.Attachments;
@@ -46,12 +45,12 @@ public class MockAttachmentsResource extends AbstractMockCollectionResource impl
     }
 
     @Override
-    public Attachments list(UriInfo uriInfo) {
+    public Attachments list() {
         Attachments ret = new Attachments();
 
         for (String id : attachments.keySet()) {
             MockAttachmentResource attachment = attachments.get(id);
-            UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(id);
+            UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(id);
             ret.getAttachments().add(attachment.addLinks(uriBuilder));
         }
 
@@ -59,7 +58,7 @@ public class MockAttachmentsResource extends AbstractMockCollectionResource impl
     }
 
     @Override
-    public Response add(UriInfo uriInfo, Attachment attachment) {
+    public Response add(Attachment attachment) {
         // update writable fields only
         if (attachment.getDataCenter() != null) {
             DataCenter dataCenter = new DataCenter();
@@ -70,7 +69,7 @@ public class MockAttachmentsResource extends AbstractMockCollectionResource impl
             attachment.setDataCenter(dataCenter);
         }
 
-        MockAttachmentResource newAttachment = new MockAttachmentResource(attachment, getExecutor());
+        MockAttachmentResource newAttachment = new MockAttachmentResource(attachment, getExecutor(), this);
 
         StorageDomain storageDomain = new StorageDomain();
         storageDomain.setId(storageDomainId);
@@ -79,7 +78,7 @@ public class MockAttachmentsResource extends AbstractMockCollectionResource impl
         String id = newAttachment.getModel().getDataCenter().getId();
         attachments.put(id, newAttachment);
 
-        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(id);
+        UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(id);
 
         attachment = newAttachment.addLinks(uriBuilder);
 
@@ -92,7 +91,7 @@ public class MockAttachmentsResource extends AbstractMockCollectionResource impl
     }
 
     @Override
-    public AttachmentResource getAttachmentSubResource(UriInfo uriInfo, String id) {
+    public AttachmentResource getAttachmentSubResource(String id) {
         return attachments.get(id);
     }
 
@@ -113,6 +112,6 @@ public class MockAttachmentsResource extends AbstractMockCollectionResource impl
         attachment.setStorageDomain(new StorageDomain());
         attachment.getStorageDomain().setId(storageDomainId);
 
-        return LinkHelper.addLinks(attachment);
+        return LinkHelper.addLinks(getUriInfo(), attachment);
     }
 }

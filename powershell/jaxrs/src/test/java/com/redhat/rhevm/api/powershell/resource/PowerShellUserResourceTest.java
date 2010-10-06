@@ -20,6 +20,9 @@ package com.redhat.rhevm.api.powershell.resource;
 
 import java.util.concurrent.Executor;
 
+import javax.ws.rs.core.UriInfo;
+
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.User;
 
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
@@ -39,8 +42,8 @@ import static com.redhat.rhevm.api.powershell.resource.AbstractPowerShellUsersRe
 
 public class PowerShellUserResourceTest extends AbstractPowerShellSimpleResourceTest<User, PowerShellUserResource> {
 
-    protected PowerShellUserResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser) {
-        return new PowerShellUserResource(USER_ID, executor, poolMap, parser);
+    protected PowerShellUserResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider) {
+        return new PowerShellUserResource(USER_ID, executor, poolMap, parser, uriProvider);
     }
 
     protected String formatUser(String name) {
@@ -52,13 +55,15 @@ public class PowerShellUserResourceTest extends AbstractPowerShellSimpleResource
 
     @Test
     public void testGet() throws Exception {
-        setUpUserExpectations("get-user -userid \"" + USER_ID + "\"", formatUser(USER_NAME));
+        setUriInfo(setUpUserExpectations("get-user -userid \"" + USER_ID + "\"", formatUser(USER_NAME)));
         verifyUser(resource.get());
     }
 
-    private void setUpUserExpectations(String command, String ret) throws Exception {
+    private UriInfo setUpUserExpectations(String command, String ret) throws Exception {
         mockStatic(PowerShellCmd.class);
         expect(PowerShellCmd.runCommand(setUpPoolExpectations(), command)).andReturn(ret);
+        UriInfo uriInfo = setUpBasicUriExpectations();
         replayAll();
+        return uriInfo;
     }
 }

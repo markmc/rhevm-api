@@ -18,6 +18,7 @@
  */
 package com.redhat.rhevm.api.mock.resource;
 
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -36,35 +37,45 @@ public class MockApiResource implements ApiResource {
 
     protected final ObjectFactory OBJECT_FACTORY = new ObjectFactory();
 
-    private static API api = new API();
+    protected UriInfo ui;
 
-    static {
-        addLink("capabilities", false);
-        addLink("clusters");
-        addLink("datacenters");
-        addLink("hosts");
-        addLink("networks", false); // powershell has no select-network command
-        addLink("storagedomains");
-        addLink("templates");
-        addLink("vms");
+    public UriInfo getUriInfo() {
+        return ui;
     }
 
-    private static void addLink(String rel, boolean searchable) {
+    @Context
+    public void setUriInfo(UriInfo uriInfo) {
+        ui = uriInfo;
+    }
+
+    private API addLinks(API api) {
+        addLink(api, "capabilities", false);
+        addLink(api, "clusters");
+        addLink(api, "datacenters");
+        addLink(api, "hosts");
+        addLink(api, "networks", false); // powershell has no select-network command
+        addLink(api, "storagedomains");
+        addLink(api, "templates");
+        addLink(api, "vms");
+        return api;
+    }
+
+    private void addLink(API api, String rel, boolean searchable) {
         Link link = new Link();
         link.setRel(rel);
-        link.setHref(rel + "/");
+        link.setHref(combine(getUriInfo().getBaseUri().getPath(), rel) + "/");
         api.getLinks().add(link);
 
         if (searchable) {
             link = new Link();
             link.setRel(rel + SEARCH_RELATION);
-            link.setHref(rel + "/" + SEARCH_TEMPLATE);
+            link.setHref(combine(getUriInfo().getBaseUri().getPath(), rel) + "/" + SEARCH_TEMPLATE);
             api.getLinks().add(link);
         }
     }
 
-    private static void addLink(String rel) {
-        addLink(rel, true);
+    private void addLink(API api, String rel) {
+        addLink(api, rel, true);
     }
 
     private String addPath(UriBuilder uriBuilder, Link link) {
@@ -83,7 +94,7 @@ public class MockApiResource implements ApiResource {
         return LinkHeader.format(link);
     }
 
-    private void addHeader(Response.ResponseBuilder responseBuilder, UriBuilder uriBuilder) {
+    private void addHeader(API api, Response.ResponseBuilder responseBuilder, UriBuilder uriBuilder) {
         // concantenate links in a single header with a comma-separated value,
         // which is the canonical form according to:
         // http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
@@ -99,23 +110,35 @@ public class MockApiResource implements ApiResource {
         responseBuilder.header("Link", header);
     }
 
-    private Response.ResponseBuilder getResponseBuilder(UriInfo uriInfo) {
-        UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
+    private Response.ResponseBuilder getResponseBuilder(API api) {
+        UriBuilder uriBuilder = getUriInfo().getBaseUriBuilder();
 
         Response.ResponseBuilder responseBuilder = Response.ok();
 
-        addHeader(responseBuilder, uriBuilder);
+        addHeader(api, responseBuilder, uriBuilder);
 
         return responseBuilder;
     }
 
     @Override
-    public Response head(UriInfo uriInfo) {
-        return getResponseBuilder(uriInfo).build();
+    public Response head() {
+        API api = addLinks(new API());
+        return getResponseBuilder(api).build();
     }
 
     @Override
-    public Response get(UriInfo uriInfo) {
-        return getResponseBuilder(uriInfo).entity(api).build();
+    public Response get() {
+        API api = addLinks(new API());
+        return getResponseBuilder(api).entity(api).build();
+    }
+
+    private String combine(String head, String tail) {
+        if (head.endsWith("/")) {
+            head = head.substring(0, head.length() - 1);
+        }
+        if (tail.startsWith("/")) {
+            tail = tail.substring(1);
+        }
+        return head + "/" + tail;
     }
 }

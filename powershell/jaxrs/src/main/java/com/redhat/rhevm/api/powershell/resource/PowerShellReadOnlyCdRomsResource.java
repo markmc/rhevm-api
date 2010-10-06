@@ -25,6 +25,7 @@ import com.redhat.rhevm.api.model.CdRom;
 import com.redhat.rhevm.api.model.CdRoms;
 import com.redhat.rhevm.api.model.Iso;
 import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 
@@ -35,8 +36,8 @@ public class PowerShellReadOnlyCdRomsResource extends AbstractPowerShellDevicesR
 
     private CdRomQuery query;
 
-    public PowerShellReadOnlyCdRomsResource(String parentId, PowerShellPoolMap shellPools, CdRomQuery query) {
-        super(parentId, shellPools);
+    public PowerShellReadOnlyCdRomsResource(String parentId, PowerShellPoolMap shellPools, CdRomQuery query, UriInfoProvider uriProvider) {
+        super(parentId, shellPools, uriProvider);
         this.query = query;
     }
 
@@ -64,7 +65,7 @@ public class PowerShellReadOnlyCdRomsResource extends AbstractPowerShellDevicesR
 
     @Override
     public CdRom addLinks(CdRom cdrom) {
-        return LinkHelper.addLinks(cdrom);
+        return LinkHelper.addLinks(getUriInfo(), cdrom);
     }
 
     @Override

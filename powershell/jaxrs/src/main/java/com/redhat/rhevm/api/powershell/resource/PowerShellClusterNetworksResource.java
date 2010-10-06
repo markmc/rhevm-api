@@ -24,18 +24,17 @@ import java.util.concurrent.Executor;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.resource.MediaType;
 
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.Networks;
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellNetwork;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
-import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 import com.redhat.rhevm.api.resource.AssignedNetworkResource;
@@ -45,7 +44,7 @@ import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validatePara
 
 @Produces(MediaType.APPLICATION_XML)
 public class PowerShellClusterNetworksResource
-    extends AbstractPowerShellResource
+    extends UriProviderWrapper
     implements AssignedNetworksResource {
 
     protected String clusterId;
@@ -53,8 +52,9 @@ public class PowerShellClusterNetworksResource
     public PowerShellClusterNetworksResource(String clusterId,
                                              Executor executor,
                                              PowerShellPoolMap shellPools,
-                                             PowerShellParser parser) {
-        super(executor, shellPools, parser);
+                                             PowerShellParser parser,
+                                             UriInfoProvider uriProvider) {
+        super(executor, shellPools, parser, uriProvider);
         this.clusterId = clusterId;
     }
 
@@ -75,7 +75,7 @@ public class PowerShellClusterNetworksResource
         network.setCluster(new Cluster());
         network.getCluster().setId(clusterId);
 
-        return LinkHelper.addLinks(network);
+        return LinkHelper.addLinks(getUriInfo(), network);
     }
 
     private String getClusterLookup() {
@@ -114,7 +114,7 @@ public class PowerShellClusterNetworksResource
     }
 
     @Override
-    public Response add(UriInfo uriInfo, Network network) {
+    public Response add(Network network) {
         validateParameters(network, "id|name");
 
         StringBuilder buf = new StringBuilder();
@@ -135,7 +135,7 @@ public class PowerShellClusterNetworksResource
 
         network = addLinks(runAndParseSingle(buf.toString()));
 
-        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(network.getId());
+        UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(network.getId());
 
         return Response.created(uriBuilder.build()).entity(network).build();
     }

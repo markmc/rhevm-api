@@ -22,7 +22,6 @@ import java.util.List;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.model.Tag;
@@ -50,13 +49,13 @@ public class PowerShellTagsResource
     public Tags list() {
         Tags ret = new Tags();
         for (Tag tag : runAndParse("get-tags")) {
-            ret.getTags().add(LinkHelper.addLinks(tag));
+            ret.getTags().add(LinkHelper.addLinks(getUriInfo(), tag));
         }
         return ret;
     }
 
     @Override
-    public Response add(UriInfo uriInfo, Tag tag) {
+    public Response add(Tag tag) {
         validateParameters(tag, "name");
 
         StringBuilder buf = new StringBuilder();
@@ -67,9 +66,9 @@ public class PowerShellTagsResource
             buf.append(" -description " + PowerShellUtils.escape(tag.getDescription()));
         }
 
-        tag = LinkHelper.addLinks(runAndParseSingle(buf.toString()));
+        tag = LinkHelper.addLinks(getUriInfo(), runAndParseSingle(buf.toString()));
 
-        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(tag.getId());
+        UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(tag.getId());
 
         return Response.created(uriBuilder.build()).entity(tag).build();
     }
@@ -86,6 +85,6 @@ public class PowerShellTagsResource
     }
 
     protected PowerShellTagResource createSubResource(String id) {
-        return new PowerShellTagResource(id, getExecutor(), shellPools, getParser());
+        return new PowerShellTagResource(id, getExecutor(), this, shellPools, getParser());
     }
 }

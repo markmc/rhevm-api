@@ -26,6 +26,7 @@ import java.util.concurrent.Executor;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.UriBuilder;
 
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.CdRom;
 import com.redhat.rhevm.api.model.CdRoms;
 import com.redhat.rhevm.api.model.Disk;
@@ -94,8 +95,8 @@ public class PowerShellDevicesResourceTest
     private static final String ADD_NIC_COMMAND = "$v = get-vm \"{0}\";foreach ($i in get-networks) '{'  if ($i.networkid -eq \"{1}\") '{    $n = $i  }}'add-networkadapter -vmobject $v -interfacename \"{2}\" -networkname $n.name";
     private static final String REMOVE_NIC_COMMAND = "$v = get-vm \"{0}\";foreach ($i in $v.GetNetworkAdapters()) '{'  if ($i.id -eq \"{1}\") '{    $n = $i  }}'remove-networkadapter -vmobject $v -networkadapterobject $n";
 
-    protected PowerShellVmResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser) {
-        return new PowerShellVmResource(VM_ID, executor, poolMap, parser);
+    protected PowerShellVmResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider) {
+        return new PowerShellVmResource(VM_ID, executor, uriProvider, poolMap, parser);
     }
 
     protected String formatVm(String name) {
@@ -130,30 +131,35 @@ public class PowerShellDevicesResourceTest
     public void testCdRomGet() throws Exception {
         PowerShellCdRomsResource parent = new PowerShellCdRomsResource(VM_ID,
                                                                        poolMap,
-                                                                       resource.new CdRomQuery(VM_ID));
-        PowerShellDeviceResource<CdRom, CdRoms> resource =
+                                                                       resource.new CdRomQuery(VM_ID),
+                                                                       uriProvider);
+        PowerShellDeviceResource<CdRom, CdRoms> cdromResource =
             new PowerShellDeviceResource<CdRom, CdRoms>(parent, CDROM_ID);
 
+        setUriInfo(setUpBasicUriExpectations());
         setUpCmdExpectations(GET_CDROMS_CMD, formatVm(VM_NAME));
-        verifyCdRom(resource.get());
+        verifyCdRom(cdromResource.get());
     }
 
     @Test
     public void testCdRomList() throws Exception {
-        PowerShellCdRomsResource resource = new PowerShellCdRomsResource(VM_ID,
+        PowerShellCdRomsResource cdromResource = new PowerShellCdRomsResource(VM_ID,
                                                                          poolMap,
-                                                                         this.resource.new CdRomQuery(VM_ID));
+                                                                         resource.new CdRomQuery(VM_ID),
+                                                                         uriProvider);
 
+        setUriInfo(setUpBasicUriExpectations());
         setUpCmdExpectations(GET_CDROMS_CMD, formatVm(VM_NAME));
 
-        verifyCdRoms(resource.list());
+        verifyCdRoms(cdromResource.list());
     }
 
     @Test
     public void testCdRomAdd() throws Exception {
-        PowerShellCdRomsResource resource = new PowerShellCdRomsResource(VM_ID,
-                                                                         poolMap,
-                                                                         this.resource.new CdRomQuery(VM_ID));
+        PowerShellCdRomsResource cdromResource = new PowerShellCdRomsResource(VM_ID,
+                                                                              poolMap,
+                                                                              resource.new CdRomQuery(VM_ID),
+                                                                              uriProvider);
 
         CdRom cdrom = new CdRom();
         cdrom.setIso(new Iso());
@@ -161,46 +167,49 @@ public class PowerShellDevicesResourceTest
 
         String command = MessageFormat.format(UPDATE_CDROM_CMD, VM_ID, ISO_NAME);
 
-        UriInfo uriInfo = setUpCmdExpectations(command, "", "cdroms", CDROM_ID);
+        setUriInfo(setUpCmdExpectations(command, "", "cdroms", CDROM_ID));
 
-        verifyCdRom((CdRom)resource.add(uriInfo, cdrom).getEntity());
+        verifyCdRom((CdRom)cdromResource.add(cdrom).getEntity());
     }
 
     @Test
     public void testCdRomRemove() throws Exception {
-        PowerShellCdRomsResource resource = new PowerShellCdRomsResource(VM_ID,
-                                                                         poolMap,
-                                                                         this.resource.new CdRomQuery(VM_ID));
+        PowerShellCdRomsResource cdromResource = new PowerShellCdRomsResource(VM_ID,
+                                                                              poolMap,
+                                                                              resource.new CdRomQuery(VM_ID),
+                                                                              uriProvider);
 
         String command = MessageFormat.format(UPDATE_CDROM_CMD, VM_ID, "");
 
         setUpCmdExpectations(command, "");
 
-        resource.remove(CDROM_ID);
+        cdromResource.remove(CDROM_ID);
     }
 
     @Test
     public void testDiskGet() throws Exception {
-        PowerShellDisksResource parent = new PowerShellDisksResource(VM_ID, poolMap, parser, "get-vm");
-        PowerShellDeviceResource<Disk, Disks> resource =
+        PowerShellDisksResource parent = new PowerShellDisksResource(VM_ID, poolMap, parser, "get-vm", uriProvider);
+        PowerShellDeviceResource<Disk, Disks> diskResource =
             new PowerShellDeviceResource<Disk, Disks>(parent, DISK_ID);
 
+        setUriInfo(setUpBasicUriExpectations());
         setUpCmdExpectations(GET_DISKS_CMD, formatDisk(DISK_NAME));
-        verifyDisk(resource.get());
+        verifyDisk(diskResource.get());
     }
 
     @Test
     public void testDiskList() throws Exception {
-        PowerShellDisksResource resource = new PowerShellDisksResource(VM_ID, poolMap, parser, "get-vm");
+        PowerShellDisksResource diskResource = new PowerShellDisksResource(VM_ID, poolMap, parser, "get-vm", uriProvider);
 
+        setUriInfo(setUpBasicUriExpectations());
         setUpCmdExpectations(GET_DISKS_CMD, formatDisk(DISK_NAME));
 
-        verifyDisks(resource.list());
+        verifyDisks(diskResource.list());
     }
 
     @Test
     public void testDiskAdd() throws Exception {
-        PowerShellDisksResource resource = new PowerShellDisksResource(VM_ID, poolMap, parser, "get-vm");
+        PowerShellDisksResource diskResource = new PowerShellDisksResource(VM_ID, poolMap, parser, "get-vm", uriProvider);
 
         Disk disk = new Disk();
         disk.setType(DiskType.SYSTEM);
@@ -208,51 +217,53 @@ public class PowerShellDevicesResourceTest
 
         String command = MessageFormat.format(ADD_DISK_COMMAND, DISK_SIZE, VM_ID);
 
-        UriInfo uriInfo = setUpCmdExpectations(command, formatDisk(DISK_NAME), "disks", DISK_ID);
+        setUriInfo(setUpCmdExpectations(command, formatDisk(DISK_NAME), "disks", DISK_ID));
 
-        verifyDisk((Disk)resource.add(uriInfo, disk).getEntity());
+        verifyDisk((Disk)diskResource.add(disk).getEntity());
     }
 
     @Test
     public void testDiskRemove() throws Exception {
-        PowerShellDisksResource resource = new PowerShellDisksResource(VM_ID, poolMap, parser, "get-vm");
+        PowerShellDisksResource diskResource = new PowerShellDisksResource(VM_ID, poolMap, parser, "get-vm", uriProvider);
 
         String command = MessageFormat.format(REMOVE_DISK_COMMAND, VM_ID, DISK_ID);
 
         setUpCmdExpectations(command, "");
 
-        resource.remove(DISK_ID);
+        diskResource.remove(DISK_ID);
     }
 
     @Test
     public void testNicGet() throws Exception {
-        PowerShellNicsResource parent = new PowerShellNicsResource(VM_ID, poolMap, parser, "get-vm");
-        PowerShellDeviceResource<NIC, Nics> resource =
+        PowerShellNicsResource parent = new PowerShellNicsResource(VM_ID, poolMap, parser, "get-vm", uriProvider);
+        PowerShellDeviceResource<NIC, Nics> nicResource =
             new PowerShellDeviceResource<NIC, Nics>(parent, NIC_ID);
 
         String [] commands = { GET_NICS_CMD, LOOKUP_NETWORK_ID_COMMAND };
         String [] returns = { formatNic(NIC_NAME), formatNetwork(NETWORK_NAME) };
 
+        setUriInfo(setUpBasicUriExpectations());
         setUpCmdExpectations(commands, returns);
 
-        verifyNic(resource.get());
+        verifyNic(nicResource.get());
     }
 
     @Test
     public void testNicList() throws Exception {
-        PowerShellNicsResource resource = new PowerShellNicsResource(VM_ID, poolMap, parser, "get-vm");
+        PowerShellNicsResource nicResource = new PowerShellNicsResource(VM_ID, poolMap, parser, "get-vm", uriProvider);
 
         String [] commands = { GET_NICS_CMD, LOOKUP_NETWORK_ID_COMMAND };
         String [] returns = { formatNic(NIC_NAME), formatNetwork(NETWORK_NAME) };
 
+        setUriInfo(setUpBasicUriExpectations());
         setUpCmdExpectations(commands, returns);
 
-        verifyNics(resource.list());
+        verifyNics(nicResource.list());
     }
 
     @Test
     public void testNicAdd() throws Exception {
-        PowerShellNicsResource resource = new PowerShellNicsResource(VM_ID, poolMap, parser, "get-vm");
+        PowerShellNicsResource nicResource = new PowerShellNicsResource(VM_ID, poolMap, parser, "get-vm", uriProvider);
 
         NIC nic = new NIC();
         nic.setName(NIC_NAME);
@@ -266,20 +277,20 @@ public class PowerShellDevicesResourceTest
 
         String [] returns = { formatNic(NIC_NAME), formatNetwork(NETWORK_NAME) };
 
-        UriInfo uriInfo = setUpCmdExpectations(commands, returns, "nics", NIC_ID);
+        setUriInfo(setUpCmdExpectations(commands, returns, "nics", NIC_ID));
 
-        verifyNic((NIC)resource.add(uriInfo, nic).getEntity());
+        verifyNic((NIC)nicResource.add(nic).getEntity());
     }
 
     @Test
     public void testNicRemove() throws Exception {
-        PowerShellNicsResource resource = new PowerShellNicsResource(VM_ID, poolMap, parser, "get-vm");
+        PowerShellNicsResource nicResource = new PowerShellNicsResource(VM_ID, poolMap, parser, "get-vm", uriProvider);
 
         String command = MessageFormat.format(REMOVE_NIC_COMMAND, VM_ID, NIC_ID);
 
         setUpCmdExpectations(command, "");
 
-        resource.remove(NIC_ID);
+        nicResource.remove(NIC_ID);
     }
 
     private UriInfo setUpCmdExpectations(String[] commands, String[] returns, String collectionType, String newId) throws Exception {
@@ -292,7 +303,7 @@ public class PowerShellDevicesResourceTest
 
         UriInfo uriInfo = null;
         if (collectionType != null && newId != null) {
-            uriInfo = createMock(UriInfo.class);
+            uriInfo = setUpBasicUriExpectations();
             UriBuilder uriBuilder = createMock(UriBuilder.class);
             expect(uriInfo.getAbsolutePathBuilder()).andReturn(uriBuilder);
             expect(uriBuilder.path(newId)).andReturn(uriBuilder);
@@ -327,6 +338,7 @@ public class PowerShellDevicesResourceTest
         assertEquals(cdrom.getId(), CDROM_ID);
         assertNotNull(cdrom.getVm());
         assertEquals(cdrom.getVm().getId(), VM_ID);
+        verifyLinks(cdrom);
     }
 
     private void verifyCdRoms(CdRoms cdroms) {
@@ -340,6 +352,7 @@ public class PowerShellDevicesResourceTest
         assertEquals(disk.getId(), DISK_ID);
         assertNotNull(disk.getVm());
         assertEquals(disk.getVm().getId(), VM_ID);
+        verifyLinks(disk);
     }
 
     private void verifyDisks(Disks disks) {
@@ -353,6 +366,7 @@ public class PowerShellDevicesResourceTest
         assertEquals(nic.getId(), NIC_ID);
         assertNotNull(nic.getVm());
         assertEquals(nic.getVm().getId(), VM_ID);
+        verifyLinks(nic);
     }
 
     private void verifyNics(Nics nics) {

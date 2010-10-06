@@ -21,8 +21,8 @@ package com.redhat.rhevm.api.powershell.resource;
 import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Snapshot;
 import com.redhat.rhevm.api.model.VM;
@@ -41,8 +41,9 @@ public class PowerShellSnapshotResource
                                       Executor executor,
                                       PowerShellPoolMap shellPools,
                                       PowerShellParser parser,
-                                      PowerShellSnapshotsResource parent) {
-        super(id, executor, shellPools, parser);
+                                      PowerShellSnapshotsResource parent,
+                                      UriInfoProvider uriProvider) {
+        super(id, executor, uriProvider, shellPools, parser);
         this.parent = parent;
     }
 
@@ -59,13 +60,13 @@ public class PowerShellSnapshotResource
     }
 
     @Override
-    public Response restore(UriInfo uriInfo, Action action) {
+    public Response restore(Action action) {
         StringBuilder buf = new StringBuilder();
 
         buf.append("restore-vm");
         buf.append(" -vmid " + PowerShellUtils.escape(parent.getVmId()));
         buf.append(" -vmsnapshotid " + PowerShellUtils.escape(getId()));
 
-        return doAction(uriInfo, new CommandRunner(action, buf.toString(), getPool()));
+        return doAction(getUriInfo(), new CommandRunner(action, buf.toString(), getPool()));
     }
 }

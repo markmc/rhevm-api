@@ -21,6 +21,9 @@ package com.redhat.rhevm.api.powershell.resource;
 import java.util.List;
 import java.util.concurrent.Executor;
 
+import javax.ws.rs.core.UriInfo;
+
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.User;
@@ -34,15 +37,16 @@ import com.redhat.rhevm.api.resource.AssignedRolesResource;
 import com.redhat.rhevm.api.resource.AssignedTagsResource;
 import com.redhat.rhevm.api.resource.UserResource;
 
-public class PowerShellUserResource extends AbstractPowerShellResource implements UserResource {
+public class PowerShellUserResource extends UriProviderWrapper implements UserResource {
 
     protected String id;
 
     public PowerShellUserResource(String id,
                                   Executor executor,
                                   PowerShellPoolMap shellPools,
-                                  PowerShellParser parser) {
-        super(executor, shellPools, parser);
+                                  PowerShellParser parser,
+                                  UriInfoProvider uriProvider) {
+        super(executor, shellPools, parser, uriProvider);
         this.id = id;
     }
 
@@ -59,39 +63,39 @@ public class PowerShellUserResource extends AbstractPowerShellResource implement
         return runAndParseSingle(getPool(), getParser(), command);
     }
 
-    public static User addLinks(User user) {
+    public static User addLinks(UriInfo uriInfo, User user) {
         String [] subCollections = { "roles", "tags" };
 
         user.getLinks().clear();
 
         for (String collection : subCollections) {
-            addSubCollection(user, collection);
+            addSubCollection(uriInfo, user, collection);
         }
 
-        return LinkHelper.addLinks(user);
+        return LinkHelper.addLinks(uriInfo, user);
     }
 
     @Override
     public User get() {
         StringBuilder getUser = new StringBuilder();
         getUser.append("get-user -userid ").append(PowerShellUtils.escape(id));
-        return addLinks(runAndParseSingle(getUser.toString()));
+        return addLinks(getUriInfo(), runAndParseSingle(getUser.toString()));
     }
 
     @Override
     public AssignedRolesResource getRolesResource() {
-        return new PowerShellAssignedRolesResource(id, getExecutor(), shellPools, getParser());
+        return new PowerShellAssignedRolesResource(id, getExecutor(), shellPools, getParser(), getUriProvider());
     }
 
     @Override
     public AssignedTagsResource getTagsResource() {
-        return new PowerShellAssignedTagsResource(User.class, id, shellPools, getParser());
+        return new PowerShellAssignedTagsResource(User.class, id, shellPools, getParser(), getUriProvider());
     }
 
-    private static void addSubCollection(User user, String collection) {
+    private static void addSubCollection(UriInfo uriInfo, User user, String collection) {
         Link link = new Link();
         link.setRel(collection);
-        link.setHref(LinkHelper.getUriBuilder(user).path(collection).build().toString());
+        link.setHref(LinkHelper.getUriBuilder(uriInfo, user).path(collection).build().toString());
         user.getLinks().add(link);
     }
 }

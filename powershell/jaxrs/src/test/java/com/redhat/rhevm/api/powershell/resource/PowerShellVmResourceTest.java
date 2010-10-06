@@ -26,6 +26,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Display;
 import com.redhat.rhevm.api.model.DisplayType;
@@ -81,8 +82,8 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
         "$h = select-host -searchtext \"name=" + DEST_HOST_NAME + "\";" +
         "migrate-vm -vmid \"" + VM_ID + "\" -desthostid $h.hostid";
 
-    protected PowerShellVmResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser) {
-        return new PowerShellVmResource(VM_ID, executor, poolMap, parser);
+    protected PowerShellVmResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider) {
+        return new PowerShellVmResource(VM_ID, executor, uriProvider, poolMap, parser);
     }
 
     protected String formatVm(String name) {
@@ -98,40 +99,34 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
 
     @Test
     public void testGet() throws Exception {
-        verifyVM(
-            resource.get(setUpVmExpectations("get-vm \"" + VM_ID + "\"" + GET_STATS,
-                                             formatVm(VM_NAME),
-                                             VM_NAME)),
-            VM_NAME);
+        setUriInfo(setUpVmExpectations("get-vm \"" + VM_ID + "\"" + GET_STATS,
+                                       formatVm(VM_NAME),
+                                       VM_NAME));
+        verifyVM(resource.get(), VM_NAME);
     }
 
     @Test
     public void testGet22() throws Exception {
-        verifyVM(
-            resource.get(setUpVmExpectations("get-vm \"" + VM_ID + "\"" + GET_STATS,
-                                             formatVm("vm22", VM_NAME),
-                                             VM_NAME)),
-            VM_NAME);
+        setUriInfo(setUpVmExpectations("get-vm \"" + VM_ID + "\"" + GET_STATS,
+                                       formatVm("vm22", VM_NAME),
+                                       VM_NAME));
+        verifyVM(resource.get(), VM_NAME);
     }
 
     @Test
     public void testGoodUpdate() throws Exception {
-        verifyVM(
-            resource.update(setUpVmExpectations(UPDATE_COMMAND,
-                                                formatVm(NEW_NAME),
-                                                NEW_NAME),
-                            getVM(NEW_NAME)),
-            NEW_NAME);
+        setUriInfo(setUpVmExpectations(UPDATE_COMMAND,
+                                       formatVm(NEW_NAME),
+                                       NEW_NAME));
+        verifyVM(resource.update(getVM(NEW_NAME)), NEW_NAME);
     }
 
     @Test
     public void testUpdateDisplay() throws Exception {
-        verifyVM(
-            resource.update(setUpVmExpectations(UPDATE_DISPLAY_COMMAND,
-                                                formatVm(NEW_NAME),
-                                                NEW_NAME),
-                            updateDisplay(getVM(NEW_NAME))),
-            NEW_NAME);
+        setUriInfo(setUpVmExpectations(UPDATE_DISPLAY_COMMAND,
+                                       formatVm(NEW_NAME),
+                                       NEW_NAME));
+        verifyVM(resource.update(updateDisplay(getVM(NEW_NAME))), NEW_NAME);
     }
 
     @Test
@@ -149,9 +144,9 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
 
     public void doTestBadUpdate(VM update, String field) throws Exception {
         try {
-            UriInfo uriInfo = createMock(UriInfo.class);
+            setUriInfo(createMock(UriInfo.class));
             replayAll();
-            resource.update(uriInfo, update);
+            resource.update(update);
             fail("expected WebApplicationException on bad update");
         } catch (WebApplicationException wae) {
             verifyUpdateException(wae, field);
@@ -160,37 +155,32 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
 
     @Test
     public void testStart() throws Exception {
-        verifyActionResponse(
-            resource.start(setUpActionExpectation("start", "start-vm"), getAction()),
-            false);
+        setUriInfo(setUpActionExpectation("start", "start-vm"));
+        verifyActionResponse(resource.start(getAction()), false);
     }
 
     @Test
     public void testStop() throws Exception {
-        verifyActionResponse(
-            resource.stop(setUpActionExpectation("stop", "stop-vm"), getAction()),
-            false);
+        setUriInfo(setUpActionExpectation("stop", "stop-vm"));
+        verifyActionResponse(resource.stop(getAction()), false);
     }
 
     @Test
     public void testShutdown() throws Exception {
-        verifyActionResponse(
-            resource.shutdown(setUpActionExpectation("shutdown", "shutdown-vm"), getAction()),
-            false);
+        setUriInfo(setUpActionExpectation("shutdown", "shutdown-vm"));
+        verifyActionResponse(resource.shutdown(getAction()), false);
     }
 
     @Test
     public void testSuspend() throws Exception {
-        verifyActionResponse(
-            resource.suspend(setUpActionExpectation("suspend", "suspend-vm"), getAction()),
-            false);
+        setUriInfo(setUpActionExpectation("suspend", "suspend-vm"));
+        verifyActionResponse(resource.suspend(getAction()), false);
     }
 
     @Test
     public void testDetach() throws Exception {
-        verifyActionResponse(
-            resource.detach(setUpActionExpectation("detach", "detach-vm"), getAction()),
-            false);
+        setUriInfo(setUpActionExpectation("detach", "detach-vm"));
+        verifyActionResponse(resource.detach(getAction()), false);
     }
 
     @Test
@@ -198,9 +188,8 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
         Action action = getAction();
         action.setHost(new Host());
         action.getHost().setId(DEST_HOST_ID);
-        verifyActionResponse(
-            resource.migrate(setUpActionExpectation("migrate", MIGRATE_COMMAND, false, null), action),
-            false);
+        setUriInfo(setUpActionExpectation("migrate", MIGRATE_COMMAND, false, null));
+        verifyActionResponse(resource.migrate(action), false);
     }
 
     @Test
@@ -208,15 +197,15 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
         Action action = getAction();
         action.setHost(new Host());
         action.getHost().setName(DEST_HOST_NAME);
-        verifyActionResponse(
-            resource.migrate(setUpActionExpectation("migrate", MIGRATE_COMMAND_WITH_HOST_NAME, false, null), action),
-            false);
+        setUriInfo(setUpActionExpectation("migrate", MIGRATE_COMMAND_WITH_HOST_NAME, false, null));
+        verifyActionResponse(resource.migrate(action), false);
     }
 
     @Test
     public void testIncompleteMigrate() throws Exception {
+        setUriInfo(setUpActionExpectation(null, null, null, null));
         try {
-            resource.migrate(setUpActionExpectation(null, null, null, null), getAction());
+            resource.migrate(getAction());
             fail("expected WebApplicationException on incomplete parameters");
         } catch (WebApplicationException wae) {
              verifyIncompleteException(wae, "Action", "migrate", "host.id|name");
@@ -228,53 +217,46 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
         Action action = getAction();
         action.setTicket(new Ticket());
         action.getTicket().setValue(TICKET_VALUE);
-        Response response = resource.ticket(setUpActionExpectation("ticket", TICKET_COMMAND, TICKET_RETURN, false, null), action);
+        setUriInfo(setUpActionExpectation("ticket", TICKET_COMMAND, TICKET_RETURN, false, null));
+        Response response = resource.ticket(action);
         verifyActionResponse(response, false);
         verifyTicketResponse(response);
     }
 
     @Test
     public void testStartAsync() throws Exception {
-        verifyActionResponse(
-            resource.start(setUpActionExpectation("start", "start-vm"), getAction(true)),
-            true);
+        setUriInfo(setUpActionExpectation("start", "start-vm"));
+        verifyActionResponse(resource.start(getAction(true)), true);
     }
 
     @Test
     public void testStartAsyncFailed() throws Exception {
-        verifyActionResponse(
-            resource.start(setUpActionExpectation("start", "start-vm", new PowerShellException(FAILURE)), getAction(true)),
-            true,
-            REASON,
-            DETAIL);
+        setUriInfo(setUpActionExpectation("start", "start-vm", new PowerShellException(FAILURE)));
+        verifyActionResponse(resource.start(getAction(true)), true, REASON, DETAIL);
     }
 
     @Test
     public void testStopAsync() throws Exception {
-        verifyActionResponse(
-            resource.stop(setUpActionExpectation("stop", "stop-vm"), getAction(true)),
-            true);
+        setUriInfo(setUpActionExpectation("stop", "stop-vm"));
+        verifyActionResponse(resource.stop(getAction(true)), true);
     }
 
     @Test
     public void testShutdownAsync() throws Exception {
-        verifyActionResponse(
-            resource.shutdown(setUpActionExpectation("shutdown", "shutdown-vm"), getAction(true)),
-            true);
+        setUriInfo(setUpActionExpectation("shutdown", "shutdown-vm"));
+        verifyActionResponse(resource.shutdown(getAction(true)), true);
     }
 
     @Test
     public void testSuspendAsync() throws Exception {
-        verifyActionResponse(
-            resource.suspend(setUpActionExpectation("suspend", "suspend-vm"), getAction(true)),
-            true);
+        setUriInfo(setUpActionExpectation("suspend", "suspend-vm"));
+        verifyActionResponse(resource.suspend(getAction(true)),true);
     }
 
     @Test
     public void testDetachAsync() throws Exception {
-        verifyActionResponse(
-            resource.detach(setUpActionExpectation("detach", "detach-vm"), getAction(true)),
-            true);
+        setUriInfo(setUpActionExpectation("detach", "detach-vm"));
+        verifyActionResponse(resource.detach(getAction(true)), true);
     }
 
     @Test
@@ -282,9 +264,8 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
         Action action = getAction(true);
         action.setHost(new Host());
         action.getHost().setId(DEST_HOST_ID);
-        verifyActionResponse(
-            resource.migrate(setUpActionExpectation("migrate", MIGRATE_COMMAND, false, null), action),
-            true);
+        setUriInfo(setUpActionExpectation("migrate", MIGRATE_COMMAND, false, null));
+        verifyActionResponse(resource.migrate(action), true);
     }
 
     @Test
@@ -292,9 +273,8 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
         Action action = getAction(true);
         action.setHost(new Host());
         action.getHost().setName(DEST_HOST_NAME);
-        verifyActionResponse(
-            resource.migrate(setUpActionExpectation("migrate", MIGRATE_COMMAND_WITH_HOST_NAME, false, null), action),
-            true);
+        setUriInfo(setUpActionExpectation("migrate", MIGRATE_COMMAND_WITH_HOST_NAME, false, null));
+        verifyActionResponse(resource.migrate(action), true);
     }
 
     @Test
@@ -302,16 +282,16 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
         Action action = getAction(true);
         action.setTicket(new Ticket());
         action.getTicket().setExpiry(360L);
-        verifyActionResponse(
-            resource.ticket(setUpActionExpectation("ticket", TICKET_EXPIRY_COMMAND, TICKET_RETURN, false, null), action),
-            true);
+        setUriInfo(setUpActionExpectation("ticket", TICKET_EXPIRY_COMMAND, TICKET_RETURN, false, null));
+        verifyActionResponse(resource.ticket(action), true);
     }
 
     private UriInfo setUpVmExpectations(String command, String ret, String name) throws Exception {
         mockStatic(PowerShellCmd.class);
         expect(PowerShellCmd.runCommand(setUpPoolExpectations(), command)).andReturn(ret);
+        UriInfo uriInfo = setUpBasicUriExpectations();
         replayAll();
-        return null;
+        return uriInfo;
     }
 
     private UriInfo setUpActionExpectation(String verb, String command, boolean appendVmId, Throwable t) throws Exception {
@@ -371,6 +351,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
         assertEquals(BigDecimal.valueOf(20L), vm.getCpuStatistics().getSystem());
         assertEquals(BigDecimal.valueOf(30L), vm.getCpuStatistics().getIdle());
         assertEquals(BigDecimal.valueOf(40L), vm.getCpuStatistics().getLoad());
+        verifyLinks(vm);
     }
 
     private void verifyActionResponse(Response r, boolean async) throws Exception {

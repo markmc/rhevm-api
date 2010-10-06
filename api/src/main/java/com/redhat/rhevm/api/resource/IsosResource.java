@@ -22,8 +22,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 import com.redhat.rhevm.api.model.Isos;
@@ -34,8 +32,8 @@ public interface IsosResource {
 
     @GET
     @Formatted
-    public Isos list(@Context UriInfo uriInfo);
+    public Isos list();
 
     @Path("{id}")
-    public IsoResource getIsoSubResource(@Context UriInfo uriInfo, @PathParam("id") String id);
+    public IsoResource getIsoSubResource(@PathParam("id") String id);
 }

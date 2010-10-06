@@ -25,9 +25,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 import com.redhat.rhevm.api.model.VM;
@@ -40,7 +38,7 @@ public interface VmsResource {
 
     @GET
     @Formatted
-    public VMs list(@Context UriInfo uriInfo);
+    public VMs list();
 
     /**
      * Creates a new VM and adds it to the database. The VM is created
@@ -54,7 +52,7 @@ public interface VmsResource {
     @POST
     @Formatted
     @Consumes(MediaType.APPLICATION_XML)
-    public Response add(@Context UriInfo uriInfo, VM vm);
+    public Response add(VM vm);
 
     @DELETE
     @Path("{id}")
@@ -68,5 +66,5 @@ public interface VmsResource {
      * @return    matching subresource if found
      */
     @Path("{id}")
-    public VmResource getVmSubResource(@Context UriInfo uriInfo, @PathParam("id") String id);
+    public VmResource getVmSubResource(@PathParam("id") String id);
 }

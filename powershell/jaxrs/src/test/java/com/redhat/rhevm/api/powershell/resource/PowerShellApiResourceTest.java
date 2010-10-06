@@ -25,6 +25,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.API;
 
@@ -67,21 +68,48 @@ public class PowerShellApiResourceTest
         "vms/search",
     };
 
+    private static final String[] hrefs = {
+        BASE_PATH + "/capabilities/",
+        BASE_PATH + "/clusters/",
+        BASE_PATH + "/clusters/?search={query}",
+        BASE_PATH + "/datacenters/",
+        BASE_PATH + "/datacenters/?search={query}",
+        BASE_PATH + "/hosts/",
+        BASE_PATH + "/hosts/?search={query}",
+        BASE_PATH + "/networks/",
+        BASE_PATH + "/roles/",
+        BASE_PATH + "/storagedomains/",
+        BASE_PATH + "/storagedomains/?search={query}",
+        BASE_PATH + "/tags/",
+        BASE_PATH + "/templates/",
+        BASE_PATH + "/templates/?search={query}",
+        BASE_PATH + "/users/",
+        BASE_PATH + "/users/?search={query}",
+        BASE_PATH + "/vmpools/",
+        BASE_PATH + "/vmpools/?search={query}",
+        BASE_PATH + "/vms/",
+        BASE_PATH + "/vms/?search={query}",
+    };
+
     private static String GET_SYSTEM_STATS_COMMAND = "get-systemstatistics";
 
     private String formatSystemStats() {
         return PowerShellTestUtils.readClassPathFile("systemstats.xml");
     }
 
-    protected PowerShellApiResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser) {
-        return new PowerShellApiResource(executor, poolMap, parser);
+    protected PowerShellApiResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider) {
+        PowerShellApiResource resource = new PowerShellApiResource();
+        resource.setExecutor(executor);
+        resource.setParser(parser);
+        resource.setPowerShellPoolMap(poolMap);
+        return resource;
     }
 
     @Test
     public void testGet() throws Exception {
         setUpSystemStatsExpectations(GET_SYSTEM_STATS_COMMAND, formatSystemStats());
-
-        verifyResponse(resource.get(setUpUriInfo()));
+        resource.setUriInfo(setUpUriInfo());
+        verifyResponse(resource.get());
     }
 
     private void setUpSystemStatsExpectations(String command, String ret) throws Exception {
@@ -95,15 +123,15 @@ public class PowerShellApiResourceTest
 
         for (String rel : relationships) {
             UriBuilder colUriBuilder = createMock(UriBuilder.class);
-            expect(colUriBuilder.build()).andReturn(URI.create(URI_ROOT + SLASH + rel)).anyTimes();
+            expect(colUriBuilder.build()).andReturn(URI.create(URI_ROOT + SLASH + rel + "/")).anyTimes();
             if (rel.endsWith("/search")) {
-                expect(uriBuilder.path(rel.replace("/search", ""))).andReturn(colUriBuilder);
+                expect(uriBuilder.path((BASE_PATH + "/" + rel).replace("/search", ""))).andReturn(colUriBuilder);
             } else {
-                expect(uriBuilder.path(rel + SLASH)).andReturn(colUriBuilder);
+                expect(uriBuilder.path(BASE_PATH + "/" + rel + SLASH)).andReturn(colUriBuilder);
             }
         }
 
-        UriInfo uriInfo = createMock(UriInfo.class);
+        UriInfo uriInfo = setUpBasicUriExpectations();
         expect(uriInfo.getBaseUriBuilder()).andReturn(uriBuilder);
 
         replayAll();
@@ -126,6 +154,7 @@ public class PowerShellApiResourceTest
             Link l = api.getLinks().get(i);
             assertNotNull(l);
             assertEquals(relationships[i], l.getRel());
+            assertEquals(hrefs[i], l.getHref());
         }
 
         assertNotNull(api.getSummary());

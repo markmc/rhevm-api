@@ -20,8 +20,8 @@ package com.redhat.rhevm.api.powershell.resource;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.CdRom;
 import com.redhat.rhevm.api.model.CdRoms;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
@@ -38,8 +38,8 @@ public class PowerShellCdRomsResource
 
     private static final String CDROM_ID = Integer.toString("cdrom".hashCode());
 
-    public PowerShellCdRomsResource(String parentId, PowerShellPoolMap shellPools, CdRomQuery query) {
-        super(parentId, shellPools, query);
+    public PowerShellCdRomsResource(String parentId, PowerShellPoolMap shellPools, CdRomQuery query, UriInfoProvider uriProvider) {
+        super(parentId, shellPools, query, uriProvider);
     }
 
     private void updateCdRom(String cdIsoPath) {
@@ -53,7 +53,7 @@ public class PowerShellCdRomsResource
     }
 
     @Override
-    public Response add(UriInfo uriInfo, CdRom cdrom) {
+    public Response add(CdRom cdrom) {
         validateParameters(cdrom, "iso");
         String cdIsoPath = cdrom.getIso().getId();
 
@@ -61,7 +61,7 @@ public class PowerShellCdRomsResource
 
         cdrom = addLinks(buildCdRom(cdIsoPath));
 
-        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(cdrom.getId());
+        UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(cdrom.getId());
 
         return Response.created(uriBuilder.build()).entity(cdrom).build();
     }

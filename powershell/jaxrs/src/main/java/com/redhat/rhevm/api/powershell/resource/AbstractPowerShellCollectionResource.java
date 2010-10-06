@@ -22,10 +22,9 @@ import com.redhat.rhevm.api.common.resource.AbstractUpdatableResource;
 import com.redhat.rhevm.api.common.util.ReapedMap;
 import com.redhat.rhevm.api.model.BaseResource;
 
-
 public abstract class AbstractPowerShellCollectionResource<R extends BaseResource,
                                                            U extends AbstractUpdatableResource<R>>
-    extends AbstractPowerShellResource {
+    extends InjectableUriProviderBase {
 
     private ReapedMap<String, U> resources;
 

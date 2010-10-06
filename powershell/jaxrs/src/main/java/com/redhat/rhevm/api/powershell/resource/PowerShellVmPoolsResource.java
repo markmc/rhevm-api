@@ -21,7 +21,6 @@ package com.redhat.rhevm.api.powershell.resource;
 import java.util.List;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.VmPool;
 import com.redhat.rhevm.api.model.VmPools;
@@ -46,20 +45,20 @@ public class PowerShellVmPoolsResource
     }
 
     public VmPool addLinks(VmPool pool) {
-        return PowerShellVmPoolResource.addLinks(getPool(), getParser(), pool);
+        return PowerShellVmPoolResource.addLinks(getUriInfo(), getPool(), getParser(), pool);
     }
 
     @Override
-    public VmPools list(UriInfo uriInfo) {
+    public VmPools list() {
         VmPools ret = new VmPools();
-        for (VmPool pool : runAndParse(getSelectCommand("select-vmpool", uriInfo, VmPool.class))) {
+        for (VmPool pool : runAndParse(getSelectCommand("select-vmpool", getUriInfo(), VmPool.class))) {
             ret.getVmPools().add(addLinks(pool));
         }
         return ret;
     }
 
     @Override
-    public Response add(UriInfo uriInfo, VmPool pool) {
+    public Response add(VmPool pool) {
         validateParameters(pool, "name", "template.id|name", "cluster.id|name");
         StringBuilder buf = new StringBuilder();
 
@@ -98,7 +97,7 @@ public class PowerShellVmPoolsResource
 
         pool = addLinks(runAndParseSingle(buf.toString()));
 
-        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(pool.getId());
+        UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(pool.getId());
 
         return Response.created(uriBuilder.build()).entity(pool).build();
     }
@@ -116,12 +115,12 @@ public class PowerShellVmPoolsResource
     }
 
     @Override
-    public VmPoolResource getVmPoolSubResource(UriInfo uriInfo, String id) {
+    public VmPoolResource getVmPoolSubResource(String id) {
         return getSubResource(id);
     }
 
     @Override
     protected PowerShellVmPoolResource createSubResource(String id) {
-        return new PowerShellVmPoolResource(id, getExecutor(), shellPools, getParser());
+        return new PowerShellVmPoolResource(id, getExecutor(), this, shellPools, getParser());
     }
 }

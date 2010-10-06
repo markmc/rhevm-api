@@ -24,8 +24,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
@@ -49,5 +47,5 @@ public interface SnapshotResource {
     @Consumes(MediaType.APPLICATION_XML)
     @Actionable
     @Path("restore")
-    public Response restore(@Context UriInfo uriInfo, Action action);
+    public Response restore(Action action);
 }

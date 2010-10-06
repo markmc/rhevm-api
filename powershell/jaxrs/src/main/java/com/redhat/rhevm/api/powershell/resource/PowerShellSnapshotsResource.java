@@ -28,7 +28,6 @@ import java.util.concurrent.Executor;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.resource.MediaType;
 
@@ -36,11 +35,11 @@ import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.Snapshot;
 import com.redhat.rhevm.api.model.Snapshots;
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellDisk;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
-import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 import com.redhat.rhevm.api.powershell.util.UUID;
@@ -48,33 +47,17 @@ import com.redhat.rhevm.api.resource.SnapshotResource;
 import com.redhat.rhevm.api.resource.SnapshotsResource;
 
 @Produces(MediaType.APPLICATION_XML)
-public class PowerShellSnapshotsResource implements SnapshotsResource {
+public class PowerShellSnapshotsResource extends UriProviderWrapper implements SnapshotsResource {
 
     protected String vmId;
-    protected Executor executor;
-    protected PowerShellPoolMap shellPools;
-    protected PowerShellParser parser;
 
     public PowerShellSnapshotsResource(String vmId,
                                        Executor executor,
                                        PowerShellPoolMap shellPools,
-                                       PowerShellParser parser) {
+                                       PowerShellParser parser,
+                                       UriInfoProvider uriProvider) {
+        super(executor, shellPools, parser, uriProvider);
         this.vmId = vmId;
-        this.executor = executor;
-        this.shellPools = shellPools;
-        this.parser = parser;
-    }
-
-    public Executor getExecutor() {
-        return executor;
-    }
-
-    public PowerShellPool getPool() {
-        return shellPools.get();
-    }
-
-    public PowerShellParser getParser() {
-        return parser;
     }
 
     public String getVmId() {
@@ -101,7 +84,7 @@ public class PowerShellSnapshotsResource implements SnapshotsResource {
         snapshot.getVm().setId(vmId);
 
         if (!disk.getParentId().equals(UUID.EMPTY)) {
-            UriBuilder uriBuilder = LinkHelper.getUriBuilder(snapshot.getVm()).path("snapshots");
+            UriBuilder uriBuilder = LinkHelper.getUriBuilder(getUriInfo(), snapshot.getVm()).path("snapshots");
 
             Link prev = new Link();
             prev.setRel("prev");
@@ -109,7 +92,7 @@ public class PowerShellSnapshotsResource implements SnapshotsResource {
             snapshot.getLinks().add(prev);
         }
 
-        return LinkHelper.addLinks(snapshot);
+        return LinkHelper.addLinks(getUriInfo(), snapshot);
     }
 
     public PowerShellDisk getDiskSnapshot(String vmSnapshotId) {
@@ -158,7 +141,7 @@ public class PowerShellSnapshotsResource implements SnapshotsResource {
     }
 
     @Override
-    public Response add(UriInfo uriInfo, Snapshot snapshot) {
+    public Response add(Snapshot snapshot) {
         StringBuilder buf = new StringBuilder();
 
         buf.append("$vm = create-snapshot");
@@ -171,7 +154,7 @@ public class PowerShellSnapshotsResource implements SnapshotsResource {
 
         snapshot = buildFromDisk(runAndParseSingle(buf.toString()));
 
-        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(snapshot.getId());
+        UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(snapshot.getId());
 
         return Response.created(uriBuilder.build()).entity(snapshot).build();
     }
@@ -190,7 +173,7 @@ public class PowerShellSnapshotsResource implements SnapshotsResource {
 
     @Override
     public SnapshotResource getSnapshotSubResource(String id) {
-        return new PowerShellSnapshotResource(id, getExecutor(), shellPools, getParser(), this);
+        return new PowerShellSnapshotResource(id, getExecutor(), shellPools, getParser(), this, getUriProvider());
     }
 
     private List<String> sortedKeys(Map<String, Snapshot> map) {

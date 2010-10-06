@@ -24,7 +24,6 @@ import java.util.Map;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.mock.util.SimpleQueryEvaluator;
 import com.redhat.rhevm.api.model.DataCenter;
@@ -49,7 +48,7 @@ public class MockClustersResource extends AbstractMockQueryableResource<Cluster>
     public void populate() {
         synchronized (clusters) {
             while (clusters.size() < 2) {
-                MockClusterResource resource = new MockClusterResource(allocateId(Cluster.class), getExecutor());
+                MockClusterResource resource = new MockClusterResource(allocateId(Cluster.class), getExecutor(), this);
                 resource.getModel().setName("cluster" + resource.getModel().getId());
                 CPU cpu = new CPU();
                 cpu.setId((clusters.size() % 2) == 0 ? "Intel Xeon" : "AMD Opteron G1");
@@ -63,11 +62,11 @@ public class MockClustersResource extends AbstractMockQueryableResource<Cluster>
     }
 
     @Override
-    public Clusters list(UriInfo uriInfo) {
+    public Clusters list() {
         Clusters ret = new Clusters();
 
         for (MockClusterResource cluster : clusters.values()) {
-            if (filter(cluster.getModel(), uriInfo, Cluster.class)) {
+            if (filter(cluster.getModel(), getUriInfo(), Cluster.class)) {
                 ret.getClusters().add(cluster.addLinks());
             }
         }
@@ -76,15 +75,15 @@ public class MockClustersResource extends AbstractMockQueryableResource<Cluster>
     }
 
     @Override
-    public Response add(UriInfo uriInfo, Cluster cluster) {
-        MockClusterResource resource = new MockClusterResource(allocateId(Cluster.class), getExecutor());
+    public Response add(Cluster cluster) {
+        MockClusterResource resource = new MockClusterResource(allocateId(Cluster.class), getExecutor(), this);
 
         resource.updateModel(cluster);
 
         String id = resource.getId();
         clusters.put(id, resource);
 
-        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(id);
+        UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(id);
 
         cluster = resource.addLinks();
 
@@ -97,7 +96,7 @@ public class MockClustersResource extends AbstractMockQueryableResource<Cluster>
     }
 
     @Override
-    public ClusterResource getClusterSubResource(UriInfo uriInfo, String id) {
+    public ClusterResource getClusterSubResource(String id) {
         return clusters.get(id);
     }
 }

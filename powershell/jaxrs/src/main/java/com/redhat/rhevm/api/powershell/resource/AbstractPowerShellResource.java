@@ -50,7 +50,7 @@ public class AbstractPowerShellResource {
         this.executor = executor;
         this.shellPools = shellPools;
         this.parser = parser;
-     }
+    }
 
     public Executor getExecutor() {
         return executor;

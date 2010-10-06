@@ -30,22 +30,20 @@ import com.redhat.rhevm.api.model.HostStorage;
 import com.redhat.rhevm.api.model.LogicalUnit;
 import com.redhat.rhevm.api.model.Storage;
 import com.redhat.rhevm.api.model.VolumeGroup;
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellStorageDevice;
 import com.redhat.rhevm.api.powershell.model.PowerShellStorageDomain;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
-import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 import com.redhat.rhevm.api.resource.StorageResource;
 import com.redhat.rhevm.api.resource.HostStorageResource;
 
-import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
-
 @Produces(MediaType.APPLICATION_XML)
 public class PowerShellHostStorageResource
-    extends AbstractPowerShellResource
+    extends UriProviderWrapper
     implements HostStorageResource {
 
     protected String hostId;
@@ -53,8 +51,9 @@ public class PowerShellHostStorageResource
     public PowerShellHostStorageResource(String hostId,
                                          Executor executor,
                                          PowerShellPoolMap shellPools,
-                                         PowerShellParser parser) {
-        super(executor, shellPools, parser);
+                                         PowerShellParser parser,
+                                         UriInfoProvider uriProvider) {
+        super(executor, shellPools, parser, uriProvider);
         this.hostId = hostId;
     }
 
@@ -132,7 +131,7 @@ public class PowerShellHostStorageResource
         storage.setHost(new Host());
         storage.getHost().setId(hostId);
 
-        return LinkHelper.addLinks(storage);
+        return LinkHelper.addLinks(getUriInfo(), storage);
     }
 
     @Override

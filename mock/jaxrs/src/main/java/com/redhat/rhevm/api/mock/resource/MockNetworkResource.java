@@ -20,10 +20,10 @@ package com.redhat.rhevm.api.mock.resource;
 
 import java.util.concurrent.Executor;
 
-import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.resource.NetworkResource;
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 
@@ -36,8 +36,8 @@ public class MockNetworkResource extends AbstractMockResource<Network> implement
      * @param network     encapsulated network
      * @param executor executor used for asynchronous actions
      */
-    MockNetworkResource(String id, Executor executor) {
-        super(id, executor);
+    MockNetworkResource(String id, Executor executor, UriInfoProvider uriProvider) {
+        super(id, executor, uriProvider);
     }
 
     // FIXME: this needs to be atomic
@@ -52,16 +52,16 @@ public class MockNetworkResource extends AbstractMockResource<Network> implement
     }
 
     public Network addLinks() {
-        return LinkHelper.addLinks(JAXBHelper.clone(OBJECT_FACTORY.createNetwork(getModel())));
+        return LinkHelper.addLinks(getUriInfo(), JAXBHelper.clone(OBJECT_FACTORY.createNetwork(getModel())));
     }
 
     @Override
-    public Network get(UriInfo uriInfo) {
+    public Network get() {
         return addLinks();
     }
 
     @Override
-    public Network update(UriInfo uriInfo, Network network) {
+    public Network update(Network network) {
         validateUpdate(network);
         updateModel(network);
         return addLinks();

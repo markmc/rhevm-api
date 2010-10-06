@@ -27,6 +27,7 @@ import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VmPool;
 import com.redhat.rhevm.api.resource.VmPoolResource;
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellVmPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
@@ -40,9 +41,10 @@ public class PowerShellVmPoolResource extends AbstractPowerShellActionableResour
 
     public PowerShellVmPoolResource(String id,
                                     Executor executor,
+                                    UriInfoProvider uriProvider,
                                     PowerShellPoolMap shellPools,
                                     PowerShellParser parser) {
-        super(id, executor, shellPools, parser);
+        super(id, executor, uriProvider, shellPools, parser);
     }
 
     public static List<VmPool> runAndParse(PowerShellPool pool, PowerShellParser parser, String command) {
@@ -99,27 +101,27 @@ public class PowerShellVmPoolResource extends AbstractPowerShellActionableResour
         return pool;
     }
 
-    public static VmPool addLinks(PowerShellPool shellPool, PowerShellParser parser, VmPool pool) {
+    public static VmPool addLinks(UriInfo uriInfo, PowerShellPool shellPool, PowerShellParser parser, VmPool pool) {
         pool = lookupClusterId(shellPool, parser, pool);
 
         if (pool.getTemplate() != null) {
             pool = lookupTemplateId(shellPool, parser, pool);
         }
 
-        return LinkHelper.addLinks(pool);
+        return LinkHelper.addLinks(uriInfo, pool);
     }
 
     public VmPool addLinks(VmPool pool) {
-        return addLinks(getPool(), getParser(), pool);
+        return addLinks(getUriInfo(), getPool(), getParser(), pool);
     }
 
     @Override
-    public VmPool get(UriInfo uriInfo) {
+    public VmPool get() {
         return addLinks(runAndParseSingle("get-vmpool -vmpoolid " + PowerShellUtils.escape(getId())));
     }
 
     @Override
-    public VmPool update(UriInfo uriInfo, VmPool pool) {
+    public VmPool update(VmPool pool) {
         validateUpdate(pool);
 
         StringBuilder buf = new StringBuilder();

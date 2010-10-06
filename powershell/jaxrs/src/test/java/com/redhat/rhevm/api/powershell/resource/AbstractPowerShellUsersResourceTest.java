@@ -28,6 +28,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.Role;
 import com.redhat.rhevm.api.model.User;
@@ -61,7 +62,7 @@ public abstract class AbstractPowerShellUsersResourceTest<A extends AbstractPowe
                                FORMAT_ARGS);
     }
 
-    protected abstract A getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser);
+    protected abstract A getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider);
 
     protected void setUpUserExpectations(String[] commands, String[] returns) throws Exception {
         setUpUserExpectations(commands, returns, false);
@@ -83,7 +84,7 @@ public abstract class AbstractPowerShellUsersResourceTest<A extends AbstractPowe
 
     @SuppressWarnings("unchecked")
     protected UriInfo setUpUriExpectations(QueryParam query, boolean add) throws Exception {
-        UriInfo uriInfo = createMock(UriInfo.class);
+        UriInfo uriInfo = setUpBasicUriExpectations();
         if (query != null) {
             MultivaluedMap<String, String> queries = createMock(MultivaluedMap.class);
             List<String> queryParam = new ArrayList<String>();
@@ -119,6 +120,7 @@ public abstract class AbstractPowerShellUsersResourceTest<A extends AbstractPowe
         assertEquals(EMAIL, user.getEmail());
         assertEquals(DOMAIN_NAME, user.getDomain());
         verifyRoles(user.getLinks());
+        verifyLinks(user);
     }
 
     private static void verifyRoles(List<Link> links) {

@@ -23,6 +23,7 @@ import java.util.List;
 import com.redhat.rhevm.api.model.NIC;
 import com.redhat.rhevm.api.model.Nics;
 import com.redhat.rhevm.api.model.Network;
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellNIC;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
@@ -38,8 +39,9 @@ public class PowerShellReadOnlyNicsResource extends AbstractPowerShellDevicesRes
     public PowerShellReadOnlyNicsResource(String parentId,
                                           PowerShellPoolMap shellPools,
                                           PowerShellParser parser,
-                                          String getCommand) {
-        super(parentId, shellPools, parser);
+                                          String getCommand,
+                                          UriInfoProvider uriProvider) {
+        super(parentId, shellPools, parser, uriProvider);
         this.getCommand = getCommand;
     }
 
@@ -88,7 +90,7 @@ public class PowerShellReadOnlyNicsResource extends AbstractPowerShellDevicesRes
 
     @Override
     public NIC addLinks(NIC nic) {
-        return LinkHelper.addLinks(lookupNetworkId(nic));
+        return LinkHelper.addLinks(getUriInfo(), lookupNetworkId(nic));
     }
 
     @Override

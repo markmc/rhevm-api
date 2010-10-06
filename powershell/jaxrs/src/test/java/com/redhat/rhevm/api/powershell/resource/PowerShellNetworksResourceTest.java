@@ -36,12 +36,12 @@ public class PowerShellNetworksResourceTest extends AbstractPowerShellCollection
     private static final String REMOVE_COMMAND = "$n = get-networks;foreach ($i in $n) {  if ($i.networkid -eq \"" + Integer.toString(NAMES[1].hashCode()) + "\") {    remove-network -networkobject $i -datacenterid $i.datacenterid  }}";
 
     public PowerShellNetworksResourceTest() {
-        super(new PowerShellNetworkResource("0", null, null, null), "networks", "network", extraArgs);
+        super(new PowerShellNetworkResource("0", null, null, null, null), "networks", "network", extraArgs);
     }
 
     @Test
     public void testList() throws Exception {
-        setUpResourceExpectations("get-networks", getSelectReturn(), NAMES);
+        resource.setUriInfo(setUpResourceExpectations("get-networks", getSelectReturn(), NAMES));
 
         verifyCollection(
             resource.list().getNetworks(),
@@ -50,11 +50,11 @@ public class PowerShellNetworksResourceTest extends AbstractPowerShellCollection
 
     @Test
     public void testAdd() throws Exception {
+        resource.setUriInfo(setUpAddResourceExpectations(getAddCommand() + ADD_COMMAND_EPILOG,
+                                                         getAddReturn(),
+                                                         NEW_NAME));
         verifyResponse(
-            resource.add(setUpAddResourceExpectations(getAddCommand() + ADD_COMMAND_EPILOG,
-                                                      getAddReturn(),
-                                                      NEW_NAME),
-                         getModel(NEW_NAME, NEW_DESCRIPTION)),
+            resource.add(getModel(NEW_NAME, NEW_DESCRIPTION)),
             NEW_NAME, NEW_DESCRIPTION);
     }
 
@@ -62,8 +62,9 @@ public class PowerShellNetworksResourceTest extends AbstractPowerShellCollection
     public void testAddIncompleteParameters() throws Exception {
         Network model = new Network();
         model.setName(NEW_NAME);
+        resource.setUriInfo(setUpResourceExpectations(new String[]{}, new String[]{}, false, null));
         try {
-            resource.add(setUpResourceExpectations(new String[]{}, new String[]{}, false, null), model);
+            resource.add(model);
             fail("expected WebApplicationException on incomplete parameters");
         } catch (WebApplicationException wae) {
              verifyIncompleteException(wae, "Network", "add", "dataCenter.id");
@@ -78,9 +79,9 @@ public class PowerShellNetworksResourceTest extends AbstractPowerShellCollection
 
     @Test
     public void testGetSubResource() throws Exception {
+        resource.setUriInfo(setUpResourceExpectations(null, null));
         verifyResource(
-            (PowerShellNetworkResource)resource.getNetworkSubResource(setUpResourceExpectations(null, null),
-                                                                      Integer.toString(NEW_NAME.hashCode())),
+            (PowerShellNetworkResource)resource.getNetworkSubResource(Integer.toString(NEW_NAME.hashCode())),
             NEW_NAME);
     }
 

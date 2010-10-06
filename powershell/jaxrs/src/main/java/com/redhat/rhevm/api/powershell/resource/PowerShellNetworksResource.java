@@ -22,7 +22,6 @@ import java.util.List;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.IP;
 import com.redhat.rhevm.api.model.Network;
@@ -52,13 +51,13 @@ public class PowerShellNetworksResource
     public Networks list() {
         Networks ret = new Networks();
         for (Network network : runAndParse("get-networks")) {
-            ret.getNetworks().add(LinkHelper.addLinks(network));
+            ret.getNetworks().add(LinkHelper.addLinks(getUriInfo(), network));
         }
         return ret;
     }
 
     @Override
-    public Response add(UriInfo uriInfo, Network network) {
+    public Response add(Network network) {
         validateParameters(network, "name", "dataCenter.id");
         StringBuilder buf = new StringBuilder();
 
@@ -91,9 +90,9 @@ public class PowerShellNetworksResource
             buf.append(" -stp");
         }
 
-        network = LinkHelper.addLinks(runAndParseSingle(buf.toString()));
+        network = LinkHelper.addLinks(getUriInfo(), runAndParseSingle(buf.toString()));
 
-        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(network.getId());
+        UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(network.getId());
 
         return Response.created(uriBuilder.build()).entity(network).build();
     }
@@ -117,11 +116,11 @@ public class PowerShellNetworksResource
     }
 
     @Override
-    public NetworkResource getNetworkSubResource(UriInfo uriInfo, String id) {
+    public NetworkResource getNetworkSubResource(String id) {
         return getSubResource(id);
     }
 
     protected PowerShellNetworkResource createSubResource(String id) {
-        return new PowerShellNetworkResource(id, getExecutor(), shellPools, getParser());
+        return new PowerShellNetworkResource(id, getExecutor(), this, shellPools, getParser());
     }
 }

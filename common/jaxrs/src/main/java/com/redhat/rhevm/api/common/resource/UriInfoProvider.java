@@ -16,16 +16,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api.resource;
+package com.redhat.rhevm.api.common.resource;
 
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import com.redhat.rhevm.api.model.Cluster;
+import javax.ws.rs.core.UriInfo;
 
+public interface UriInfoProvider {
 
-@Produces(MediaType.APPLICATION_XML)
-public interface ClusterResource extends UpdatableResource<Cluster> {
+    UriInfo getUriInfo();
 
-    @Path("networks")
-    public AssignedNetworksResource getAssignedNetworksSubResource();
 }

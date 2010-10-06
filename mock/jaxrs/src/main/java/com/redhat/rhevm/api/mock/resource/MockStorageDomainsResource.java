@@ -24,7 +24,6 @@ import java.util.Map;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.mock.util.SimpleQueryEvaluator;
 import com.redhat.rhevm.api.model.Attachment;
@@ -50,7 +49,7 @@ public class MockStorageDomainsResource extends AbstractMockQueryableResource<St
     }
 
     private void addStorageDomain(StorageDomainType domainType, String name, StorageType storageType, String address, String path) {
-        MockStorageDomainResource resource = new MockStorageDomainResource(allocateId(StorageDomain.class), getExecutor());
+        MockStorageDomainResource resource = new MockStorageDomainResource(allocateId(StorageDomain.class), getExecutor(), this);
 
         resource.getModel().setName(name);
         resource.getModel().setType(domainType);
@@ -74,11 +73,11 @@ public class MockStorageDomainsResource extends AbstractMockQueryableResource<St
     }
 
     @Override
-    public StorageDomains list(UriInfo uriInfo) {
+    public StorageDomains list() {
         StorageDomains ret = new StorageDomains();
 
         for (MockStorageDomainResource storageDomain : storageDomains.values()) {
-            if (filter(storageDomain.getModel(), uriInfo, StorageDomain.class)) {
+            if (filter(storageDomain.getModel(), getUriInfo(), StorageDomain.class)) {
                 ret.getStorageDomains().add(storageDomain.addLinks());
             }
         }
@@ -87,15 +86,15 @@ public class MockStorageDomainsResource extends AbstractMockQueryableResource<St
     }
 
     @Override
-    public Response add(UriInfo uriInfo, StorageDomain storageDomain) {
-        MockStorageDomainResource resource = new MockStorageDomainResource(allocateId(StorageDomain.class), getExecutor());
+    public Response add(StorageDomain storageDomain) {
+        MockStorageDomainResource resource = new MockStorageDomainResource(allocateId(StorageDomain.class), getExecutor(), this);
 
         resource.updateModel(storageDomain);
 
         String id = resource.getId();
         storageDomains.put(id, resource);
 
-        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(id);
+        UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(id);
 
         storageDomain = resource.addLinks();
 
@@ -109,7 +108,7 @@ public class MockStorageDomainsResource extends AbstractMockQueryableResource<St
     }
 
     @Override
-    public StorageDomainResource getStorageDomainSubResource(UriInfo uriInfo, String id) {
+    public StorageDomainResource getStorageDomainSubResource(String id) {
         return storageDomains.get(id);
     }
 

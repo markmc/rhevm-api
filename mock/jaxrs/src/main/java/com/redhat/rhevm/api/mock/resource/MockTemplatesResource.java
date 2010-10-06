@@ -24,7 +24,6 @@ import java.util.Map;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.mock.util.SimpleQueryEvaluator;
 import com.redhat.rhevm.api.model.Template;
@@ -47,7 +46,7 @@ public class MockTemplatesResource extends AbstractMockQueryableResource<Templat
     public void populate() {
         synchronized (templates) {
             while (templates.size() < 4) {
-                MockTemplateResource resource = new MockTemplateResource(allocateId(Template.class), getExecutor());
+                MockTemplateResource resource = new MockTemplateResource(allocateId(Template.class), getExecutor(), this);
                 resource.getModel().setName("template" + resource.getModel().getId());
                 templates.put(resource.getModel().getId(), resource);
             }
@@ -55,11 +54,11 @@ public class MockTemplatesResource extends AbstractMockQueryableResource<Templat
     }
 
     @Override
-    public Templates list(UriInfo uriInfo) {
+    public Templates list() {
         Templates ret = new Templates();
 
         for (MockTemplateResource template : templates.values()) {
-            if (filter(template.getModel(), uriInfo, Template.class)) {
+            if (filter(template.getModel(), getUriInfo(), Template.class)) {
                 ret.getTemplates().add(template.addLinks());
             }
         }
@@ -68,15 +67,15 @@ public class MockTemplatesResource extends AbstractMockQueryableResource<Templat
     }
 
     @Override
-    public Response add(UriInfo uriInfo, Template template) {
-        MockTemplateResource resource = new MockTemplateResource(allocateId(Template.class), getExecutor());
+    public Response add(Template template) {
+        MockTemplateResource resource = new MockTemplateResource(allocateId(Template.class), getExecutor(), this);
 
         resource.updateModel(template);
 
         String id = resource.getId();
         templates.put(id, resource);
 
-        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(id);
+        UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(id);
 
         template = resource.addLinks();
 
@@ -89,7 +88,7 @@ public class MockTemplatesResource extends AbstractMockQueryableResource<Templat
     }
 
     @Override
-    public TemplateResource getTemplateSubResource(UriInfo uriInfo, String id) {
+    public TemplateResource getTemplateSubResource(String id) {
         return templates.get(id);
     }
 }

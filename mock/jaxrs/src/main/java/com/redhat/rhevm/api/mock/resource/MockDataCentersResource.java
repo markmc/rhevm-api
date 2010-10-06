@@ -24,7 +24,6 @@ import java.util.Map;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.mock.util.SimpleQueryEvaluator;
 import com.redhat.rhevm.api.model.DataCenter;
@@ -37,9 +36,6 @@ import static com.redhat.rhevm.api.mock.resource.AbstractMockResource.allocateId
 
 
 public class MockDataCentersResource extends AbstractMockQueryableResource<DataCenter> implements DataCentersResource {
-    /* FIXME: would like to do:
-     * private @Context UriInfo uriInfo;
-     */
 
     private static Map<String, MockDataCenterResource> dataCenters =
         Collections.synchronizedMap(new HashMap<String, MockDataCenterResource>());
@@ -51,7 +47,7 @@ public class MockDataCentersResource extends AbstractMockQueryableResource<DataC
     public void populate() {
         synchronized (dataCenters) {
             while (dataCenters.size() < 2) {
-                MockDataCenterResource resource = new MockDataCenterResource(allocateId(DataCenter.class), getExecutor());
+                MockDataCenterResource resource = new MockDataCenterResource(allocateId(DataCenter.class), getExecutor(), this);
                 resource.getModel().setName("datacenter" + resource.getModel().getId());
                 resource.getModel().setStorageType((dataCenters.size() % 2) == 0 ? StorageType.ISCSI : StorageType.NFS);
                 dataCenters.put(resource.getModel().getId(), resource);
@@ -60,11 +56,11 @@ public class MockDataCentersResource extends AbstractMockQueryableResource<DataC
     }
 
     @Override
-    public DataCenters list(UriInfo uriInfo) {
+    public DataCenters list() {
         DataCenters ret = new DataCenters();
 
         for (MockDataCenterResource dataCenter : dataCenters.values()) {
-            if (filter(dataCenter.getModel(), uriInfo, DataCenter.class)) {
+            if (filter(dataCenter.getModel(), getUriInfo(), DataCenter.class)) {
                 ret.getDataCenters().add(dataCenter.addLinks());
             }
         }
@@ -73,15 +69,15 @@ public class MockDataCentersResource extends AbstractMockQueryableResource<DataC
     }
 
     @Override
-    public Response add(UriInfo uriInfo, DataCenter dataCenter) {
-        MockDataCenterResource resource = new MockDataCenterResource(allocateId(DataCenter.class), getExecutor());
+    public Response add(DataCenter dataCenter) {
+        MockDataCenterResource resource = new MockDataCenterResource(allocateId(DataCenter.class), getExecutor(), this);
 
         resource.updateModel(dataCenter);
 
         String id = resource.getId();
         dataCenters.put(id, resource);
 
-        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(id);
+        UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(id);
 
         dataCenter = resource.addLinks();
 
@@ -94,7 +90,7 @@ public class MockDataCentersResource extends AbstractMockQueryableResource<DataC
     }
 
     @Override
-    public DataCenterResource getDataCenterSubResource(UriInfo uriInfo, String id) {
+    public DataCenterResource getDataCenterSubResource(String id) {
         return dataCenters.get(id);
     }
 }

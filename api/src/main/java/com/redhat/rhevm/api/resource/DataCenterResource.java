@@ -23,8 +23,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 import com.redhat.rhevm.api.model.DataCenter;
@@ -35,12 +33,12 @@ public interface DataCenterResource extends UpdatableResource<DataCenter> {
 
     @GET
     @Formatted
-    public DataCenter get(@Context UriInfo uriInfo);
+    public DataCenter get();
 
     @PUT
     @Formatted
     @Consumes(MediaType.APPLICATION_XML)
-    public DataCenter update(@Context UriInfo uriInfo, DataCenter dataCenter);
+    public DataCenter update(DataCenter dataCenter);
 
     @Path("isos")
     public IsosResource getIsosResource();

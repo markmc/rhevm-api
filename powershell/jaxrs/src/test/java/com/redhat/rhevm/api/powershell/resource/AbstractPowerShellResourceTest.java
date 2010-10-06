@@ -23,6 +23,7 @@ import java.util.concurrent.Executor;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.BaseResource;
 import com.redhat.rhevm.api.model.Status;
@@ -59,18 +60,25 @@ public abstract class AbstractPowerShellResourceTest<R /* extends BaseResource *
     protected ControllableExecutor executor;
     protected PowerShellPoolMap poolMap;
     protected PowerShellParser parser;
+    protected PlaceHolderUriInfoProvider uriProvider;
 
     @Before
     public void setUp() throws Exception {
         executor = new ControllableExecutor();
         poolMap = createMock(PowerShellPoolMap.class);
         parser = PowerShellParser.newInstance();
-        resource = getResource(executor, poolMap, parser);
+        uriProvider = new PlaceHolderUriInfoProvider();
+        resource = getResource(executor, poolMap, parser, uriProvider);
     }
 
     @After
     public void tearDown() {
         verifyAll();
+        uriProvider.setUriInfo(null);
+    }
+
+    protected void setUriInfo(UriInfo uriInfo) {
+        uriProvider.setUriInfo(uriInfo);
     }
 
     protected Action getAction() {
@@ -94,9 +102,9 @@ public abstract class AbstractPowerShellResourceTest<R /* extends BaseResource *
             }
         }
 
-        UriInfo uriInfo = createMock(UriInfo.class);
+        UriInfo uriInfo = setUpBasicUriExpectations();
         if (baseUri != null) {
-            expect(uriInfo.getPath()).andReturn(baseUri).times(2);
+            expect(uriInfo.getPath()).andReturn(baseUri).anyTimes();
         }
 
         replayAll();
@@ -137,10 +145,10 @@ public abstract class AbstractPowerShellResourceTest<R /* extends BaseResource *
         assertTrue(action.getLink().size() == 2);
         assertEquals("expected parent link", "parent", action.getLink().get(0).getRel());
         assertNotNull(action.getLink().get(0).getHref());
-        assertTrue(action.getLink().get(0).getHref().startsWith(baseUri));
+        assertTrue(action.getLink().get(0).getHref().indexOf(baseUri) != -1);
         assertNotNull(action.getLink().get(1).getHref());
         assertEquals("expected replay link", "replay", action.getLink().get(1).getRel());
-        assertTrue(action.getLink().get(1).getHref().startsWith(baseUri));
+        assertTrue(action.getLink().get(1).getHref().indexOf(baseUri) != -1);
         assertEquals("unexpected async task", async ? 1 : 0, executor.taskCount());
         executor.runNext();
         if (reason != null) {
@@ -150,5 +158,5 @@ public abstract class AbstractPowerShellResourceTest<R /* extends BaseResource *
         }
     }
 
-    protected abstract A getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser);
+    protected abstract A getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider);
 }

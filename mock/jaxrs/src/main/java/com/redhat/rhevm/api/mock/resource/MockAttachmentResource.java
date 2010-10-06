@@ -22,9 +22,9 @@ import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.common.resource.AttachmentActionValidator;
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.ActionsBuilder;
@@ -44,8 +44,8 @@ public class MockAttachmentResource extends AbstractMockResource<Attachment> imp
      * @param attachment  encapsulated Attachment
      * @param executor    executor used for asynchronous actions
      */
-    MockAttachmentResource(Attachment attachment, Executor executor) {
-        super(attachment.getDataCenter().getId(), executor);
+    MockAttachmentResource(Attachment attachment, Executor executor, UriInfoProvider uriProvider) {
+        super(attachment.getDataCenter().getId(), executor, uriProvider);
         attachment.setStatus(StorageDomainStatus.INACTIVE);
         updateModel(attachment);
     }
@@ -66,7 +66,7 @@ public class MockAttachmentResource extends AbstractMockResource<Attachment> imp
     }
 
     public Attachment addLinks(UriBuilder uriBuilder) {
-        LinkHelper.addLinks(getModel());
+        LinkHelper.addLinks(getUriInfo(), getModel());
 
         ActionValidator actionValidator = new AttachmentActionValidator(getModel());
         ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, AttachmentResource.class, actionValidator);
@@ -76,20 +76,20 @@ public class MockAttachmentResource extends AbstractMockResource<Attachment> imp
     }
 
     @Override
-    public Attachment get(UriInfo uriInfo) {
-        return addLinks(uriInfo.getRequestUriBuilder());
+    public Attachment get() {
+        return addLinks(getUriInfo().getRequestUriBuilder());
     }
 
     @Override
-    public Response activate(UriInfo uriInfo, Action action) {
+    public Response activate(Action action) {
         // FIXME: error if not attached
-        return doAction(uriInfo, new AttachmentStatusSetter(action, StorageDomainStatus.ACTIVE));
+        return doAction(getUriInfo(), new AttachmentStatusSetter(action, StorageDomainStatus.ACTIVE));
     }
 
     @Override
-    public Response deactivate(UriInfo uriInfo, Action action) {
+    public Response deactivate(Action action) {
         // FIXME: error if not active
-        return doAction(uriInfo, new AttachmentStatusSetter(action, StorageDomainStatus.INACTIVE));
+        return doAction(getUriInfo(), new AttachmentStatusSetter(action, StorageDomainStatus.INACTIVE));
     }
 
     private class AttachmentStatusSetter extends AbstractActionTask {

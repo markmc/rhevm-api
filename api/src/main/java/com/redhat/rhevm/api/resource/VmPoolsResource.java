@@ -25,9 +25,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 import com.redhat.rhevm.api.model.VmPool;
@@ -40,12 +38,12 @@ public interface VmPoolsResource {
 
     @GET
     @Formatted
-    public VmPools list(@Context UriInfo uriInfo);
+    public VmPools list();
 
     @POST
     @Formatted
     @Consumes(MediaType.APPLICATION_XML)
-    public Response add(@Context UriInfo uriInfo, VmPool pool);
+    public Response add(VmPool pool);
 
     @DELETE
     @Path("{id}")
@@ -59,5 +57,5 @@ public interface VmPoolsResource {
      * @return    matching subresource if found
      */
     @Path("{id}")
-    public VmPoolResource getVmPoolSubResource(@Context UriInfo uriInfo, @PathParam("id") String id);
+    public VmPoolResource getVmPoolSubResource(@PathParam("id") String id);
 }

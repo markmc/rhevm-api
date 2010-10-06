@@ -18,25 +18,33 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import static org.easymock.EasyMock.expect;
+import static org.powermock.api.easymock.PowerMock.createMock;
+
 import java.lang.annotation.Annotation;
+import java.net.URI;
 import java.text.MessageFormat;
 import java.util.Arrays;
 
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import org.junit.Assert;
 import org.junit.Ignore;
 
 import com.redhat.rhevm.api.model.BaseResource;
 import com.redhat.rhevm.api.model.Fault;
+import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.powershell.util.PowerShellTestUtils;
 
 @Ignore
 public class BasePowerShellResourceTest extends Assert {
 
     protected static final String URI_ROOT = "http://localhost:8099";
+    protected static final String BASE_PATH = "/rhevm-api-powershell";
+    protected static final String URI_BASE = URI_ROOT + BASE_PATH;
     protected static final String SLASH = "/";
     protected static final String QUERY = "name=*r*s";
 
@@ -106,6 +114,12 @@ public class BasePowerShellResourceTest extends Assert {
         };
     }
 
+    protected UriInfo setUpBasicUriExpectations() {
+        UriInfo uriInfo = createMock(UriInfo.class);
+        expect(uriInfo.getBaseUri()).andReturn(URI.create(URI_BASE + SLASH)).anyTimes();
+        return uriInfo;
+    }
+
     protected void verifyResponse(Response r, String name, String description, String collectionName) {
         assertEquals("unexpected status", 201, r.getStatus());
         Object entity = r.getEntity();
@@ -120,6 +134,14 @@ public class BasePowerShellResourceTest extends Assert {
         assertEquals("unexpected location header",
                      URI_ROOT + SLASH + collectionName + SLASH + name.hashCode(),
                      r.getMetadata().get("Location").get(0).toString());
+    }
+
+    protected static void verifyLinks(BaseResource model) {
+        assertNotNull(model.getHref());
+        assertTrue(model.getHref().startsWith("/rhevm-api-powershell"));
+        for (Link link : model.getLinks()) {
+            assertTrue(link.getHref().startsWith("/rhevm-api-powershell"));
+        }
     }
 
     protected static String[] asArray(String s) {

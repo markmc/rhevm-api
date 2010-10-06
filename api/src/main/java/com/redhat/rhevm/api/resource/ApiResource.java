@@ -22,9 +22,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.HEAD;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 
@@ -33,9 +31,9 @@ import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 public interface ApiResource {
 
     @HEAD
-    public Response head(@Context UriInfo uriInfo);
+    public Response head();
 
     @GET
     @Formatted
-    public Response get(@Context UriInfo uriInfo);
+    public Response get();
 }

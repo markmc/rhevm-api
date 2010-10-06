@@ -21,6 +21,7 @@ package com.redhat.rhevm.api.powershell.resource;
 import java.util.concurrent.Executor;
 
 import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.BaseResource;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPool;
@@ -41,11 +42,26 @@ public abstract class AbstractPowerShellActionableResource<R extends BaseResourc
         this.shellPools = shellPools;
     }
 
+    public AbstractPowerShellActionableResource(String id, Executor executor, UriInfoProvider uriProvider, PowerShellPoolMap shellPools) {
+        super(id, executor, uriProvider);
+        this.shellPools = shellPools;
+    }
+
     public AbstractPowerShellActionableResource(String id,
                                                 Executor executor,
                                                 PowerShellPoolMap shellPools,
                                                 PowerShellParser parser) {
         super(id, executor);
+        this.shellPools = shellPools;
+        this.parser = parser;
+    }
+
+    public AbstractPowerShellActionableResource(String id,
+                                                Executor executor,
+                                                UriInfoProvider uriProvider,
+                                                PowerShellPoolMap shellPools,
+                                                PowerShellParser parser) {
+        super(id, executor, uriProvider);
         this.shellPools = shellPools;
         this.parser = parser;
     }

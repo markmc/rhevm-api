@@ -27,6 +27,7 @@ import com.redhat.rhevm.api.model.CpuTopology;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.resource.TemplateResource;
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.common.util.ReflectionHelper;
@@ -43,9 +44,10 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
 
     public PowerShellTemplateResource(String id,
                                       Executor executor,
+                                      UriInfoProvider uriProvider,
                                       PowerShellPoolMap shellPools,
                                       PowerShellParser parser) {
-        super(id, executor, shellPools, parser);
+        super(id, executor, uriProvider, shellPools, parser);
     }
 
     public static List<PowerShellTemplate> runAndParse(PowerShellPool pool,
@@ -64,7 +66,7 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
         return runAndParseSingle(getPool(), getParser(), command);
     }
 
-    public static Template addLinks(PowerShellTemplate template) {
+    public static Template addLinks(UriInfo uriInfo, PowerShellTemplate template) {
         Template ret = JAXBHelper.clone("template", Template.class, template);
 
         String [] deviceCollections = { "cdroms", "disks", "nics" };
@@ -74,24 +76,24 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
         for (String collection : deviceCollections) {
             Link link = new Link();
             link.setRel(collection);
-            link.setHref(LinkHelper.getUriBuilder(ret).path(collection).build().toString());
+            link.setHref(LinkHelper.getUriBuilder(uriInfo, ret).path(collection).build().toString());
             ret.getLinks().add(link);
         }
 
-        return LinkHelper.addLinks(ret);
+        return LinkHelper.addLinks(uriInfo, ret);
     }
 
     @Override
-    public Template get(UriInfo uriInfo) {
+    public Template get() {
         StringBuilder buf = new StringBuilder();
 
         buf.append("get-template -templateid " + PowerShellUtils.escape(getId()));
 
-        return addLinks(runAndParseSingle(buf.toString()));
+        return addLinks(getUriInfo(), runAndParseSingle(buf.toString()));
     }
 
     @Override
-    public Template update(UriInfo uriInfo, Template template) {
+    public Template update(Template template) {
         validateUpdate(template);
 
         StringBuilder buf = new StringBuilder();
@@ -126,7 +128,7 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
 
         buf.append("update-template -templateobject $t");
 
-        return addLinks(runAndParseSingle(buf.toString()));
+        return addLinks(getUriInfo(), runAndParseSingle(buf.toString()));
     }
 
     public class CdRomQuery extends PowerShellCdRomsResource.CdRomQuery {
@@ -140,16 +142,16 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
 
     @Override
     public PowerShellReadOnlyCdRomsResource getCdRomsResource() {
-        return new PowerShellReadOnlyCdRomsResource(getId(), shellPools, new CdRomQuery(getId()));
+        return new PowerShellReadOnlyCdRomsResource(getId(), shellPools, new CdRomQuery(getId()), getUriProvider());
     }
 
     @Override
     public PowerShellReadOnlyDisksResource getDisksResource() {
-        return new PowerShellReadOnlyDisksResource(getId(), shellPools, getParser(), "get-template");
+        return new PowerShellReadOnlyDisksResource(getId(), shellPools, getParser(), "get-template", getUriProvider());
     }
 
     @Override
     public PowerShellReadOnlyNicsResource getNicsResource() {
-        return new PowerShellReadOnlyNicsResource(getId(), shellPools, getParser(), "get-template");
+        return new PowerShellReadOnlyNicsResource(getId(), shellPools, getParser(), "get-template", getUriProvider());
     }
 }

@@ -23,8 +23,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.POST;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 import javax.ws.rs.core.Response;
 
@@ -50,49 +48,49 @@ public interface VmResource extends UpdatableResource<VM> {
     @Consumes(MediaType.APPLICATION_XML)
     @Actionable
     @Path("start")
-    public Response start(@Context UriInfo uriInfo, Action action);
+    public Response start(Action action);
 
     @POST
     @Formatted
     @Consumes(MediaType.APPLICATION_XML)
     @Actionable
     @Path("stop")
-    public Response stop(@Context UriInfo uriInfo, Action action);
+    public Response stop(Action action);
 
     @POST
     @Formatted
     @Consumes(MediaType.APPLICATION_XML)
     @Actionable
     @Path("shutdown")
-    public Response shutdown(@Context UriInfo uriInfo, Action action);
+    public Response shutdown(Action action);
 
     @POST
     @Formatted
     @Consumes(MediaType.APPLICATION_XML)
     @Actionable
     @Path("suspend")
-    public Response suspend(@Context UriInfo uriInfo, Action action);
+    public Response suspend(Action action);
 
     @POST
     @Formatted
     @Consumes(MediaType.APPLICATION_XML)
     @Actionable
     @Path("detach")
-    public Response detach(@Context UriInfo uriInfo, Action action);
+    public Response detach(Action action);
 
     @POST
     @Formatted
     @Consumes(MediaType.APPLICATION_XML)
     @Actionable
     @Path("migrate")
-    public Response migrate(@Context UriInfo uriInfo, Action action);
+    public Response migrate(Action action);
 
     @POST
     @Formatted
     @Consumes(MediaType.APPLICATION_XML)
     @Actionable
     @Path("ticket")
-    public Response ticket(@Context UriInfo uriInfo, Action action);
+    public Response ticket(Action action);
 
     @Path("cdroms")
     public DevicesResource<CdRom, CdRoms> getCdRomsResource();

@@ -53,12 +53,8 @@ public class BaseActionResource<R extends BaseResource> implements ActionResourc
         return action;
     }
 
-    private String getRelativePath(UriInfo uriInfo) {
-        String path = uriInfo.getPath();
-        if (path.startsWith("/")) {
-            path = path.substring(1);
-        }
-        return path;
+    private String getPath(UriInfo uriInfo) {
+        return combine(uriInfo.getBaseUri().getPath(), uriInfo.getPath());
     }
 
     private void addLink(String rel, String href) {
@@ -69,12 +65,22 @@ public class BaseActionResource<R extends BaseResource> implements ActionResourc
     }
 
     private void addLinks(UriInfo uriInfo) {
-        action.setHref(UriBuilder.fromPath(getRelativePath(uriInfo)).path(action.getId()).build().toString());
+        action.setHref(UriBuilder.fromPath(getPath(uriInfo)).path(action.getId()).build().toString());
 
-        String parentHref = LinkHelper.addLinks(parent).getHref();
+        String parentHref = LinkHelper.addLinks(uriInfo, parent).getHref();
         if (parentHref != null) {
             addLink("parent", parentHref);
         }
-        addLink("replay", getRelativePath(uriInfo));
+        addLink("replay", getPath(uriInfo));
+    }
+
+    private String combine(String head, String tail) {
+        if (head.endsWith("/")) {
+            head = head.substring(0, head.length() - 1);
+        }
+        if (tail.startsWith("/")) {
+            tail = tail.substring(1);
+        }
+        return head + "/" + tail;
     }
 }

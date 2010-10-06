@@ -21,6 +21,7 @@ package com.redhat.rhevm.api.powershell.resource;
 import java.util.List;
 import java.util.concurrent.Executor;
 
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.model.Role;
 import com.redhat.rhevm.api.powershell.model.PowerShellRole;
@@ -31,7 +32,7 @@ import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 import com.redhat.rhevm.api.resource.RoleResource;
 
-public class PowerShellRoleResource extends AbstractPowerShellResource implements RoleResource {
+public class PowerShellRoleResource extends UriProviderWrapper implements RoleResource {
 
     protected String roleId;
     protected String userId;
@@ -40,8 +41,9 @@ public class PowerShellRoleResource extends AbstractPowerShellResource implement
                                   String userId,
                                   Executor executor,
                                   PowerShellPoolMap shellPools,
-                                  PowerShellParser parser) {
-        super(executor, shellPools, parser);
+                                  PowerShellParser parser,
+                                  UriInfoProvider uriProvider) {
+        super(executor, shellPools, parser, uriProvider);
         this.roleId = roleId;
         this.userId = userId;
     }
@@ -65,6 +67,6 @@ public class PowerShellRoleResource extends AbstractPowerShellResource implement
         StringBuilder getRole = new StringBuilder();
         getRole.append("get-role -roleid ").append(PowerShellUtils.escape(roleId));
 
-        return LinkHelper.addLinks(runAndParseSingle(getRole.toString()));
+        return LinkHelper.addLinks(getUriInfo(), runAndParseSingle(getRole.toString()));
     }
 }

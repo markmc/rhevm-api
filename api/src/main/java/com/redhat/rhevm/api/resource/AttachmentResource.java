@@ -24,9 +24,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 import com.redhat.rhevm.api.model.Attachment;
@@ -39,7 +37,7 @@ public interface AttachmentResource {
 
     @GET
     @Formatted
-    public Attachment get(@Context UriInfo uriInfo);
+    public Attachment get();
 
     @Path("{action: (activate|deactivate)}/{oid}")
     public ActionResource getActionSubresource(@PathParam("action") String action, @PathParam("oid") String oid);
@@ -49,12 +47,12 @@ public interface AttachmentResource {
     @Consumes(MediaType.APPLICATION_XML)
     @Actionable
     @Path("activate")
-    public Response activate(@Context UriInfo uriInfo, Action action);
+    public Response activate(Action action);
 
     @POST
     @Formatted
     @Consumes(MediaType.APPLICATION_XML)
     @Actionable
     @Path("deactivate")
-    public Response deactivate(@Context UriInfo uriInfo, Action action);
+    public Response deactivate(Action action);
 }

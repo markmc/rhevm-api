@@ -24,8 +24,8 @@ import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.User;
 import com.redhat.rhevm.api.model.Users;
 import com.redhat.rhevm.api.model.VM;
@@ -38,7 +38,7 @@ import com.redhat.rhevm.api.resource.AttachedUsersResource;
 import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
 import static com.redhat.rhevm.api.powershell.util.PowerShellUtils.escape;
 
-public class PowerShellAttachedUsersResource extends AbstractPowerShellResource implements AttachedUsersResource {
+public class PowerShellAttachedUsersResource extends UriProviderWrapper  implements AttachedUsersResource {
 
     private static String PARENT_ID = " -vmid ";
     private static String PARENT_SEARCH = SEARCH_TEXT + "\"vm.name={0}\"";
@@ -48,8 +48,9 @@ public class PowerShellAttachedUsersResource extends AbstractPowerShellResource 
     public PowerShellAttachedUsersResource(String parentId,
                                            Executor executor,
                                            PowerShellPoolMap shellPools,
-                                           PowerShellParser parser) {
-        super(executor, shellPools, parser);
+                                           PowerShellParser parser,
+                                           UriInfoProvider uriProvider) {
+        super(executor, shellPools, parser, uriProvider);
         this.parentId = parentId;
     }
 
@@ -62,7 +63,7 @@ public class PowerShellAttachedUsersResource extends AbstractPowerShellResource 
     }
 
     @Override
-    public Users list(UriInfo uriInfo) {
+    public Users list() {
         Users ret = new Users();
         // apparently needs to be run a separate command, as substituting in $vm.name
         // into the select-user searchtext leads to a powershell syntax error
@@ -74,13 +75,13 @@ public class PowerShellAttachedUsersResource extends AbstractPowerShellResource 
         getUsers.append("select-user").append(MessageFormat.format(PARENT_SEARCH, vm.getName()));
 
         for (User user : runAndParse(getUsers.toString())) {
-            ret.getUsers().add(PowerShellUserResource.addLinks(user));
+            ret.getUsers().add(PowerShellUserResource.addLinks(getUriInfo(), user));
         }
         return ret;
     }
 
     @Override
-    public Response add(UriInfo uriInfo, User user) {
+    public Response add(User user) {
         validateParameters(user, "userName|id");
         StringBuilder attachUser = new StringBuilder();
 
@@ -94,8 +95,8 @@ public class PowerShellAttachedUsersResource extends AbstractPowerShellResource 
 
         attachUser.append("attach-user -userobject $u")
                   .append(PARENT_ID).append(parentId);
-        User newUser = PowerShellUserResource.addLinks(runAndParseSingle(attachUser.toString()));
-        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(newUser.getId());
+        User newUser = PowerShellUserResource.addLinks(getUriInfo(), runAndParseSingle(attachUser.toString()));
+        UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(newUser.getId());
         return Response.created(uriBuilder.build()).entity(newUser).build();
     }
 
@@ -108,7 +109,7 @@ public class PowerShellAttachedUsersResource extends AbstractPowerShellResource 
     }
 
     @Override
-    public UserResource getUserSubResource(UriInfo uriInfo, String id) {
-        return new PowerShellUserResource(id, executor, shellPools, parser);
+    public UserResource getUserSubResource(String id) {
+        return new PowerShellUserResource(id, executor, shellPools, parser, getUriProvider());
     }
 }

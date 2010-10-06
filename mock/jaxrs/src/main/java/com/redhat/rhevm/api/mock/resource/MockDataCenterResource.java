@@ -20,12 +20,12 @@ package com.redhat.rhevm.api.mock.resource;
 
 import java.util.concurrent.Executor;
 
-import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Attachments;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.resource.DataCenterResource;
 import com.redhat.rhevm.api.resource.IsosResource;
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 
@@ -41,8 +41,8 @@ public class MockDataCenterResource extends AbstractMockResource<DataCenter> imp
      * @param dataCenter  encapsulated DataCenter
      * @param executor    executor used for asynchronous actions
      */
-    MockDataCenterResource(String id, Executor executor) {
-        super(id, executor);
+    MockDataCenterResource(String id, Executor executor, UriInfoProvider uriProvider) {
+        super(id, executor, uriProvider);
     }
 
     // FIXME: this needs to be atomic
@@ -65,17 +65,17 @@ public class MockDataCenterResource extends AbstractMockResource<DataCenter> imp
         Attachments attachments = MockStorageDomainsResource.getAttachmentsForDataCenter(dataCenter.getId());
         dataCenter.setAttachments(attachments);
 
-        return LinkHelper.addLinks(dataCenter);
+        return LinkHelper.addLinks(getUriInfo(), dataCenter);
     }
 
     /* FIXME: kill uriInfo param, make href auto-generated? */
     @Override
-    public DataCenter get(UriInfo uriInfo) {
+    public DataCenter get() {
         return addLinks();
     }
 
     @Override
-    public DataCenter update(UriInfo uriInfo, DataCenter dataCenter) {
+    public DataCenter update(DataCenter dataCenter) {
         validateUpdate(dataCenter);
         updateModel(dataCenter);
         return addLinks();

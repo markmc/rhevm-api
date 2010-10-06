@@ -20,11 +20,11 @@ package com.redhat.rhevm.api.powershell.resource;
 
 import java.util.concurrent.Executor;
 
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.HostStorage;
 import com.redhat.rhevm.api.model.Storage;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
-import com.redhat.rhevm.api.powershell.util.PowerShellException;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
@@ -58,8 +58,8 @@ public class PowerShellHostStorageResourceTest
     private static final String GET_STORAGE_VGS_CMD = "get-storagevolumegroups -hostid \"" + asId(HOST_NAME) + "\"";
     private static final String GET_STORAGE_VG_CMD = GET_STORAGE_VGS_CMD + " | ? { $_.vgid -eq \"" + asId(VGS[0]) + "\" }";
 
-    protected  PowerShellHostResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser) {
-        return new PowerShellHostResource(asId(HOST_NAME), executor, poolMap, parser);
+    protected  PowerShellHostResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider) {
+        return new PowerShellHostResource(asId(HOST_NAME), executor, uriProvider, poolMap, parser);
     }
 
     protected String formatDevices(String[] names) {
@@ -82,11 +82,12 @@ public class PowerShellHostStorageResourceTest
 
     @Test
     public void testGetDevice() {
-        PowerShellHostStorageResource parent = new PowerShellHostStorageResource(asId(HOST_NAME), executor, poolMap, parser);
+        PowerShellHostStorageResource parent = new PowerShellHostStorageResource(asId(HOST_NAME), executor, poolMap, parser, uriProvider);
         PowerShellStorageResource resource = new PowerShellStorageResource(asId(DEVICES[0]), parent);
 
         setUpCmdExpectations(GET_STORAGE_DEVICE_CMD,
                              formatDevice(DEVICES[0]));
+        setUriInfo(setUpBasicUriExpectations());
         replayAll();
 
         verifyStorageDevice(resource.get(), 0);
@@ -94,7 +95,7 @@ public class PowerShellHostStorageResourceTest
 
     @Test
     public void testGetVolumeGroup() {
-        PowerShellHostStorageResource parent = new PowerShellHostStorageResource(asId(HOST_NAME), executor, poolMap, parser);
+        PowerShellHostStorageResource parent = new PowerShellHostStorageResource(asId(HOST_NAME), executor, poolMap, parser, uriProvider);
         PowerShellStorageResource resource = new PowerShellStorageResource(asId(VGS[0]), parent);
 
         String[] commands = { GET_STORAGE_ENODEV_CMD,
@@ -102,6 +103,7 @@ public class PowerShellHostStorageResourceTest
         String[] returns = { "<Objects/>", formatVolumeGroup(VGS[0]) };
 
         setUpCmdExpectations(commands, returns);
+        setUriInfo(setUpBasicUriExpectations());
         replayAll();
 
         verifyStorageVolumeGroup(resource.get(), 0);
@@ -109,7 +111,7 @@ public class PowerShellHostStorageResourceTest
 
     @Test
     public void testList() {
-        PowerShellHostStorageResource resource = new PowerShellHostStorageResource(asId(HOST_NAME), executor, poolMap, parser);
+        PowerShellHostStorageResource resource = new PowerShellHostStorageResource(asId(HOST_NAME), executor, poolMap, parser, uriProvider);
 
         String[] commands = { GET_STORAGE_DEVICES_CMD,
                               GET_STORAGE_VGS_CMD };
@@ -117,6 +119,7 @@ public class PowerShellHostStorageResourceTest
                              formatVolumeGroups(VGS) };
 
         setUpCmdExpectations(commands, returns);
+        setUriInfo(setUpBasicUriExpectations());
         replayAll();
 
         verifyHostStorage(resource.list());
@@ -144,11 +147,13 @@ public class PowerShellHostStorageResourceTest
     private void verifyStorageDevice(Storage storage, int i) {
         assertNotNull(storage);
         assertEquals(asId(DEVICES[i]), storage.getId());
+        verifyLinks(storage);
     }
 
     private void verifyStorageVolumeGroup(Storage storage, int i) {
         assertNotNull(storage);
         assertEquals(asId(VGS[i]), storage.getId());
+        verifyLinks(storage);
     }
 
     private void verifyHostStorage(HostStorage hostStorage) {

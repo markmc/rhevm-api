@@ -22,7 +22,6 @@ import java.util.List;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Role;
 import com.redhat.rhevm.api.model.User;
@@ -34,7 +33,7 @@ import com.redhat.rhevm.api.resource.UsersResource;
 
 import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
 
-public class PowerShellUsersResource extends AbstractPowerShellResource implements UsersResource {
+public class PowerShellUsersResource extends InjectableUriProviderBase implements UsersResource {
 
     public List<User> runAndParse(String command) {
         return PowerShellUserResource.runAndParse(getPool(), getParser(), command);
@@ -45,22 +44,21 @@ public class PowerShellUsersResource extends AbstractPowerShellResource implemen
     }
 
     @Override
-    public Users list(UriInfo uriInfo) {
+    public Users list() {
         Users ret = new Users();
-        for (User user : runAndParse(getSelectCommand("select-user", uriInfo, User.class))) {
-            ret.getUsers().add(PowerShellUserResource.addLinks(user));
+        for (User user : runAndParse(getSelectCommand("select-user", getUriInfo(), User.class))) {
+            ret.getUsers().add(PowerShellUserResource.addLinks(getUriInfo(), user));
         }
         return ret;
     }
 
     @Override
-    public Response add(UriInfo uriInfo, User user) {
+    public Response add(User user) {
         validateParameters(user, "userName|id", "roles.id|name");
         StringBuilder buf = new StringBuilder();
 
         String userArg = null;
         if (user.isSetId()) {
-            System.out.println("id is set");
             userArg = PowerShellUtils.escape(user.getId());
         } else {
             buf.append("$u = select-user -AD").append(SEARCH_TEXT);
@@ -71,8 +69,8 @@ public class PowerShellUsersResource extends AbstractPowerShellResource implemen
         String roleArg = getRoleArg(user.getRoles().getRoles().get(0), buf);
 
         buf.append("add-user -userid ").append(userArg).append(" -userroleid ").append(roleArg);
-        User newUser = PowerShellUserResource.addLinks(runAndParseSingle(buf.toString()));
-        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(newUser.getId());
+        User newUser = PowerShellUserResource.addLinks(getUriInfo(), runAndParseSingle(buf.toString()));
+        UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(newUser.getId());
 
         if (user.getRoles().getRoles().size() > 1) {
             for (int i = 1 ; i < user.getRoles().getRoles().size() ; i++) {
@@ -92,8 +90,8 @@ public class PowerShellUsersResource extends AbstractPowerShellResource implemen
     }
 
     @Override
-    public UserResource getUserSubResource(UriInfo uriInfo, String id) {
-        return new PowerShellUserResource(id, executor, shellPools, parser);
+    public UserResource getUserSubResource(String id) {
+        return new PowerShellUserResource(id, executor, shellPools, parser, this);
     }
 
     static String getRoleArg(Role role, StringBuilder buf) {

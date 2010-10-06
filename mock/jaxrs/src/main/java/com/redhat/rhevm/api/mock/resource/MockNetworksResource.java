@@ -24,7 +24,6 @@ import java.util.Map;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.mock.util.SimpleQueryEvaluator;
 import com.redhat.rhevm.api.model.DataCenter;
@@ -49,7 +48,7 @@ public class MockNetworksResource extends AbstractMockQueryableResource<Network>
     public void populate() {
         synchronized (networks) {
             while (networks.size() < 4) {
-                MockNetworkResource resource = new MockNetworkResource(allocateId(Network.class), getExecutor());
+                MockNetworkResource resource = new MockNetworkResource(allocateId(Network.class), getExecutor(), this);
                 resource.getModel().setName("network" + resource.getModel().getId());
                 resource.getModel().setStatus((networks.size() % 2) == 0 ? NetworkStatus.OPERATIONAL : NetworkStatus.NON_OPERATIONAL);
                 DataCenter dataCenter = new DataCenter();
@@ -65,7 +64,7 @@ public class MockNetworksResource extends AbstractMockQueryableResource<Network>
         Networks ret = new Networks();
 
         for (MockNetworkResource network : networks.values()) {
-            if (filter(network.getModel(), null, Network.class)) {
+            if (filter(network.getModel(), getUriInfo(), Network.class)) {
                 ret.getNetworks().add(network.addLinks());
             }
         }
@@ -74,15 +73,15 @@ public class MockNetworksResource extends AbstractMockQueryableResource<Network>
     }
 
     @Override
-    public Response add(UriInfo uriInfo, Network network) {
-        MockNetworkResource resource = new MockNetworkResource(allocateId(Network.class), getExecutor());
+    public Response add(Network network) {
+        MockNetworkResource resource = new MockNetworkResource(allocateId(Network.class), getExecutor(), this);
 
         resource.updateModel(network);
 
         String id = resource.getId();
         networks.put(id, resource);
 
-        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(id);
+        UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(id);
 
         network = resource.addLinks();
 
@@ -95,7 +94,7 @@ public class MockNetworksResource extends AbstractMockQueryableResource<Network>
     }
 
     @Override
-    public NetworkResource getNetworkSubResource(UriInfo uriInfo, String id) {
+    public NetworkResource getNetworkSubResource(String id) {
         return networks.get(id);
     }
 }

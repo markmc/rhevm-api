@@ -24,6 +24,7 @@ import java.util.List;
 import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.Disks;
 
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellDisk;
@@ -40,8 +41,9 @@ public class PowerShellReadOnlyDisksResource extends AbstractPowerShellDevicesRe
     public PowerShellReadOnlyDisksResource(String parentId,
                                            PowerShellPoolMap shellPools,
                                            PowerShellParser parser,
-                                           String getCommand) {
-        super(parentId, shellPools, parser);
+                                           String getCommand,
+                                           UriInfoProvider uriProvider) {
+        super(parentId, shellPools, parser, uriProvider);
         this.getCommand = getCommand;
     }
 
@@ -72,7 +74,7 @@ public class PowerShellReadOnlyDisksResource extends AbstractPowerShellDevicesRe
     @Override
     public Disk addLinks(Disk disk) {
         disk = JAXBHelper.clone("disk", Disk.class, disk);
-        return LinkHelper.addLinks(disk);
+        return LinkHelper.addLinks(getUriInfo(), disk);
     }
 
     @Override

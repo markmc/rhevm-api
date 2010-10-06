@@ -21,7 +21,6 @@ package com.redhat.rhevm.api.powershell.resource;
 import java.util.List;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.common.util.ReflectionHelper;
 import com.redhat.rhevm.api.model.CpuTopology;
@@ -49,16 +48,16 @@ public class PowerShellTemplatesResource
     }
 
     @Override
-    public Templates list(UriInfo uriInfo) {
+    public Templates list() {
         Templates ret = new Templates();
-        for (PowerShellTemplate template : runAndParse(getSelectCommand("select-template", uriInfo, Template.class))) {
-            ret.getTemplates().add(PowerShellTemplateResource.addLinks(template));
+        for (PowerShellTemplate template : runAndParse(getSelectCommand("select-template", getUriInfo(), Template.class))) {
+            ret.getTemplates().add(PowerShellTemplateResource.addLinks(getUriInfo(), template));
         }
         return ret;
     }
 
     @Override
-    public Response add(UriInfo uriInfo, Template template) {
+    public Response add(Template template) {
         validateParameters(template, "name", "vm.id|name");
         StringBuilder buf = new StringBuilder();
 
@@ -110,9 +109,9 @@ public class PowerShellTemplatesResource
 
         PowerShellTemplate ret = runAndParseSingle(buf.toString());
 
-        template = PowerShellTemplateResource.addLinks(ret);
+        template = PowerShellTemplateResource.addLinks(getUriInfo(), ret);
 
-        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(ret.getId());
+        UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(ret.getId());
 
         return Response.created(uriBuilder.build()).entity(template).build();
     }
@@ -124,11 +123,11 @@ public class PowerShellTemplatesResource
     }
 
     @Override
-    public TemplateResource getTemplateSubResource(UriInfo uriInfo, String id) {
+    public TemplateResource getTemplateSubResource(String id) {
         return getSubResource(id);
     }
 
     protected PowerShellTemplateResource createSubResource(String id) {
-        return new PowerShellTemplateResource(id, getExecutor(), shellPools, getParser());
+        return new PowerShellTemplateResource(id, getExecutor(), this, shellPools, getParser());
     }
 }

@@ -23,7 +23,6 @@ import java.util.List;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.LogicalUnit;
 import com.redhat.rhevm.api.model.Storage;
@@ -54,18 +53,18 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
     }
 
     @Override
-    public StorageDomains list(UriInfo uriInfo) {
+    public StorageDomains list() {
         StorageDomains ret = new StorageDomains();
 
-        List<StorageDomain> storageDomains = runAndParse(getSelectCommand("select-storagedomain", uriInfo, StorageDomain.class), true);
+        List<StorageDomain> storageDomains = runAndParse(getSelectCommand("select-storagedomain", getUriInfo(), StorageDomain.class), true);
 
         for (StorageDomain storageDomain : storageDomains) {
-            ret.getStorageDomains().add(PowerShellStorageDomainResource.addLinks(storageDomain));
+            ret.getStorageDomains().add(PowerShellStorageDomainResource.addLinks(getUriInfo(), storageDomain));
         }
 
         for (String id : tornDownDomains.keySet()) {
             PowerShellStorageDomainResource resource = tornDownDomains.get(id);
-            ret.getStorageDomains().add(PowerShellStorageDomainResource.addLinks(resource.getTornDown()));
+            ret.getStorageDomains().add(PowerShellStorageDomainResource.addLinks(getUriInfo(), resource.getTornDown()));
         }
 
         return ret;
@@ -118,7 +117,7 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
     }
 
     @Override
-    public Response add(UriInfo uriInfo, StorageDomain storageDomain) {
+    public Response add(StorageDomain storageDomain) {
         validateParameters(storageDomain, "name", "host.id|name", "type", "storage.type");
 
         Storage storage = storageDomain.getStorage();
@@ -210,9 +209,9 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
 
         storageDomain = runAndParseSingle(buf.toString(), true);
 
-        storageDomain = PowerShellStorageDomainResource.addLinks(storageDomain);
+        storageDomain = PowerShellStorageDomainResource.addLinks(getUriInfo(), storageDomain);
 
-        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(storageDomain.getId());
+        UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(storageDomain.getId());
 
         return Response.created(uriBuilder.build()).entity(storageDomain).build();
     }
@@ -224,7 +223,7 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
     }
 
     @Override
-    public StorageDomainResource getStorageDomainSubResource(UriInfo uriInfo, String id) {
+    public StorageDomainResource getStorageDomainSubResource(String id) {
         if (tornDownDomains.containsKey(id)) {
             return tornDownDomains.get(id);
         } else {

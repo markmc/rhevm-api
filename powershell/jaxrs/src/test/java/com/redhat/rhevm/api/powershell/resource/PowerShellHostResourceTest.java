@@ -26,6 +26,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Fault;
 import com.redhat.rhevm.api.model.Host;
@@ -62,8 +63,8 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
     private static String ISCSI_DISCOVER_COMMAND = "$cnx = new-storageserverconnection -storagetype ISCSI -connection \"" + ISCSI_PORTAL + "\" -portal \"" + ISCSI_PORTAL + "\"; get-storageserversendtargets -hostid \"" + HOST_ID + "\" -storageserverconnectionobject $cnx";
     private static String ISCSI_LOGIN_COMMAND = "$cnx = new-storageserverconnection -storagetype ISCSI -connection \"" + ISCSI_PORTAL + "\" -portal \"" + ISCSI_PORTAL + "\" -iqn \"" + ISCSI_TARGET + "\"; connect-storagetohost -hostid \"" + HOST_ID + "\" -storageserverconnectionobject $cnx";
 
-    protected PowerShellHostResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser) {
-        return new PowerShellHostResource(HOST_ID, executor, poolMap, parser);
+    protected PowerShellHostResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider) {
+        return new PowerShellHostResource(HOST_ID, executor, uriProvider, poolMap, parser);
     }
 
     protected String formatHost(String name) {
@@ -85,39 +86,34 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
 
     @Test
     public void testGet() throws Exception {
-        verifyHost(
-            resource.get(setUpHostExpectations(GET_COMMAND,
-                                               formatHost(HOST_NAME),
-                                               HOST_NAME)),
-            HOST_NAME);
+        setUriInfo(setUpHostExpectations(GET_COMMAND,
+                                         formatHost(HOST_NAME),
+                                         HOST_NAME));
+        verifyHost(resource.get(), HOST_NAME);
     }
 
     @Test
     public void testGet22() throws Exception {
-        verifyHost(
-            resource.get(setUpHostExpectations(GET_COMMAND,
-                                               formatHost("host22", HOST_NAME),
-                                               HOST_NAME)),
-            HOST_NAME);
+        setUriInfo(setUpHostExpectations(GET_COMMAND,
+                                         formatHost("host22", HOST_NAME),
+                                         HOST_NAME));
+        verifyHost(resource.get(), HOST_NAME);
     }
 
     @Test
     public void testGoodUpdate() throws Exception {
-        verifyHost(
-            resource.update(setUpHostExpectations(UPDATE_COMMAND,
-                                                  formatHost("eris"),
-                                                  "eris"),
-                            getHost(HOST_ID, "eris")),
-            "eris");
+        setUriInfo(setUpHostExpectations(UPDATE_COMMAND,
+                                         formatHost("eris"),
+                                         "eris"));
+        verifyHost(resource.update(getHost(HOST_ID, "eris")), "eris");
     }
 
     @Test
     public void testBadUpdate() throws Exception {
         try {
-            UriInfo uriInfo = createMock(UriInfo.class);
+            setUriInfo(createMock(UriInfo.class));
             replayAll();
-            resource.update(uriInfo,
-                            getHost("98765", "eris"));
+            resource.update(getHost("98765", "eris"));
             fail("expected WebApplicationException on bad update");
         } catch (WebApplicationException wae) {
             verifyUpdateException(wae);
@@ -126,24 +122,23 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
 
     @Test
     public void testApprove() throws Exception {
-        verifyActionResponse(
-            resource.approve(setUpActionExpectation("approve", "approve-host"), getAction()),
-            false);
+        setUriInfo(setUpActionExpectation("approve", "approve-host"));
+        verifyActionResponse(resource.approve(getAction()), false);
     }
 
     @Test
     public void testInstall() throws Exception {
         Action action = getAction();
         action.setRootPassword(INSTALL_PASSWORD);
-        verifyActionResponse(
-            resource.install(setUpActionExpectation("hosts/" + HOST_ID, "install", INSTALL_COMMAND, ACTION_RETURN), action),
-            false);
+        setUriInfo(setUpActionExpectation("hosts/" + HOST_ID, "install", INSTALL_COMMAND, ACTION_RETURN));
+        verifyActionResponse(resource.install(action), false);
     }
 
     @Test
     public void testIncompleteInstall() throws Exception {
+        setUriInfo(setUpActionExpectation(null, null, null, null));
         try {
-            resource.install(setUpActionExpectation(null, null, null, null), getAction());
+            resource.install(getAction());
             fail("expected WebApplicationException on incomplete parameters");
         } catch (WebApplicationException wae) {
              verifyIncompleteException(wae, "Action", "install", "rootPassword");
@@ -152,27 +147,23 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
 
     @Test
     public void testActivate() throws Exception {
-        verifyActionResponse(
-            resource.activate(setUpActionExpectation("activate", "resume-host"), getAction()),
-            false);
+        setUriInfo(setUpActionExpectation("activate", "resume-host"));
+        verifyActionResponse(resource.activate(getAction()), false);
     }
 
     @Test
     public void testDeactivate() throws Exception {
-        verifyActionResponse(
-            resource.deactivate(setUpActionExpectation("deactivate", "suspend-host"), getAction()),
-            false);
+        setUriInfo(setUpActionExpectation("deactivate", "suspend-host"));
+        verifyActionResponse(resource.deactivate(getAction()), false);
     }
 
     @Test
     public void testCommitNetConfig() throws Exception {
-        verifyActionResponse(
-            resource.commitNetConfig(setUpActionExpectation("/hosts/"+ HOST_ID + "/",
-                                                            "commitnetconfig",
-                                                            COMMIT_NET_CONFIG_COMMAND,
-                                                            ACTION_RETURN),
-                                     getAction()),
-            false);
+        setUriInfo(setUpActionExpectation("/hosts/"+ HOST_ID + "/",
+                                          "commitnetconfig",
+                                          COMMIT_NET_CONFIG_COMMAND,
+                                          ACTION_RETURN));
+        verifyActionResponse(resource.commitNetConfig(getAction()), false);
     }
 
     @Test
@@ -180,12 +171,11 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
         Action action = getAction();
         action.setIscsi(new IscsiParameters());
         action.getIscsi().setAddress(ISCSI_PORTAL);
-        Response response =
-            resource.iscsiDiscover(setUpActionExpectation("/hosts/" + HOST_ID + "/",
-                                                          "iscsidiscover",
-                                                          ISCSI_DISCOVER_COMMAND,
-                                                          formatStorageConnection()),
-                                   action);
+        setUriInfo(setUpActionExpectation("/hosts/" + HOST_ID + "/",
+                                          "iscsidiscover",
+                                          ISCSI_DISCOVER_COMMAND,
+                                          formatStorageConnection()));
+        Response response = resource.iscsiDiscover(action);
         verifyActionResponse(response, false);
         verifyIscsiTargets(response);
     }
@@ -196,61 +186,53 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
         action.setIscsi(new IscsiParameters());
         action.getIscsi().setAddress(ISCSI_PORTAL);
         action.getIscsi().setTarget(ISCSI_TARGET);
-        verifyActionResponse(
-            resource.iscsiLogin(setUpActionExpectation("/hosts/" + HOST_ID + "/",
-                                                       "iscsilogin",
-                                                       ISCSI_LOGIN_COMMAND,
-                                                       ACTION_RETURN),
-                                action),
-            false);
+        setUriInfo(setUpActionExpectation("/hosts/" + HOST_ID + "/",
+                                          "iscsilogin",
+                                          ISCSI_LOGIN_COMMAND,
+                                          ACTION_RETURN));
+        verifyActionResponse(resource.iscsiLogin(action), false);
     }
 
     @Test
     public void testApproveAsync() throws Exception {
-        verifyActionResponse(
-            resource.approve(setUpActionExpectation("approve", "approve-host"), getAction(true)),
-            true);
+        setUriInfo(setUpActionExpectation("approve", "approve-host"));
+        verifyActionResponse(resource.approve(getAction(true)), true);
     }
 
     @Test
     public void testInstallAsync() throws Exception {
         Action action = getAction(true);
         action.setRootPassword(INSTALL_PASSWORD);
-        verifyActionResponse(
-            resource.install(setUpActionExpectation("hosts/" + HOST_ID, "install", INSTALL_COMMAND, ACTION_RETURN), action),
-            true);
+        setUriInfo(setUpActionExpectation("hosts/" + HOST_ID, "install", INSTALL_COMMAND, ACTION_RETURN));
+        verifyActionResponse(resource.install(action), true);
     }
 
     @Test
     public void testCommitNetConfigAsync() throws Exception {
-        verifyActionResponse(
-            resource.commitNetConfig(setUpActionExpectation("/hosts/"+ HOST_ID + "/",
-                                                            "commitnetconfig",
-                                                            COMMIT_NET_CONFIG_COMMAND,
-                                                            ACTION_RETURN),
-                                     getAction(true)),
-            true);
+        setUriInfo(setUpActionExpectation("/hosts/"+ HOST_ID + "/",
+                                          "commitnetconfig",
+                                          COMMIT_NET_CONFIG_COMMAND,
+                                          ACTION_RETURN));
+        verifyActionResponse(resource.commitNetConfig(getAction(true)), true);
     }
 
     @Test
     public void testActivateAsync() throws Exception {
-        verifyActionResponse(
-            resource.activate(setUpActionExpectation("activate", "resume-host"), getAction(true)),
-            true);
+        setUriInfo(setUpActionExpectation("activate", "resume-host"));
+        verifyActionResponse(resource.activate(getAction(true)), true);
     }
 
     @Test
     public void testDeactivateAsync() throws Exception {
-        verifyActionResponse(
-            resource.deactivate(setUpActionExpectation("deactivate", "suspend-host"), getAction(true)),
-            true);
+        setUriInfo(setUpActionExpectation("deactivate", "suspend-host"));
+        verifyActionResponse(resource.deactivate(getAction(true)), true);
     }
 
     private UriInfo setUpHostExpectations(String command, String ret, String name) throws Exception {
         mockStatic(PowerShellCmd.class);
         expect(PowerShellCmd.runCommand(setUpPoolExpectations(), command)).andReturn(ret);
         String href = "hosts/" + Integer.toString(name.hashCode());
-        UriInfo uriInfo = createMock(UriInfo.class);
+        UriInfo uriInfo = setUpBasicUriExpectations();
         UriBuilder uriBuilder = createMock(UriBuilder.class);
         expect(uriInfo.getRequestUriBuilder()).andReturn(uriBuilder).anyTimes();
         expect(uriBuilder.build()).andReturn(new URI(href)).anyTimes();
@@ -258,6 +240,7 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
         expect(uriBuilder.clone()).andReturn(actionUriBuilder).anyTimes();
         expect(actionUriBuilder.path(isA(String.class))).andReturn(uriBuilder).anyTimes();
         expect(actionUriBuilder.build()).andReturn(new URI(href + "/action")).anyTimes();
+        //expect(uriInfo.getBaseUri()).andReturn(URI.create(URI_BASE)).anyTimes();
         replayAll();
 
         return uriInfo;
@@ -285,6 +268,7 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
         assertNotNull(host);
         assertEquals(Integer.toString(name.hashCode()), host.getId());
         assertEquals(name, host.getName());
+        verifyLinks(host);
     }
 
     private void verifyIscsiTargets(Response response) {

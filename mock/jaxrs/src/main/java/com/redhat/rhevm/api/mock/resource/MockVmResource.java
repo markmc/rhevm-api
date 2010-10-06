@@ -21,7 +21,6 @@ package com.redhat.rhevm.api.mock.resource;
 import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Cluster;
@@ -31,6 +30,7 @@ import com.redhat.rhevm.api.resource.AttachedUsersResource;
 import com.redhat.rhevm.api.resource.DevicesResource;
 import com.redhat.rhevm.api.resource.SnapshotsResource;
 import com.redhat.rhevm.api.resource.VmResource;
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.mock.model.MockVmStatus;
@@ -46,12 +46,11 @@ public class MockVmResource extends AbstractMockResource<VM> implements VmResour
 
     /**
      * Package-protected ctor, never needs to be instantiated by JAX-RS framework.
-     *
-     * @param vm       encapsulated VM
      * @param executor executor used for asynchronous actions
+     * @param vm       encapsulated VM
      */
-    public MockVmResource(String id, Executor executor) {
-        super(id, executor);
+    public MockVmResource(String id, Executor executor, UriInfoProvider uriProvider) {
+        super(id, executor, uriProvider);
     }
 
     // FIXME: this needs to be atomic
@@ -71,17 +70,17 @@ public class MockVmResource extends AbstractMockResource<VM> implements VmResour
     }
 
     public VM addLinks() {
-        return LinkHelper.addLinks(JAXBHelper.clone("vm", VM.class, getModel()));
+        return LinkHelper.addLinks(getUriInfo(), JAXBHelper.clone("vm", VM.class, getModel()));
     }
 
     /* FIXME: kill uriInfo param, make href auto-generated? */
     @Override
-    public VM get(UriInfo uriInfo) {
+    public VM get() {
         return addLinks();
     }
 
     @Override
-    public VM update(UriInfo uriInfo, VM vm) {
+    public VM update(VM vm) {
         validateUpdate(vm);
         updateModel(vm);
         return addLinks();
@@ -92,41 +91,41 @@ public class MockVmResource extends AbstractMockResource<VM> implements VmResour
     }
 
     @Override
-    public Response start(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new VmStatusSetter(action, MockVmStatus.UP));
+    public Response start(Action action) {
+        return doAction(getUriInfo(), new VmStatusSetter(action, MockVmStatus.UP));
     }
 
 
     @Override
-    public Response stop(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new VmStatusSetter(action, MockVmStatus.DOWN));
+    public Response stop(Action action) {
+        return doAction(getUriInfo(), new VmStatusSetter(action, MockVmStatus.DOWN));
 
     }
 
     @Override
-    public Response shutdown(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new VmStatusSetter(action, MockVmStatus.DOWN));
+    public Response shutdown(Action action) {
+        return doAction(getUriInfo(), new VmStatusSetter(action, MockVmStatus.DOWN));
     }
 
     @Override
-    public Response suspend(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new DoNothingTask(action));
+    public Response suspend(Action action) {
+        return doAction(getUriInfo(), new DoNothingTask(action));
     }
 
     @Override
-    public Response detach(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new DoNothingTask(action));
+    public Response detach(Action action) {
+        return doAction(getUriInfo(), new DoNothingTask(action));
     }
 
     @Override
-    public Response migrate(UriInfo uriInfo, Action action) {
+    public Response migrate(Action action) {
         String migrateToHostId = action.getHost().getId();
-        return doAction(uriInfo, new DoNothingTask(action));
+        return doAction(getUriInfo(), new DoNothingTask(action));
     }
 
     @Override
-    public Response ticket(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new DoNothingTask(action));
+    public Response ticket(Action action) {
+        return doAction(getUriInfo(), new DoNothingTask(action));
     }
 
     private class VmStatusSetter extends AbstractActionTask {

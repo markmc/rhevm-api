@@ -18,37 +18,29 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.Iso;
 import com.redhat.rhevm.api.resource.IsoResource;
-import com.redhat.rhevm.api.common.util.LinkHelper;
 
 
 public class PowerShellIsoResource implements IsoResource {
 
-    private static String id;
-    private static String dataCenterId;
+    private String id;
+    private String dataCenterId;
+    private PowerShellIsosResource parent;
 
-    public PowerShellIsoResource(String id, String dataCenterId) {
-        PowerShellIsoResource.id = id;
-        PowerShellIsoResource.dataCenterId = dataCenterId;
-    }
-
-    public static Iso addLinks(Iso iso, String dataCenterId) {
-        iso.setDataCenter(new DataCenter());
-        iso.getDataCenter().setId(dataCenterId);
-
-        return LinkHelper.addLinks(iso);
+    public PowerShellIsoResource(String id, String dataCenterId, PowerShellIsosResource parent) {
+        this.id = id;
+        this.dataCenterId = dataCenterId;
+        this.parent = parent;
     }
 
     @Override
-    public Iso get(UriInfo uriInfo) {
+    public Iso get() {
         Iso iso = new Iso();
         iso.setId(id);
         iso.setName(id);
 
-        return addLinks(iso, dataCenterId);
+        return parent.addLinks(iso, dataCenterId);
     }
 }

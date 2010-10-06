@@ -21,6 +21,7 @@ package com.redhat.rhevm.api.powershell.resource;
 import java.text.MessageFormat;
 import java.util.concurrent.Executor;
 
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.Role;
 import com.redhat.rhevm.api.model.Roles;
 import com.redhat.rhevm.api.model.User;
@@ -43,7 +44,7 @@ public class PowerShellUsersResourceTest extends AbstractPowerShellUsersResource
     protected static final String ROLE_BY_NAME_ARG = "$role.Id";
     protected static final String ATTACH_ROLE_COMMAND = "attach-role -roleid \"" + ROLE_ID + "\" -elementid " + USER_ID;
 
-    protected PowerShellUsersResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser) {
+    protected PowerShellUsersResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider) {
         PowerShellUsersResource resource = new PowerShellUsersResource();
         resource.setExecutor(executor);
         resource.setPowerShellPoolMap(poolMap);
@@ -63,7 +64,8 @@ public class PowerShellUsersResourceTest extends AbstractPowerShellUsersResource
         User user = getUser(USER_ID, ROLE_ID);
         setUpUserExpectations(asArray(MessageFormat.format(ADD_USER_BY_ID, "\"" + ROLE_ID + "\"")),
                               asArray(formatUser(USER_NAME)));
-        verifyResponse(resource.add(setUpUriExpectations(null, true), user), USER_NAME, null, "users");
+        resource.setUriInfo(setUpUriExpectations(null, true));
+        verifyResponse(resource.add(user), USER_NAME, null, "users");
     }
 
     @Test
@@ -72,7 +74,8 @@ public class PowerShellUsersResourceTest extends AbstractPowerShellUsersResource
         setUpUserExpectations(asArrayV(MessageFormat.format(ADD_USER_BY_ID, "\"" + ROLE_ID + "\""),
                                        ATTACH_ROLE_COMMAND),
                               asArrayV(formatUser(USER_NAME), formatRole(ROLE_NAME)));
-        verifyResponse(resource.add(setUpUriExpectations(null, true), user), USER_NAME, null, "users");
+        resource.setUriInfo(setUpUriExpectations(null, true));
+        verifyResponse(resource.add(user), USER_NAME, null, "users");
     }
 
     @Test
@@ -81,7 +84,8 @@ public class PowerShellUsersResourceTest extends AbstractPowerShellUsersResource
         setUpUserExpectations(asArray(MessageFormat.format(GET_ROLE_BY_NAME, ROLE_NAME)
                                       + MessageFormat.format(ADD_USER_BY_ID, ROLE_BY_NAME_ARG)),
                               asArray(formatUser(USER_NAME)));
-        verifyResponse(resource.add(setUpUriExpectations(null, true), user), USER_NAME, null, "users");
+        resource.setUriInfo(setUpUriExpectations(null, true));
+        verifyResponse(resource.add(user), USER_NAME, null, "users");
     }
 
     @Test
@@ -90,7 +94,8 @@ public class PowerShellUsersResourceTest extends AbstractPowerShellUsersResource
         setUpUserExpectations(asArray(GET_USER_BY_NAME
                                       + MessageFormat.format(ADD_USER_BY_NAME, "\"" + ROLE_ID + "\"")),
                               asArray(formatUser(USER_NAME)));
-        verifyResponse(resource.add(setUpUriExpectations(null, true), user), USER_NAME, null, "users");
+        resource.setUriInfo(setUpUriExpectations(null, true));
+        verifyResponse(resource.add(user), USER_NAME, null, "users");
     }
 
     @Test
@@ -100,13 +105,15 @@ public class PowerShellUsersResourceTest extends AbstractPowerShellUsersResource
                                       + MessageFormat.format(GET_ROLE_BY_NAME, ROLE_NAME)
                                       + MessageFormat.format(ADD_USER_BY_NAME, ROLE_BY_NAME_ARG)),
                               asArray(formatUser(USER_NAME)));
-        verifyResponse(resource.add(setUpUriExpectations(null, true), user), USER_NAME, null, "users");
+        resource.setUriInfo(setUpUriExpectations(null, true));
+        verifyResponse(resource.add(user), USER_NAME, null, "users");
     }
 
     @Test
     public void testList() throws Exception {
         setUpUserExpectations(asArray(SELECT_COMMAND), asArray(formatUser(USER_NAME)));
-        verifyUsers(resource.list(setUpUriExpectations(getQueryParam())));
+        resource.setUriInfo(setUpUriExpectations(getQueryParam()));
+        verifyUsers(resource.list());
     }
 
     @Test

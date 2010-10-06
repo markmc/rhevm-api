@@ -22,7 +22,6 @@ import java.util.List;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.DataCenters;
@@ -48,20 +47,20 @@ public class PowerShellDataCentersResource
     }
 
     public DataCenter addLinks(DataCenter dataCenter) {
-        return PowerShellDataCenterResource.addLinks(getPool(), getParser(), dataCenter);
+        return PowerShellDataCenterResource.addLinks(getUriInfo(), getPool(), getParser(), dataCenter);
     }
 
     @Override
-    public DataCenters list(UriInfo uriInfo) {
+    public DataCenters list() {
         DataCenters ret = new DataCenters();
-        for (DataCenter dataCenter : runAndParse(getSelectCommand("select-datacenter", uriInfo, DataCenter.class))) {
+        for (DataCenter dataCenter : runAndParse(getSelectCommand("select-datacenter", getUriInfo(), DataCenter.class))) {
             ret.getDataCenters().add(addLinks(dataCenter));
         }
         return ret;
     }
 
     @Override
-    public Response add(UriInfo uriInfo, DataCenter dataCenter) {
+    public Response add(DataCenter dataCenter) {
         validateParameters(dataCenter, "name", "storageType");
         StringBuilder buf = new StringBuilder();
 
@@ -93,7 +92,7 @@ public class PowerShellDataCentersResource
 
         dataCenter = addLinks(runAndParseSingle(buf.toString()));
 
-        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(dataCenter.getId());
+        UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(dataCenter.getId());
 
         return Response.created(uriBuilder.build()).entity(dataCenter).build();
     }
@@ -105,11 +104,11 @@ public class PowerShellDataCentersResource
     }
 
     @Override
-    public DataCenterResource getDataCenterSubResource(UriInfo uriInfo, String id) {
+    public DataCenterResource getDataCenterSubResource(String id) {
         return getSubResource(id);
     }
 
     protected PowerShellDataCenterResource createSubResource(String id) {
-        return new PowerShellDataCenterResource(id, getExecutor(), shellPools, getParser());
+        return new PowerShellDataCenterResource(id, getExecutor(), this, shellPools, getParser());
     }
 }

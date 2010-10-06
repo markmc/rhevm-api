@@ -25,9 +25,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 import com.redhat.rhevm.api.model.Host;
@@ -40,7 +38,7 @@ public interface HostsResource {
 
     @GET
     @Formatted
-    public Hosts list(@Context UriInfo uriInfo);
+    public Hosts list();
 
     /**
      * Creates a new host and adds it to the database. The host is
@@ -56,7 +54,7 @@ public interface HostsResource {
     @POST
     @Formatted
     @Consumes(MediaType.APPLICATION_XML)
-    public Response add(@Context UriInfo uriInfo, Host host);
+    public Response add(Host host);
 
     @DELETE
     @Path("{id}")
@@ -70,5 +68,5 @@ public interface HostsResource {
      * @return    matching subresource if found
      */
     @Path("{id}")
-    public HostResource getHostSubResource(@Context UriInfo uriInfo, @PathParam("id") String id);
+    public HostResource getHostSubResource(@PathParam("id") String id);
 }

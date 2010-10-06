@@ -70,37 +70,33 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
 
 
     public PowerShellVmsResourceTest() {
-        super(new PowerShellVmResource("0", null, null, null), "vms", "vm", extraArgs);
+        super(new PowerShellVmResource("0", null, null, null, null), "vms", "vm", extraArgs);
     }
 
     @Test
     public void testList() throws Exception {
-        verifyCollection(
-            resource.list(setUpResourceExpectations(getSelectCommand() + GET_STATS,
-                                                    getSelectReturn(),
-                                                    null,
-                                                    NAMES)).getVMs(),
-            NAMES, DESCRIPTIONS);
+        resource.setUriInfo(setUpResourceExpectations(getSelectCommand() + GET_STATS,
+                                                      getSelectReturn(),
+                                                      null,
+                                                      NAMES));
+        verifyCollection(resource.list().getVMs(), NAMES, DESCRIPTIONS);
     }
 
     @Test
     public void testQuery() throws Exception {
-        verifyCollection(
-            resource.list(setUpResourceExpectations(getQueryCommand(VM.class) + GET_STATS,
-                                                    getQueryReturn(),
-                                                    getQueryParam(),
-                                                    NAMES_SUBSET)).getVMs(),
-            NAMES_SUBSET, DESCRIPTIONS_SUBSET);
+        resource.setUriInfo(setUpResourceExpectations(getQueryCommand(VM.class) + GET_STATS,
+                                                      getQueryReturn(),
+                                                      getQueryParam(),
+                                                      NAMES_SUBSET));
+        verifyCollection(resource.list().getVMs(), NAMES_SUBSET, DESCRIPTIONS_SUBSET);
     }
 
     @Test
     public void testAddWithTemplateId() throws Exception {
-        verifyResponse(
-            resource.add(setUpAddResourceExpectations(ADD_COMMAND_PROLOG + getAddCommand() + ADD_COMMAND_EPILOG,
-                                                      getAddReturn(),
-                                                      NEW_NAME),
-                         getModel(NEW_NAME, NEW_DESCRIPTION)),
-            NEW_NAME, NEW_DESCRIPTION);
+        resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND_PROLOG + getAddCommand() + ADD_COMMAND_EPILOG,
+                                                         getAddReturn(),
+                                                         NEW_NAME));
+        verifyResponse(resource.add(getModel(NEW_NAME, NEW_DESCRIPTION)), NEW_NAME, NEW_DESCRIPTION);
     }
 
     @Test
@@ -109,12 +105,10 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
         model.getTemplate().setId(null);
         model.getTemplate().setName(TEMPLATE_NAME);
 
-        verifyResponse(
-            resource.add(setUpAddResourceExpectations(TEMPLATE_BY_NAME_ADD_COMMAND_PROLOG + getAddCommand() + ADD_COMMAND_EPILOG,
-                                                      getAddReturn(),
-                                                      NEW_NAME),
-                         model),
-            NEW_NAME, NEW_DESCRIPTION);
+        resource.setUriInfo(setUpAddResourceExpectations(TEMPLATE_BY_NAME_ADD_COMMAND_PROLOG + getAddCommand() + ADD_COMMAND_EPILOG,
+                                                         getAddReturn(),
+                                                         NEW_NAME));
+        verifyResponse(resource.add(model), NEW_NAME, NEW_DESCRIPTION);
     }
 
     @Test
@@ -125,30 +119,27 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
         model.getCluster().setId(null);
         model.getCluster().setName(CLUSTER_NAME);
 
-        verifyResponse(
-            resource.add(setUpAddResourceExpectations(CLUSTER_BY_NAME_ADD_COMMAND_PROLOG + getAddCommand() + CLUSTER_BY_NAME_ADD_COMMAND_EPILOG,
-                                                      getAddReturn(),
-                                                      NEW_NAME),
-                         model),
-            NEW_NAME, NEW_DESCRIPTION);
+        resource.setUriInfo(setUpAddResourceExpectations(CLUSTER_BY_NAME_ADD_COMMAND_PROLOG + getAddCommand() + CLUSTER_BY_NAME_ADD_COMMAND_EPILOG,
+                                                         getAddReturn(),
+                                                         NEW_NAME));
+        verifyResponse(resource.add(model), NEW_NAME, NEW_DESCRIPTION);
     }
 
     @Test
     public void testAddWithDisplay() throws Exception {
-        verifyResponse(
-            resource.add(setUpAddResourceExpectations(ADD_COMMAND_PROLOG + getAddCommand() + DISPLAY_ADD_COMMAND_EPILOG,
-                                                      getAddReturn(),
-                                                      NEW_NAME),
-                         updateDisplay(getModel(NEW_NAME, NEW_DESCRIPTION))),
-            NEW_NAME, NEW_DESCRIPTION);
+        resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND_PROLOG + getAddCommand() + DISPLAY_ADD_COMMAND_EPILOG,
+                                                         getAddReturn(),
+                                                         NEW_NAME));
+        verifyResponse(resource.add(updateDisplay(getModel(NEW_NAME, NEW_DESCRIPTION))), NEW_NAME, NEW_DESCRIPTION);
     }
 
     @Test
     public void testAddIncompleteParameters() throws Exception {
         VM model = new VM();
         model.setName(NEW_NAME);
+        resource.setUriInfo(setUpResourceExpectations(new String[]{}, new String[]{}, false, null));
         try {
-            resource.add(setUpResourceExpectations(new String[]{}, new String[]{}, false, null), model);
+            resource.add(model);
             fail("expected WebApplicationException on incomplete parameters");
         } catch (WebApplicationException wae) {
              verifyIncompleteException(wae, "VM", "add", "template.id|name", "cluster.id|name");
@@ -163,9 +154,9 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
 
     @Test
     public void testGetSubResource() throws Exception {
+        resource.setUriInfo(setUpResourceExpectations(null, null));
         verifyResource(
-            (PowerShellVmResource)resource.getVmSubResource(setUpResourceExpectations(null, null),
-                                                            Integer.toString(NEW_NAME.hashCode())),
+            (PowerShellVmResource)resource.getVmSubResource(Integer.toString(NEW_NAME.hashCode())),
             NEW_NAME);
     }
 

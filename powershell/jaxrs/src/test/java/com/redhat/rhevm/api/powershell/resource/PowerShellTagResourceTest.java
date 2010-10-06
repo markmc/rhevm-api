@@ -23,6 +23,7 @@ import java.util.concurrent.Executor;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.Fault;
 import com.redhat.rhevm.api.model.Tag;
 
@@ -32,7 +33,7 @@ import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 
 import org.junit.Test;
 
-import static org.easymock.classextension.EasyMock.expect;
+import static org.easymock.EasyMock.expect;
 
 import static org.powermock.api.easymock.PowerMock.createMock;
 import static org.powermock.api.easymock.PowerMock.mockStatic;
@@ -48,8 +49,8 @@ public class PowerShellTagResourceTest extends AbstractPowerShellResourceTest<Ta
     private static final String GET_COMMAND = "get-tag \"" + TAG_ID + "\"";
     private static final String UPDATE_COMMAND = "$t = " + GET_COMMAND + "; $t.name = \"eris\"; $t.description = \"\"; update-tag -tagobject $t";
 
-    protected PowerShellTagResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser) {
-        return new PowerShellTagResource(TAG_ID, executor, poolMap, parser);
+    protected PowerShellTagResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider) {
+        return new PowerShellTagResource(TAG_ID, executor, uriProvider, poolMap, parser);
     }
 
     protected String formatTag(String name, String description) {
@@ -61,29 +62,26 @@ public class PowerShellTagResourceTest extends AbstractPowerShellResourceTest<Ta
 
     @Test
     public void testGet() throws Exception {
-        verifyTag(
-            resource.get(setUpTagExpectations(GET_COMMAND,
-                                              formatTag(TAG_NAME, TAG_DESCRIPTION),
-                                              TAG_NAME)),
-            TAG_NAME, TAG_DESCRIPTION);
+        setUriInfo(setUpTagExpectations(GET_COMMAND,
+                                        formatTag(TAG_NAME, TAG_DESCRIPTION),
+                                        TAG_NAME));
+        verifyTag(resource.get(), TAG_NAME, TAG_DESCRIPTION);
     }
 
     @Test
     public void testGoodUpdate() throws Exception {
-        verifyTag(
-            resource.update(setUpTagExpectations(UPDATE_COMMAND,
-                                                 formatTag("eris", ""),
-                                                 "eris"),
-                            getTag("eris", "")),
-            "eris", null);
+        setUriInfo(setUpTagExpectations(UPDATE_COMMAND,
+                                        formatTag("eris", ""),
+                                        "eris"));
+        verifyTag(resource.update(getTag("eris", "")), "eris", null);
     }
 
     @Test
     public void testBadUpdate() throws Exception {
         try {
-            UriInfo uriInfo = createMock(UriInfo.class);
+            setUriInfo(createMock(UriInfo.class));
             replayAll();
-            resource.update(uriInfo, getTag("98765", "eris", ""));
+            resource.update(getTag("98765", "eris", ""));
             fail("expected WebApplicationException on bad update");
         } catch (WebApplicationException wae) {
             verifyUpdateException(wae);
@@ -93,8 +91,9 @@ public class PowerShellTagResourceTest extends AbstractPowerShellResourceTest<Ta
     private UriInfo setUpTagExpectations(String command, String ret, String name) throws Exception {
         mockStatic(PowerShellCmd.class);
         expect(PowerShellCmd.runCommand(setUpPoolExpectations(), command)).andReturn(ret);
+        UriInfo uriInfo = setUpBasicUriExpectations();
         replayAll();
-        return null;
+        return uriInfo;
     }
 
     private Tag getTag(String name, String description) {
@@ -114,6 +113,7 @@ public class PowerShellTagResourceTest extends AbstractPowerShellResourceTest<Ta
         assertEquals(tag.getId(), Integer.toString(name.hashCode()));
         assertEquals(tag.getName(), name);
         assertEquals(tag.getDescription(), description);
+        verifyLinks(tag);
     }
 
     private void verifyUpdateException(WebApplicationException wae) {

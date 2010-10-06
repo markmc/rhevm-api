@@ -20,9 +20,15 @@ package com.redhat.rhevm.api.mock.resource;
 
 import java.util.concurrent.Executor;
 
-public abstract class AbstractMockCollectionResource {
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.UriInfo;
+
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
+
+public abstract class AbstractMockCollectionResource implements UriInfoProvider {
 
     private Executor executor;
+    private UriInfo ui;
 
     public Executor getExecutor() {
         return executor;
@@ -30,6 +36,15 @@ public abstract class AbstractMockCollectionResource {
 
     public void setExecutor(Executor executor) {
         this.executor = executor;
+    }
+
+    public UriInfo getUriInfo() {
+        return ui;
+    }
+
+    @Context
+    public void setUriInfo(UriInfo uriInfo) {
+        ui = uriInfo;
     }
 }
 

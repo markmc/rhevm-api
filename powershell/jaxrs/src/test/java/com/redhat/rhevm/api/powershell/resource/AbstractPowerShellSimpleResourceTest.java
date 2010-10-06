@@ -20,6 +20,9 @@ package com.redhat.rhevm.api.powershell.resource;
 
 import java.util.concurrent.Executor;
 
+import javax.ws.rs.core.UriInfo;
+
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.BaseResource;
 import com.redhat.rhevm.api.powershell.util.ControllableExecutor;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
@@ -51,18 +54,24 @@ public abstract class AbstractPowerShellSimpleResourceTest<R extends BaseResourc
     protected ControllableExecutor executor;
     protected PowerShellPoolMap poolMap;
     protected PowerShellParser parser;
+    protected PlaceHolderUriInfoProvider uriProvider;
 
     @Before
     public void setUp() throws Exception {
         executor = new ControllableExecutor();
         poolMap = createMock(PowerShellPoolMap.class);
         parser = PowerShellParser.newInstance();
-        resource = getResource(executor, poolMap, parser);
+        uriProvider = new PlaceHolderUriInfoProvider();
+        resource = getResource(executor, poolMap, parser, uriProvider);
     }
 
     @After
     public void tearDown() {
         verifyAll();
+    }
+
+    protected void setUriInfo(UriInfo uriInfo) {
+        uriProvider.setUriInfo(uriInfo);
     }
 
     protected PowerShellPool setUpPoolExpectations() {
@@ -75,5 +84,5 @@ public abstract class AbstractPowerShellSimpleResourceTest<R extends BaseResourc
         return pool;
     }
 
-    protected abstract A getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser);
+    protected abstract A getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider);
 }

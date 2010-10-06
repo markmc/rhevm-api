@@ -25,9 +25,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 import com.redhat.rhevm.api.model.Cluster;
@@ -40,12 +38,12 @@ public interface ClustersResource {
 
     @GET
     @Formatted
-    public Clusters list(@Context UriInfo uriInfo);
+    public Clusters list();
 
     @POST
     @Formatted
     @Consumes(MediaType.APPLICATION_XML)
-    public Response add(@Context UriInfo uriInfo, Cluster cluster);
+    public Response add(Cluster cluster);
 
     @DELETE
     @Path("{id}")
@@ -59,5 +57,5 @@ public interface ClustersResource {
      * @return    matching subresource if found
      */
     @Path("{id}")
-    public ClusterResource getClusterSubResource(@Context UriInfo uriInfo, @PathParam("id") String id);
+    public ClusterResource getClusterSubResource(@PathParam("id") String id);
 }

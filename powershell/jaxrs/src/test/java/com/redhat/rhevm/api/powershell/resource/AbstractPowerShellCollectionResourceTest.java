@@ -150,7 +150,7 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
                 }
             }
         }
-        UriInfo uriInfo = createMock(UriInfo.class);
+        UriInfo uriInfo = setUpBasicUriExpectations();
         if (query != null) {
             MultivaluedMap<String, String> queries = createMock(MultivaluedMap.class);
             List<String> queryParam = new ArrayList<String>();
@@ -182,7 +182,7 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
                 }
             }
         }
-        UriInfo uriInfo = createMock(UriInfo.class);
+        UriInfo uriInfo = setUpBasicUriExpectations();
         if (query != null) {
             MultivaluedMap<String, String> queries = createMock(MultivaluedMap.class);
             List<String> queryParam = new ArrayList<String>();

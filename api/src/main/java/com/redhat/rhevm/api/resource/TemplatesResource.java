@@ -25,9 +25,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 import com.redhat.rhevm.api.model.Template;
@@ -40,17 +38,17 @@ public interface TemplatesResource {
 
     @GET
     @Formatted
-    public Templates list(@Context UriInfo uriInfo);
+    public Templates list();
 
     @POST
     @Formatted
     @Consumes(MediaType.APPLICATION_XML)
-    public Response add(@Context UriInfo uriInfo, Template template);
+    public Response add(Template template);
 
     @DELETE
     @Path("{id}")
     public void remove(@PathParam("id") String id);
 
     @Path("{id}")
-    public TemplateResource getTemplateSubResource(@Context UriInfo uriInfo, @PathParam("id") String id);
+    public TemplateResource getTemplateSubResource(@PathParam("id") String id);
 }

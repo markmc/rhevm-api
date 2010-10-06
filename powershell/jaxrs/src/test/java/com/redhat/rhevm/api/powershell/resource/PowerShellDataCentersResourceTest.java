@@ -42,7 +42,7 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
     private static final String GET_STORAGE_COMMAND = "get-storagedomain -datacenterid ";
 
     public PowerShellDataCentersResourceTest() {
-        super(new PowerShellDataCenterResource("0", null, null, null), "datacenters", "datacenter", extraArgs);
+        super(new PowerShellDataCenterResource("0", null, null, null, null), "datacenters", "datacenter", extraArgs);
     }
 
     protected String formatStorageDomain(String name) {
@@ -69,10 +69,10 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
                                formatStorageDomain("dione"),
                                formatVersion(MAJOR, MINOR),
                                formatStorageDomain("titan") };
-         List<DataCenter> datacenters =
-             resource.list(setUpResourceExpectations(4, commands, returns, false, null, NAMES)).getDataCenters();
-         assertEquals(datacenters.get(0).getStatus(), DataCenterStatus.UP);
-         verifyCollection(datacenters, NAMES, DESCRIPTIONS);
+        resource.setUriInfo(setUpResourceExpectations(4, commands, returns, false, null, NAMES));
+        List<DataCenter> datacenters = resource.list().getDataCenters();
+        assertEquals(datacenters.get(0).getStatus(), DataCenterStatus.UP);
+        verifyCollection(datacenters, NAMES, DESCRIPTIONS);
     }
 
     @Test
@@ -91,9 +91,8 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
                                formatStorageDomain("storagedomain22", "dione"),
                                formatVersion(MAJOR, MINOR),
                                formatStorageDomain("storagedomain22", "titan") };
-         verifyCollection(
-             resource.list(setUpResourceExpectations(4, commands, returns, false, null, NAMES)).getDataCenters(),
-             NAMES, DESCRIPTIONS);
+        resource.setUriInfo(setUpResourceExpectations(4, commands, returns, false, null, NAMES));
+        verifyCollection(resource.list().getDataCenters(), NAMES, DESCRIPTIONS);
     }
 
     @Test
@@ -108,9 +107,8 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
                                formatStorageDomain("mimas"),
                                formatVersion(MAJOR, MINOR),
                                formatStorageDomain("dione") };
-         verifyCollection(
-             resource.list(setUpResourceExpectations(3, commands, returns, false, getQueryParam(), NAMES_SUBSET)).getDataCenters(),
-             NAMES_SUBSET, DESCRIPTIONS_SUBSET);
+        resource.setUriInfo(setUpResourceExpectations(3, commands, returns, false, getQueryParam(), NAMES_SUBSET));
+        verifyCollection(resource.list().getDataCenters(), NAMES_SUBSET, DESCRIPTIONS_SUBSET);
     }
 
     @Test
@@ -124,18 +122,18 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
 
         DataCenter model = getModel(NEW_NAME, NEW_DESCRIPTION);
         model.setVersion(null);
+        resource.setUriInfo(setUpResourceExpectations(2, commands, returns, true, null, NEW_NAME));
 
-        verifyResponse(
-            resource.add(setUpResourceExpectations(2, commands, returns, true, null, NEW_NAME), model),
-            NEW_NAME, NEW_DESCRIPTION);
+        verifyResponse(resource.add(model), NEW_NAME, NEW_DESCRIPTION);
     }
 
     @Test
     public void testAddIncompleteParameters() throws Exception {
         DataCenter model = new DataCenter();
         model.setName(NEW_NAME);
+        resource.setUriInfo(setUpResourceExpectations(new String[]{}, new String[]{}, false, null));
         try {
-            resource.add(setUpResourceExpectations(new String[]{}, new String[]{}, false, null), model);
+            resource.add(model);
             fail("expected WebApplicationException on incomplete parameters");
         } catch (WebApplicationException wae) {
              verifyIncompleteException(wae, "DataCenter", "add", "storageType");
@@ -150,9 +148,9 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
 
     @Test
     public void testGetSubResource() throws Exception {
+        resource.setUriInfo(setUpResourceExpectations(null, null));
         verifyResource(
-            (PowerShellDataCenterResource)resource.getDataCenterSubResource(setUpResourceExpectations(null, null),
-                                                                            Integer.toString(NEW_NAME.hashCode())),
+            (PowerShellDataCenterResource)resource.getDataCenterSubResource(Integer.toString(NEW_NAME.hashCode())),
             NEW_NAME);
     }
 

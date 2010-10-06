@@ -25,9 +25,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 import com.redhat.rhevm.api.model.User;
@@ -41,12 +39,12 @@ public interface AttachedUsersResource {
 
     @GET
     @Formatted
-    public Users list(@Context UriInfo uriInfo);
+    public Users list();
 
     @POST
     @Formatted
     @Consumes(MediaType.APPLICATION_XML)
-    public Response add(@Context UriInfo uriInfo, User User);
+    public Response add(User User);
 
     @DELETE
     @Path("{id}")
@@ -60,5 +58,5 @@ public interface AttachedUsersResource {
      * @return    matching subresource if found
      */
     @Path("{id}")
-    public UserResource getUserSubResource(@Context UriInfo uriInfo, @PathParam("id") String id);
+    public UserResource getUserSubResource(@PathParam("id") String id);
 }

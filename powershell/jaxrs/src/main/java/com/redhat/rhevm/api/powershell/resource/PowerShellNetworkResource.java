@@ -21,10 +21,10 @@ package com.redhat.rhevm.api.powershell.resource;
 import java.util.List;
 import java.util.concurrent.Executor;
 
-import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.resource.NetworkResource;
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellNetwork;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
@@ -38,9 +38,10 @@ public class PowerShellNetworkResource extends AbstractPowerShellActionableResou
 
     public PowerShellNetworkResource(String id,
                                      Executor executor,
+                                     UriInfoProvider uriProvider,
                                      PowerShellPoolMap shellPools,
                                      PowerShellParser parser) {
-        super(id, executor, shellPools, parser);
+        super(id, executor, uriProvider, shellPools, parser);
     }
 
     public static List<Network> runAndParse(PowerShellPool pool, PowerShellParser parser, String command) {
@@ -62,7 +63,7 @@ public class PowerShellNetworkResource extends AbstractPowerShellActionableResou
     }
 
     @Override
-    public Network get(UriInfo uriInfo) {
+    public Network get() {
         StringBuilder buf = new StringBuilder();
 
         buf.append("$n = get-networks;");
@@ -72,11 +73,11 @@ public class PowerShellNetworkResource extends AbstractPowerShellActionableResou
         buf.append("  }");
         buf.append("}");
 
-        return LinkHelper.addLinks(runAndParseSingle(buf.toString()));
+        return LinkHelper.addLinks(getUriInfo(), runAndParseSingle(buf.toString()));
     }
 
     @Override
-    public Network update(UriInfo uriInfo, Network network) {
+    public Network update(Network network) {
         validateUpdate(network);
 
         StringBuilder buf = new StringBuilder();
@@ -95,6 +96,6 @@ public class PowerShellNetworkResource extends AbstractPowerShellActionableResou
         buf.append("  }");
         buf.append("}");
 
-        return LinkHelper.addLinks(runAndParseSingle(buf.toString()));
+        return LinkHelper.addLinks(getUriInfo(), runAndParseSingle(buf.toString()));
     }
 }

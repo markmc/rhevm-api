@@ -22,7 +22,6 @@ import java.util.List;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.Clusters;
@@ -48,16 +47,16 @@ public class PowerShellClustersResource
     }
 
     @Override
-    public Clusters list(UriInfo uriInfo) {
+    public Clusters list() {
         Clusters ret = new Clusters();
-        for (Cluster cluster : runAndParse(getSelectCommand("select-cluster", uriInfo, Cluster.class))) {
-            ret.getClusters().add(PowerShellClusterResource.addLinks(getPool(), getParser(), cluster));
+        for (Cluster cluster : runAndParse(getSelectCommand("select-cluster", getUriInfo(), Cluster.class))) {
+            ret.getClusters().add(PowerShellClusterResource.addLinks(getUriInfo(), getPool(), getParser(), cluster));
         }
         return ret;
     }
 
     @Override
-    public Response add(UriInfo uriInfo, Cluster cluster) {
+    public Response add(Cluster cluster) {
         validateParameters(cluster, "name", "dataCenter.id", "cpu.id");
         StringBuilder buf = new StringBuilder();
 
@@ -90,9 +89,9 @@ public class PowerShellClustersResource
         buf.append(" -datacenterid " + PowerShellUtils.escape(cluster.getDataCenter().getId()));
         buf.append(" -compatibilityversion $version");
 
-        cluster = PowerShellClusterResource.addLinks(getPool(), getParser(), runAndParseSingle(buf.toString()));
+        cluster = PowerShellClusterResource.addLinks(getUriInfo(), getPool(), getParser(), runAndParseSingle(buf.toString()));
 
-        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(cluster.getId());
+        UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(cluster.getId());
 
         return Response.created(uriBuilder.build()).entity(cluster).build();
     }
@@ -104,11 +103,11 @@ public class PowerShellClustersResource
     }
 
     @Override
-    public ClusterResource getClusterSubResource(UriInfo uriInfo, String id) {
+    public ClusterResource getClusterSubResource(String id) {
         return getSubResource(id);
     }
 
     protected PowerShellClusterResource createSubResource(String id) {
-        return new PowerShellClusterResource(id, getExecutor(), shellPools, getParser());
+        return new PowerShellClusterResource(id, getExecutor(), this, shellPools, getParser());
     }
 }

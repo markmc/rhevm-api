@@ -18,11 +18,8 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import java.util.concurrent.Executor;
-
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.model.API;
@@ -36,13 +33,10 @@ import com.redhat.rhevm.api.model.Users;
 import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.powershell.model.PowerShellSystemStats;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
-import com.redhat.rhevm.api.powershell.util.PowerShellParser;
-import com.redhat.rhevm.api.powershell.util.PowerShellPool;
-import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.resource.ApiResource;
 
 public class PowerShellApiResource
-    extends AbstractPowerShellResource
+    extends InjectableUriProviderBase
     implements ApiResource {
 
     private static final String SEARCH_RELATION = "/search";
@@ -50,48 +44,38 @@ public class PowerShellApiResource
 
     protected final ObjectFactory OBJECT_FACTORY = new ObjectFactory();
 
-    private static API api = new API();
-
-    static {
-        addLink("capabilities", false);
-        addLink("clusters");
-        addLink("datacenters");
-        addLink("hosts");
-        addLink("networks", false); // powershell has no select-network command
-        addLink("roles", false);
-        addLink("storagedomains");
-        addLink("tags", false);
-        addLink("templates");
-        addLink("users");
-        addLink("vmpools");
-        addLink("vms");
+    private API addLinks(API api) {
+        addLink(api, "capabilities", false);
+        addLink(api, "clusters");
+        addLink(api, "datacenters");
+        addLink(api, "hosts");
+        addLink(api, "networks", false); // powershell has no select-network command
+        addLink(api, "roles", false);
+        addLink(api, "storagedomains");
+        addLink(api, "tags", false);
+        addLink(api, "templates");
+        addLink(api, "users");
+        addLink(api, "vmpools");
+        addLink(api, "vms");
+        return api;
     }
 
-    private static void addLink(String rel, boolean searchable) {
+    private void addLink(API api, String rel, boolean searchable) {
         Link link = new Link();
         link.setRel(rel);
-        link.setHref(rel + "/");
+        link.setHref(getUriInfo().getBaseUri().getPath() + rel + "/");
         api.getLinks().add(link);
 
         if (searchable) {
             link = new Link();
             link.setRel(rel + SEARCH_RELATION);
-            link.setHref(rel + "/" + SEARCH_TEMPLATE);
+            link.setHref(getUriInfo().getBaseUri().getPath() + rel + "/" + SEARCH_TEMPLATE);
             api.getLinks().add(link);
         }
     }
 
-    public PowerShellApiResource() {
-    }
-
-    public PowerShellApiResource(Executor executor,
-                                 PowerShellPoolMap shellPools,
-                                 PowerShellParser parser) {
-        super(executor, shellPools, parser);
-    }
-
-    private static void addLink(String rel) {
-        addLink(rel, true);
+    private void addLink(API api, String rel) {
+        addLink(api, rel, true);
     }
 
     private String addPath(UriBuilder uriBuilder, Link link) {
@@ -110,7 +94,7 @@ public class PowerShellApiResource
         return LinkHeader.format(link);
     }
 
-    private void addHeader(Response.ResponseBuilder responseBuilder, UriBuilder uriBuilder) {
+    private void addHeader(API api, Response.ResponseBuilder responseBuilder, UriBuilder uriBuilder) {
         // concantenate links in a single header with a comma-separated value,
         // which is the canonical form according to:
         // http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
@@ -126,26 +110,26 @@ public class PowerShellApiResource
         responseBuilder.header("Link", header);
     }
 
-    private Response.ResponseBuilder getResponseBuilder(UriInfo uriInfo) {
-        UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
+    private Response.ResponseBuilder getResponseBuilder(API api) {
+        UriBuilder uriBuilder = getUriInfo().getBaseUriBuilder();
 
         Response.ResponseBuilder responseBuilder = Response.ok();
 
-        addHeader(responseBuilder, uriBuilder);
+        addHeader(api, responseBuilder, uriBuilder);
 
         return responseBuilder;
     }
 
     @Override
-    public Response head(UriInfo uriInfo) {
-        return getResponseBuilder(uriInfo).build();
+    public Response head() {
+        API api = addLinks(new API());
+        return getResponseBuilder(api).build();
     }
 
     @Override
-    public Response get(UriInfo uriInfo) {
-        API ret = JAXBHelper.clone(OBJECT_FACTORY.createApi(api));
-        ret = addSummary(ret);
-        return getResponseBuilder(uriInfo).entity(ret).build();
+    public Response get() {
+        API api = addSummary(addLinks(new API()));
+        return getResponseBuilder(api).entity(api).build();
     }
 
     private PowerShellSystemStats runAndParse(String command) {

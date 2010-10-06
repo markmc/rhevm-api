@@ -26,6 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.redhat.rhevm.api.model.BaseResource;
 
 import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 
 
 public abstract class AbstractMockResource<R extends BaseResource> extends AbstractActionableResource<R> {
@@ -36,8 +37,17 @@ public abstract class AbstractMockResource<R extends BaseResource> extends Abstr
         super(id);
     }
 
+    public AbstractMockResource(String id, UriInfoProvider uriProvider) {
+        super(id);
+        this.uriProvider = uriProvider;
+    }
+
     public AbstractMockResource(String id, Executor executor) {
         super(id, executor);
+    }
+
+    public AbstractMockResource(String id, Executor executor, UriInfoProvider uriProvider) {
+        super(id, executor, uriProvider);
     }
 
     public static String allocateId(Class<?> clazz) {

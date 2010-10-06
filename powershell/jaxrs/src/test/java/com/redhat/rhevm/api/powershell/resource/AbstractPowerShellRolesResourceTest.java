@@ -18,6 +18,8 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import javax.ws.rs.core.UriInfo;
+
 import com.redhat.rhevm.api.model.Role;
 import com.redhat.rhevm.api.model.Roles;
 import com.redhat.rhevm.api.model.User;
@@ -47,14 +49,16 @@ public abstract class AbstractPowerShellRolesResourceTest<A extends AbstractPowe
 
     @Test
     public void testList() throws Exception {
-        setUpRoleExpectations(getSelectCommand(), formatRole(ROLE_NAME));
+        cacheUriInfo(setUpRoleExpectations(getSelectCommand(), formatRole(ROLE_NAME)));
         verifyRoles(listRoles());
     }
 
-    protected void setUpRoleExpectations(String command, String ret) throws Exception {
+    protected UriInfo setUpRoleExpectations(String command, String ret) throws Exception {
         mockStatic(PowerShellCmd.class);
         expect(PowerShellCmd.runCommand(setUpPoolExpectations(), command)).andReturn(ret);
+        UriInfo uriInfo = setUpBasicUriExpectations();
         replayAll();
+        return uriInfo;
     }
 
     protected void verifyRoles(Roles roles) {
@@ -66,9 +70,12 @@ public abstract class AbstractPowerShellRolesResourceTest<A extends AbstractPowe
         assertEquals(ROLE_NAME, role.getName());
         assertEquals(ROLE_DESCRIPTION, role.getDescription());
         verifyUser(role.getUser());
+        verifyLinks(role);
     }
 
     protected abstract String getSelectCommand();
+
+    protected abstract void cacheUriInfo(UriInfo uriInfo);
 
     protected abstract Roles listRoles();
 

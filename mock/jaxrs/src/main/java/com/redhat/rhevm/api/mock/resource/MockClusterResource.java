@@ -20,13 +20,13 @@ package com.redhat.rhevm.api.mock.resource;
 
 import java.util.concurrent.Executor;
 
-import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.resource.AssignedNetworksResource;
 import com.redhat.rhevm.api.resource.ClusterResource;
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 
@@ -39,8 +39,8 @@ public class MockClusterResource extends AbstractMockResource<Cluster> implement
      * @param cluster  encapsulated Cluster
      * @param executor    executor used for asynchronous actions
      */
-    MockClusterResource(String id, Executor executor) {
-        super(id, executor);
+    MockClusterResource(String id, Executor executor, UriInfoProvider uriProvider) {
+        super(id, executor, uriProvider);
     }
 
     // FIXME: this needs to be atomic
@@ -67,16 +67,16 @@ public class MockClusterResource extends AbstractMockResource<Cluster> implement
     }
 
     public Cluster addLinks() {
-        return LinkHelper.addLinks(JAXBHelper.clone(OBJECT_FACTORY.createCluster(getModel())));
+        return LinkHelper.addLinks(getUriInfo(), JAXBHelper.clone(OBJECT_FACTORY.createCluster(getModel())));
     }
 
     @Override
-    public Cluster get(UriInfo uriInfo) {
+    public Cluster get() {
         return addLinks();
     }
 
     @Override
-    public Cluster update(UriInfo uriInfo, Cluster cluster) {
+    public Cluster update(Cluster cluster) {
         validateUpdate(cluster);
         updateModel(cluster);
         return addLinks();

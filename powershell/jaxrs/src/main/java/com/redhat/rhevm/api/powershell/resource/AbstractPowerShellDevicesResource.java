@@ -22,41 +22,32 @@ import java.util.List;
 
 import javax.ws.rs.Produces;
 
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.BaseDevice;
 import com.redhat.rhevm.api.model.BaseDevices;
 import com.redhat.rhevm.api.resource.MediaType;
 
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
-import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.resource.ReadOnlyDevicesResource;
 
 @Produces(MediaType.APPLICATION_XML)
 public abstract class AbstractPowerShellDevicesResource<D extends BaseDevice, C extends BaseDevices>
+    extends UriProviderWrapper
     implements ReadOnlyDevicesResource<D, C> {
 
     protected String parentId;
-    protected PowerShellPoolMap shellPools;
-    protected PowerShellParser parser;
 
     public AbstractPowerShellDevicesResource(String parentId,
                                              PowerShellPoolMap shellPools,
-                                             PowerShellParser parser) {
+                                             PowerShellParser parser,
+                                             UriInfoProvider uriProvider) {
+        super(null, shellPools, parser, uriProvider);
         this.parentId = parentId;
-        this.shellPools = shellPools;
-        this.parser = parser;
     }
 
-    public AbstractPowerShellDevicesResource(String parentId, PowerShellPoolMap shellPools) {
-        this(parentId, shellPools, null);
-    }
-
-    public PowerShellPool getPool() {
-        return shellPools.get();
-    }
-
-    public PowerShellParser getParser() {
-        return parser;
+    public AbstractPowerShellDevicesResource(String parentId, PowerShellPoolMap shellPools, UriInfoProvider uriProvider) {
+        this(parentId, shellPools, null, uriProvider);
     }
 
     public abstract D addLinks(D device);

@@ -33,6 +33,7 @@ import com.redhat.rhevm.api.resource.AssignedTagsResource;
 import com.redhat.rhevm.api.resource.HostResource;
 import com.redhat.rhevm.api.resource.HostNicsResource;
 import com.redhat.rhevm.api.resource.HostStorageResource;
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellHost;
 import com.redhat.rhevm.api.powershell.model.PowerShellStorageConnection;
@@ -49,9 +50,10 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
 
     public PowerShellHostResource(String id,
                                   Executor executor,
+                                  UriInfoProvider uriProvider,
                                   PowerShellPoolMap shellPools,
                                   PowerShellParser parser) {
-        super(id, executor, shellPools, parser);
+        super(id, executor, uriProvider, shellPools, parser);
     }
 
     public static List<Host> runAndParse(PowerShellPool pool, PowerShellParser parser, String command) {
@@ -72,25 +74,25 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
         return runAndParseSingle(getPool(), getParser(), command);
     }
 
-    public static Host addLinks(Host host) {
+    public static Host addLinks(UriInfo uriInfo, Host host) {
         String [] subCollections = { "nics", "storage", "tags" };
 
         host.getLinks().clear();
 
         for (String collection : subCollections) {
-            addSubCollection(host, collection);
+            addSubCollection(uriInfo, host, collection);
         }
 
-        return LinkHelper.addLinks(host);
+        return LinkHelper.addLinks(uriInfo, host);
     }
 
     @Override
-    public Host get(UriInfo uriInfo) {
-        return addLinks(runAndParseSingle("get-host " + PowerShellUtils.escape(getId())));
+    public Host get() {
+        return addLinks(getUriInfo(), runAndParseSingle("get-host " + PowerShellUtils.escape(getId())));
     }
 
     @Override
-    public Host update(UriInfo uriInfo, Host host) {
+    public Host update(Host host) {
         validateUpdate(host);
 
         StringBuilder buf = new StringBuilder();
@@ -103,39 +105,39 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
 
         buf.append("update-host -hostobject $h");
 
-        return addLinks(runAndParseSingle(buf.toString()));
+        return addLinks(getUriInfo(), runAndParseSingle(buf.toString()));
     }
 
     @Override
-    public Response approve(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new CommandRunner(action, "approve-host", "host", getId(), getPool()));
+    public Response approve(Action action) {
+        return doAction(getUriInfo(), new CommandRunner(action, "approve-host", "host", getId(), getPool()));
     }
 
     @Override
-    public Response install(UriInfo uriInfo, Action action) {
+    public Response install(Action action) {
         validateParameters(action, "rootPassword");
-        return doAction(uriInfo, new HostInstaller(action, action.getRootPassword(), getPool()));
+        return doAction(getUriInfo(), new HostInstaller(action, action.getRootPassword(), getPool()));
     }
 
     @Override
-    public Response activate(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new CommandRunner(action, "resume-host", "host", getId(), getPool()));
+    public Response activate(Action action) {
+        return doAction(getUriInfo(), new CommandRunner(action, "resume-host", "host", getId(), getPool()));
     }
 
     @Override
-    public Response deactivate(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new CommandRunner(action, "suspend-host", "host", getId(), getPool()));
+    public Response deactivate(Action action) {
+        return doAction(getUriInfo(), new CommandRunner(action, "suspend-host", "host", getId(), getPool()));
     }
 
     @Override
-    public Response commitNetConfig(UriInfo uriInfo, Action action) {
+    public Response commitNetConfig(Action action) {
         StringBuilder buf = new StringBuilder();
 
         buf.append("$h = get-host " + PowerShellUtils.escape(getId()) + "; ");
         buf.append("commit-configurationchanges");
         buf.append(" -hostobject $h");
 
-        return doAction(uriInfo, new CommandRunner(action, buf.toString(), getPool()));
+        return doAction(getUriInfo(), new CommandRunner(action, buf.toString(), getPool()));
     }
 
     private List<String> parseIscsiTargets(String output) {
@@ -147,7 +149,7 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
     }
 
     @Override
-    public Response iscsiDiscover(UriInfo uriInfo, Action action) {
+    public Response iscsiDiscover(Action action) {
         validateParameters(action, "iscsi.address");
 
         IscsiParameters params = action.getIscsi();
@@ -167,7 +169,7 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
         buf.append(" -hostid " + PowerShellUtils.escape(getId()));
         buf.append(" -storageserverconnectionobject $cnx");
 
-        return doAction(uriInfo,
+        return doAction(getUriInfo(),
                         new CommandRunner(action, buf.toString(), getPool()) {
                             protected void handleOutput(String output) {
                                 for (String target : parseIscsiTargets(output)) {
@@ -178,7 +180,7 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
     }
 
     @Override
-    public Response iscsiLogin(UriInfo uriInfo, Action action) {
+    public Response iscsiLogin(Action action) {
         validateParameters(action, "iscsi.address", "iscsi.target");
 
         IscsiParameters params = action.getIscsi();
@@ -205,7 +207,7 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
         buf.append(" -hostid " + PowerShellUtils.escape(getId()));
         buf.append(" -storageserverconnectionobject $cnx");
 
-        return doAction(uriInfo, new CommandRunner(action, buf.toString(), getPool()));
+        return doAction(getUriInfo(), new CommandRunner(action, buf.toString(), getPool()));
     }
 
     class HostInstaller extends AbstractPowerShellActionTask {
@@ -236,23 +238,23 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
 
     @Override
     public HostNicsResource getHostNicsResource() {
-        return new PowerShellHostNicsResource(getId(), getExecutor(), shellPools, getParser());
+        return new PowerShellHostNicsResource(getId(), getExecutor(), shellPools, getParser(), getUriProvider());
     }
 
     @Override
     public HostStorageResource getHostStorageResource() {
-        return new PowerShellHostStorageResource(getId(), getExecutor(), shellPools, getParser());
+        return new PowerShellHostStorageResource(getId(), getExecutor(), shellPools, getParser(), getUriProvider());
     }
 
     @Override
     public AssignedTagsResource getTagsResource() {
-        return new PowerShellAssignedTagsResource(Host.class, getId(), shellPools, getParser());
+        return new PowerShellAssignedTagsResource(Host.class, getId(), shellPools, getParser(), getUriProvider());
     }
 
-    private static void addSubCollection(Host host, String collection) {
+    private static void addSubCollection(UriInfo uriInfo, Host host, String collection) {
         Link link = new Link();
         link.setRel(collection);
-        link.setHref(LinkHelper.getUriBuilder(host).path(collection).build().toString());
+        link.setHref(LinkHelper.getUriBuilder(uriInfo, host).path(collection).build().toString());
         host.getLinks().add(link);
     }
 }

@@ -20,6 +20,7 @@ package com.redhat.rhevm.api.powershell.resource;
 
 import java.util.List;
 
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -30,6 +31,7 @@ import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.resource.AttachmentResource;
 import com.redhat.rhevm.api.resource.AttachmentsResource;
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.util.PowerShellException;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
@@ -41,15 +43,25 @@ import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
 
 
-public class PowerShellAttachmentsResource extends AbstractPowerShellResource implements AttachmentsResource {
+public class PowerShellAttachmentsResource extends AbstractPowerShellResource implements AttachmentsResource, UriInfoProvider {
 
     private String storageDomainId;
+    private UriInfo ui;
 
     public PowerShellAttachmentsResource(String storageDomainId,
                                          PowerShellPoolMap shellPools,
                                          PowerShellParser parser) {
         super(shellPools, parser);
         this.storageDomainId = storageDomainId;
+    }
+
+    public UriInfo getUriInfo() {
+        return ui;
+    }
+
+    @Context
+    public void setUriInfo(UriInfo uriInfo) {
+        ui = uriInfo;
     }
 
     public static Attachment buildAttachment(DataCenter dataCenter, StorageDomain storageDomain) {
@@ -74,7 +86,7 @@ public class PowerShellAttachmentsResource extends AbstractPowerShellResource im
     }
 
     @Override
-    public Attachments list(UriInfo uriInfo) {
+    public Attachments list() {
         Attachments ret = new Attachments();
 
         StringBuilder buf = new StringBuilder();
@@ -103,14 +115,14 @@ public class PowerShellAttachmentsResource extends AbstractPowerShellResource im
 
             Attachment attachment = buildAttachment(dataCenter, storageDomain);
 
-            ret.getAttachments().add(PowerShellAttachmentResource.addLinks(attachment));
+            ret.getAttachments().add(PowerShellAttachmentResource.addLinks(getUriInfo(), attachment));
         }
 
         return ret;
     }
 
     @Override
-    public Response add(UriInfo uriInfo, Attachment attachment) {
+    public Response add(Attachment attachment) {
         validateParameters(attachment, "dataCenter.id");
         DataCenter dataCenter = attachment.getDataCenter();
 
@@ -125,9 +137,9 @@ public class PowerShellAttachmentsResource extends AbstractPowerShellResource im
                                                                                         buf.toString());
 
         attachment = buildAttachment(dataCenter, storageDomain);
-        attachment = PowerShellAttachmentResource.addLinks(attachment);
+        attachment = PowerShellAttachmentResource.addLinks(getUriInfo(), attachment);
 
-        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(dataCenter.getId());
+        UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(dataCenter.getId());
 
         return Response.created(uriBuilder.build()).entity(attachment).build();
     }
@@ -144,8 +156,8 @@ public class PowerShellAttachmentsResource extends AbstractPowerShellResource im
     }
 
     @Override
-    public AttachmentResource getAttachmentSubResource(UriInfo uriInfo, String id) {
-        return new PowerShellAttachmentResource(id, storageDomainId, executor, shellPools, getParser());
+    public AttachmentResource getAttachmentSubResource(String id) {
+        return new PowerShellAttachmentResource(id, storageDomainId, executor, this, shellPools, getParser());
     }
 
     /**
@@ -154,7 +166,8 @@ public class PowerShellAttachmentsResource extends AbstractPowerShellResource im
      * @param dataCenterId  the ID of the data center
      * @return  an encapsulation of the attachments
      */
-    public static Attachments getAttachmentsForDataCenter(PowerShellPool pool,
+    public static Attachments getAttachmentsForDataCenter(UriInfo uriInfo,
+                                                          PowerShellPool pool,
                                                           PowerShellParser parser,
                                                           String dataCenterId) {
         Attachments attachments = new Attachments();
@@ -178,7 +191,7 @@ public class PowerShellAttachmentsResource extends AbstractPowerShellResource im
             attachment.setId(dataCenterId);
             attachment.setStorageDomain(new StorageDomain());
             attachment.getStorageDomain().setId(storageDomain.getId());
-            attachments.getAttachments().add(LinkHelper.addLinks(attachment));
+            attachments.getAttachments().add(LinkHelper.addLinks(uriInfo, attachment));
 
         }
 

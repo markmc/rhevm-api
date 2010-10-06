@@ -24,11 +24,11 @@ import java.util.concurrent.Executor;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.UriBuilder;
 
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.Tag;
 import com.redhat.rhevm.api.model.Tags;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
-import com.redhat.rhevm.api.powershell.util.PowerShellException;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
@@ -64,8 +64,8 @@ public class PowerShellAssignedTagsResourceTest
     private static final String ADD_VM_TAG_BY_NAME_CMD = "$tag = get-tags | ? { $_.name -eq \"" + TAGS[0] +"\" }; attach-tag -tagobject $tag -vmid \"" + asId(VM_NAME) + "\"";
     private static final String REMOVE_VM_TAG_CMD = "$tag = get-tag \"" + asId(TAGS[0]) +"\"; detach-tag -tagobject $tag -vmid \"" + asId(VM_NAME) + "\"";
 
-    protected  PowerShellVmResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser) {
-        return new PowerShellVmResource(asId(VM_NAME), executor, poolMap, parser);
+    protected  PowerShellVmResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider) {
+        return new PowerShellVmResource(asId(VM_NAME), executor, uriProvider, poolMap, parser);
     }
 
     protected String formatTags(String[] names, String[] args) {
@@ -79,57 +79,59 @@ public class PowerShellAssignedTagsResourceTest
 
     @Test
     public void testVmTagGet() {
-        PowerShellAssignedTagsResource parent = new PowerShellAssignedTagsResource(VM.class, asId(VM_NAME), poolMap, parser);
-        PowerShellAssignedTagResource resource = new PowerShellAssignedTagResource(asId(TAGS[0]), parent);
+        PowerShellAssignedTagsResource parent = new PowerShellAssignedTagsResource(VM.class, asId(VM_NAME), poolMap, parser, uriProvider);
+        PowerShellAssignedTagResource tagResource = new PowerShellAssignedTagResource(asId(TAGS[0]), parent);
 
         setUpCmdExpectations(GET_VM_TAG_CMD,
                              formatTag(TAGS[0], extraArgs));
+        setUriInfo(setUpBasicUriExpectations());
         replayAll();
 
-        verifyTag(resource.get(), 0);
+        verifyTag(tagResource.get(), 0);
     }
 
     @Test
     public void testVmTagsList() {
-        PowerShellAssignedTagsResource resource = new PowerShellAssignedTagsResource(VM.class, asId(VM_NAME), poolMap, parser);
+        PowerShellAssignedTagsResource tagResource = new PowerShellAssignedTagsResource(VM.class, asId(VM_NAME), poolMap, parser, uriProvider);
 
         setUpCmdExpectations(GET_VM_TAGS_CMD, formatTags(TAGS, extraArgs));
+        setUriInfo(setUpBasicUriExpectations());
         replayAll();
 
-        verifyTags(resource.list());
+        verifyTags(tagResource.list());
     }
 
     @Test
     public void testVmTagAdd() throws Exception {
-        PowerShellAssignedTagsResource resource = new PowerShellAssignedTagsResource(VM.class, asId(VM_NAME),  poolMap, parser);
+        PowerShellAssignedTagsResource tagResource = new PowerShellAssignedTagsResource(VM.class, asId(VM_NAME),  poolMap, parser, uriProvider);
 
         setUpCmdExpectations(ADD_VM_TAG_CMD, formatTag(TAGS[0], extraArgs));
-        UriInfo uriInfo = setUpUriInfoExpections(asId(TAGS[0]));
+        setUriInfo(setUpUriInfoExpections(asId(TAGS[0])));
         replayAll();
 
         Tag tag = new Tag();
         tag.setId(asId(TAGS[0]));
 
-        verifyTag((Tag)resource.add(uriInfo, tag).getEntity(), 0);
+        verifyTag((Tag)tagResource.add(tag).getEntity(), 0);
     }
 
     @Test
     public void testVmTagAddByName() throws Exception {
-        PowerShellAssignedTagsResource resource = new PowerShellAssignedTagsResource(VM.class, asId(VM_NAME), poolMap, parser);
+        PowerShellAssignedTagsResource tagResource = new PowerShellAssignedTagsResource(VM.class, asId(VM_NAME), poolMap, parser, uriProvider);
 
         setUpCmdExpectations(ADD_VM_TAG_BY_NAME_CMD, formatTag(TAGS[0], extraArgs));
-        UriInfo uriInfo = setUpUriInfoExpections(asId(TAGS[0]));
+        setUriInfo(setUpUriInfoExpections(asId(TAGS[0])));
         replayAll();
 
         Tag tag = new Tag();
         tag.setName(TAGS[0]);
 
-        verifyTag((Tag)resource.add(uriInfo, tag).getEntity(), 0);
+        verifyTag((Tag)tagResource.add(tag).getEntity(), 0);
     }
 
     @Test
     public void testRemove() {
-        PowerShellAssignedTagsResource resource = new PowerShellAssignedTagsResource(VM.class, asId(VM_NAME), poolMap, parser);
+        PowerShellAssignedTagsResource resource = new PowerShellAssignedTagsResource(VM.class, asId(VM_NAME), poolMap, parser, uriProvider);
 
         setUpCmdExpectations(REMOVE_VM_TAG_CMD, "");
         replayAll();
@@ -138,7 +140,7 @@ public class PowerShellAssignedTagsResourceTest
     }
 
     private UriInfo setUpUriInfoExpections(String id) throws Exception {
-        UriInfo uriInfo = createMock(UriInfo.class);
+        UriInfo uriInfo = setUpBasicUriExpectations();
         UriBuilder uriBuilder = createMock(UriBuilder.class);
         expect(uriInfo.getAbsolutePathBuilder()).andReturn(uriBuilder);
         expect(uriBuilder.path(id)).andReturn(uriBuilder);
@@ -161,6 +163,7 @@ public class PowerShellAssignedTagsResourceTest
         assertNotNull(tag);
         assertEquals(asId(TAGS[i]), tag.getId());
         assertEquals(TAGS[i], tag.getName());
+        verifyLinks(tag);
     }
 
     private void verifyTags(Tags tags) {

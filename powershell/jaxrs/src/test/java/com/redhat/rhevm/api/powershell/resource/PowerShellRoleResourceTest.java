@@ -20,6 +20,9 @@ package com.redhat.rhevm.api.powershell.resource;
 
 import java.util.concurrent.Executor;
 
+import javax.ws.rs.core.UriInfo;
+
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.Role;
 import com.redhat.rhevm.api.model.User;
 
@@ -42,8 +45,8 @@ public class PowerShellRoleResourceTest extends AbstractPowerShellSimpleResource
     private static final String USER_ID = "00000000-0000-0000-0001-000000000004";
     private static final String ROLE_DESCRIPTION = "RHEVM fix-it-up chappie";
 
-    protected PowerShellRoleResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser) {
-        return new PowerShellRoleResource(ROLE_ID, USER_ID, executor, poolMap, parser);
+    protected PowerShellRoleResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider) {
+        return new PowerShellRoleResource(ROLE_ID, USER_ID, executor, poolMap, parser, uriProvider);
     }
 
     protected String formatUser(String name) {
@@ -55,14 +58,16 @@ public class PowerShellRoleResourceTest extends AbstractPowerShellSimpleResource
 
     @Test
     public void testGet() throws Exception {
-        setUpRoleExpectations("get-role -roleid \"" + ROLE_ID + "\"", formatUser(ROLE_NAME));
+        setUriInfo(setUpRoleExpectations("get-role -roleid \"" + ROLE_ID + "\"", formatUser(ROLE_NAME)));
         verifyRole(resource.get());
     }
 
-    private void setUpRoleExpectations(String command, String ret) throws Exception {
+    private UriInfo setUpRoleExpectations(String command, String ret) throws Exception {
         mockStatic(PowerShellCmd.class);
         expect(PowerShellCmd.runCommand(setUpPoolExpectations(), command)).andReturn(ret);
+        UriInfo uriInfo = setUpBasicUriExpectations();
         replayAll();
+        return uriInfo;
     }
 
     private void verifyRole(Role role) {
@@ -71,6 +76,7 @@ public class PowerShellRoleResourceTest extends AbstractPowerShellSimpleResource
         assertEquals(ROLE_NAME, role.getName());
         assertEquals(ROLE_DESCRIPTION, role.getDescription());
         verifyUser(role.getUser());
+        verifyLinks(role);
     }
 
     private void verifyUser(User user) {

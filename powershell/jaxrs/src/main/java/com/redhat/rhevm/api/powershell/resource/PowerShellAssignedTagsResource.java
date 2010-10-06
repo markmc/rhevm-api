@@ -20,24 +20,22 @@ package com.redhat.rhevm.api.powershell.resource;
 
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.concurrent.Executor;
 
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.resource.MediaType;
 
 import com.redhat.rhevm.api.model.BaseResource;
 import com.redhat.rhevm.api.model.Tag;
 import com.redhat.rhevm.api.model.Tags;
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.common.util.ReflectionHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellTag;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
-import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 import com.redhat.rhevm.api.resource.AssignedTagResource;
@@ -47,7 +45,7 @@ import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validatePara
 
 @Produces(MediaType.APPLICATION_XML)
 public class PowerShellAssignedTagsResource
-    extends AbstractPowerShellResource
+    extends UriProviderWrapper
     implements AssignedTagsResource {
 
     protected Class<? extends BaseResource> parentType;
@@ -56,8 +54,9 @@ public class PowerShellAssignedTagsResource
     public PowerShellAssignedTagsResource(Class<? extends BaseResource> parentType,
                                           String parentId,
                                           PowerShellPoolMap shellPools,
-                                          PowerShellParser parser) {
-        super(shellPools, parser);
+                                          PowerShellParser parser,
+                                          UriInfoProvider uriProvider) {
+        super(null, shellPools, parser, uriProvider);
         this.parentType = parentType;
         this.parentId = parentId;
     }
@@ -82,7 +81,7 @@ public class PowerShellAssignedTagsResource
     public Tag addLinks(Tag tag) {
         ReflectionHelper.assignChildModel(tag, parentType).setId(parentId);
 
-        return LinkHelper.addLinks(tag);
+        return LinkHelper.addLinks(getUriInfo(), tag);
     }
 
     private String getParentIdArg() {
@@ -105,7 +104,7 @@ public class PowerShellAssignedTagsResource
     }
 
     @Override
-    public Response add(UriInfo uriInfo, Tag tag) {
+    public Response add(Tag tag) {
         validateParameters(tag, "id|name");
 
         StringBuilder buf = new StringBuilder();
@@ -120,7 +119,7 @@ public class PowerShellAssignedTagsResource
 
         tag = addLinks(runAndParseSingle(buf.toString()));
 
-        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(tag.getId());
+        UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(tag.getId());
 
         return Response.created(uriBuilder.build()).entity(tag).build();
     }

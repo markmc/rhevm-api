@@ -22,10 +22,10 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.BaseResource;
@@ -97,13 +97,13 @@ import com.redhat.rhevm.api.resource.VmsResource;
  * the API definition interfaces.
 
  * For example, a link to a VM is the combination of the @Path attribute on
- * VmsResource and the VM id - i.e. 'vms/{vm_id}'
+ * VmsResource and the VM id - i.e. '/rhevm-api/vms/{vm_id}'
  *
  * Resource collections which are a sub-resource of a parent collection
  * present a more difficult challenge. For example, the link to a VM tag
  * is the combination of the @Path attribute on VmsResource, the VM id,
  * the @Path attribute on VmResource.getTagsResource() and the tag id -
- * i.e. 'vms/{vm_id}/tags/{tag_id}'
+ * i.e. '/rhevm-api/vms/{vm_id}/tags/{tag_id}'
  *
  * To be able to do this we need, for each collection, the collection type
  * (e.g. AssignedTagsResource), the resource type (e.g. AssignedTagResource)
@@ -311,12 +311,13 @@ public class LinkHelper {
      * Create a #UriBuilder which encapsulates the path to an object
      *
      * i.e. for a VM tag, return a UriBuilder which encapsulates
-     * 'vms/{vm_id}/tags/{tag_id}'
+     * '/rhevm-api/vms/{vm_id}/tags/{tag_id}'
      *
-     * @param model the object
-     * @return      the #UriBuilder encapsulating the object's path
+     * @param uriInfo the URI info
+     * @param model   the object
+     * @return        the #UriBuilder encapsulating the object's path
      */
-    public static <R extends BaseResource> UriBuilder getUriBuilder(R model) {
+    public static <R extends BaseResource> UriBuilder getUriBuilder(UriInfo uriInfo, R model) {
         Collection collection = getCollection(model);
         if (collection == null) {
             return null;
@@ -333,10 +334,12 @@ public class LinkHelper {
                                   parentCollection.getResourceType(),
                                   model.getClass());
 
-            uriBuilder = getUriBuilder(parent).path(path);
+            uriBuilder = getUriBuilder(uriInfo, parent).path(path);
         } else {
             String path = getPath(collection.getCollectionType());
-            uriBuilder = UriBuilder.fromPath(path);
+            uriBuilder = uriInfo != null
+                         ? UriBuilder.fromPath(uriInfo.getBaseUri().getPath()).path(path)
+                         : UriBuilder.fromPath(path);
         }
 
         return uriBuilder.path(model.getId());
@@ -345,13 +348,14 @@ public class LinkHelper {
     /**
      * Set the href attribute on the supplied object
      *
-     * e.g. set href = 'vms/{vm_id}/tags/{tag_id}' on a VM tag
+     * e.g. set href = '/rhevm-api/vms/{vm_id}/tags/{tag_id}' on a VM tag
      *
-     * @param model the object
-     * @return      the model, with the href attribute set
+     * @param uriInfo  the URI info
+     * @param model    the object
+     * @return         the model, with the href attribute set
      */
-    private static <R extends BaseResource> void setHref(R model) {
-        UriBuilder uriBuilder = getUriBuilder(model);
+    private static <R extends BaseResource> void setHref(UriInfo uriInfo, R model) {
+        UriBuilder uriBuilder = getUriBuilder(uriInfo, model);
         if (uriBuilder != null) {
             model.setHref(uriBuilder.build().toString());
         }
@@ -360,12 +364,13 @@ public class LinkHelper {
     /**
      * Construct the set of action links for an object
      *
-     * @param model the object
-     * @return      the object, including its set of action links
+     * @param uriInfo the URI info
+     * @param model   the object
+     * @return        the object, including its set of action links
      */
-    private static <R extends BaseResource> void setActions(R model) {
+    private static <R extends BaseResource> void setActions(UriInfo uriInfo, R model) {
         Collection collection = getCollection(model);
-        UriBuilder uriBuilder = getUriBuilder(model);
+        UriBuilder uriBuilder = getUriBuilder(uriInfo, model);
         if (uriBuilder != null) {
             ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, collection.getResourceType());
             model.setActions(actionsBuilder.build());
@@ -376,21 +381,23 @@ public class LinkHelper {
      * Set the href attribute on the object (and its inline objects)
      * and construct its set of action links
      *
-     * @param model the object
-     * @return      the object, with href attributes and action links
+     * @param uriInfo  the URI info
+     * @param model    the object
+     * @return         the object, with href attributes and action links
      */
-    public static <R extends BaseResource> R addLinks(R model) {
-        setHref(model);
-        setActions(model);
+    public static <R extends BaseResource> R addLinks(UriInfo uriInfo, R model) {
+        setHref(uriInfo, model);
+        setActions(uriInfo, model);
 
         for (BaseResource inline : getInlineResources(model)) {
             if (inline.getId() != null) {
-                setHref(inline);
+                setHref(uriInfo, inline);
             }
         }
 
         return model;
     }
+
 
     /**
      * A #Map sub-class which maps a model type (e.g. Tag.class) to a

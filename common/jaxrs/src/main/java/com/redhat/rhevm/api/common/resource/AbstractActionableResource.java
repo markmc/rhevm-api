@@ -41,6 +41,7 @@ public abstract class AbstractActionableResource<R extends BaseResource> extends
 
     protected Executor executor;
     protected ReapedMap<String, ActionResource> actions;
+    protected UriInfoProvider uriProvider;
 
     public AbstractActionableResource(String id) {
         this(id, new SimpleExecutor());
@@ -50,6 +51,21 @@ public abstract class AbstractActionableResource<R extends BaseResource> extends
         super(id);
         this.executor = executor;
         actions = new ReapedMap<String, ActionResource>(REAP_AFTER);
+    }
+
+    public AbstractActionableResource(String id, Executor executor, UriInfoProvider uriProvider) {
+        super(id);
+        this.executor = executor;
+        this.uriProvider = uriProvider;
+        actions = new ReapedMap<String, ActionResource>(REAP_AFTER);
+    }
+
+    protected UriInfo getUriInfo() {
+        return uriProvider.getUriInfo();
+    }
+
+    public UriInfoProvider getUriProvider() {
+        return uriProvider;
     }
 
     protected R getModel() {
@@ -105,7 +121,7 @@ public abstract class AbstractActionableResource<R extends BaseResource> extends
                     public Response get() {
                         R tmp = newModel();
                         tmp.setId(getId());
-                        tmp = LinkHelper.addLinks(tmp);
+                        tmp = LinkHelper.addLinks(getUriInfo(), tmp);
                         Response.Status status = Response.Status.MOVED_PERMANENTLY;
                         return Response.status(status).location(URI.create(tmp.getHref())).build();
                     }

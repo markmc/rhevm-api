@@ -20,8 +20,8 @@ package com.redhat.rhevm.api.powershell.resource;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.NIC;
 import com.redhat.rhevm.api.model.Nics;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
@@ -40,12 +40,13 @@ public class PowerShellNicsResource
     public PowerShellNicsResource(String parentId,
                                   PowerShellPoolMap shellPools,
                                   PowerShellParser parser,
-                                  String getCommand) {
-        super(parentId, shellPools, parser, getCommand);
+                                  String getCommand,
+                                  UriInfoProvider uriProvider) {
+        super(parentId, shellPools, parser, getCommand, uriProvider);
     }
 
     @Override
-    public Response add(UriInfo uriInfo, NIC nic) {
+    public Response add(NIC nic) {
         validateParameters(nic, "name", "network.id");
         StringBuilder buf = new StringBuilder();
 
@@ -69,7 +70,7 @@ public class PowerShellNicsResource
 
         nic = addLinks(runAndParseSingle(buf.toString()));
 
-        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(nic.getId());
+        UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(nic.getId());
 
         return Response.created(uriBuilder.build()).entity(nic).build();
     }

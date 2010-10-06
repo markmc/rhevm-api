@@ -56,49 +56,53 @@ public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectio
     private static final String CLUSTER_BY_NAME_ADD_COMMAND_EPILOG = ADD_COMMAND_NO_CLUSTER_EPILOG + " -hostclusterid $c.ClusterId";
 
     public PowerShellTemplatesResourceTest() {
-        super(new PowerShellTemplateResource("0", null, null, null), "templates", "template", extraArgs);
+        super(new PowerShellTemplateResource("0", null, null, null, null), "templates", "template", extraArgs);
     }
 
     @Test
     public void testList() throws Exception {
-        verifyCollection(
-            resource.list(setUpResourceExpectations(getSelectCommand(),
-                                                    getSelectReturn(),
-                                                    NAMES)).getTemplates(),
-            NAMES, DESCRIPTIONS);
+        resource.setUriInfo(setUpResourceExpectations(getSelectCommand(),
+                                                      getSelectReturn(),
+                                                      NAMES));
+        verifyCollection(resource.list().getTemplates(),
+                         NAMES,
+                         DESCRIPTIONS);
     }
 
     @Test
     public void testQuery() throws Exception {
-        verifyCollection(
-            resource.list(setUpResourceExpectations(getQueryCommand(Template.class),
-                                                    getQueryReturn(),
-                                                    getQueryParam(),
-                                                    NAMES_SUBSET)).getTemplates(),
-            NAMES_SUBSET, DESCRIPTIONS_SUBSET);
+        resource.setUriInfo(setUpResourceExpectations(getQueryCommand(Template.class),
+                                                      getQueryReturn(),
+                                                      getQueryParam(),
+                                                      NAMES_SUBSET));
+        verifyCollection(resource.list().getTemplates(),
+                         NAMES_SUBSET,
+                         DESCRIPTIONS_SUBSET);
     }
 
     @Test
     public void testAddWithVmId() throws Exception {
-        verifyResponse(
-            resource.add(setUpAddResourceExpectations(ADD_COMMAND_PROLOG + getAddCommand(true) + ADD_COMMAND_EPILOG,
-                                                      getAddReturn(),
-                                                      NEW_NAME),
-                         getModel(NEW_NAME, NEW_DESCRIPTION)),
-            NEW_NAME, NEW_DESCRIPTION);
+        resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND_PROLOG
+                                                         + getAddCommand(true)
+                                                         + ADD_COMMAND_EPILOG,
+                                                         getAddReturn(),
+                                                         NEW_NAME));
+        verifyResponse(resource.add(getModel(NEW_NAME, NEW_DESCRIPTION)),
+                       NEW_NAME,
+                       NEW_DESCRIPTION);
     }
 
     @Test
     public void testAddWithNoCluster() throws Exception {
         Template model = getModel(NEW_NAME, NEW_DESCRIPTION);
         model.setCluster(null);
+        resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND_PROLOG
+                                                         + getAddCommand(true)
+                                                         + ADD_COMMAND_NO_CLUSTER_EPILOG,
+                                                         getAddReturn(),
+                                                         NEW_NAME));
 
-        verifyResponse(
-            resource.add(setUpAddResourceExpectations(ADD_COMMAND_PROLOG + getAddCommand(true) + ADD_COMMAND_NO_CLUSTER_EPILOG,
-                                                      getAddReturn(),
-                                                      NEW_NAME),
-                         model),
-            NEW_NAME, NEW_DESCRIPTION);
+        verifyResponse(resource.add(model), NEW_NAME, NEW_DESCRIPTION);
     }
 
     @Test
@@ -106,13 +110,13 @@ public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectio
         Template model = getModel(NEW_NAME, NEW_DESCRIPTION);
         model.getVm().setId(null);
         model.getVm().setName(VM_NAME);
+        resource.setUriInfo(setUpAddResourceExpectations(VM_BY_NAME_ADD_COMMAND_PROLOG
+                                                         + getAddCommand(true)
+                                                         + ADD_COMMAND_EPILOG,
+                                                         getAddReturn(),
+                                                         NEW_NAME));
 
-        verifyResponse(
-            resource.add(setUpAddResourceExpectations(VM_BY_NAME_ADD_COMMAND_PROLOG + getAddCommand(true) + ADD_COMMAND_EPILOG,
-                                                      getAddReturn(),
-                                                      NEW_NAME),
-                         model),
-            NEW_NAME, NEW_DESCRIPTION);
+        verifyResponse(resource.add(model), NEW_NAME, NEW_DESCRIPTION);
     }
 
     @Test
@@ -122,21 +126,22 @@ public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectio
         model.getVm().setName(VM_NAME);
         model.getCluster().setId(null);
         model.getCluster().setName(CLUSTER_NAME);
+        resource.setUriInfo(setUpAddResourceExpectations(CLUSTER_BY_NAME_ADD_COMMAND_PROLOG
+                                                         + getAddCommand(true)
+                                                         + CLUSTER_BY_NAME_ADD_COMMAND_EPILOG,
+                                                         getAddReturn(),
+                                                         NEW_NAME));
 
-        verifyResponse(
-            resource.add(setUpAddResourceExpectations(CLUSTER_BY_NAME_ADD_COMMAND_PROLOG + getAddCommand(true) + CLUSTER_BY_NAME_ADD_COMMAND_EPILOG,
-                                                      getAddReturn(),
-                                                      NEW_NAME),
-                         model),
-            NEW_NAME, NEW_DESCRIPTION);
+        verifyResponse(resource.add(model), NEW_NAME, NEW_DESCRIPTION);
     }
 
     @Test
     public void testAddIncompleteParameters() throws Exception {
         Template model = new Template();
         model.setName(NEW_NAME);
+        resource.setUriInfo(setUpResourceExpectations(new String[]{}, new String[]{}, false, null));
         try {
-            resource.add(setUpResourceExpectations(new String[]{}, new String[]{}, false, null), model);
+            resource.add(model);
             fail("expected WebApplicationException on incomplete parameters");
         } catch (WebApplicationException wae) {
              verifyIncompleteException(wae, "Template", "add", "vm.id|name");
@@ -145,15 +150,15 @@ public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectio
 
     @Test
     public void testRemove() throws Exception {
-        setUpResourceExpectations(getRemoveCommand(), null);
+        resource.setUriInfo(setUpResourceExpectations(getRemoveCommand(), null));
         resource.remove(Integer.toString(NAMES[1].hashCode()));
     }
 
     @Test
     public void testGetSubResource() throws Exception {
+        resource.setUriInfo(setUpResourceExpectations(null, null));
         verifyResource(
-            (PowerShellTemplateResource)resource.getTemplateSubResource(setUpResourceExpectations(null, null),
-                                                                        Integer.toString(NEW_NAME.hashCode())),
+            (PowerShellTemplateResource)resource.getTemplateSubResource(Integer.toString(NEW_NAME.hashCode())),
             NEW_NAME);
     }
 

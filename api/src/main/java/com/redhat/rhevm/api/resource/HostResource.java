@@ -22,9 +22,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.POST;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 import com.redhat.rhevm.api.model.Action;
@@ -42,43 +40,43 @@ public interface HostResource extends UpdatableResource<Host> {
     @Formatted
     @Actionable
     @Path("approve")
-    public Response approve(@Context UriInfo uriInfo, Action action);
+    public Response approve(Action action);
 
     @POST
     @Formatted
     @Actionable
     @Path("install")
-    public Response install(@Context UriInfo uriInfo, Action action);
+    public Response install(Action action);
 
     @POST
     @Formatted
     @Actionable
     @Path("activate")
-    public Response activate(@Context UriInfo uriInfo, Action action);
+    public Response activate(Action action);
 
     @POST
     @Formatted
     @Actionable
     @Path("deactivate")
-    public Response deactivate(@Context UriInfo uriInfo, Action action);
+    public Response deactivate(Action action);
 
     @POST
     @Formatted
     @Actionable
     @Path("commitnetconfig")
-    public Response commitNetConfig(@Context UriInfo uriInfo, Action action);
+    public Response commitNetConfig(Action action);
 
     @POST
     @Formatted
     @Actionable
     @Path("iscsidiscover")
-    public Response iscsiDiscover(@Context UriInfo uriInfo, Action action);
+    public Response iscsiDiscover(Action action);
 
     @POST
     @Formatted
     @Actionable
     @Path("iscsilogin")
-    public Response iscsiLogin(@Context UriInfo uriInfo, Action action);
+    public Response iscsiLogin(Action action);
 
     @Path("nics")
     public HostNicsResource getHostNicsResource();

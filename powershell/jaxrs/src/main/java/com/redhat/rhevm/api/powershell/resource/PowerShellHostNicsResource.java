@@ -24,7 +24,6 @@ import java.util.concurrent.Executor;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.resource.MediaType;
 
@@ -33,12 +32,12 @@ import com.redhat.rhevm.api.model.HostNics;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.Slaves;
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellHostNIC;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
-import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 import com.redhat.rhevm.api.resource.HostNicResource;
@@ -47,33 +46,17 @@ import com.redhat.rhevm.api.resource.HostNicsResource;
 import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
 
 @Produces(MediaType.APPLICATION_XML)
-public class PowerShellHostNicsResource implements HostNicsResource {
+public class PowerShellHostNicsResource extends UriProviderWrapper implements HostNicsResource {
 
     protected String hostId;
-    protected Executor executor;
-    protected PowerShellPoolMap shellPools;
-    protected PowerShellParser parser;
 
     public PowerShellHostNicsResource(String hostId,
                                       Executor executor,
                                       PowerShellPoolMap shellPools,
-                                      PowerShellParser parser) {
+                                      PowerShellParser parser,
+                                      UriInfoProvider uriProvider) {
+        super(executor, shellPools, parser, uriProvider);
         this.hostId = hostId;
-        this.executor = executor;
-        this.shellPools = shellPools;
-        this.parser = parser;
-    }
-
-    public Executor getExecutor() {
-        return executor;
-    }
-
-    public PowerShellPool getPool() {
-        return shellPools.get();
-    }
-
-    public PowerShellParser getParser() {
-        return parser;
     }
 
     public String getHostId() {
@@ -139,7 +122,7 @@ public class PowerShellHostNicsResource implements HostNicsResource {
         if (nic.getBondName() != null) {
             String masterId = bondNics.get(0).getId();
 
-            UriBuilder uriBuilder = LinkHelper.getUriBuilder(nic.getHost()).path("nics");
+            UriBuilder uriBuilder = LinkHelper.getUriBuilder(getUriInfo(), nic.getHost()).path("nics");
 
             Link master = new Link();
             master.setRel("master");
@@ -151,7 +134,7 @@ public class PowerShellHostNicsResource implements HostNicsResource {
                 HostNIC slave = new HostNIC();
                 slave.setId(bond.getId());
                 slave.setHost(bond.getHost());
-                nic.getSlaves().getSlaves().add(LinkHelper.addLinks(slave));
+                nic.getSlaves().getSlaves().add(LinkHelper.addLinks(getUriInfo(), slave));
                 slave.setHost(null);
             }
         }
@@ -164,7 +147,7 @@ public class PowerShellHostNicsResource implements HostNicsResource {
 
         HostNIC ret = JAXBHelper.clone("host_nic", HostNIC.class, nic);
 
-        return LinkHelper.addLinks(lookupNetworkId(ret));
+        return LinkHelper.addLinks(getUriInfo(), lookupNetworkId(ret));
     }
 
     public PowerShellHostNIC getHostNic(String nicId) {
@@ -195,7 +178,7 @@ public class PowerShellHostNicsResource implements HostNicsResource {
     }
 
     @Override
-    public Response add(UriInfo uriInfo, HostNIC nic) {
+    public Response add(HostNIC nic) {
         validateParameters(nic, "name", "network.id|name", "slaves.id|name");
 
         StringBuilder buf = new StringBuilder();
@@ -239,7 +222,7 @@ public class PowerShellHostNicsResource implements HostNicsResource {
 
         nic = addLinks(runAndParseSingle(buf.toString()));
 
-        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(nic.getId());
+        UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(nic.getId());
 
         return Response.created(uriBuilder.build()).entity(nic).build();
     }
@@ -265,6 +248,6 @@ public class PowerShellHostNicsResource implements HostNicsResource {
 
     @Override
     public HostNicResource getHostNicSubResource(String id) {
-        return new PowerShellHostNicResource(id, getExecutor(), shellPools, getParser(), this);
+        return new PowerShellHostNicResource(id, getExecutor(), shellPools, getParser(), this, getUriProvider());
     }
 }

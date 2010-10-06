@@ -20,11 +20,11 @@ package com.redhat.rhevm.api.mock.resource;
 
 import java.util.concurrent.Executor;
 
-import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.resource.DevicesResource;
 import com.redhat.rhevm.api.resource.TemplateResource;
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 
@@ -37,8 +37,8 @@ public class MockTemplateResource extends AbstractMockResource<Template> impleme
      * @param template     encapsulated template
      * @param executor executor used for asynchronous actions
      */
-    MockTemplateResource(String id, Executor executor) {
-        super(id, executor);
+    MockTemplateResource(String id, Executor executor, UriInfoProvider uriProvider) {
+        super(id, executor, uriProvider);
     }
 
     // FIXME: this needs to be atomic
@@ -53,16 +53,16 @@ public class MockTemplateResource extends AbstractMockResource<Template> impleme
     }
 
     public Template addLinks() {
-        return LinkHelper.addLinks(JAXBHelper.clone("template", Template.class, getModel()));
+        return LinkHelper.addLinks(getUriInfo(), JAXBHelper.clone("template", Template.class, getModel()));
     }
 
     @Override
-    public Template get(UriInfo uriInfo) {
+    public Template get() {
         return addLinks();
     }
 
     @Override
-    public Template update(UriInfo uriInfo, Template template) {
+    public Template update(Template template) {
         validateUpdate(template);
         updateModel(template);
         return addLinks();

@@ -49,36 +49,32 @@ public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionRes
 
 
     public PowerShellHostsResourceTest() {
-        super(new PowerShellHostResource("0", null, null, null), "hosts", "host", extraArgs);
+        super(new PowerShellHostResource("0", null, null, null, null), "hosts", "host", extraArgs);
     }
 
     @Test
     public void testList() throws Exception {
-        verifyCollection(
-            resource.list(setUpResourceExpectations(getSelectCommand(),
-                                                    getSelectReturn(),
-                                                    NAMES)).getHosts(),
-            NAMES, NO_DESCRIPTIONS);
+        resource.setUriInfo(setUpResourceExpectations(getSelectCommand(),
+                                                      getSelectReturn(),
+                                                      NAMES));
+        verifyCollection(resource.list().getHosts(), NAMES, NO_DESCRIPTIONS);
     }
 
     @Test
     public void testQuery() throws Exception {
-        verifyCollection(
-            resource.list(setUpResourceExpectations(getQueryCommand(Host.class),
-                                                    getQueryReturn(),
-                                                    getQueryParam(),
-                                                    NAMES_SUBSET)).getHosts(),
-            NAMES_SUBSET, NO_DESCRIPTIONS_SUBSET);
+        resource.setUriInfo(setUpResourceExpectations(getQueryCommand(Host.class),
+                                                      getQueryReturn(),
+                                                      getQueryParam(),
+                                                      NAMES_SUBSET));
+        verifyCollection(resource.list().getHosts(), NAMES_SUBSET, NO_DESCRIPTIONS_SUBSET);
     }
 
     @Test
     public void testAdd() throws Exception {
-        verifyResponse(
-            resource.add(setUpAddResourceExpectations(ADD_COMMAND + ADD_COMMAND_EPILOG,
-                                                      getAddReturn(),
-                                                      NEW_NAME),
-                         getModel(NEW_NAME, NO_DESCRIPTION)),
-            NEW_NAME, NO_DESCRIPTION);
+        resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND + ADD_COMMAND_EPILOG,
+                                                         getAddReturn(),
+                                                         NEW_NAME));
+        verifyResponse(resource.add(getModel(NEW_NAME, NO_DESCRIPTION)), NEW_NAME, NO_DESCRIPTION);
     }
 
     @Test
@@ -86,15 +82,13 @@ public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionRes
         Host model = getModel(NEW_NAME, NO_DESCRIPTION);
         model.setCluster(new Cluster());
         model.getCluster().setName(CLUSTER_NAME);
+        resource.setUriInfo(setUpAddResourceExpectations(CLUSTER_BY_NAME_ADD_COMMAND_PROLOG
+                                                         + ADD_COMMAND
+                                                         + CLUSTER_BY_NAME_ADD_COMMAND_EPILOG,
+                                                         getAddReturn(),
+                                                         NEW_NAME));
 
-        verifyResponse(
-            resource.add(setUpAddResourceExpectations(CLUSTER_BY_NAME_ADD_COMMAND_PROLOG
-                                                      + ADD_COMMAND
-                                                      + CLUSTER_BY_NAME_ADD_COMMAND_EPILOG,
-                                                      getAddReturn(),
-                                                      NEW_NAME),
-                         model),
-            NEW_NAME, NO_DESCRIPTION);
+        verifyResponse(resource.add(model), NEW_NAME, NO_DESCRIPTION);
     }
 
     @Test
@@ -102,22 +96,21 @@ public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionRes
         Host model = getModel(NEW_NAME, NO_DESCRIPTION);
         model.setCluster(new Cluster());
         model.getCluster().setId(CLUSTER_ID);
+        resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND
+                                                         + CLUSTER_BY_ID_ADD_COMMAND_EPILOG,
+                                                         getAddReturn(),
+                                                         NEW_NAME));
 
-        verifyResponse(
-            resource.add(setUpAddResourceExpectations(ADD_COMMAND
-                                                      + CLUSTER_BY_ID_ADD_COMMAND_EPILOG,
-                                                      getAddReturn(),
-                                                      NEW_NAME),
-                         model),
-            NEW_NAME, NO_DESCRIPTION);
+        verifyResponse(resource.add(model), NEW_NAME, NO_DESCRIPTION);
     }
 
     @Test
     public void testAddIncompleteParameters() throws Exception {
         Host model = new Host();
         model.setName(NEW_NAME);
+        resource.setUriInfo(setUpResourceExpectations(new String[]{}, new String[]{}, false, null));
         try {
-            resource.add(setUpResourceExpectations(new String[]{}, new String[]{}, false, null), model);
+            resource.add(model);
             fail("expected WebApplicationException on incomplete parameters");
         } catch (WebApplicationException wae) {
              verifyIncompleteException(wae, "Host", "add", "address");
@@ -128,14 +121,12 @@ public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionRes
     public void testAddWithPort() throws Exception {
         Host model = getModel(NEW_NAME, NO_DESCRIPTION);
         model.setPort(PORT);
+        resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND
+                                                         + PORT_OVERRIDE_ADD_COMMAND_EPILOG,
+                                                         getAddReturn(),
+                                                         NEW_NAME));
 
-        verifyResponse(
-            resource.add(setUpAddResourceExpectations(ADD_COMMAND
-                                                      + PORT_OVERRIDE_ADD_COMMAND_EPILOG,
-                                                      getAddReturn(),
-                                                      NEW_NAME),
-                         model),
-            NEW_NAME, NO_DESCRIPTION);
+        verifyResponse(resource.add(model), NEW_NAME, NO_DESCRIPTION);
     }
 
     @Test
@@ -146,9 +137,9 @@ public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionRes
 
     @Test
     public void testGetSubResource() throws Exception {
+        resource.setUriInfo(setUpResourceExpectations(null, null));
         verifyResource(
-            (PowerShellHostResource)resource.getHostSubResource(setUpResourceExpectations(null, null),
-                                                                Integer.toString(NEW_NAME.hashCode())),
+            (PowerShellHostResource)resource.getHostSubResource(Integer.toString(NEW_NAME.hashCode())),
             NEW_NAME);
     }
 

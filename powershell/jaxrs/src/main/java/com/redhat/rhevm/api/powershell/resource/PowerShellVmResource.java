@@ -33,6 +33,7 @@ import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VmType;
 import com.redhat.rhevm.api.resource.AssignedTagsResource;
 import com.redhat.rhevm.api.resource.VmResource;
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.common.util.ReflectionHelper;
@@ -51,9 +52,10 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
 
     public PowerShellVmResource(String id,
                                 Executor executor,
+                                UriInfoProvider uriProvider,
                                 PowerShellPoolMap shellPools,
                                 PowerShellParser parser) {
-        super(id, executor, shellPools, parser);
+        super(id, executor, uriProvider, shellPools, parser);
     }
 
     public static List<PowerShellVM> runAndParse(PowerShellPool pool, PowerShellParser parser, String command) {
@@ -70,7 +72,7 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
         return runAndParseSingle(getPool(), getParser(), command);
     }
 
-    public static VM addLinks(PowerShellVM vm) {
+    public static VM addLinks(UriInfo uriInfo, PowerShellVM vm) {
         VM ret = JAXBHelper.clone("vm", VM.class, vm);
 
         String [] deviceCollections = { "cdroms", "disks", "nics", "snapshots", "tags" };
@@ -78,23 +80,23 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
         ret.getLinks().clear();
 
         for (String collection : deviceCollections) {
-            addSubCollection(ret, collection);
+            addSubCollection(uriInfo, ret, collection);
         }
 
         if (VmType.DESKTOP.equals(ret.getType())) {
-            addSubCollection(ret, "users");
+            addSubCollection(uriInfo, ret, "users");
         }
 
-        return LinkHelper.addLinks(ret);
+        return LinkHelper.addLinks(uriInfo, ret);
     }
 
     @Override
-    public VM get(UriInfo uriInfo) {
-        return addLinks(runAndParseSingle("get-vm " + PowerShellUtils.escape(getId()) + GET_STATS));
+    public VM get() {
+        return addLinks(getUriInfo(), runAndParseSingle("get-vm " + PowerShellUtils.escape(getId()) + GET_STATS));
     }
 
     @Override
-    public VM update(UriInfo uriInfo, VM vm) {
+    public VM update(VM vm) {
         validateUpdate(vm);
 
         StringBuilder buf = new StringBuilder();
@@ -140,7 +142,7 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
 
         buf.append("update-vm -vmobject $v");
 
-        return addLinks(runAndParseSingle(buf.toString()));
+        return addLinks(getUriInfo(), runAndParseSingle(buf.toString()));
     }
 
     protected String[] getStrictlyImmutable() {
@@ -148,32 +150,32 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
     }
 
     @Override
-    public Response start(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new CommandRunner(action, "start-vm", "vm", getId(), getPool()));
+    public Response start(Action action) {
+        return doAction(getUriInfo(), new CommandRunner(action, "start-vm", "vm", getId(), getPool()));
     }
 
     @Override
-    public Response stop(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new CommandRunner(action, "stop-vm", "vm", getId(), getPool()));
+    public Response stop(Action action) {
+        return doAction(getUriInfo(), new CommandRunner(action, "stop-vm", "vm", getId(), getPool()));
     }
 
     @Override
-    public Response shutdown(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new CommandRunner(action, "shutdown-vm", "vm", getId(), getPool()));
+    public Response shutdown(Action action) {
+        return doAction(getUriInfo(), new CommandRunner(action, "shutdown-vm", "vm", getId(), getPool()));
     }
 
     @Override
-    public Response suspend(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new CommandRunner(action, "suspend-vm", "vm", getId(), getPool()));
+    public Response suspend(Action action) {
+        return doAction(getUriInfo(), new CommandRunner(action, "suspend-vm", "vm", getId(), getPool()));
     }
 
     @Override
-    public Response detach(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new CommandRunner(action, "detach-vm", "vm", getId(), getPool()));
+    public Response detach(Action action) {
+        return doAction(getUriInfo(), new CommandRunner(action, "detach-vm", "vm", getId(), getPool()));
     }
 
     @Override
-    public Response migrate(UriInfo uriInfo, Action action) {
+    public Response migrate(Action action) {
         validateParameters(action, "host.id|name");
         StringBuilder buf = new StringBuilder();
 
@@ -191,11 +193,11 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
         buf.append(" -vmid " + PowerShellUtils.escape(getId()));
         buf.append(" -desthostid " + hostArg);
 
-        return doAction(uriInfo, new CommandRunner(action, buf.toString(), getPool()));
+        return doAction(getUriInfo(), new CommandRunner(action, buf.toString(), getPool()));
     }
 
     @Override
-    public Response ticket(UriInfo uriInfo, Action action) {
+    public Response ticket(Action action) {
         StringBuilder buf = new StringBuilder();
 
         buf.append("set-vmticket");
@@ -210,7 +212,7 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
             }
         }
 
-        return doAction(uriInfo,
+        return doAction(getUriInfo(),
                         new CommandRunner(action, buf.toString(), getPool()) {
                             protected void handleOutput(String output) {
                                 action.setTicket(PowerShellTicket.parse(getParser(), output));
@@ -229,38 +231,38 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
 
     @Override
     public PowerShellCdRomsResource getCdRomsResource() {
-        return new PowerShellCdRomsResource(getId(), shellPools, new CdRomQuery(getId()));
+        return new PowerShellCdRomsResource(getId(), shellPools, new CdRomQuery(getId()), getUriProvider());
     }
 
     @Override
     public PowerShellDisksResource getDisksResource() {
-        return new PowerShellDisksResource(getId(), shellPools, getParser(), "get-vm");
+        return new PowerShellDisksResource(getId(), shellPools, getParser(), "get-vm", getUriProvider());
     }
 
     @Override
     public PowerShellNicsResource getNicsResource() {
-        return new PowerShellNicsResource(getId(), shellPools, getParser(), "get-vm");
+        return new PowerShellNicsResource(getId(), shellPools, getParser(), "get-vm", getUriProvider());
     }
 
     @Override
     public PowerShellSnapshotsResource getSnapshotsResource() {
-        return new PowerShellSnapshotsResource(getId(), getExecutor(), shellPools, getParser());
+        return new PowerShellSnapshotsResource(getId(), getExecutor(), shellPools, getParser(), getUriProvider());
     }
 
     @Override
     public AssignedTagsResource getTagsResource() {
-        return new PowerShellAssignedTagsResource(VM.class, getId(), shellPools, getParser());
+        return new PowerShellAssignedTagsResource(VM.class, getId(), shellPools, getParser(), getUriProvider());
     }
 
     @Override
     public PowerShellAttachedUsersResource getUsersResource() {
-        return new PowerShellAttachedUsersResource(getId(), getExecutor(), shellPools, getParser());
+        return new PowerShellAttachedUsersResource(getId(), getExecutor(), shellPools, getParser(), getUriProvider());
     }
 
-    private static void addSubCollection(VM vm, String collection) {
+    private static void addSubCollection(UriInfo uriInfo, VM vm, String collection) {
         Link link = new Link();
         link.setRel(collection);
-        link.setHref(LinkHelper.getUriBuilder(vm).path(collection).build().toString());
+        link.setHref(LinkHelper.getUriBuilder(uriInfo, vm).path(collection).build().toString());
         vm.getLinks().add(link);
     }
 }

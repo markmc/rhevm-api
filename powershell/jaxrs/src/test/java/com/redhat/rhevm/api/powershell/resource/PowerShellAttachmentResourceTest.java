@@ -23,6 +23,7 @@ import java.util.concurrent.Executor;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.Attachment;
 import com.redhat.rhevm.api.model.StorageDomainStatus;
 
@@ -54,8 +55,8 @@ public class PowerShellAttachmentResourceTest extends AbstractPowerShellResource
     private static final String GET_COMMAND = "get-storagedomain" + DC_AND_SD_ARGS;
     private static final String ACTION_RETURN = "replace with realistic powershell return";
 
-    protected PowerShellAttachmentResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser) {
-        return new PowerShellAttachmentResource(DATA_CENTER_ID, STORAGE_DOMAIN_ID, executor, poolMap, parser);
+    protected PowerShellAttachmentResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider) {
+        return new PowerShellAttachmentResource(DATA_CENTER_ID, STORAGE_DOMAIN_ID, executor, uriProvider, poolMap, parser);
     }
 
     protected String formatStorageDomain(String name) {
@@ -64,43 +65,41 @@ public class PowerShellAttachmentResourceTest extends AbstractPowerShellResource
 
     @Test
     public void testGet() throws Exception {
-        verifyAttachment(resource.get(setUpAttachmentExpectations()));
+        setUriInfo(setUpAttachmentExpectations());
+        verifyAttachment(resource.get());
     }
 
     @Test
     public void testActivate() throws Exception {
-        verifyActionResponse(
-            resource.activate(setUpActionExpectation("activate", "activate-storagedomain"), getAction()),
-            false);
+        setUriInfo(setUpActionExpectation("activate", "activate-storagedomain"));
+        verifyActionResponse(resource.activate(getAction()), false);
     }
 
     @Test
     public void testDeactivate() throws Exception {
-        verifyActionResponse(
-            resource.deactivate(setUpActionExpectation("deactivate", "deactivate-storagedomain"), getAction()),
-            false);
+        setUriInfo(setUpActionExpectation("deactivate", "deactivate-storagedomain"));
+        verifyActionResponse(resource.deactivate(getAction()), false);
     }
 
     @Test
     public void testActivateAsync() throws Exception {
-        verifyActionResponse(
-            resource.activate(setUpActionExpectation("activate", "activate-storagedomain"), getAction(true)),
-            true);
+        setUriInfo(setUpActionExpectation("activate", "activate-storagedomain"));
+        verifyActionResponse(resource.activate(getAction(true)), true);
     }
 
     @Test
     public void testDeactivateAsync() throws Exception {
-        verifyActionResponse(
-            resource.deactivate(setUpActionExpectation("deactivate", "deactivate-storagedomain"), getAction(true)),
-            true);
+        setUriInfo(setUpActionExpectation("deactivate", "deactivate-storagedomain"));
+        verifyActionResponse(resource.deactivate(getAction(true)), true);
     }
 
     private UriInfo setUpAttachmentExpectations() throws Exception {
         mockStatic(PowerShellCmd.class);
         expect(PowerShellCmd.runCommand(setUpPoolExpectations(),
                                         GET_COMMAND)).andReturn(formatStorageDomain(STORAGE_DOMAIN_NAME));
+        UriInfo uriInfo = setUpBasicUriExpectations();
         replayAll();
-        return null;
+        return uriInfo;
     }
 
     private UriInfo setUpActionExpectation(String verb, String command) throws Exception {
@@ -117,6 +116,7 @@ public class PowerShellAttachmentResourceTest extends AbstractPowerShellResource
         assertEquals(attachment.getStorageDomain().getId(), STORAGE_DOMAIN_ID);
         assertEquals(attachment.getStatus(), StorageDomainStatus.ACTIVE);
         assert(attachment.isMaster());
+        verifyLinks(attachment);
     }
 
     private void verifyActionResponse(Response r, boolean async) throws Exception {

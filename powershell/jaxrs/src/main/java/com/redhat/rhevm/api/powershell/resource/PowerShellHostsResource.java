@@ -22,7 +22,6 @@ import java.util.List;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.Hosts;
@@ -47,16 +46,16 @@ public class PowerShellHostsResource
     }
 
     @Override
-    public Hosts list(UriInfo uriInfo) {
+    public Hosts list() {
         Hosts ret = new Hosts();
-        for (Host host : runAndParse(getSelectCommand("select-host", uriInfo, Host.class))) {
-            ret.getHosts().add(PowerShellHostResource.addLinks(host));
+        for (Host host : runAndParse(getSelectCommand("select-host", getUriInfo(), Host.class))) {
+            ret.getHosts().add(PowerShellHostResource.addLinks(getUriInfo(), host));
         }
         return ret;
     }
 
     @Override
-    public Response add(UriInfo uriInfo, Host host) {
+    public Response add(Host host) {
         validateParameters(host, "name", "address");
         StringBuilder buf = new StringBuilder();
 
@@ -76,9 +75,9 @@ public class PowerShellHostsResource
             buf.append(" -port " + host.getPort());
         }
 
-        host = PowerShellHostResource.addLinks(runAndParseSingle(buf.toString()));
+        host = PowerShellHostResource.addLinks(getUriInfo(), runAndParseSingle(buf.toString()));
 
-        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(host.getId());
+        UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(host.getId());
 
         return Response.created(uriBuilder.build()).entity(host).build();
     }
@@ -90,12 +89,12 @@ public class PowerShellHostsResource
     }
 
     @Override
-    public HostResource getHostSubResource(UriInfo uriInfo, String id) {
+    public HostResource getHostSubResource(String id) {
         return getSubResource(id);
     }
 
     protected PowerShellHostResource createSubResource(String id) {
-        return new PowerShellHostResource(id, getExecutor(), shellPools, getParser());
+        return new PowerShellHostResource(id, getExecutor(), this, shellPools, getParser());
     }
 
     private String getClusterArg(StringBuilder buf, Host host) {

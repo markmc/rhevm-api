@@ -25,9 +25,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 import com.redhat.rhevm.api.model.StorageDomain;
@@ -40,12 +38,12 @@ public interface StorageDomainsResource {
 
     @GET
     @Formatted
-    public StorageDomains list(@Context UriInfo uriInfo);
+    public StorageDomains list();
 
     @POST
     @Formatted
     @Consumes(MediaType.APPLICATION_XML)
-    public Response add(@Context UriInfo uriInfo, StorageDomain storageDomains);
+    public Response add(StorageDomain storageDomains);
 
     @DELETE
     @Path("{id}")
@@ -59,5 +57,5 @@ public interface StorageDomainsResource {
      * @return    matching subresource if found
      */
     @Path("{id}")
-    public StorageDomainResource getStorageDomainSubResource(@Context UriInfo uriInfo, @PathParam("id") String id);
+    public StorageDomainResource getStorageDomainSubResource(@PathParam("id") String id);
 }

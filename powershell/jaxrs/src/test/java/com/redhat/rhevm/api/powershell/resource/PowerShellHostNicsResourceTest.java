@@ -25,6 +25,7 @@ import java.util.concurrent.Executor;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.UriBuilder;
 
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.HostNIC;
@@ -98,8 +99,8 @@ public class PowerShellHostNicsResourceTest
     private static final String REASON = "Powershell command \"" + ATTACH_NETWORK_CMD + "\" failed with " + FAILURE;
     private static final String DETAIL = "at com.redhat.rhevm.api.powershell.util.PowerShellCmd.runCommand(";
 
-    protected PowerShellHostResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser) {
-        return new PowerShellHostResource(asId(HOST_NAME), executor, poolMap, parser);
+    protected PowerShellHostResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider) {
+        return new PowerShellHostResource(asId(HOST_NAME), executor, uriProvider, poolMap, parser);
     }
 
     protected String formatNics(String[] names, String[][] args) {
@@ -124,8 +125,8 @@ public class PowerShellHostNicsResourceTest
 
     @Test
     public void testGet() {
-        PowerShellHostNicsResource parent = new PowerShellHostNicsResource(asId(HOST_NAME), executor, poolMap, parser);
-        PowerShellHostNicResource resource = new PowerShellHostNicResource(asId(NICS[0]), executor, poolMap, parser, parent);
+        PowerShellHostNicsResource parent = new PowerShellHostNicsResource(asId(HOST_NAME), executor, poolMap, parser, uriProvider);
+        PowerShellHostNicResource nicResource = new PowerShellHostNicResource(asId(NICS[0]), executor, poolMap, parser, parent, uriProvider);
 
         String[] commands = { GET_NIC_CMD,
                               formatLookupNetworkCmd(0) };
@@ -133,14 +134,15 @@ public class PowerShellHostNicsResourceTest
                              formatNetwork(NETS[0]) };
 
         setUpCmdExpectations(commands, returns);
+        setUriInfo(setUpBasicUriExpectations());
         replayAll();
 
-        verifyHostNic(resource.get(), 0);
+        verifyHostNic(nicResource.get(), 0);
     }
 
     @Test
     public void testHostNicsList() {
-        PowerShellHostNicsResource resource = new PowerShellHostNicsResource(asId(HOST_NAME), executor, poolMap, parser);
+        PowerShellHostNicsResource nicResource = new PowerShellHostNicsResource(asId(HOST_NAME), executor, poolMap, parser, uriProvider);
 
         String[] commands = { GET_NICS_CMD,
                               formatLookupNetworkCmd(0),
@@ -150,14 +152,15 @@ public class PowerShellHostNicsResourceTest
                              formatNetwork(NETS[1]) };
 
         setUpCmdExpectations(commands, returns);
+        setUriInfo(setUpBasicUriExpectations());
         replayAll();
 
-        verifyHostNics(resource.list());
+        verifyHostNics(nicResource.list());
     }
 
     @Test
     public void testHostNicAdd() throws Exception {
-        PowerShellHostNicsResource resource = new PowerShellHostNicsResource(asId(HOST_NAME), executor, poolMap, parser);
+        PowerShellHostNicsResource nicResource = new PowerShellHostNicsResource(asId(HOST_NAME), executor, poolMap, parser, uriProvider);
 
         String[] commands = { ADD_BOND_CMD,
                               LOOKUP_SLAVE_ID_COMMAND,
@@ -167,7 +170,7 @@ public class PowerShellHostNicsResourceTest
                              formatNetwork(NETS[0]) };
 
         setUpCmdExpectations(commands, returns);
-        UriInfo uriInfo = setUpUriInfoExpections(asId(BOND_NAME));
+        setUriInfo(setUpUriInfoExpections(asId(BOND_NAME)));
         replayAll();
 
         HostNIC bond = new HostNIC();
@@ -184,103 +187,86 @@ public class PowerShellHostNicsResourceTest
         slave.setId(asId(NICS[1]));
         bond.getSlaves().getSlaves().add(slave);
 
-        verifyBond((HostNIC)resource.add(uriInfo, bond).getEntity());
+        verifyBond((HostNIC)nicResource.add(bond).getEntity());
     }
 
     @Test
     public void testHostNicRemove() {
-        PowerShellHostNicsResource resource = new PowerShellHostNicsResource(asId(HOST_NAME), executor, poolMap, parser);
+        PowerShellHostNicsResource nicResource = new PowerShellHostNicsResource(asId(HOST_NAME), executor, poolMap, parser, uriProvider);
 
         setUpCmdExpectations(REMOVE_BOND_CMD, "");
         replayAll();
 
-        resource.remove(asId(BOND_NAME));
+        nicResource.remove(asId(BOND_NAME));
     }
 
     @Test
     public void testAttach() throws Exception {
-        PowerShellHostNicsResource parent = new PowerShellHostNicsResource(asId(HOST_NAME), executor, poolMap, parser);
-        PowerShellHostNicResource resource = new PowerShellHostNicResource(asId(NICS[0]), executor, poolMap, parser, parent);
+        PowerShellHostNicsResource parent = new PowerShellHostNicsResource(asId(HOST_NAME), executor, poolMap, parser, uriProvider);
+        PowerShellHostNicResource nicResource = new PowerShellHostNicResource(asId(NICS[0]), executor, poolMap, parser, parent, uriProvider);
 
         Action action = getAction();
         action.setNetwork(new Network());
         action.getNetwork().setId(asId(NETS[0]));
 
-        verifyActionResponse(
-            resource.attach(setUpActionExpectation(NIC_URI, "attach", ATTACH_NETWORK_CMD, ACTION_RETURN),
-                            action),
-            NIC_URI,
-            false);
+        setUriInfo(setUpActionExpectation(NIC_URI, "attach", ATTACH_NETWORK_CMD, ACTION_RETURN));
+        verifyActionResponse(nicResource.attach(action), NIC_URI, false);
     }
 
     @Test
     public void testAttachByName() throws Exception {
-        PowerShellHostNicsResource parent = new PowerShellHostNicsResource(asId(HOST_NAME), executor, poolMap, parser);
-        PowerShellHostNicResource resource = new PowerShellHostNicResource(asId(NICS[0]), executor, poolMap, parser, parent);
+        PowerShellHostNicsResource parent = new PowerShellHostNicsResource(asId(HOST_NAME), executor, poolMap, parser, uriProvider);
+        PowerShellHostNicResource nicResource = new PowerShellHostNicResource(asId(NICS[0]), executor, poolMap, parser, parent, uriProvider);
 
         Action action = getAction();
         action.setNetwork(new Network());
         action.getNetwork().setName(NETS[0]);
 
-        verifyActionResponse(
-            resource.attach(setUpActionExpectation(NIC_URI, "attach", ATTACH_NETWORK_BY_NAME_CMD, ACTION_RETURN),
-                            action),
-            NIC_URI,
-            false);
+        setUriInfo(setUpActionExpectation(NIC_URI, "attach", ATTACH_NETWORK_BY_NAME_CMD, ACTION_RETURN));
+        verifyActionResponse(nicResource.attach(action), NIC_URI, false);
     }
 
     @Test
     public void testDetach() throws Exception {
-        PowerShellHostNicsResource parent = new PowerShellHostNicsResource(asId(HOST_NAME), executor, poolMap, parser);
-        PowerShellHostNicResource resource = new PowerShellHostNicResource(asId(NICS[0]), executor, poolMap, parser, parent);
+        PowerShellHostNicsResource parent = new PowerShellHostNicsResource(asId(HOST_NAME), executor, poolMap, parser, uriProvider);
+        PowerShellHostNicResource nicResource = new PowerShellHostNicResource(asId(NICS[0]), executor, poolMap, parser, parent, uriProvider);
 
         Action action = getAction();
         action.setNetwork(new Network());
         action.getNetwork().setId(asId(NETS[0]));
 
-        verifyActionResponse(
-            resource.detach(setUpActionExpectation(NIC_URI, "detach", DETACH_NETWORK_CMD, ACTION_RETURN),
-                            action),
-            NIC_URI,
-            false);
+        setUriInfo(setUpActionExpectation(NIC_URI, "detach", DETACH_NETWORK_CMD, ACTION_RETURN));
+        verifyActionResponse(nicResource.detach(action), NIC_URI, false);
     }
 
     @Test
     public void testAttachAsync() throws Exception {
-        PowerShellHostNicsResource parent = new PowerShellHostNicsResource(asId(HOST_NAME), executor, poolMap, parser);
-        PowerShellHostNicResource resource = new PowerShellHostNicResource(asId(NICS[0]), executor, poolMap, parser, parent);
+        PowerShellHostNicsResource parent = new PowerShellHostNicsResource(asId(HOST_NAME), executor, poolMap, parser, uriProvider);
+        PowerShellHostNicResource nicsResource = new PowerShellHostNicResource(asId(NICS[0]), executor, poolMap, parser, parent, uriProvider);
 
         Action action = getAction(true);
         action.setNetwork(new Network());
         action.getNetwork().setId(asId(NETS[0]));
 
-        verifyActionResponse(
-            resource.attach(setUpActionExpectation(NIC_URI, "attach", ATTACH_NETWORK_CMD, ACTION_RETURN),
-                            action),
-            NIC_URI,
-            true);
+        setUriInfo(setUpActionExpectation(NIC_URI, "attach", ATTACH_NETWORK_CMD, ACTION_RETURN));
+        verifyActionResponse(nicsResource.attach(action), NIC_URI, true);
     }
 
     @Test
     public void testAttachAsyncFailed() throws Exception {
-        PowerShellHostNicsResource parent = new PowerShellHostNicsResource(asId(HOST_NAME), executor, poolMap, parser);
-        PowerShellHostNicResource resource = new PowerShellHostNicResource(asId(NICS[0]), executor, poolMap, parser, parent);
+        PowerShellHostNicsResource parent = new PowerShellHostNicsResource(asId(HOST_NAME), executor, poolMap, parser, uriProvider);
+        PowerShellHostNicResource nicResource = new PowerShellHostNicResource(asId(NICS[0]), executor, poolMap, parser, parent, uriProvider);
 
         Action action = getAction(true);
         action.setNetwork(new Network());
         action.getNetwork().setId(asId(NETS[0]));
 
-        verifyActionResponse(
-            resource.attach(setUpActionExpectation(NIC_URI, "attach", ATTACH_NETWORK_CMD, new PowerShellException(FAILURE)),
-                            action),
-            NIC_URI,
-            true,
-            REASON,
-            DETAIL);
+        setUriInfo(setUpActionExpectation(NIC_URI, "attach", ATTACH_NETWORK_CMD, new PowerShellException(FAILURE)));
+        verifyActionResponse(nicResource.attach(action), NIC_URI, true, REASON, DETAIL);
     }
 
     private UriInfo setUpUriInfoExpections(String id) throws Exception {
-        UriInfo uriInfo = createMock(UriInfo.class);
+        UriInfo uriInfo = setUpBasicUriExpectations();
         UriBuilder uriBuilder = createMock(UriBuilder.class);
         expect(uriInfo.getAbsolutePathBuilder()).andReturn(uriBuilder);
         expect(uriBuilder.path(id)).andReturn(uriBuilder);
@@ -336,6 +322,7 @@ public class PowerShellHostNicsResourceTest
         assertNotNull(nic);
         assertEquals(asId(NICS[i]), nic.getId());
         verifyHostNicDetails(nic, i);
+        verifyLinks(nic);
     }
 
     private void verifyHostNics(HostNics nics) {

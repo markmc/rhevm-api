@@ -29,14 +29,8 @@ import org.junit.Test;
 
 import org.junit.runner.RunWith;
 
-import static org.easymock.classextension.EasyMock.expect;
-
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
-import static org.powermock.api.easymock.PowerMock.createMock;
-import static org.powermock.api.easymock.PowerMock.mockStatic;
-import static org.powermock.api.easymock.PowerMock.replayAll;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest( { PowerShellCmd.class })
@@ -68,8 +62,9 @@ public class PowerShellStorageDomainsResourceTest
         String [] commands = { getSelectCommand(), };
         String [] returns = { getSelectReturn(), };
 
+        resource.setUriInfo(setUpResourceExpectations(commands, returns, null, NAMES));
         verifyCollection(
-            resource.list(setUpResourceExpectations(commands, returns, null, NAMES)).getStorageDomains(),
+            resource.list().getStorageDomains(),
             NAMES, NULL_DESCRIPTIONS);
     }
 
@@ -78,9 +73,8 @@ public class PowerShellStorageDomainsResourceTest
         String [] commands = { getQueryCommand(StorageDomain.class), };
         String [] returns = { getQueryReturn(), };
 
-        verifyCollection(
-            resource.list(setUpResourceExpectations(commands, returns, getQueryParam(), NAMES_SUBSET)).getStorageDomains(),
-            NAMES_SUBSET, NULL_DESCRIPTIONS_SUBSET);
+        resource.setUriInfo(setUpResourceExpectations(commands, returns, getQueryParam(), NAMES_SUBSET));
+        verifyCollection(resource.list().getStorageDomains(), NAMES_SUBSET, NULL_DESCRIPTIONS_SUBSET);
     }
 
     @Test
@@ -93,10 +87,8 @@ public class PowerShellStorageDomainsResourceTest
         model.getStorage().setType(StorageType.NFS);
         model.getStorage().setAddress(NFS_ADDRESS);
         model.getStorage().setPath(NFS_PATH);
-        verifyResponse(
-            resource.add(setUpAddResourceExpectations(ADD_NFS_COMMAND, getAddReturn(), NEW_NAME),
-                         model),
-            NEW_NAME, null);
+        resource.setUriInfo(setUpAddResourceExpectations(ADD_NFS_COMMAND, getAddReturn(), NEW_NAME));
+        verifyResponse(resource.add(model), NEW_NAME, null);
     }
 
     @Test
@@ -109,10 +101,8 @@ public class PowerShellStorageDomainsResourceTest
         model.getStorage().setType(StorageType.NFS);
         model.getStorage().setAddress(NFS_ADDRESS);
         model.getStorage().setPath(NFS_PATH);
-        verifyResponse(
-            resource.add(setUpAddResourceExpectations(ADD_NFS_WITH_HOST_NAME_COMMAND, getAddReturn(), NEW_NAME),
-                         model),
-            NEW_NAME, null);
+        resource.setUriInfo(setUpAddResourceExpectations(ADD_NFS_WITH_HOST_NAME_COMMAND, getAddReturn(), NEW_NAME));
+        verifyResponse(resource.add(model), NEW_NAME, null);
     }
 
     protected PowerShellStorageDomainsResource getResource() {

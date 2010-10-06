@@ -24,7 +24,6 @@ import java.util.Map;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.mock.util.SimpleQueryEvaluator;
 import com.redhat.rhevm.api.model.Host;
@@ -36,9 +35,6 @@ import static com.redhat.rhevm.api.mock.resource.AbstractMockResource.allocateId
 
 
 public class MockHostsResource extends AbstractMockQueryableResource<Host> implements HostsResource {
-    /* FIXME: would like to do:
-     * private @Context UriInfo uriInfo;
-     */
 
     private static Map<String, MockHostResource> hosts =
         Collections.synchronizedMap(new HashMap<String, MockHostResource>());
@@ -50,7 +46,7 @@ public class MockHostsResource extends AbstractMockQueryableResource<Host> imple
     public void populate() {
         synchronized (hosts) {
             while (hosts.size() < 4) {
-                MockHostResource resource = new MockHostResource(allocateId(Host.class), getExecutor());
+                MockHostResource resource = new MockHostResource(allocateId(Host.class), getExecutor(), this);
                 resource.getModel().setName("host" + resource.getModel().getId());
                 hosts.put(resource.getModel().getId(), resource);
             }
@@ -58,11 +54,11 @@ public class MockHostsResource extends AbstractMockQueryableResource<Host> imple
     }
 
     @Override
-    public Hosts list(UriInfo uriInfo) {
+    public Hosts list() {
         Hosts ret = new Hosts();
 
         for (MockHostResource host : hosts.values()) {
-            if (filter(host.getModel(), uriInfo, Host.class)) {
+            if (filter(host.getModel(), getUriInfo(), Host.class)) {
                 ret.getHosts().add(host.addLinks());
             }
         }
@@ -71,15 +67,15 @@ public class MockHostsResource extends AbstractMockQueryableResource<Host> imple
     }
 
     @Override
-    public Response add(UriInfo uriInfo, Host host) {
-        MockHostResource resource = new MockHostResource(allocateId(Host.class), getExecutor());
+    public Response add(Host host) {
+        MockHostResource resource = new MockHostResource(allocateId(Host.class), getExecutor(), this);
 
         resource.updateModel(host);
 
         String id = resource.getId();
         hosts.put(id, resource);
 
-        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(id);
+        UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(id);
 
         host = resource.addLinks();
 
@@ -92,7 +88,7 @@ public class MockHostsResource extends AbstractMockQueryableResource<Host> imple
     }
 
     @Override
-    public HostResource getHostSubResource(UriInfo uriInfo, String id) {
+    public HostResource getHostSubResource(String id) {
         return hosts.get(id);
     }
 }

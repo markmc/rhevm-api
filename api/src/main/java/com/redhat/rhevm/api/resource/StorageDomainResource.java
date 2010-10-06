@@ -23,9 +23,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 import com.redhat.rhevm.api.model.Action;
@@ -44,7 +42,7 @@ public interface StorageDomainResource extends UpdatableResource<StorageDomain> 
     @Consumes(MediaType.APPLICATION_XML)
     @Actionable
     @Path("teardown")
-    public Response teardown(@Context UriInfo uriInfo, Action action);
+    public Response teardown(Action action);
 
     @Path("attachments")
     public AttachmentsResource getAttachmentsResource();

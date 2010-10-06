@@ -29,6 +29,7 @@ import com.redhat.rhevm.api.model.SupportedVersions;
 import com.redhat.rhevm.api.model.Version;
 import com.redhat.rhevm.api.resource.AssignedNetworksResource;
 import com.redhat.rhevm.api.resource.ClusterResource;
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellCluster;
 import com.redhat.rhevm.api.powershell.model.PowerShellVersion;
@@ -43,9 +44,10 @@ public class PowerShellClusterResource extends AbstractPowerShellActionableResou
 
     public PowerShellClusterResource(String id,
                                      Executor executor,
+                                     UriInfoProvider uriProvider,
                                      PowerShellPoolMap shellPools,
                                      PowerShellParser parser) {
-        super(id, executor, shellPools, parser);
+        super(id, executor, uriProvider, shellPools, parser);
     }
 
     public static List<Cluster> runAndParse(PowerShellPool pool, PowerShellParser parser, String command) {
@@ -80,21 +82,21 @@ public class PowerShellClusterResource extends AbstractPowerShellActionableResou
         return cluster;
     }
 
-    public static Cluster addLinks(PowerShellPool pool, PowerShellParser parser, Cluster cluster) {
+    public static Cluster addLinks(UriInfo uriInfo, PowerShellPool pool, PowerShellParser parser, Cluster cluster) {
         cluster = querySupportedVersions(pool, parser, cluster);
 
         Link link = new Link();
         link.setRel("networks");
-        link.setHref(LinkHelper.getUriBuilder(cluster).path("networks").build().toString());
+        link.setHref(LinkHelper.getUriBuilder(uriInfo, cluster).path("networks").build().toString());
 
         cluster.getLinks().clear();
         cluster.getLinks().add(link);
 
-        return LinkHelper.addLinks(cluster);
+        return LinkHelper.addLinks(uriInfo, cluster);
     }
 
     @Override
-    public Cluster get(UriInfo uriInfo) {
+    public Cluster get() {
         StringBuilder buf = new StringBuilder();
 
         buf.append("$l = select-cluster;");
@@ -104,11 +106,11 @@ public class PowerShellClusterResource extends AbstractPowerShellActionableResou
         buf.append("  } ");
         buf.append("}");
 
-        return addLinks(getPool(), getParser(), runAndParseSingle(buf.toString()));
+        return addLinks(getUriInfo(), getPool(), getParser(), runAndParseSingle(buf.toString()));
     }
 
     @Override
-    public Cluster update(UriInfo uriInfo, Cluster cluster) {
+    public Cluster update(Cluster cluster) {
         validateUpdate(cluster);
 
         StringBuilder buf = new StringBuilder();
@@ -147,11 +149,11 @@ public class PowerShellClusterResource extends AbstractPowerShellActionableResou
 
         buf.append("} }");
 
-        return addLinks(getPool(), getParser(), runAndParseSingle(buf.toString()));
+        return addLinks(getUriInfo(), getPool(), getParser(), runAndParseSingle(buf.toString()));
     }
 
     @Override
     public AssignedNetworksResource getAssignedNetworksSubResource() {
-        return new PowerShellClusterNetworksResource(getId(), getExecutor(), shellPools, getParser());
+        return new PowerShellClusterNetworksResource(getId(), getExecutor(), shellPools, getParser(), getUriProvider());
     }
 }

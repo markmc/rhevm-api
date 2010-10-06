@@ -25,6 +25,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.Fault;
 import com.redhat.rhevm.api.model.Template;
 
@@ -52,8 +53,8 @@ public class PowerShellTemplateResourceTest extends AbstractPowerShellResourceTe
     private static final String GET_COMMAND = "get-template -templateid \"" + TEMPLATE_ID + "\"";
     private static final String UPDATE_COMMAND = "$t = get-template \"" + TEMPLATE_ID + "\";$t.name = \"" + NEW_NAME + "\";update-template -templateobject $t";
 
-    protected PowerShellTemplateResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser) {
-        return new PowerShellTemplateResource(TEMPLATE_ID, executor, poolMap, parser);
+    protected PowerShellTemplateResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider) {
+        return new PowerShellTemplateResource(TEMPLATE_ID, executor, uriProvider, poolMap, parser);
     }
 
     protected String formatTemplate(String name) {
@@ -65,27 +66,22 @@ public class PowerShellTemplateResourceTest extends AbstractPowerShellResourceTe
 
     @Test
     public void testGet() throws Exception {
-        verifyTemplate(resource.get(setUpTemplateExpectations(GET_COMMAND,
-                                                              formatTemplate(TEMPLATE_NAME))),
-                       TEMPLATE_NAME);
+        setUriInfo(setUpTemplateExpectations(GET_COMMAND, formatTemplate(TEMPLATE_NAME)));
+        verifyTemplate(resource.get(), TEMPLATE_NAME);
     }
 
     @Test
     public void testGoodUpdate() throws Exception {
-        verifyTemplate(
-            resource.update(setUpTemplateExpectations(UPDATE_COMMAND,
-                                                      formatTemplate(NEW_NAME)),
-                            getTemplate(NEW_NAME)),
-            NEW_NAME);
+        setUriInfo(setUpTemplateExpectations(UPDATE_COMMAND, formatTemplate(NEW_NAME)));
+        verifyTemplate(resource.update(getTemplate(NEW_NAME)), NEW_NAME);
     }
 
     @Test
     public void testBadUpdate() throws Exception {
         try {
-            UriInfo uriInfo = createMock(UriInfo.class);
+            setUriInfo(createMock(UriInfo.class));
             replayAll();
-            resource.update(uriInfo,
-                            getTemplate(BAD_ID, NEW_NAME));
+            resource.update(getTemplate(BAD_ID, NEW_NAME));
             fail("expected WebApplicationException on bad update");
         } catch (WebApplicationException wae) {
             verifyUpdateException(wae);
@@ -95,7 +91,7 @@ public class PowerShellTemplateResourceTest extends AbstractPowerShellResourceTe
     private UriInfo setUpTemplateExpectations(String command, String ret) throws Exception {
         mockStatic(PowerShellCmd.class);
         expect(PowerShellCmd.runCommand(setUpPoolExpectations(), command)).andReturn(ret);
-        UriInfo uriInfo = createMock(UriInfo.class);
+        UriInfo uriInfo = setUpBasicUriExpectations();
         UriBuilder uriBuilder = createMock(UriBuilder.class);
         expect(uriInfo.getRequestUriBuilder()).andReturn(uriBuilder).anyTimes();
         expect(uriBuilder.build()).andReturn(new URI("templates/" + TEMPLATE_ID)).anyTimes();
@@ -120,6 +116,7 @@ public class PowerShellTemplateResourceTest extends AbstractPowerShellResourceTe
         assertEquals(template.getId(), Integer.toString(name.hashCode()));
         assertEquals(template.getName(), name);
         assertEquals(template.getDescription(), TEMPLATE_DESCRIPTION);
+        verifyLinks(template);
     }
 
     private void verifyUpdateException(WebApplicationException wae) {

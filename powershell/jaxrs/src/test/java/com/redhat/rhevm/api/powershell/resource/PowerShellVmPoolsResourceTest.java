@@ -53,7 +53,7 @@ public class PowerShellVmPoolsResourceTest extends AbstractPowerShellCollectionR
     public static final String LOOKUP_TEMPLATE_COMMAND = "select-template -searchtext \"name = " + TEMPLATE_NAME + "\"";
 
     public PowerShellVmPoolsResourceTest() {
-        super(new PowerShellVmPoolResource("0", null, null, null), "vmpools", "vmpool", extraArgs);
+        super(new PowerShellVmPoolResource("0", null, null, null, null), "vmpools", "vmpool", extraArgs);
     }
 
     protected String formatCluster(String name) {
@@ -80,9 +80,8 @@ public class PowerShellVmPoolsResourceTest extends AbstractPowerShellCollectionR
                               formatCluster(CLUSTER_NAME), formatTemplate(TEMPLATE_NAME),
                               formatCluster(CLUSTER_NAME), formatTemplate(TEMPLATE_NAME),
                               formatCluster(CLUSTER_NAME), formatTemplate(TEMPLATE_NAME) };
-        verifyCollection(
-            resource.list(setUpResourceExpectations(4, commands, returns, false, null, NAMES)).getVmPools(),
-            NAMES, DESCRIPTIONS);
+        resource.setUriInfo(setUpResourceExpectations(4, commands, returns, false, null, NAMES));
+        verifyCollection(resource.list().getVmPools(), NAMES, DESCRIPTIONS);
     }
 
 
@@ -94,24 +93,21 @@ public class PowerShellVmPoolsResourceTest extends AbstractPowerShellCollectionR
         String [] returns = { getQueryReturn(),
                               formatCluster(CLUSTER_NAME), formatTemplate(TEMPLATE_NAME),
                               formatCluster(CLUSTER_NAME), formatTemplate(TEMPLATE_NAME) };
-        verifyCollection(
-            resource.list(setUpResourceExpectations(3,
-                                                    commands,
-                                                    returns,
-                                                    false,
-                                                    getQueryParam(),
-                                                    NAMES_SUBSET)).getVmPools(),
-            NAMES_SUBSET, DESCRIPTIONS_SUBSET);
+        resource.setUriInfo(setUpResourceExpectations(3,
+                                                      commands,
+                                                      returns,
+                                                      false,
+                                                      getQueryParam(),
+                                                      NAMES_SUBSET));
+        verifyCollection(resource.list().getVmPools(), NAMES_SUBSET, DESCRIPTIONS_SUBSET);
     }
 
     @Test
     public void testAdd() throws Exception {
         String [] commands = { ADD_COMMAND, LOOKUP_CLUSTER_COMMAND, LOOKUP_TEMPLATE_COMMAND };
         String [] returns = { getAddReturn(), formatCluster(CLUSTER_NAME), formatTemplate(TEMPLATE_NAME) };
-        verifyResponse(
-            resource.add(setUpResourceExpectations(2, commands, returns, true, null, NEW_NAME),
-                         getModel(NEW_NAME, NEW_DESCRIPTION)),
-            NEW_NAME, NEW_DESCRIPTION);
+        resource.setUriInfo(setUpResourceExpectations(2, commands, returns, true, null, NEW_NAME));
+        verifyResponse(resource.add(getModel(NEW_NAME, NEW_DESCRIPTION)), NEW_NAME, NEW_DESCRIPTION);
     }
 
     @Test
@@ -122,10 +118,8 @@ public class PowerShellVmPoolsResourceTest extends AbstractPowerShellCollectionR
 
         String [] commands = { TEMPLATE_BY_NAME_ADD_COMMAND, LOOKUP_CLUSTER_COMMAND, LOOKUP_TEMPLATE_COMMAND };
         String [] returns = { getAddReturn(), formatCluster(CLUSTER_NAME), formatTemplate(TEMPLATE_NAME) };
-        verifyResponse(
-            resource.add(setUpResourceExpectations(2, commands, returns, true, null, NEW_NAME),
-                         model),
-            NEW_NAME, NEW_DESCRIPTION);
+        resource.setUriInfo(setUpResourceExpectations(2, commands, returns, true, null, NEW_NAME));
+        verifyResponse(resource.add(model), NEW_NAME, NEW_DESCRIPTION);
     }
 
     @Test
@@ -138,10 +132,8 @@ public class PowerShellVmPoolsResourceTest extends AbstractPowerShellCollectionR
 
         String [] commands = { CLUSTER_BY_NAME_ADD_COMMAND, LOOKUP_CLUSTER_COMMAND, LOOKUP_TEMPLATE_COMMAND };
         String [] returns = { getAddReturn(), formatCluster(CLUSTER_NAME), formatTemplate(TEMPLATE_NAME) };
-        verifyResponse(
-            resource.add(setUpResourceExpectations(2, commands, returns, true, null, NEW_NAME),
-                         model),
-            NEW_NAME, NEW_DESCRIPTION);
+        resource.setUriInfo(setUpResourceExpectations(2, commands, returns, true, null, NEW_NAME));
+        verifyResponse(resource.add(model), NEW_NAME, NEW_DESCRIPTION);
     }
 
 
@@ -150,8 +142,9 @@ public class PowerShellVmPoolsResourceTest extends AbstractPowerShellCollectionR
         VmPool model = new VmPool();
         model.setName(NEW_NAME);
         model.setTemplate(new Template());
+        resource.setUriInfo(setUpResourceExpectations(new String[]{}, new String[]{}, false, null));
         try {
-            resource.add(setUpResourceExpectations(new String[]{}, new String[]{}, false, null), model);
+            resource.add(model);
             fail("expected WebApplicationException on incomplete parameters");
         } catch (WebApplicationException wae) {
              verifyIncompleteException(wae, "VmPool", "add", "template.id|name", "cluster.id|name");
@@ -166,9 +159,9 @@ public class PowerShellVmPoolsResourceTest extends AbstractPowerShellCollectionR
 
     @Test
     public void testGetSubResource() throws Exception {
+        resource.setUriInfo(setUpResourceExpectations(null, null));
         verifyResource(
-            (PowerShellVmPoolResource)resource.getVmPoolSubResource(setUpResourceExpectations(null, null),
-                                                                    Integer.toString(NEW_NAME.hashCode())),
+            (PowerShellVmPoolResource)resource.getVmPoolSubResource(Integer.toString(NEW_NAME.hashCode())),
             NEW_NAME);
     }
 

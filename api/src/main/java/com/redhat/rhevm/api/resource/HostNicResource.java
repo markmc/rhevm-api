@@ -24,8 +24,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.POST;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 import javax.ws.rs.core.Response;
 
@@ -49,12 +47,12 @@ public interface HostNicResource {
     @Consumes(MediaType.APPLICATION_XML)
     @Actionable
     @Path("attach")
-    public Response attach(@Context UriInfo uriInfo, Action action);
+    public Response attach(Action action);
 
     @POST
     @Formatted
     @Consumes(MediaType.APPLICATION_XML)
     @Actionable
     @Path("detach")
-    public Response detach(@Context UriInfo uriInfo, Action action);
+    public Response detach(Action action);
 }

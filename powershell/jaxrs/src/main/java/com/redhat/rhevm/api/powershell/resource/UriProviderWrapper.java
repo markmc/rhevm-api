@@ -16,6 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+
 package com.redhat.rhevm.api.powershell.resource;
 
 import java.util.concurrent.Executor;
@@ -23,37 +24,26 @@ import java.util.concurrent.Executor;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
-import com.redhat.rhevm.api.model.Roles;
-import com.redhat.rhevm.api.model.User;
-
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 
-public class PowerShellRolesResourceTest extends AbstractPowerShellRolesResourceTest<PowerShellRolesResource> {
+public class UriProviderWrapper extends AbstractPowerShellResource {
 
-    protected static final String SELECT_COMMAND = "get-roles";
+    private UriInfoProvider uriProvider;
 
-    protected PowerShellRolesResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider) {
-        PowerShellRolesResource resource = new PowerShellRolesResource();
-        resource.setExecutor(executor);
-        resource.setPowerShellPoolMap(poolMap);
-        resource.setParser(parser);
-        return resource;
+    protected UriProviderWrapper(Executor executor,
+                                 PowerShellPoolMap shellPools,
+                                 PowerShellParser parser,
+                                 UriInfoProvider uriProvider) {
+        super(executor, shellPools, parser);
+        this.uriProvider = uriProvider;
     }
 
-    protected String getSelectCommand() {
-        return SELECT_COMMAND;
+    protected UriInfo getUriInfo() {
+        return uriProvider.getUriInfo();
     }
 
-    protected Roles listRoles() {
-        return resource.list();
-    }
-
-    protected void verifyUser(User user) {
-        assertNull(user);
-    }
-
-    protected void cacheUriInfo(UriInfo uriInfo) {
-        resource.setUriInfo(uriInfo);
+    protected UriInfoProvider getUriProvider() {
+        return uriProvider;
     }
 }

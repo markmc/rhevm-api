@@ -24,6 +24,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.common.resource.AttachmentActionValidator;
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.ActionsBuilder;
@@ -50,17 +51,18 @@ public class PowerShellAttachmentResource extends AbstractPowerShellActionableRe
     PowerShellAttachmentResource(String dataCenterId,
                                  String storageDomainId,
                                  Executor executor,
+                                 UriInfoProvider uriProvider,
                                  PowerShellPoolMap shellPools,
                                  PowerShellParser parser) {
-        super(dataCenterId, executor, shellPools, parser);
+        super(dataCenterId, executor, uriProvider, shellPools, parser);
         this.storageDomainId = storageDomainId;
     }
 
-    public static Attachment addLinks(Attachment attachment) {
-        attachment = LinkHelper.addLinks(attachment);
+    public static Attachment addLinks(UriInfo uriInfo, Attachment attachment) {
+        attachment = LinkHelper.addLinks(uriInfo, attachment);
 
         ActionValidator actionValidator = new AttachmentActionValidator(attachment);
-        ActionsBuilder actionsBuilder = new ActionsBuilder(LinkHelper.getUriBuilder(attachment),
+        ActionsBuilder actionsBuilder = new ActionsBuilder(LinkHelper.getUriBuilder(uriInfo, attachment),
                                                            AttachmentResource.class,
                                                            actionValidator);
         attachment.setActions(actionsBuilder.build());
@@ -78,7 +80,7 @@ public class PowerShellAttachmentResource extends AbstractPowerShellActionableRe
     }
 
     @Override
-    public Attachment get(UriInfo uriInfo) {
+    public Attachment get() {
         StringBuilder buf = new StringBuilder();
 
         buf.append("get-storagedomain");
@@ -94,17 +96,17 @@ public class PowerShellAttachmentResource extends AbstractPowerShellActionableRe
 
         Attachment attachment = PowerShellAttachmentsResource.buildAttachment(dataCenter, storageDomain);
 
-        return addLinks(attachment);
+        return addLinks(getUriInfo(), attachment);
     }
 
     @Override
-    public Response activate(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new AttachmentActionTask(action, "activate-storagedomain"));
+    public Response activate(Action action) {
+        return doAction(getUriInfo(), new AttachmentActionTask(action, "activate-storagedomain"));
     }
 
     @Override
-    public Response deactivate(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new AttachmentActionTask(action, "deactivate-storagedomain"));
+    public Response deactivate(Action action) {
+        return doAction(getUriInfo(), new AttachmentActionTask(action, "deactivate-storagedomain"));
     }
 
     private class AttachmentActionTask extends AbstractPowerShellActionTask {

@@ -23,6 +23,7 @@ import java.util.concurrent.Executor;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.Fault;
 import com.redhat.rhevm.api.model.VmPool;
 
@@ -50,8 +51,8 @@ public class PowerShellVmPoolResourceTest extends AbstractPowerShellResourceTest
     private static final String GET_COMMAND = "get-vmpool -vmpoolid \"" + POOL_ID + "\"";
     private static final String UPDATE_COMMAND = "$v = get-vmpool \"" + POOL_ID + "\";$v.name = \"" + NEW_NAME + "\";update-vmpool -vmpoolobject $v";
 
-    protected PowerShellVmPoolResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser) {
-        return new PowerShellVmPoolResource(POOL_ID, executor, poolMap, parser);
+    protected PowerShellVmPoolResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider) {
+        return new PowerShellVmPoolResource(POOL_ID, executor, uriProvider, poolMap, parser);
     }
 
     protected String formatVmPool(String name) {
@@ -92,9 +93,8 @@ public class PowerShellVmPoolResourceTest extends AbstractPowerShellResourceTest
                                formatCluster(PowerShellVmPoolsResourceTest.CLUSTER_NAME),
                                formatTemplate(PowerShellVmPoolsResourceTest.TEMPLATE_NAME) };
 
-        verifyVmPool(
-            resource.get(setUpVmPoolExpectations(commands, returns, POOL_NAME)),
-            POOL_NAME);
+        setUriInfo(setUpVmPoolExpectations(commands, returns, POOL_NAME));
+        verifyVmPool(resource.get(), POOL_NAME);
     }
 
     @Test
@@ -106,9 +106,8 @@ public class PowerShellVmPoolResourceTest extends AbstractPowerShellResourceTest
                                formatCluster("cluster22", PowerShellVmPoolsResourceTest.CLUSTER_NAME),
                                formatTemplate(PowerShellVmPoolsResourceTest.TEMPLATE_NAME) };
 
-        verifyVmPool(
-            resource.get(setUpVmPoolExpectations(commands, returns, POOL_NAME)),
-            POOL_NAME);
+        setUriInfo(setUpVmPoolExpectations(commands, returns, POOL_NAME));
+        verifyVmPool(resource.get(), POOL_NAME);
     }
 
     @Test
@@ -120,19 +119,16 @@ public class PowerShellVmPoolResourceTest extends AbstractPowerShellResourceTest
                                formatCluster(PowerShellVmPoolsResourceTest.CLUSTER_NAME),
                                formatTemplate(PowerShellVmPoolsResourceTest.TEMPLATE_NAME) };
 
-        verifyVmPool(
-            resource.update(setUpVmPoolExpectations(commands, returns, NEW_NAME),
-                            getVmPool(NEW_NAME)),
-            NEW_NAME);
+        setUriInfo(setUpVmPoolExpectations(commands, returns, NEW_NAME));
+        verifyVmPool(resource.update(getVmPool(NEW_NAME)), NEW_NAME);
     }
 
     @Test
     public void testBadUpdate() throws Exception {
         try {
-            UriInfo uriInfo = createMock(UriInfo.class);
+            setUriInfo(createMock(UriInfo.class));
             replayAll();
-            resource.update(uriInfo,
-                            getVmPool(BAD_ID, NEW_NAME));
+            resource.update(getVmPool(BAD_ID, NEW_NAME));
             fail("expected WebApplicationException on bad update");
         } catch (WebApplicationException wae) {
             verifyUpdateException(wae);
@@ -150,8 +146,9 @@ public class PowerShellVmPoolResourceTest extends AbstractPowerShellResourceTest
                 }
             }
         }
+        UriInfo uriInfo = setUpBasicUriExpectations();
         replayAll();
-        return null;
+        return uriInfo;
     }
 
     private VmPool getVmPool(String name) {

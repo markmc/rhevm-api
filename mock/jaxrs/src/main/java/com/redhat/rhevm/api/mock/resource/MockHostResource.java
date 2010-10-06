@@ -21,7 +21,6 @@ package com.redhat.rhevm.api.mock.resource;
 import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Host;
@@ -30,6 +29,7 @@ import com.redhat.rhevm.api.resource.AssignedTagsResource;
 import com.redhat.rhevm.api.resource.HostResource;
 import com.redhat.rhevm.api.resource.HostNicsResource;
 import com.redhat.rhevm.api.resource.HostStorageResource;
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 
@@ -45,8 +45,8 @@ public class MockHostResource extends AbstractMockResource<Host> implements Host
      * @param host     encapsulated host
      * @param executor executor used for asynchronous actions
      */
-    MockHostResource(String id, Executor executor) {
-        super(id, executor);
+    MockHostResource(String id, Executor executor, UriInfoProvider uriProvider) {
+        super(id, executor, uriProvider);
     }
 
     // FIXME: this needs to be atomic
@@ -61,54 +61,54 @@ public class MockHostResource extends AbstractMockResource<Host> implements Host
     }
 
     public Host addLinks() {
-        return LinkHelper.addLinks(JAXBHelper.clone(OBJECT_FACTORY.createHost(getModel())));
+        return LinkHelper.addLinks(getUriInfo(), JAXBHelper.clone(OBJECT_FACTORY.createHost(getModel())));
     }
 
     /* FIXME: kill uriInfo param, make href auto-generated? */
     @Override
-    public Host get(UriInfo uriInfo) {
+    public Host get() {
         return addLinks();
     }
 
     @Override
-    public Host update(UriInfo uriInfo, Host host) {
+    public Host update(Host host) {
         validateUpdate(host);
         updateModel(host);
         return addLinks();
     }
 
     @Override
-    public Response approve(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new DoNothingTask(action));
+    public Response approve(Action action) {
+        return doAction(getUriInfo(), new DoNothingTask(action));
     }
 
     @Override
-    public Response install(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new DoNothingTask(action));
+    public Response install(Action action) {
+        return doAction(getUriInfo(), new DoNothingTask(action));
     }
 
     @Override
-    public Response activate(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new HostStatusSetter(action, HostStatus.UP));
+    public Response activate(Action action) {
+        return doAction(getUriInfo(), new HostStatusSetter(action, HostStatus.UP));
     }
 
     @Override
-    public Response deactivate(UriInfo uriInfo, Action action) {
-        return doAction(uriInfo, new HostStatusSetter(action, HostStatus.MAINTENANCE));
+    public Response deactivate(Action action) {
+        return doAction(getUriInfo(), new HostStatusSetter(action, HostStatus.MAINTENANCE));
     }
 
     @Override
-    public Response commitNetConfig(UriInfo uriInfo, Action action) {
+    public Response commitNetConfig(Action action) {
         return null;
     }
 
     @Override
-    public Response iscsiDiscover(UriInfo uriInfo, Action action) {
+    public Response iscsiDiscover(Action action) {
         return null;
     }
 
     @Override
-    public Response iscsiLogin(UriInfo uriInfo, Action action) {
+    public Response iscsiLogin(Action action) {
         return null;
     }
 

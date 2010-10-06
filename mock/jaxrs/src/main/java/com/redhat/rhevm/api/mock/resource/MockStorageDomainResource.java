@@ -22,9 +22,9 @@ import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.common.resource.StorageDomainActionValidator;
+import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.model.Action;
@@ -47,8 +47,8 @@ public class MockStorageDomainResource extends AbstractMockResource<StorageDomai
      * @param storageDomain  encapsulated StorageDomain
      * @param executor       executor used for asynchronous actions
      */
-    MockStorageDomainResource(String id, Executor executor) {
-        super(id, executor);
+    MockStorageDomainResource(String id, Executor executor,  UriInfoProvider uriProvider) {
+        super(id, executor, uriProvider);
         getModel().setStatus(StorageDomainStatus.UNATTACHED);
         this.attachments = new MockAttachmentsResource(id, executor);
     }
@@ -67,9 +67,9 @@ public class MockStorageDomainResource extends AbstractMockResource<StorageDomai
     public StorageDomain addLinks() {
         StorageDomain storageDomain = JAXBHelper.clone(OBJECT_FACTORY.createStorageDomain(getModel()));
 
-        storageDomain = LinkHelper.addLinks(storageDomain);
+        storageDomain = LinkHelper.addLinks(getUriInfo(), storageDomain);
 
-        UriBuilder uriBuilder = LinkHelper.getUriBuilder(storageDomain);
+        UriBuilder uriBuilder = LinkHelper.getUriBuilder(getUriInfo(), storageDomain);
 
         ActionValidator actionValidator = new StorageDomainActionValidator(storageDomain);
         ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, StorageDomainResource.class, actionValidator);
@@ -85,21 +85,21 @@ public class MockStorageDomainResource extends AbstractMockResource<StorageDomai
     }
 
     @Override
-    public StorageDomain get(UriInfo uriInfo) {
+    public StorageDomain get() {
         return addLinks();
     }
 
     @Override
-    public StorageDomain update(UriInfo uriInfo, StorageDomain storageDomain) {
+    public StorageDomain update(StorageDomain storageDomain) {
         validateUpdate(storageDomain);
         updateModel(storageDomain);
         return addLinks();
     }
 
     @Override
-    public Response teardown(UriInfo uriInfo, Action action) {
+    public Response teardown(Action action) {
         // FIXME: error if not unattached
-        return doAction(uriInfo, new StorageDomainStatusSetter(action, StorageDomainStatus.TORNDOWN));
+        return doAction(getUriInfo(), new StorageDomainStatusSetter(action, StorageDomainStatus.TORNDOWN));
     }
 
     public AttachmentsResource getAttachmentsResource() {

@@ -25,9 +25,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 import com.redhat.rhevm.api.model.Attachment;
@@ -39,12 +37,12 @@ public interface AttachmentsResource {
 
     @GET
     @Formatted
-    public Attachments list(@Context UriInfo uriInfo);
+    public Attachments list();
 
     @POST
     @Formatted
     @Consumes(MediaType.APPLICATION_XML)
-    public Response add(@Context UriInfo uriInfo, Attachment attachment);
+    public Response add(Attachment attachment);
 
     @DELETE
     @Path("{id}")
@@ -58,5 +56,5 @@ public interface AttachmentsResource {
      * @return    matching subresource if found
      */
     @Path("{id}")
-    public AttachmentResource getAttachmentSubResource(@Context UriInfo uriInfo, @PathParam("id") String id);
+    public AttachmentResource getAttachmentSubResource(@PathParam("id") String id);
 }

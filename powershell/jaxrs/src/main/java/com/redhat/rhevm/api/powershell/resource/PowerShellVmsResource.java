@@ -22,7 +22,6 @@ import java.util.List;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.common.util.ReflectionHelper;
 import com.redhat.rhevm.api.model.CpuTopology;
@@ -52,16 +51,16 @@ public class PowerShellVmsResource
     }
 
     @Override
-    public VMs list(UriInfo uriInfo) {
+    public VMs list() {
         VMs ret = new VMs();
-        for (PowerShellVM vm : runAndParse(getSelectCommand("select-vm", uriInfo, VM.class) + GET_STATS)) {
-            ret.getVMs().add(PowerShellVmResource.addLinks(vm));
+        for (PowerShellVM vm : runAndParse(getSelectCommand("select-vm", getUriInfo(), VM.class) + GET_STATS)) {
+            ret.getVMs().add(PowerShellVmResource.addLinks(getUriInfo(), vm));
         }
         return ret;
     }
 
     @Override
-    public Response add(UriInfo uriInfo, VM vm) {
+    public Response add(VM vm) {
         validateParameters(vm, "name", "template.id|name", "cluster.id|name");
         StringBuilder buf = new StringBuilder();
 
@@ -125,9 +124,9 @@ public class PowerShellVmsResource
 
         PowerShellVM ret = runAndParseSingle(buf.toString());
 
-        vm = PowerShellVmResource.addLinks(ret);
+        vm = PowerShellVmResource.addLinks(getUriInfo(), ret);
 
-        UriBuilder uriBuilder = uriInfo.getAbsolutePathBuilder().path(ret.getId());
+        UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(ret.getId());
 
         return Response.created(uriBuilder.build()).entity(vm).build();
     }
@@ -139,12 +138,12 @@ public class PowerShellVmsResource
     }
 
     @Override
-    public VmResource getVmSubResource(UriInfo uriInfo, String id) {
+    public VmResource getVmSubResource(String id) {
         return getSubResource(id);
     }
 
     @Override
     protected PowerShellVmResource createSubResource(String id) {
-        return new PowerShellVmResource(id, getExecutor(), shellPools, getParser());
+        return new PowerShellVmResource(id, getExecutor(), this, shellPools, getParser());
     }
 }

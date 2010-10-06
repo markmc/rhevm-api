@@ -25,7 +25,7 @@ import com.redhat.rhevm.api.model.Roles;
 import com.redhat.rhevm.api.resource.RolesResource;
 import com.redhat.rhevm.api.resource.RoleResource;
 
-public class PowerShellRolesResource extends AbstractPowerShellResource implements RolesResource {
+public class PowerShellRolesResource extends InjectableUriProviderBase implements RolesResource {
 
     public List<Role> runAndParse(String command) {
         return PowerShellRoleResource.runAndParse(getPool(), getParser(), null, command);
@@ -39,13 +39,13 @@ public class PowerShellRolesResource extends AbstractPowerShellResource implemen
     public Roles list() {
         Roles ret = new Roles();
         for (Role Role : runAndParse("get-roles")) {
-            ret.getRoles().add(LinkHelper.addLinks(Role));
+            ret.getRoles().add(LinkHelper.addLinks(getUriInfo(), Role));
         }
         return ret;
     }
 
     @Override
     public RoleResource getRoleSubResource(String roleId) {
-        return new PowerShellRoleResource(roleId, null, executor, shellPools, parser);
+        return new PowerShellRoleResource(roleId, null, executor, shellPools, parser, this);
     }
 }
