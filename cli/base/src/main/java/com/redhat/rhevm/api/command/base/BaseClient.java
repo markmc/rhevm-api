@@ -21,6 +21,7 @@ package com.redhat.rhevm.api.command.base;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.IOException;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -382,8 +383,8 @@ public class BaseClient {
         return href.startsWith(HTTP_SCHEME) || href.startsWith(HTTPS_SCHEME)
                ? href
                : href.startsWith("/")
-                 ? getBaseUrl() + href
-                 : getBaseUrl() + "/" + href;
+                 ? URI.create(getBaseUrl()).getAuthority() + href
+                 : URI.create(getBaseUrl()).getAuthority() + "/" + href;
     }
 
     private void diagnose(String baseError, Exception failure, Response r, int expected) {
