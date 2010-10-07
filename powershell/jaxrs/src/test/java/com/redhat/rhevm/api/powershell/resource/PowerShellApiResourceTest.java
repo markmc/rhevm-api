@@ -125,9 +125,9 @@ public class PowerShellApiResourceTest
             UriBuilder colUriBuilder = createMock(UriBuilder.class);
             expect(colUriBuilder.build()).andReturn(URI.create(URI_ROOT + SLASH + rel + "/")).anyTimes();
             if (rel.endsWith("/search")) {
-                expect(uriBuilder.path((BASE_PATH + "/" + rel).replace("/search", ""))).andReturn(colUriBuilder);
+                expect(uriBuilder.path(rel.replace("/search", ""))).andReturn(colUriBuilder);
             } else {
-                expect(uriBuilder.path(BASE_PATH + "/" + rel + SLASH)).andReturn(colUriBuilder);
+                expect(uriBuilder.path(rel + SLASH)).andReturn(colUriBuilder);
             }
         }
 

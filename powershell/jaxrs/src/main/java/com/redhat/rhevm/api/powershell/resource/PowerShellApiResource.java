@@ -80,7 +80,7 @@ public class PowerShellApiResource
 
     private String addPath(UriBuilder uriBuilder, Link link) {
         String query = "";
-        String path = link.getHref();
+        String path = relative(link);
 
         // otherwise UriBuilder.build() will substitute {query}
         if (path.contains("?")) {
@@ -160,5 +160,9 @@ public class PowerShellApiResource
         api.setSummary(summary);
 
         return api;
+    }
+
+    private String relative(Link link) {
+        return link.getHref().substring(link.getHref().indexOf(link.getRel().split("/")[0]), link.getHref().length());
     }
 }
