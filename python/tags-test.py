@@ -43,4 +43,20 @@ for fmt in [xmlfmt]:
    tag.name += "u"
    tag = t.update(tag.href, tag, 200)
 
+   for vm in t.get(links['vms']):
+      for child in t.get(vm.link['tags'].href):
+         t.get(child.href)
+      child = fmt.Tag()
+      child.id = tag.id # add by id
+      child = t.create(vm.link['tags'].href, child)
+      t.delete(child.href)
+
+   for host in t.get(links['hosts']):
+      for child in t.get(host.link['tags'].href):
+         t.get(child.href)
+      child = fmt.Tag()
+      child.name = tag.name # add by name
+      child = t.create(host.link['tags'].href, child)
+      t.delete(child.href)
+
    t.delete(tag.href)
