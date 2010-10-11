@@ -93,6 +93,10 @@
       <xs:element name="ticket" type="Ticket" minOccurs="0"/>
       <!-- for Host ISCSI actions -->
       <xs:element name="iscsi" type="IscsiParameters" minOccurs="0"/>
+      <!-- for VM export action -->
+      <xs:element name="storage_domain" type="StorageDomain" minOccurs="0"/>
+      <xs:element name="discard_snapshots" type="xs:boolean" minOccurs="0"/>
+      <xs:element name="exclusive" type="xs:boolean" minOccurs="0"/>
       <!-- ... etc., explicitly enumerate all the parameter types -->
     </xs:sequence>
   </xs:group>

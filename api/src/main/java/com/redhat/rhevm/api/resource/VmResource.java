@@ -40,7 +40,7 @@ import com.redhat.rhevm.api.model.VM;
 @Produces(MediaType.APPLICATION_XML)
 public interface VmResource extends UpdatableResource<VM> {
 
-    @Path("{action: (start|stop|shutdown|suspend|detach|migrate|ticket)}/{oid}")
+    @Path("{action: (start|stop|shutdown|suspend|detach|migrate|export|ticket)}/{oid}")
     public ActionResource getActionSubresource(@PathParam("action")String action, @PathParam("oid")String oid);
 
     @POST
@@ -84,6 +84,13 @@ public interface VmResource extends UpdatableResource<VM> {
     @Actionable
     @Path("migrate")
     public Response migrate(Action action);
+
+    @POST
+    @Formatted
+    @Consumes(MediaType.APPLICATION_XML)
+    @Actionable
+    @Path("export")
+    public Response export(Action action);
 
     @POST
     @Formatted

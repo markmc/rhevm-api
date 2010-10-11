@@ -124,6 +124,11 @@ public class MockVmResource extends AbstractMockResource<VM> implements VmResour
     }
 
     @Override
+    public Response export(Action action) {
+        return null;
+    }
+
+    @Override
     public Response ticket(Action action) {
         return doAction(getUriInfo(), new DoNothingTask(action));
     }
