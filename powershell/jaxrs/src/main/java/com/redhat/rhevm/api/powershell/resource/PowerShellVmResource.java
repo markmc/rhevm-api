@@ -198,8 +198,38 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
 
     @Override
     public Response export(Action action) {
-        // REVISIT
-        return null;
+        StringBuilder buf = new StringBuilder();
+
+        String storageDomainArg;
+        if (action.isSetStorageDomain()) {
+            validateParameters(action, "storageDomain.id|name");
+            if (action.getStorageDomain().isSetId()) {
+                storageDomainArg = PowerShellUtils.escape(action.getStorageDomain().getId());
+            } else {
+                buf.append("$dest = select-storagedomain ");
+                buf.append("| ? { $_.name -eq ");
+                buf.append(PowerShellUtils.escape(action.getStorageDomain().getName()));
+                buf.append(" }; ");
+                storageDomainArg = "$dest.storagedomainid";
+            }
+        } else {
+            buf.append("$dest = select-storagedomain | ? { $_.domaintype -eq \"Export\" }; ");
+            storageDomainArg = "$dest.storagedomainid";
+        }
+
+        buf.append("export-vm");
+        buf.append(" -vmid " + PowerShellUtils.escape(getId()));
+        buf.append(" -storagedomainid " + storageDomainArg);
+
+        if (!action.isSetExclusive() || !action.isExclusive()) {
+            buf.append(" -forceoverride");
+        }
+
+        if (!action.isSetDiscardSnapshots() || !action.isDiscardSnapshots()) {
+            buf.append(" -copycollapse");
+        }
+
+        return doAction(getUriInfo(), new CommandRunner(action, buf.toString(), getPool()));
     }
 
     @Override
