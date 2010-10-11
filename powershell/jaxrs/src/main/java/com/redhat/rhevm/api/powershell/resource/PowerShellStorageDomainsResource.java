@@ -71,6 +71,33 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
         return ret;
     }
 
+    private Storage validateAddParameters(StorageDomain storageDomain) {
+        validateParameters(storageDomain, "name", "host.id|name", "type", "storage.type");
+
+        Storage storage = storageDomain.getStorage();
+
+        switch (storage.getType()) {
+        case NFS:
+            validateParameters(storage, "address", "path");
+            break;
+        case ISCSI:
+        case FCP:
+            // REVISIT: validate that a logical unit or volume group supplied
+            for (LogicalUnit lu : storage.getLogicalUnits()) {
+                validateParameters(lu, "id");
+            }
+            if (storage.isSetVolumeGroup()) {
+                validateParameters(storage.getVolumeGroup(), "id");
+            }
+            break;
+        default:
+            assert false : storage.getType();
+            break;
+        }
+
+        return storage;
+    }
+
     private String setUpHostArg(Host host, StringBuilder buf) {
         if (host.isSetId()) {
             return PowerShellUtils.escape(host.getId());
@@ -131,30 +158,9 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
 
     @Override
     public Response add(StorageDomain storageDomain) {
-        validateParameters(storageDomain, "name", "host.id|name", "type", "storage.type");
-
-        Storage storage = storageDomain.getStorage();
-
-        switch (storage.getType()) {
-        case NFS:
-            validateParameters(storage, "address", "path");
-            break;
-        case ISCSI:
-        case FCP:
-            // REVISIT: validate that a logical unit or volume group supplied
-            for (LogicalUnit lu : storage.getLogicalUnits()) {
-                validateParameters(lu, "id");
-            }
-            if (storage.isSetVolumeGroup()) {
-                validateParameters(storage.getVolumeGroup(), "id");
-            }
-            break;
-        default:
-            assert false : storage.getType();
-            break;
-        }
-
         StringBuilder buf = new StringBuilder();
+
+        Storage storage = validateAddParameters(storageDomain);
 
         String hostArg = setUpHostArg(storageDomain.getHost(), buf);
 
