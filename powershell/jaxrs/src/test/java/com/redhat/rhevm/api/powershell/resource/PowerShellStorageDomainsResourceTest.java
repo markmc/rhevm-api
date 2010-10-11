@@ -44,9 +44,17 @@ public class PowerShellStorageDomainsResourceTest
     private static final String NFS_PATH = "/mystoragedomains/data";
 
     private static final String GET_HOST_COMMAND = "$h = select-host -searchtext \"name=" + HOST_NAME + "\";";
+
+    private static final String GET_PRECONFIGURED_COMMAND = "$sd = get-preconfiguredstoragedomains -hostid \"" + HOST_ID + "\" -storagedomaintype Data -storagetype NFS -nfsmountpoint \"" + NFS_ADDRESS + ":" + NFS_PATH + "\"; ";
+    private static final String IMPORT_PRECONFIGURED_COMMAND = "import-preconfiguredstoragedomain -hostid \"" + HOST_ID + "\" -storagedomainobject $sd";
+
+    private static final String GET_PRECONFIGURED_WITH_HOST_NAME_COMMAND = "$sd = get-preconfiguredstoragedomains -hostid $h.hostid -storagedomaintype Data -storagetype NFS -nfsmountpoint \"" + NFS_ADDRESS + ":" + NFS_PATH + "\"; ";
+    private static final String IMPORT_PRECONFIGURED_WITH_HOST_NAME_COMMAND = "import-preconfiguredstoragedomain -hostid $h.hostid -storagedomainobject $sd";
+
     private static final String NFS_ADD_EPILOG = " -domaintype Data -storagetype NFS -storage \"" + NFS_ADDRESS + ":" + NFS_PATH + "\"";
-    private static final String ADD_NFS_COMMAND = "add-storagedomain -name \"" + NEW_NAME + "\" -hostid \"" + HOST_ID + "\"" + NFS_ADD_EPILOG;
-    private static final String ADD_NFS_WITH_HOST_NAME_COMMAND = GET_HOST_COMMAND + "add-storagedomain -name \"" + NEW_NAME + "\" -hostid $h.hostid" + NFS_ADD_EPILOG;;
+
+    private static final String ADD_NFS_COMMAND = GET_PRECONFIGURED_COMMAND + "if ($sd -ne $null) { " + IMPORT_PRECONFIGURED_COMMAND + " } else { add-storagedomain -name \"" + NEW_NAME + "\" -hostid \"" + HOST_ID + "\"" + NFS_ADD_EPILOG + " }";
+    private static final String ADD_NFS_WITH_HOST_NAME_COMMAND = GET_HOST_COMMAND + GET_PRECONFIGURED_WITH_HOST_NAME_COMMAND + "if ($sd -ne $null) { " + IMPORT_PRECONFIGURED_WITH_HOST_NAME_COMMAND + " } else { add-storagedomain -name \"" + NEW_NAME + "\" -hostid $h.hostid" + NFS_ADD_EPILOG + " }";
 
     protected static final String[] NULL_DESCRIPTIONS = { null, null, null };
     protected static final String[] NULL_DESCRIPTIONS_SUBSET = { null, null };

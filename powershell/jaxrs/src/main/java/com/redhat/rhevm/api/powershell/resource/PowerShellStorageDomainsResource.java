@@ -110,6 +110,29 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
         return "$h.hostid";
     }
 
+    private String getNfsMountPoint(Storage storage) {
+        return storage.getAddress() + ":" + storage.getPath();
+    }
+
+    private String getImportPreConfiguredStorageDomain(StorageDomain storageDomain, String hostArg) {
+        StringBuilder buf = new StringBuilder();
+
+        buf.append("$sd = get-preconfiguredstoragedomains");
+        buf.append(" -hostid " + hostArg);
+        buf.append(getTypeArgs(storageDomain, "storage"));
+        buf.append(" -nfsmountpoint ");
+        buf.append(PowerShellUtils.escape(getNfsMountPoint(storageDomain.getStorage())));
+        buf.append("; ");
+
+        buf.append("if ($sd -ne $null) { ");
+        buf.append("import-preconfiguredstoragedomain");
+        buf.append(" -hostid " + hostArg);
+        buf.append(" -storagedomainobject $sd");
+        buf.append(" } else { ");
+
+        return buf.toString();
+    }
+
     private String getIscsiConnections(Storage storage, String hostArg) {
         List<LogicalUnit> logicalUnits = null;
 
@@ -157,9 +180,13 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
     }
 
     private String getTypeArgs(StorageDomain storageDomain) {
+        return getTypeArgs(storageDomain, "");
+    }
+
+    private String getTypeArgs(StorageDomain storageDomain, String domainTypePrefix) {
         StringBuilder buf = new StringBuilder();
 
-        buf.append(" -domaintype ");
+        buf.append(" -" + domainTypePrefix + "domaintype ");
         switch (storageDomain.getType()) {
         case DATA:
             buf.append("Data");
@@ -188,11 +215,14 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
 
         String hostArg = setUpHostArg(storageDomain.getHost(), buf);
 
-        if (storage.getType() == StorageType.ISCSI) {
-            buf.append(getIscsiConnections(storage, hostArg));
-        }
+        if (storage.getType() == StorageType.NFS) {
+            buf.append(getImportPreConfiguredStorageDomain(storageDomain, hostArg));
+        } else if (storage.getType() == StorageType.ISCSI ||
+                   storage.getType() == StorageType.FCP) {
+            if (storage.getType() == StorageType.ISCSI) {
+                buf.append(getIscsiConnections(storage, hostArg));
+            }
 
-        if (storage.getType() == StorageType.ISCSI || storage.getType() == StorageType.FCP) {
             if (storage.isSetLogicalUnits()) {
                 buf.append("$lunids = new-object System.Collections.ArrayList;");
                 for (LogicalUnit lu : storage.getLogicalUnits()) {
@@ -212,7 +242,7 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
         switch (storage.getType()) {
         case NFS:
             buf.append(" -storage ");
-            buf.append(PowerShellUtils.escape(storage.getAddress() + ":" + storage.getPath()));
+            buf.append(PowerShellUtils.escape(getNfsMountPoint(storage)));
             break;
         case ISCSI:
         case FCP:
@@ -224,6 +254,10 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
             break;
         default:
             break;
+        }
+
+        if (storage.getType() == StorageType.NFS) {
+            buf.append(" }");
         }
 
         storageDomain = runAndParseSingle(buf.toString(), true);
