@@ -24,6 +24,7 @@ import java.util.List;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
+import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.LogicalUnit;
 import com.redhat.rhevm.api.model.Storage;
 import com.redhat.rhevm.api.model.StorageDomain;
@@ -68,6 +69,18 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
         }
 
         return ret;
+    }
+
+    private String setUpHostArg(Host host, StringBuilder buf) {
+        if (host.isSetId()) {
+            return PowerShellUtils.escape(host.getId());
+        }
+
+        buf.append("$h = select-host -searchtext ");
+        buf.append(PowerShellUtils.escape("name=" +  host.getName()));
+        buf.append(";");
+
+        return "$h.hostid";
     }
 
     private String getIscsiConnections(Storage storage, String hostArg) {
@@ -143,15 +156,7 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
 
         StringBuilder buf = new StringBuilder();
 
-        String hostArg = null;
-        if (storageDomain.getHost().isSetId()) {
-            hostArg = PowerShellUtils.escape(storageDomain.getHost().getId());
-        } else {
-            buf.append("$h = select-host -searchtext ");
-            buf.append(PowerShellUtils.escape("name=" +  storageDomain.getHost().getName()));
-            buf.append(";");
-            hostArg = "$h.hostid";
-        }
+        String hostArg = setUpHostArg(storageDomain.getHost(), buf);
 
         if (storage.getType() == StorageType.ISCSI) {
             buf.append(getIscsiConnections(storage, hostArg));
