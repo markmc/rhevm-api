@@ -156,6 +156,30 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
         return buf.toString();
     }
 
+    private String getTypeArgs(StorageDomain storageDomain) {
+        StringBuilder buf = new StringBuilder();
+
+        buf.append(" -domaintype ");
+        switch (storageDomain.getType()) {
+        case DATA:
+            buf.append("Data");
+            break;
+        case ISO:
+            buf.append("ISO");
+            break;
+        case EXPORT:
+            buf.append("Export");
+            break;
+        default:
+            assert false : storageDomain.getType();
+            break;
+        }
+
+        buf.append(" -storagetype " + storageDomain.getStorage().getType().toString());
+
+        return buf.toString();
+    }
+
     @Override
     public Response add(StorageDomain storageDomain) {
         StringBuilder buf = new StringBuilder();
@@ -183,23 +207,7 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
 
         buf.append(" -hostid " + hostArg);
 
-        buf.append(" -domaintype ");
-        switch (storageDomain.getType()) {
-        case DATA:
-            buf.append("Data");
-            break;
-        case ISO:
-            buf.append("ISO");
-            break;
-        case EXPORT:
-            buf.append("Export");
-            break;
-        default:
-            assert false : storageDomain.getType();
-            break;
-        }
-
-        buf.append(" -storagetype " + storage.getType().toString());
+        buf.append(getTypeArgs(storageDomain));
 
         switch (storage.getType()) {
         case NFS:
