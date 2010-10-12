@@ -58,7 +58,7 @@ for fmt in [xmlfmt]:
 
     dom = fmt.StorageDomain()
     dom.name = randomName("sd")
-    dom.type = 'DATA'
+    dom.type = 'EXPORT'
     dom.storage = fmt.Storage()
     dom.storage.type = 'NFS'
     dom.storage.address = address
@@ -80,6 +80,19 @@ for fmt in [xmlfmt]:
     t.delete(attachment.href)
 
     dom = t.get(dom.href)
+
+    t.syncAction(dom.actions, "teardown", host=h)
+
+    t.delete(dom.href)
+
+    dom = fmt.StorageDomain()
+    dom.type = 'EXPORT'
+    dom.storage = fmt.Storage()
+    dom.storage.type = 'NFS'
+    dom.storage.address = address
+    dom.storage.path = path
+    dom.host = h
+    dom = t.create(links['storagedomains'], dom)
 
     t.syncAction(dom.actions, "teardown", host=h)
 
