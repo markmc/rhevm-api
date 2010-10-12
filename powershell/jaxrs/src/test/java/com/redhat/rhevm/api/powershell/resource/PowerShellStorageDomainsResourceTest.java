@@ -55,6 +55,7 @@ public class PowerShellStorageDomainsResourceTest
 
     private static final String ADD_NFS_COMMAND = GET_PRECONFIGURED_COMMAND + "if ($sd -ne $null) { " + IMPORT_PRECONFIGURED_COMMAND + " } else { add-storagedomain -name \"" + NEW_NAME + "\" -hostid \"" + HOST_ID + "\"" + NFS_ADD_EPILOG + " }";
     private static final String ADD_NFS_WITH_HOST_NAME_COMMAND = GET_HOST_COMMAND + GET_PRECONFIGURED_WITH_HOST_NAME_COMMAND + "if ($sd -ne $null) { " + IMPORT_PRECONFIGURED_WITH_HOST_NAME_COMMAND + " } else { add-storagedomain -name \"" + NEW_NAME + "\" -hostid $h.hostid" + NFS_ADD_EPILOG + " }";
+    private static final String ADD_EXISTING_NFS_COMMAND = GET_HOST_COMMAND + GET_PRECONFIGURED_WITH_HOST_NAME_COMMAND + "if ($sd -ne $null) { " + IMPORT_PRECONFIGURED_WITH_HOST_NAME_COMMAND + " } else { throw \"A name is require when creating a new storage domain\" }";
 
     protected static final String[] NULL_DESCRIPTIONS = { null, null, null };
     protected static final String[] NULL_DESCRIPTIONS_SUBSET = { null, null };
@@ -110,6 +111,20 @@ public class PowerShellStorageDomainsResourceTest
         model.getStorage().setAddress(NFS_ADDRESS);
         model.getStorage().setPath(NFS_PATH);
         resource.setUriInfo(setUpAddResourceExpectations(ADD_NFS_WITH_HOST_NAME_COMMAND, getAddReturn(), NEW_NAME));
+        verifyResponse(resource.add(model), NEW_NAME, null);
+    }
+
+    @Test
+    public void testNfsAddExisting() throws Exception {
+        StorageDomain model = getModel(null, null);
+        model.setHost(new Host());
+        model.getHost().setName(HOST_NAME);
+        model.setType(StorageDomainType.DATA);
+        model.setStorage(new Storage());
+        model.getStorage().setType(StorageType.NFS);
+        model.getStorage().setAddress(NFS_ADDRESS);
+        model.getStorage().setPath(NFS_PATH);
+        resource.setUriInfo(setUpAddResourceExpectations(ADD_EXISTING_NFS_COMMAND, getAddReturn(), NEW_NAME));
         verifyResponse(resource.add(model), NEW_NAME, null);
     }
 

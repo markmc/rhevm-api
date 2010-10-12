@@ -252,7 +252,7 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
 
     protected R getModel(String name, String description) {
         R model = ReflectionHelper.newModel(updatable);
-        model.setId(Integer.toString(name.hashCode()));
+        model.setId(name != null ? Integer.toString(name.hashCode()) : null);
         model.setName(name);
         model.setDescription(description);
         populateModel(model);

@@ -39,6 +39,8 @@ import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validatePara
 
 public class PowerShellStorageDomainsResource extends AbstractPowerShellCollectionResource<StorageDomain, PowerShellStorageDomainResource> implements StorageDomainsResource {
 
+    private static final String NAME_REQUIRED_ERROR = "A name is require when creating a new storage domain";
+
     /* Storage domains that have been torn down but not deleted
      * FIXME: this map shouldn't be static and needs synchronization
      */
@@ -72,7 +74,7 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
     }
 
     private Storage validateAddParameters(StorageDomain storageDomain) {
-        validateParameters(storageDomain, "name", "host.id|name", "type", "storage.type");
+        validateParameters(storageDomain, "host.id|name", "type", "storage.type");
 
         Storage storage = storageDomain.getStorage();
 
@@ -219,6 +221,8 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
             buf.append(getImportPreConfiguredStorageDomain(storageDomain, hostArg));
         } else if (storage.getType() == StorageType.ISCSI ||
                    storage.getType() == StorageType.FCP) {
+            validateParameters(storageDomain, "name");
+
             if (storage.getType() == StorageType.ISCSI) {
                 buf.append(getIscsiConnections(storage, hostArg));
             }
@@ -231,29 +235,33 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
             }
         }
 
-        buf.append("add-storagedomain");
+        if (storageDomain.isSetName()) {
+            buf.append("add-storagedomain");
 
-        buf.append(" -name " + PowerShellUtils.escape(storageDomain.getName()));
+            buf.append(" -name " + PowerShellUtils.escape(storageDomain.getName()));
 
-        buf.append(" -hostid " + hostArg);
+            buf.append(" -hostid " + hostArg);
 
-        buf.append(getTypeArgs(storageDomain));
+            buf.append(getTypeArgs(storageDomain));
 
-        switch (storage.getType()) {
-        case NFS:
-            buf.append(" -storage ");
-            buf.append(PowerShellUtils.escape(getNfsMountPoint(storage)));
-            break;
-        case ISCSI:
-        case FCP:
-            if (storage.isSetLogicalUnits()) {
-                buf.append(" -lunidlist $lunids");
-            } else {
-                buf.append(" -volumegroup " + PowerShellUtils.escape(storage.getVolumeGroup().getId()));
+            switch (storage.getType()) {
+            case NFS:
+                buf.append(" -storage ");
+                buf.append(PowerShellUtils.escape(getNfsMountPoint(storage)));
+                break;
+            case ISCSI:
+            case FCP:
+                if (storage.isSetLogicalUnits()) {
+                    buf.append(" -lunidlist $lunids");
+                } else {
+                    buf.append(" -volumegroup " + PowerShellUtils.escape(storage.getVolumeGroup().getId()));
+                }
+                break;
+            default:
+                break;
             }
-            break;
-        default:
-            break;
+        } else {
+            buf.append("throw \"" + NAME_REQUIRED_ERROR + "\"");
         }
 
         if (storage.getType() == StorageType.NFS) {
