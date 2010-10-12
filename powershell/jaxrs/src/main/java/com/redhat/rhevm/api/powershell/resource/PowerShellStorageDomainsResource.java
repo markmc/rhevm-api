@@ -29,6 +29,7 @@ import com.redhat.rhevm.api.model.LogicalUnit;
 import com.redhat.rhevm.api.model.Storage;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.StorageDomains;
+import com.redhat.rhevm.api.model.StorageDomainType;
 import com.redhat.rhevm.api.model.StorageType;
 import com.redhat.rhevm.api.resource.StorageDomainResource;
 import com.redhat.rhevm.api.resource.StorageDomainsResource;
@@ -217,8 +218,13 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
 
         String hostArg = setUpHostArg(storageDomain.getHost(), buf);
 
-        if (storage.getType() == StorageType.NFS) {
+        boolean closeBlock = false;
+
+        if (storage.getType() == StorageType.NFS &&
+            (storageDomain.getType() == StorageDomainType.EXPORT ||
+             storageDomain.getType() == StorageDomainType.ISO)) {
             buf.append(getImportPreConfiguredStorageDomain(storageDomain, hostArg));
+            closeBlock = true;
         } else if (storage.getType() == StorageType.ISCSI ||
                    storage.getType() == StorageType.FCP) {
             validateParameters(storageDomain, "name");
@@ -264,7 +270,7 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
             buf.append("throw \"" + NAME_REQUIRED_ERROR + "\"");
         }
 
-        if (storage.getType() == StorageType.NFS) {
+        if (closeBlock) {
             buf.append(" }");
         }
 
