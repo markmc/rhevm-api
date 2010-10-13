@@ -86,15 +86,22 @@ public class PowerShellDataCenterResource extends AbstractPowerShellActionableRe
     public static DataCenter addLinks(UriInfo uriInfo, PowerShellPool pool, PowerShellParser parser, DataCenter dataCenter) {
         dataCenter = querySupportedVersions(pool, parser, dataCenter);
 
-        dataCenter = LinkHelper.addLinks(uriInfo, dataCenter);
+        String [] subCollections = { "isos", "storagedomains" };
 
-        Link link = new Link();
-        link.setRel("isos");
-        link.setHref(LinkHelper.getUriBuilder(uriInfo, dataCenter).path("isos").build().toString());
         dataCenter.getLinks().clear();
-        dataCenter.getLinks().add(link);
 
-        return dataCenter;
+        for (String collection : subCollections) {
+            addSubCollection(uriInfo, dataCenter, collection);
+        }
+
+        return LinkHelper.addLinks(uriInfo, dataCenter);
+    }
+
+    private static void addSubCollection(UriInfo uriInfo, DataCenter dataCenter, String collection) {
+        Link link = new Link();
+        link.setRel(collection);
+        link.setHref(LinkHelper.getUriBuilder(uriInfo, dataCenter).path(collection).build().toString());
+        dataCenter.getLinks().add(link);
     }
 
     public DataCenter addLinks(DataCenter dataCenter) {
@@ -145,6 +152,9 @@ public class PowerShellDataCenterResource extends AbstractPowerShellActionableRe
     }
 
     public AttachedStorageDomainsResource getAttachedStorageDomainsResource() {
-        return null;
+        PowerShellAttachedStorageDomainsResource resource =
+            new PowerShellAttachedStorageDomainsResource(getId(), shellPools, getParser());
+        resource.setUriInfo(getUriInfo());
+        return resource;
     }
 }
