@@ -425,40 +425,6 @@
     </xs:sequence>
   </xs:complexType>
 
-  <!-- Attachments, representing a Storage Domain attached to a Data Center -->
-
-  <xs:element name="attachment" type="Attachment"/>
-
-  <xs:element name="attachments" type="Attachments"/>
-
-  <xs:complexType name="Attachment">
-    <xs:complexContent>
-      <xs:extension base="BaseResource">
-        <xs:sequence>
-          <xs:element name="data_center" type="DataCenter"/>
-          <xs:element name="storage_domain" type="StorageDomain" minOccurs="0"/>
-          <xs:element name="status" type="StorageDomainStatus" minOccurs="0"/>
-          <xs:element name="master" type="xs:boolean" minOccurs="0"/>
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="Attachments">
-    <xs:complexContent>
-      <xs:extension base="BaseResources">
-        <xs:sequence>
-          <xs:annotation>
-            <xs:appinfo>
-                <jaxb:property name="Attachments"/>
-            </xs:appinfo>
-          </xs:annotation>
-          <xs:element ref="attachment" maxOccurs="unbounded"/>
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
   <!-- Data Centers -->
 
   <xs:element name="data_center" type="DataCenter"/>
@@ -473,7 +439,7 @@
           <xs:element name="version" type="Version" minOccurs="0"/>
           <xs:element name="supported_versions" type="SupportedVersions" minOccurs="0"/>
           <xs:element name="status" type="DataCenterStatus" minOccurs="0"/>
-          <!-- also a rel="isos" link, see Isos above -->
+          <!-- also rel="isos" and rel="storagedomains" links -->
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -822,7 +788,6 @@
           <xs:element name="status" type="StorageDomainStatus" minOccurs="0"/>
           <xs:element name="master" type="xs:boolean" minOccurs="0"/>
           <xs:element ref="storage" minOccurs="0"/>
-          <!-- also a rel="attachments" link, see Attachments above -->
           <!-- host is only relevant at creation time -->
           <xs:element ref="host" minOccurs="0"/>
           <xs:element name="available" type="xs:unsignedInt" minOccurs="0"/>
