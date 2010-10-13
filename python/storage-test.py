@@ -46,12 +46,15 @@ for fmt in [xmlfmt]:
     print "=== ", fmt.MEDIA_TYPE, " ==="
 
     for dom in t.get(links['storagedomains']):
-        t.get(dom.href)
-        for att in t.get(dom.link['attachments'].href):
-            t.get(att.href)
+       t.get(dom.href)
+
+    dc = find_data_center(t, 'Default')
+
+    for dom in t.get(dc.link['storagedomains'].href):
+       t.get(dom.href)
 
     if host is None:
-        continue
+       continue
 
     h = fmt.Host()
     h.name = host
@@ -66,20 +69,15 @@ for fmt in [xmlfmt]:
     dom.host = h
     dom = t.create(links['storagedomains'], dom)
 
-    attachment = fmt.Attachment()
-    attachment.data_center = fmt.DataCenter()
-    attachment.data_center.id = find_data_center(t, 'Default').id
-    attachment = t.create(dom.link['attachments'].href, attachment)
+    attachDom = fmt.StorageDomain()
+    attachDom.id = dom.id
+    attachDom = t.create(dc.link['storagedomains'].href, attachDom)
 
-    t.syncAction(attachment.actions, "activate")
+    t.syncAction(attachDom.actions, "activate")
 
-    attachment = t.get(attachment.href)
+    t.syncAction(attachDom.actions, "deactivate")
 
-    t.syncAction(attachment.actions, "deactivate")
-
-    t.delete(attachment.href)
-
-    dom = t.get(dom.href)
+    t.delete(attachDom.href)
 
     t.syncAction(dom.actions, "teardown", host=h)
 
