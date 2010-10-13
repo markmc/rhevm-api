@@ -23,12 +23,10 @@ import java.util.concurrent.Executor;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
-import com.redhat.rhevm.api.common.resource.AttachmentActionValidator;
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.ActionsBuilder;
-import com.redhat.rhevm.api.model.ActionValidator;
 import com.redhat.rhevm.api.model.Attachment;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.StorageDomain;
@@ -68,8 +66,7 @@ public class MockAttachmentResource extends AbstractMockResource<Attachment> imp
     public Attachment addLinks(UriBuilder uriBuilder) {
         LinkHelper.addLinks(getUriInfo(), getModel());
 
-        ActionValidator actionValidator = new AttachmentActionValidator(getModel());
-        ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, AttachmentResource.class, actionValidator);
+        ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, AttachmentResource.class);
         getModel().setActions(actionsBuilder.build());
 
         return getModel();

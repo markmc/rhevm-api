@@ -23,12 +23,10 @@ import java.util.concurrent.Executor;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.common.resource.AttachmentActionValidator;
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.ActionsBuilder;
-import com.redhat.rhevm.api.model.ActionValidator;
 import com.redhat.rhevm.api.model.Attachment;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.StorageDomain;
@@ -61,10 +59,8 @@ public class PowerShellAttachmentResource extends AbstractPowerShellActionableRe
     public static Attachment addLinks(UriInfo uriInfo, Attachment attachment) {
         attachment = LinkHelper.addLinks(uriInfo, attachment);
 
-        ActionValidator actionValidator = new AttachmentActionValidator(attachment);
         ActionsBuilder actionsBuilder = new ActionsBuilder(LinkHelper.getUriBuilder(uriInfo, attachment),
-                                                           AttachmentResource.class,
-                                                           actionValidator);
+                                                           AttachmentResource.class);
         attachment.setActions(actionsBuilder.build());
 
         return attachment;
