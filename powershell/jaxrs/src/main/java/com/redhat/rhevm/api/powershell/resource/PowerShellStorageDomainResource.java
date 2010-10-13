@@ -24,12 +24,10 @@ import java.util.List;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.common.resource.StorageDomainActionValidator;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.ActionsBuilder;
-import com.redhat.rhevm.api.model.ActionValidator;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.StorageDomainStatus;
@@ -146,10 +144,8 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
 
         storageDomain = LinkHelper.addLinks(uriInfo, storageDomain);
 
-        ActionValidator actionValidator = new StorageDomainActionValidator(storageDomain);
         ActionsBuilder actionsBuilder = new ActionsBuilder(LinkHelper.getUriBuilder(uriInfo, storageDomain),
-                                                           StorageDomainResource.class,
-                                                           actionValidator);
+                                                           StorageDomainResource.class);
         storageDomain.setActions(actionsBuilder.build());
 
         Link link = new Link();
