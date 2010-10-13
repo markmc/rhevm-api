@@ -73,6 +73,12 @@ for fmt in [xmlfmt]:
     attachDom.id = dom.id
     attachDom = t.create(dc.link['storagedomains'].href, attachDom)
 
+    t.delete(attachDom.href)
+
+    attachDom = fmt.StorageDomain()
+    attachDom.name = dom.name
+    attachDom = t.create(dc.link['storagedomains'].href, attachDom)
+
     t.syncAction(attachDom.actions, "activate")
 
     t.syncAction(attachDom.actions, "deactivate")
