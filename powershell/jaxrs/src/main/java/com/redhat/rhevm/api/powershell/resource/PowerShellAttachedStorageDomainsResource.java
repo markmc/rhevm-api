@@ -104,15 +104,23 @@ public class PowerShellAttachedStorageDomainsResource
 
     @Override
     public Response add(StorageDomain storageDomain) {
-        validateParameters(storageDomain, "id");
-
-        // REVIST: support adding by name
+        validateParameters(storageDomain, "id|name");
 
         StringBuilder buf = new StringBuilder();
 
+        String storageDomainArg;
+        if (storageDomain.isSetId()) {
+            storageDomainArg = PowerShellUtils.escape(storageDomain.getId());
+        } else {
+            buf.append("$sd = select-storagedomain -searchtext ");
+            buf.append(PowerShellUtils.escape("name=" + storageDomain.getName()));
+            buf.append(";");
+            storageDomainArg = "$sd.storagedomainid";
+        }
+
         buf.append("attach-storagedomain");
         buf.append(" -datacenterid " + PowerShellUtils.escape(dataCenterId));
-        buf.append(" -storagedomainid " + PowerShellUtils.escape(storageDomain.getId()));
+        buf.append(" -storagedomainid " + storageDomainArg);
 
         storageDomain = PowerShellStorageDomainResource.runAndParseSingle(getPool(),
                                                                           getParser(),
