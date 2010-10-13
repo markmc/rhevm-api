@@ -23,7 +23,6 @@ import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.model.Attachments;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.Version;
@@ -87,12 +86,6 @@ public class PowerShellDataCenterResource extends AbstractPowerShellActionableRe
         dataCenter = querySupportedVersions(pool, parser, dataCenter);
 
         dataCenter = LinkHelper.addLinks(uriInfo, dataCenter);
-
-        Attachments attachments = PowerShellAttachmentsResource.getAttachmentsForDataCenter(uriInfo,
-                                                                                            pool,
-                                                                                            parser,
-                                                                                            dataCenter.getId());
-        dataCenter.setAttachments(attachments);
 
         Link link = new Link();
         link.setRel("isos");

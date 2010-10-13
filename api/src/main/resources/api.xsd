@@ -472,7 +472,6 @@
           <xs:element name="storage_type" type="StorageType" minOccurs="0"/>
           <xs:element name="version" type="Version" minOccurs="0"/>
           <xs:element name="supported_versions" type="SupportedVersions" minOccurs="0"/>
-          <xs:element name="attachments" type="Attachments" minOccurs="0"/>
           <xs:element name="status" type="DataCenterStatus" minOccurs="0"/>
           <!-- also a rel="isos" link, see Isos above -->
         </xs:sequence>

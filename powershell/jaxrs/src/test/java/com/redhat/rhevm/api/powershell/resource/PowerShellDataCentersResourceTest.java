@@ -39,36 +39,20 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
 
     private static final String[] extraArgs = new String[] { STORAGE_TYPE, Integer.toString(MAJOR), Integer.toString(MINOR) };
 
-    private static final String GET_STORAGE_COMMAND = "get-storagedomain -datacenterid ";
-
     public PowerShellDataCentersResourceTest() {
         super(new PowerShellDataCenterResource("0", null, null, null, null), "datacenters", "datacenter", extraArgs);
-    }
-
-    protected String formatStorageDomain(String name) {
-        return formatStorageDomain("storagedomain", name);
-    }
-
-    protected String formatStorageDomain(String type, String name) {
-        return formatXmlReturn(type, new String[] { name }, new String[] { "" }, new String[] {});
     }
 
     @Test
     public void testList() throws Exception {
         String [] commands = { getSelectCommand(),
                                getSupportedVersionCommand(NAMES[0]),
-                               getStorageCommand(NAMES[0]),
                                getSupportedVersionCommand(NAMES[1]),
-                               getStorageCommand(NAMES[1]),
-                               getSupportedVersionCommand(NAMES[2]),
-                               getStorageCommand(NAMES[2]) };
+                               getSupportedVersionCommand(NAMES[2]) };
         String [] returns =  { getSelectReturn(),
                                formatVersion(MAJOR, MINOR),
-                               formatStorageDomain("mimas"),
                                formatVersion(MAJOR, MINOR),
-                               formatStorageDomain("dione"),
-                               formatVersion(MAJOR, MINOR),
-                               formatStorageDomain("titan") };
+                               formatVersion(MAJOR, MINOR) };
         resource.setUriInfo(setUpResourceExpectations(4, commands, returns, false, null, NAMES));
         List<DataCenter> datacenters = resource.list().getDataCenters();
         assertEquals(datacenters.get(0).getStatus(), DataCenterStatus.UP);
@@ -79,18 +63,12 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
     public void testList22() throws Exception {
         String [] commands = { getSelectCommand(),
                                getSupportedVersionCommand(NAMES[0]),
-                               getStorageCommand(NAMES[0]),
                                getSupportedVersionCommand(NAMES[1]),
-                               getStorageCommand(NAMES[1]),
-                               getSupportedVersionCommand(NAMES[2]),
-                               getStorageCommand(NAMES[2]) };
+                               getSupportedVersionCommand(NAMES[2]) };
         String [] returns =  { getSelectReturn(),
                                formatVersion(MAJOR, MINOR),
-                               formatStorageDomain("storagedomain22", "mimas"),
                                formatVersion(MAJOR, MINOR),
-                               formatStorageDomain("storagedomain22", "dione"),
-                               formatVersion(MAJOR, MINOR),
-                               formatStorageDomain("storagedomain22", "titan") };
+                               formatVersion(MAJOR, MINOR) };
         resource.setUriInfo(setUpResourceExpectations(4, commands, returns, false, null, NAMES));
         verifyCollection(resource.list().getDataCenters(), NAMES, DESCRIPTIONS);
     }
@@ -99,14 +77,10 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
     public void testQuery() throws Exception {
         String [] commands = { getQueryCommand(DataCenter.class),
                                getSupportedVersionCommand(NAMES[1]),
-                               getStorageCommand(NAMES[1]),
-                               getSupportedVersionCommand(NAMES[2]),
-                               getStorageCommand(NAMES[2]) };
+                               getSupportedVersionCommand(NAMES[2]) };
         String [] returns =  { getQueryReturn(),
                                formatVersion(MAJOR, MINOR),
-                               formatStorageDomain("mimas"),
-                               formatVersion(MAJOR, MINOR),
-                               formatStorageDomain("dione") };
+                               formatVersion(MAJOR, MINOR) };
         resource.setUriInfo(setUpResourceExpectations(3, commands, returns, false, getQueryParam(), NAMES_SUBSET));
         verifyCollection(resource.list().getDataCenters(), NAMES_SUBSET, DESCRIPTIONS_SUBSET);
     }
@@ -114,11 +88,9 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
     @Test
     public void testAdd() throws Exception {
         String [] commands = { getAddCommand(),
-                               getSupportedVersionCommand(NEW_NAME),
-                               getStorageCommand(NEW_NAME) };
+                               getSupportedVersionCommand(NEW_NAME) };
         String [] returns =  { getAddReturn(),
-                               formatVersion(MAJOR, MINOR),
-                               formatStorageDomain("rhea") };
+                               formatVersion(MAJOR, MINOR) };
 
         DataCenter model = getModel(NEW_NAME, NEW_DESCRIPTION);
         model.setVersion(null);
@@ -202,10 +174,6 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
         buf.append("\"");
 
         return buf.toString();
-    }
-
-    protected String getStorageCommand(String name) {
-        return getCommand("get-storagedomain", name);
     }
 
     protected String getSupportedVersionCommand(String name) {

@@ -32,7 +32,6 @@ import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.resource.AttachmentResource;
 import com.redhat.rhevm.api.resource.AttachmentsResource;
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
-import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.util.PowerShellException;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
@@ -158,43 +157,5 @@ public class PowerShellAttachmentsResource extends AbstractPowerShellResource im
     @Override
     public AttachmentResource getAttachmentSubResource(String id) {
         return new PowerShellAttachmentResource(id, storageDomainId, executor, this, shellPools, getParser());
-    }
-
-    /**
-     * Build a list of storage domains attached to a data center
-     *
-     * @param dataCenterId  the ID of the data center
-     * @return  an encapsulation of the attachments
-     */
-    public static Attachments getAttachmentsForDataCenter(UriInfo uriInfo,
-                                                          PowerShellPool pool,
-                                                          PowerShellParser parser,
-                                                          String dataCenterId) {
-        Attachments attachments = new Attachments();
-
-        StringBuilder buf = new StringBuilder();
-
-        buf.append("get-storagedomain");
-        buf.append(" -datacenterid " + PowerShellUtils.escape(dataCenterId));
-
-        List<StorageDomain> storageDomains;
-        try {
-            storageDomains = PowerShellStorageDomainResource.runAndParse(pool, parser, buf.toString());
-        } catch (PowerShellException e) {
-            // Ignore 'There is no Storage Domains in DataCenter' error
-            // i.e. no storage domains are attached to this data center
-            return attachments;
-        }
-
-        for (StorageDomain storageDomain : storageDomains) {
-            Attachment attachment = new Attachment();
-            attachment.setId(dataCenterId);
-            attachment.setStorageDomain(new StorageDomain());
-            attachment.getStorageDomain().setId(storageDomain.getId());
-            attachments.getAttachments().add(LinkHelper.addLinks(uriInfo, attachment));
-
-        }
-
-        return attachments;
     }
 }
