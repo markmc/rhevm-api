@@ -31,16 +31,10 @@ public class ActionsBuilder {
 
     private UriBuilder uriBuilder;
     private Class<?> service;
-    private ActionValidator validator;
-
-    public ActionsBuilder(UriBuilder uriBuilder, Class<?> service, ActionValidator validator) {
-        this.uriBuilder = uriBuilder;
-        this.service = service;
-        this.validator = validator;
-    }
 
     public ActionsBuilder(UriBuilder uriBuilder, Class<?> service) {
-        this(uriBuilder, service, null);
+        this.uriBuilder = uriBuilder;
+        this.service = service;
     }
 
     public Actions build() {
@@ -50,8 +44,7 @@ public class ActionsBuilder {
             Path path = method.getAnnotation(Path.class);
             Actionable actionable = method.getAnnotation(Actionable.class);
 
-            if (actionable != null && path != null &&
-                (validator == null || validator.validateAction(path.value()))) {
+            if (actionable != null && path != null) {
                 URI uri = uriBuilder.clone().path(path.value()).build();
 
                 Link link = new Link();
