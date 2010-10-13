@@ -20,8 +20,6 @@ package com.redhat.rhevm.api.mock.resource;
 
 import java.util.concurrent.Executor;
 
-
-import com.redhat.rhevm.api.model.Attachments;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.resource.DataCenterResource;
 import com.redhat.rhevm.api.resource.IsosResource;
@@ -61,9 +59,6 @@ public class MockDataCenterResource extends AbstractMockResource<DataCenter> imp
 
     public DataCenter addLinks() {
         DataCenter dataCenter = JAXBHelper.clone(OBJECT_FACTORY.createDataCenter(getModel()));
-
-        Attachments attachments = MockStorageDomainsResource.getAttachmentsForDataCenter(dataCenter.getId());
-        dataCenter.setAttachments(attachments);
 
         return LinkHelper.addLinks(getUriInfo(), dataCenter);
     }

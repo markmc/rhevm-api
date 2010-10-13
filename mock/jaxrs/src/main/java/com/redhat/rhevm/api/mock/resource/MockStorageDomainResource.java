@@ -28,7 +28,6 @@ import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.ActionsBuilder;
-import com.redhat.rhevm.api.model.Attachment;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.StorageDomainStatus;
@@ -36,8 +35,6 @@ import com.redhat.rhevm.api.resource.AttachmentsResource;
 import com.redhat.rhevm.api.resource.StorageDomainResource;
 
 public class MockStorageDomainResource extends AbstractMockResource<StorageDomain> implements StorageDomainResource {
-
-    private MockAttachmentsResource attachments;
 
     /**
      * Package-protected ctor, never needs to be instantiated by JAX-RS framework.
@@ -48,7 +45,6 @@ public class MockStorageDomainResource extends AbstractMockResource<StorageDomai
     MockStorageDomainResource(String id, Executor executor,  UriInfoProvider uriProvider) {
         super(id, executor, uriProvider);
         getModel().setStatus(StorageDomainStatus.UNATTACHED);
-        this.attachments = new MockAttachmentsResource(id, executor);
     }
 
     // FIXME: this needs to be atomic
@@ -72,12 +68,6 @@ public class MockStorageDomainResource extends AbstractMockResource<StorageDomai
         ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, StorageDomainResource.class);
         storageDomain.setActions(actionsBuilder.build());
 
-        Link link = new Link();
-        link.setRel("attachments");
-        link.setHref(uriBuilder.clone().path("attachments").build().toString());
-        storageDomain.getLinks().clear();
-        storageDomain.getLinks().add(link);
-
         return storageDomain;
     }
 
@@ -100,18 +90,7 @@ public class MockStorageDomainResource extends AbstractMockResource<StorageDomai
     }
 
     public AttachmentsResource getAttachmentsResource() {
-        return attachments;
-    }
-
-    /**
-     * Build a attachment representation for any existing attachment to
-     * the given data center
-     *
-     * @param dataCenterId  the ID of the data center
-     * @return  a representation of the attachment
-     */
-    public Attachment getAttachment(String dataCenterId) {
-        return attachments.getAttachment(dataCenterId);
+        return null;
     }
 
     private class StorageDomainStatusSetter extends AbstractActionTask {

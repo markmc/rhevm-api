@@ -26,8 +26,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
 import com.redhat.rhevm.api.mock.util.SimpleQueryEvaluator;
-import com.redhat.rhevm.api.model.Attachment;
-import com.redhat.rhevm.api.model.Attachments;
 import com.redhat.rhevm.api.model.Storage;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.StorageDomains;
@@ -110,24 +108,5 @@ public class MockStorageDomainsResource extends AbstractMockQueryableResource<St
     @Override
     public StorageDomainResource getStorageDomainSubResource(String id) {
         return storageDomains.get(id);
-    }
-
-    /**
-     * Build a list of storage domains attached to a data center
-     *
-     * @param dataCenterId  the ID of the data center
-     * @return  an encapsulation of the attachments
-     */
-    public static Attachments getAttachmentsForDataCenter(String dataCenterId) {
-        Attachments attachments = new Attachments();
-
-        for (MockStorageDomainResource storageDomain : storageDomains.values()) {
-            Attachment attachment = storageDomain.getAttachment(dataCenterId);
-            if (attachment != null) {
-                attachments.getAttachments().add(attachment);
-            }
-        }
-
-        return attachments;
     }
 }
