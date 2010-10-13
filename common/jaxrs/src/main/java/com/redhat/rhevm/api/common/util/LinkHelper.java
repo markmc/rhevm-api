@@ -29,7 +29,6 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.BaseResource;
-import com.redhat.rhevm.api.model.Attachment;
 import com.redhat.rhevm.api.model.CdRom;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.DataCenter;
@@ -54,8 +53,6 @@ import com.redhat.rhevm.api.resource.AssignedTagResource;
 import com.redhat.rhevm.api.resource.AssignedTagsResource;
 import com.redhat.rhevm.api.resource.AttachedStorageDomainResource;
 import com.redhat.rhevm.api.resource.AttachedStorageDomainsResource;
-import com.redhat.rhevm.api.resource.AttachmentResource;
-import com.redhat.rhevm.api.resource.AttachmentsResource;
 import com.redhat.rhevm.api.resource.ClusterResource;
 import com.redhat.rhevm.api.resource.ClustersResource;
 import com.redhat.rhevm.api.resource.DataCenterResource;
@@ -126,9 +123,6 @@ public class LinkHelper {
 
     static {
         ParentToCollectionMap map;
-
-        map = new ParentToCollectionMap(AttachmentResource.class, AttachmentsResource.class, StorageDomain.class);
-        TYPES.put(Attachment.class, map);
 
         map = new ParentToCollectionMap(DeviceResource.class, DevicesResource.class, VM.class);
         TYPES.put(CdRom.class, map);

@@ -25,7 +25,6 @@ import javax.ws.rs.core.UriInfo;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.redhat.rhevm.api.model.Attachment;
 import com.redhat.rhevm.api.model.CdRom;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.DataCenter;
@@ -82,7 +81,6 @@ public class LinkHelperTest extends Assert {
     private static final String USER_TAG_HREF = BASE_PATH + "/users/" + USER_ID + "/tags/" + TAG_ID;
     private static final String CLUSTER_NETWORK_HREF = BASE_PATH + "/clusters/" + CLUSTER_ID + "/networks/" + NETWORK_ID;
     private static final String ISO_HREF = BASE_PATH + "/datacenters/" + DATA_CENTER_ID + "/isos/" + ISO_ID;
-    private static final String ATTACHMENT_HREF = STORAGE_DOMAIN_HREF + "/attachments/" + DATA_CENTER_ID;
     private static final String CDROM_HREF = VM_HREF + "/cdroms/" + CDROM_ID;
     private static final String DISK_HREF = VM_HREF + "/disks/" + DISK_ID;
     private static final String NIC_HREF = VM_HREF + "/nics/" + NIC_ID;
@@ -285,29 +283,6 @@ public class LinkHelperTest extends Assert {
         LinkHelper.addLinks(setUpUriExpectations(), nic);
 
         assertEquals(NIC_HREF, nic.getHref());
-    }
-
-    @Test
-    public void testAttachmentLinks() throws Exception {
-        Attachment attachment = new Attachment();
-        attachment.setId(DATA_CENTER_ID);
-        attachment.setStorageDomain(new StorageDomain());
-        attachment.getStorageDomain().setId(STORAGE_DOMAIN_ID);
-
-        LinkHelper.addLinks(setUpUriExpectations(), attachment);
-
-        assertEquals(ATTACHMENT_HREF, attachment.getHref());
-        assertEquals(STORAGE_DOMAIN_HREF, attachment.getStorageDomain().getHref());
-    }
-
-    @Test
-    public void testAttachmentWithoutStorageDomain() throws Exception {
-        Attachment attachment = new Attachment();
-        attachment.setId(DATA_CENTER_ID);
-
-        LinkHelper.addLinks(setUpUriExpectations(), attachment);
-
-        assertNull(attachment.getHref());
     }
 
     @Test
