@@ -817,6 +817,7 @@
     <xs:complexContent>
       <xs:extension base="BaseResource">
         <xs:sequence>
+          <xs:element ref="data_center" minOccurs="0"/>
           <xs:element name="type" type="StorageDomainType" minOccurs="0"/>
           <xs:element name="status" type="StorageDomainStatus" minOccurs="0"/>
           <xs:element name="master" type="xs:boolean" minOccurs="0"/>
