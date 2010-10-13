@@ -148,12 +148,6 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
                                                            StorageDomainResource.class);
         storageDomain.setActions(actionsBuilder.build());
 
-        Link link = new Link();
-        link.setRel("attachments");
-        link.setHref(LinkHelper.getUriBuilder(uriInfo, storageDomain).path("attachments").build().toString());
-        storageDomain.getLinks().clear();
-        storageDomain.getLinks().add(link);
-
         return storageDomain;
     }
 
@@ -201,10 +195,7 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
 
     @Override
     public AttachmentsResource getAttachmentsResource() {
-        PowerShellAttachmentsResource resource =
-            new PowerShellAttachmentsResource(getId(), shellPools, getParser());
-        resource.setUriInfo(getUriInfo());
-        return resource;
+        return null;
     }
 
     private class StorageDomainTeardowner extends AbstractPowerShellActionTask {
