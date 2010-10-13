@@ -19,30 +19,34 @@
 package com.redhat.rhevm.api.resource;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PUT;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
-import com.redhat.rhevm.api.model.DataCenter;
-
+import com.redhat.rhevm.api.model.StorageDomain;
+import com.redhat.rhevm.api.model.StorageDomains;
 
 @Produces(MediaType.APPLICATION_XML)
-public interface DataCenterResource extends UpdatableResource<DataCenter> {
+public interface AttachedStorageDomainsResource {
 
     @GET
     @Formatted
-    public DataCenter get();
+    public StorageDomains list();
 
-    @PUT
+    @POST
     @Formatted
     @Consumes(MediaType.APPLICATION_XML)
-    public DataCenter update(DataCenter dataCenter);
+    public Response add(StorageDomain storageDomain);
 
-    @Path("isos")
-    public IsosResource getIsosResource();
+    @DELETE
+    @Path("{id}")
+    public void remove(@PathParam("id") String id);
 
-    @Path("storagedomains")
-    public AttachedStorageDomainsResource getAttachedStorageDomainsResource();
+    @Path("{id}")
+    public AttachedStorageDomainResource getAttachedStorageDomainSubResource(@PathParam("id") String id);
 }

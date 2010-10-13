@@ -27,6 +27,7 @@ import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.Version;
 import com.redhat.rhevm.api.model.SupportedVersions;
+import com.redhat.rhevm.api.resource.AttachedStorageDomainsResource;
 import com.redhat.rhevm.api.resource.DataCenterResource;
 import com.redhat.rhevm.api.resource.IsosResource;
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
@@ -141,5 +142,9 @@ public class PowerShellDataCenterResource extends AbstractPowerShellActionableRe
 
     public IsosResource getIsosResource() {
         return new PowerShellIsosResource(getId(), shellPools, getParser(), uriProvider);
+    }
+
+    public AttachedStorageDomainsResource getAttachedStorageDomainsResource() {
+        return null;
     }
 }

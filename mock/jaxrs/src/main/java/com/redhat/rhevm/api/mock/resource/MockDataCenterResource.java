@@ -21,6 +21,7 @@ package com.redhat.rhevm.api.mock.resource;
 import java.util.concurrent.Executor;
 
 import com.redhat.rhevm.api.model.DataCenter;
+import com.redhat.rhevm.api.resource.AttachedStorageDomainsResource;
 import com.redhat.rhevm.api.resource.DataCenterResource;
 import com.redhat.rhevm.api.resource.IsosResource;
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
@@ -77,6 +78,10 @@ public class MockDataCenterResource extends AbstractMockResource<DataCenter> imp
     }
 
     public IsosResource getIsosResource() {
+        return null;
+    }
+
+    public AttachedStorageDomainsResource getAttachedStorageDomainsResource() {
         return null;
     }
 }

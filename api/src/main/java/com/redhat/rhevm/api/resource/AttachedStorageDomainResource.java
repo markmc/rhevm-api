@@ -21,28 +21,37 @@ package com.redhat.rhevm.api.resource;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PUT;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
-import com.redhat.rhevm.api.model.DataCenter;
-
+import com.redhat.rhevm.api.model.StorageDomain;
+import com.redhat.rhevm.api.model.Action;
+import com.redhat.rhevm.api.model.Actionable;
 
 @Produces(MediaType.APPLICATION_XML)
-public interface DataCenterResource extends UpdatableResource<DataCenter> {
+public interface AttachedStorageDomainResource {
 
     @GET
     @Formatted
-    public DataCenter get();
+    public StorageDomain get();
 
-    @PUT
+    @Path("{action: (activate|deactivate)}/{oid}")
+    public ActionResource getActionSubresource(@PathParam("action") String action, @PathParam("oid") String oid);
+
+    @POST
     @Formatted
     @Consumes(MediaType.APPLICATION_XML)
-    public DataCenter update(DataCenter dataCenter);
+    @Actionable
+    @Path("activate")
+    public Response activate(Action action);
 
-    @Path("isos")
-    public IsosResource getIsosResource();
-
-    @Path("storagedomains")
-    public AttachedStorageDomainsResource getAttachedStorageDomainsResource();
+    @POST
+    @Formatted
+    @Consumes(MediaType.APPLICATION_XML)
+    @Actionable
+    @Path("deactivate")
+    public Response deactivate(Action action);
 }
