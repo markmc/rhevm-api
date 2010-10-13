@@ -72,6 +72,7 @@ public class LinkHelperTest extends Assert {
     private static final String TEMPLATE_HREF = BASE_PATH + "/templates/" + TEMPLATE_ID;
     private static final String VM_POOL_HREF = BASE_PATH + "/vmpools/" + VM_POOL_ID;
     private static final String STORAGE_DOMAIN_HREF = BASE_PATH + "/storagedomains/" + STORAGE_DOMAIN_ID;
+    private static final String ATTACHED_STORAGE_DOMAIN_HREF = BASE_PATH + "/datacenters/" + DATA_CENTER_ID + "/storagedomains/" + STORAGE_DOMAIN_ID;
     private static final String HOST_HREF = BASE_PATH + "/hosts/" + HOST_ID;
     private static final String DATA_CENTER_HREF = BASE_PATH + "/datacenters/" + DATA_CENTER_ID;
     private static final String NETWORK_HREF = BASE_PATH + "/networks/" + NETWORK_ID;
@@ -141,6 +142,19 @@ public class LinkHelperTest extends Assert {
 
         assertEquals(STORAGE_DOMAIN_HREF, storageDomain.getHref());
         assertNull(storageDomain.getStorage().getHref());
+    }
+
+    @Test
+    public void testAttachedStorageDomainLinks() throws Exception {
+        StorageDomain storageDomain = new StorageDomain();
+        storageDomain.setId(STORAGE_DOMAIN_ID);
+
+        storageDomain.setDataCenter(new DataCenter());
+        storageDomain.getDataCenter().setId(DATA_CENTER_ID);
+
+        LinkHelper.addLinks(setUpUriExpectations(), storageDomain);
+
+        assertEquals(ATTACHED_STORAGE_DOMAIN_HREF, storageDomain.getHref());
     }
 
     @Test

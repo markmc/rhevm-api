@@ -52,6 +52,8 @@ import com.redhat.rhevm.api.resource.AssignedNetworkResource;
 import com.redhat.rhevm.api.resource.AssignedNetworksResource;
 import com.redhat.rhevm.api.resource.AssignedTagResource;
 import com.redhat.rhevm.api.resource.AssignedTagsResource;
+import com.redhat.rhevm.api.resource.AttachedStorageDomainResource;
+import com.redhat.rhevm.api.resource.AttachedStorageDomainsResource;
 import com.redhat.rhevm.api.resource.AttachmentResource;
 import com.redhat.rhevm.api.resource.AttachmentsResource;
 import com.redhat.rhevm.api.resource.ClusterResource;
@@ -167,6 +169,7 @@ public class LinkHelper {
         TYPES.put(Storage.class, map);
 
         map = new ParentToCollectionMap(StorageDomainResource.class, StorageDomainsResource.class);
+        map.add(AttachedStorageDomainResource.class, AttachedStorageDomainsResource.class, DataCenter.class);
         TYPES.put(StorageDomain.class, map);
 
         map = new ParentToCollectionMap(TagResource.class, TagsResource.class);
