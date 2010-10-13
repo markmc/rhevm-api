@@ -18,7 +18,6 @@
  */
 package com.redhat.rhevm.api.command.datacenters;
 
-import com.redhat.rhevm.api.model.Attachment;
 import com.redhat.rhevm.api.model.DataCenter;
 
 import com.redhat.rhevm.api.command.base.VerboseDisplay;
@@ -31,28 +30,6 @@ public class DataCenterVerboseDisplay implements VerboseDisplay<DataCenter> {
         }
         if (model.isSetStorageType()) {
             System.out.println("  storage type: " + model.getStorageType());
-        }
-        if (model.isSetAttachments() && model.getAttachments().getAttachments().size() > 0) {
-            System.out.println("  Attachments: ");
-            for (Attachment attachment : model.getAttachments().getAttachments()) {
-                if (attachment.isSetMaster()) {
-                    System.out.println("    master: " + attachment.isMaster());
-                }
-                if (attachment.isSetDataCenter()) {
-                    System.out.println("    data center: " + attachment.getDataCenter().getName());
-                }
-                if (attachment.isSetStorageDomain()) {
-                    if (attachment.getStorageDomain().isSetName()) {
-                        System.out.println("    storage domain: " + attachment.getStorageDomain().getName());
-                    } else if (attachment.getStorageDomain().isSetId()) {
-                        System.out.println("    storage domain ID: " + attachment.getStorageDomain().getId());
-                    }
-                }
-                if (attachment.isSetStatus()) {
-                    System.out.println("    storage domain status: " + attachment.getStatus());
-                }
-                System.out.println();
-            }
         }
     }
 }
