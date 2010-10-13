@@ -30,10 +30,6 @@
             <entry><literal>true</literal> if this is the master storage domain of a data center</entry>
           </row>
           <row>
-            <entry><literal>link rel="attachments"</literal></entry>
-            <entry>A link to the attachments collection representing which data centers the storage domain is attached to. See <xref linkend="sect-REST_API_Guide-Storage_Domains-Attachments"/></entry>
-          </row>
-          <row>
             <entry><literal>host</literal></entry>
             <entry>A reference to the host on which this storage domain should be initialized. The only restriction on this host is that it should have access to the physical storage specified.</entry>
           </row>
@@ -74,7 +70,6 @@
     &lt;path&gt;/exports/RHEVX/images/0&lt;/path&gt;
   &lt;/storage&gt;
   &lt;master&gt;true&lt;/master&gt;
-  &lt;link rel="attachments" href="storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/attachments"/&gt;
 &lt;/storage_domain&gt;
   </screen>
 
@@ -83,7 +78,7 @@
   </para>
 
   <para>
-    Once a storage domain has been initialized it can be attached to a data center. See <xref linkend="sect-REST_API_Guide-Storage_Domains-Attachments"/>.
+    Once a storage domain has been initialized it can be attached to a data center. See <xref linkend="sect-REST_API_Guide-Data_Centers-Attached_Storage_Domains"/>.
   </para>
 
   <para>
@@ -143,90 +138,7 @@ Content-type: application/xml
     </screen>
 
     <para>
-      A storage domain must be detached from all data centers before it can be torn down. See <xref linkend="sect-REST_API_Guide-Storage_Domains-Attachments"/>.
-    </para>
-
-  </section>
-
-  <section id="sect-REST_API_Guide-Storage_Domains-Attachments">
-    <title>
-      Storage Domain Attachments
-    </title>
-
-    <para>
-      A storage domain must be attached to a data center before it can be used. This is done by posting a representation of the attachment to the storage domain's attachments collection.
-    </para>
-
-    <para>
-      Attachments are similar to other resources, with the exception that they have no <literal>name</literal> element and cannot be modified using <literal>PUT</literal>. The attachment specific properties include:
-
-      <informaltable frame="none">
-        <tgroup cols="2">
-          <colspec colwidth="2*"/>
-          <colspec colwidth="5*"/>
-          <tbody>
-            <row>
-              <entry><literal>data_center</literal></entry>
-              <entry>A reference to the data center which this storage domain is attached. See <xref linkend="chap-REST_API_Guide-Data_Centers"/></entry>
-            </row>
-            <row>
-              <entry><literal>storage_domain</literal></entry>
-              <entry>A reference to the storage domain</entry>
-            </row>
-            <row>
-              <entry><literal>status</literal></entry>
-              <entry>Either <literal>ACTIVE</literal> or <literal>INACTIVE</literal></entry>
-            </row>
-            <row>
-              <entry><literal>master</literal></entry>
-              <entry><literal>true</literal> if this is the master storage domain of the data center</entry>
-            </row>
-          </tbody>
-        </tgroup>
-      </informaltable>
-
-      For example:
-    </para>
-
-    <screen>
-&lt;attachment id="d70d5e2d-b8ad-494a-a4d2-c7a5631073c4" href="storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/attachments/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4"&gt;
-  &lt;data_center id="d70d5e2d-b8ad-494a-a4d2-c7a5631073c4" href="datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4"/&gt;
-  &lt;status&gt;ACTIVE&lt;/status&gt;
-  &lt;master&gt;true&lt;/master&gt;
-  &lt;actions&gt;
-    &lt;link rel="deactivate" href="/storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/attachments/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/deactivate"/&gt;
-  &lt;actions&gt;
-&lt;/attachment&gt;
-
-    </screen>
-
-    <para>
-      When creating a new attachment, a <literal>data_center id</literal> must be supplied. An example of attaching a storage domain to a data center:
-    </para>
-
-    <screen>
-POST /storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/attachments HTTP/1.1
-Content-type: application/xml
-
-&lt;attachment&gt;
-  &lt;data_center id="d70d5e2d-b8ad-494a-a4d2-c7a5631073c4"/&gt;
-&lt;attachment&gt;
-
-HTTP/1.1 201 Created
-Location: /storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/attachments/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4
-Content-Type: application/xml
-
-&lt;attachment id="d70d5e2d-b8ad-494a-a4d2-c7a5631073c4" href="storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/attachments/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4"&gt;
-  &lt;data_center id="d70d5e2d-b8ad-494a-a4d2-c7a5631073c4" href="datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4"/&gt;
-  &lt;status&gt;INACTIVE&lt;/status&gt;
-  &lt;actions&gt;
-    &lt;link rel="activate" href="storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/attachments/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/activate"/&gt;
-  &lt;actions&gt;
-&lt;/attachment&gt;
-    </screen>
-
-    <para>
-      There are two possible actions for storage domain attachments - <literal>activate</literal> and <literal>deactivate</literal>.
+      A storage domain must be detached from all data centers before it can be torn down. See <xref linkend="sect-REST_API_Guide-Data_Centers-Attached_Storage_Domains"/>.
     </para>
 
   </section>
@@ -237,11 +149,11 @@ Content-Type: application/xml
     </title>
 
     <para>
-      A storage domain attachment must be activated before it the storage domain may be used. The activate action does not take any action specific parameters.
+      An attached storage domain must be activated before it the may be used. The activate action does not take any action specific parameters.
     </para>
 
     <screen>
-POST /storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/attachments/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/activate HTTP/1.1
+POST /datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/activate HTTP/1.1
 Content-type: application/xml
     </screen>
 
@@ -253,11 +165,11 @@ Content-type: application/xml
     </title>
 
     <para>
-      A storage domain attachment must be deactivated before it can be removed. The deactivate action does not take any action specific parameters.
+      An attached storage domain must be deactivated before it can be removed. The deactivate action does not take any action specific parameters.
     </para>
 
     <screen>
-POST /storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/attachments/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/deactivate HTTP/1.1
+POST /datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/deactivate HTTP/1.1
 Content-type: application/xml
     </screen>
 

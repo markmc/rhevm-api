@@ -18,8 +18,8 @@
             <entry>Describes which storage type is allowed in this datacenter. Either <literal>ISCSI</literal>, <literal>NFS</literal> or <literal>FCP</literal></entry>
           </row>
           <row>
-            <entry><literal>attachments</literal></entry>
-            <entry>A collection of partial representations of the storage domains which are attached to this data center. See <xref linkend="chap-REST_API_Guide-Storage_Domains"/></entry>
+            <entry><literal>link rel="storagedomains"</literal></entry>
+            <entry>A link to a description of the storage domains attached to this data center</entry>
           </row>
           <row>
             <entry><literal>link rel="isos"</literal></entry>
@@ -45,10 +45,7 @@
   &lt;name&gt;Default&lt;/name&gt;
   &lt;description&gt;The default Data Center&lt;/description&gt;
   &lt;storage_type&gt;NFS&lt;/storage_type&gt;
-  &lt;attachments&gt;
-    &lt;attachment href="storagedomains/80abb8b2-0cd8-4ddb-9949-1839e181105a/attachments/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4"/&gt;
-    &lt;attachment href="storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/attachments/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4"/&gt;
-  &lt;/attachments&gt;
+  &lt;link rel="storagedomains" href="datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/storagedomains"/&gt;
   &lt;link rel="isos" href="datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/isos"/&gt;
   &lt;version major="2" minor="1"/&gt;
   &lt;supported_versions&gt;
@@ -60,6 +57,57 @@
   <para>
     When creating a new data center, the <literal>name</literal> and <literal>storage_type</literal> elements are required. Only the <literal>name</literal> and <literal>description</literal> elements may be updated post-creation.
   </para>
+
+  <section id="sect-REST_API_Guide-Data_Centers-Attached_Storage_Domains">
+    <title>
+      Attached Storage Domains
+    </title>
+
+    <para>
+      A storage domain must be attached to a data center before it can be used. This is done by posting a representation of the storage domain to the data center's storage domains collection.
+    </para>
+
+    <para>
+      An attached storage domain has a similar representation to a top-level storage domain, with the exception that it has a data center specific status and set of actions.
+    </para>
+
+    <para>
+      When attaching a storage domain, its ID or name must be supplied. An example of attaching a storage domain to a data center:
+    </para>
+
+    <screen>
+POST /datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/storagedomains HTTP/1.1
+Content-type: application/xml
+
+&lt;storage_domain id="fabe0451-701f-4235-8f7e-e20e458819ed"/&gt;
+
+HTTP/1.1 201 Created
+Location: /datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed
+Content-Type: application/xml
+
+&lt;storage_domain id="fabe0451-701f-4235-8f7e-e20e458819ed" href="datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed"&gt;
+  &lt;name&gt;images0&lt;/name&gt;
+  &lt;type&gt;DATA&lt;/type&gt;
+  &lt;status&gt;INACTIVE&lt;/status&gt;
+  &lt;master&gt;true&lt;/master&gt;
+  &lt;storage&gt;
+    &lt;type&gt;NFS&lt;/type&gt;
+    &lt;address&gt;172.31.0.6&lt;/address&gt;
+    &lt;path&gt;/exports/RHEVX/images/0&lt;/path&gt;
+  &lt;/storage&gt;
+  &lt;data_center id="d70d5e2d-b8ad-494a-a4d2-c7a5631073c4" href="datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4"/&gt;
+  &lt;actions&gt;
+    &lt;link rel="activate" href="datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/activate"/&gt;
+    &lt;link rel="deactivate" href="datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/deactivate"/&gt;
+  &lt;/actions&gt;
+&lt;/storage_domain&gt;
+    </screen>
+
+    <para>
+      There are two possible actions for attached storage domains - <literal>activate</literal> and <literal>deactivate</literal>. See <xref linkend="sect-REST_API_Guide-Storage_Domains-Activate"/> and <xref linkend="sect-REST_API_Guide-Storage_Domains-Deactivate"/>.
+    </para>
+
+  </section>
 
   <section id="sect-REST_API_Guide-Data_Centers-ISO_Images">
     <title>
