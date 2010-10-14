@@ -20,10 +20,8 @@ package com.redhat.rhevm.api.powershell.resource;
 
 import java.util.List;
 
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 
-import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.model.DataCenter;
@@ -36,49 +34,28 @@ import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 import com.redhat.rhevm.api.resource.StorageDomainContentResource;
-import com.redhat.rhevm.api.resource.StorageDomainContentsResource;
 
 public class PowerShellStorageDomainVmsResource
-    extends AbstractPowerShellResource
-    implements StorageDomainContentsResource<VMs, VM>, UriInfoProvider {
-
-    private PowerShellAttachedStorageDomainResource parent;
-    private UriInfo ui;
+    extends AbstractPowerShellStorageDomainContentsResource<VMs, VM> {
 
     public PowerShellStorageDomainVmsResource(PowerShellAttachedStorageDomainResource parent,
                                               PowerShellPoolMap shellPools,
                                               PowerShellParser parser) {
-        super(shellPools, parser);
-        this.parent = parent;
-    }
-
-    public UriInfo getUriInfo() {
-        return ui;
-    }
-
-    @Context
-    public void setUriInfo(UriInfo uriInfo) {
-        ui = uriInfo;
-    }
-
-    public String getStorageDomainId() {
-        return parent.getId();
-    }
-
-    public String getDataCenterId() {
-        return parent.getDataCenterId();
+        super(parent, shellPools, parser);
     }
 
     public List<PowerShellVM> runAndParse(String command) {
         return PowerShellVM.parse(getParser(), PowerShellCmd.runCommand(getPool(), command));
     }
 
-    public PowerShellVM runAndParseSingle(String command) {
+    @Override
+    public VM runAndParseSingle(String command) {
         List<PowerShellVM> vms = runAndParse(command);
 
         return !vms.isEmpty() ? vms.get(0) : null;
     }
 
+    @Override
     public VM addLinks(UriInfo uriInfo, VM vm) {
         vm = JAXBHelper.clone("vm", VM.class, vm);
 

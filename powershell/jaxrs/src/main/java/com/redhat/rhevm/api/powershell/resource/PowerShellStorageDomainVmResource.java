@@ -20,20 +20,15 @@ package com.redhat.rhevm.api.powershell.resource;
 
 import java.util.concurrent.Executor;
 
-import javax.ws.rs.core.UriInfo;
-
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
-import com.redhat.rhevm.api.resource.StorageDomainContentResource;
 
 public class PowerShellStorageDomainVmResource
-    extends AbstractPowerShellActionableResource<VM>
-    implements StorageDomainContentResource<VM> {
-
-    private PowerShellStorageDomainVmsResource parent;
+    extends AbstractPowerShellStorageDomainContentResource<VM, VMs> {
 
     public PowerShellStorageDomainVmResource(PowerShellStorageDomainVmsResource parent,
                                              String vmId,
@@ -41,16 +36,7 @@ public class PowerShellStorageDomainVmResource
                                              UriInfoProvider uriProvider,
                                              PowerShellPoolMap shellPools,
                                              PowerShellParser parser) {
-        super(vmId, executor, uriProvider, shellPools, parser);
-        this.parent = parent;
-    }
-
-    public String getStorageDomainId() {
-        return parent.getStorageDomainId();
-    }
-
-    public String getDataCenterId() {
-        return parent.getDataCenterId();
+        super(parent, vmId, executor, uriProvider, shellPools, parser);
     }
 
     @Override
