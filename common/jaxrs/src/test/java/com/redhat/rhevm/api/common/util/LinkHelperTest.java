@@ -168,10 +168,11 @@ public class LinkHelperTest extends Assert {
         vm.getStorageDomain().setDataCenter(new DataCenter());
         vm.getStorageDomain().getDataCenter().setId(DATA_CENTER_ID);
 
-        LinkHelper.addLinks(setUpUriExpectations(), vm);
+        vm = LinkHelper.addLinks(setUpUriExpectations(), vm);
 
         assertEquals(STORAGE_DOMAIN_VM_HREF, vm.getHref());
         assertEquals(ATTACHED_STORAGE_DOMAIN_HREF, vm.getStorageDomain().getHref());
+        assertFalse(vm.getStorageDomain().isSetDataCenter());
     }
 
     @Test
@@ -185,10 +186,11 @@ public class LinkHelperTest extends Assert {
         template.getStorageDomain().setDataCenter(new DataCenter());
         template.getStorageDomain().getDataCenter().setId(DATA_CENTER_ID);
 
-        LinkHelper.addLinks(setUpUriExpectations(), template);
+        template = LinkHelper.addLinks(setUpUriExpectations(), template);
 
         assertEquals(STORAGE_DOMAIN_TEMPLATE_HREF, template.getHref());
         assertEquals(ATTACHED_STORAGE_DOMAIN_HREF, template.getStorageDomain().getHref());
+        assertFalse(template.getStorageDomain().isSetDataCenter());
     }
 
     @Test

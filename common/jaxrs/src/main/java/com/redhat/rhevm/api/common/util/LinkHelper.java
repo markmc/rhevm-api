@@ -268,6 +268,27 @@ public class LinkHelper {
     }
 
     /**
+     * Unset the property on @model of type @type
+     *
+     * @param model the object with the property to unset
+     * @param type  the type of the property
+     */
+    private static void unsetInlineResource(BaseResource model, Class<?> type) {
+        for (Method method : model.getClass().getMethods()) {
+            if (method.getName().startsWith("set")) {
+                try {
+                    if (type.isAssignableFrom(method.getParameterTypes()[0])) {
+                        method.invoke(model, new Object[]{null});
+                        return;
+                    }
+                } catch (Exception e) {
+                    // invocation target exception should not occur on simple setter
+                }
+            }
+        }
+    }
+
+    /**
      * Return any parent object set on @model
      *
      * i.e. return the value of any bean property whose type matches @parentType
@@ -393,6 +414,9 @@ public class LinkHelper {
         for (BaseResource inline : getInlineResources(model)) {
             if (inline.getId() != null) {
                 setHref(uriInfo, inline);
+            }
+            for (BaseResource grandParent : getInlineResources(inline)) {
+                unsetInlineResource(inline, grandParent.getClass());
             }
         }
 
