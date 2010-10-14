@@ -112,7 +112,7 @@ public class PowerShellAttachedStorageDomainResource
     }
 
     public StorageDomainContentsResource<VMs, VM> getStorageDomainVmsResource() {
-        return null;
+        return new PowerShellStorageDomainVmsResource(this, shellPools, getParser());
     }
 
     public StorageDomainContentsResource<Templates, Template> getStorageDomainTemplatesResource() {
