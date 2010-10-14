@@ -74,6 +74,8 @@ import com.redhat.rhevm.api.resource.AssignedRolesResource;
 import com.redhat.rhevm.api.resource.SnapshotResource;
 import com.redhat.rhevm.api.resource.SnapshotsResource;
 import com.redhat.rhevm.api.resource.StorageResource;
+import com.redhat.rhevm.api.resource.StorageDomainContentResource;
+import com.redhat.rhevm.api.resource.StorageDomainContentsResource;
 import com.redhat.rhevm.api.resource.StorageDomainResource;
 import com.redhat.rhevm.api.resource.StorageDomainsResource;
 import com.redhat.rhevm.api.resource.TagResource;
@@ -173,6 +175,7 @@ public class LinkHelper {
         TYPES.put(Tag.class, map);
 
         map = new ParentToCollectionMap(TemplateResource.class, TemplatesResource.class);
+        map.add(StorageDomainContentResource.class, StorageDomainContentsResource.class, StorageDomain.class);
         TYPES.put(Template.class, map);
 
         map = new ParentToCollectionMap(UserResource.class, UsersResource.class);
@@ -180,6 +183,7 @@ public class LinkHelper {
         TYPES.put(User.class, map);
 
         map = new ParentToCollectionMap(VmResource.class, VmsResource.class);
+        map.add(StorageDomainContentResource.class, StorageDomainContentsResource.class, StorageDomain.class);
         TYPES.put(VM.class, map);
 
         map = new ParentToCollectionMap(VmPoolResource.class, VmPoolsResource.class);
