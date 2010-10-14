@@ -57,6 +57,10 @@ public class PowerShellAttachedStorageDomainResource
         this.parent = parent;
     }
 
+    public String getDataCenterId() {
+        return parent.getDataCenterId();
+    }
+
     protected StorageDomain addLinks(UriInfo uriInfo, StorageDomain storageDomain) {
         return parent.addLinks(uriInfo, storageDomain);
     }
@@ -66,7 +70,7 @@ public class PowerShellAttachedStorageDomainResource
         StorageDomain storageDomain = new StorageDomain();
         storageDomain.setId(getId());
         storageDomain.setDataCenter(new DataCenter());
-        storageDomain.getDataCenter().setId(parent.getDataCenterId());
+        storageDomain.getDataCenter().setId(getDataCenterId());
         return storageDomain;
     }
 
@@ -75,7 +79,7 @@ public class PowerShellAttachedStorageDomainResource
         StringBuilder buf = new StringBuilder();
 
         buf.append("get-storagedomain");
-        buf.append(" -datacenterid " + PowerShellUtils.escape(parent.getDataCenterId()));
+        buf.append(" -datacenterid " + PowerShellUtils.escape(getDataCenterId()));
         buf.append(" -storagedomainid " + PowerShellUtils.escape(getId()));
 
         return addLinks(getUriInfo(),
@@ -100,7 +104,7 @@ public class PowerShellAttachedStorageDomainResource
             StringBuilder buf = new StringBuilder();
 
             buf.append(command);
-            buf.append(" -datacenterid " + PowerShellUtils.escape(parent.getDataCenterId()));
+            buf.append(" -datacenterid " + PowerShellUtils.escape(getDataCenterId()));
             buf.append(" -storagedomainid " + PowerShellUtils.escape(getId()));
 
             PowerShellCmd.runCommand(getPool(), buf.toString());
