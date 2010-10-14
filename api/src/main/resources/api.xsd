@@ -829,6 +829,7 @@
             <xs:element name="cpu" type="CPU" minOccurs="0"/>
             <xs:element name="os" type="OperatingSystem" minOccurs="0"/>
             <xs:element ref="cluster" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="storage_domain" minOccurs="0" maxOccurs="1"/>
             <!-- also rel="cdroms/disks/nics" links, see Devices below -->
           </xs:sequence>
         </xs:extension>
@@ -925,6 +926,7 @@
             <xs:element ref="host" minOccurs="0" maxOccurs="1"/>
             <xs:element ref="cluster" minOccurs="0" maxOccurs="1"/>
             <xs:element ref="template" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="storage_domain" minOccurs="0" maxOccurs="1"/>
 
             <xs:element name="memory_statistics" type="MemoryStatistics" minOccurs="0" maxOccurs="1">
               <xs:annotation>
