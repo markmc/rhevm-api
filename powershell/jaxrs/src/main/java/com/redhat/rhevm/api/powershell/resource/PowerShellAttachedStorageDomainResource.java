@@ -29,7 +29,12 @@ import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.StorageDomain;
+import com.redhat.rhevm.api.model.Template;
+import com.redhat.rhevm.api.model.Templates;
+import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.resource.AttachedStorageDomainResource;
+import com.redhat.rhevm.api.resource.StorageDomainContentsResource;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
@@ -100,5 +105,13 @@ public class PowerShellAttachedStorageDomainResource
 
             PowerShellCmd.runCommand(getPool(), buf.toString());
         }
+    }
+
+    public StorageDomainContentsResource<VMs, VM> getStorageDomainVmsResource() {
+        return null;
+    }
+
+    public StorageDomainContentsResource<Templates, Template> getStorageDomainTemplatesResource() {
+        return null;
     }
 }
