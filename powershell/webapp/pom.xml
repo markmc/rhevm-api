@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.redhat.rhevm.api</groupId>
     <artifactId>powershell-parent</artifactId>
-    <version>0.9-SNAPSHOT</version>
+    <version>0.9-milestone-4.2</version>
   </parent>
 
   <artifactId>rhevm-api-powershell-webapp</artifactId>
