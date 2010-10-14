@@ -116,6 +116,6 @@ public class PowerShellAttachedStorageDomainResource
     }
 
     public StorageDomainContentsResource<Templates, Template> getStorageDomainTemplatesResource() {
-        return null;
+        return new PowerShellStorageDomainTemplatesResource(this, shellPools, getParser());
     }
 }

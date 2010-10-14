@@ -76,7 +76,7 @@ public class PowerShellAttachedStorageDomainsResource
         storageDomain.setDataCenter(new DataCenter());
         storageDomain.getDataCenter().setId(dataCenterId);
 
-        String [] subCollections = { "vms" };
+        String [] subCollections = { "templates", "vms" };
 
         storageDomain.getLinks().clear();
 
