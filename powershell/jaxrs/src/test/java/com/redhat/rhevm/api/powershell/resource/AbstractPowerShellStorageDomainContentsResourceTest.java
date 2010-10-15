@@ -42,7 +42,7 @@ import static org.powermock.api.easymock.PowerMock.mockStatic;
 @PrepareForTest( { PowerShellCmd.class })
 public abstract class AbstractPowerShellStorageDomainContentsResourceTest<C extends BaseResources,
                                                                           R extends BaseResource,
-                                                                          A extends AbstractPowerShellStorageDomainContentsResource<C, R>>
+                                                                          A extends AbstractPowerShellStorageDomainContentsResource<R>>
     extends AbstractPowerShellResourceTest<R, A> {
 
     protected static final String[] NAMES = {"clontarf", "killester", "harmonstown", "raheny", "kilbarrack"};

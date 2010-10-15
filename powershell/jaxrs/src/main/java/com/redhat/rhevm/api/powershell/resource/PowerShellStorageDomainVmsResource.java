@@ -34,9 +34,11 @@ import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 import com.redhat.rhevm.api.resource.StorageDomainContentResource;
+import com.redhat.rhevm.api.resource.StorageDomainContentsResource;
 
 public class PowerShellStorageDomainVmsResource
-    extends AbstractPowerShellStorageDomainContentsResource<VMs, VM> {
+    extends AbstractPowerShellStorageDomainContentsResource<VM>
+    implements StorageDomainContentsResource<VMs, VM> {
 
     public PowerShellStorageDomainVmsResource(PowerShellAttachedStorageDomainResource parent,
                                               PowerShellPoolMap shellPools,

@@ -22,18 +22,16 @@ import java.util.concurrent.Executor;
 
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.BaseResource;
-import com.redhat.rhevm.api.model.BaseResources;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.resource.StorageDomainContentResource;
 
-public abstract class AbstractPowerShellStorageDomainContentResource<R extends BaseResource, C extends BaseResources>
-    extends AbstractPowerShellActionableResource<R>
-    implements StorageDomainContentResource<R> {
+public abstract class AbstractPowerShellStorageDomainContentResource<R extends BaseResource>
+    extends AbstractPowerShellActionableResource<R> {
 
-    protected AbstractPowerShellStorageDomainContentsResource<C, R> parent;
+    protected AbstractPowerShellStorageDomainContentsResource<R> parent;
 
-    public AbstractPowerShellStorageDomainContentResource(AbstractPowerShellStorageDomainContentsResource<C, R> parent,
+    public AbstractPowerShellStorageDomainContentResource(AbstractPowerShellStorageDomainContentsResource<R> parent,
                                                           String id,
                                                           Executor executor,
                                                           UriInfoProvider uriProvider,

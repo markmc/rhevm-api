@@ -23,14 +23,12 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.BaseResource;
-import com.redhat.rhevm.api.model.BaseResources;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
-import com.redhat.rhevm.api.resource.StorageDomainContentsResource;
 
-public abstract class AbstractPowerShellStorageDomainContentsResource<C extends BaseResources, R extends BaseResource>
+public abstract class AbstractPowerShellStorageDomainContentsResource<R extends BaseResource>
     extends AbstractPowerShellResource
-    implements StorageDomainContentsResource<C, R>, UriInfoProvider {
+    implements UriInfoProvider {
 
     private PowerShellAttachedStorageDomainResource parent;
     private UriInfo ui;
