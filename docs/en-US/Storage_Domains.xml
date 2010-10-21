@@ -33,6 +33,18 @@
             <entry><literal>host</literal></entry>
             <entry>A reference to the host on which this storage domain should be initialized. The only restriction on this host is that it should have access to the physical storage specified.</entry>
           </row>
+          <row>
+            <entry><literal>available</literal></entry>
+            <entry>Space available in Gb</entry>
+          </row>
+          <row>
+            <entry><literal>used</literal></entry>
+            <entry>Space used in Gb</entry>
+          </row>
+          <row>
+            <entry><literal>committed</literal></entry>
+            <entry>Space committed in Gb</entry>
+          </row>
         </tbody>
       </tgroup>
     </informaltable>
@@ -70,6 +82,9 @@
     &lt;path&gt;/exports/RHEVX/images/0&lt;/path&gt;
   &lt;/storage&gt;
   &lt;master&gt;true&lt;/master&gt;
+  &lt;available&gt;159&lt;/available&gt;
+  &lt;used&gt;141&lt;/used&gt;
+  &lt;committed&gt;50&lt;/committed&gt;
 &lt;/storage_domain&gt;
   </screen>
 
