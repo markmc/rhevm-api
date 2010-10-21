@@ -4,23 +4,23 @@
 %BOOK_ENTITIES;
 ]>
 <book status="draft">
-	<xi:include href="/rhevm-api/Book_Info.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-	<xi:include href="/rhevm-api/Preface.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-	<xi:include href="/rhevm-api/Introduction.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-	<xi:include href="/rhevm-api/Entry_Point.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-	<xi:include href="/rhevm-api/Compatibility_Level_Versions.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-	<xi:include href="/rhevm-api/Capabilities.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-	<xi:include href="/rhevm-api/Authentication.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-	<xi:include href="/rhevm-api/Common_Idioms.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-	<xi:include href="/rhevm-api/Data_Centers.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-	<xi:include href="/rhevm-api/Clusters.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-	<xi:include href="/rhevm-api/Networks.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-	<xi:include href="/rhevm-api/Storage_Domains.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-	<xi:include href="/rhevm-api/Hosts.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-	<xi:include href="/rhevm-api/VMs.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-	<xi:include href="/rhevm-api/Templates.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-	<xi:include href="/rhevm-api/VM_Pools.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-	<xi:include href="/rhevm-api/Users_and_Roles.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-	<xi:include href="/rhevm-api/Tags.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-	<xi:include href="/rhevm-api/Revision_History.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="Book_Info.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="Preface.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="Introduction.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="Entry_Point.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="Compatibility_Level_Versions.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="Capabilities.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="Authentication.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="Common_Idioms.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="Data_Centers.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="Clusters.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="Networks.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="Storage_Domains.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="Hosts.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="VMs.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="Templates.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="VM_Pools.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="Users_and_Roles.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="Tags.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="Revision_History.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 </book>
