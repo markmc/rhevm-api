@@ -41,11 +41,11 @@
   </para>
 
   <screen>
-&lt;network id="00000000-0000-0000-0000-000000000009" href="networks/00000000-0000-0000-0000-000000000009"&gt;
+&lt;network id="00000000-0000-0000-0000-000000000009" href="/rhevm-api/networks/00000000-0000-0000-0000-000000000009"&gt;
   &lt;name&gt;rhevm&lt;/name&gt;
   &lt;status&gt;OPERATIONAL&lt;/status&gt;
   &lt;description&gt;Management Network&lt;/description&gt;
-  &lt;data_center id="d70d5e2d-b8ad-494a-a4d2-c7a5631073c4" href="datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4"/&gt;
+  &lt;data_center id="d70d5e2d-b8ad-494a-a4d2-c7a5631073c4" href="/rhevm-api/datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4"/&gt;
 &lt;/network&gt;
   </screen>
 

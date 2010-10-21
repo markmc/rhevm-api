@@ -34,7 +34,7 @@
   </para>
 
   <screen>
-&lt;tag id="f436ebfc-67f2-41bd-8ec6-902b6f7dcb5e" href="tags/f436ebfc-67f2-41bd-8ec6-902b6f7dcb5e"&gt;
+&lt;tag id="f436ebfc-67f2-41bd-8ec6-902b6f7dcb5e" href="/rhevm-api/tags/f436ebfc-67f2-41bd-8ec6-902b6f7dcb5e"&gt;
   &lt;name&gt;Finance&lt;/name&gt;
   &lt;description&gt;Resources for the Finance department&lt;/description&gt;
 &lt;/tag&gt;
@@ -62,7 +62,7 @@
     </para>
 
     <screen>
-POST /vms/0/tags HTTP/1.1
+POST /rhevm-api/vms/0/tags HTTP/1.1
 Accept: application/xml
 Content-Type: application/xml
 
@@ -72,15 +72,15 @@ HTTP/1.1 201 Created
 Location: http://{host}/vms/0/tags/f436ebfc-67f2-41bd-8ec6-902b6f7dcb5e
 Content-Type: application/xml
 
-&lt;tag id="f436ebfc-67f2-41bd-8ec6-902b6f7dcb5e" href="vms/0/tags/f436ebfc-67f2-41bd-8ec6-902b6f7dcb5e"&gt;
+&lt;tag id="f436ebfc-67f2-41bd-8ec6-902b6f7dcb5e" href="/rhevm-api/vms/0/tags/f436ebfc-67f2-41bd-8ec6-902b6f7dcb5e"&gt;
   &lt;name&gt;Finance&lt;/name&gt;
   &lt;description&gt;Resources for the Finance department&lt;/description&gt;
-  &lt;vm id="0" href="vms/0"/&gt;
+  &lt;vm id="0" href="/rhevm-api/vms/0"/&gt;
 &lt;/tag&gt;
     </screen>
 
     <screen>
-DELETE /vms/0/tags/f436ebfc-67f2-41bd-8ec6-902b6f7dcb5e HTTP/1.1
+DELETE /rhevm-api/vms/0/tags/f436ebfc-67f2-41bd-8ec6-902b6f7dcb5e HTTP/1.1
 
 HTTP/1.1 204 No Content
     </screen>
@@ -90,14 +90,14 @@ HTTP/1.1 204 No Content
     </para>
 
     <screen>
-GET /vms?search=tag%3DFinance HTTP/1.1
+GET /rhevm-api/vms?search=tag%3DFinance HTTP/1.1
 Accept: application/xml
 
 HTTP/1.1 200 OK
 Content-Type: application/xml
 
 &lt;vms&gt;
-  &lt;vm id="0" href="vms/0"&gt;
+  &lt;vm id="0" href="/rhevm-api/vms/0"&gt;
     ...
   &lt;/vm&gt;
   ...

@@ -10,7 +10,7 @@
     </para>
 
   <screen>
-&lt;resource id="d9a0e106-9273-4812-bb05-ed75fe1ac652" href="resources/d9a0e106-9273-4812-bb05-ed75fe1ac652"&gt;
+&lt;resource id="d9a0e106-9273-4812-bb05-ed75fe1ac652" href="/rhevm-api/resources/d9a0e106-9273-4812-bb05-ed75fe1ac652"&gt;
   &lt;name&gt;foo&lt;/name&gt;
   &lt;description&gt;This is the foo resource&lt;/description&gt;
 &lt;/resource&gt;
@@ -30,7 +30,7 @@
           </row>
           <row>
             <entry><literal>href</literal></entry>
-            <entry>The canonical location of the resource</entry>
+            <entry>The canonical location of the resource as an absolute path</entry>
           </row>
         </tbody>
       </tgroup>
@@ -67,14 +67,14 @@
     </para>
 
     <screen>
-GET /resources/ HTTP/1.1
+GET /rhevm-api/resources/ HTTP/1.1
 Accept: application/xml
 
 HTTP/1.1 200 OK
 Content-Type: application/xml
 
 &lt;resources&gt;
-  &lt;resource id="{id}" href="resources/{id}"&gt;
+  &lt;resource id="{id}" href="/rhevm-api/resources/{id}"&gt;
     &lt;name&gt;foo&lt;/name&gt;
     &lt;description&gt;The Foo Resource&lt;/description&gt;
     ...
@@ -97,14 +97,14 @@ Content-Type: application/xml
     </para>
 
     <screen>
-GET /resources?search={query} HTTP/1.1
+GET /rhevm-api/resources?search={query} HTTP/1.1
 Accept: application/xml
 
 HTTP/1.1 200 OK
 Content-Type: application/xml
 
 &lt;resources&gt;
-  &lt;resource id="{id}" href="resources/{id}"&gt;
+  &lt;resource id="{id}" href="/rhevm-api/resources/{id}"&gt;
     ...
   &lt;/resource&gt;
   ...
@@ -123,13 +123,13 @@ Content-Type: application/xml
     </para>
 
     <screen>
-GET /resources/{id} HTTP/1.1
+GET /rhevm-api/resources/{id} HTTP/1.1
 Accept: application/xml
 
 HTTP/1.1 200 OK
 Content-Type: application/xml
 
-&lt;resource id="{id}" href="resources/{id}"&gt;
+&lt;resource id="{id}" href="/rhevm-api/resources/{id}"&gt;
   ...
 &lt;/resource&gt;
     </screen>
@@ -150,7 +150,7 @@ Content-Type: application/xml
     </para>
 
     <screen>
-POST /resources HTTP/1.1
+POST /rhevm-api/resources HTTP/1.1
 Accept: application/xml
 Content-Type: application/xml
 
@@ -162,7 +162,7 @@ HTTP/1.1 201 Created
 Location: http://{host}/resources/1234-abcd-6789-ef00
 Content-Type: application/xml
 
-&lt;resource id="1234-abcd-6789-ef00" href="resources/1234-abcd-6789-ef00"&gt;
+&lt;resource id="1234-abcd-6789-ef00" href="/rhevm-api/resources/1234-abcd-6789-ef00"&gt;
   &lt;name&gt;foo&lt;/name&gt;
   ...
 &lt;/resource&gt;
@@ -184,7 +184,7 @@ Content-Type: application/xml
     </para>
 
     <screen>
-PUT /resources/{id} HTTP/1.1
+PUT /rhevm-api/resources/{id} HTTP/1.1
 Accept: application/xml
 Content-Type: application/xml
 
@@ -195,7 +195,7 @@ Content-Type: application/xml
 HTTP/1.1 200 OK
 Content-Type: application/xml
 
-&lt;resource id="..." href="..."&gt;
+&lt;resource id="..." href="/rhevm-api/..."&gt;
   &lt;name&gt;foo&lt;/name&gt;
   ...
 &lt;/resource&gt;
@@ -221,7 +221,7 @@ Content-Type: application/xml
     </para>
 
     <screen>
-DELETE /resources/{id} HTTP/1.1
+DELETE /rhevm-api/resources/{id} HTTP/1.1
 
 HTTP/1.1 204 No Content
     </screen>
@@ -241,8 +241,8 @@ HTTP/1.1 204 No Content
 &lt;resource&gt;
   ...
   &lt;actions&gt;
-    &lt;link rel="frob" href="resources/{id}/frob"/&gt;
-    &lt;link rel="twiddle" href="resources/{id}/twiddle"/&gt;
+    &lt;link rel="frob" href="/rhevm-api/resources/{id}/frob"/&gt;
+    &lt;link rel="twiddle" href="/rhevm-api/resources/{id}/twiddle"/&gt;
     ...
   &lt;/actions&gt;
   ...
@@ -278,7 +278,7 @@ HTTP/1.1 204 No Content
     </para>
 
     <screen>
-POST /resources/{id}/{verb} HTTP/1.1
+POST /rhevm-api/resources/{id}/{verb} HTTP/1.1
 Content-Type: application/xml
 Accept: application/xml
 
@@ -289,7 +289,7 @@ Accept: application/xml
 HTTP/1.1 202 Accept
 Content-Type: application/xml
 
-&lt;action id="{action_id}" href="resources/{id}/{verb}/{action_id}"&gt;
+&lt;action id="{action_id}" href="/rhevm-api/resources/{id}/{verb}/{action_id}"&gt;
   &lt;async&gt;true&lt;/async&gt;
   ...
 &lt;action&gt;
@@ -327,16 +327,16 @@ Content-Type: application/xml
     </para>
 
     <screen>
-GET /resources/{id}/{verb}/{action_id} HTTP/1.1
+GET /rhevm-api/resources/{id}/{verb}/{action_id} HTTP/1.1
 Accept: application/xml
 
 HTTP/1.1 200 OK
 Content-Type: application/xml
 
-&lt;action id="{action_id}" href="resources/{id}/{verb}/{action_id}"&gt;
+&lt;action id="{action_id}" href="/rhevm-api/resources/{id}/{verb}/{action_id}"&gt;
   &lt;status&gt;{PENDING|IN_PROGRESS|COMPLETE|FAILED}&lt;/status&gt;
-  &lt;link rel="parent" href="resources/{id}"/&gt;
-  &lt;link rel="replay" href="resources/{id}/{verb}"/&gt;
+  &lt;link rel="parent" href="/rhevm-api/resources/{id}"/&gt;
+  &lt;link rel="replay" href="/rhevm-api/resources/{id}/{verb}"/&gt;
 &lt;action&gt;
     </screen>
 
@@ -372,7 +372,7 @@ Content-Type: application/xml
     </para>
 
     <screen>
-PUT /resources/{id} HTTP/1.1
+PUT /rhevm-api/resources/{id} HTTP/1.1
 Accept: application/xml
 Content-Type: application/xml
 

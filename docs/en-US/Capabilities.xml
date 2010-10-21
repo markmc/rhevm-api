@@ -37,7 +37,7 @@
   </para>
 
   <screen>
-GET /capabilities HTTP/1.1
+GET /rhevm-api/capabilities HTTP/1.1
 Accept: application/xml
 
 HTTP/1.1 200 OK

@@ -41,12 +41,12 @@
   </para>
 
   <screen>
-&lt;data_center id="d70d5e2d-b8ad-494a-a4d2-c7a5631073c4" href="datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4"&gt;
+&lt;data_center id="d70d5e2d-b8ad-494a-a4d2-c7a5631073c4" href="/rhevm-api/datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4"&gt;
   &lt;name&gt;Default&lt;/name&gt;
   &lt;description&gt;The default Data Center&lt;/description&gt;
   &lt;storage_type&gt;NFS&lt;/storage_type&gt;
-  &lt;link rel="storagedomains" href="datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/storagedomains"/&gt;
-  &lt;link rel="isos" href="datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/isos"/&gt;
+  &lt;link rel="storagedomains" href="/rhevm-api/datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/storagedomains"/&gt;
+  &lt;link rel="isos" href="/rhevm-api/datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/isos"/&gt;
   &lt;version major="2" minor="1"/&gt;
   &lt;supported_versions&gt;
     &lt;version major="2" minor="2"/&gt;
@@ -76,7 +76,7 @@
     </para>
 
     <screen>
-POST /datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/storagedomains HTTP/1.1
+POST /rhevm-api/datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/storagedomains HTTP/1.1
 Content-type: application/xml
 
 &lt;storage_domain id="fabe0451-701f-4235-8f7e-e20e458819ed"/&gt;
@@ -85,7 +85,7 @@ HTTP/1.1 201 Created
 Location: /datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed
 Content-Type: application/xml
 
-&lt;storage_domain id="fabe0451-701f-4235-8f7e-e20e458819ed" href="datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed"&gt;
+&lt;storage_domain id="fabe0451-701f-4235-8f7e-e20e458819ed" href="/rhevm-api/datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed"&gt;
   &lt;name&gt;images0&lt;/name&gt;
   &lt;type&gt;DATA&lt;/type&gt;
   &lt;status&gt;INACTIVE&lt;/status&gt;
@@ -95,10 +95,10 @@ Content-Type: application/xml
     &lt;address&gt;172.31.0.6&lt;/address&gt;
     &lt;path&gt;/exports/RHEVX/images/0&lt;/path&gt;
   &lt;/storage&gt;
-  &lt;data_center id="d70d5e2d-b8ad-494a-a4d2-c7a5631073c4" href="datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4"/&gt;
+  &lt;data_center id="d70d5e2d-b8ad-494a-a4d2-c7a5631073c4" href="/rhevm-api/datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4"/&gt;
   &lt;actions&gt;
-    &lt;link rel="activate" href="datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/activate"/&gt;
-    &lt;link rel="deactivate" href="datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/deactivate"/&gt;
+    &lt;link rel="activate" href="/rhevm-api/datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/activate"/&gt;
+    &lt;link rel="deactivate" href="/rhevm-api/datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/deactivate"/&gt;
   &lt;/actions&gt;
 &lt;/storage_domain&gt;
     </screen>
@@ -118,11 +118,11 @@ Content-Type: application/xml
     </para>
 
     <screen>
-GET /datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/isos HTTP/1.1
+GET /rhevm-api/datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/isos HTTP/1.1
 Accept: application/xml
 
 &lt;isos&gt;
-  &lt;iso id="en_winxp_pro_with_sp2.iso" href="datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/isos/en_winxp_pro_with_sp2.iso"&gt;
+  &lt;iso id="en_winxp_pro_with_sp2.iso" href="/rhevm-api/datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/isos/en_winxp_pro_with_sp2.iso"&gt;
     &lt;name&gt;en_winxp_pro_with_sp2.iso&lt;/name&gt;
   &lt;/iso&gt;
 &lt;/isos&gt;

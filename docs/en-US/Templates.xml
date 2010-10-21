@@ -62,7 +62,7 @@
   </para>
 
   <screen>
-&lt;template id="00000000-0000-0000-0000-000000000000" href="templates/00000000-0000-0000-0000-000000000000"&gt;
+&lt;template id="00000000-0000-0000-0000-000000000000" href="/rhevm-api/templates/00000000-0000-0000-0000-000000000000"&gt;
   &lt;name&gt;Blank&lt;/name&gt;
   &lt;description&gt;Blank template&lt;/description&gt;
   &lt;type&gt;SERVER&lt;/type&gt;
@@ -74,7 +74,7 @@
   &lt;os&gt;
     &lt;boot dev="hd"/&gt;
   &lt;/os&gt;
-  &lt;cluster id="0" href="clusters/0"/&gt;
+  &lt;cluster id="0" href="/rhevm-api/clusters/0"/&gt;
   &lt;actions/&gt;
 &lt;/template&gt;
   </screen>

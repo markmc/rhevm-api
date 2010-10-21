@@ -19,15 +19,15 @@ Link: &lt;http://{host}/{base}/hosts&gt;; rel=hosts, &lt;http://{host}/{base}/vm
 Content-Type: application/xml
 
 &lt;api&gt;
-  &lt;link rel="hosts" href="hosts"/&gt;
-  &lt;link rel="vms" href="vms"/&gt;
+  &lt;link rel="hosts" href="{base}/hosts"/&gt;
+  &lt;link rel="vms" href="{base}/vms"/&gt;
   ...
 &lt;/api&gt;
   </screen>
 
   <note>
     <para>
-      For simplicity, in all other examples we omit the <literal>Host</literal> request header and assume <varname>{base}</varname> is <literal>/</literal>.
+      For simplicity, in all other examples we omit the <literal>Host</literal> request header and assume <varname>{base}</varname> is <literal>/rhevm-api</literal>. This base path will differ depending on the implementation, for example it is <literal>/rhevm-api-powershell</literal> for the PowerShell-based implementation.
     </para>
   </note>
 
@@ -116,7 +116,13 @@ Content-Type: application/xml
       All URIs shown in example responses are purely illustrative. The format of all URIs returned by the server is opaque and may change in future versions. Clients must navigate to any specific resources via the entry point URI.
     </para>
     <para>
-      Also, any relative URIs returned by the server are relative to <varname>{base}</varname>. The server may choose to return absolute or relative URIs and clients should be prepared to handle both. <literal>Link</literal> headers will only contain absolute URIs.
+      The server may choose to include absolute URIs or absolute paths
+    <footnote>
+      <para>
+        The RFC describing Uniform Resource Locator Generic Syntax provides a <ulink url="http://tools.ietf.org/html/rfc3986#appendix-A">Collected ABNF for URI</ulink> that explains the difference between these forms. 
+      </para>
+    </footnote>
+      in the <literal>link</literal> element <literal>href</literal> attribute, so clients should be prepared to handle either form. <literal>Link</literal> headers will only contain absolute URIs.
     </para>
   </note>
 

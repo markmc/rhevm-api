@@ -60,7 +60,7 @@
   </para>
 
   <screen>
-&lt;storage_domain id="fabe0451-701f-4235-8f7e-e20e458819ed" href="storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed"&gt;
+&lt;storage_domain id="fabe0451-701f-4235-8f7e-e20e458819ed" href="/rhevm-api/storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed"&gt;
   &lt;name&gt;images0&lt;/name&gt;
   &lt;type&gt;DATA&lt;/type&gt;
   &lt;status&gt;ACTIVE&lt;/status&gt;
@@ -129,7 +129,7 @@
     </para>
 
     <screen>
-POST /storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/teardown HTTP/1.1
+POST /rhevm-api/storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/teardown HTTP/1.1
 Content-type: application/xml
 
 &lt;action&gt;
@@ -153,7 +153,7 @@ Content-type: application/xml
     </para>
 
     <screen>
-POST /datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/activate HTTP/1.1
+POST /rhevm-api/datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/activate HTTP/1.1
 Content-type: application/xml
     </screen>
 
@@ -169,7 +169,7 @@ Content-type: application/xml
     </para>
 
     <screen>
-POST /datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/deactivate HTTP/1.1
+POST /rhevm-api/datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/deactivate HTTP/1.1
 Content-type: application/xml
     </screen>
 

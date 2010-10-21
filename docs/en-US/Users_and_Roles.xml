@@ -44,7 +44,7 @@
     </para>
 
     <screen>
-GET /roles HTTP/1.1
+GET /rhevm-api/roles HTTP/1.1
 Accept: application/xml
 
 HTTP/1.1 200 OK
@@ -52,22 +52,22 @@ Content-Type: application/xml
 
 &lt;roles&gt;
   &lt;role id="00000000-0000-0000-0000-000000000001"
-        href="roles/00000000-0000-0000-0000-000000000001"&gt;
+        href="/rhevm-api/roles/00000000-0000-0000-0000-000000000001"&gt;
     &lt;name&gt;SuperUser&lt;/name&gt;
     &lt;description&gt;Roles management administrator&lt;/description&gt;
   &lt;/role&gt;
   &lt;role id="00000000-0000-0000-0001-000000000001"
-        href="roles/00000000-0000-0000-0001-000000000001"&gt;
+        href="/rhevm-api/roles/00000000-0000-0000-0001-000000000001"&gt;
     &lt;name&gt;RHEVMUser&lt;/name&gt;
     &lt;description&gt;RHEVM user&lt;/description&gt;
   &lt;/role&gt;
   &lt;role id="00000000-0000-0000-0001-000000000002"
-        href="roles/00000000-0000-0000-0001-000000000002"&gt;
+        href="/rhevm-api/roles/00000000-0000-0000-0001-000000000002"&gt;
     &lt;name&gt;RHEVMPowerUser&lt;/name&gt;
     &lt;description&gt;RHEVM power user&lt;/description&gt;
   &lt;/role&gt;
   &lt;role id="00000000-0000-0000-0001-000000000003"
-        href="roles/00000000-0000-0000-0001-000000000003"&gt;
+        href="/rhevm-api/roles/00000000-0000-0000-0001-000000000003"&gt;
     &lt;name&gt;RHEVMVDIUser&lt;/name&gt;
     &lt;description&gt;RHEVM VDI user&lt;/description&gt;
   &lt;/role&gt;
@@ -134,15 +134,15 @@ Content-Type: application/xml
     </para>
 
     <screen>
-GET /users HTTP/1.1
+GET /rhevm-api/users HTTP/1.1
 Accept: application/xml
 
 &lt;users>
-  &lt;user id="225f15cd-e891-434d-8262-a66808fcb9b1" href="users/225f15cd-e891-434d-8262-a66808fcb9b1"&gt;
+  &lt;user id="225f15cd-e891-434d-8262-a66808fcb9b1" href="/rhevm-api/users/225f15cd-e891-434d-8262-a66808fcb9b1"&gt;
     &lt;name&gt;RHEV-M Admin&lt;/name&gt;
     &lt;actions/&gt;
-    &lt;link rel="roles" href="users/225f15cd-e891-434d-8262-a66808fcb9b1/roles"/&gt;
-    &lt;link rel="tags" href="users/225f15cd-e891-434d-8262-a66808fcb9b1/tags"/&gt;
+    &lt;link rel="roles" href="/rhevm-api/users/225f15cd-e891-434d-8262-a66808fcb9b1/roles"/&gt;
+    &lt;link rel="tags" href="/rhevm-api/users/225f15cd-e891-434d-8262-a66808fcb9b1/tags"/&gt;
     &lt;domain&gt;black.qumranet.com&lt;/domain&gt;
     &lt;logged_in&gt;false&lt;/logged_in&gt;
     &lt;user_name&gt;rhevmadmin@black.qumranet.com&lt;/user_name&gt;
@@ -162,7 +162,7 @@ Accept: application/xml
     </para>
 
     <screen>
-POST /users HTTP/1.1
+POST /rhevm-api/users HTTP/1.1
 Content-Type: application/xml
 Accept: application/xml
 
@@ -208,7 +208,7 @@ Accept: application/xml
     </note>
 
     <screen>
-POST /users/225f15cd-e891-434d-8262-a66808fcb9b1/roles HTTP/1.1
+POST /rhevm-api/users/225f15cd-e891-434d-8262-a66808fcb9b1/roles HTTP/1.1
 Content-Type: application/xml
 Accept: application/xml
 
