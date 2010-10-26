@@ -337,6 +337,14 @@ public class LinkHelperTest extends Assert {
         assertEquals(HOST_HREF, storage.getHost().getHref());
     }
 
+    @Test
+    public void testCombine() throws Exception {
+		assertEquals("/foo/bar", LinkHelper.combine("/foo", "bar"));
+		assertEquals("/foo/bar", LinkHelper.combine("/foo/", "bar"));
+		assertEquals("/foo/bar", LinkHelper.combine("/foo/", "/bar"));
+		assertEquals("/foo/bar", LinkHelper.combine("/foo", "/bar"));
+    }
+
     private UriInfo setUpUriExpectations() {
         UriInfo uriInfo = createMock(UriInfo.class);
         expect(uriInfo.getBaseUri()).andReturn(URI.create(URI_ROOT + BASE_PATH)).anyTimes();

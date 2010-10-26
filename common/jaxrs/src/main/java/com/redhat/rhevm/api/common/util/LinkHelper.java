@@ -423,6 +423,22 @@ public class LinkHelper {
         return model;
     }
 
+    /**
+     * Combine head and tail portions of a URI path.
+     *
+     * @param head the path head
+     * @param tail the path tail
+     * @return the combined head and tail
+     */
+    public static String combine(String head, String tail) {
+        if (head.endsWith("/")) {
+            head = head.substring(0, head.length() - 1);
+        }
+        if (tail.startsWith("/")) {
+            tail = tail.substring(1);
+        }
+        return head + "/" + tail;
+    }
 
     /**
      * A #Map sub-class which maps a model type (e.g. Tag.class) to a

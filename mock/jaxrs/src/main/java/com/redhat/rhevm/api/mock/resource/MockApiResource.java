@@ -30,6 +30,8 @@ import com.redhat.rhevm.api.model.ObjectFactory;
 import com.redhat.rhevm.api.resource.ApiResource;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 
+import static com.redhat.rhevm.api.common.util.LinkHelper.combine;
+
 public class MockApiResource implements ApiResource {
 
     private static final String SEARCH_RELATION = "/search";
@@ -130,16 +132,6 @@ public class MockApiResource implements ApiResource {
     public Response get() {
         API api = addLinks(new API());
         return getResponseBuilder(api).entity(api).build();
-    }
-
-    private String combine(String head, String tail) {
-        if (head.endsWith("/")) {
-            head = head.substring(0, head.length() - 1);
-        }
-        if (tail.startsWith("/")) {
-            tail = tail.substring(1);
-        }
-        return head + "/" + tail;
     }
 
     private String relative(Link link) {
