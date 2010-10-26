@@ -891,7 +891,6 @@
 
   <xs:complexType name="MemoryStatistics">
     <xs:sequence>
-      <xs:element name="size" type="xs:unsignedInt" minOccurs="0" maxOccurs="1"/>
       <xs:element name="utilization" type="xs:unsignedInt" minOccurs="0" maxOccurs="1"/>
     </xs:sequence>
   </xs:complexType>

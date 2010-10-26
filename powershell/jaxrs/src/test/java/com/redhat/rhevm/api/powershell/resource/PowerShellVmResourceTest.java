@@ -392,7 +392,6 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
         assertEquals(Integer.valueOf(1), vm.getDisplay().getMonitors());
         assertTrue(vm.getDisplay().getPort() == null || vm.getDisplay().getPort() != -1);
         assertTrue(vm.isSetMemoryStatistics());
-        assertEquals(Long.valueOf(1024L), vm.getMemoryStatistics().getSize());
         assertEquals(Long.valueOf(50L), vm.getMemoryStatistics().getUtilization());
         assertTrue(vm.isSetCpuStatistics());
         assertEquals(BigDecimal.valueOf(10L), vm.getCpuStatistics().getUser());

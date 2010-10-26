@@ -202,7 +202,6 @@ public class PowerShellVM extends VM {
         if (!vm.isSetMemoryStatistics()) {
             vm.setMemoryStatistics(new MemoryStatistics());
         }
-        vm.getMemoryStatistics().setSize((long)entity.get("memsizemb", Integer.class));
         vm.getMemoryStatistics().setUtilization((long)entity.get("usagemempercent", Integer.class));
     }
 
