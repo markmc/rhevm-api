@@ -54,6 +54,12 @@ public class PowerShellVmTest extends PowerShellModelTest {
         assertEquals(BigDecimal.valueOf(20L), v.getCpuStatistics().getSystem());
         assertEquals(BigDecimal.valueOf(30L), v.getCpuStatistics().getIdle());
         assertEquals(BigDecimal.valueOf(40L), v.getCpuStatistics().getLoad());
+        if (hostId != null) {
+            assertTrue(v.isSetHost());
+            assertEquals(hostId, v.getHost().getId());
+        } else {
+            assertFalse(v.isSetHost());
+        }
     }
 
     private void testBootDevices(VM vm, BootDevice ... bootDevices) {

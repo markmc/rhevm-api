@@ -98,10 +98,14 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     }
 
     protected String formatVm(String type, String name) {
+        return formatVm(type, name, PowerShellVmsResourceTest.extraArgs);
+    }
+
+    protected String formatVm(String type, String name, String[] extraArgs) {
         return formatXmlReturn(type,
                                new String[] { name },
                                new String[] { "" },
-                               PowerShellVmsResourceTest.extraArgs);
+                               extraArgs);
     }
 
     @Test
@@ -118,6 +122,16 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
                                        formatVm("vm22", VM_NAME),
                                        VM_NAME));
         verifyVM(resource.get(), VM_NAME);
+    }
+
+    @Test
+    public void testGet22NoHost() throws Exception {
+        setUriInfo(setUpVmExpectations("get-vm \"" + VM_ID + "\"" + GET_STATS,
+                                       formatVm("vm22",
+                                                VM_NAME,
+                                                PowerShellVmsResourceTest.noHostArgs),
+                                       VM_NAME));
+        verifyVM(resource.get(), VM_NAME, false);
     }
 
     @Test
@@ -384,6 +398,10 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     }
 
     private void verifyVM(VM vm, String name) {
+        verifyVM(vm, name, true);
+    }
+
+    private void verifyVM(VM vm, String name, boolean hostExpected) {
         assertNotNull(vm);
         assertEquals(Integer.toString(name.hashCode()), vm.getId());
         assertEquals(name, vm.getName());
@@ -398,6 +416,11 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
         assertEquals(BigDecimal.valueOf(20L), vm.getCpuStatistics().getSystem());
         assertEquals(BigDecimal.valueOf(30L), vm.getCpuStatistics().getIdle());
         assertEquals(BigDecimal.valueOf(40L), vm.getCpuStatistics().getLoad());
+        if (hostExpected) {
+            assertTrue(vm.isSetHost());
+        } else {
+            assertFalse(vm.isSetHost());
+        }
         verifyLinks(vm);
     }
 

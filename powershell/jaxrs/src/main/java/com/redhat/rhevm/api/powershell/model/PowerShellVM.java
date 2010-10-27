@@ -162,7 +162,7 @@ public class PowerShellVM extends VM {
         }
         vm.setOs(os);
 
-        Object hostId = entity.get("runningonhost", String.class, Integer.class).toString();
+        Object hostId = entity.get("runningonhost", String.class, Integer.class);
         if (!isEmptyId(hostId)) {
             Host host = new Host();
             host.setId(hostId.toString());
@@ -177,7 +177,7 @@ public class PowerShellVM extends VM {
         template.setId(entity.get("templateid"));
         vm.setTemplate(template);
 
-        Object poolId = entity.get("poolid", String.class, Integer.class).toString();
+        Object poolId = entity.get("poolid", String.class, Integer.class);
         if (!isEmptyId(poolId)) {
             VmPool pool = new VmPool();
             pool.setId(poolId.toString());

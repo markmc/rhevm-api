@@ -46,6 +46,8 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
 
     public static final String[] extraArgs = new String[] { CLUSTER_ID, TEMPLATE_ID, Integer.toString(MEMSIZE), Integer.toString(BOOTSEQUENCE), Integer.toString(N_SOCKETS), Integer.toString(N_CPUS), ISO_NAME, HOST_ID, POOL_ID };
 
+    public static final String[] noHostArgs = new String[] { CLUSTER_ID, TEMPLATE_ID, Integer.toString(MEMSIZE), Integer.toString(BOOTSEQUENCE), Integer.toString(N_SOCKETS), Integer.toString(N_CPUS), ISO_NAME, "-1", POOL_ID };
+
     private static final String ADD_COMMAND_PROLOG =
         "$templ = get-template -templateid \"" + TEMPLATE_ID + "\";";
     private static final String ADD_COMMAND_EPILOG =
