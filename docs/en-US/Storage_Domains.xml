@@ -134,6 +134,42 @@
 
   </section>
 
+  <section id="sect-REST_API_Guide-Storage_Domains-Import_Existing">
+    <title>
+      Importing Existing Storage Domains
+    </title>
+
+    <para>
+      As a special case, you may remove an ISO or Export storage domain from one RHEV-M instance (without re-formatting the underlying storage) and import it into another instance. Importing is achieved similarly to adding a new storage domain, except that the <literal>name</literal> is ignored and not required.
+    </para>
+
+    <screen>
+POST /rhevm-api/storagedomains HTTP/1.1
+Accept: application/xml
+Content-Type: application/xml
+
+&lt;storage_domain&gt;
+  &lt;type&gt;EXPORT&lt;/type&gt;
+  &lt;storage&gt;
+    &lt;type&gt;NFS&lt;/type&gt;
+    &lt;address&gt;172.31.0.6&lt;/address&gt;
+    &lt;path&gt;/exports/RHEVX/export-domain&lt;/path&gt;
+  &lt;/storage&gt;
+  &lt;host id="0"/&gt;
+&lt;/storage_domain&gt;
+
+HTTP/1.1 201 Created
+Location: http://{host}/storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed
+Content-Type: application/xml
+
+&lt;storage_domain id="fabe0451-701f-4235-8f7e-e20e458819ed" href="/rhevm-api/storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed"&gt;
+  &lt;name&gt;export1&lt;/name&gt;
+  ...
+&lt;/storage_domain&gt;
+    </screen>
+
+  </section>
+
   <section id="sect-REST_API_Guide-Storage_Domains-Teardown">
     <title>
       Teardown Action
