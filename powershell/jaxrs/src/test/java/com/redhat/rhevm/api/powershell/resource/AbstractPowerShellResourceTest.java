@@ -135,6 +135,11 @@ public abstract class AbstractPowerShellResourceTest<R /* extends BaseResource *
         assertNotNull(action.getId());
         assertNotNull(action.getLink());
         assertEquals(async, action.isAsync());
+        if (action.getStatus() == Status.FAILED && reason == null) {
+            assertNotNull(action.getFault());
+            System.out.println(action.getStatus() + " : " + action.getFault().getReason());
+            System.out.println(action.getFault().getDetail());
+        }
         assertTrue("unexpected status", async
                    ? action.getStatus().equals(Status.PENDING)
                      || action.getStatus().equals(Status.IN_PROGRESS)
