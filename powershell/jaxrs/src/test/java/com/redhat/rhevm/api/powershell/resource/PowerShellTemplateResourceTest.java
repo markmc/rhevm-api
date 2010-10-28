@@ -22,11 +22,14 @@ import java.net.URI;
 import java.util.concurrent.Executor;
 
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
+import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Fault;
+import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.Template;
 
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
@@ -48,10 +51,17 @@ public class PowerShellTemplateResourceTest extends AbstractPowerShellResourceTe
     private static final String TEMPLATE_ID = Integer.toString(TEMPLATE_NAME.hashCode());
     private static final String TEMPLATE_DESCRIPTION = "this is a template";
     private static final String NEW_NAME = "eris";
+    private static final String STORAGE_DOMAIN_NAME = "xtratime";
+    private static final String STORAGE_DOMAIN_ID = Integer.toString(STORAGE_DOMAIN_NAME.hashCode());
     private static final String BAD_ID = "98765";
 
     private static final String GET_COMMAND = "get-template -templateid \"" + TEMPLATE_ID + "\"";
     private static final String UPDATE_COMMAND = "$t = get-template \"" + TEMPLATE_ID + "\";$t.name = \"" + NEW_NAME + "\";update-template -templateobject $t";
+
+    private static final String EXPORT_COMMAND = "$dest = select-storagedomain | ? { $_.domaintype -eq \"Export\" }; export-template -templateid \"" + TEMPLATE_ID + "\" -storagedomainid $dest.storagedomainid -forceoverride";
+    private static final String EXPORT_WITH_PARAMS_COMMAND = "$dest = select-storagedomain | ? { $_.domaintype -eq \"Export\" }; export-template -templateid \"" + TEMPLATE_ID + "\" -storagedomainid $dest.storagedomainid";
+    private static final String EXPORT_WITH_STORAGE_DOMAIN_COMMAND = "export-template -templateid \"" + TEMPLATE_ID + "\" -storagedomainid \"" + STORAGE_DOMAIN_ID + "\" -forceoverride";
+    private static final String EXPORT_WITH_NAMED_STORAGE_DOMAIN_COMMAND = "$dest = select-storagedomain | ? { $_.name -eq \"" + STORAGE_DOMAIN_NAME + "\" }; export-template -templateid \"" + TEMPLATE_ID + "\" -storagedomainid $dest.storagedomainid -forceoverride";
 
     protected PowerShellTemplateResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider) {
         return new PowerShellTemplateResource(TEMPLATE_ID, executor, uriProvider, poolMap, parser);
@@ -86,6 +96,47 @@ public class PowerShellTemplateResourceTest extends AbstractPowerShellResourceTe
         } catch (WebApplicationException wae) {
             verifyUpdateException(wae);
         }
+    }
+
+    @Test
+    public void testExport() throws Exception {
+        Action action = getAction();
+        setUriInfo(setUpActionExpectation("export", EXPORT_COMMAND));
+        verifyActionResponse(resource.export(action));
+    }
+
+    @Test
+    public void testExportWithParams() throws Exception {
+        Action action = getAction();
+        action.setExclusive(true);
+        setUriInfo(setUpActionExpectation("export", EXPORT_WITH_PARAMS_COMMAND));
+        verifyActionResponse(resource.export(action));
+    }
+
+    @Test
+    public void testExportWithStorageDomain() throws Exception {
+        Action action = getAction();
+        action.setStorageDomain(new StorageDomain());
+        action.getStorageDomain().setId(STORAGE_DOMAIN_ID);
+        setUriInfo(setUpActionExpectation("export", EXPORT_WITH_STORAGE_DOMAIN_COMMAND));
+        verifyActionResponse(resource.export(action));
+    }
+
+    @Test
+    public void testExportWithNamedStorageDomain() throws Exception {
+        Action action = getAction();
+        action.setStorageDomain(new StorageDomain());
+        action.getStorageDomain().setName(STORAGE_DOMAIN_NAME);
+        setUriInfo(setUpActionExpectation("export", EXPORT_WITH_NAMED_STORAGE_DOMAIN_COMMAND));
+        verifyActionResponse(resource.export(action));
+    }
+
+    private UriInfo setUpActionExpectation(String verb, String command) throws Exception {
+        return setUpActionExpectation("/templates/" + TEMPLATE_ID + "/", verb, command, null);
+    }
+
+    private void verifyActionResponse(Response r) throws Exception {
+        verifyActionResponse(r, "templates/" + TEMPLATE_ID, false);
     }
 
     private UriInfo setUpTemplateExpectations(String command, String ret) throws Exception {

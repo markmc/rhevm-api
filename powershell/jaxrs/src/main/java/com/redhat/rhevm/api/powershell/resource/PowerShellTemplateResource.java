@@ -21,8 +21,10 @@ package com.redhat.rhevm.api.powershell.resource;
 import java.util.List;
 import java.util.concurrent.Executor;
 
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.CpuTopology;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.Template;
@@ -39,6 +41,7 @@ import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
+import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
 
 public class PowerShellTemplateResource extends AbstractPowerShellActionableResource<Template> implements TemplateResource {
 
@@ -129,6 +132,38 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
         buf.append("update-template -templateobject $t");
 
         return addLinks(getUriInfo(), runAndParseSingle(buf.toString()));
+    }
+
+    @Override
+    public Response export(Action action) {
+        StringBuilder buf = new StringBuilder();
+
+        String storageDomainArg;
+        if (action.isSetStorageDomain()) {
+            validateParameters(action, "storageDomain.id|name");
+            if (action.getStorageDomain().isSetId()) {
+                storageDomainArg = PowerShellUtils.escape(action.getStorageDomain().getId());
+            } else {
+                buf.append("$dest = select-storagedomain ");
+                buf.append("| ? { $_.name -eq ");
+                buf.append(PowerShellUtils.escape(action.getStorageDomain().getName()));
+                buf.append(" }; ");
+                storageDomainArg = "$dest.storagedomainid";
+            }
+        } else {
+            buf.append("$dest = select-storagedomain | ? { $_.domaintype -eq \"Export\" }; ");
+            storageDomainArg = "$dest.storagedomainid";
+        }
+
+        buf.append("export-template");
+        buf.append(" -templateid " + PowerShellUtils.escape(getId()));
+        buf.append(" -storagedomainid " + storageDomainArg);
+
+        if (!action.isSetExclusive() || !action.isExclusive()) {
+            buf.append(" -forceoverride");
+        }
+
+        return doAction(getUriInfo(), new CommandRunner(action, buf.toString(), getPool()));
     }
 
     public class CdRomQuery extends PowerShellCdRomsResource.CdRomQuery {

@@ -20,7 +20,9 @@ package com.redhat.rhevm.api.mock.resource;
 
 import java.util.concurrent.Executor;
 
+import javax.ws.rs.core.Response;
 
+import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.resource.DevicesResource;
 import com.redhat.rhevm.api.resource.TemplateResource;
@@ -66,6 +68,11 @@ public class MockTemplateResource extends AbstractMockResource<Template> impleme
         validateUpdate(template);
         updateModel(template);
         return addLinks();
+    }
+
+    @Override
+    public Response export(Action action) {
+        return null;
     }
 
     @Override public DevicesResource getCdRomsResource() { return null; }

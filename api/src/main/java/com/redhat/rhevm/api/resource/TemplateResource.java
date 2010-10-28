@@ -18,9 +18,16 @@
  */
 package com.redhat.rhevm.api.resource;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
+import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
+import com.redhat.rhevm.api.model.Actionable;
+import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.CdRom;
 import com.redhat.rhevm.api.model.CdRoms;
 import com.redhat.rhevm.api.model.Disk;
@@ -29,9 +36,18 @@ import com.redhat.rhevm.api.model.NIC;
 import com.redhat.rhevm.api.model.Nics;
 import com.redhat.rhevm.api.model.Template;
 
-
 @Produces(MediaType.APPLICATION_XML)
 public interface TemplateResource extends UpdatableResource<Template> {
+
+    @Path("{action: (export)}/{oid}")
+    public ActionResource getActionSubresource(@PathParam("action") String action, @PathParam("oid") String oid);
+
+    @POST
+    @Formatted
+    @Consumes(MediaType.APPLICATION_XML)
+    @Actionable
+    @Path("export")
+    public Response export(Action action);
 
     @Path("cdroms")
     public ReadOnlyDevicesResource<CdRom, CdRoms> getCdRomsResource();
