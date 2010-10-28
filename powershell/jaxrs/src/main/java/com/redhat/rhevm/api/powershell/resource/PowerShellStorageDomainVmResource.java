@@ -20,7 +20,12 @@ package com.redhat.rhevm.api.powershell.resource;
 
 import java.util.concurrent.Executor;
 
+import javax.ws.rs.core.Response;
+
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
+import com.redhat.rhevm.api.model.Action;
+import com.redhat.rhevm.api.model.DataCenter;
+import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
@@ -59,5 +64,20 @@ public class PowerShellStorageDomainVmResource
         buf.append(" }");
 
         return parent.addLinks(getUriInfo(), parent.runAndParseSingle(buf.toString()));
+    }
+
+    @Override
+    protected VM getModel() {
+        VM vm = super.getModel();
+        vm.setStorageDomain(new StorageDomain());
+        vm.getStorageDomain().setId(getStorageDomainId());
+        vm.getStorageDomain().setDataCenter(new DataCenter());
+        vm.getStorageDomain().getDataCenter().setId(getDataCenterId());
+        return vm;
+    }
+
+    @Override
+    public Response doImport(Action action) {
+        return doImport(action, "vm");
     }
 }

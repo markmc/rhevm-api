@@ -54,6 +54,9 @@ public abstract class AbstractPowerShellStorageDomainContentsResourceTest<C exte
 
     protected static final String STORAGE_DOMAIN_URI = BASE_PATH + SLASH + "datacenters" + SLASH + DATA_CENTER_ID + SLASH + "storagedomains" + SLASH + STORAGE_DOMAIN_ID;
 
+    protected static final String IMPORT_CLUSTER_ID = asId("seapoint");
+    protected static final String IMPORT_DEST_DOMAIN_ID = asId("blackrock");
+
     protected A getResource(Executor executor,
                             PowerShellPoolMap poolMap,
                             PowerShellParser parser,

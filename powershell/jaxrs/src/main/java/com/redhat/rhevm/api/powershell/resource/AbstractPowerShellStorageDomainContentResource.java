@@ -20,11 +20,19 @@ package com.redhat.rhevm.api.powershell.resource;
 
 import java.util.concurrent.Executor;
 
+import javax.ws.rs.core.Response;
+
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
+import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.BaseResource;
+import com.redhat.rhevm.api.model.Cluster;
+import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
+import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 import com.redhat.rhevm.api.resource.StorageDomainContentResource;
+
+import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
 
 public abstract class AbstractPowerShellStorageDomainContentResource<R extends BaseResource>
     extends AbstractPowerShellActionableResource<R> {
@@ -47,5 +55,49 @@ public abstract class AbstractPowerShellStorageDomainContentResource<R extends B
 
     public String getDataCenterId() {
         return parent.getDataCenterId();
+    }
+
+    protected Response doImport(Action action, String type) {
+        validateParameters(action, "cluster.id|name", "storageDomain.id|name");
+
+        StringBuilder buf = new StringBuilder();
+
+        String clusterArg = getClusterArg(buf, action.getCluster());
+        String destDomainArg = getDestDomainArg(buf, action.getStorageDomain());
+
+        buf.append("import-" + type);
+        buf.append(" -datacenterid " + PowerShellUtils.escape(getDataCenterId()));
+        buf.append(" -sourcedomainid " + PowerShellUtils.escape(getStorageDomainId()));
+        buf.append(" -destdomainid " + destDomainArg);
+        buf.append(" -clusterid " + clusterArg);
+        buf.append(" -" + type + "id " + PowerShellUtils.escape(getId()));
+
+        return doAction(getUriInfo(), new CommandRunner(action, buf.toString(), getPool()));
+    }
+
+    protected String getClusterArg(StringBuilder buf, Cluster cluster) {
+        String ret;
+        if (cluster.isSetId()) {
+            ret = PowerShellUtils.escape(cluster.getId());
+        } else {
+            buf.append("$c = select-cluster -searchtext ");
+            buf.append(PowerShellUtils.escape("name=" + cluster.getName()));
+            buf.append("; ");
+            ret = "$c.clusterid";
+        }
+        return ret;
+    }
+
+    protected String getDestDomainArg(StringBuilder buf, StorageDomain destDomain) {
+        String ret;
+        if (destDomain.isSetId()) {
+            ret = PowerShellUtils.escape(destDomain.getId());
+        } else {
+            buf.append("$d = select-storagedomain -searchtext ");
+            buf.append(PowerShellUtils.escape("name=" + destDomain.getName()));
+            buf.append("; ");
+            ret = "$d.storagedomainid";
+        }
+        return ret;
     }
 }

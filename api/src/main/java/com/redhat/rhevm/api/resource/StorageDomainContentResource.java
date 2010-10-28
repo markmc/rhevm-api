@@ -18,16 +18,34 @@
  */
 package com.redhat.rhevm.api.resource;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
+import com.redhat.rhevm.api.model.Action;
+import com.redhat.rhevm.api.model.Actionable;
 import com.redhat.rhevm.api.model.BaseResource;
+import com.redhat.rhevm.api.resource.ActionResource;
 
 @Produces(MediaType.APPLICATION_XML)
 public interface StorageDomainContentResource<R extends BaseResource> {
 
+    @Path("{action: (import)}/{oid}")
+    public ActionResource getActionSubresource(@PathParam("action") String action, @PathParam("oid") String oid);
+
     @GET
     @Formatted
     public R get();
+
+    @POST
+    @Formatted
+    @Consumes(MediaType.APPLICATION_XML)
+    @Actionable
+    @Path("import")
+    public Response doImport(Action action);
 }

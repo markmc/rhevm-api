@@ -18,6 +18,13 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+
+import com.redhat.rhevm.api.model.Action;
+import com.redhat.rhevm.api.model.Cluster;
+import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
@@ -35,6 +42,8 @@ public class PowerShellStorageDomainVmsResourceTest
     private static final String GET_VMS_COMMAND = "$sd = get-storagedomain \"" + STORAGE_DOMAIN_ID + "\"; if ($sd.domaintype -eq \"Data\") { get-vm -storagedomainid \"" + STORAGE_DOMAIN_ID + "\" } elseif ($sd.domaintype -eq \"Export\") { get-vmimportcandidates -showall -datacenterid \"" + DATA_CENTER_ID + "\" -storagedomainid \"" + STORAGE_DOMAIN_ID + "\" }";
 
     private static final String GET_VM_COMMAND = "$sd = get-storagedomain \"" + STORAGE_DOMAIN_ID + "\"; if ($sd.domaintype -eq \"Data\") { get-vm -vmid \"" + asId(NAMES[0]) + "\" } elseif ($sd.domaintype -eq \"Export\") { get-vmimportcandidates -showall -datacenterid \"" + DATA_CENTER_ID + "\" -storagedomainid \"" + STORAGE_DOMAIN_ID + "\" | ? { $_.vmid -eq \"" + asId(NAMES[0]) + "\" } }";
+
+    protected static final String IMPORT_VM_COMMAND = "import-vm -datacenterid \"" + DATA_CENTER_ID + "\" -sourcedomainid \"" + STORAGE_DOMAIN_ID + "\" -destdomainid \"" + IMPORT_DEST_DOMAIN_ID + "\" -clusterid \"" + IMPORT_CLUSTER_ID + "\" -vmid \"" + asId(NAMES[0]) + "\"";
 
     protected PowerShellStorageDomainVmsResource getResource(PowerShellAttachedStorageDomainResource parent,
                                                              PowerShellPoolMap poolMap,
@@ -61,17 +70,65 @@ public class PowerShellStorageDomainVmsResourceTest
 
     @Test
     public void testGet() {
-        PowerShellStorageDomainVmResource childResource = new
-            PowerShellStorageDomainVmResource(resource,
-                                              asId(NAMES[0]),
-                                              executor,
-                                              uriProvider,
-                                              poolMap,
-                                              parser);
+        PowerShellStorageDomainVmResource subResource = getSubResource(0);
         setUpCmdExpectations(GET_VM_COMMAND, formatVm(NAMES[0]));
         setUriInfo(setUpBasicUriExpectations());
         replayAll();
-        verifyVm(childResource.get(), 0);
+        verifyVm(subResource.get(), 0);
+    }
+
+    protected void doTestImport(boolean async) throws Exception {
+        PowerShellStorageDomainVmResource subResource = getSubResource(0);
+
+        setUriInfo(setUpActionExpectation("import", IMPORT_VM_COMMAND, 0));
+
+        Action action = getAction(async);
+        action.setCluster(new Cluster());
+        action.getCluster().setId(IMPORT_CLUSTER_ID);
+        action.setStorageDomain(new StorageDomain());
+        action.getStorageDomain().setId(IMPORT_DEST_DOMAIN_ID);
+
+        verifyActionResponse(subResource.doImport(action), async, 0);
+    }
+
+    @Test
+    public void doTestImport() throws Exception {
+        doTestImport(false);
+    }
+
+    @Test
+    public void testImportAsync() throws Exception {
+        doTestImport(true);
+    }
+
+    @Test
+    public void testIncompleteImport() throws Exception {
+        PowerShellStorageDomainVmResource subResource = getSubResource(0);
+
+        setUriInfo(setUpActionExpectation(null, null, null, null));
+        try {
+            subResource.doImport(getAction());
+            fail("expected WebApplicationException on incomplete parameters");
+        } catch (WebApplicationException wae) {
+             verifyIncompleteException(wae, "Action", "doImport", "cluster.id|name, storageDomain.id|name");
+        }
+    }
+
+    protected PowerShellStorageDomainVmResource getSubResource(int index) {
+        return new PowerShellStorageDomainVmResource(resource,
+                                                     asId(NAMES[index]),
+                                                     executor,
+                                                     uriProvider,
+                                                     poolMap,
+                                                     parser);
+    }
+
+    protected UriInfo setUpActionExpectation(String verb, String command, int index) throws Exception {
+        return setUpActionExpectation(COLLECTION_URI + SLASH + asId(NAMES[index]), verb, command, null);
+    }
+
+    private void verifyActionResponse(Response r, boolean async, int index) throws Exception {
+        verifyActionResponse(r, COLLECTION_URI + SLASH + asId(NAMES[index]), async);
     }
 
     protected void verifyVms(VMs vms) {
