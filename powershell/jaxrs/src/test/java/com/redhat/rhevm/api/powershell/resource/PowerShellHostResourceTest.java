@@ -76,7 +76,6 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
                                new String[] { name },
                                new String[] { "" },
                                PowerShellHostsResourceTest.extraArgs);
-        System.out.println(ret);
         return ret;
     }
 
