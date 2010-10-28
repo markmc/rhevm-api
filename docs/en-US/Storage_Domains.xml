@@ -180,7 +180,7 @@ Content-Type: application/xml
     </para>
 
     <para>
-      VMs and templates in these collections have a similar representation to their counterparts in the top-level VMs and templates collection, except they also contain a <literal>storage_domain</literal> reference and an <literal>import</literal> action.
+      VMs and templates in these collections have a similar representation to their counterparts in the top-level VMs and templates collection, except they also contain a <literal>storage_domain</literal> reference and an <literal>import</literal> action (see <xref linkend="sect-REST_API_Guide-VMs-Import"/>).
     </para>
 
     <screen>

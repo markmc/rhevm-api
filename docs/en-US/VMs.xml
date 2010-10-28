@@ -134,7 +134,7 @@
   </para>
 
   <para>
-    There are eight possible actions for hosts - <literal>start</literal>, <literal>stop</literal>, <literal>shutdown</literal>, <literal>suspend</literal>, <literal>detach</literal>, <literal>migrate</literal>, <literal>export</literal> and <literal>ticket</literal>.
+    There are a number of possible actions for VMs - <literal>start</literal>, <literal>stop</literal>, <literal>shutdown</literal>, <literal>suspend</literal>, <literal>detach</literal>, <literal>migrate</literal>, <literal>export</literal>, <literal>import</literal> and <literal>ticket</literal>.
   </para>
 
   <section id="sect-REST_API_Guide-VMs-Devices">
@@ -530,6 +530,33 @@ Content-type: application/xml
   &lt;storage_domain name="export1"/&gt;
   &lt;exclusive&gt;true&lt;exclusive/&gt;
   &lt;discard_snapshots&gt;true&lt;discard_snapshots/&gt;
+&lt;/action&gt;
+    </screen>
+
+  </section>
+
+  <section id="sect-REST_API_Guide-VMs-Import">
+    <title>
+      Import Action
+    </title>
+
+    <para>
+      Import a VM from an <literal>Export</literal> storage domain. The destination cluster and storage domain must be specified via <literal>cluster</literal> and <literal>storage_domain</literal> references.
+    </para>
+
+    <note>
+      <para>
+        The import action is only available on VMs listed under an <literal>Export</literal> storage domain. See <xref linkend="sect-REST_API_Guide-Storage_Domains-Listing"/>.
+      </para>
+    </note>
+
+    <screen>
+POST /rhevm-api/datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/vms/082c794b-771f-452f-83c9-b2b5a19c0399/import HTTP/1.1
+Content-type: application/xml
+
+&lt;action&gt;
+  &lt;storage_domain name="images0"/&gt;
+  &lt;cluster name="Default"/&gt;
 &lt;/action&gt;
     </screen>
 
