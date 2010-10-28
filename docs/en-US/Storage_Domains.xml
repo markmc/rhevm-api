@@ -170,6 +170,37 @@ Content-Type: application/xml
 
   </section>
 
+  <section id="sect-REST_API_Guide-Storage_Domains-Listing">
+    <title>
+      Listing Storage Domain Contents
+    </title>
+
+    <para>
+      Attached storage domains (see <xref linkend="sect-REST_API_Guide-Data_Centers-Attached_Storage_Domains"/>) contain <literal>vms</literal> and <literal>templates</literal> sub-collections which list the VMs and templates stored on that particular storage domain.
+    </para>
+
+    <para>
+      VMs and templates in these collections have a similar representation to their counterparts in the top-level VMs and templates collection, except they also contain a <literal>storage_domain</literal> reference and an <literal>import</literal> action.
+    </para>
+
+    <screen>
+GET /rhevm-api/datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/vms
+Accept: application/xml
+
+&lt;vms&gt;
+  &lt;vm id="082c794b-771f-452f-83c9-b2b5a19c0399" href="/rhevm-api/datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/vms/082c794b-771f-452f-83c9-b2b5a19c0399"&gt;
+    &lt;name&gt;vm1&lt;/name&gt;
+    ...
+    &lt;storage_domain id="082c794b-771f-452f-83c9-b2b5a19c0399" href="/rhevm-api/datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed"/&gt;
+    &lt;actions&gt;
+      &lt;link rel="import" href="/rhevm-api/datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/vms/082c794b-771f-452f-83c9-b2b5a19c0399/import"/&gt;
+    &lt;/actions&gt;
+  &lt;/vm&gt;
+&lt;/vms&gt;
+    </screen>
+
+  </section>
+
   <section id="sect-REST_API_Guide-Storage_Domains-Teardown">
     <title>
       Teardown Action

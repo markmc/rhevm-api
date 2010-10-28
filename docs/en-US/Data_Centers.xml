@@ -68,7 +68,7 @@
     </para>
 
     <para>
-      An attached storage domain has a similar representation to a top-level storage domain, with the exception that it has a data center specific status and set of actions.
+      An attached storage domain has a similar representation to a top-level storage domain, with the exception that it has a data center specific status and set of actions. It also contains <literal>vms</literal> and <literal>templates</literal> sub-collections representing the contents of the storage domain, see <xref linkend="sect-REST_API_Guide-Storage_Domains-Listing"/>.
     </para>
 
     <para>
@@ -96,6 +96,8 @@ Content-Type: application/xml
     &lt;path&gt;/exports/RHEVX/images/0&lt;/path&gt;
   &lt;/storage&gt;
   &lt;data_center id="d70d5e2d-b8ad-494a-a4d2-c7a5631073c4" href="/rhevm-api/datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4"/&gt;
+  &lt;link rel="vms" href="/rhevm-api/datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/vms"/&gt;
+  &lt;link rel="templates" href="/rhevm-api/datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/templates"/&gt;
   &lt;actions&gt;
     &lt;link rel="activate" href="/rhevm-api/datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/activate"/&gt;
     &lt;link rel="deactivate" href="/rhevm-api/datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/deactivate"/&gt;
