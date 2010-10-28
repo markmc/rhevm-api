@@ -112,10 +112,16 @@ public class PowerShellAttachedStorageDomainResource
     }
 
     public StorageDomainContentsResource<VMs, VM> getStorageDomainVmsResource() {
-        return new PowerShellStorageDomainVmsResource(this, shellPools, getParser());
+        PowerShellStorageDomainVmsResource resource =
+            new PowerShellStorageDomainVmsResource(this, shellPools, getParser());
+        resource.setUriInfo(getUriInfo());
+        return resource;
     }
 
     public StorageDomainContentsResource<Templates, Template> getStorageDomainTemplatesResource() {
-        return new PowerShellStorageDomainTemplatesResource(this, shellPools, getParser());
+        PowerShellStorageDomainTemplatesResource resource =
+            new PowerShellStorageDomainTemplatesResource(this, shellPools, getParser());
+        resource.setUriInfo(getUriInfo());
+        return resource;
     }
 }
