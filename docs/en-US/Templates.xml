@@ -75,7 +75,9 @@
     &lt;boot dev="hd"/&gt;
   &lt;/os&gt;
   &lt;cluster id="0" href="/rhevm-api/clusters/0"/&gt;
-  &lt;actions/&gt;
+  &lt;actions&gt;
+    &lt;link rel="export" href="/rhevm-api/templates/00000000-0000-0000-0000-000000000000/export"/&gt;
+  &lt;/actions&gt;
 &lt;/template&gt;
   </screen>
 
@@ -86,5 +88,30 @@
   <para>
     Templates also have a number of read-only device collections through which the devices attached to template may be queried. Like with VMs, there are <literal>cdroms</literal>, <literal>disks</literal> and <literal>nics</literal> collections. See <xref linkend="sect-REST_API_Guide-VMs-Devices"/>.
   </para>
+
+  <para>
+    There is only one possible action for templates - <literal>export</literal>.
+  </para>
+
+  <section id="sect-REST_API_Guide-Templates-Export">
+    <title>
+      Export Action
+    </title>
+
+    <para>
+      Export a template to an <literal>Export</literal> storage domain. A destination storage domain may be specified via a <literal>storage_domain</literal> reference. By default, the export action will overwrite any existing template by the same name in the destination domain, but this may be avoided by setting the <literal>exclusive</literal> parameter to <literal>true</literal>.
+    </para>
+
+    <screen>
+POST /rhevm-api/templates/00000000-0000-0000-0000-000000000000/export HTTP/1.1
+Content-type: application/xml
+
+&lt;action&gt;
+  &lt;storage_domain id="fabe0451-701f-4235-8f7e-e20e458819ed"/&gt;
+  &lt;exclusive&gt;true&lt;exclusive/&gt;
+&lt;/action&gt;
+    </screen>
+
+  </section>
 
 </chapter>
