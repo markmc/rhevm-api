@@ -127,6 +127,9 @@ public class PowerShellVmsResource
         if (bootSequence != null) {
             buf.append(" -defaultbootsequence " + bootSequence);
         }
+        if (vm.isSetOs() && vm.getOs().isSetType()) {
+            buf.append(" -os " + PowerShellUtils.escape(vm.getOs().getType()));
+        }
 
         PowerShellVM ret = runAndParseSingle(buf.toString());
 

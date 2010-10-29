@@ -868,6 +868,7 @@
       <xs:element name="initrd" type="xs:string" minOccurs="0"/>
       <xs:element name="cmdline" type="xs:string" minOccurs="0"/>
     </xs:sequence>
+    <xs:attribute name="type" type="xs:string"/>
   </xs:complexType>
 
   <xs:complexType name="HighlyAvailable">

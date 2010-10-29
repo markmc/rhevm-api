@@ -34,6 +34,10 @@
             <entry>The display <literal>type</literal> (either <literal>VNC</literal> or <literal>SPICE</literal>), port, and the number of <literal>monitors</literal></entry>
           </row>
           <row>
+            <entry><literal>os</literal> <literal>type</literal></entry>
+            <entry>The gues operating system type, e.g. <literal>RHEL5</literal> or <literal>WindowsXP</literal></entry>
+          </row>
+          <row>
             <entry><literal>os</literal> <literal>boot dev="cdrom|hd|network"</literal></entry>
             <entry>A list of boot devices (described by a <literal>dev</literal> attribute on a <literal>boot</literal> element) - either <literal>cdrom</literal>, <literal>hd</literal> or <literal>network</literal></entry>
           </row>
