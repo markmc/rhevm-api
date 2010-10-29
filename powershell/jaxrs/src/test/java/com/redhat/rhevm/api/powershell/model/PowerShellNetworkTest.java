@@ -61,6 +61,6 @@ public class PowerShellNetworkTest extends PowerShellModelTest {
 
         assertEquals(networks.size(), 1);
 
-        testNetwork(networks.get(0), "00000000-0000-0000-0000-000000000009", "rhevm", "Management Network", "bb0fd622-5b2a-4c69-bfc5-29493932844a", null, null, null, null, null, NetworkStatus.OPERATIONAL);
+        testNetwork(networks.get(0), "00000000-0000-0000-0000-000000000009", "rhevm", "Management Network", "bb0fd622-5b2a-4c69-bfc5-29493932844a", null, null, null, "5", null, NetworkStatus.OPERATIONAL);
     }
 }
