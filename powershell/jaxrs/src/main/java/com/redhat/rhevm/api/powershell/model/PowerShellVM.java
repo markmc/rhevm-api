@@ -28,6 +28,7 @@ import com.redhat.rhevm.api.model.CpuTopology;
 import com.redhat.rhevm.api.model.CpuStatistics;
 import com.redhat.rhevm.api.model.Display;
 import com.redhat.rhevm.api.model.DisplayType;
+import com.redhat.rhevm.api.model.HighlyAvailable;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.MemoryStatistics;
 import com.redhat.rhevm.api.model.OperatingSystem;
@@ -161,6 +162,12 @@ public class PowerShellVM extends VM {
             os.getBoot().add(boot);
         }
         vm.setOs(os);
+
+        if (entity.get("highlyavailable", Boolean.class)) {
+            vm.setHighlyAvailable(new HighlyAvailable());
+            vm.getHighlyAvailable().setValue(true);
+            vm.getHighlyAvailable().setPriority(entity.get("priority", Integer.class));
+        }
 
         Object hostId = entity.get("runningonhost", String.class, Integer.class);
         if (!isEmptyId(hostId)) {

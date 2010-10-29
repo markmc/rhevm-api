@@ -8,7 +8,7 @@
     <Property Name="TemplateId" Type="System.String">3ee77811-f1eb-4d3f-991e-e539dbb2f1f9</Property>
     <Property Name="Session" Type="System.String">Unknown</Property>
     <Property Name="MemorySize" Type="System.Int32">512</Property>
-    <Property Name="Priority" Type="System.Int32">0</Property>
+    <Property Name="Priority" Type="System.Int32">100</Property>
     <Property Name="Domain" Type="System.String" />
     <Property Name="OperatingSystem" Type="System.String">OtherLinux</Property>
     <Property Name="CreationDate" Type="System.DateTime">20/07/2010 17:28:18</Property>
@@ -53,7 +53,7 @@
       <Property Type="System.String" />
     </Property>
     <Property Name="DisplayPort" Type="System.Int32">5910</Property>
-    <Property Name="HighlyAvailable" Type="System.Boolean">False</Property>
+    <Property Name="HighlyAvailable" Type="System.Boolean">True</Property>
     <Property Name="TimeZone" Type="System.String" />
     <Property Name="PoolId" Type="System.Guid">1de2d827-4569-47cb-a3c7-643124ecc083</Property>
   </Object>

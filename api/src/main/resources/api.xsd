@@ -870,6 +870,14 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="HighlyAvailable">
+    <xs:simpleContent>
+      <xs:extension base="xs:boolean">
+        <xs:attribute name="priority" type="xs:int"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
   <xs:simpleType name="DisplayType">
     <xs:restriction base="xs:string">
       <xs:enumeration value="VNC"/>
@@ -924,6 +932,7 @@
             <xs:element name="memory" type="xs:long" minOccurs="0"/>
             <xs:element name="cpu" type="CPU" minOccurs="0"/>
             <xs:element name="os" type="OperatingSystem" minOccurs="0"/>
+            <xs:element name="highly_available" type="HighlyAvailable" minOccurs="0"/>
             <xs:element name="display" type="Display" minOccurs="0" maxOccurs="1"/>
             <xs:element ref="host" minOccurs="0" maxOccurs="1"/>
             <xs:element ref="cluster" minOccurs="0" maxOccurs="1"/>

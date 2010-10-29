@@ -50,6 +50,10 @@
             <entry>A kernel command line parameter string to be used with the kernel above</entry>
           </row>
           <row>
+            <entry><literal>highly_available</literal></entry>
+            <entry><literal>true</literal> if the VM should be automatically restarted if the host crashes. A <literal>priority</literal> attribute controls the order in which VMs are re-started</entry>
+          </row>
+          <row>
             <entry><literal>host</literal></entry>
             <entry>A reference to the host which this VM is currently running on. See <xref linkend="chap-REST_API_Guide-Hosts"/></entry>
           </row>
@@ -101,6 +105,7 @@
   &lt;os&gt;
     &lt;boot dev="hd"/&gt;
   &lt;/os&gt;
+  &lt;highly_available priority="20"&gt;true&lt;/highly_available&gt;
   &lt;cluster id="0" href="/rhevm-api/clusters/0"/&gt;
   &lt;template id="00000000-0000-0000-0000-000000000000" href="/rhevm-api/templates/00000000-0000-0000-0000-000000000000"/&gt;
   &lt;memory_statistics&gt;

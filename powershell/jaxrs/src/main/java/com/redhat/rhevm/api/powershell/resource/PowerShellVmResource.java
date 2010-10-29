@@ -128,6 +128,12 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
         if (bootSequence != null) {
             buf.append(" $v.defaultbootsequence = '" + bootSequence + "';");
         }
+        if (vm.isSetHighlyAvailable()) {
+            buf.append(" $v.highlyavailable = " + (vm.getHighlyAvailable().isValue() ? "$true" : "$false") + ";");
+            if (vm.getHighlyAvailable().isSetPriority()) {
+                buf.append(" $v.priority = " + Integer.toString(vm.getHighlyAvailable().getPriority()) + ";");
+            }
+        }
         if (vm.isSetDisplay()) {
             Display display = vm.getDisplay();
             if (display.isSetMonitors()) {

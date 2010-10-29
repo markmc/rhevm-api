@@ -92,6 +92,12 @@ public class PowerShellVmsResource
         if (vm.getDescription() != null) {
             buf.append(" -description " + PowerShellUtils.escape(vm.getDescription()));
         }
+        if (vm.isSetHighlyAvailable() && vm.getHighlyAvailable().isValue()) {
+            buf.append(" -highlyavailable $true");
+            if (vm.getHighlyAvailable().isSetPriority()) {
+                buf.append(" -priority " + Integer.toString(vm.getHighlyAvailable().getPriority()));
+            }
+        }
         if (vm.isSetDisplay()) {
             Display display = vm.getDisplay();
             if (display.isSetMonitors()) {
