@@ -93,24 +93,24 @@ public class PowerShellVM extends VM {
 
     private static VmStatus parseStatus(String s) {
         if (s == null) return null;
-        else if (s.equals("Unassigned"))       return VmStatus.UNASSIGNED;
-        else if (s.equals("Down"))             return VmStatus.DOWN;
-        else if (s.equals("Up"))               return VmStatus.UP;
-        else if (s.equals("PoweringUp"))       return VmStatus.POWERING_UP;
-        else if (s.equals("PoweredDown"))      return VmStatus.POWERED_DOWN;
-        else if (s.equals("Paused"))           return VmStatus.PAUSED;
-        else if (s.equals("MigratingFrom"))    return VmStatus.MIGRATING_FROM;
-        else if (s.equals("MigratingTo"))      return VmStatus.MIGRATING_TO;
-        else if (s.equals("Unknown"))          return VmStatus.UNKNOWN;
-        else if (s.equals("NotResponding"))    return VmStatus.NOT_RESPONDING;
-        else if (s.equals("WaitForLaunch"))    return VmStatus.WAIT_FOR_LAUNCH;
-        else if (s.equals("RebootInProgress")) return VmStatus.REBOOT_IN_PROGRESS;
-        else if (s.equals("SavingState"))      return VmStatus.SAVING_STATE;
-        else if (s.equals("RestoringState"))   return VmStatus.RESTORING_STATE;
-        else if (s.equals("Suspended"))        return VmStatus.SUSPENDED;
-        else if (s.equals("ImageIllegal"))     return VmStatus.IMAGE_ILLEGAL;
-        else if (s.equals("ImageLocked"))      return VmStatus.IMAGE_LOCKED;
-        else if (s.equals("PoweringDown"))     return VmStatus.POWERING_DOWN;
+        else if (s.equals("Unassigned"))         return VmStatus.UNASSIGNED;
+        else if (s.equals("Down"))               return VmStatus.DOWN;
+        else if (s.equals("Up"))                 return VmStatus.UP;
+        else if (s.equals("Powering Up"))        return VmStatus.POWERING_UP;
+        else if (s.equals("Powered Down"))       return VmStatus.POWERED_DOWN;
+        else if (s.equals("Paused"))             return VmStatus.PAUSED;
+        else if (s.equals("Migrating From"))     return VmStatus.MIGRATING_FROM;
+        else if (s.equals("Migrating To"))       return VmStatus.MIGRATING_TO;
+        else if (s.equals("Unknown"))            return VmStatus.UNKNOWN;
+        else if (s.equals("Not Responding"))     return VmStatus.NOT_RESPONDING;
+        else if (s.equals("Wait For Launch"))    return VmStatus.WAIT_FOR_LAUNCH;
+        else if (s.equals("Reboot In Progress")) return VmStatus.REBOOT_IN_PROGRESS;
+        else if (s.equals("Saving State"))       return VmStatus.SAVING_STATE;
+        else if (s.equals("Restoring State"))    return VmStatus.RESTORING_STATE;
+        else if (s.equals("Suspended"))          return VmStatus.SUSPENDED;
+        else if (s.equals("Image Illegal"))      return VmStatus.IMAGE_ILLEGAL;
+        else if (s.equals("Image Locked"))       return VmStatus.IMAGE_LOCKED;
+        else if (s.equals("Powering Down"))      return VmStatus.POWERING_DOWN;
         else return null;
     }
 
