@@ -60,9 +60,9 @@ public class PowerShellCmdTest extends Assert {
     private static final String DOMAIN = "LeinsterHouse";
     private static final String USER = "Jackie";
     private static final String PASSWORD = "HealyRae";
-    private static final String LOGIN_USER = "login-user -domain \"" + DOMAIN + "\" -username \"" + USER + "\" -password \"" + PASSWORD + "\";\n";
+    private static final String LOGIN_USER = "logout-user; login-user -domain \"" + DOMAIN + "\" -username \"" + USER + "\" -password \"" + PASSWORD + "\";\n";
     private static final String LOGIN_FAILED = "Login failed. Please verify your login information";
-    private static final String LOGIN_USER_NO_DOMAIN = "login-user -username \"" + USER + "\" -password \"" + PASSWORD + "\";\n";
+    private static final String LOGIN_USER_NO_DOMAIN = "logout-user; login-user -username \"" + USER + "\" -password \"" + PASSWORD + "\";\n";
 
     @After
     public void tearDown() {
@@ -71,7 +71,7 @@ public class PowerShellCmdTest extends Assert {
 
     @Test
     public void testSimple() throws Exception {
-        PowerShellCmd cmd = new PowerShellCmd(null, setupExpectations(null, false));
+        PowerShellCmd cmd = new PowerShellCmd(new Principal(USER, PASSWORD, DOMAIN), setupExpectations(LOGIN_USER, false));
 
         cmd.start();
 
@@ -84,7 +84,7 @@ public class PowerShellCmdTest extends Assert {
 
     @Test
     public void testSysWow64() throws Exception {
-        PowerShellCmd cmd = new PowerShellCmd(null, setupExpectations(null, true));
+        PowerShellCmd cmd = new PowerShellCmd(new Principal(USER, PASSWORD, DOMAIN), setupExpectations(LOGIN_USER, true));
 
         cmd.start();
 
@@ -95,18 +95,6 @@ public class PowerShellCmdTest extends Assert {
         cmd.stop();
     }
 
-    @Test
-    public void testAuth() throws Exception {
-        PowerShellCmd cmd = new PowerShellCmd(new Principal(USER, PASSWORD, DOMAIN), setupExpectations(LOGIN_USER, false));
-
-        cmd.start();
-
-        assertEquals(EXIT_STATUS, cmd.run(SCRIPT));
-        assertEquals(OUTPUT, cmd.getStdOut());
-        assertEquals(ERROR, cmd.getStdErr());
-
-        cmd.stop();
-    }
 
     @Test
     public void testUnAuth() throws Exception {
@@ -179,10 +167,8 @@ public class PowerShellCmdTest extends Assert {
         expectNew(ExpectJ.class).andReturn(ej);
         expect(ej.spawn((syswow64 ? SYSWOW64_PATH : "powershell.exe") + " -command -")).andReturn(spawn);
 
-        if (login != null) {
-            spawn.send(login);
-            expectLastCall();
-        }
+        spawn.send(login);
+        expectLastCall();
 
         spawn.send(previousOutput.endsWith(TIMEOUT) ? LOGIN_USER + getScript() : getScript());
         expectLastCall();

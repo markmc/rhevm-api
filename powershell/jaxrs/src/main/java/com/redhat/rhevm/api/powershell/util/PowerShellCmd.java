@@ -126,6 +126,7 @@ public class PowerShellCmd {
     private String buildLogin() {
         StringBuilder loginUser = new StringBuilder();
 
+        loginUser.append("logout-user; ");
         loginUser.append("login-user");
         if (principal.getDomain() != null) {
             loginUser.append(" -domain "   + PowerShellUtils.escape(principal.getDomain()));
@@ -150,12 +151,10 @@ public class PowerShellCmd {
             throw new PowerShellException("Launching powershell failed", ex);
         }
 
-        if (principal != null && !principal.equals(Principal.NONE)) {
-            try {
-                process.send(buildLogin());
-            } catch (java.io.IOException ex) {
-                throw new PowerShellException("Writing login-user to powershell process failed", ex);
-            }
+        try {
+            process.send(buildLogin());
+        } catch (java.io.IOException ex) {
+            throw new PowerShellException("Writing login-user to powershell process failed", ex);
         }
     }
 
