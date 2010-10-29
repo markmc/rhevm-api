@@ -26,7 +26,6 @@ import com.redhat.rhevm.api.model.Storage;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.StorageDomainStatus;
 import com.redhat.rhevm.api.model.StorageDomainType;
-import com.redhat.rhevm.api.powershell.enums.PowerShellStorageDomainSharedStatus;
 import com.redhat.rhevm.api.powershell.enums.PowerShellStorageDomainStatus;
 import com.redhat.rhevm.api.powershell.enums.PowerShellStorageType;
 import com.redhat.rhevm.api.powershell.model.PowerShellStorageDomain;
@@ -34,15 +33,7 @@ import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 
 public class PowerShellStorageDomain extends StorageDomain {
 
-    private StorageDomainStatus sharedStatus;
     private String vgId;
-
-    public StorageDomainStatus getSharedStatus() {
-        return sharedStatus;
-    }
-    public void setSharedStatus(StorageDomainStatus sharedStatus) {
-        this.sharedStatus = sharedStatus;
-    }
 
     public String getVgId() {
         return vgId;
@@ -72,12 +63,6 @@ public class PowerShellStorageDomain extends StorageDomain {
                 entity.get("status", PowerShellStorageDomainStatus.class);
             if (status != null) {
                 storageDomain.setStatus(status.map());
-            }
-
-            PowerShellStorageDomainSharedStatus sharedStatus =
-                entity.get("sharedstatus", PowerShellStorageDomainSharedStatus.class);
-            if (sharedStatus != null) {
-                storageDomain.setSharedStatus(sharedStatus.map());
             }
 
             Storage storage = new Storage();

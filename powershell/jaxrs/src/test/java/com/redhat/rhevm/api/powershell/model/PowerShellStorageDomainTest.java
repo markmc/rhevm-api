@@ -31,20 +31,19 @@ import com.redhat.rhevm.api.powershell.model.PowerShellStorageDomain;
 
 public class PowerShellStorageDomainTest extends PowerShellModelTest {
 
-    private void testStorageDomain(PowerShellStorageDomain s, String id, String name, StorageDomainType type, Boolean isMaster, StorageDomainStatus status, StorageDomainStatus sharedStatus, Object available, Object used, Object committed) {
+    private void testStorageDomain(PowerShellStorageDomain s, String id, String name, StorageDomainType type, Boolean isMaster, StorageDomainStatus status, Object available, Object used, Object committed) {
         assertEquals(id, s.getId());
         assertEquals(name, s.getName());
         assertEquals(type, s.getType());
         assertEquals(isMaster, s.isMaster());
         assertEquals(status, s.getStatus());
-        assertEquals(sharedStatus, s.getSharedStatus());
         assertEquals(available, s.getAvailable());
         assertEquals(used, s.getUsed());
         assertEquals(committed, s.getCommitted());
     }
 
-    private void testNfsStorageDomain(PowerShellStorageDomain s, String id, String name, StorageDomainType type, Boolean isMaster, StorageDomainStatus status, StorageDomainStatus sharedStatus, String address, String path, Object available, Object used, Object committed) {
-        testStorageDomain(s, id, name, type, isMaster, status, sharedStatus, available, used, committed);
+    private void testNfsStorageDomain(PowerShellStorageDomain s, String id, String name, StorageDomainType type, Boolean isMaster, StorageDomainStatus status, String address, String path, Object available, Object used, Object committed) {
+        testStorageDomain(s, id, name, type, isMaster, status, available, used, committed);
 
         Storage storage = s.getStorage();
         assertNotNull(storage);
@@ -54,8 +53,8 @@ public class PowerShellStorageDomainTest extends PowerShellModelTest {
         assertEquals(path, storage.getPath());
     }
 
-    private void testIscsiStorageDomain(PowerShellStorageDomain s, String id, String name, StorageDomainType type, Boolean isMaster, StorageDomainStatus status, StorageDomainStatus sharedStatus, Object available, Object used, Object committed) {
-        testStorageDomain(s, id, name, type, isMaster, status, sharedStatus, available, used, committed);
+    private void testIscsiStorageDomain(PowerShellStorageDomain s, String id, String name, StorageDomainType type, Boolean isMaster, StorageDomainStatus status, Object available, Object used, Object committed) {
+        testStorageDomain(s, id, name, type, isMaster, status, available, used, committed);
 
         Storage storage = s.getStorage();
         assertNotNull(storage);
@@ -74,25 +73,25 @@ public class PowerShellStorageDomainTest extends PowerShellModelTest {
 
         testNfsStorageDomain(storageDomains.get(0),
                              "788cd1e6-aa2b-412e-bcaf-0b37b96f00b2", "foo222",
-                             StorageDomainType.DATA, null,  null, StorageDomainStatus.UNATTACHED,
+                             StorageDomainType.DATA, null,  null,
                              "172.31.0.6", "/exports/RHEVX/markmc/images/2",
                              Long.valueOf(150L), Long.valueOf(139L), Long.valueOf(0L));
 
         testNfsStorageDomain(storageDomains.get(1),
                              "85fa8ff2-b3e4-483a-970d-7a8a13bc839f", "images0",
-                             StorageDomainType.DATA, true, null, StorageDomainStatus.ACTIVE,
+                             StorageDomainType.DATA, true, StorageDomainStatus.ACTIVE,
                              "172.31.0.6", "/exports/RHEVX/markmc/images/0",
                              Long.valueOf(150L), Long.valueOf(139L), Long.valueOf(16L));
 
         testNfsStorageDomain(storageDomains.get(2),
                              "4fa5e14f-8404-4dee-a16f-172279376f0c", "iso0",
-                             StorageDomainType.ISO, null, null, StorageDomainStatus.INACTIVE,
+                             StorageDomainType.ISO, null, StorageDomainStatus.INACTIVE,
                              "172.31.0.6", "/exports/RHEVX/markmc/iso/0",
                              null, null, Long.valueOf(0L));
 
         testIscsiStorageDomain(storageDomains.get(3),
                                "746afd39-0229-4686-8ee6-7c1900848d00", "iscsi252",
-                               StorageDomainType.DATA, null, null, StorageDomainStatus.UNATTACHED,
+                               StorageDomainType.DATA, null, StorageDomainStatus.UNATTACHED,
                              Long.valueOf(16L), Long.valueOf(3L), Long.valueOf(0L));
     }
 }

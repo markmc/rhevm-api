@@ -48,19 +48,19 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
     private static HashMap<String, PowerShellStorageDomainResource> tornDownDomains =
         new HashMap<String, PowerShellStorageDomainResource>();
 
-    public List<StorageDomain> runAndParse(String command, boolean sharedStatus) {
-        return PowerShellStorageDomainResource.runAndParse(getPool(), getParser(), command, sharedStatus);
+    public List<StorageDomain> runAndParse(String command) {
+        return PowerShellStorageDomainResource.runAndParse(getPool(), getParser(), command);
     }
 
-    public StorageDomain runAndParseSingle(String command, boolean sharedStatus) {
-        return PowerShellStorageDomainResource.runAndParseSingle(getPool(), getParser(), command, sharedStatus);
+    public StorageDomain runAndParseSingle(String command) {
+        return PowerShellStorageDomainResource.runAndParseSingle(getPool(), getParser(), command);
     }
 
     @Override
     public StorageDomains list() {
         StorageDomains ret = new StorageDomains();
 
-        List<StorageDomain> storageDomains = runAndParse(getSelectCommand("select-storagedomain", getUriInfo(), StorageDomain.class), true);
+        List<StorageDomain> storageDomains = runAndParse(getSelectCommand("select-storagedomain", getUriInfo(), StorageDomain.class));
 
         for (StorageDomain storageDomain : storageDomains) {
             ret.getStorageDomains().add(PowerShellStorageDomainResource.addLinks(getUriInfo(), storageDomain));
@@ -274,7 +274,7 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
             buf.append(" }");
         }
 
-        storageDomain = runAndParseSingle(buf.toString(), true);
+        storageDomain = runAndParseSingle(buf.toString());
 
         storageDomain = PowerShellStorageDomainResource.addLinks(getUriInfo(), storageDomain);
 

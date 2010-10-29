@@ -59,50 +59,14 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
         return tornDown;
     }
 
-    /**
-     * Run a powershell command and parse the output as a list of storage
-     * domains.
-     * <p>
-     * If the resulting storage domains are being viewed in the context
-     * of a specific data center, then the caller wants the value of the
-     * 'status' property. In this case, @sharedStatus should be #false.
-     * <p>
-     * If the storage domain is being viewed outside of the context of any
-     * data center, then the 'sharedStatus' property contains the required
-     * status and the caller should supply #true for @sharedStatus.
-     *
-     * @param command the powershell command to execute
-     * @param sharedStatus whether the 'sharedStatus' property is needed
-     * @return a list of storage domains
-     */
-    public static List<StorageDomain> runAndParse(PowerShellPool pool,
-                                                  PowerShellParser parser,
-                                                  String command,
-                                                  boolean sharedStatus) {
+    public static List<StorageDomain> runAndParse(PowerShellPool pool, PowerShellParser parser, String command) {
         List<PowerShellStorageDomain> storageDomains =
             PowerShellStorageDomain.parse(parser, PowerShellCmd.runCommand(pool, command));
         List<StorageDomain> ret = new ArrayList<StorageDomain>();
-
         for (PowerShellStorageDomain storageDomain : storageDomains) {
-            if (sharedStatus) {
-                storageDomain.setStatus(storageDomain.getSharedStatus());
-            }
             ret.add(storageDomain);
         }
-
         return ret;
-    }
-
-    /**
-     * Run a powershell command and parse the output as a list of storage
-     * domains. The 'sharedStatus' property in the output from the command
-     * is ignored.
-     *
-     * @param command the powershell command to execute
-     * @return a list of storage domains
-     */
-    public static List<StorageDomain> runAndParse(PowerShellPool pool, PowerShellParser parser, String command) {
-        return runAndParse(pool, parser, command, false);
     }
 
     /**
@@ -113,29 +77,14 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
      * @param whether the 'sharedStatus' property is needed
      * @return a single storage domain, or null
      */
-    public static StorageDomain runAndParseSingle(PowerShellPool pool,
-                                                  PowerShellParser parser,
-                                                  String command,
-                                                  boolean sharedStatus) {
-        List<StorageDomain> storageDomains = runAndParse(pool, parser, command, sharedStatus);
+    public static StorageDomain runAndParseSingle(PowerShellPool pool, PowerShellParser parser, String command) {
+        List<StorageDomain> storageDomains = runAndParse(pool, parser, command);
 
         return !storageDomains.isEmpty() ? storageDomains.get(0) : null;
     }
 
-    /**
-     * Run a powershell command and parse the output as a single storage
-     * domain. The 'sharedStatus' property in the output from the command
-     * is ignored.
-     *
-     * @param command the powershell command to execute
-     * @return a single storage domain, or null
-     */
-    public static StorageDomain runAndParseSingle(PowerShellPool pool, PowerShellParser parser, String command) {
-        return runAndParseSingle(pool, parser, command, false);
-    }
-
-    public StorageDomain runAndParseSingle(String command, boolean sharedStatus) {
-        return runAndParseSingle(getPool(), getParser(), command, sharedStatus);
+    public StorageDomain runAndParseSingle(String command) {
+        return runAndParseSingle(getPool(), getParser(), command);
     }
 
     public static StorageDomain addLinks(UriInfo uriInfo, StorageDomain storageDomain) {
@@ -156,7 +105,7 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
         if (tornDown != null) {
             storageDomain = tornDown;
         } else {
-            storageDomain = runAndParseSingle("get-storagedomain " + PowerShellUtils.escape(getId()), true);
+            storageDomain = runAndParseSingle("get-storagedomain " + PowerShellUtils.escape(getId()));
         }
         return addLinks(getUriInfo(), storageDomain);
     }
@@ -181,7 +130,7 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
 
             buf.append("update-storagedomain -storagedomainobject $d");
 
-            storageDomain = runAndParseSingle(buf.toString(), true);
+            storageDomain = runAndParseSingle(buf.toString());
         }
         return addLinks(getUriInfo(), storageDomain);
     }
@@ -201,8 +150,7 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
         public void execute() {
             String id = PowerShellStorageDomainResource.this.getId();
 
-            StorageDomain storageDomain =
-                runAndParseSingle("get-storagedomain " + PowerShellUtils.escape(id), true);
+            StorageDomain storageDomain = runAndParseSingle("get-storagedomain " + PowerShellUtils.escape(id));
 
             StringBuilder buf = new StringBuilder();
 

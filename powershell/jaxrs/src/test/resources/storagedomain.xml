@@ -34,7 +34,7 @@
     <Property Name="NFSPath" Type="System.String">172.31.0.6:/exports/RHEVX/markmc/images/0</Property>
     <Property Name="AvailableDiskSize" Type="System.Int32">150</Property>
     <Property Name="Status" Type="VdcCommon.BusinessEntities.StorageDomainStatus">
-      <Property Name="value__" Type="System.Int32">0</Property>
+      <Property Name="value__" Type="System.Int32">3</Property>
     </Property>
     <Property Name="SharedStatus" Type="VdcCommon.BusinessEntities.StorageDomainSharedStatus">
       <Property Name="value__" Type="System.Int32">1</Property>
@@ -55,7 +55,7 @@
     <Property Name="NFSPath" Type="System.String">172.31.0.6:/exports/RHEVX/markmc/iso/0</Property>
     <Property Name="AvailableDiskSize" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
     <Property Name="Status" Type="VdcCommon.BusinessEntities.StorageDomainStatus">
-      <Property Name="value__" Type="System.Int32">0</Property>
+      <Property Name="value__" Type="System.Int32">4</Property>
     </Property>
     <Property Name="SharedStatus" Type="VdcCommon.BusinessEntities.StorageDomainSharedStatus">
       <Property Name="value__" Type="System.Int32">2</Property>
@@ -76,7 +76,7 @@
     <Property Name="NFSPath" Type="System.String" />
     <Property Name="AvailableDiskSize" Type="System.Int32">16</Property>
     <Property Name="Status" Type="VdcCommon.BusinessEntities.StorageDomainStatus">
-      <Property Name="value__" Type="System.Int32">0</Property>
+      <Property Name="value__" Type="System.Int32">2</Property>
     </Property>
     <Property Name="SharedStatus" Type="VdcCommon.BusinessEntities.StorageDomainSharedStatus">
       <Property Name="value__" Type="System.Int32">0</Property>
