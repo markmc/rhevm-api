@@ -21,6 +21,7 @@ package com.redhat.rhevm.api.common.util;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.ws.rs.Path;
@@ -105,6 +106,9 @@ import com.redhat.rhevm.api.resource.VmsResource;
  * is the combination of the @Path attribute on VmsResource, the VM id,
  * the @Path attribute on VmResource.getTagsResource() and the tag id -
  * i.e. '/rhevm-api/vms/{vm_id}/tags/{tag_id}'
+ * In most cases the parent type may be computed, but in exceptional
+ * cases there are a number of equally valid candidates. Disambiguation
+ * is achieved via an explicit suggestedParentType parameter.
  *
  * To be able to do this we need, for each collection, the collection type
  * (e.g. AssignedTagsResource), the resource type (e.g. AssignedTagResource)
@@ -317,7 +321,30 @@ public class LinkHelper {
      * @return      the #Collection instance representing the object's collection
      */
     private static Collection getCollection(BaseResource model) {
+        return getCollection(model, null);
+    }
+
+    /**
+     * Lookup the #Collection instance which represents this object
+     *
+     * i.e. for a VM tag (i.e. a Tag object which its VM property set)
+     * return the #Collection instance which encapsulates AssignedTagResource,
+     * AssignedTagsResource and VM.
+     *
+     * @param model                the object to query for
+     * @param suggestedParentType  the suggested parent type
+     * @return                     the #Collection instance representing the object's collection
+     */
+    private static Collection getCollection(BaseResource model, Class<? extends BaseResource> suggestedParentType) {
         ParentToCollectionMap collections = TYPES.get(model.getClass());
+
+        if (suggestedParentType != null) {
+            for (Class<? extends BaseResource> parentType : collections.keySet()) {
+                if (parentType.equals(suggestedParentType)) {
+                    return collections.get(parentType);
+                }
+            }
+        }
 
         for (Class<? extends BaseResource> parentType : collections.keySet()) {
             if (parentType != NO_PARENT &&
@@ -340,7 +367,22 @@ public class LinkHelper {
      * @return        the #UriBuilder encapsulating the object's path
      */
     public static <R extends BaseResource> UriBuilder getUriBuilder(UriInfo uriInfo, R model) {
-        Collection collection = getCollection(model);
+        return getUriBuilder(uriInfo, model, null);
+    }
+
+    /**
+     * Create a #UriBuilder which encapsulates the path to an object
+     *
+     * i.e. for a VM tag, return a UriBuilder which encapsulates
+     * '/rhevm-api/vms/{vm_id}/tags/{tag_id}'
+     *
+     * @param uriInfo              the URI info
+     * @param model                the object
+     * @param suggestedParentType  the suggested parent type
+     * @return                     the #UriBuilder encapsulating the object's path
+     */
+    public static <R extends BaseResource> UriBuilder getUriBuilder(UriInfo uriInfo, R model, Class<? extends BaseResource> suggestedParentType) {
+        Collection collection = getCollection(model, suggestedParentType);
         if (collection == null) {
             return null;
         }
@@ -350,7 +392,7 @@ public class LinkHelper {
         if (collection.getParentType() != NO_PARENT) {
             BaseResource parent = getParentModel(model, collection.getParentType());
 
-            Collection parentCollection = getCollection(parent);
+            Collection parentCollection = getCollection(parent, suggestedParentType);
 
             String path = getPath(collection.getCollectionType(),
                                   parentCollection.getResourceType(),
@@ -377,7 +419,21 @@ public class LinkHelper {
      * @return         the model, with the href attribute set
      */
     private static <R extends BaseResource> void setHref(UriInfo uriInfo, R model) {
-        UriBuilder uriBuilder = getUriBuilder(uriInfo, model);
+        setHref(uriInfo, model, null);
+    }
+
+    /**
+     * Set the href attribute on the supplied object
+     *
+     * e.g. set href = '/rhevm-api/vms/{vm_id}/tags/{tag_id}' on a VM tag
+     *
+     * @param uriInfo              the URI info
+     * @param model                the object
+     * @param suggestedParentType  the suggested parent type
+     * @return                     the model, with the href attribute set
+     */
+    private static <R extends BaseResource> void setHref(UriInfo uriInfo, R model, Class<? extends BaseResource> suggestedParentType) {
+        UriBuilder uriBuilder = getUriBuilder(uriInfo, model, suggestedParentType);
         if (uriBuilder != null) {
             model.setHref(uriBuilder.build().toString());
         }
@@ -408,7 +464,11 @@ public class LinkHelper {
      * @return         the object, with href attributes and action links
      */
     public static <R extends BaseResource> R addLinks(UriInfo uriInfo, R model) {
-        setHref(uriInfo, model);
+        return addLinks(uriInfo, model, null);
+    }
+
+    public static <R extends BaseResource> R addLinks(UriInfo uriInfo, R model, Class<? extends BaseResource> parentType) {
+        setHref(uriInfo, model, parentType);
         setActions(uriInfo, model);
 
         for (BaseResource inline : getInlineResources(model)) {
@@ -455,7 +515,7 @@ public class LinkHelper {
      * contains a collection definition describing the top-level
      * tags collection which is keyed on the NO_PARENT key.
      */
-    private static class ParentToCollectionMap extends HashMap<Class<? extends BaseResource>, Collection> {
+    private static class ParentToCollectionMap extends LinkedHashMap<Class<? extends BaseResource>, Collection> {
         public ParentToCollectionMap(Class<?> resourceType,
                                      Class<?> collectionType,
                                      Class<? extends BaseResource> parentType) {

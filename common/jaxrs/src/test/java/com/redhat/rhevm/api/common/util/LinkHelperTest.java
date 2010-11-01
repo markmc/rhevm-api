@@ -90,6 +90,15 @@ public class LinkHelperTest extends Assert {
 
     @Test
     public void testVmLinks() throws Exception {
+        doTestVmLinks(false);
+    }
+
+    @Test
+    public void testVmLinksSuggestedParent() throws Exception {
+        doTestVmLinks(true);
+    }
+
+    private void doTestVmLinks(boolean suggestParent) throws Exception {
         VM vm = new VM();
         vm.setId(VM_ID);
         vm.setCluster(new Cluster());
@@ -99,7 +108,11 @@ public class LinkHelperTest extends Assert {
         vm.setVmPool(new VmPool());
         vm.getVmPool().setId(VM_POOL_ID);
 
-        LinkHelper.addLinks(setUpUriExpectations(), vm);
+        if (suggestParent) {
+            LinkHelper.addLinks(setUpUriExpectations(), vm, VM.class);
+        } else {
+            LinkHelper.addLinks(setUpUriExpectations(), vm);
+        }
 
         assertEquals(VM_HREF, vm.getHref());
         assertEquals(CLUSTER_HREF, vm.getCluster().getHref());
@@ -339,10 +352,10 @@ public class LinkHelperTest extends Assert {
 
     @Test
     public void testCombine() throws Exception {
-		assertEquals("/foo/bar", LinkHelper.combine("/foo", "bar"));
-		assertEquals("/foo/bar", LinkHelper.combine("/foo/", "bar"));
-		assertEquals("/foo/bar", LinkHelper.combine("/foo/", "/bar"));
-		assertEquals("/foo/bar", LinkHelper.combine("/foo", "/bar"));
+        assertEquals("/foo/bar", LinkHelper.combine("/foo", "bar"));
+        assertEquals("/foo/bar", LinkHelper.combine("/foo/", "bar"));
+        assertEquals("/foo/bar", LinkHelper.combine("/foo/", "/bar"));
+        assertEquals("/foo/bar", LinkHelper.combine("/foo", "/bar"));
     }
 
     private UriInfo setUpUriExpectations() {
