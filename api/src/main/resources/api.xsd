@@ -576,6 +576,9 @@
     <xs:complexContent>
       <xs:extension base="BaseResource">
         <xs:sequence>
+          <xs:element name="mutable" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="administrative" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+
           <xs:element name="user" type="User" minOccurs="0" maxOccurs="1"/>
           <!-- used only to represent the initial set of permits for a
                new role, therafter modification of this permit set is
