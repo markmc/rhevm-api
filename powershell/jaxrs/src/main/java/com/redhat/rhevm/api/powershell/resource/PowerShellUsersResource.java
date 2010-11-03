@@ -46,7 +46,7 @@ public class PowerShellUsersResource extends InjectableUriProviderBase implement
     @Override
     public Users list() {
         Users ret = new Users();
-        for (User user : runAndParse(getSelectCommand("select-user", getUriInfo(), User.class))) {
+        for (User user : runAndParse(getSelectCommand("select-user", getUriInfo(), User.class, false))) {
             ret.getUsers().add(PowerShellUserResource.addLinks(getUriInfo(), user));
         }
         return ret;

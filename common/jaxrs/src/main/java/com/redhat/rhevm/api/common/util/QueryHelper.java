@@ -62,7 +62,7 @@ public class QueryHelper {
         RETURN_TYPES.put(DataCenter.class, "Datacenter" + RETURN_TYPE_SEPARTOR);
         RETURN_TYPES.put(StorageDomain.class, "Storage" + RETURN_TYPE_SEPARTOR);
         RETURN_TYPES.put(Template.class, "Template" + RETURN_TYPE_SEPARTOR);
-        RETURN_TYPES.put(User.class, "");
+        RETURN_TYPES.put(User.class, "Users");
         RETURN_TYPES.put(VmPool.class, "Pools" + RETURN_TYPE_SEPARTOR);
     }
 
@@ -80,23 +80,48 @@ public class QueryHelper {
     /**
      * Extract constraint from query parameters.
      *
+     * @param uriInfo  contains query parameters if set
+     * @param clz      the individual return type expected from the query
+     * @param typePrefix    true if return type prefix is to be included
+     * @return         constraint in correct format
+     */
+    public static String getConstraint(UriInfo uriInfo, Class<?> clz, boolean typePrefix) {
+        return getConstraint(uriInfo, null, clz, typePrefix);
+    }
+
+    /**
+     * Extract constraint from query parameters.
+     *
      * @param uriInfo       contains query parameters if set
      * @param defaultQuery  raw query to use if not present in URI parameters
      * @param clz           the individual return type expected from the query
      * @return              constraint in correct format
      */
     public static String getConstraint(UriInfo uriInfo, String defaultQuery, Class<?> clz) {
+        return getConstraint(uriInfo, defaultQuery, clz, true);
+    }
+
+    /**
+     * Extract constraint from query parameters.
+     *
+     * @param uriInfo       contains query parameters if set
+     * @param defaultQuery  raw query to use if not present in URI parameters
+     * @param clz           the individual return type expected from the query
+     * @param typePrefix    true if return type prefix is to be included
+     * @return              constraint in correct format
+     */
+    public static String getConstraint(UriInfo uriInfo, String defaultQuery, Class<?> clz, boolean typePrefix) {
         MultivaluedMap<String, String> queries = uriInfo.getQueryParameters();
         String constraint = queries != null
                             && queries.get(CONSTRAINT_PARAMETER) != null
                             && queries.get(CONSTRAINT_PARAMETER).size() > 0
                             ? queries.get(CONSTRAINT_PARAMETER).get(0)
                             : null;
+        String prefix = typePrefix ? RETURN_TYPES.get(clz) : "";
         return constraint != null
-               ? RETURN_TYPES.get(clz) + constraint
+               ? prefix + constraint
                : defaultQuery != null
-                 ? RETURN_TYPES.get(clz) + defaultQuery
+                 ? prefix + defaultQuery
                  : null;
     }
-
 }

@@ -77,8 +77,12 @@ public class AbstractPowerShellResource {
     }
 
     protected String getSelectCommand(String root, UriInfo uriInfo, Class<?> collectionType) {
+        return getSelectCommand(root, uriInfo, collectionType, true);
+    }
+
+    protected String getSelectCommand(String root, UriInfo uriInfo, Class<?> collectionType, boolean typePrefix) {
         String ret = root;
-        String constraint = QueryHelper.getConstraint(uriInfo, collectionType);
+        String constraint = QueryHelper.getConstraint(uriInfo, collectionType, typePrefix);
         if (constraint != null) {
             ret = new StringBuffer(root).append(SEARCH_TEXT)
                                         .append(PowerShellUtils.escape(constraint))

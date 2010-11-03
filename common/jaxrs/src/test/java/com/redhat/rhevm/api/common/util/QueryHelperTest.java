@@ -77,6 +77,7 @@ public class QueryHelperTest extends Assert {
     }
 
     private void doTestGetConstraint(Class<?> clz, String expectedPrefix) throws Exception {
+
         UriInfo uriInfo = createMock(UriInfo.class);
         MultivaluedMap<String, String> queries = createMock(MultivaluedMap.class);
         List<String> queryParam = new ArrayList<String>();
@@ -86,9 +87,43 @@ public class QueryHelperTest extends Assert {
 
         replay(uriInfo, queries);
 
-        assertEquals(expectedPrefix + QUERY, QueryHelper.getConstraint(uriInfo, clz));
+        if ("".equals(expectedPrefix)) {
+            assertEquals(QUERY, QueryHelper.getConstraint(uriInfo, clz, false));
+        } else {
+            assertEquals(expectedPrefix + QUERY, QueryHelper.getConstraint(uriInfo, clz));
+        }
 
         verify(uriInfo, queries);
+    }
+
+    @Test
+    public void testGetVMConstraintNoPrefix() throws Exception {
+        doTestGetConstraint(VM.class, "VMs : ");
+    }
+
+    @Test
+    public void testGetHostConstraintNoPrefix() throws Exception {
+        doTestGetConstraint(Host.class, "Hosts : ");
+    }
+
+    @Test
+    public void testGetClusterConstraintNoPrefix() throws Exception {
+        doTestGetConstraint(Cluster.class, "Clusters : ");
+    }
+
+    @Test
+    public void testGetDataCenterConstraintNoPrefix() throws Exception {
+        doTestGetConstraint(DataCenter.class, "Datacenter : ");
+    }
+
+    @Test
+    public void testGetStorageConstraintNoPrefix() throws Exception {
+        doTestGetConstraint(StorageDomain.class, "Storage : ");
+    }
+
+    @Test
+    public void testGetTemplateConstraintNoPrefix() throws Exception {
+        doTestGetConstraint(Template.class, "Template : ");
     }
 
     @Test
