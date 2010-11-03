@@ -19,6 +19,7 @@
 package com.redhat.rhevm.api.powershell.resource;
 
 import java.util.List;
+import javax.ws.rs.core.Response;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.model.Role;
 import com.redhat.rhevm.api.model.Roles;
@@ -42,6 +43,17 @@ public class PowerShellRolesResource extends InjectableUriProviderBase implement
             ret.getRoles().add(LinkHelper.addLinks(getUriInfo(), Role));
         }
         return ret;
+    }
+
+    @Override
+    public Response add(Role role) {
+        // REVISIT
+        return null;
+    }
+
+    @Override
+    public void remove(String id) {
+        // REVISIT
     }
 
     @Override
