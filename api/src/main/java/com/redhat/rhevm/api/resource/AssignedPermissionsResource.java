@@ -18,28 +18,45 @@
  */
 package com.redhat.rhevm.api.resource;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
-
+import javax.ws.rs.core.Response;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
-import com.redhat.rhevm.api.model.User;
+import com.redhat.rhevm.api.model.Permission;
+import com.redhat.rhevm.api.model.Permissions;
 
-
+/**
+ * Represents a permission sub-collection, scoped by User or some entity type.
+ */
 @Produces(MediaType.APPLICATION_XML)
-public interface UserResource {
+public interface AssignedPermissionsResource {
 
     @GET
     @Formatted
-    public User get();
+    public Permissions list();
 
-    @Path("roles")
-    public AssignedRolesResource getRolesResource();
+    @POST
+    @Formatted
+    @Consumes(MediaType.APPLICATION_XML)
+    public Response add(Permission permission);
 
-    @Path("permissions")
-    public AssignedPermissionsResource getPermissionsResource();
+    @DELETE
+    @Path("{id}")
+    public void remove(@PathParam("id") String id);
 
-    @Path("tags")
-    public AssignedTagsResource getTagsResource();
+    /**
+     * Sub-resource locator method, returns individual PermissionResource on which the
+     * remainder of the URI is dispatched.
+     *
+     * @param id  the Permission ID
+     * @return    matching subresource if found
+     */
+    @Path("{id}")
+    public PermissionResource getPermissionSubResource(@PathParam("id") String id);
 }

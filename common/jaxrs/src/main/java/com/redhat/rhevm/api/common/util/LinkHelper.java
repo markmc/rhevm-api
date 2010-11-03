@@ -39,6 +39,7 @@ import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.Iso;
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.NIC;
+import com.redhat.rhevm.api.model.Permission;
 import com.redhat.rhevm.api.model.Permit;
 import com.redhat.rhevm.api.model.Role;
 import com.redhat.rhevm.api.model.Snapshot;
@@ -71,6 +72,8 @@ import com.redhat.rhevm.api.resource.IsoResource;
 import com.redhat.rhevm.api.resource.IsosResource;
 import com.redhat.rhevm.api.resource.NetworkResource;
 import com.redhat.rhevm.api.resource.NetworksResource;
+import com.redhat.rhevm.api.resource.PermissionResource;
+import com.redhat.rhevm.api.resource.AssignedPermissionsResource;
 import com.redhat.rhevm.api.resource.PermitResource;
 import com.redhat.rhevm.api.resource.PermitsResource;
 import com.redhat.rhevm.api.resource.RoleResource;
@@ -153,6 +156,11 @@ public class LinkHelper {
 
         map = new ParentToCollectionMap(IsoResource.class, IsosResource.class, DataCenter.class);
         TYPES.put(Iso.class, map);
+
+        map = new ParentToCollectionMap(PermissionResource.class, AssignedPermissionsResource.class, User.class);
+        map.add(PermissionResource.class, AssignedPermissionsResource.class, Role.class);
+        map.add(PermissionResource.class, AssignedPermissionsResource.class, VM.class);
+        TYPES.put(Permission.class, map);
 
         map = new ParentToCollectionMap(NetworkResource.class, NetworksResource.class);
         map.add(AssignedNetworkResource.class, AssignedNetworksResource.class, Cluster.class);

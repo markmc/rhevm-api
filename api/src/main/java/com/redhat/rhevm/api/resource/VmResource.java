@@ -116,4 +116,7 @@ public interface VmResource extends UpdatableResource<VM> {
 
     @Path("tags")
     public AssignedTagsResource getTagsResource();
+
+    @Path("permissions")
+    public AssignedPermissionsResource getPermissionsResource();
 }

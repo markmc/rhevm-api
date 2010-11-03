@@ -31,6 +31,7 @@ import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.Ticket;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VmType;
+import com.redhat.rhevm.api.resource.AssignedPermissionsResource;
 import com.redhat.rhevm.api.resource.AssignedTagsResource;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
@@ -302,6 +303,11 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
     @Override
     public PowerShellAttachedUsersResource getUsersResource() {
         return new PowerShellAttachedUsersResource(getId(), getExecutor(), shellPools, getParser(), getUriProvider());
+    }
+
+    @Override
+    public AssignedPermissionsResource getPermissionsResource() {
+        return null;
     }
 
     private static void addSubCollection(UriInfo uriInfo, VM vm, String collection) {

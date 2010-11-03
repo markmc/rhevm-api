@@ -25,6 +25,7 @@ import javax.ws.rs.core.Response;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.resource.AssignedPermissionsResource;
 import com.redhat.rhevm.api.resource.AssignedTagsResource;
 import com.redhat.rhevm.api.resource.AttachedUsersResource;
 import com.redhat.rhevm.api.resource.DevicesResource;
@@ -152,5 +153,6 @@ public class MockVmResource extends AbstractMockResource<VM> implements VmResour
     @Override public DevicesResource       getNicsResource()      { return null; }
     @Override public SnapshotsResource     getSnapshotsResource() { return null; }
     @Override public AttachedUsersResource getUsersResource()     { return null; }
+    @Override public AssignedPermissionsResource getPermissionsResource() { return null; }
     @Override public AssignedTagsResource  getTagsResource()      { return null; }
 }

@@ -33,6 +33,7 @@ import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+import com.redhat.rhevm.api.resource.AssignedPermissionsResource;
 import com.redhat.rhevm.api.resource.AssignedRolesResource;
 import com.redhat.rhevm.api.resource.AssignedTagsResource;
 import com.redhat.rhevm.api.resource.UserResource;
@@ -85,6 +86,11 @@ public class PowerShellUserResource extends UriProviderWrapper implements UserRe
     @Override
     public AssignedRolesResource getRolesResource() {
         return new PowerShellAssignedRolesResource(id, getExecutor(), shellPools, getParser(), getUriProvider());
+    }
+
+    @Override
+    public AssignedPermissionsResource getPermissionsResource() {
+        return null;
     }
 
     @Override

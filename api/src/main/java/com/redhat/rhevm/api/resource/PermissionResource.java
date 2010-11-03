@@ -18,28 +18,20 @@
  */
 package com.redhat.rhevm.api.resource;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
-import com.redhat.rhevm.api.model.User;
+import com.redhat.rhevm.api.model.Permission;
 
 
 @Produces(MediaType.APPLICATION_XML)
-public interface UserResource {
+public interface PermissionResource {
 
     @GET
     @Formatted
-    public User get();
-
-    @Path("roles")
-    public AssignedRolesResource getRolesResource();
-
-    @Path("permissions")
-    public AssignedPermissionsResource getPermissionsResource();
-
-    @Path("tags")
-    public AssignedTagsResource getTagsResource();
+    public Permission get();
 }
