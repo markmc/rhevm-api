@@ -34,7 +34,8 @@ public class MockTemplateResourceTest extends MockTestBase {
         assertNotNull(template.getHref());
         assertTrue(template.getHref().endsWith("templates/" + template.getId()));
         assertNotNull(template.getActions());
-        assertEquals(template.getActions().getLinks().size(), 0);
+        assertEquals(1, template.getActions().getLinks().size());
+        assertEquals("export", template.getActions().getLinks().get(0).getRel());
     }
 
     @Test
