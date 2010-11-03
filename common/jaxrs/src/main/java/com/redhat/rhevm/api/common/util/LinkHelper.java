@@ -39,6 +39,7 @@ import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.Iso;
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.NIC;
+import com.redhat.rhevm.api.model.Permit;
 import com.redhat.rhevm.api.model.Role;
 import com.redhat.rhevm.api.model.Snapshot;
 import com.redhat.rhevm.api.model.Storage;
@@ -70,6 +71,8 @@ import com.redhat.rhevm.api.resource.IsoResource;
 import com.redhat.rhevm.api.resource.IsosResource;
 import com.redhat.rhevm.api.resource.NetworkResource;
 import com.redhat.rhevm.api.resource.NetworksResource;
+import com.redhat.rhevm.api.resource.PermitResource;
+import com.redhat.rhevm.api.resource.PermitsResource;
 import com.redhat.rhevm.api.resource.RoleResource;
 import com.redhat.rhevm.api.resource.AssignedRolesResource;
 import com.redhat.rhevm.api.resource.SnapshotResource;
@@ -157,6 +160,9 @@ public class LinkHelper {
 
         map = new ParentToCollectionMap(DeviceResource.class, DevicesResource.class, VM.class);
         TYPES.put(NIC.class, map);
+
+        map = new ParentToCollectionMap(PermitResource.class, PermitsResource.class, Role.class);
+        TYPES.put(Permit.class, map);
 
         map = new ParentToCollectionMap(RoleResource.class, RolesResource.class);
         map.add(RoleResource.class, AssignedRolesResource.class, User.class);

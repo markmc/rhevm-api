@@ -30,7 +30,9 @@ import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+import com.redhat.rhevm.api.resource.PermitsResource;
 import com.redhat.rhevm.api.resource.RoleResource;
+
 
 public class PowerShellRoleResource extends UriProviderWrapper implements RoleResource {
 
@@ -69,4 +71,10 @@ public class PowerShellRoleResource extends UriProviderWrapper implements RoleRe
 
         return LinkHelper.addLinks(getUriInfo(), runAndParseSingle(getRole.toString()));
     }
+
+    @Override
+    public PermitsResource getPermitsResource() {
+        return null;
+    }
+
 }

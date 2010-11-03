@@ -20,21 +20,15 @@ package com.redhat.rhevm.api.resource;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
-import javax.ws.rs.Path;
 
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
-import com.redhat.rhevm.api.model.Role;
-
+import com.redhat.rhevm.api.model.Permit;
 
 @Produces(MediaType.APPLICATION_XML)
-public interface RoleResource {
+public interface PermitResource {
 
     @GET
     @Formatted
-    public Role get();
-
-    @Path("permits")
-    public PermitsResource getPermitsResource();
-
+    public Permit get();
 }

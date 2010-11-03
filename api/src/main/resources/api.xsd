@@ -384,6 +384,7 @@
               </xs:appinfo>
             </xs:annotation>
           </xs:element>
+          <xs:element name="permits" type="Permits" minOccurs="0"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -540,6 +541,33 @@
 
   <!-- Users & Roles -->
 
+  <xs:element name="permit" type="Permit"/>
+
+  <xs:element name="permits" type="Permits"/>
+
+  <xs:complexType name="Permit">
+    <xs:complexContent>
+      <xs:extension base="BaseResource">
+        <xs:sequence>
+          <xs:element name="administrative" type="xs:boolean" maxOccurs="1"/>
+          <xs:element name="role" type="Role" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Permits">
+    <xs:sequence>
+      <xs:element name="permit" type="Permit" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <jaxb:property name="Permits"/>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:element name="role" type="Role"/>
 
   <xs:element name="roles" type="Roles"/>
@@ -549,6 +577,11 @@
       <xs:extension base="BaseResource">
         <xs:sequence>
           <xs:element name="user" type="User" minOccurs="0" maxOccurs="1"/>
+          <!-- used only to represent the initial set of permits for a
+               new role, therafter modification of this permit set is
+               only supported via the rel="permits" sub-collection -->
+          <xs:element name="permits" type="Permits" minOccurs="0" maxOccurs="1"/>
+          <!-- also rel="permits" links, see Permits above -->
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
