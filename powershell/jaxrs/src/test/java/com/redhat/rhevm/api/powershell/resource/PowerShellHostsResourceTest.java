@@ -30,6 +30,7 @@ public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionRes
     private static final String CLUSTER_ID = "1234-5678-8765-4321";
     private static final String CLUSTER_NAME = "pleiades";
     private static final String ADDRESS = "192.168.105.1";
+    private static final String PASSWORD = "foobar";
     private static final int PORT = 12345;
 
     public static final String[] extraArgs = new String[] { CLUSTER_ID, ADDRESS, Integer.toString(PORT) };
@@ -42,7 +43,7 @@ public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionRes
         "$c = select-cluster -searchtext \"name=" + CLUSTER_NAME + "\";";
 
     private static final String ADD_COMMAND = "add-host -name \"" + NEW_NAME + "\" ";
-    private static final String ADD_COMMAND_EPILOG = "-address \"" + ADDRESS + "\" -rootpassword notneeded";
+    private static final String ADD_COMMAND_EPILOG = "-address \"" + ADDRESS + "\" -rootpassword \"" + PASSWORD + "\"";
     private static final String CLUSTER_BY_NAME_ADD_COMMAND_EPILOG = ADD_COMMAND_EPILOG + " -hostclusterid $c.ClusterId";
     private static final String CLUSTER_BY_ID_ADD_COMMAND_EPILOG = ADD_COMMAND_EPILOG + " -hostclusterid \"" + CLUSTER_ID + "\"";
     private static final String PORT_OVERRIDE_ADD_COMMAND_EPILOG = ADD_COMMAND_EPILOG + " -port " + PORT;
@@ -113,7 +114,7 @@ public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionRes
             resource.add(model);
             fail("expected WebApplicationException on incomplete parameters");
         } catch (WebApplicationException wae) {
-             verifyIncompleteException(wae, "Host", "add", "address");
+             verifyIncompleteException(wae, "Host", "add", "address", "rootPassword");
         }
     }
 
@@ -149,5 +150,6 @@ public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionRes
 
     protected void populateModel(Host host) {
         host.setAddress(ADDRESS);
+        host.setRootPassword(PASSWORD);
     }
 }

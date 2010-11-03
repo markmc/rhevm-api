@@ -56,7 +56,7 @@ public class PowerShellHostsResource
 
     @Override
     public Response add(Host host) {
-        validateParameters(host, "name", "address");
+        validateParameters(host, "name", "address", "rootPassword");
         StringBuilder buf = new StringBuilder();
 
         String clusterArg = getClusterArg(buf, host);
@@ -66,8 +66,7 @@ public class PowerShellHostsResource
         buf.append(" -name " + PowerShellUtils.escape(host.getName()));
         buf.append(" -address " + PowerShellUtils.escape(host.getAddress()));
 
-        // It appears that the root password is not really needed here
-        buf.append(" -rootpassword notneeded");
+        buf.append(" -rootpassword " + PowerShellUtils.escape(host.getRootPassword()));
 
         buf.append(clusterArg);
 
