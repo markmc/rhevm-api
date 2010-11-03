@@ -515,6 +515,9 @@
                e.g. the standard VDSM port 54321 -->
           <xs:element name="port" type="xs:unsignedShort" minOccurs="0"/>
           <xs:element name="version" type="Version" minOccurs="0"/>
+          <!-- when creating a new host, a root password is required, but
+               this is not subsequently included in the representation -->
+          <xs:element name="root_password" type="xs:string" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
