@@ -30,6 +30,10 @@
             <entry>The listen port of the VDSM daemon running on this host</entry>
           </row>
           <row>
+            <entry><literal>root_password</literal></entry>
+            <entry>The root password of this host, by convention only included in the client-provided host representation on creation</entry>
+          </row>
+          <row>
             <entry><literal>version</literal></entry>
             <entry>The compatibility level of the host (see <xref linkend="chap-REST_API_Guide-Cluster_Level_Versions"/>)</entry>
           </row>
@@ -63,7 +67,7 @@
   </screen>
 
   <para>
-    When creating a new host, the <literal>name</literal> and <literal>address</literal> elements are required. Only the <literal>name</literal> element may be updated post-creation.
+    When creating a new host, the <literal>name</literal>, <literal>address</literal> and <literal>root_password</literal> elements are required. The <literal>root_password</literal> element is by convention only included in the client-provided initial representation (i.e. is not reported in the representations returned from subsequent <literal>GET</literal>s and <literal>UPDATE</literal>s). Only the <literal>name</literal> element may be updated post-creation.
   </para>
 
   <para>
