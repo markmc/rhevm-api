@@ -47,8 +47,15 @@ public class PowerShellTagsResource
 
     @Override
     public Tags list() {
+        StringBuilder buf = new StringBuilder();
+
+        buf.append("$tags = @(); ");
+        buf.append("$tags += get-tag -1; ");
+        buf.append("$tags += get-tags; ");
+        buf.append("$tags");
+
         Tags ret = new Tags();
-        for (Tag tag : runAndParse("get-tags")) {
+        for (Tag tag : runAndParse(buf.toString())) {
             ret.getTags().add(LinkHelper.addLinks(getUriInfo(), tag));
         }
         return ret;

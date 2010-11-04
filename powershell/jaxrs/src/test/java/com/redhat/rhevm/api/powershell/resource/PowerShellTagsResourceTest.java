@@ -29,6 +29,8 @@ import org.junit.Test;
 public class PowerShellTagsResourceTest
     extends AbstractPowerShellCollectionResourceTest<Tag, PowerShellTagResource, PowerShellTagsResource> {
 
+    private static final String GET_TAGS_COMMAND = "$tags = @(); $tags += get-tag -1; $tags += get-tags; $tags";
+
     public static final String[] extraArgs = new String[]{};
 
     public PowerShellTagsResourceTest() {
@@ -37,7 +39,7 @@ public class PowerShellTagsResourceTest
 
     @Test
     public void testList() throws Exception {
-        resource.setUriInfo(setUpResourceExpectations("get-tags", getSelectReturn(), NAMES));
+        resource.setUriInfo(setUpResourceExpectations(GET_TAGS_COMMAND, getSelectReturn(), NAMES));
         List<Tag> tags = resource.list().getTags();
         verifyCollection(tags, NAMES, DESCRIPTIONS);
     }
