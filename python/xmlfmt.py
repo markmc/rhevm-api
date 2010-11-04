@@ -192,10 +192,14 @@ class VmPool(Base):
     COLLECTIONS = [ "vmpools", ]
     ELEMENTS = Base.ELEMENTS + ['size', 'cluster', 'template']
 
+class Parent(Element):
+    NAME = 'parent'
+    ELEMENTS = Element.ELEMENTS + ['tag']
+
 class Tag(Base):
     NAME = "tag"
     COLLECTIONS = [ "tags", ]
-    ELEMENTS = Base.ELEMENTS + ['vm', 'host', 'user']
+    ELEMENTS = Base.ELEMENTS + ['vm', 'host', 'user', 'parent']
 
 class Template(Base):
     NAME = "template"
@@ -218,7 +222,7 @@ class User(Base):
     ELEMENTS = Base.ELEMENTS + ['domain', 'department', 'logged_in', 'last_name', 'user_name', 'groups', 'roles']
 
 
-TYPES = [ Action, Actions, Boot, CdRom, Cluster, CPU, DataCenter, Disk, GracePeriod, Host, HostNIC, IP, Iso, Link, LogicalUnit, MAC, Network, NIC, OS, Role, Storage, StorageDomain, Snapshot, Tag, Template, Topology, User, Version, VLAN, VM, VmPool]
+TYPES = [ Action, Actions, Boot, CdRom, Cluster, CPU, DataCenter, Disk, GracePeriod, Host, HostNIC, IP, Iso, Link, LogicalUnit, MAC, Network, NIC, OS, Parent, Role, Storage, StorageDomain, Snapshot, Tag, Template, Topology, User, Version, VLAN, VM, VmPool]
 
 def findEntityType(name):
     for t in TYPES:

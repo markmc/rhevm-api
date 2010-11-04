@@ -32,8 +32,11 @@ for fmt in [xmlfmt]:
 
    print "=== ", fmt.MEDIA_TYPE, " ==="
 
+   root = None
    for tag in t.get(links['tags']):
       t.get(tag.href)
+      if tag.name == "root":
+         root = tag
 
    tag = fmt.Tag()
    tag.name = randomName("tag")
@@ -59,4 +62,18 @@ for fmt in [xmlfmt]:
       child = t.create(host.link['tags'].href, child)
       t.delete(child.href)
 
+   child = fmt.Tag()
+   child.name = randomName("child")
+   child.parent = fmt.Parent()
+   child.parent.tag = fmt.Tag()
+   child.parent.tag.name = tag.name
+
+   child = t.create(links['tags'], child)
+
+   child.name += "u"
+   child.parent.tag.id = root.id
+   child = t.update(child.href, child, 200)
+
    t.delete(tag.href)
+
+   t.delete(child.href)
