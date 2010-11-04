@@ -23,11 +23,18 @@ import java.util.List;
 import javax.ws.rs.WebApplicationException;
 
 import com.redhat.rhevm.api.model.Tag;
+import com.redhat.rhevm.api.model.TagParent;
 
 import org.junit.Test;
 
 public class PowerShellTagsResourceTest
     extends AbstractPowerShellCollectionResourceTest<Tag, PowerShellTagResource, PowerShellTagsResource> {
+
+    private static final String PARENT_NAME = "parent";
+    private static final String PARENT_ID = asId(PARENT_NAME);
+
+    private static final String ADD_WITH_PARENT_PROLOG = "$parent = get-tag \"" + PARENT_ID + "\"; ";
+    private static final String ADD_WITH_PARENT_EPILOG = " -parenttagobject $parent";
 
     private static final String GET_TAGS_COMMAND = "$tags = @(); $tags += get-tag -1; $tags += get-tags; $tags";
 
@@ -54,6 +61,23 @@ public class PowerShellTagsResourceTest
         verifyResponse(resource.add(getModel(NEW_NAME, NEW_DESCRIPTION)),
                        NEW_NAME,
                        NEW_DESCRIPTION);
+    }
+
+    @Test
+    public void testAddWithParent() throws Exception {
+        Tag tag = getModel(NEW_NAME, NEW_DESCRIPTION);
+        tag.setParent(new TagParent());
+        tag.getParent().setTag(new Tag());
+        tag.getParent().getTag().setId(PARENT_ID);
+
+        resource.setUriInfo(setUpResourceExpectations(asArray(ADD_WITH_PARENT_PROLOG +
+                                                              getAddCommand() +
+                                                              ADD_WITH_PARENT_EPILOG),
+                                                      asArray(getAddReturn()),
+                                                      true,
+                                                      null,
+                                                      NEW_NAME));
+        verifyResponse(resource.add(tag), NEW_NAME, NEW_DESCRIPTION);
     }
 
     @Test

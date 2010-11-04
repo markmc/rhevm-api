@@ -65,12 +65,25 @@ public class PowerShellTagsResource
     public Response add(Tag tag) {
         validateParameters(tag, "name");
 
+        String parentId = null;
+        if (tag.isSetParent() && tag.getParent().isSetTag() && tag.getParent().getTag().isSetId()) {
+            parentId = tag.getParent().getTag().getId();
+        }
+
         StringBuilder buf = new StringBuilder();
+
+        if (parentId != null) {
+            buf.append("$parent = get-tag " + PowerShellUtils.escape(parentId) + "; ");
+        }
 
         buf.append("add-tag");
         buf.append(" -name " + PowerShellUtils.escape(tag.getName()));
         if (tag.isSetDescription()) {
             buf.append(" -description " + PowerShellUtils.escape(tag.getDescription()));
+        }
+
+        if (parentId != null) {
+            buf.append(" -parenttagobject $parent");
         }
 
         tag = LinkHelper.addLinks(getUriInfo(), runAndParseSingle(buf.toString()));
