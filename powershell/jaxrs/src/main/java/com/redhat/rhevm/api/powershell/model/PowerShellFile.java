@@ -16,31 +16,28 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api.powershell.resource;
+package com.redhat.rhevm.api.powershell.model;
 
+import java.util.ArrayList;
+import java.util.List;
 
-import com.redhat.rhevm.api.model.Iso;
-import com.redhat.rhevm.api.resource.IsoResource;
+import com.redhat.rhevm.api.model.File;
+import com.redhat.rhevm.api.model.FileType;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 
+public class PowerShellFile {
 
-public class PowerShellIsoResource implements IsoResource {
+    public static List<File> parse(PowerShellParser parser, String output) {
+        List<File> ret = new ArrayList<File>();
 
-    private String id;
-    private String dataCenterId;
-    private PowerShellIsosResource parent;
+        for (PowerShellParser.Entity entity : parser.parse(output)) {
+            File file = new File();
+            file.setId(entity.getValue());
+            file.setName(entity.getValue());
+            file.setType(FileType.ISO);
+            ret.add(file);
+        }
 
-    public PowerShellIsoResource(String id, String dataCenterId, PowerShellIsosResource parent) {
-        this.id = id;
-        this.dataCenterId = dataCenterId;
-        this.parent = parent;
-    }
-
-    @Override
-    public Iso get() {
-        Iso iso = new Iso();
-        iso.setId(id);
-        iso.setName(id);
-
-        return parent.addLinks(iso, dataCenterId);
+        return ret;
     }
 }

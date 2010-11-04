@@ -320,6 +320,13 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <xs:simpleType name="FileType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ISO"/>
+      <xs:enumeration value="VFD"/>
+    </xs:restriction>
+  </xs:simpleType>
+
   <!-- CPUs -->
 
   <xs:element name="cpu" type="CPU"/>
@@ -443,7 +450,7 @@
           <xs:element name="version" type="Version" minOccurs="0"/>
           <xs:element name="supported_versions" type="SupportedVersions" minOccurs="0"/>
           <xs:element name="status" type="DataCenterStatus" minOccurs="0"/>
-          <!-- also rel="isos" and rel="storagedomains" links -->
+          <!-- also rel="files" and rel="storagedomains" links -->
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -687,32 +694,33 @@
     </xs:complexContent>
   </xs:complexType>
 
-  <!-- ISOs -->
+  <!-- Files (ISO or VFD files) -->
 
-  <xs:element name="iso" type="Iso"/>
+  <xs:element name="file" type="File"/>
 
-  <xs:element name="isos" type="Isos"/>
+  <xs:element name="files" type="Files"/>
 
-  <xs:complexType name="Iso">
+  <xs:complexType name="File">
     <xs:complexContent>
       <xs:extension base="BaseResource">
         <xs:sequence>
+          <xs:element name="type" type="FileType" minOccurs="0"/>
           <xs:element ref="data_center" minOccurs="0"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:complexType name="Isos">
+  <xs:complexType name="Files">
     <xs:complexContent>
       <xs:extension base="BaseResources">
         <xs:sequence>
           <xs:annotation>
             <xs:appinfo>
-                <jaxb:property name="Isos"/>
+                <jaxb:property name="Files"/>
             </xs:appinfo>
           </xs:annotation>
-          <xs:element ref="iso" maxOccurs="unbounded"/>
+          <xs:element ref="file" maxOccurs="unbounded"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -1126,7 +1134,7 @@
     <xs:complexContent>
       <xs:extension base="BaseDevice">
         <xs:sequence>
-          <xs:element ref="iso"/>
+          <xs:element ref="file"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>

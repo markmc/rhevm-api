@@ -23,7 +23,7 @@ import java.util.concurrent.Executor;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.resource.AttachedStorageDomainsResource;
 import com.redhat.rhevm.api.resource.DataCenterResource;
-import com.redhat.rhevm.api.resource.IsosResource;
+import com.redhat.rhevm.api.resource.FilesResource;
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
@@ -77,7 +77,7 @@ public class MockDataCenterResource extends AbstractMockResource<DataCenter> imp
         return addLinks();
     }
 
-    public IsosResource getIsosResource() {
+    public FilesResource getFilesResource() {
         return null;
     }
 

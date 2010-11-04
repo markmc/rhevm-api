@@ -18,24 +18,30 @@
  */
 package com.redhat.rhevm.api.powershell.model;
 
-import java.util.ArrayList;
+import org.junit.Test;
 import java.util.List;
+import com.redhat.rhevm.api.model.File;
+import com.redhat.rhevm.api.model.FileType;
 
-import com.redhat.rhevm.api.model.Iso;
-import com.redhat.rhevm.api.powershell.util.PowerShellParser;
+public class PowerShellFileTest extends PowerShellModelTest {
 
-public class PowerShellIso {
+    private void testFile(File i, String id) {
+        assertEquals(id, i.getId());
+        assertEquals(id, i.getName());
+        assertEquals(FileType.ISO, i.getType());
+    }
 
-    public static List<Iso> parse(PowerShellParser parser, String output) {
-        List<Iso> ret = new ArrayList<Iso>();
+    @Test
+    public void testParse() throws Exception {
+        String data = readFileContents("iso.xml");
+        assertNotNull(data);
 
-        for (PowerShellParser.Entity entity : parser.parse(output)) {
-            Iso iso = new Iso();
-            iso.setId(entity.getValue());
-            iso.setName(entity.getValue());
-            ret.add(iso);
-        }
+        List<File> files = PowerShellFile.parse(getParser(), data);
 
-        return ret;
+        assertEquals(files.size(), 3);
+
+        testFile(files.get(0), "Fedora-13-x86_64-Live.iso");
+        testFile(files.get(1), "en_winxp_pro_with_sp2.iso");
+        testFile(files.get(2), "WindowsXP-sp2-vlk.iso");
     }
 }

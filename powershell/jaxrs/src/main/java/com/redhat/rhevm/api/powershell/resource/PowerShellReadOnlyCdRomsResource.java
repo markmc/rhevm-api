@@ -23,7 +23,7 @@ import java.util.List;
 
 import com.redhat.rhevm.api.model.CdRom;
 import com.redhat.rhevm.api.model.CdRoms;
-import com.redhat.rhevm.api.model.Iso;
+import com.redhat.rhevm.api.model.File;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.LinkHelper;
@@ -44,8 +44,8 @@ public class PowerShellReadOnlyCdRomsResource extends AbstractPowerShellDevicesR
     protected CdRom buildCdRom(String cdIsoPath) {
         CdRom cdrom = new CdRom();
         cdrom.setId(CDROM_ID);
-        cdrom.setIso(new Iso());
-        cdrom.getIso().setId(cdIsoPath);
+        cdrom.setFile(new File());
+        cdrom.getFile().setId(cdIsoPath);
         cdrom.setVm(new VM());
         cdrom.getVm().setId(parentId);
         return cdrom;

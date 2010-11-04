@@ -54,8 +54,8 @@ public class PowerShellCdRomsResource
 
     @Override
     public Response add(CdRom cdrom) {
-        validateParameters(cdrom, "iso");
-        String cdIsoPath = cdrom.getIso().getId();
+        validateParameters(cdrom, "file");
+        String cdIsoPath = cdrom.getFile().getId();
 
         updateCdRom(cdIsoPath);
 

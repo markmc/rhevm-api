@@ -16,33 +16,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api.powershell.model;
+package com.redhat.rhevm.api.powershell.resource;
 
-import org.junit.Test;
+import com.redhat.rhevm.api.model.File;
+import com.redhat.rhevm.api.model.FileType;
+import com.redhat.rhevm.api.resource.FileResource;
 
-import java.util.List;
+public class PowerShellFileResource implements FileResource {
 
-import com.redhat.rhevm.api.model.Iso;
+    private String id;
+    private String dataCenterId;
+    private PowerShellFilesResource parent;
 
-
-public class PowerShellIsoTest extends PowerShellModelTest {
-
-    private void testIso(Iso i, String id) {
-        assertEquals(id, i.getId());
-        assertEquals(id, i.getName());
+    public PowerShellFileResource(String id, String dataCenterId, PowerShellFilesResource parent) {
+        this.id = id;
+        this.dataCenterId = dataCenterId;
+        this.parent = parent;
     }
 
-    @Test
-    public void testParse() throws Exception {
-        String data = readFileContents("iso.xml");
-        assertNotNull(data);
-
-        List<Iso> isos = PowerShellIso.parse(getParser(), data);
-
-        assertEquals(isos.size(), 3);
-
-        testIso(isos.get(0), "Fedora-13-x86_64-Live.iso");
-        testIso(isos.get(1), "en_winxp_pro_with_sp2.iso");
-        testIso(isos.get(2), "WindowsXP-sp2-vlk.iso");
+    @Override
+    public File get() {
+        File file = new File();
+        file.setId(id);
+        file.setName(id);
+        file.setType(FileType.ISO);
+        return parent.addLinks(file, dataCenterId);
     }
 }

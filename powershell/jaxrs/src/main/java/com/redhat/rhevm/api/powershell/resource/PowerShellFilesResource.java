@@ -21,22 +21,21 @@ package com.redhat.rhevm.api.powershell.resource;
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.model.DataCenter;
-import com.redhat.rhevm.api.model.Iso;
-import com.redhat.rhevm.api.model.Isos;
-import com.redhat.rhevm.api.resource.IsoResource;
-import com.redhat.rhevm.api.resource.IsosResource;
-import com.redhat.rhevm.api.powershell.model.PowerShellIso;
+import com.redhat.rhevm.api.model.File;
+import com.redhat.rhevm.api.model.Files;
+import com.redhat.rhevm.api.resource.FileResource;
+import com.redhat.rhevm.api.resource.FilesResource;
+import com.redhat.rhevm.api.powershell.model.PowerShellFile;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
-
-public class PowerShellIsosResource extends UriProviderWrapper implements IsosResource {
+public class PowerShellFilesResource extends UriProviderWrapper implements FilesResource {
 
     private String dataCenterId;
 
-    public PowerShellIsosResource(String dataCenterId,
+    public PowerShellFilesResource(String dataCenterId,
                                   PowerShellPoolMap shellPools,
                                   PowerShellParser parser,
                                   UriInfoProvider uriProvider) {
@@ -45,7 +44,7 @@ public class PowerShellIsosResource extends UriProviderWrapper implements IsosRe
     }
 
     @Override
-    public Isos list() {
+    public Files list() {
         StringBuilder buf = new StringBuilder();
         buf.append("$d = get-datacenter " + PowerShellUtils.escape(dataCenterId));
         buf.append("; ");
@@ -53,23 +52,21 @@ public class PowerShellIsosResource extends UriProviderWrapper implements IsosRe
         buf.append("get-isoimages");
         buf.append(" -datacenterid " + PowerShellUtils.escape(dataCenterId));
         buf.append("}");
-        Isos ret = new Isos();
-        for (Iso iso : PowerShellIso.parse(parser, PowerShellCmd.runCommand(getPool(), buf.toString()))) {
-            ret.getIsos().add(addLinks(iso, dataCenterId));
+        Files ret = new Files();
+        for (File file : PowerShellFile.parse(parser, PowerShellCmd.runCommand(getPool(), buf.toString()))) {
+            ret.getFiles().add(addLinks(file, dataCenterId));
         }
         return ret;
     }
 
     @Override
-    public IsoResource getIsoSubResource(String id) {
-        return new PowerShellIsoResource(id, dataCenterId, this);
+    public FileResource getFileSubResource(String id) {
+        return new PowerShellFileResource(id, dataCenterId, this);
     }
 
-    public Iso addLinks(Iso iso, String dataCenterId) {
-        iso.setDataCenter(new DataCenter());
-        iso.getDataCenter().setId(dataCenterId);
-
-        return LinkHelper.addLinks(getUriInfo(), iso);
+    public File addLinks(File file, String dataCenterId) {
+        file.setDataCenter(new DataCenter());
+        file.getDataCenter().setId(dataCenterId);
+        return LinkHelper.addLinks(getUriInfo(), file);
     }
-
 }

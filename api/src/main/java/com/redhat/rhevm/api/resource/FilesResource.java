@@ -19,16 +19,20 @@
 package com.redhat.rhevm.api.resource;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
-import com.redhat.rhevm.api.model.Iso;
-
+import com.redhat.rhevm.api.model.Files;
 
 @Produces(MediaType.APPLICATION_XML)
-public interface IsoResource {
+public interface FilesResource {
 
     @GET
     @Formatted
-    public Iso get();
+    public Files list();
+
+    @Path("{id}")
+    public FileResource getFileSubResource(@PathParam("id") String id);
 }

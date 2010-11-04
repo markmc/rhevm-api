@@ -30,7 +30,7 @@ import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.Host;
-import com.redhat.rhevm.api.model.Iso;
+import com.redhat.rhevm.api.model.File;
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.NIC;
 import com.redhat.rhevm.api.model.Storage;
@@ -56,7 +56,7 @@ public class LinkHelperTest extends Assert {
     private static final String DATA_CENTER_ID = "majestic";
     private static final String NETWORK_ID = "stupendous";
     private static final String TAG_ID = "outstanding";
-    private static final String ISO_ID = "faroutdude";
+    private static final String FILE_ID = "faroutdude";
     private static final String CDROM_ID = "wonderful";
     private static final String DISK_ID = "fantastic";
     private static final String NIC_ID = "super";
@@ -82,7 +82,7 @@ public class LinkHelperTest extends Assert {
     private static final String HOST_TAG_HREF = BASE_PATH + "/hosts/" + HOST_ID + "/tags/" + TAG_ID;
     private static final String USER_TAG_HREF = BASE_PATH + "/users/" + USER_ID + "/tags/" + TAG_ID;
     private static final String CLUSTER_NETWORK_HREF = BASE_PATH + "/clusters/" + CLUSTER_ID + "/networks/" + NETWORK_ID;
-    private static final String ISO_HREF = BASE_PATH + "/datacenters/" + DATA_CENTER_ID + "/isos/" + ISO_ID;
+    private static final String FILE_HREF = BASE_PATH + "/datacenters/" + DATA_CENTER_ID + "/files/" + FILE_ID;
     private static final String CDROM_HREF = VM_HREF + "/cdroms/" + CDROM_ID;
     private static final String DISK_HREF = VM_HREF + "/disks/" + DISK_ID;
     private static final String NIC_HREF = VM_HREF + "/nics/" + NIC_ID;
@@ -285,16 +285,16 @@ public class LinkHelperTest extends Assert {
     }
 
     @Test
-    public void testIsoLinks() throws Exception {
-        Iso iso = new Iso();
-        iso.setId(ISO_ID);
+    public void testFileLinks() throws Exception {
+        File file = new File();
+        file.setId(FILE_ID);
 
-        iso.setDataCenter(new DataCenter());
-        iso.getDataCenter().setId(DATA_CENTER_ID);
+        file.setDataCenter(new DataCenter());
+        file.getDataCenter().setId(DATA_CENTER_ID);
 
-        LinkHelper.addLinks(setUpUriExpectations(), iso);
+        LinkHelper.addLinks(setUpUriExpectations(), file);
 
-        assertEquals(ISO_HREF, iso.getHref());
+        assertEquals(FILE_HREF, file.getHref());
     }
 
     @Test

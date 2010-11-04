@@ -40,8 +40,8 @@ public interface DataCenterResource extends UpdatableResource<DataCenter> {
     @Consumes(MediaType.APPLICATION_XML)
     public DataCenter update(DataCenter dataCenter);
 
-    @Path("isos")
-    public IsosResource getIsosResource();
+    @Path("files")
+    public FilesResource getFilesResource();
 
     @Path("storagedomains")
     public AttachedStorageDomainsResource getAttachedStorageDomainsResource();

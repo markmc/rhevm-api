@@ -32,7 +32,7 @@ import com.redhat.rhevm.api.model.CdRoms;
 import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.Disks;
 import com.redhat.rhevm.api.model.DiskType;
-import com.redhat.rhevm.api.model.Iso;
+import com.redhat.rhevm.api.model.File;
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.NIC;
 import com.redhat.rhevm.api.model.Nics;
@@ -162,8 +162,8 @@ public class PowerShellDevicesResourceTest
                                                                               uriProvider);
 
         CdRom cdrom = new CdRom();
-        cdrom.setIso(new Iso());
-        cdrom.getIso().setId(ISO_NAME);
+        cdrom.setFile(new File());
+        cdrom.getFile().setId(ISO_NAME);
 
         String command = MessageFormat.format(UPDATE_CDROM_CMD, VM_ID, ISO_NAME);
 
