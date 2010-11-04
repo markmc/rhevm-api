@@ -47,8 +47,12 @@ public class PowerShellIsosResource extends UriProviderWrapper implements IsosRe
     @Override
     public Isos list() {
         StringBuilder buf = new StringBuilder();
+        buf.append("$d = get-datacenter " + PowerShellUtils.escape(dataCenterId));
+        buf.append("; ");
+        buf.append("if ($d.status -eq \"Up\") { ");
         buf.append("get-isoimages");
         buf.append(" -datacenterid " + PowerShellUtils.escape(dataCenterId));
+        buf.append("}");
         Isos ret = new Isos();
         for (Iso iso : PowerShellIso.parse(parser, PowerShellCmd.runCommand(getPool(), buf.toString()))) {
             ret.getIsos().add(addLinks(iso, dataCenterId));
