@@ -66,14 +66,21 @@ public class PowerShellTagsResource
         validateParameters(tag, "name");
 
         String parentId = null;
-        if (tag.isSetParent() && tag.getParent().isSetTag() && tag.getParent().getTag().isSetId()) {
-            parentId = tag.getParent().getTag().getId();
+        String parentName = null;
+        if (tag.isSetParent() && tag.getParent().isSetTag()) {
+            if (tag.getParent().getTag().isSetId()) {
+                parentId = tag.getParent().getTag().getId();
+            } else if (tag.getParent().getTag().isSetName()) {
+                parentName = tag.getParent().getTag().getName();
+            }
         }
 
         StringBuilder buf = new StringBuilder();
 
         if (parentId != null) {
             buf.append("$parent = get-tag " + PowerShellUtils.escape(parentId) + "; ");
+        } else if (parentName != null) {
+            buf.append("$parent = get-tags | ? { $_.name -eq " + PowerShellUtils.escape(parentName) + " }; ");
         }
 
         buf.append("add-tag");
@@ -82,7 +89,7 @@ public class PowerShellTagsResource
             buf.append(" -description " + PowerShellUtils.escape(tag.getDescription()));
         }
 
-        if (parentId != null) {
+        if (parentId != null || parentName != null) {
             buf.append(" -parenttagobject $parent");
         }
 
