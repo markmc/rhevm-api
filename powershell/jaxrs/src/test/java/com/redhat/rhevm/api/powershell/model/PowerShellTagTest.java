@@ -26,10 +26,13 @@ import com.redhat.rhevm.api.model.Tag;
 
 public class PowerShellTagTest extends PowerShellModelTest {
 
-    private void testTag(Tag t, String id, String name, String description) {
+    private void testTag(Tag t, String id, String name, String description, String parentId) {
         assertEquals(id, t.getId());
         assertEquals(name, t.getName());
         assertEquals(description, t.getDescription());
+        assertNotNull(t.getParent());
+        assertNotNull(t.getParent().getTag());
+        assertEquals(parentId, t.getParent().getTag().getId());
     }
 
     @Test
@@ -41,7 +44,7 @@ public class PowerShellTagTest extends PowerShellModelTest {
 
         assertEquals(2, tags.size());
 
-        testTag(tags.get(0), "0", "foo", "Foo tag");
-        testTag(tags.get(1), "1", "bar", "Bar tag");
+        testTag(tags.get(0), "0", "foo", "Foo tag", "-1");
+        testTag(tags.get(1), "1", "bar", "Bar tag", "-1");
     }
 }

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.redhat.rhevm.api.model.Tag;
+import com.redhat.rhevm.api.model.TagParent;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 
 public class PowerShellTag {
@@ -35,6 +36,10 @@ public class PowerShellTag {
             tag.setId(entity.get("tagid", String.class, Integer.class).toString());
             tag.setName(entity.get("name"));
             tag.setDescription(entity.get("description"));
+
+            tag.setParent(new TagParent());
+            tag.getParent().setTag(new Tag());
+            tag.getParent().getTag().setId(entity.get("parentid", String.class, Integer.class).toString());
 
             ret.add(tag);
         }
