@@ -82,18 +82,18 @@ public class PowerShellNetworkResource extends AbstractPowerShellActionableResou
 
         StringBuilder buf = new StringBuilder();
 
-        buf.append("foreach ($i in $n) {");
-        buf.append("  if ($i.networkid -eq " + PowerShellUtils.escape(getId()) + ") {");
+        buf.append("foreach ($i in $n) { ");
+        buf.append("if ($i.networkid -eq " + PowerShellUtils.escape(getId()) + ") { ");
 
         if (network.getName() != null) {
-            buf.append("    $i.name = " + PowerShellUtils.escape(network.getName()) + ";");
+            buf.append("$i.name = " + PowerShellUtils.escape(network.getName()) + "; ");
         }
 
-        buf.append("    update-network");
+        buf.append("update-network");
         buf.append(" -networkobject $i");
-        buf.append(" -datacenterid " + PowerShellUtils.escape(network.getDataCenter().getId()));
+        buf.append(" -datacenterid $i.datacenterid");
 
-        buf.append("  }");
+        buf.append(" } ");
         buf.append("}");
 
         return LinkHelper.addLinks(getUriInfo(), runAndParseSingle(buf.toString()));

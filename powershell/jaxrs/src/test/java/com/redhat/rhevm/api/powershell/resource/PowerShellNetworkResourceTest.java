@@ -48,7 +48,7 @@ public class PowerShellNetworkResourceTest extends AbstractPowerShellResourceTes
     private static final String DATA_CENTER_ID = PowerShellNetworksResourceTest.DATA_CENTER_ID;
 
     private static final String GET_COMMAND = "$n = get-networks;foreach ($i in $n) {  if ($i.networkid -eq \"" + NETWORK_ID + "\") {    $i  }}";
-    private static final String UPDATE_COMMAND = "foreach ($i in $n) {  if ($i.networkid -eq \"" + NETWORK_ID + "\") {    $i.name = \"eris\";    update-network -networkobject $i -datacenterid \"" + DATA_CENTER_ID + "\"  }}";
+    private static final String UPDATE_COMMAND = "foreach ($i in $n) { if ($i.networkid -eq \"" + NETWORK_ID + "\") { $i.name = \"eris\"; update-network -networkobject $i -datacenterid $i.datacenterid } }";
 
     protected PowerShellNetworkResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider) {
         return new PowerShellNetworkResource(NETWORK_ID, executor, uriProvider, poolMap, parser);
@@ -74,7 +74,9 @@ public class PowerShellNetworkResourceTest extends AbstractPowerShellResourceTes
         setUriInfo(setUpNetworkExpectations(UPDATE_COMMAND,
                                             formatNetwork("eris"),
                                             "eris"));
-        verifyNetwork(resource.update(getNetwork("eris")), "eris");
+        Network network = new Network();
+        network.setName("eris");
+        verifyNetwork(resource.update(network), "eris");
     }
 
     @Test
