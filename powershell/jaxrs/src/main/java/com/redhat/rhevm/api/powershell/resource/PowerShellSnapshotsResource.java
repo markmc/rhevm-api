@@ -114,7 +114,9 @@ public class PowerShellSnapshotsResource extends UriProviderWrapper implements S
         buf.append("$snaps = @(); ");
         buf.append("$vm = get-vm " + PowerShellUtils.escape(vmId) + "; ");
         buf.append("foreach ($d in $vm.getdiskimages()) { ");
+        buf.append("try { ");
         buf.append("$snaps += get-snapshot -vmid $vm.vmid -drive $d.internaldrivemapping ");
+        buf.append("} catch { [console]::error.writeline($_.exception) } ");
         buf.append("} ");
         buf.append("$snaps");
 
