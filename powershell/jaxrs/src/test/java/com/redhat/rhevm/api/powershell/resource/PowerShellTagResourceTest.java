@@ -26,6 +26,7 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.Fault;
 import com.redhat.rhevm.api.model.Tag;
+import com.redhat.rhevm.api.model.TagParent;
 
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
@@ -46,8 +47,12 @@ public class PowerShellTagResourceTest extends AbstractPowerShellResourceTest<Ta
     private static final String TAG_ID = Integer.toString(TAG_NAME.hashCode());
     private static final String TAG_DESCRIPTION = "foo tag";
 
+    private static final String PARENT_NAME = "parent";
+    private static final String PARENT_ID = asId(PARENT_NAME);
+
     private static final String GET_COMMAND = "get-tag \"" + TAG_ID + "\"";
-    private static final String UPDATE_COMMAND = "$t = " + GET_COMMAND + "; $t.name = \"eris\"; $t.description = \"\"; update-tag -tagobject $t";
+    private static final String UPDATE_COMMAND = "$t = " + GET_COMMAND + "; $t.name = \"eris\"; $t.description = \"\"; $t = update-tag -tagobject $t; $t";
+    private static final String MOVE_COMMAND = "$t = " + GET_COMMAND + "; $parent = get-tag \"" + PARENT_ID + "\"; $t = update-tag -tagobject $t; if ($t.parentid -ne $parent.tagid) { move-tag -tagobject $t -parenttagobject $parent } $t";
 
     protected PowerShellTagResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider) {
         return new PowerShellTagResource(TAG_ID, executor, uriProvider, poolMap, parser);
@@ -74,6 +79,19 @@ public class PowerShellTagResourceTest extends AbstractPowerShellResourceTest<Ta
                                         formatTag("eris", ""),
                                         "eris"));
         verifyTag(resource.update(getTag("eris", "")), "eris", null);
+    }
+
+    @Test
+    public void testMove() throws Exception {
+        Tag tag = new Tag();
+        tag.setParent(new TagParent());
+        tag.getParent().setTag(new Tag());
+        tag.getParent().getTag().setId(PARENT_ID);
+
+        setUriInfo(setUpTagExpectations(MOVE_COMMAND,
+                                        formatTag("eris", ""),
+                                        "eris"));
+        verifyTag(resource.update(tag), "eris", null);
     }
 
     @Test

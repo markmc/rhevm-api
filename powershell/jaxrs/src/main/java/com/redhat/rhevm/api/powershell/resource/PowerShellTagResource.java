@@ -70,9 +70,18 @@ public class PowerShellTagResource extends AbstractPowerShellActionableResource<
     public Tag update(Tag tag) {
         validateUpdate(tag);
 
+        String parentId = null;
+        if (tag.isSetParent() && tag.getParent().isSetTag() && tag.getParent().getTag().isSetId()) {
+            parentId = tag.getParent().getTag().getId();
+        }
+
         StringBuilder buf = new StringBuilder();
 
         buf.append("$t = get-tag " + PowerShellUtils.escape(getId()) + "; ");
+
+        if (parentId != null) {
+            buf.append("$parent = get-tag " + PowerShellUtils.escape(parentId) + "; ");
+        }
 
         if (tag.getName() != null) {
             buf.append("$t.name = " + PowerShellUtils.escape(tag.getName()) + "; ");
@@ -81,7 +90,15 @@ public class PowerShellTagResource extends AbstractPowerShellActionableResource<
             buf.append("$t.description = " + PowerShellUtils.escape(tag.getDescription()) + "; ");
         }
 
-        buf.append("update-tag -tagobject $t");
+        buf.append("$t = update-tag -tagobject $t; ");
+
+        if (parentId != null) {
+            buf.append("if ($t.parentid -ne $parent.tagid) { ");
+            buf.append("move-tag -tagobject $t -parenttagobject $parent");
+            buf.append(" } ");
+        }
+
+        buf.append("$t");
 
         return LinkHelper.addLinks(getUriInfo(), runAndParseSingle(buf.toString()));
     }
