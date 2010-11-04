@@ -26,6 +26,7 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.Fault;
+import com.redhat.rhevm.api.model.IP;
 import com.redhat.rhevm.api.model.Network;
 
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
@@ -48,7 +49,11 @@ public class PowerShellNetworkResourceTest extends AbstractPowerShellResourceTes
     private static final String DATA_CENTER_ID = PowerShellNetworksResourceTest.DATA_CENTER_ID;
 
     private static final String GET_COMMAND = "$n = get-networks;foreach ($i in $n) {  if ($i.networkid -eq \"" + NETWORK_ID + "\") {    $i  }}";
-    private static final String UPDATE_COMMAND = "foreach ($i in $n) { if ($i.networkid -eq \"" + NETWORK_ID + "\") { $i.name = \"eris\"; update-network -networkobject $i -datacenterid $i.datacenterid } }";
+    private static final String UPDATE_COMMAND_PREFIX = "foreach ($i in $n) { if ($i.networkid -eq \"" + NETWORK_ID + "\") { ";
+    private static final String UPDATE_COMMAND_SUFFIX = "update-network -networkobject $i -datacenterid $i.datacenterid } }";
+    private static final String UPDATE_NAME_COMMAND = UPDATE_COMMAND_PREFIX + "$i.name = \"eris\"; " + UPDATE_COMMAND_SUFFIX;
+    private static final String UPDATE_IP_COMMAND = UPDATE_COMMAND_PREFIX + "$i.address = \"172.31.0.110\"; " + UPDATE_COMMAND_SUFFIX;
+    private static final String DISABLE_STP_COMMAND = UPDATE_COMMAND_PREFIX + "$i.stp = $false; " + UPDATE_COMMAND_SUFFIX;
 
     protected PowerShellNetworkResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider) {
         return new PowerShellNetworkResource(NETWORK_ID, executor, uriProvider, poolMap, parser);
@@ -70,12 +75,33 @@ public class PowerShellNetworkResourceTest extends AbstractPowerShellResourceTes
     }
 
     @Test
-    public void testGoodUpdate() throws Exception {
-        setUriInfo(setUpNetworkExpectations(UPDATE_COMMAND,
+    public void testUpdateName() throws Exception {
+        setUriInfo(setUpNetworkExpectations(UPDATE_NAME_COMMAND,
                                             formatNetwork("eris"),
                                             "eris"));
         Network network = new Network();
         network.setName("eris");
+        verifyNetwork(resource.update(network), "eris");
+    }
+
+    @Test
+    public void testUpdateIp() throws Exception {
+        setUriInfo(setUpNetworkExpectations(UPDATE_IP_COMMAND,
+                                            formatNetwork("eris"),
+                                            "eris"));
+        Network network = new Network();
+        network.setIp(new IP());
+        network.getIp().setAddress("172.31.0.110");
+        verifyNetwork(resource.update(network), "eris");
+    }
+
+    @Test
+    public void testDisableStp() throws Exception {
+        setUriInfo(setUpNetworkExpectations(DISABLE_STP_COMMAND,
+                                            formatNetwork("eris"),
+                                            "eris"));
+        Network network = new Network();
+        network.setStp(false);
         verifyNetwork(resource.update(network), "eris");
     }
 

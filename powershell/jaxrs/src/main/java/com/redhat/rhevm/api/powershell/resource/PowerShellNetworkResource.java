@@ -21,7 +21,7 @@ package com.redhat.rhevm.api.powershell.resource;
 import java.util.List;
 import java.util.concurrent.Executor;
 
-
+import com.redhat.rhevm.api.model.IP;
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.resource.NetworkResource;
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
@@ -32,7 +32,6 @@ import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
-
 
 public class PowerShellNetworkResource extends AbstractPowerShellActionableResource<Network> implements NetworkResource {
 
@@ -87,6 +86,34 @@ public class PowerShellNetworkResource extends AbstractPowerShellActionableResou
 
         if (network.getName() != null) {
             buf.append("$i.name = " + PowerShellUtils.escape(network.getName()) + "; ");
+        }
+        if (network.getDescription() != null) {
+            buf.append("$i.description = " + PowerShellUtils.escape(network.getDescription()) + "; ");
+        }
+
+        if (network.getIp() != null) {
+            IP ip = network.getIp();
+
+            if (ip.getAddress() != null) {
+                buf.append("$i.address = " + PowerShellUtils.escape(ip.getAddress()) + "; ");
+            }
+            if (ip.getNetmask() != null) {
+                buf.append("$i.subnet = " + PowerShellUtils.escape(ip.getNetmask()) + "; ");
+            }
+            if (ip.getGateway() != null) {
+                buf.append("$i.gateway = " + PowerShellUtils.escape(ip.getGateway()) + "; ");
+            }
+        }
+
+        if (network.getVlan() != null) {
+            buf.append("$i.vlanid " + PowerShellUtils.escape(network.getVlan().getId()) + "; ");
+        }
+        if (network.isStp() != null) {
+            if (network.isStp()) {
+                buf.append("$i.stp = $true; ");
+            } else {
+                buf.append("$i.stp = $false; ");
+            }
         }
 
         buf.append("update-network");
