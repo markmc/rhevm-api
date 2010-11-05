@@ -29,6 +29,8 @@ import com.redhat.rhevm.api.powershell.enums.PowerShellBootSequence;
 
 import org.junit.Test;
 
+import static com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource.PROCESS_VMS;
+
 public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResourceTest<VM, PowerShellVmResource, PowerShellVmsResource> {
 
     public static String TEMPLATE_ID = "template1";
@@ -68,8 +70,6 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     private static final String DISPLAY_ADD_COMMAND_EPILOG =
         " -numofmonitors 4 -displaytype VNC" + ADD_COMMAND_EPILOG;
 
-    static final String GET_STATS = "|foreach {$_;$_.getmemorystatistics();$_.getcpustatistics()}";
-
 
     public PowerShellVmsResourceTest() {
         super(new PowerShellVmResource("0", null, null, null, null), "vms", "vm", extraArgs);
@@ -77,7 +77,7 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
 
     @Test
     public void testList() throws Exception {
-        resource.setUriInfo(setUpResourceExpectations(getSelectCommand() + GET_STATS,
+        resource.setUriInfo(setUpResourceExpectations(getSelectCommand() + PROCESS_VMS,
                                                       getSelectReturn(),
                                                       null,
                                                       NAMES));
@@ -86,7 +86,7 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
 
     @Test
     public void testQuery() throws Exception {
-        resource.setUriInfo(setUpResourceExpectations(getQueryCommand(VM.class) + GET_STATS,
+        resource.setUriInfo(setUpResourceExpectations(getQueryCommand(VM.class) + PROCESS_VMS,
                                                       getQueryReturn(),
                                                       getQueryParam(),
                                                       NAMES_SUBSET));
@@ -95,7 +95,7 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
 
     @Test
     public void testAddWithTemplateId() throws Exception {
-        resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND_PROLOG + getAddCommand() + ADD_COMMAND_EPILOG,
+        resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND_PROLOG + getAddCommand() + ADD_COMMAND_EPILOG + PROCESS_VMS,
                                                          getAddReturn(),
                                                          NEW_NAME));
         verifyResponse(resource.add(getModel(NEW_NAME, NEW_DESCRIPTION)), NEW_NAME, NEW_DESCRIPTION);
@@ -107,7 +107,7 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
         model.getTemplate().setId(null);
         model.getTemplate().setName(TEMPLATE_NAME);
 
-        resource.setUriInfo(setUpAddResourceExpectations(TEMPLATE_BY_NAME_ADD_COMMAND_PROLOG + getAddCommand() + ADD_COMMAND_EPILOG,
+        resource.setUriInfo(setUpAddResourceExpectations(TEMPLATE_BY_NAME_ADD_COMMAND_PROLOG + getAddCommand() + ADD_COMMAND_EPILOG + PROCESS_VMS,
                                                          getAddReturn(),
                                                          NEW_NAME));
         verifyResponse(resource.add(model), NEW_NAME, NEW_DESCRIPTION);
@@ -121,7 +121,7 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
         model.getCluster().setId(null);
         model.getCluster().setName(CLUSTER_NAME);
 
-        resource.setUriInfo(setUpAddResourceExpectations(CLUSTER_BY_NAME_ADD_COMMAND_PROLOG + getAddCommand() + CLUSTER_BY_NAME_ADD_COMMAND_EPILOG,
+        resource.setUriInfo(setUpAddResourceExpectations(CLUSTER_BY_NAME_ADD_COMMAND_PROLOG + getAddCommand() + CLUSTER_BY_NAME_ADD_COMMAND_EPILOG + PROCESS_VMS,
                                                          getAddReturn(),
                                                          NEW_NAME));
         verifyResponse(resource.add(model), NEW_NAME, NEW_DESCRIPTION);
@@ -129,7 +129,7 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
 
     @Test
     public void testAddWithDisplay() throws Exception {
-        resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND_PROLOG + getAddCommand() + DISPLAY_ADD_COMMAND_EPILOG,
+        resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND_PROLOG + getAddCommand() + DISPLAY_ADD_COMMAND_EPILOG + PROCESS_VMS,
                                                          getAddReturn(),
                                                          NEW_NAME));
         verifyResponse(resource.add(updateDisplay(getModel(NEW_NAME, NEW_DESCRIPTION))), NEW_NAME, NEW_DESCRIPTION);

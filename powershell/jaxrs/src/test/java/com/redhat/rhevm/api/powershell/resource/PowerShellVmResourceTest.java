@@ -50,7 +50,7 @@ import static org.powermock.api.easymock.PowerMock.createMock;
 import static org.powermock.api.easymock.PowerMock.mockStatic;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 
-import static com.redhat.rhevm.api.powershell.resource.PowerShellVmsResourceTest.GET_STATS;
+import static com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource.PROCESS_VMS;
 
 public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM, PowerShellVmResource> {
 
@@ -110,7 +110,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
 
     @Test
     public void testGet() throws Exception {
-        setUriInfo(setUpVmExpectations("get-vm \"" + VM_ID + "\"" + GET_STATS,
+        setUriInfo(setUpVmExpectations("get-vm \"" + VM_ID + "\"" + PROCESS_VMS,
                                        formatVm(VM_NAME),
                                        VM_NAME));
         verifyVM(resource.get(), VM_NAME);
@@ -118,7 +118,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
 
     @Test
     public void testGet22() throws Exception {
-        setUriInfo(setUpVmExpectations("get-vm \"" + VM_ID + "\"" + GET_STATS,
+        setUriInfo(setUpVmExpectations("get-vm \"" + VM_ID + "\"" + PROCESS_VMS,
                                        formatVm("vm22", VM_NAME),
                                        VM_NAME));
         verifyVM(resource.get(), VM_NAME);
@@ -126,7 +126,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
 
     @Test
     public void testGet22NoHost() throws Exception {
-        setUriInfo(setUpVmExpectations("get-vm \"" + VM_ID + "\"" + GET_STATS,
+        setUriInfo(setUpVmExpectations("get-vm \"" + VM_ID + "\"" + PROCESS_VMS,
                                        formatVm("vm22",
                                                 VM_NAME,
                                                 PowerShellVmsResourceTest.noHostArgs),
@@ -136,7 +136,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
 
     @Test
     public void testGoodUpdate() throws Exception {
-        setUriInfo(setUpVmExpectations(UPDATE_COMMAND,
+        setUriInfo(setUpVmExpectations(UPDATE_COMMAND + PROCESS_VMS,
                                        formatVm(NEW_NAME),
                                        NEW_NAME));
         verifyVM(resource.update(getVM(NEW_NAME)), NEW_NAME);
@@ -144,7 +144,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
 
     @Test
     public void testUpdateDisplay() throws Exception {
-        setUriInfo(setUpVmExpectations(UPDATE_DISPLAY_COMMAND,
+        setUriInfo(setUpVmExpectations(UPDATE_DISPLAY_COMMAND + PROCESS_VMS,
                                        formatVm(NEW_NAME),
                                        NEW_NAME));
         verifyVM(resource.update(updateDisplay(getVM(NEW_NAME))), NEW_NAME);

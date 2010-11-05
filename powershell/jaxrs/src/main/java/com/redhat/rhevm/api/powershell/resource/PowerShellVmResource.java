@@ -47,7 +47,7 @@ import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
-import static com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource.GET_STATS;
+import static com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource.PROCESS_VMS;
 
 public class PowerShellVmResource extends AbstractPowerShellActionableResource<VM> implements VmResource {
 
@@ -93,7 +93,7 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
 
     @Override
     public VM get() {
-        return addLinks(getUriInfo(), runAndParseSingle("get-vm " + PowerShellUtils.escape(getId()) + GET_STATS));
+        return addLinks(getUriInfo(), runAndParseSingle("get-vm " + PowerShellUtils.escape(getId()) + PROCESS_VMS));
     }
 
     @Override
@@ -152,7 +152,7 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
 
         buf.append("update-vm -vmobject $v");
 
-        return addLinks(getUriInfo(), runAndParseSingle(buf.toString()));
+        return addLinks(getUriInfo(), runAndParseSingle(buf.toString() + PROCESS_VMS));
     }
 
     protected String[] getStrictlyImmutable() {
