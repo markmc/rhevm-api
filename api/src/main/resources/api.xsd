@@ -391,7 +391,6 @@
               </xs:appinfo>
             </xs:annotation>
           </xs:element>
-          <xs:element name="permits" type="Permits" minOccurs="0"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -406,6 +405,7 @@
           </xs:appinfo>
         </xs:annotation>
       </xs:element>
+      <xs:element name="permits" type="Permits" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
 
