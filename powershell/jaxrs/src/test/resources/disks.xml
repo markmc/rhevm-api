@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 <Objects>
+  <Object Type="System.DateTime">10/12/1969 17:29:35</Object>
+  <Object Type="System.String">1969:12:10:17:29:35</Object>
   <Object Type="RhevmCmd.CLIImage">
     <Property Name="SnapshotId" Type="System.String">0b9318b4-e426-4380-9e6a-bb7f3a38a2ce</Property>
     <Property Name="CreationDate" Type="System.DateTime">10/12/1969 17:29:35</Property>

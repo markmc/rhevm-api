@@ -47,7 +47,7 @@ public class PowerShellDiskTest extends PowerShellModelTest {
         assertEquals(vmSnapshotId, d.getVmSnapshotId());
         assertEquals(parentId, d.getParentId());
         assertEquals(internalDriveMapping, d.getInternalDriveMapping());
-        assertEquals(lastModified, d.getLastModified());
+        assertEquals(lastModified, d.getLastModified().toString());
     }
 
     @Test
@@ -60,7 +60,7 @@ public class PowerShellDiskTest extends PowerShellModelTest {
         assertNotNull(disks);
         assertEquals(disks.size(), 1);
 
-        testDisk(disks.get(0), "0b9318b4-e426-4380-9e6a-bb7f3a38a2ce", VM_ID, 1341231104L, DiskType.SYSTEM, DiskStatus.OK, DiskInterface.IDE, DiskFormat.RAW, true, true, null, null, "563055c6-b1ec-4f31-85a1-6354a916a0b5", "00000000-0000-0000-0000-000000000000", "1", "10/12/1969 17:29:35");
+        testDisk(disks.get(0), "0b9318b4-e426-4380-9e6a-bb7f3a38a2ce", VM_ID, 1341231104L, DiskType.SYSTEM, DiskStatus.OK, DiskInterface.IDE, DiskFormat.RAW, true, true, null, null, "563055c6-b1ec-4f31-85a1-6354a916a0b5", "00000000-0000-0000-0000-000000000000", "1", "1969-12-10T17:29:35.000Z");
     }
 
     @Test
@@ -73,7 +73,7 @@ public class PowerShellDiskTest extends PowerShellModelTest {
         assertNotNull(disks);
         assertEquals(disks.size(), 2);
 
-        testDisk(disks.get(0), "222ea10f-7c0a-4302-8e80-2834b8fa681a", VM_ID, 1073741824L, DiskType.DATA, DiskStatus.OK, DiskInterface.IDE, DiskFormat.COW, true, null, null, null, "22a659ab-29a3-4160-9647-bb07753c612e", "00000000-0000-0000-0000-000000000000", "2", "7/22/2010 10:40:27 AM");
-        testDisk(disks.get(1), "0e833f37-3437-44f2-a04f-6f9692882431", VM_ID, 2147483648L, DiskType.SYSTEM, DiskStatus.OK, DiskInterface.VIRTIO, DiskFormat.RAW, null, true, true, null, "1d122de8-1aa2-4b07-9d42-937333ea577d", "00000000-0000-0000-0000-000000000000", "1", "7/21/2010 10:59:42 AM");
+        testDisk(disks.get(0), "222ea10f-7c0a-4302-8e80-2834b8fa681a", VM_ID, 1073741824L, DiskType.DATA, DiskStatus.OK, DiskInterface.IDE, DiskFormat.COW, true, null, null, null, "22a659ab-29a3-4160-9647-bb07753c612e", "00000000-0000-0000-0000-000000000000", "2", "2010-07-22T10:40:27.000Z");
+        testDisk(disks.get(1), "0e833f37-3437-44f2-a04f-6f9692882431", VM_ID, 2147483648L, DiskType.SYSTEM, DiskStatus.OK, DiskInterface.VIRTIO, DiskFormat.RAW, null, true, true, null, "1d122de8-1aa2-4b07-9d42-937333ea577d", "00000000-0000-0000-0000-000000000000", "1", "2010-07-22T10:59:42.000Z");
     }
 }

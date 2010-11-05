@@ -19,7 +19,10 @@
 package com.redhat.rhevm.api.powershell.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javax.xml.datatype.XMLGregorianCalendar;
 
 import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.DiskInterface;
@@ -31,12 +34,13 @@ import com.redhat.rhevm.api.powershell.enums.PowerShellVolumeFormat;
 import com.redhat.rhevm.api.powershell.enums.PowerShellVolumeFormat22;
 import com.redhat.rhevm.api.powershell.enums.PowerShellVolumeType;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
+import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 public class PowerShellDisk extends Disk {
 
     private String vmSnapshotId;
     private String parentId;
-    private String lastModified;
+    private XMLGregorianCalendar lastModified;
     private String internalDriveMapping;
 
     public String getVmSnapshotId() {
@@ -53,10 +57,10 @@ public class PowerShellDisk extends Disk {
         this.parentId = parentId;
     }
 
-    public String getLastModified() {
+    public XMLGregorianCalendar getLastModified() {
         return lastModified;
     }
-    public void setLastModified(String lastModified) {
+    public void setLastModified(XMLGregorianCalendar lastModified) {
         this.lastModified = lastModified;
     }
 
@@ -70,7 +74,19 @@ public class PowerShellDisk extends Disk {
     public static List<PowerShellDisk> parse(PowerShellParser parser, String vmId, String output) {
         List<PowerShellDisk> ret = new ArrayList<PowerShellDisk>();
 
+        Map<String, XMLGregorianCalendar> dates = new HashMap<String, XMLGregorianCalendar>();
+        String date = null;
+
         for (PowerShellParser.Entity entity : parser.parse(output)) {
+            if (PowerShellParser.DATE_TYPE.equals(entity.getType())) {
+                date = entity.getValue();
+                continue;
+            } else if (PowerShellParser.STRING_TYPE.equals(entity.getType())) {
+                dates.put(date, PowerShellUtils.parseDate(entity.getValue()));
+                date = null;
+                continue;
+            }
+
             PowerShellDisk disk = new PowerShellDisk();
 
             disk.setId(entity.get("snapshotid"));
@@ -103,8 +119,11 @@ public class PowerShellDisk extends Disk {
 
             disk.setVmSnapshotId(entity.get("vmsnapshotid"));
             disk.setParentId(entity.get("parentid"));
-            disk.setLastModified(entity.get("lastmodified"));
             disk.setInternalDriveMapping(entity.get("internaldrivemapping"));
+
+            if (dates.containsKey(entity.get("lastmodified"))) {
+                disk.setLastModified(dates.get(entity.get("lastmodified")));
+            }
 
             ret.add(disk);
         }

@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 <Objects>
+  <Object Type="System.DateTime">7/22/2010 10:40:27 AM</Object>
+  <Object Type="System.String">2010:7:22:10:40:27</Object>
   <Object Type="RhevmCmd.CLIImage">
     <Property Name="SnapshotId" Type="System.String">222ea10f-7c0a-4302-8e80-2834b8fa681a</Property>
     <Property Name="CreationDate" Type="System.DateTime">7/22/2010 10:40:27 AM</Property>
@@ -32,6 +34,8 @@
       <Property Name="value__" Type="System.Int32">0</Property>
     </Property>
   </Object>
+  <Object Type="System.DateTime">7/21/2010 10:59:42 AM</Object>
+  <Object Type="System.String">2010:7:22:10:59:42</Object>
   <Object Type="RhevmCmd.CLIImage">
     <Property Name="SnapshotId" Type="System.String">0e833f37-3437-44f2-a04f-6f9692882431</Property>
     <Property Name="CreationDate" Type="System.DateTime">7/21/2010 10:59:42 AM</Property>

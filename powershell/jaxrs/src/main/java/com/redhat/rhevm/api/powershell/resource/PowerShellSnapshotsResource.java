@@ -56,6 +56,7 @@ public class PowerShellSnapshotsResource extends UriProviderWrapper implements S
         StringBuilder buf = new StringBuilder();
         buf.append(" | ");
         buf.append("foreach { ");
+        buf.append(PowerShellUtils.getDateHack("lastmodified"));
         buf.append("$_; ");
         buf.append("}");
         PROCESS_DISKS = buf.toString();

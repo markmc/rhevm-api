@@ -18,6 +18,9 @@
  */
 package com.redhat.rhevm.api.powershell.util;
 
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+
 public class PowerShellUtils {
 
     private static final String QUOTE = "\"";
@@ -30,5 +33,37 @@ public class PowerShellUtils {
             arg = arg.replace(c, ESCAPE + c);
         }
         return new StringBuffer(QUOTE).append(arg).append(QUOTE).toString();
+    }
+
+    /* Nasty, nasty hack to print a given System.DateTime field followed
+     * by a simple string representation of it relative to UTC. This allows
+     * us to parse the date, which we can't do with the standard string
+     * representation of System.DateTime.
+     */
+    public static String getDateHack(String field) {
+        StringBuilder buf = new StringBuilder();
+        buf.append("$d = $_." + field + "; ");
+        buf.append("$d; ");
+        buf.append("$d = [system.datetime]::specifykind($d, [system.datetimeKind]::utc); ");
+        buf.append("[string]::format(\"{0}:{1}:{2}:{3}:{4}:{5}\", ");
+        buf.append("$d.year, $d.month, $d.day, $d.hour,$d.minute, $d.second); ");
+        return buf.toString();
+    }
+
+    public static XMLGregorianCalendar parseDate(String date) {
+        String[] parts = date.split(":");
+        DatatypeFactory factory;
+        try {
+            factory = DatatypeFactory.newInstance();
+        } catch (javax.xml.datatype.DatatypeConfigurationException dtce) {
+            return null; // Meh!
+        }
+        return factory.newXMLGregorianCalendar(Integer.parseInt(parts[0]),
+                                               Integer.parseInt(parts[1]),
+                                               Integer.parseInt(parts[2]),
+                                               Integer.parseInt(parts[3]),
+                                               Integer.parseInt(parts[4]),
+                                               Integer.parseInt(parts[5]),
+                                               0, 0);
     }
 }

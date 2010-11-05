@@ -43,6 +43,9 @@ import com.redhat.rhevm.api.powershell.enums.EnumMapper;
 public class PowerShellParser {
     private static final Log log = LogFactory.getLog(PowerShellCmd.class);
 
+    public static final String DATE_TYPE = "System.DateTime";
+    public static final String STRING_TYPE = "System.String";
+
     private DocumentBuilder documentBuilder;
     private EnumMapper enumMapper;
 
@@ -152,8 +155,6 @@ public class PowerShellParser {
     }
 
     public static class Entity {
-
-        public static final String VM_TYPE = "RhevmCmd.CLIVm";
 
         private String type;
         private String value;
