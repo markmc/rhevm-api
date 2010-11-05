@@ -49,6 +49,8 @@ import static org.powermock.api.easymock.PowerMock.createMock;
 import static org.powermock.api.easymock.PowerMock.mockStatic;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 
+import static com.redhat.rhevm.api.powershell.resource.PowerShellSnapshotsResource.PROCESS_DISKS;
+
 @RunWith(PowerMockRunner.class)
 @PrepareForTest( { PowerShellCmd.class })
 public class PowerShellSnapshotsResourceTest
@@ -65,9 +67,9 @@ public class PowerShellSnapshotsResourceTest
 
     private static final String DATE = "the time has come";
 
-    private static final String GET_SNAPSHOT_CMD = "$vm = get-vm \"" + VM_ID + "\"; foreach ($d in $vm.getdiskimages()) { foreach ($s in get-snapshot -vmid $vm.vmid -drive $d.internaldrivemapping) { if ($s.vmsnapshotid -eq \"" + asId(SNAPSHOTS[0]) + "\") { $s; break } } }";
-    private static final String GET_SNAPSHOTS_CMD = "$snaps = @(); $vm = get-vm \"" + VM_ID + "\"; foreach ($d in $vm.getdiskimages()) { try { $snaps += get-snapshot -vmid $vm.vmid -drive $d.internaldrivemapping } catch { [console]::error.writeline($_.exception) } } $snaps";
-    private static final String ADD_SNAPSHOT_CMD = "$vm = create-snapshot -vmid \"" + VM_ID + "\" -async; $vm.getdiskimages()";
+    private static final String GET_SNAPSHOT_CMD = "$vm = get-vm \"" + VM_ID + "\"; foreach ($d in $vm.getdiskimages()) { foreach ($s in get-snapshot -vmid $vm.vmid -drive $d.internaldrivemapping) { if ($s.vmsnapshotid -eq \"" + asId(SNAPSHOTS[0]) + "\") { $s; break } } }" + PROCESS_DISKS;
+    private static final String GET_SNAPSHOTS_CMD = "$snaps = @(); $vm = get-vm \"" + VM_ID + "\"; foreach ($d in $vm.getdiskimages()) { try { $snaps += get-snapshot -vmid $vm.vmid -drive $d.internaldrivemapping } catch { [console]::error.writeline($_.exception) } } $snaps" + PROCESS_DISKS;
+    private static final String ADD_SNAPSHOT_CMD = "$vm = create-snapshot -vmid \"" + VM_ID + "\" -async; $vm.getdiskimages()" + PROCESS_DISKS;
     private static final String REMOVE_SNAPSHOT_CMD = "remove-snapshot -vmid \"" + VM_ID + "\" -vmsnapshotid \"" + asId(SNAPSHOTS[0]) + "\" -async";
     private static final String RESTORE_SNAPSHOT_CMD = "restore-vm -vmid \"" + VM_ID + "\" -vmsnapshotid \"" + asId(SNAPSHOTS[0]) + "\"";
 

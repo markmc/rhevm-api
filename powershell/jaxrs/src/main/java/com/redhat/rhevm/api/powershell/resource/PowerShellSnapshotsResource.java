@@ -51,6 +51,16 @@ public class PowerShellSnapshotsResource extends UriProviderWrapper implements S
 
     protected String vmId;
 
+    static final String PROCESS_DISKS;
+    static {
+        StringBuilder buf = new StringBuilder();
+        buf.append(" | ");
+        buf.append("foreach { ");
+        buf.append("$_; ");
+        buf.append("}");
+        PROCESS_DISKS = buf.toString();
+    }
+
     public PowerShellSnapshotsResource(String vmId,
                                        Executor executor,
                                        PowerShellPoolMap shellPools,
@@ -105,7 +115,7 @@ public class PowerShellSnapshotsResource extends UriProviderWrapper implements S
         buf.append("$s; break");
         buf.append(" } } }");
 
-        return runAndParseSingle(buf.toString());
+        return runAndParseSingle(buf.toString() + PROCESS_DISKS);
     }
 
     private List<PowerShellDisk> getDiskSnapshots() {
@@ -120,7 +130,7 @@ public class PowerShellSnapshotsResource extends UriProviderWrapper implements S
         buf.append("} ");
         buf.append("$snaps");
 
-        return runAndParse(buf.toString());
+        return runAndParse(buf.toString() + PROCESS_DISKS);
     }
 
     @Override
@@ -154,7 +164,7 @@ public class PowerShellSnapshotsResource extends UriProviderWrapper implements S
         buf.append(" -async; ");
         buf.append("$vm.getdiskimages()");
 
-        snapshot = buildFromDisk(runAndParseSingle(buf.toString()));
+        snapshot = buildFromDisk(runAndParseSingle(buf.toString() + PROCESS_DISKS));
 
         UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(snapshot.getId());
 
