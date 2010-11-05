@@ -40,7 +40,17 @@ public class PowerShellVmsResource
     extends AbstractPowerShellCollectionResource<VM, PowerShellVmResource>
     implements VmsResource {
 
-    static final String PROCESS_VMS = "|foreach {$_;$_.getmemorystatistics();$_.getcpustatistics()}";
+    static final String PROCESS_VMS;
+    static {
+        StringBuilder buf = new StringBuilder();
+        buf.append(" | ");
+        buf.append("foreach { ");
+        buf.append("$_; ");
+        buf.append("$_.getmemorystatistics(); ");
+        buf.append("$_.getcpustatistics() ");
+        buf.append("}");
+        PROCESS_VMS = buf.toString();
+    }
 
     public List<PowerShellVM> runAndParse(String command) {
         return PowerShellVmResource.runAndParse(getPool(), getParser(), command);
