@@ -86,4 +86,7 @@ public interface HostResource extends UpdatableResource<Host> {
 
     @Path("tags")
     public AssignedTagsResource getTagsResource();
+
+    @Path("permissions")
+    public AssignedPermissionsResource getPermissionsResource();
 }

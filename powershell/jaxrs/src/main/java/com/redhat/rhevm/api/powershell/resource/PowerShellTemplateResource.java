@@ -28,6 +28,7 @@ import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.CpuTopology;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.Template;
+import com.redhat.rhevm.api.resource.AssignedPermissionsResource;
 import com.redhat.rhevm.api.resource.TemplateResource;
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
@@ -188,5 +189,10 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
     @Override
     public PowerShellReadOnlyNicsResource getNicsResource() {
         return new PowerShellReadOnlyNicsResource(getId(), shellPools, getParser(), "get-template", getUriProvider());
+    }
+
+    @Override
+    public AssignedPermissionsResource getPermissionsResource() {
+        return null;
     }
 }

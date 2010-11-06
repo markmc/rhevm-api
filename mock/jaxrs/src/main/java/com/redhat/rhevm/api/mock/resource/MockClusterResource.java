@@ -25,6 +25,7 @@ import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.resource.AssignedNetworksResource;
+import com.redhat.rhevm.api.resource.AssignedPermissionsResource;
 import com.redhat.rhevm.api.resource.ClusterResource;
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
@@ -84,6 +85,11 @@ public class MockClusterResource extends AbstractMockResource<Cluster> implement
 
     @Override
     public AssignedNetworksResource getAssignedNetworksSubResource() {
+        return null;
+    }
+
+    @Override
+    public AssignedPermissionsResource getPermissionsResource() {
         return null;
     }
 }

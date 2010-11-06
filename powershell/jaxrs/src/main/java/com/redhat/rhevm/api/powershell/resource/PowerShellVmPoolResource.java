@@ -26,6 +26,7 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VmPool;
+import com.redhat.rhevm.api.resource.AssignedPermissionsResource;
 import com.redhat.rhevm.api.resource.VmPoolResource;
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.LinkHelper;
@@ -142,4 +143,10 @@ public class PowerShellVmPoolResource extends AbstractPowerShellActionableResour
 
         return addLinks(runAndParseSingle(buf.toString()));
     }
+
+    @Override
+    public AssignedPermissionsResource getPermissionsResource() {
+        return null;
+    }
+
 }

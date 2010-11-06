@@ -45,4 +45,7 @@ public interface DataCenterResource extends UpdatableResource<DataCenter> {
 
     @Path("storagedomains")
     public AttachedStorageDomainsResource getAttachedStorageDomainsResource();
+
+    @Path("permissions")
+    public AssignedPermissionsResource getPermissionsResource();
 }

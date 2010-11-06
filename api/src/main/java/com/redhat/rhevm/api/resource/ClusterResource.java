@@ -28,4 +28,8 @@ public interface ClusterResource extends UpdatableResource<Cluster> {
 
     @Path("networks")
     public AssignedNetworksResource getAssignedNetworksSubResource();
+
+    @Path("permissions")
+    public AssignedPermissionsResource getPermissionsResource();
+
 }

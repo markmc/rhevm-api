@@ -31,6 +31,7 @@ import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.StorageDomainStatus;
+import com.redhat.rhevm.api.resource.AssignedPermissionsResource;
 import com.redhat.rhevm.api.resource.StorageDomainResource;
 
 public class MockStorageDomainResource extends AbstractMockResource<StorageDomain> implements StorageDomainResource {
@@ -86,6 +87,11 @@ public class MockStorageDomainResource extends AbstractMockResource<StorageDomai
     public Response teardown(Action action) {
         // FIXME: error if not unattached
         return doAction(getUriInfo(), new StorageDomainStatusSetter(action, StorageDomainStatus.TORNDOWN));
+    }
+
+    @Override
+    public AssignedPermissionsResource getPermissionsResource() {
+        return null;
     }
 
     private class StorageDomainStatusSetter extends AbstractActionTask {

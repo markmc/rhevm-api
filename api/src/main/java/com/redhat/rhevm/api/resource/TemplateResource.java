@@ -57,4 +57,8 @@ public interface TemplateResource extends UpdatableResource<Template> {
 
     @Path("nics")
     public ReadOnlyDevicesResource<NIC, Nics> getNicsResource();
+
+    @Path("permissions")
+    public AssignedPermissionsResource getPermissionsResource();
+
 }

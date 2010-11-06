@@ -28,6 +28,7 @@ import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.SupportedVersions;
 import com.redhat.rhevm.api.model.Version;
 import com.redhat.rhevm.api.resource.AssignedNetworksResource;
+import com.redhat.rhevm.api.resource.AssignedPermissionsResource;
 import com.redhat.rhevm.api.resource.ClusterResource;
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.LinkHelper;
@@ -155,5 +156,10 @@ public class PowerShellClusterResource extends AbstractPowerShellActionableResou
     @Override
     public AssignedNetworksResource getAssignedNetworksSubResource() {
         return new PowerShellClusterNetworksResource(getId(), getExecutor(), shellPools, getParser(), getUriProvider());
+    }
+
+    @Override
+    public AssignedPermissionsResource getPermissionsResource() {
+        return null;
     }
 }

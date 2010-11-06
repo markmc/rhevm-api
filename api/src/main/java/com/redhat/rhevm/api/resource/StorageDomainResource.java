@@ -43,4 +43,8 @@ public interface StorageDomainResource extends UpdatableResource<StorageDomain> 
     @Actionable
     @Path("teardown")
     public Response teardown(Action action);
+
+    @Path("permissions")
+    public AssignedPermissionsResource getPermissionsResource();
+
 }

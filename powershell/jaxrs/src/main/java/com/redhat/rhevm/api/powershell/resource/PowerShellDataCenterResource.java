@@ -27,6 +27,7 @@ import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.Version;
 import com.redhat.rhevm.api.model.SupportedVersions;
+import com.redhat.rhevm.api.resource.AssignedPermissionsResource;
 import com.redhat.rhevm.api.resource.AttachedStorageDomainsResource;
 import com.redhat.rhevm.api.resource.DataCenterResource;
 import com.redhat.rhevm.api.resource.FilesResource;
@@ -145,6 +146,11 @@ public class PowerShellDataCenterResource extends AbstractPowerShellActionableRe
         buf.append("update-datacenter -datacenterobject $d");
 
         return addLinks(runAndParseSingle(buf.toString()));
+    }
+
+    @Override
+    public AssignedPermissionsResource getPermissionsResource() {
+        return null;
     }
 
     public FilesResource getFilesResource() {

@@ -29,6 +29,7 @@ import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.IscsiParameters;
 import com.redhat.rhevm.api.model.Link;
+import com.redhat.rhevm.api.resource.AssignedPermissionsResource;
 import com.redhat.rhevm.api.resource.AssignedTagsResource;
 import com.redhat.rhevm.api.resource.HostResource;
 import com.redhat.rhevm.api.resource.HostNicsResource;
@@ -208,6 +209,11 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
         buf.append(" -storageserverconnectionobject $cnx");
 
         return doAction(getUriInfo(), new CommandRunner(action, buf.toString(), getPool()));
+    }
+
+    @Override
+    public AssignedPermissionsResource getPermissionsResource() {
+        return null;
     }
 
     class HostInstaller extends AbstractPowerShellActionTask {

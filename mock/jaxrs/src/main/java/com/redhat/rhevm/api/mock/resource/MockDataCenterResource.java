@@ -21,6 +21,7 @@ package com.redhat.rhevm.api.mock.resource;
 import java.util.concurrent.Executor;
 
 import com.redhat.rhevm.api.model.DataCenter;
+import com.redhat.rhevm.api.resource.AssignedPermissionsResource;
 import com.redhat.rhevm.api.resource.AttachedStorageDomainsResource;
 import com.redhat.rhevm.api.resource.DataCenterResource;
 import com.redhat.rhevm.api.resource.FilesResource;
@@ -82,6 +83,11 @@ public class MockDataCenterResource extends AbstractMockResource<DataCenter> imp
     }
 
     public AttachedStorageDomainsResource getAttachedStorageDomainsResource() {
+        return null;
+    }
+
+    @Override
+    public AssignedPermissionsResource getPermissionsResource() {
         return null;
     }
 }
