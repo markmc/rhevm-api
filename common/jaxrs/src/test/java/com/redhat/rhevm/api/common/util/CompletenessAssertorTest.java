@@ -24,6 +24,7 @@ import javax.ws.rs.WebApplicationException;
 
 import com.redhat.rhevm.api.model.Fault;
 import com.redhat.rhevm.api.model.Host;
+import com.redhat.rhevm.api.model.Permission;
 import com.redhat.rhevm.api.model.Role;
 import com.redhat.rhevm.api.model.Roles;
 import com.redhat.rhevm.api.model.User;
@@ -135,6 +136,30 @@ public class CompletenessAssertorTest extends Assert {
     }
 
     @Test
+    public void testMissingSuperFieldAlternatives() throws Exception {
+        Permission permission = new Permission();
+        permission.setVm(new VM());
+        try {
+            CompletenessAssertor.validateParameters(permission, "user|vm.name");
+            fail("expected WebApplicationException on incomplete model");
+        } catch (WebApplicationException wae) {
+            verifyIncompleteException(wae, "Permission", "user|vm.name");
+        }
+    }
+
+    @Test
+    public void testMissingBothAlternatives() throws Exception {
+        Permission permission = new Permission();
+        permission.setVm(new VM());
+        try {
+            CompletenessAssertor.validateParameters(permission, "user|vm.name|id");
+            fail("expected WebApplicationException on incomplete model");
+        } catch (WebApplicationException wae) {
+            verifyIncompleteException(wae, "Permission", "user|vm.name|id");
+        }
+    }
+
+    @Test
     public void testCompleteSubField() throws Exception {
         VM vm = new VM();
         vm.setHost(new Host());
@@ -148,6 +173,22 @@ public class CompletenessAssertorTest extends Assert {
         vm.setHost(new Host());
         vm.getHost().setName("zog");
         CompletenessAssertor.validateParameters(vm, "host.id|name");
+    }
+
+    @Test
+    public void testCompleteSuperFieldAlternatives() throws Exception {
+        Permission permission = new Permission();
+        permission.setUser(new User());
+        permission.getUser().setName("joe");
+        CompletenessAssertor.validateParameters(permission, "vm|user.name");
+    }
+
+    @Test
+    public void testCompleteBothAlternatives() throws Exception {
+        Permission permission = new Permission();
+        permission.setUser(new User());
+        permission.getUser().setName("joe");
+        CompletenessAssertor.validateParameters(permission, "vm|user.name|id");
     }
 
     @Test

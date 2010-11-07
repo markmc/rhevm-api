@@ -41,6 +41,7 @@ public class CompletenessAssertor {
     // REVISIT: i18n
     private static final String INCOMPLETE_PARAMS_REASON = "Incomplete parameters";
     private static final String INCOMPLETE_PARAMS_DETAIL = "{0} {1} required for {2}";
+    private static final String ALTERNATIVE = "\\|";
 
     private static final Response.Status INCOMPLETE_PARAMS_STATUS = Response.Status.BAD_REQUEST;
 
@@ -82,8 +83,14 @@ public class CompletenessAssertor {
                         missing.add(r);
                     }
                 }
-            } else if (!(isSet(model, superField(r)) && assertFields(model, superField(r), subField(r)))) {
-                missing.add(r);
+            } else {
+                boolean found = false;
+                for (String superField : superField(r).split(ALTERNATIVE)) {
+                    found = found || (isSet(model, capitalize(superField)) && assertFields(model, superField, subField(r)));
+                }
+                if (!found) {
+                    missing.add(r);
+                }
             }
         }
 
@@ -109,7 +116,7 @@ public class CompletenessAssertor {
     }
 
     private static boolean assertFields(Object model, String superField, String subFields) {
-        String[] splitFields = subFields.split("\\|");
+        String[] splitFields = subFields.split(ALTERNATIVE);
         boolean found = false;
         for (String subField : splitFields) {
             found = found || isSet(superField != null ? get(model, superField) : model, capitalize(subField));
