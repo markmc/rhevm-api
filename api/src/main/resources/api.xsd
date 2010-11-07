@@ -673,7 +673,14 @@
         <xs:sequence>
           <xs:element name="user" type="User" minOccurs="0" maxOccurs="1"/>
           <xs:element name="role" type="Role" minOccurs="0" maxOccurs="1"/>
+          <!-- only one of the following entity references is set -->
+          <xs:element ref="data_center" minOccurs="0" maxOccurs="1"/>
+          <xs:element ref="cluster" minOccurs="0" maxOccurs="1"/>
+          <xs:element ref="host" minOccurs="0" maxOccurs="1"/>
+          <xs:element ref="storage_domain" minOccurs="0" maxOccurs="1"/>
           <xs:element ref="vm" minOccurs="0" maxOccurs="1"/>
+          <xs:element ref="vmpool" minOccurs="0" maxOccurs="1"/>
+          <xs:element ref="template" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
