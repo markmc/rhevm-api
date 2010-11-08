@@ -83,6 +83,7 @@ public class PowerShellTemplate extends Template {
             template.setCpu(cpu);
 
             OperatingSystem os = new OperatingSystem();
+            os.setType(entity.get("operatingsystem"));
             for (OperatingSystem.Boot boot : entity.get("defaultbootsequence", PowerShellBootSequence.class).map()) {
                 os.getBoot().add(boot);
             }
