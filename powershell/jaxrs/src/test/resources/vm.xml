@@ -106,7 +106,7 @@
       <Property Name="value__" Type="System.Int32">0</Property>
     </Property>
     <Property Name="AutoStartup" Type="System.Boolean">False</Property>
-    <Property Name="Stateless" Type="System.Boolean">False</Property>
+    <Property Name="Stateless" Type="System.Boolean">True</Property>
     <Property Name="DisplayType" Type="System.String">Spice</Property>
     <Property Name="CdIsoPath" Type="System.String" />
     <Property Name="FloppyPath" Type="System.String" />

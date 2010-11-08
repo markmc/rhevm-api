@@ -189,6 +189,10 @@ public class PowerShellVM extends VM {
         }
         vm.setOs(os);
 
+        if (entity.get("stateless", Boolean.class)) {
+            vm.setStateless(true);
+        }
+
         if (entity.get("highlyavailable", Boolean.class)) {
             vm.setHighlyAvailable(new HighlyAvailable());
             vm.getHighlyAvailable().setValue(true);

@@ -103,6 +103,9 @@ public class PowerShellVmsResource
         if (vm.getDescription() != null) {
             buf.append(" -description " + PowerShellUtils.escape(vm.getDescription()));
         }
+        if (vm.isSetStateless() && vm.isStateless()) {
+            buf.append(" -stateless $true");
+        }
         if (vm.isSetHighlyAvailable() && vm.getHighlyAvailable().isValue()) {
             buf.append(" -highlyavailable $true");
             if (vm.getHighlyAvailable().isSetPriority()) {
