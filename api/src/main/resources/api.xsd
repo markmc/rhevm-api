@@ -335,6 +335,13 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <xs:simpleType name="PowerManagementOptionType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="BOOL"/>
+      <xs:enumeration value="INT"/>
+    </xs:restriction>
+  </xs:simpleType>
+
   <!-- CPUs -->
 
   <xs:element name="cpu" type="CPU"/>
@@ -516,6 +523,37 @@
 
   <!-- Hosts -->
 
+  <xs:complexType name="PowerManagementOption">
+    <xs:attribute name="name" type="xs:string"/>
+    <xs:attribute name="value" type="xs:string"/>
+    <xs:attribute name="type" type="PowerManagementOptionType"/>
+  </xs:complexType>
+
+  <xs:complexType name="PowerManagementOptions">
+    <xs:sequence>
+      <xs:element name="option" type="PowerManagementOption" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <jaxb:property name="Options"/>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="power_management" type="PowerManagement"/>
+
+  <xs:complexType name="PowerManagement">
+    <xs:sequence>
+      <xs:element name="enabled" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="address" type="xs:string"/>
+      <xs:element name="username" type="xs:string"/>
+      <xs:element name="password" type="xs:string"/>
+      <xs:element name="options" type="PowerManagementOptions"/>
+    </xs:sequence>
+    <xs:attribute name="type" type="xs:string"/>
+  </xs:complexType>
+
   <xs:element name="host" type="Host"/>
 
   <xs:element name="hosts" type="Hosts"/>
@@ -531,6 +569,7 @@
                e.g. the standard VDSM port 54321 -->
           <xs:element name="port" type="xs:unsignedShort" minOccurs="0"/>
           <xs:element name="version" type="Version" minOccurs="0"/>
+          <xs:element ref="power_management" minOccurs="0"/>
           <!-- when creating a new host, a root password is required, but
                this is not subsequently included in the representation -->
           <xs:element name="root_password" type="xs:string" minOccurs="0" maxOccurs="1"/>
