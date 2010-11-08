@@ -110,7 +110,7 @@
     <Property Name="DisplayType" Type="System.String">Spice</Property>
     <Property Name="CdIsoPath" Type="System.String" />
     <Property Name="FloppyPath" Type="System.String" />
-    <Property Name="Origin" Type="System.String">RHEV</Property>
+    <Property Name="Origin" Type="System.String">VmWare</Property>
     <Property Name="KvmEnabled" Type="System.Boolean">True</Property>
     <Property Name="RunAndPause" Type="System.Boolean">False</Property>
     <Property Name="AcpiEnabled" Type="System.Boolean">True</Property>
@@ -181,7 +181,7 @@
     <Property Name="DisplayType" Type="System.String">VNC</Property>
     <Property Name="CdIsoPath" Type="System.String" />
     <Property Name="FloppyPath" Type="System.String" />
-    <Property Name="Origin" Type="System.String">RHEV</Property>
+    <Property Name="Origin" Type="System.String">Xen</Property>
     <Property Name="KvmEnabled" Type="System.Boolean">True</Property>
     <Property Name="RunAndPause" Type="System.Boolean">False</Property>
     <Property Name="AcpiEnabled" Type="System.Boolean">True</Property>

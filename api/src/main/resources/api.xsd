@@ -309,6 +309,14 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <xs:simpleType name="VmOrigin">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="RHEV"/>
+      <xs:enumeration value="VMWARE"/>
+      <xs:enumeration value="XEN"/>
+    </xs:restriction>
+  </xs:simpleType>
+
   <xs:simpleType name="DataCenterStatus">
     <xs:restriction base="xs:string">
       <xs:enumeration value="UNINITIALIZED"/>
@@ -1061,6 +1069,7 @@
             <xs:element ref="template" minOccurs="0" maxOccurs="1"/>
             <xs:element ref="storage_domain" minOccurs="0" maxOccurs="1"/>
             <xs:element name="creation_time" type="xs:dateTime" minOccurs="0"/>
+            <xs:element name="origin" type="VmOrigin" minOccurs="0"/>
 
             <xs:element name="memory_statistics" type="MemoryStatistics" minOccurs="0" maxOccurs="1">
               <xs:annotation>

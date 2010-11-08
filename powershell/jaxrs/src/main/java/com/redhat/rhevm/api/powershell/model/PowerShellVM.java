@@ -37,6 +37,7 @@ import com.redhat.rhevm.api.model.MemoryStatistics;
 import com.redhat.rhevm.api.model.OperatingSystem;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.model.VmOrigin;
 import com.redhat.rhevm.api.model.VmPool;
 import com.redhat.rhevm.api.model.VmStatus;
 import com.redhat.rhevm.api.powershell.enums.PowerShellBootSequence;
@@ -116,6 +117,14 @@ public class PowerShellVM extends VM {
         else if (s.equals("Image Illegal"))      return VmStatus.IMAGE_ILLEGAL;
         else if (s.equals("Image Locked"))       return VmStatus.IMAGE_LOCKED;
         else if (s.equals("Powering Down"))      return VmStatus.POWERING_DOWN;
+        else return null;
+    }
+
+    private static VmOrigin parseOrigin(String s) {
+        if (s == null) return null;
+        else if (s.equals("RHEV"))   return VmOrigin.RHEV;
+        else if (s.equals("VmWare")) return VmOrigin.VMWARE;
+        else if (s.equals("Xen"))    return VmOrigin.XEN;
         else return null;
     }
 
@@ -223,6 +232,8 @@ public class PowerShellVM extends VM {
         if (dates.containsKey(entity.get("creationdate"))) {
             vm.setCreationTime(dates.get(entity.get("creationdate")));
         }
+
+        vm.setOrigin(parseOrigin(entity.get("origin")));
 
         return vm;
     }
