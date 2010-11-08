@@ -19,7 +19,10 @@
 package com.redhat.rhevm.api.powershell.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javax.xml.datatype.XMLGregorianCalendar;
 
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.CPU;
@@ -30,7 +33,7 @@ import com.redhat.rhevm.api.powershell.enums.PowerShellBootSequence;
 import com.redhat.rhevm.api.powershell.enums.PowerShellVmTemplateStatus;
 import com.redhat.rhevm.api.powershell.enums.PowerShellVmType;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
-
+import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 public class PowerShellTemplate extends Template {
 
@@ -45,7 +48,19 @@ public class PowerShellTemplate extends Template {
     public static List<PowerShellTemplate> parse(PowerShellParser parser, String output) {
         List<PowerShellTemplate> ret = new ArrayList<PowerShellTemplate>();
 
+        Map<String, XMLGregorianCalendar> dates = new HashMap<String, XMLGregorianCalendar>();
+        String date = null;
+
         for (PowerShellParser.Entity entity : parser.parse(output)) {
+            if (PowerShellParser.DATE_TYPE.equals(entity.getType())) {
+                date = entity.getValue();
+                continue;
+            } else if (PowerShellParser.STRING_TYPE.equals(entity.getType())) {
+                dates.put(date, PowerShellUtils.parseDate(entity.getValue()));
+                date = null;
+                continue;
+            }
+
             PowerShellTemplate template = new PowerShellTemplate();
 
             template.setId(entity.get("templateid"));
@@ -72,6 +87,10 @@ public class PowerShellTemplate extends Template {
             Cluster cluster = new Cluster();
             cluster.setId(entity.get("hostclusterid", String.class, Integer.class).toString());
             template.setCluster(cluster);
+
+            if (dates.containsKey(entity.get("creationdate"))) {
+                template.setCreationTime(dates.get(entity.get("creationdate")));
+            }
 
             ret.add(template);
         }

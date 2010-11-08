@@ -44,6 +44,7 @@ public class PowerShellTemplatesResource
         StringBuilder buf = new StringBuilder();
         buf.append(" | ");
         buf.append("foreach { ");
+        buf.append(PowerShellUtils.getDateHack("creationdate"));
         buf.append("$_; ");
         buf.append("}");
         PROCESS_TEMPLATES = buf.toString();

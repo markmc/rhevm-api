@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 <Objects>
+  <Object Type="System.DateTime">01/04/2008 00:00:00</Object>
+  <Object Type="System.String">2008:04:01:00:00:00</Object>
   <Object Type="RhevmCmd.CLITemplate">
     <Property Name="TemplateId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
     <Property Name="CreationDate" Type="System.DateTime">01/04/2008 00:00:00</Property>
@@ -44,6 +46,8 @@
       <Property Name="value__" Type="System.Int32">0</Property>
     </Property>
   </Object>
+  <Object Type="System.DateTime">05/07/2010 18:35:12</Object>
+  <Object Type="System.String">2010:07:05:18:35:12</Object>
   <Object Type="RhevmCmd.CLITemplate">
     <Property Name="TemplateId" Type="System.String">8d465dcc-df83-4161-868b-ad223744b14a</Property>
     <Property Name="CreationDate" Type="System.DateTime">05/07/2010 18:35:12</Property>
@@ -88,6 +92,8 @@
       <Property Name="value__" Type="System.Int32">0</Property>
     </Property>
   </Object>
+  <Object Type="System.DateTime">05/07/2010 18:33:54</Object>
+  <Object Type="System.String">2010:07:05:18:33:54</Object>
   <Object Type="RhevmCmd.CLITemplate">
     <Property Name="TemplateId" Type="System.String">b3831709-6a0b-41dd-8e96-ea1f2573f95a</Property>
     <Property Name="CreationDate" Type="System.DateTime">05/07/2010 18:33:54</Property>
@@ -132,6 +138,8 @@
       <Property Name="value__" Type="System.Int32">0</Property>
     </Property>
   </Object>
+  <Object Type="System.DateTime">02/07/2010 14:37:09</Object>
+  <Object Type="System.String">2010:07:02:14:37:09</Object>
   <Object Type="RhevmCmd.CLITemplate">
     <Property Name="TemplateId" Type="System.String">3ee77811-f1eb-4d3f-991e-e539dbb2f1f9</Property>
     <Property Name="CreationDate" Type="System.DateTime">02/07/2010 14:37:09</Property>
