@@ -91,7 +91,6 @@ public class PowerShellTemplate extends Template {
             if (Boolean.TRUE.equals(entity.get("autostartup", Boolean.class))) {
                 template.setHighlyAvailable(new HighlyAvailable());
                 template.getHighlyAvailable().setValue(true);
-                template.getHighlyAvailable().setPriority(entity.get("priority", Integer.class));
             }
 
             Boolean stateless = entity.get("isstateless", Boolean.class);
