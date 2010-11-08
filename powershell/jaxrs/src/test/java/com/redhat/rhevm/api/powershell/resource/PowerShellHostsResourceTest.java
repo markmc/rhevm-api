@@ -22,6 +22,9 @@ import javax.ws.rs.WebApplicationException;
 
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.Host;
+import com.redhat.rhevm.api.model.PowerManagement;
+import com.redhat.rhevm.api.model.PowerManagementOption;
+import com.redhat.rhevm.api.model.PowerManagementOptions;
 
 import org.junit.Test;
 
@@ -44,6 +47,7 @@ public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionRes
 
     private static final String ADD_COMMAND = "add-host -name \"" + NEW_NAME + "\" ";
     private static final String ADD_COMMAND_EPILOG = "-address \"" + ADDRESS + "\" -rootpassword \"" + PASSWORD + "\"";
+    private static final String ADD_COMMAND_PM_EPILOG = " -managementtype \"fenceme\" -managementhostname \"foo\" -managementuser \"me\" -managementpassword \"mysecret\" -managementsecure -managementport \"12345\" -managementslot \"54321\" -managementoptions \"secure=true,port=12345,slot=54321\"";
     private static final String CLUSTER_BY_NAME_ADD_COMMAND_EPILOG = ADD_COMMAND_EPILOG + " -hostclusterid $c.ClusterId";
     private static final String CLUSTER_BY_ID_ADD_COMMAND_EPILOG = ADD_COMMAND_EPILOG + " -hostclusterid \"" + CLUSTER_ID + "\"";
     private static final String PORT_OVERRIDE_ADD_COMMAND_EPILOG = ADD_COMMAND_EPILOG + " -port " + PORT;
@@ -103,6 +107,35 @@ public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionRes
                                                          NEW_NAME));
 
         verifyResponse(resource.add(model), NEW_NAME, NO_DESCRIPTION);
+    }
+
+    @Test
+    public void testAddWithPowerManagement() throws Exception {
+        Host model = getModel(NEW_NAME, NO_DESCRIPTION);
+
+        model.setPowerManagement(new PowerManagement());
+        model.getPowerManagement().setEnabled(false);
+        model.getPowerManagement().setType("fenceme");
+        model.getPowerManagement().setAddress("foo");
+        model.getPowerManagement().setUsername("me");
+        model.getPowerManagement().setPassword("mysecret");
+        model.getPowerManagement().setOptions(new PowerManagementOptions());
+        model.getPowerManagement().getOptions().getOptions().add(buildOption("secure", "true"));
+        model.getPowerManagement().getOptions().getOptions().add(buildOption("port", "12345"));
+        model.getPowerManagement().getOptions().getOptions().add(buildOption("slot", "54321"));
+
+        resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND + ADD_COMMAND_EPILOG + ADD_COMMAND_PM_EPILOG,
+                                                         getAddReturn(),
+                                                         NEW_NAME));
+
+        verifyResponse(resource.add(model), NEW_NAME, NO_DESCRIPTION);
+    }
+
+    private PowerManagementOption buildOption(String name, String value) {
+        PowerManagementOption option = new PowerManagementOption();
+        option.setName(name);
+        option.setValue(value);
+        return option;
     }
 
     @Test

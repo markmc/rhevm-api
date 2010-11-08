@@ -29,6 +29,8 @@ import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.IscsiParameters;
 import com.redhat.rhevm.api.model.Link;
+import com.redhat.rhevm.api.model.PowerManagement;
+import com.redhat.rhevm.api.model.PowerManagementOption;
 import com.redhat.rhevm.api.resource.AssignedPermissionsResource;
 import com.redhat.rhevm.api.resource.AssignedTagsResource;
 import com.redhat.rhevm.api.resource.HostResource;
@@ -45,7 +47,7 @@ import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
-
+import static com.redhat.rhevm.api.powershell.resource.PowerShellHostsResource.joinPowerManagementOptions;
 
 public class PowerShellHostResource extends AbstractPowerShellActionableResource<Host> implements HostResource {
 
@@ -102,6 +104,43 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
 
         if (host.getName() != null) {
             buf.append("$h.name = " + PowerShellUtils.escape(host.getName()) + ";");
+        }
+
+        if (host.isSetPowerManagement()) {
+            PowerManagement powerManagement = host.getPowerManagement();
+
+            if (powerManagement.isSetEnabled()) {
+                buf.append("$h.powermanagement.enabled = " + (powerManagement.isEnabled() ? "$true" : "$false") + "; ");
+            }
+            if (powerManagement.isSetType()) {
+                buf.append("$h.powermanagement.type = " + PowerShellUtils.escape(powerManagement.getType()) + "; ");
+            }
+            if (powerManagement.isSetAddress()) {
+                buf.append("$h.powermanagement.address = " + PowerShellUtils.escape(powerManagement.getAddress()) + "; ");
+            }
+            if (powerManagement.isSetUsername()) {
+                buf.append("$h.powermanagement.username = " + PowerShellUtils.escape(powerManagement.getUsername()) + "; ");
+            }
+            if (powerManagement.isSetPassword()) {
+                buf.append("$h.powermanagement.password = " + PowerShellUtils.escape(powerManagement.getPassword()) + "; ");
+            }
+
+            if (powerManagement.isSetOptions()) {
+                for (PowerManagementOption opt : powerManagement.getOptions().getOptions()) {
+                    if (opt.getName() == null) {
+                        continue;
+                    }
+                    if (opt.getName().equals("secure")) {
+                        buf.append("$h.powermanagement.secure = " + (opt.getValue().toLowerCase().equals("true") ? "$true" : "$false") + "; ");
+                    } else if (opt.getName().equals("port")) {
+                        buf.append("$h.powermanagement.port = " + PowerShellUtils.escape(opt.getValue()) + "; ");
+                    } else if (opt.getName().equals("slot")) {
+                        buf.append("$h.powermanagement.slot = " + PowerShellUtils.escape(opt.getValue()) + "; ");
+                    }
+                }
+                buf.append("$h.powermanagement.options = " +
+                           PowerShellUtils.escape(joinPowerManagementOptions(powerManagement.getOptions())) + "; ");
+            }
         }
 
         buf.append("update-host -hostobject $h");

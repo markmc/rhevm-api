@@ -18,6 +18,7 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.util.Iterator;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
@@ -25,6 +26,9 @@ import javax.ws.rs.core.UriBuilder;
 
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.Hosts;
+import com.redhat.rhevm.api.model.PowerManagement;
+import com.redhat.rhevm.api.model.PowerManagementOption;
+import com.redhat.rhevm.api.model.PowerManagementOptions;
 import com.redhat.rhevm.api.resource.HostResource;
 import com.redhat.rhevm.api.resource.HostsResource;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
@@ -74,6 +78,45 @@ public class PowerShellHostsResource
             buf.append(" -port " + host.getPort());
         }
 
+        if (host.isSetPowerManagement()) {
+            PowerManagement powerManagement = host.getPowerManagement();
+
+            if (powerManagement.isSetEnabled() && powerManagement.isEnabled()) {
+                buf.append(" -allowmanagement");
+            }
+            if (powerManagement.isSetType()) {
+                buf.append(" -managementtype " + PowerShellUtils.escape(powerManagement.getType()));
+            }
+            if (powerManagement.isSetAddress()) {
+                buf.append(" -managementhostname " + PowerShellUtils.escape(powerManagement.getAddress()));
+            }
+            if (powerManagement.isSetUsername()) {
+                buf.append(" -managementuser " + PowerShellUtils.escape(powerManagement.getUsername()));
+            }
+            if (powerManagement.isSetPassword()) {
+                buf.append(" -managementpassword " + PowerShellUtils.escape(powerManagement.getPassword()));
+            }
+
+            if (powerManagement.isSetOptions()) {
+                for (PowerManagementOption opt : powerManagement.getOptions().getOptions()) {
+                    if (opt.getName() == null) {
+                        continue;
+                    }
+                    if (opt.getName().equals("secure")) {
+                        if (opt.getValue().toLowerCase().equals("true")) {
+                            buf.append(" -managementsecure");
+                        }
+                    } else if (opt.getName().equals("port")) {
+                        buf.append(" -managementport " + PowerShellUtils.escape(opt.getValue()));
+                    } else if (opt.getName().equals("slot")) {
+                        buf.append(" -managementslot " + PowerShellUtils.escape(opt.getValue()));
+                    }
+                }
+                buf.append(" -managementoptions " +
+                           PowerShellUtils.escape(joinPowerManagementOptions(powerManagement.getOptions())));
+            }
+        }
+
         host = PowerShellHostResource.addLinks(getUriInfo(), runAndParseSingle(buf.toString()));
 
         UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(host.getId());
@@ -109,5 +152,20 @@ public class PowerShellHostsResource
             }
         }
         return clusterArg;
+    }
+
+    public static String joinPowerManagementOptions(PowerManagementOptions options) {
+        StringBuilder buf = new StringBuilder();
+        Iterator<PowerManagementOption> iter = options.getOptions().iterator();
+        while (iter.hasNext()) {
+            PowerManagementOption option = iter.next();
+            buf.append(option.getName());
+            buf.append("=");
+            buf.append(option.getValue());
+            if (iter.hasNext()) {
+                buf.append(",");
+            }
+        }
+        return buf.toString();
     }
 }
