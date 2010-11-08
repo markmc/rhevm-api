@@ -20,7 +20,10 @@ package com.redhat.rhevm.api.powershell.model;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javax.xml.datatype.XMLGregorianCalendar;
 
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.CPU;
@@ -39,6 +42,7 @@ import com.redhat.rhevm.api.model.VmStatus;
 import com.redhat.rhevm.api.powershell.enums.PowerShellBootSequence;
 import com.redhat.rhevm.api.powershell.enums.PowerShellVmType;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
+import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 import com.redhat.rhevm.api.powershell.util.UUID;
 
 public class PowerShellVM extends VM {
@@ -118,9 +122,21 @@ public class PowerShellVM extends VM {
     public static List<PowerShellVM> parse(PowerShellParser parser, String output) {
         List<PowerShellVM> ret = new ArrayList<PowerShellVM>();
 
+        Map<String, XMLGregorianCalendar> dates = new HashMap<String, XMLGregorianCalendar>();
+        String date = null;
+
         for (PowerShellParser.Entity entity : parser.parse(output)) {
+            if (PowerShellParser.DATE_TYPE.equals(entity.getType())) {
+                date = entity.getValue();
+                continue;
+            } else if (PowerShellParser.STRING_TYPE.equals(entity.getType())) {
+                dates.put(date, PowerShellUtils.parseDate(entity.getValue()));
+                date = null;
+                continue;
+            }
+
             if (VM_TYPE.equals(entity.getType())) {
-                ret.add(parseVm(entity));
+                ret.add(parseVm(entity, dates));
             } else if (MEMORY_STATS_TYPE.equals(entity.getType())) {
                 parseMemoryStats(entity, last(ret));
             } else if (CPU_STATS_TYPE.equals(entity.getType())) {
@@ -135,7 +151,7 @@ public class PowerShellVM extends VM {
         return list.get(list.size() - 1);
     }
 
-    private static PowerShellVM parseVm(PowerShellParser.Entity entity) {
+    private static PowerShellVM parseVm(PowerShellParser.Entity entity, Map<String, XMLGregorianCalendar> dates) {
         PowerShellVM vm = new PowerShellVM();
 
         vm.setId(entity.get("vmid"));
@@ -203,6 +219,11 @@ public class PowerShellVM extends VM {
             }
             vm.setDisplay(display);
         }
+
+        if (dates.containsKey(entity.get("creationdate"))) {
+            vm.setCreationTime(dates.get(entity.get("creationdate")));
+        }
+
         return vm;
     }
 

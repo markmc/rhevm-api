@@ -1059,6 +1059,7 @@
             <xs:element ref="cluster" minOccurs="0" maxOccurs="1"/>
             <xs:element ref="template" minOccurs="0" maxOccurs="1"/>
             <xs:element ref="storage_domain" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="creation_time" type="xs:dateTime" minOccurs="0"/>
 
             <xs:element name="memory_statistics" type="MemoryStatistics" minOccurs="0" maxOccurs="1">
               <xs:annotation>

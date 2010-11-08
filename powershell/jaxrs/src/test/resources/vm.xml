@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 <Objects>
+  <Object Type="System.DateTime">20/07/2010 17:28:18</Object>
+  <Object Type="System.String">2010:07:20:17:28:18</Object>
   <Object Type="RhevmCmd.CLIVm">
     <Property Name="VmId" Type="System.String">142bf5b1-04fb-4221-9360-0f9b7dab3013</Property>
     <Property Name="Name" Type="System.String">foo-1</Property>
@@ -71,6 +73,8 @@
     <Property Name="Idle" Type="System.Decimal">30</Property>
     <Property Name="Load" Type="System.Decimal">40</Property>
   </Object>
+  <Object Type="System.DateTime">20/07/2010 17:33:03</Object>
+  <Object Type="System.String">2010:07:20:17:33:03</Object>
   <Object Type="RhevmCmd.CLIVm">
     <Property Name="VmId" Type="System.String">f9e37917-8382-486f-875d-4045be045d85</Property>
     <Property Name="Name" Type="System.String">foo-2</Property>
@@ -140,6 +144,8 @@
     <Property Name="Idle" Type="System.Decimal">30</Property>
     <Property Name="Load" Type="System.Decimal">40</Property>
   </Object>
+  <Object Type="System.DateTime">02/07/2010 10:27:02</Object>
+  <Object Type="System.String">2010:07:20:10:27:02</Object>
   <Object Type="RhevmCmd.CLIVm">
     <Property Name="VmId" Type="System.String">aa0e6522-5baf-4f92-86d3-716883de4359</Property>
     <Property Name="Name" Type="System.String">test</Property>
@@ -211,6 +217,8 @@
     <Property Name="Idle" Type="System.Decimal">30</Property>
     <Property Name="Load" Type="System.Decimal">40</Property>
   </Object>
+  <Object Type="System.DateTime">02/07/2010 10:58:41</Object>
+  <Object Type="System.String">2010:07:20:10:58:41</Object>
   <Object Type="RhevmCmd.CLIVm">
     <Property Name="VmId" Type="System.String">5114bb3e-a4e6-44b2-b783-b3eea7d84720</Property>
     <Property Name="Name" Type="System.String">testf13</Property>

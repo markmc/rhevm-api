@@ -45,6 +45,7 @@ public class PowerShellVmsResource
         StringBuilder buf = new StringBuilder();
         buf.append(" | ");
         buf.append("foreach { ");
+        buf.append(PowerShellUtils.getDateHack("creationdate"));
         buf.append("$_; ");
         buf.append("$_.getmemorystatistics(); ");
         buf.append("$_.getcpustatistics() ");
