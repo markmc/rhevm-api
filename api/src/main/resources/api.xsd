@@ -1273,7 +1273,6 @@
       <xs:extension base="BaseResource">
         <xs:sequence>
           <xs:element ref="vm" minOccurs="0"/>
-          <!-- REVISIT: should be xs:dateTime (https://fedorahosted.org/rhevm-api/ticket/65) -->
           <xs:element name="date" type="xs:dateTime" minOccurs="0"/>
           <!-- Also a rel="prev" link -->
         </xs:sequence>
