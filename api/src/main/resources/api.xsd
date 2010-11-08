@@ -406,6 +406,7 @@
               </xs:appinfo>
             </xs:annotation>
           </xs:element>
+          <xs:element ref="power_managers" minOccurs="0"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -552,6 +553,20 @@
       <xs:element name="options" type="PowerManagementOptions"/>
     </xs:sequence>
     <xs:attribute name="type" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:element name="power_managers" type="PowerManagers"/>
+
+  <xs:complexType name="PowerManagers">
+    <xs:sequence>
+      <xs:element ref="power_management" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <jaxb:property name="PowerManagers"/>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
   </xs:complexType>
 
   <xs:element name="host" type="Host"/>
