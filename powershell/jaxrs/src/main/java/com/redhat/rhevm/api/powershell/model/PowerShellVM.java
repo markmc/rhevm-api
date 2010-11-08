@@ -229,6 +229,8 @@ public class PowerShellVM extends VM {
             vm.setDisplay(display);
         }
 
+        vm.setStartTime(PowerShellUtils.getDate(entity.get("elapsedtime", BigDecimal.class).intValue()));
+
         if (dates.containsKey(entity.get("creationdate"))) {
             vm.setCreationTime(dates.get(entity.get("creationdate")));
         }

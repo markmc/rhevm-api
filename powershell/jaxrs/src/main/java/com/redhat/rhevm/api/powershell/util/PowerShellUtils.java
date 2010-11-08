@@ -18,7 +18,10 @@
  */
 package com.redhat.rhevm.api.powershell.util;
 
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.logging.Log;
@@ -77,5 +80,15 @@ public class PowerShellUtils {
                                                             Integer.parseInt(parts[4]),
                                                             Integer.parseInt(parts[5]),
                                                             0, 0);
+    }
+
+    public static XMLGregorianCalendar getDate(int secondsAgo) {
+        if (secondsAgo == 0) {
+            return null;
+        }
+        XMLGregorianCalendar ret =
+            getDatatypeFactory().newXMLGregorianCalendar(new GregorianCalendar(TimeZone.getTimeZone("UTC")));
+        ret.add(getDatatypeFactory().newDuration(false, 0, 0, 0, 0, 0, secondsAgo));
+        return ret;
     }
 }
