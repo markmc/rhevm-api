@@ -133,7 +133,7 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
             buf.append(" $v.operatingsystem = " + PowerShellUtils.escape(vm.getOs().getType()) + ";");
         }
         if (vm.isSetStateless()) {
-            buf.append(" $v.stateless = " + (vm.isStateless() ? "$true" : "$false") + ";");
+            buf.append(" $v.stateless = " + PowerShellUtils.encode(vm.isStateless()) + ";");
         }
         if (vm.isSetHighlyAvailable()) {
             buf.append(" $v.highlyavailable = " + PowerShellUtils.encode(vm.getHighlyAvailable().isValue()) + ";");

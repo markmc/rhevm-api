@@ -26,6 +26,7 @@ import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.Display;
 import com.redhat.rhevm.api.model.DisplayType;
 import com.redhat.rhevm.api.model.HighlyAvailable;
+import com.redhat.rhevm.api.model.OperatingSystem;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.powershell.enums.PowerShellBootSequence;
@@ -62,6 +63,7 @@ public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectio
     private static final String HIGHLY_AVAILABLE_ADD_COMMAND_EPILOG = " -highlyavailable $true";
     private static final String STATEFUL_ADD_COMMAND_EPILOG = " -stateless $false";
     private static final String DISPLAY_TYPE_ADD_COMMAND_EPILOG = " -displaytype VNC";
+    private static final String OS_ADD_COMMAND_EPILOG = " -os \"OtherLinux\"";
 
     public PowerShellTemplatesResourceTest() {
         super(new PowerShellTemplateResource("0", null, null, null, null), "templates", "template", extraArgs);
@@ -148,7 +150,7 @@ public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectio
     }
 
     @Test
-    public void testAddWithWithHighlyAvailble() throws Exception {
+    public void testAddHighlyAvailble() throws Exception {
         resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND_PROLOG
                                                          + getAddCommand(true)
                                                          + ADD_COMMAND_EPILOG
@@ -192,6 +194,23 @@ public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectio
         Template template = getModel(NEW_NAME, NEW_DESCRIPTION);
         template.setDisplay(new Display());
         template.getDisplay().setType(DisplayType.VNC);
+        verifyResponse(resource.add(template),
+                       NEW_NAME,
+                       NEW_DESCRIPTION);
+    }
+
+    @Test
+    public void testAddWithOperatingSystem() throws Exception {
+        resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND_PROLOG
+                                                         + getAddCommand(true)
+                                                         + ADD_COMMAND_EPILOG
+                                                         + OS_ADD_COMMAND_EPILOG
+                                                         + PROCESS_TEMPLATES,
+                                                         getAddReturn(),
+                                                         NEW_NAME));
+        Template template = getModel(NEW_NAME, NEW_DESCRIPTION);
+        template.setOs(new OperatingSystem());
+        template.getOs().setType("OtherLinux");
         verifyResponse(resource.add(template),
                        NEW_NAME,
                        NEW_DESCRIPTION);

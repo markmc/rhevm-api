@@ -119,6 +119,9 @@ public class PowerShellTemplatesResource
         if (bootSequence != null) {
             buf.append(" -defaultbootsequence " + bootSequence);
         }
+        if (template.isSetOs() && template.getOs().isSetType()) {
+            buf.append(" -os " + PowerShellUtils.escape(template.getOs().getType()));
+        }
         if (template.isSetStateless()) {
             buf.append(" -stateless " + PowerShellUtils.encode(template.isStateless()));
         }

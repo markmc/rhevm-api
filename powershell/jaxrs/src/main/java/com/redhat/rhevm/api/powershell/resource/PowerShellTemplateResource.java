@@ -131,6 +131,9 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
         if (bootSequence != null) {
             buf.append(" $t.defaultbootsequence = '" + bootSequence + "';");
         }
+        if (template.isSetOs() && template.getOs().isSetType()) {
+            buf.append(" $t.operatingsystem = " + PowerShellUtils.escape(template.getOs().getType()) + ";");
+        }
         if (template.isSetStateless()) {
             buf.append(" $t.isstateless = " + PowerShellUtils.encode(template.isStateless()) + ";");
         }
