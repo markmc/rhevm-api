@@ -19,6 +19,7 @@
 package com.redhat.rhevm.api.powershell.resource;
 
 import java.net.URI;
+import java.text.MessageFormat;
 import java.util.concurrent.Executor;
 
 import javax.ws.rs.WebApplicationException;
@@ -28,7 +29,10 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.Action;
+import com.redhat.rhevm.api.model.Display;
+import com.redhat.rhevm.api.model.DisplayType;
 import com.redhat.rhevm.api.model.Fault;
+import com.redhat.rhevm.api.model.HighlyAvailable;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.Template;
 
@@ -57,7 +61,11 @@ public class PowerShellTemplateResourceTest extends AbstractPowerShellResourceTe
     private static final String BAD_ID = "98765";
 
     private static final String GET_COMMAND = "get-template -templateid \"" + TEMPLATE_ID + "\"" + PROCESS_TEMPLATES;
-    private static final String UPDATE_COMMAND = "$t = get-template \"" + TEMPLATE_ID + "\";$t.name = \"" + NEW_NAME + "\";update-template -templateobject $t" + PROCESS_TEMPLATES;
+    private static final String UPDATE_COMMAND_TEMPLATE = "$t = get-template \"" + TEMPLATE_ID + "\";$t.name = \"" + NEW_NAME + "\";{0}update-template -templateobject $t";
+    private static final String UPDATE_COMMAND = MessageFormat.format(UPDATE_COMMAND_TEMPLATE, "") + PROCESS_TEMPLATES;
+    private static final String UPDATE_HIGHLY_AVAILABLE_COMMAND = MessageFormat.format(UPDATE_COMMAND_TEMPLATE, " $t.autostartup = $false;") + PROCESS_TEMPLATES;
+    private static final String UPDATE_STATELESS_COMMAND = MessageFormat.format(UPDATE_COMMAND_TEMPLATE, " $t.isstateless = $true;")  + PROCESS_TEMPLATES;
+    private static final String UPDATE_DISPLAY_COMMAND = MessageFormat.format(UPDATE_COMMAND_TEMPLATE, " $t.numofmonitors = 4; $t.displaytype = 'VNC';")  + PROCESS_TEMPLATES;
 
     private static final String EXPORT_COMMAND = "$dest = select-storagedomain | ? { $_.domaintype -eq \"Export\" }; export-template -templateid \"" + TEMPLATE_ID + "\" -storagedomainid $dest.storagedomainid -forceoverride";
     private static final String EXPORT_WITH_PARAMS_COMMAND = "$dest = select-storagedomain | ? { $_.domaintype -eq \"Export\" }; export-template -templateid \"" + TEMPLATE_ID + "\" -storagedomainid $dest.storagedomainid";
@@ -85,6 +93,24 @@ public class PowerShellTemplateResourceTest extends AbstractPowerShellResourceTe
     public void testGoodUpdate() throws Exception {
         setUriInfo(setUpTemplateExpectations(UPDATE_COMMAND, formatTemplate(NEW_NAME)));
         verifyTemplate(resource.update(getTemplate(NEW_NAME)), NEW_NAME);
+    }
+
+    @Test
+    public void testUpdateHighlyAvailable() throws Exception {
+        setUriInfo(setUpTemplateExpectations(UPDATE_HIGHLY_AVAILABLE_COMMAND, formatTemplate(NEW_NAME)));
+        verifyTemplate(resource.update(updateHighlyAvailable(getTemplate(NEW_NAME))), NEW_NAME);
+    }
+
+    @Test
+    public void testUpdateStateless() throws Exception {
+        setUriInfo(setUpTemplateExpectations(UPDATE_STATELESS_COMMAND, formatTemplate(NEW_NAME)));
+        verifyTemplate(resource.update(updateStateless(getTemplate(NEW_NAME))), NEW_NAME);
+    }
+
+    @Test
+    public void testUpdateDisplay() throws Exception {
+        setUriInfo(setUpTemplateExpectations(UPDATE_DISPLAY_COMMAND, formatTemplate(NEW_NAME)));
+        verifyTemplate(resource.update(updateDisplay(getTemplate(NEW_NAME))), NEW_NAME);
     }
 
     @Test
@@ -160,6 +186,24 @@ public class PowerShellTemplateResourceTest extends AbstractPowerShellResourceTe
         Template template = new Template();
         template.setId(id);
         template.setName(name);
+        return template;
+    }
+
+    private Template updateHighlyAvailable(Template template) {
+        template.setHighlyAvailable(new HighlyAvailable());
+        template.getHighlyAvailable().setValue(false);
+        return template;
+    }
+
+    private Template updateStateless(Template template) {
+        template.setStateless(true);
+        return template;
+    }
+
+    private Template updateDisplay(Template template) {
+        template.setDisplay(new Display());
+        template.getDisplay().setType(DisplayType.VNC);
+        template.getDisplay().setMonitors(4);
         return template;
     }
 

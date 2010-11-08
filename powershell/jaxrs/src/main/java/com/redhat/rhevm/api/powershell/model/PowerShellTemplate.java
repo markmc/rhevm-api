@@ -27,6 +27,9 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.CpuTopology;
+import com.redhat.rhevm.api.model.Display;
+import com.redhat.rhevm.api.model.DisplayType;
+import com.redhat.rhevm.api.model.HighlyAvailable;
 import com.redhat.rhevm.api.model.OperatingSystem;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.powershell.enums.PowerShellBootSequence;
@@ -84,6 +87,25 @@ public class PowerShellTemplate extends Template {
                 os.getBoot().add(boot);
             }
             template.setOs(os);
+
+            if (Boolean.TRUE.equals(entity.get("autostartup", Boolean.class))) {
+                template.setHighlyAvailable(new HighlyAvailable());
+                template.getHighlyAvailable().setValue(true);
+                template.getHighlyAvailable().setPriority(entity.get("priority", Integer.class));
+            }
+
+            Boolean stateless = entity.get("isstateless", Boolean.class);
+            if (stateless != null) {
+                template.setStateless(stateless);
+            }
+
+            DisplayType displayType = PowerShellVM.parseDisplayType(entity.get("displaytype"));
+            if (displayType != null) {
+                Display display = new Display();
+                display.setType(displayType);
+                display.setMonitors(entity.get("numofmonitors", Integer.class));
+                template.setDisplay(display);
+            }
 
             Cluster cluster = new Cluster();
             cluster.setId(entity.get("hostclusterid", String.class, Integer.class).toString());

@@ -90,7 +90,7 @@ public class PowerShellVM extends VM {
         return DisplayType.VNC.equals(type) ? "VNC" : "Spice";
     }
 
-    private static DisplayType parseDisplayType(String s) {
+    public static DisplayType parseDisplayType(String s) {
         if (s == null) return null;
         else if (s.equals("VNC"))   return DisplayType.VNC;
         else if (s.equals("Spice")) return DisplayType.SPICE;

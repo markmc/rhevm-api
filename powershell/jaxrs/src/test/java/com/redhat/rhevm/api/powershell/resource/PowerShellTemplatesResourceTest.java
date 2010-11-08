@@ -23,6 +23,9 @@ import javax.ws.rs.WebApplicationException;
 import org.junit.Test;
 
 import com.redhat.rhevm.api.model.Cluster;
+import com.redhat.rhevm.api.model.Display;
+import com.redhat.rhevm.api.model.DisplayType;
+import com.redhat.rhevm.api.model.HighlyAvailable;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.powershell.enums.PowerShellBootSequence;
@@ -55,6 +58,10 @@ public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectio
         "$c = select-cluster -searchtext \"name=" + CLUSTER_NAME + "\";";
 
     private static final String CLUSTER_BY_NAME_ADD_COMMAND_EPILOG = ADD_COMMAND_NO_CLUSTER_EPILOG + " -hostclusterid $c.ClusterId";
+
+    private static final String HIGHLY_AVAILABLE_ADD_COMMAND_EPILOG = " -highlyavailable $true";
+    private static final String STATEFUL_ADD_COMMAND_EPILOG = " -stateless $false";
+    private static final String DISPLAY_TYPE_ADD_COMMAND_EPILOG = " -displaytype VNC";
 
     public PowerShellTemplatesResourceTest() {
         super(new PowerShellTemplateResource("0", null, null, null, null), "templates", "template", extraArgs);
@@ -138,6 +145,56 @@ public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectio
                                                          NEW_NAME));
 
         verifyResponse(resource.add(model), NEW_NAME, NEW_DESCRIPTION);
+    }
+
+    @Test
+    public void testAddWithWithHighlyAvailble() throws Exception {
+        resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND_PROLOG
+                                                         + getAddCommand(true)
+                                                         + ADD_COMMAND_EPILOG
+                                                         + HIGHLY_AVAILABLE_ADD_COMMAND_EPILOG
+                                                         + PROCESS_TEMPLATES,
+                                                         getAddReturn(),
+                                                         NEW_NAME));
+        Template template = getModel(NEW_NAME, NEW_DESCRIPTION);
+        template.setHighlyAvailable(new HighlyAvailable());
+        template.getHighlyAvailable().setValue(true);
+        verifyResponse(resource.add(template),
+                       NEW_NAME,
+                       NEW_DESCRIPTION);
+    }
+
+    @Test
+    public void testAddStateless() throws Exception {
+        resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND_PROLOG
+                                                         + getAddCommand(true)
+                                                         + ADD_COMMAND_EPILOG
+                                                         + STATEFUL_ADD_COMMAND_EPILOG
+                                                         + PROCESS_TEMPLATES,
+                                                         getAddReturn(),
+                                                         NEW_NAME));
+        Template template = getModel(NEW_NAME, NEW_DESCRIPTION);
+        template.setStateless(false);
+        verifyResponse(resource.add(template),
+                       NEW_NAME,
+                       NEW_DESCRIPTION);
+    }
+
+    @Test
+    public void testAddWithDisplayType() throws Exception {
+        resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND_PROLOG
+                                                         + getAddCommand(true)
+                                                         + ADD_COMMAND_EPILOG
+                                                         + DISPLAY_TYPE_ADD_COMMAND_EPILOG
+                                                         + PROCESS_TEMPLATES,
+                                                         getAddReturn(),
+                                                         NEW_NAME));
+        Template template = getModel(NEW_NAME, NEW_DESCRIPTION);
+        template.setDisplay(new Display());
+        template.getDisplay().setType(DisplayType.VNC);
+        verifyResponse(resource.add(template),
+                       NEW_NAME,
+                       NEW_DESCRIPTION);
     }
 
     @Test

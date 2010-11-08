@@ -26,6 +26,7 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.CpuTopology;
+import com.redhat.rhevm.api.model.Display;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.resource.AssignedPermissionsResource;
@@ -129,6 +130,21 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
         String bootSequence = PowerShellVM.buildBootSequence(template.getOs());
         if (bootSequence != null) {
             buf.append(" $t.defaultbootsequence = '" + bootSequence + "';");
+        }
+        if (template.isSetStateless()) {
+            buf.append(" $t.isstateless = " + PowerShellUtils.encode(template.isStateless()) + ";");
+        }
+        if (template.isSetHighlyAvailable()) {
+            buf.append(" $t.autostartup = " + PowerShellUtils.encode(template.getHighlyAvailable().isValue()) + ";");
+        }
+        if (template.isSetDisplay()) {
+            Display display = template.getDisplay();
+            if (display.isSetMonitors()) {
+                buf.append(" $t.numofmonitors = " + display.getMonitors() + ";");
+            }
+            if (display.isSetType()) {
+                buf.append(" $t.displaytype = '" + PowerShellVM.asString(display.getType()) + "';");
+            }
         }
 
         buf.append("update-template -templateobject $t");

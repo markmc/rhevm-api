@@ -91,4 +91,8 @@ public class PowerShellUtils {
         ret.add(getDatatypeFactory().newDuration(false, 0, 0, 0, 0, 0, secondsAgo));
         return ret;
     }
+
+    public static String encode(Boolean b) {
+        return Boolean.TRUE.equals(b) ? "$true" : "$false";
+    }
 }

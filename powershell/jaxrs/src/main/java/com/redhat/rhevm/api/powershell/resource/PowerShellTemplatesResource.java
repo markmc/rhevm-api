@@ -24,6 +24,7 @@ import javax.ws.rs.core.UriBuilder;
 
 import com.redhat.rhevm.api.common.util.ReflectionHelper;
 import com.redhat.rhevm.api.model.CpuTopology;
+import com.redhat.rhevm.api.model.Display;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.Templates;
 import com.redhat.rhevm.api.resource.TemplateResource;
@@ -31,6 +32,7 @@ import com.redhat.rhevm.api.resource.TemplatesResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellTemplate;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
@@ -117,7 +119,18 @@ public class PowerShellTemplatesResource
         if (bootSequence != null) {
             buf.append(" -defaultbootsequence " + bootSequence);
         }
-
+        if (template.isSetStateless()) {
+            buf.append(" -stateless " + PowerShellUtils.encode(template.isStateless()));
+        }
+        if (template.isSetHighlyAvailable() && template.getHighlyAvailable().isValue()) {
+            buf.append(" -highlyavailable " + PowerShellUtils.encode(template.getHighlyAvailable().isValue()));
+        }
+        if (template.isSetDisplay()) {
+            Display display = template.getDisplay();
+            if (display.isSetType()) {
+                buf.append(" -displaytype " + PowerShellVM.asString(display.getType()));
+            }
+        }
         PowerShellTemplate ret = runAndParseSingle(buf.toString() + PROCESS_TEMPLATES);
 
         template = PowerShellTemplateResource.addLinks(getUriInfo(), ret);
