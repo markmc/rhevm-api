@@ -66,7 +66,7 @@ public class PowerShellTemplateResourceTest extends AbstractPowerShellResourceTe
     private static final String UPDATE_COMMAND = MessageFormat.format(UPDATE_COMMAND_TEMPLATE, "") + PROCESS_TEMPLATES;
     private static final String UPDATE_HIGHLY_AVAILABLE_COMMAND = MessageFormat.format(UPDATE_COMMAND_TEMPLATE, " $t.autostartup = $false;") + PROCESS_TEMPLATES;
     private static final String UPDATE_STATELESS_COMMAND = MessageFormat.format(UPDATE_COMMAND_TEMPLATE, " $t.isstateless = $true;")  + PROCESS_TEMPLATES;
-    private static final String UPDATE_DISPLAY_COMMAND = MessageFormat.format(UPDATE_COMMAND_TEMPLATE, " $t.numofmonitors = 4; $t.displaytype = 'VNC';")  + PROCESS_TEMPLATES;
+    private static final String UPDATE_DISPLAY_COMMAND = MessageFormat.format(UPDATE_COMMAND_TEMPLATE, " $t.displaytype = 'VNC';")  + PROCESS_TEMPLATES;
     private static final String UPDATE_OS_COMMAND = MessageFormat.format(UPDATE_COMMAND_TEMPLATE, " $t.operatingsystem = \"OtherLinux\";")  + PROCESS_TEMPLATES;
     
     private static final String EXPORT_COMMAND = "$dest = select-storagedomain | ? { $_.domaintype -eq \"Export\" }; export-template -templateid \"" + TEMPLATE_ID + "\" -storagedomainid $dest.storagedomainid -forceoverride";
@@ -211,7 +211,6 @@ public class PowerShellTemplateResourceTest extends AbstractPowerShellResourceTe
     private Template updateDisplay(Template template) {
         template.setDisplay(new Display());
         template.getDisplay().setType(DisplayType.VNC);
-        template.getDisplay().setMonitors(4);
         return template;
     }
 

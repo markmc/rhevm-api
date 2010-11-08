@@ -142,9 +142,6 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
         }
         if (template.isSetDisplay()) {
             Display display = template.getDisplay();
-            if (display.isSetMonitors()) {
-                buf.append(" $t.numofmonitors = " + display.getMonitors() + ";");
-            }
             if (display.isSetType()) {
                 buf.append(" $t.displaytype = '" + PowerShellVM.asString(display.getType()) + "';");
             }
