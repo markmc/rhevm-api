@@ -30,6 +30,7 @@ import com.redhat.rhevm.api.model.CpuTopology;
 import com.redhat.rhevm.api.model.OperatingSystem;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.powershell.enums.PowerShellBootSequence;
+import com.redhat.rhevm.api.powershell.enums.PowerShellOriginType;
 import com.redhat.rhevm.api.powershell.enums.PowerShellVmTemplateStatus;
 import com.redhat.rhevm.api.powershell.enums.PowerShellVmType;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
@@ -91,6 +92,8 @@ public class PowerShellTemplate extends Template {
             if (dates.containsKey(entity.get("creationdate"))) {
                 template.setCreationTime(dates.get(entity.get("creationdate")));
             }
+
+            template.setOrigin(entity.get("origin", PowerShellOriginType.class).map());
 
             ret.add(template);
         }

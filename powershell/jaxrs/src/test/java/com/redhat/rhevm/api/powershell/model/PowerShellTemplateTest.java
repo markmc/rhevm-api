@@ -23,12 +23,12 @@ import org.junit.Test;
 import java.util.List;
 
 import com.redhat.rhevm.api.model.TemplateStatus;
+import com.redhat.rhevm.api.model.VmOrigin;
 import com.redhat.rhevm.api.model.VmType;
-
 
 public class PowerShellTemplateTest extends PowerShellModelTest {
 
-    private void testTemplate(PowerShellTemplate t, String id, String name, String description, VmType type, TemplateStatus status, Long memory, int sockets, int cores, String cdIsoPath, String clusterId, String creationTime) {
+    private void testTemplate(PowerShellTemplate t, String id, String name, String description, VmType type, TemplateStatus status, Long memory, int sockets, int cores, String cdIsoPath, String clusterId, String creationTime, VmOrigin origin) {
         assertEquals(id, t.getId());
         assertEquals(name, t.getName());
         assertEquals(description, t.getDescription());
@@ -43,6 +43,7 @@ public class PowerShellTemplateTest extends PowerShellModelTest {
         assertNotNull(t.getCluster());
         assertEquals(clusterId, t.getCluster().getId());
         assertEquals(creationTime, t.getCreationTime().toString());
+        assertEquals(origin, t.getOrigin());
     }
 
     @Test
@@ -54,9 +55,9 @@ public class PowerShellTemplateTest extends PowerShellModelTest {
 
         assertEquals(templates.size(), 4);
 
-        testTemplate(templates.get(0), "00000000-0000-0000-0000-000000000000", "Blank", "Blank template", VmType.DESKTOP, TemplateStatus.OK, 536870912L, 1, 1, null, "99408929-82cf-4dc7-a532-9d998063fa95", "2008-04-01T00:00:00.000Z");
-        testTemplate(templates.get(1), "8d465dcc-df83-4161-868b-ad223744b14a", "foo520", null, VmType.DESKTOP, TemplateStatus.OK, 536870912L, 1, 1, null, "99408929-82cf-4dc7-a532-9d998063fa95", "2010-07-05T18:35:12.000Z");
-        testTemplate(templates.get(2), "b3831709-6a0b-41dd-8e96-ea1f2573f95a", "foobar", "foo", VmType.SERVER, TemplateStatus.OK, 536870912L, 1, 1,null, "99408929-82cf-4dc7-a532-9d998063fa95", "2010-07-05T18:33:54.000Z");
-        testTemplate(templates.get(3), "3ee77811-f1eb-4d3f-991e-e539dbb2f1f9", "tmpl1", null, VmType.DESKTOP, TemplateStatus.OK, 536870912L, 1, 1,null, "99408929-82cf-4dc7-a532-9d998063fa95", "2010-07-02T14:37:09.000Z");
+        testTemplate(templates.get(0), "00000000-0000-0000-0000-000000000000", "Blank", "Blank template", VmType.DESKTOP, TemplateStatus.OK, 536870912L, 1, 1, null, "99408929-82cf-4dc7-a532-9d998063fa95", "2008-04-01T00:00:00.000Z", VmOrigin.RHEV);
+        testTemplate(templates.get(1), "8d465dcc-df83-4161-868b-ad223744b14a", "foo520", null, VmType.DESKTOP, TemplateStatus.OK, 536870912L, 1, 1, null, "99408929-82cf-4dc7-a532-9d998063fa95", "2010-07-05T18:35:12.000Z", VmOrigin.VMWARE);
+        testTemplate(templates.get(2), "b3831709-6a0b-41dd-8e96-ea1f2573f95a", "foobar", "foo", VmType.SERVER, TemplateStatus.OK, 536870912L, 1, 1,null, "99408929-82cf-4dc7-a532-9d998063fa95", "2010-07-05T18:33:54.000Z", VmOrigin.XEN);
+        testTemplate(templates.get(3), "3ee77811-f1eb-4d3f-991e-e539dbb2f1f9", "tmpl1", null, VmType.DESKTOP, TemplateStatus.OK, 536870912L, 1, 1,null, "99408929-82cf-4dc7-a532-9d998063fa95", "2010-07-02T14:37:09.000Z", VmOrigin.RHEV);
     }
 }

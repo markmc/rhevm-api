@@ -89,7 +89,7 @@
     <Property Name="CdIsoPath" Type="System.String" />
     <Property Name="DisplayType" Type="System.String">VNC</Property>
     <Property Name="Origin" Type="VdcCommon.BusinessEntities.OriginType">
-      <Property Name="value__" Type="System.Int32">0</Property>
+      <Property Name="value__" Type="System.Int32">1</Property>
     </Property>
   </Object>
   <Object Type="System.DateTime">05/07/2010 18:33:54</Object>
@@ -135,7 +135,7 @@
     <Property Name="CdIsoPath" Type="System.String" />
     <Property Name="DisplayType" Type="System.String">VNC</Property>
     <Property Name="Origin" Type="VdcCommon.BusinessEntities.OriginType">
-      <Property Name="value__" Type="System.Int32">0</Property>
+      <Property Name="value__" Type="System.Int32">2</Property>
     </Property>
   </Object>
   <Object Type="System.DateTime">02/07/2010 14:37:09</Object>
