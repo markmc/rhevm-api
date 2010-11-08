@@ -60,8 +60,8 @@ public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectio
 
     private static final String CLUSTER_BY_NAME_ADD_COMMAND_EPILOG = ADD_COMMAND_NO_CLUSTER_EPILOG + " -hostclusterid $c.ClusterId";
 
-    private static final String HIGHLY_AVAILABLE_ADD_COMMAND_EPILOG = " -highlyavailable $true";
-    private static final String STATEFUL_ADD_COMMAND_EPILOG = " -stateless $false";
+    private static final String HIGHLY_AVAILABLE_ADD_COMMAND_EPILOG = " -highlyavailable ";
+    private static final String STATEFUL_ADD_COMMAND_EPILOG = " -stateless ";
     private static final String DISPLAY_TYPE_ADD_COMMAND_EPILOG = " -displaytype VNC";
     private static final String OS_ADD_COMMAND_EPILOG = " -os \"OtherLinux\"";
 

@@ -123,10 +123,10 @@ public class PowerShellTemplatesResource
             buf.append(" -os " + PowerShellUtils.escape(template.getOs().getType()));
         }
         if (template.isSetStateless()) {
-            buf.append(" -stateless " + PowerShellUtils.encode(template.isStateless()));
+            buf.append(" -stateless ");
         }
         if (template.isSetHighlyAvailable() && template.getHighlyAvailable().isValue()) {
-            buf.append(" -highlyavailable " + PowerShellUtils.encode(template.getHighlyAvailable().isValue()));
+            buf.append(" -highlyavailable ");
         }
         if (template.isSetDisplay()) {
             Display display = template.getDisplay();
