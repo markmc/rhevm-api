@@ -21,7 +21,12 @@ package com.redhat.rhevm.api.powershell.util;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public class PowerShellUtils {
+
+    private static final Log log = LogFactory.getLog(PowerShellCmd.class);
 
     private static final String QUOTE = "\"";
     private static final String ESCAPE = "`";
@@ -50,20 +55,27 @@ public class PowerShellUtils {
         return buf.toString();
     }
 
+    private static DatatypeFactory datatypeFactory;
+
+    private static DatatypeFactory getDatatypeFactory() {
+        if (datatypeFactory == null) {
+            try {
+                datatypeFactory = DatatypeFactory.newInstance();
+            } catch (javax.xml.datatype.DatatypeConfigurationException dtce) {
+                log.warn("Failed to initialize DatatypeFactory: " + dtce);
+            }
+        }
+        return datatypeFactory;
+    }
+
     public static XMLGregorianCalendar parseDate(String date) {
         String[] parts = date.split(":");
-        DatatypeFactory factory;
-        try {
-            factory = DatatypeFactory.newInstance();
-        } catch (javax.xml.datatype.DatatypeConfigurationException dtce) {
-            return null; // Meh!
-        }
-        return factory.newXMLGregorianCalendar(Integer.parseInt(parts[0]),
-                                               Integer.parseInt(parts[1]),
-                                               Integer.parseInt(parts[2]),
-                                               Integer.parseInt(parts[3]),
-                                               Integer.parseInt(parts[4]),
-                                               Integer.parseInt(parts[5]),
-                                               0, 0);
+        return getDatatypeFactory().newXMLGregorianCalendar(Integer.parseInt(parts[0]),
+                                                            Integer.parseInt(parts[1]),
+                                                            Integer.parseInt(parts[2]),
+                                                            Integer.parseInt(parts[3]),
+                                                            Integer.parseInt(parts[4]),
+                                                            Integer.parseInt(parts[5]),
+                                                            0, 0);
     }
 }
