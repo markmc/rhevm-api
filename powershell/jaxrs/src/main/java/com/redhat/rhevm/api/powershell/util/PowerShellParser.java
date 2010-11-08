@@ -309,7 +309,7 @@ public class PowerShellParser {
         private boolean enabled;
         private String address;
         private String type;
-        private String user;
+        private String username;
         private String password;
         private int port;
         private int slot;
@@ -327,8 +327,8 @@ public class PowerShellParser {
                 if (prop.getName().equals("type")) {
                     type = prop.getValue(String.class);
                 }
-                if (prop.getName().equals("user")) {
-                    user = prop.getValue(String.class);
+                if (prop.getName().equals("username")) {
+                    username = prop.getValue(String.class);
                 }
                 if (prop.getName().equals("password")) {
                     password = prop.getValue(String.class);
@@ -369,11 +369,11 @@ public class PowerShellParser {
             this.type = type;
         }
 
-        public String getUser() {
-            return user;
+        public String getUsername() {
+            return username;
         }
-        public void setUser(String user) {
-            this.user = user;
+        public void setUsername(String user) {
+            this.username = username;
         }
 
         public String getPassword() {

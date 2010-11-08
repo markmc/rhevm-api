@@ -31,6 +31,9 @@ import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Fault;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.IscsiParameters;
+import com.redhat.rhevm.api.model.PowerManagement;
+import com.redhat.rhevm.api.model.PowerManagementOption;
+import com.redhat.rhevm.api.model.PowerManagementOptions;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
@@ -54,6 +57,7 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
     private static final String GET_COMMAND = "get-host \"" + HOST_ID + "\"";
     private static final String ACTION_RETURN = "replace with realistic powershell return";
     private static final String UPDATE_COMMAND = "$h = get-host \"" + HOST_ID + "\";$h.name = \"eris\";update-host -hostobject $h";
+    private static final String UPDATE_PM_COMMAND = "$h = get-host \"" + HOST_ID + "\";$h.name = \"eris\";$h.powermanagement.enabled = $false; $h.powermanagement.type = \"fenceme\"; $h.powermanagement.address = \"foo\"; $h.powermanagement.username = \"me\"; $h.powermanagement.password = \"mysecret\"; $h.powermanagement.secure = $true; $h.powermanagement.port = \"12345\"; $h.powermanagement.slot = \"54321\"; $h.powermanagement.options = \"secure=true,port=12345,slot=54321\"; update-host -hostobject $h";
     private static final String INSTALL_PASSWORD = "boldlygoingnowhere";
     private static final String INSTALL_COMMAND = "$h = get-host \"" + HOST_ID + "\";update-host -hostobject $h -install -rootpassword \"" + INSTALL_PASSWORD + "\"";
     private static final String COMMIT_NET_CONFIG_COMMAND = "$h = get-host \"" + HOST_ID + "\"; commit-configurationchanges -hostobject $h";
@@ -105,6 +109,35 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
                                          formatHost("eris"),
                                          "eris"));
         verifyHost(resource.update(getHost(HOST_ID, "eris")), "eris");
+    }
+
+    @Test
+    public void testPowerManagementUpdate() throws Exception {
+        Host host = getHost(HOST_ID, "eris");
+
+        host.setPowerManagement(new PowerManagement());
+        host.getPowerManagement().setEnabled(false);
+        host.getPowerManagement().setType("fenceme");
+        host.getPowerManagement().setAddress("foo");
+        host.getPowerManagement().setUsername("me");
+        host.getPowerManagement().setPassword("mysecret");
+        host.getPowerManagement().setOptions(new PowerManagementOptions());
+        host.getPowerManagement().getOptions().getOptions().add(buildOption("secure", "true"));
+        host.getPowerManagement().getOptions().getOptions().add(buildOption("port", "12345"));
+        host.getPowerManagement().getOptions().getOptions().add(buildOption("slot", "54321"));
+
+        setUriInfo(setUpHostExpectations(UPDATE_PM_COMMAND,
+                                         formatHost("eris"),
+                                         "eris"));
+
+        verifyHost(resource.update(host), "eris");
+    }
+
+    private PowerManagementOption buildOption(String name, String value) {
+        PowerManagementOption option = new PowerManagementOption();
+        option.setName(name);
+        option.setValue(value);
+        return option;
     }
 
     @Test

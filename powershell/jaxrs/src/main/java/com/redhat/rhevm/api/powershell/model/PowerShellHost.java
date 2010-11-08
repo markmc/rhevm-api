@@ -24,7 +24,9 @@ import java.util.List;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.HostStatus;
-import com.redhat.rhevm.api.powershell.model.PowerShellHost;
+import com.redhat.rhevm.api.model.PowerManagement;
+import com.redhat.rhevm.api.model.PowerManagementOption;
+import com.redhat.rhevm.api.model.PowerManagementOptions;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 
 public class PowerShellHost {
@@ -48,6 +50,36 @@ public class PowerShellHost {
         return null;
     }
 
+    private static PowerManagementOptions parsePowerManagementOptions(String options) {
+        if (options == null) {
+            return null;
+        }
+
+        PowerManagementOptions ret = new PowerManagementOptions();
+
+        String[] opts = options.split(",");
+        for (int i = 0; i < opts.length; i++) {
+            String[] parts = opts[i].split("=");
+
+            PowerManagementOption option = new PowerManagementOption();
+            option.setName(parts[0]);
+            option.setValue(parts[1]);
+            ret.getOptions().add(option);
+        }
+
+        return ret;
+    }
+
+    private static PowerManagement parsePowerManagement(PowerShellParser.PowerManagement parsed) {
+        PowerManagement ret = new PowerManagement();
+        ret.setType(parsed.getType());
+        ret.setEnabled(parsed.getEnabled());
+        ret.setAddress(parsed.getAddress());
+        ret.setUsername(parsed.getUsername());
+        ret.setOptions(parsePowerManagementOptions(parsed.getOptions()));
+        return ret;
+    }
+
     public static List<Host> parse(PowerShellParser parser, String output) {
         List<Host> ret = new ArrayList<Host>();
 
@@ -60,6 +92,9 @@ public class PowerShellHost {
             host.setPort(entity.get("port", Integer.class));
             host.setName(entity.get("name"));
             host.setStatus(parseStatus(entity.get("status")));
+
+            host.setPowerManagement(parsePowerManagement(entity.get("powermanagement",
+                                                                    PowerShellParser.PowerManagement.class)));
 
             ret.add(host);
         }

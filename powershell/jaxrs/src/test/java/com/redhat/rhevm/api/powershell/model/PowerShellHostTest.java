@@ -24,9 +24,23 @@ import java.util.List;
 
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.HostStatus;
-
+import com.redhat.rhevm.api.model.PowerManagement;
 
 public class PowerShellHostTest extends PowerShellModelTest {
+
+    private void testPowerManagement(PowerManagement p, String type, Boolean enabled, String address, String username, String[] optionNames, String[] optionValues) {
+        assertEquals(type, p.getType());
+        assertEquals(enabled, p.isEnabled());
+        assertEquals(address, p.getAddress());
+        assertEquals(username, p.getUsername());
+        assertFalse(p.isSetPassword());
+        assertEquals(optionNames.length, p.getOptions().getOptions().size());
+        for (int i = 0; i < optionNames.length; i++) {
+            assertEquals(optionNames[i], p.getOptions().getOptions().get(i).getName());
+            assertEquals(optionValues[i], p.getOptions().getOptions().get(i).getValue());
+            assertFalse(p.getOptions().getOptions().get(i).isSetType());
+        }
+    }
 
     private void testHost(Host h, String id, String name, HostStatus status, String clusterId, int port) {
         assertEquals(h.getId(), id);
@@ -47,5 +61,8 @@ public class PowerShellHostTest extends PowerShellModelTest {
         assertEquals(hosts.size(), 1);
 
         testHost(hosts.get(0), "5f38363b-7457-4884-831e-78c27cebb31d", "zig", HostStatus.UP, "99408929-82cf-4dc7-a532-9d998063fa95", 54321);
+
+        assertNotNull(hosts.get(0).getPowerManagement());
+        testPowerManagement(hosts.get(0).getPowerManagement(), "ilo", true, "192.168.1.107", "foo", new String[] { "secure", "port" }, new String[] { "true", "12345" });
     }
 }

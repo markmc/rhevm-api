@@ -20,15 +20,15 @@
     <Property Name="VmMigrating" Type="System.Int32">0</Property>
     <Property Name="HostStrength" Type="System.Int32">100</Property>
     <Property Name="PowerManagement" Type="RhevmCmd.CLIHostPowerManagement">
-      <Property Name="Enabled" Type="System.Boolean">False</Property>
-      <Property Name="Address" Type="System.String" />
-      <Property Name="Type" Type="System.String" />
-      <Property Name="UserName" Type="System.String" />
-      <Property Name="Password" Type="System.String" />
-      <Property Name="Port" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+      <Property Name="Enabled" Type="System.Boolean">True</Property>
+      <Property Name="Address" Type="System.String">192.168.1.107</Property>
+      <Property Name="Type" Type="System.String">ilo</Property>
+      <Property Name="UserName" Type="System.String">foo</Property>
+      <Property Name="Password" Type="System.String">**********</Property>
+      <Property Name="Port" Type="System.Int32">12345</Property>
       <Property Name="Slot" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
-      <Property Name="Secure" Type="System.Nullable`1[[System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
-      <Property Name="Options" Type="System.String" />
+      <Property Name="Secure" Type="System.Boolean">True</Property>
+      <Property Name="Options" Type="System.String">secure=true,port=12345</Property>
     </Property>
   </Object>
 </Objects>
