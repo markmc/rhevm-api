@@ -43,6 +43,7 @@ import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
+import static com.redhat.rhevm.api.powershell.resource.PowerShellTemplatesResource.PROCESS_TEMPLATES;
 
 public class PowerShellTemplateResource extends AbstractPowerShellActionableResource<Template> implements TemplateResource {
 
@@ -93,7 +94,7 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
 
         buf.append("get-template -templateid " + PowerShellUtils.escape(getId()));
 
-        return addLinks(getUriInfo(), runAndParseSingle(buf.toString()));
+        return addLinks(getUriInfo(), runAndParseSingle(buf.toString() + PROCESS_TEMPLATES));
     }
 
     @Override
@@ -132,7 +133,7 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
 
         buf.append("update-template -templateobject $t");
 
-        return addLinks(getUriInfo(), runAndParseSingle(buf.toString()));
+        return addLinks(getUriInfo(), runAndParseSingle(buf.toString() + PROCESS_TEMPLATES));
     }
 
     @Override

@@ -27,6 +27,7 @@ import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.powershell.enums.PowerShellBootSequence;
 
+import static com.redhat.rhevm.api.powershell.resource.PowerShellTemplatesResource.PROCESS_TEMPLATES;
 
 public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectionResourceTest<Template, PowerShellTemplateResource, PowerShellTemplatesResource> {
 
@@ -61,7 +62,7 @@ public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectio
 
     @Test
     public void testList() throws Exception {
-        resource.setUriInfo(setUpResourceExpectations(getSelectCommand(),
+        resource.setUriInfo(setUpResourceExpectations(getSelectCommand() + PROCESS_TEMPLATES,
                                                       getSelectReturn(),
                                                       NAMES));
         verifyCollection(resource.list().getTemplates(),
@@ -71,7 +72,7 @@ public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectio
 
     @Test
     public void testQuery() throws Exception {
-        resource.setUriInfo(setUpResourceExpectations(getQueryCommand(Template.class),
+        resource.setUriInfo(setUpResourceExpectations(getQueryCommand(Template.class) + PROCESS_TEMPLATES,
                                                       getQueryReturn(),
                                                       getQueryParam(),
                                                       NAMES_SUBSET));
@@ -84,7 +85,8 @@ public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectio
     public void testAddWithVmId() throws Exception {
         resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND_PROLOG
                                                          + getAddCommand(true)
-                                                         + ADD_COMMAND_EPILOG,
+                                                         + ADD_COMMAND_EPILOG
+                                                         + PROCESS_TEMPLATES,
                                                          getAddReturn(),
                                                          NEW_NAME));
         verifyResponse(resource.add(getModel(NEW_NAME, NEW_DESCRIPTION)),
@@ -98,7 +100,8 @@ public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectio
         model.setCluster(null);
         resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND_PROLOG
                                                          + getAddCommand(true)
-                                                         + ADD_COMMAND_NO_CLUSTER_EPILOG,
+                                                         + ADD_COMMAND_NO_CLUSTER_EPILOG
+                                                         + PROCESS_TEMPLATES,
                                                          getAddReturn(),
                                                          NEW_NAME));
 
@@ -112,7 +115,8 @@ public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectio
         model.getVm().setName(VM_NAME);
         resource.setUriInfo(setUpAddResourceExpectations(VM_BY_NAME_ADD_COMMAND_PROLOG
                                                          + getAddCommand(true)
-                                                         + ADD_COMMAND_EPILOG,
+                                                         + ADD_COMMAND_EPILOG
+                                                         + PROCESS_TEMPLATES,
                                                          getAddReturn(),
                                                          NEW_NAME));
 
@@ -128,7 +132,8 @@ public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectio
         model.getCluster().setName(CLUSTER_NAME);
         resource.setUriInfo(setUpAddResourceExpectations(CLUSTER_BY_NAME_ADD_COMMAND_PROLOG
                                                          + getAddCommand(true)
-                                                         + CLUSTER_BY_NAME_ADD_COMMAND_EPILOG,
+                                                         + CLUSTER_BY_NAME_ADD_COMMAND_EPILOG
+                                                         + PROCESS_TEMPLATES,
                                                          getAddReturn(),
                                                          NEW_NAME));
 

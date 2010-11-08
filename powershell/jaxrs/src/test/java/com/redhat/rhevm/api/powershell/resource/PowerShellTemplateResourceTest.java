@@ -44,6 +44,7 @@ import static org.powermock.api.easymock.PowerMock.createMock;
 import static org.powermock.api.easymock.PowerMock.mockStatic;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 
+import static com.redhat.rhevm.api.powershell.resource.PowerShellTemplatesResource.PROCESS_TEMPLATES;
 
 public class PowerShellTemplateResourceTest extends AbstractPowerShellResourceTest<Template, PowerShellTemplateResource> {
 
@@ -55,8 +56,8 @@ public class PowerShellTemplateResourceTest extends AbstractPowerShellResourceTe
     private static final String STORAGE_DOMAIN_ID = Integer.toString(STORAGE_DOMAIN_NAME.hashCode());
     private static final String BAD_ID = "98765";
 
-    private static final String GET_COMMAND = "get-template -templateid \"" + TEMPLATE_ID + "\"";
-    private static final String UPDATE_COMMAND = "$t = get-template \"" + TEMPLATE_ID + "\";$t.name = \"" + NEW_NAME + "\";update-template -templateobject $t";
+    private static final String GET_COMMAND = "get-template -templateid \"" + TEMPLATE_ID + "\"" + PROCESS_TEMPLATES;
+    private static final String UPDATE_COMMAND = "$t = get-template \"" + TEMPLATE_ID + "\";$t.name = \"" + NEW_NAME + "\";update-template -templateobject $t" + PROCESS_TEMPLATES;
 
     private static final String EXPORT_COMMAND = "$dest = select-storagedomain | ? { $_.domaintype -eq \"Export\" }; export-template -templateid \"" + TEMPLATE_ID + "\" -storagedomainid $dest.storagedomainid -forceoverride";
     private static final String EXPORT_WITH_PARAMS_COMMAND = "$dest = select-storagedomain | ? { $_.domaintype -eq \"Export\" }; export-template -templateid \"" + TEMPLATE_ID + "\" -storagedomainid $dest.storagedomainid";

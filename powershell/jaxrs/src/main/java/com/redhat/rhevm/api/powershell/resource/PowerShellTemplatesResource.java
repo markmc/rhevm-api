@@ -39,6 +39,16 @@ public class PowerShellTemplatesResource
     extends AbstractPowerShellCollectionResource<Template, PowerShellTemplateResource>
     implements TemplatesResource {
 
+    static final String PROCESS_TEMPLATES;
+    static {
+        StringBuilder buf = new StringBuilder();
+        buf.append(" | ");
+        buf.append("foreach { ");
+        buf.append("$_; ");
+        buf.append("}");
+        PROCESS_TEMPLATES = buf.toString();
+    }
+
     public List<PowerShellTemplate> runAndParse(String command) {
         return PowerShellTemplateResource.runAndParse(getPool(), getParser(), command);
     }
@@ -50,7 +60,7 @@ public class PowerShellTemplatesResource
     @Override
     public Templates list() {
         Templates ret = new Templates();
-        for (PowerShellTemplate template : runAndParse(getSelectCommand("select-template", getUriInfo(), Template.class))) {
+        for (PowerShellTemplate template : runAndParse(getSelectCommand("select-template", getUriInfo(), Template.class) + PROCESS_TEMPLATES)) {
             ret.getTemplates().add(PowerShellTemplateResource.addLinks(getUriInfo(), template));
         }
         return ret;
@@ -107,7 +117,7 @@ public class PowerShellTemplatesResource
             buf.append(" -defaultbootsequence " + bootSequence);
         }
 
-        PowerShellTemplate ret = runAndParseSingle(buf.toString());
+        PowerShellTemplate ret = runAndParseSingle(buf.toString() + PROCESS_TEMPLATES);
 
         template = PowerShellTemplateResource.addLinks(getUriInfo(), ret);
 
