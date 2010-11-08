@@ -663,6 +663,39 @@
     </xs:complexContent>
   </xs:complexType>
 
+  <xs:element name="group" type="Groups"/>
+
+  <xs:element name="groups" type="Groups"/>
+
+  <xs:complexType name="Group">
+    <xs:complexContent>
+      <xs:extension base="BaseResource">
+        <xs:sequence>
+          <xs:element name="domain" type="xs:string" minOccurs="0" maxOccurs="1"/>
+          <!-- used only to represent the initial role assignments for a
+               new group, therafter modification of role assignments are
+               only supported via the rel="roles" sub-collection -->
+          <xs:element name="roles" type="Roles" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Groups">
+    <xs:complexContent>
+      <xs:extension base="BaseResources">
+        <xs:sequence>
+          <xs:annotation>
+            <xs:appinfo>
+                <jaxb:property name="Groups"/>
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:element ref="user" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
   <xs:element name="permission" type="Permission"/>
 
   <xs:element name="permissions" type="Permissions"/>
@@ -671,8 +704,10 @@
     <xs:complexContent>
       <xs:extension base="BaseResource">
         <xs:sequence>
-          <xs:element name="user" type="User" minOccurs="0" maxOccurs="1"/>
           <xs:element name="role" type="Role" minOccurs="0" maxOccurs="1"/>
+          <!-- only one of the following AD element references is set -->
+          <xs:element name="user" type="User" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="group" type="Group" minOccurs="0" maxOccurs="1"/>
           <!-- only one of the following entity references is set -->
           <xs:element ref="data_center" minOccurs="0" maxOccurs="1"/>
           <xs:element ref="cluster" minOccurs="0" maxOccurs="1"/>
