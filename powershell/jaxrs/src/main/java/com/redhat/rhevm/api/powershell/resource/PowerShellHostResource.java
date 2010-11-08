@@ -160,6 +160,32 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
     }
 
     @Override
+    public Response fence(Action action) {
+        validateParameters(action, "fenceType");
+
+        StringBuilder buf = new StringBuilder();
+        buf.append("fence-host");
+        buf.append(" -hostid " + PowerShellUtils.escape(getId()));
+
+        switch (action.getFenceType()) {
+        case MANUAL:
+            buf.append(" -manual");
+            break;
+        case RESTART:
+            buf.append(" -action Restart");
+            break;
+        case START:
+            buf.append(" -action Start");
+            break;
+        case STOP:
+            buf.append(" -action Stop");
+            break;
+        }
+
+        return doAction(getUriInfo(), new CommandRunner(action, buf.toString(), getPool()));
+    }
+
+    @Override
     public Response activate(Action action) {
         return doAction(getUriInfo(), new CommandRunner(action, "resume-host", "host", getId(), getPool()));
     }

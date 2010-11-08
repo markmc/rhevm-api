@@ -89,6 +89,11 @@ public class MockHostResource extends AbstractMockResource<Host> implements Host
     }
 
     @Override
+    public Response fence(Action action) {
+        return doAction(getUriInfo(), new DoNothingTask(action));
+    }
+
+    @Override
     public Response activate(Action action) {
         return doAction(getUriInfo(), new HostStatusSetter(action, HostStatus.UP));
     }

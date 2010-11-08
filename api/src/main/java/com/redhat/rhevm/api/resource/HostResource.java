@@ -33,7 +33,7 @@ import com.redhat.rhevm.api.model.Host;
 @Produces(MediaType.APPLICATION_XML)
 public interface HostResource extends UpdatableResource<Host> {
 
-    @Path("{action: (approve|install|activate|deactivate|commitnetconfig|iscsidiscover|iscsilogin)}/{oid}")
+    @Path("{action: (approve|install|fence|activate|deactivate|commitnetconfig|iscsidiscover|iscsilogin)}/{oid}")
     public ActionResource getActionSubresource(@PathParam("action")String action, @PathParam("oid")String oid);
 
     @POST
@@ -47,6 +47,12 @@ public interface HostResource extends UpdatableResource<Host> {
     @Actionable
     @Path("install")
     public Response install(Action action);
+
+    @POST
+    @Formatted
+    @Actionable
+    @Path("fence")
+    public Response fence(Action action);
 
     @POST
     @Formatted
