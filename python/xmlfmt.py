@@ -142,7 +142,7 @@ class DataCenter(Base):
 class Disk(Base):
     NAME = 'disk'
     COLLECTIONS = [ 'disks', ]
-    ELEMENTS = Base.ELEMENTS + ['size', 'type', 'status', 'interface', 'format', 'sparse', 'bootable', 'wipe_after_delete', 'propagate_errors', 'vm']
+    ELEMENTS = Base.ELEMENTS + ['storage_domain', 'size', 'type', 'status', 'interface', 'format', 'sparse', 'bootable', 'wipe_after_delete', 'propagate_errors', 'vm']
 
 class Host(Base):
     NAME = "host"
