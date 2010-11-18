@@ -736,7 +736,7 @@
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:element name="group" type="Groups"/>
+  <xs:element name="group" type="Group"/>
 
   <xs:element name="groups" type="Groups"/>
 
