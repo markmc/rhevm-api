@@ -245,12 +245,16 @@
                 <entry><literal>propagate_errors</literal></entry>
                 <entry><literal>true</literal> if disk errors should not cause VM to be paused and, instead, disk errors should be propagated to the guest OS</entry>
               </row>
+              <row>
+                <entry><literal>storage_domain</literal></entry>
+                <entry>The ID of the associated storage domain, only used when adding the first disk to a VM that was not itself created from a template</entry>
+              </row>
             </tbody>
           </tgroup>
         </informaltable>
       </para>
       <para>
-        When adding a new disk, the <literal>size</literal> property is required.
+        When adding a new disk, the <literal>size</literal> property is required. Also the <literal>storage_domain</literal> ID is needed in the case of the first disk being added to a VM that was not itself created from a template.
       </para>
       <note>
         <para>
