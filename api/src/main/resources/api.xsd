@@ -763,7 +763,7 @@
                 <jaxb:property name="Groups"/>
             </xs:appinfo>
           </xs:annotation>
-          <xs:element ref="user" maxOccurs="unbounded"/>
+          <xs:element ref="group" maxOccurs="unbounded"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
