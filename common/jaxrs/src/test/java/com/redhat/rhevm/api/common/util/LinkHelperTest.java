@@ -31,6 +31,7 @@ import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.File;
+import com.redhat.rhevm.api.model.Group;
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.NIC;
 import com.redhat.rhevm.api.model.Storage;
@@ -62,6 +63,7 @@ public class LinkHelperTest extends Assert {
     private static final String NIC_ID = "super";
     private static final String STORAGE_ID = "sensational";
     private static final String USER_ID = "doublerainbowalltheway";
+    private static final String GROUP_ID = "bankruptnation";
 
     private static final String URI_ROOT = "http://localhost:8080";
     private static final String BASE_PATH = "/rhevm-api-powershell";
@@ -87,6 +89,7 @@ public class LinkHelperTest extends Assert {
     private static final String DISK_HREF = VM_HREF + "/disks/" + DISK_ID;
     private static final String NIC_HREF = VM_HREF + "/nics/" + NIC_ID;
     private static final String STORAGE_HREF = HOST_HREF + "/storage/" + STORAGE_ID;
+    private static final String GROUP_HREF = BASE_PATH + "/groups/" + GROUP_ID;
 
     @Test
     public void testVmLinks() throws Exception {
@@ -348,6 +351,16 @@ public class LinkHelperTest extends Assert {
 
         assertEquals(STORAGE_HREF, storage.getHref());
         assertEquals(HOST_HREF, storage.getHost().getHref());
+    }
+
+    @Test
+    public void testGroupLinks() throws Exception {
+        Group group = new Group();
+        group.setId(GROUP_ID);
+
+        LinkHelper.addLinks(setUpUriExpectations(), group);
+
+        assertEquals(GROUP_HREF, group.getHref());
     }
 
     @Test

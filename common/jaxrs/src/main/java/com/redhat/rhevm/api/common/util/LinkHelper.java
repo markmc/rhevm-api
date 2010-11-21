@@ -37,6 +37,7 @@ import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.HostNIC;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.File;
+import com.redhat.rhevm.api.model.Group;
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.NIC;
 import com.redhat.rhevm.api.model.Permission;
@@ -70,6 +71,8 @@ import com.redhat.rhevm.api.resource.HostNicResource;
 import com.redhat.rhevm.api.resource.HostNicsResource;
 import com.redhat.rhevm.api.resource.FileResource;
 import com.redhat.rhevm.api.resource.FilesResource;
+import com.redhat.rhevm.api.resource.GroupResource;
+import com.redhat.rhevm.api.resource.GroupsResource;
 import com.redhat.rhevm.api.resource.NetworkResource;
 import com.redhat.rhevm.api.resource.NetworksResource;
 import com.redhat.rhevm.api.resource.PermissionResource;
@@ -156,6 +159,9 @@ public class LinkHelper {
 
         map = new ParentToCollectionMap(FileResource.class, FilesResource.class, DataCenter.class);
         TYPES.put(File.class, map);
+
+        map = new ParentToCollectionMap(GroupResource.class, GroupsResource.class);
+        TYPES.put(Group.class, map);
 
         map = new ParentToCollectionMap(PermissionResource.class, AssignedPermissionsResource.class, User.class);
         map.add(PermissionResource.class, AssignedPermissionsResource.class, Role.class);
