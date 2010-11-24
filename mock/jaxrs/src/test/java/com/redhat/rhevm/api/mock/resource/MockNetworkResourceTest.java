@@ -38,8 +38,7 @@ public class MockNetworkResourceTest extends MockTestBase {
         assertNotNull(network.getDataCenter());
         assertNotNull(network.getDataCenter().getId());
         assertNotNull(network.getDataCenter().getHref());
-        assertNotNull(network.getActions());
-        assertEquals(network.getActions().getLinks().size(), 0);
+        assertNull(network.getActions());
     }
 
     @Test

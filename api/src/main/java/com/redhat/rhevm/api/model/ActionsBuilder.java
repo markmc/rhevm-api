@@ -38,7 +38,7 @@ public class ActionsBuilder {
     }
 
     public Actions build() {
-        Actions actions = new Actions();
+        Actions actions = null;
 
         for (Method method : service.getMethods()) {
             Path path = method.getAnnotation(Path.class);
@@ -51,6 +51,9 @@ public class ActionsBuilder {
                 link.setRel(path.value());
                 link.setHref(uri.toString());
 
+                if (actions == null) {
+                    actions = new Actions();
+                }
                 actions.getLinks().add(link);
             }
         }
