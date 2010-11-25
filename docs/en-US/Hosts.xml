@@ -342,8 +342,8 @@ Content-type: application/xml
     &lt;name&gt;LUN0&lt;/name&gt;
     &lt;type&gt;ISCSI&lt;/type&gt;
     &lt;logical_unit id="LUN0"&gt;
-      &lt;address&gt;mysan.mycorp.com&lt;/address&gt;
-      &lt;target&gt;iqn.2009-08.com.mycorp:mysan.foobar&lt;/target&gt;
+      &lt;address&gt;mysan.example.com&lt;/address&gt;
+      &lt;target&gt;iqn.2009-08.com.example:mysan.foobar&lt;/target&gt;
     &lt;/logical_unit&gt;
   &lt;/storage&gt;
   &lt;storage id="999" href="/rhevm-api/hosts/1234/storage/999"&gt;
@@ -352,12 +352,12 @@ Content-type: application/xml
     &lt;volume_group id="5432"&gt;
       &lt;name&gt;FooVG&lt;/name&gt;
       &lt;logical_unit id="LUN1"&gt;
-        &lt;address&gt;mysan.mycorp.com&lt;/address&gt;
-        &lt;target&gt;iqn.2009-08.com.mycorp:mysan.foobar&lt;/target&gt;
+        &lt;address&gt;mysan.example.com&lt;/address&gt;
+        &lt;target&gt;iqn.2009-08.com.example:mysan.foobar&lt;/target&gt;
       &lt;/logical_unit&gt;
       &lt;logical_unit id="LUN2"&gt;
-        &lt;address&gt;mysan.mycorp.com&lt;/address&gt;
-        &lt;target&gt;iqn.2009-08.com.mycorp:mysan.foobar&lt;/target&gt;
+        &lt;address&gt;mysan.example.com&lt;/address&gt;
+        &lt;target&gt;iqn.2009-08.com.example:mysan.foobar&lt;/target&gt;
       &lt;/logical_unit&gt;
     &lt;/volume_group&gt;
   &lt;/storage&gt;
@@ -477,7 +477,7 @@ Accept: application/xml
 
 &lt;action&gt;
   &lt;iscsi&gt;
-    &lt;address&gt;mysan.mycorp.com&lt;/address&gt;
+    &lt;address&gt;mysan.example.com&lt;/address&gt;
   &lt;/iscsi&gt;
 &lt;/action&gt;
 
@@ -485,7 +485,7 @@ HTTP/1.1 202 Accept
 Content-Type: application/xml
 
 &lt;action id="e9126d04-0f74-4e1a-9139-13f11fcbb4ab" href="/rhevm-api/hosts/0/iscsidiscover/e9126d04-0f74-4e1a-9139-13f11fcbb4ab"&gt;
-  &lt;iscsi_target&gt;iqn.2009-08.com.mycorp:mysan.foobar&lt;/iscsi_target&gt;
+  &lt;iscsi_target&gt;iqn.2009-08.com.example:mysan.foobar&lt;/iscsi_target&gt;
   ...
 &lt;action&gt;
     </screen>
@@ -508,8 +508,8 @@ Accept: application/xml
 
 &lt;action&gt;
   &lt;iscsi&gt;
-    &lt;address&gt;mysan.mycorp.com&lt;/address&gt;
-    &lt;target&gt;iqn.2009-08.com.mycorp:mysan.foobar&lt;/target&gt;
+    &lt;address&gt;mysan.example.com&lt;/address&gt;
+    &lt;target&gt;iqn.2009-08.com.example:mysan.foobar&lt;/target&gt;
     &lt;username&gt;jimmy&lt;/username&gt;
     &lt;password&gt;s3kr37&lt;/password&gt;
   &lt;/iscsi&gt;

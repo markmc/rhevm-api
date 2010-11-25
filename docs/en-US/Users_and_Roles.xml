@@ -147,7 +147,7 @@ Accept: application/xml
     &lt;logged_in&gt;false&lt;/logged_in&gt;
     &lt;user_name&gt;rhevmadmin@domain.example.com&lt;/user_name&gt;
     &lt;groups&gt;
-      &lt;group&gt;Group Policy Creator Owners@domain.example.com.com/Users&lt;/group&gt;
+      &lt;group&gt;Group Policy Creator Owners@domain.example.com/Users&lt;/group&gt;
       &lt;group&gt;Domain Admins@domain.example.com/Users&lt;/group&gt;
       &lt;group&gt;Enterprise Admins@domain.example.com/Users&lt;/group&gt;
       &lt;group&gt;Schema Admins@domain.example.com/Users&lt;/group&gt;
