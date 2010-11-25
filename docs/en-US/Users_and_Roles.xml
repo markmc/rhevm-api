@@ -143,22 +143,22 @@ Accept: application/xml
     &lt;actions/&gt;
     &lt;link rel="roles" href="/rhevm-api/users/225f15cd-e891-434d-8262-a66808fcb9b1/roles"/&gt;
     &lt;link rel="tags" href="/rhevm-api/users/225f15cd-e891-434d-8262-a66808fcb9b1/tags"/&gt;
-    &lt;domain&gt;black.qumranet.com&lt;/domain&gt;
+    &lt;domain&gt;domain.example.com&lt;/domain&gt;
     &lt;logged_in&gt;false&lt;/logged_in&gt;
-    &lt;user_name&gt;rhevmadmin@black.qumranet.com&lt;/user_name&gt;
+    &lt;user_name&gt;rhevmadmin@domain.example.com&lt;/user_name&gt;
     &lt;groups&gt;
-      &lt;group&gt;Group Policy Creator Owners@black.qumranet.com/Users&lt;/group&gt;
-      &lt;group&gt;Domain Admins@black.qumranet.com/Users&lt;/group&gt;
-      &lt;group&gt;Enterprise Admins@black.qumranet.com/Users&lt;/group&gt;
-      &lt;group&gt;Schema Admins@black.qumranet.com/Users&lt;/group&gt;
-      &lt;group&gt;Administrators@black.qumranet.com/Builtin&lt;/group&gt;
+      &lt;group&gt;Group Policy Creator Owners@domain.example.com.com/Users&lt;/group&gt;
+      &lt;group&gt;Domain Admins@domain.example.com/Users&lt;/group&gt;
+      &lt;group&gt;Enterprise Admins@domain.example.com/Users&lt;/group&gt;
+      &lt;group&gt;Schema Admins@domain.example.com/Users&lt;/group&gt;
+      &lt;group&gt;Administrators@domain.example.com/Builtin&lt;/group&gt;
     &lt;/groups&gt;
   &lt;/user&gt;
 &lt;/users&gt;
     </screen>
 
     <para>
-      The users collection may be <literal>POST</literal>ed to in order to add an existing Active Directory user to the RHEVM database. The client-provided new user representation must include an embedded <literal>roles</literal> list with at least one initial role to assign to the user. For example, the following request assigns two initial roles to the user <literal>joe@black.qumranet.com</literal>:
+      The users collection may be <literal>POST</literal>ed to in order to add an existing Active Directory user to the RHEVM database. The client-provided new user representation must include an embedded <literal>roles</literal> list with at least one initial role to assign to the user. For example, the following request assigns two initial roles to the user <literal>joe@domain.example.com</literal>:
     </para>
 
     <screen>
@@ -167,7 +167,7 @@ Content-Type: application/xml
 Accept: application/xml
 
 &lt;user&gt;
-  &lt;user_name&gt;joe@black.qumranet.com&lt;/user_name&gt;
+  &lt;user_name&gt;joe@domain.example.com&lt;/user_name&gt;
   &lt;roles&gt;
     &lt;role&gt;
       &lt;name&gt;RHEVMPowerUser&lt;/name&gt;

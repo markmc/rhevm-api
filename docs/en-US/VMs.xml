@@ -420,7 +420,7 @@ POST /rhevm-api/vms/0/users HTTP/1.1
 Content-type: application/xml
 Accept: application/xml
 &lt;user&gt;
-  &lt;user_name&gt;rhevmadmin@black.qumranet.com&lt;/user_name&gt;
+  &lt;user_name&gt;rhevmadmin@domain.example.com&lt;/user_name&gt;
 &lt;/user&gt;
     </screen>
 

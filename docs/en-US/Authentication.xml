@@ -36,7 +36,7 @@ HTTP/1.1 401 Authorization Required
           </row>
           <row>
             <entry>domain</entry>
-            <entry>black.qumranet.com</entry>
+            <entry>domain.example.com</entry>
           </row>
           <row>
             <entry>password</entry>
@@ -44,7 +44,7 @@ HTTP/1.1 401 Authorization Required
           </row>
           <row>
             <entry>unencoded credentials</entry>
-            <entry>rhevmadmin@black.qumranet.com:123456</entry>
+            <entry>rhevmadmin@domain.example.com:123456</entry>
           </row>
           <row>
             <entry>base64 encoded credentials</entry>
