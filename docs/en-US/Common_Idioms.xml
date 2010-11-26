@@ -4,7 +4,7 @@
 %BOOK_ENTITIES;
 ]>
 <chapter id="chap-REST_API_Guide-Common_Idioms">
-  <title>Common Idioms For All Resource</title>
+  <title>Common Idioms For All Resources</title>
   <para>
     Resources are represented by XML documents e.g.
     </para>
