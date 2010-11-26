@@ -47,9 +47,9 @@
   &lt;storage_type&gt;NFS&lt;/storage_type&gt;
   &lt;link rel="storagedomains" href="/rhevm-api/datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/storagedomains"/&gt;
   &lt;link rel="isos" href="/rhevm-api/datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/isos"/&gt;
-  &lt;version major="2" minor="1"/&gt;
+  &lt;version major="2" minor="2"/&gt;
   &lt;supported_versions&gt;
-    &lt;version major="2" minor="2"/&gt;
+    &lt;version major="2" minor="3"/&gt;
   &lt;/supported_versions&gt;
 &lt;/data_center&gt;
   </screen>

@@ -15,31 +15,7 @@
     Once all hosts within a cluster have been upgraded to a certain level, that level's <literal>version</literal> will appear under a <literal>supported_versions</literal> element. This indicates that the cluster's <literal>version</literal> may now be updated to that level. Likewise, once all clusters within a data center have been updated to a given level, the data center may then be updated to that level.
   </para>
   <para>
-    For example, if you have a RHEV-M <literal>2.1</literal> instance and you update to <literal>2.2</literal>, the API will report:
-  </para>
-  <screen>
-&lt;host ...&gt;
-  ...
-  &lt;version major="2" minor="1"/&gt;
-  ...
-&lt;/host&gt;
-
-&lt;cluster ...&gt;
-  ...
-  &lt;version major="2" minor="1"/&gt;
-  &lt;supported_versions/&gt;
-  ...
-&lt;/cluster&gt;
-
-&lt;data_center ...&gt;
-  ...
-  &lt;version major="2" minor="1"/&gt;
-  &lt;supported_versions/&gt;
-  ...
-&lt;/data_center&gt;
-  </screen>
-  <para>
-    Once all hosts within a cluster have been updated to VDSM from <literal>2.2</literal>, the API will report:
+    For example, if you have a RHEV-M <literal>2.2</literal> instance and you update to <literal>2.3</literal>, the API will report:
   </para>
   <screen>
 &lt;host ...&gt;
@@ -50,26 +26,6 @@
 
 &lt;cluster ...&gt;
   ...
-  &lt;version major="2" minor="1"/&gt;
-  &lt;supported_versions&gt;
-    &lt;version major="2" minor="2"/&gt;
-  &lt;/supported_versions&gt;
-  ...
-&lt;/cluster&gt;
-
-&lt;data_center ...&gt;
-  ...
-  &lt;version major="2" minor="1"/&gt;
-  &lt;supported_versions/&gt;
-  ...
-&lt;/data_center&gt;
-  </screen>
-  <para>
-    The cluster may then updated to <literal>2.2</literal> and the API will report:
-  </para>
-  <screen>
-&lt;cluster ...&gt;
-  ...
   &lt;version major="2" minor="2"/&gt;
   &lt;supported_versions/&gt;
   ...
@@ -77,14 +33,58 @@
 
 &lt;data_center ...&gt;
   ...
-  &lt;version major="2" minor="1"/&gt;
+  &lt;version major="2" minor="2"/&gt;
+  &lt;supported_versions/&gt;
+  ...
+&lt;/data_center&gt;
+  </screen>
+  <para>
+    Once all hosts within a cluster have been updated to VDSM from <literal>2.3</literal>, the API will report:
+  </para>
+  <screen>
+&lt;host ...&gt;
+  ...
+  &lt;version major="2" minor="3"/&gt;
+  ...
+&lt;/host&gt;
+
+&lt;cluster ...&gt;
+  ...
+  &lt;version major="2" minor="2"/&gt;
   &lt;supported_versions&gt;
-    &lt;version major="2" minor="2"/&gt;
+    &lt;version major="2" minor="3"/&gt;
+  &lt;/supported_versions&gt;
+  ...
+&lt;/cluster&gt;
+
+&lt;data_center ...&gt;
+  ...
+  &lt;version major="2" minor="2"/&gt;
+  &lt;supported_versions/&gt;
+  ...
+&lt;/data_center&gt;
+  </screen>
+  <para>
+    The cluster may then updated to <literal>2.3</literal> and the API will report:
+  </para>
+  <screen>
+&lt;cluster ...&gt;
+  ...
+  &lt;version major="2" minor="3"/&gt;
+  &lt;supported_versions/&gt;
+  ...
+&lt;/cluster&gt;
+
+&lt;data_center ...&gt;
+  ...
+  &lt;version major="2" minor="2"/&gt;
+  &lt;supported_versions&gt;
+    &lt;version major="2" minor="3"/&gt;
   &lt;/supported_versions&gt;
   ...
 &lt;/data_center&gt;
   </screen>
   <para>
-    This indicates that the data center may be updated to <literal>2.2</literal>
+    This indicates that the data center may be updated to <literal>2.3</literal>
   </para>
 </chapter>

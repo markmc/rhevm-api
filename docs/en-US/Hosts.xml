@@ -48,7 +48,7 @@
 &lt;host id="0" href="/rhevm-api/hosts/0"&gt;
   &lt;name&gt;zig&lt;/name&gt;
   &lt;status&gt;UP&lt;/status&gt;
-  &lt;version major="2" minor="2"/&gt;
+  &lt;version major="2" minor="3"/&gt;
   &lt;cluster id="0" href="/rhevm-api/clusters/0"/&gt;
   &lt;port&gt;54321&lt;/port&gt;
   &lt;link rel="nics" href="/rhevm-api/hosts/0/nics"/&gt;

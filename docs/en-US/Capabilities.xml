@@ -51,7 +51,7 @@ Content-Type: application/xml
     &lt;/cpus&gt;
     ...
   &lt;/version&gt;
-  &lt;version major="2" minor="1"&gt;
+  &lt;version major="2" minor="3"&gt;
     &lt;cpus&gt;
       ...
     &lt;/cpus&gt;
