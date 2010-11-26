@@ -7,7 +7,7 @@
   <title>Authentication</title>
 
   <para>
-    A valid RHEVM username and password must be provided with all invocations on the API, with HTTP Basic Authentication
+    A valid Red Hat Enterprise Virtualization Manager username and password must be provided with all invocations on the API, with HTTP Basic Authentication
     <footnote>
       <para>
         Basic Authentication is described in <ulink url="http://tools.ietf.org/html/rfc2617">RFC 2617 HTTP Authentication: Basic and Digest Access Authentication</ulink>.
@@ -24,7 +24,7 @@ HTTP/1.1 401 Authorization Required
   </screen>
 
   <para>
-    In this case, the request should be re-issued with an <literal>Authorization</literal> header for the specified realm. The RHEVM domain and user should be encoded in the supplied credentials via the username@domain convention. So for example given the following user details:
+    In this case, the request should be re-issued with an <literal>Authorization</literal> header for the specified realm. The Red Hat Enterprise Virtualization Manager domain and user should be encoded in the supplied credentials via the username@domain convention. So for example given the following user details:
     <informaltable frame="none">
       <tgroup cols="2">
         <colspec colwidth="2*"/>

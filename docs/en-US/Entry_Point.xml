@@ -47,7 +47,7 @@ Content-Type: application/xml
         <tbody>
           <row>
             <entry><literal>capabilities</literal></entry>
-            <entry>Information about the supported capabilities of RHEV-M</entry>
+            <entry>Information about the supported capabilities of the Red Hat Enterprise Virtualization Manager</entry>
           </row>
           <row>
             <entry><literal>clusters</literal></entry>

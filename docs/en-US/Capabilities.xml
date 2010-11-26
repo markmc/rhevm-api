@@ -6,7 +6,7 @@
 <chapter id="chap-REST_API_Guide-Capabilities">
   <title>Capabilities</title>
   <para>
-    The <literal>rel="capabilities"</literal> link obtained from the entry point URI (see <xref linkend="chap-REST_API_Guide-Entry_Point"/>) allows information about the supported capabilities of this instance of RHEV-M to be queried. The <literal>capabilities</literal> element contains any number of <literal>version</literal> elements which describe capabilities which are dependent on a compatiblity level. The <literal>version</literal> element may contain the following information:
+    The <literal>rel="capabilities"</literal> link obtained from the entry point URI (see <xref linkend="chap-REST_API_Guide-Entry_Point"/>) allows information about the supported capabilities of this instance of Red Hat Enterprise Virtualization Manager to be queried. The <literal>capabilities</literal> element contains any number of <literal>version</literal> elements which describe capabilities which are dependent on a compatiblity level. The <literal>version</literal> element may contain the following information:
 
     <informaltable frame="none">
       <tgroup cols="2">
@@ -70,7 +70,7 @@ Content-Type: application/xml
     </para>
 
     <para>
-      RHEV has a set of supported CPU types to choose from when configuring a cluster. Each CPU has the following properties:
+      Red Hat Enterprise Virtualization has a set of supported CPU types to choose from when configuring a cluster. Each CPU has the following properties:
 
       <informaltable frame="none">
         <tgroup cols="2">

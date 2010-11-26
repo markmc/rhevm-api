@@ -140,7 +140,7 @@
     </title>
 
     <para>
-      As a special case, you may remove an ISO or Export storage domain from one RHEV-M instance (without re-formatting the underlying storage) and import it into another instance. Importing is achieved similarly to adding a new storage domain, except that the <literal>name</literal> is ignored and not required.
+      As a special case, you may remove an ISO or Export storage domain from one Red Hat Enterprise Virtualization Manager instance (without re-formatting the underlying storage) and import it into another instance. Importing is achieved similarly to adding a new storage domain, except that the <literal>name</literal> is ignored and not required.
     </para>
 
     <screen>

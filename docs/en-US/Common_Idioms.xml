@@ -26,7 +26,7 @@
         <tbody>
           <row>
             <entry><literal>id</literal></entry>
-            <entry>An opaque server-generated identifier for the resource which is guaranteed to be unique across all resources in this RHEV-M instance</entry>
+            <entry>An opaque server-generated identifier for the resource which is guaranteed to be unique across all resources in this Red Hat Enterprise Virtualization Manager instance</entry>
           </row>
           <row>
             <entry><literal>href</literal></entry>
@@ -93,7 +93,7 @@ Content-Type: application/xml
     </title>
 
     <para>
-      A collection may be queried using a <literal>GET</literal> request on an appropropriate <literal>"collection/search"</literal> URI template, instantiated with a query constraint expressed in the RHEV-M query language. Only those resources in the collection satisfying the constraint will be returned.
+      A collection may be queried using a <literal>GET</literal> request on an appropropriate <literal>"collection/search"</literal> URI template, instantiated with a query constraint expressed in the Red Hat Enterprise Virtualization Manager query language. Only those resources in the collection satisfying the constraint will be returned.
     </para>
 
     <screen>

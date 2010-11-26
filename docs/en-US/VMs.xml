@@ -411,7 +411,7 @@ Content-type: application/xml
 
     <note>
       <para>
-      Users referenced in this way must already exist in the RHEVM user database, and may be identified either via their RHEVM ID or by user prinicpal name (see <xref linkend="chap-REST_API_Guide-Users-and-Roles"/>). In the example below, the latter approach is taken.
+      Users referenced in this way must already exist in the Red Hat Enterprise Virtualization Manager user database, and may be identified either via their ID or by user prinicpal name (see <xref linkend="chap-REST_API_Guide-Users-and-Roles"/>). In the example below, the latter approach is taken.
       </para>
     </note>
 

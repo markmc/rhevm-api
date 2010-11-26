@@ -7,7 +7,7 @@
   <title>Users and Roles</title>
 
   <para>
-    Users and roles form the basis of RHEVM authorization. Role-based access control allows coarse-grained job functions to be assigned to individual users. The RHEVM user abstraction is in turn heavily oriented towards the Active Directory concept of a user.
+    Users and roles form the basis of Red Hat Enterprise Virtualization Manager authorization. Role-based access control allows coarse-grained job functions to be assigned to individual users. The Manager user abstraction is in turn heavily oriented towards the Active Directory concept of a user.
   </para>
 
   <section id="sect-REST_API_Guide-Roles">
@@ -76,7 +76,7 @@ Content-Type: application/xml
 
     <note>
       <para>
-        Because the global roles form a static set in RHEVM 2.2, the usual collection idioms are not followed in this case, <emphasis>i.e.</emphasis> a new role cannot be created via <literal>POST</literal>, nor can a role be destroyed via <literal>DELETE</literal> on the collection.
+        Because the global roles form a static set in Red Hat Enterprise Virtualization Manager 2.2, the usual collection idioms are not followed in this case, <emphasis>i.e.</emphasis> a new role cannot be created via <literal>POST</literal>, nor can a role be destroyed via <literal>DELETE</literal> on the collection.
       </para>
     </note>
 
@@ -158,7 +158,7 @@ Accept: application/xml
     </screen>
 
     <para>
-      The users collection may be <literal>POST</literal>ed to in order to add an existing Active Directory user to the RHEVM database. The client-provided new user representation must include an embedded <literal>roles</literal> list with at least one initial role to assign to the user. For example, the following request assigns two initial roles to the user <literal>joe@domain.example.com</literal>:
+      The users collection may be <literal>POST</literal>ed to in order to add an existing Active Directory user to the Red Hat Enterprise Virtualization Manager database. The client-provided new user representation must include an embedded <literal>roles</literal> list with at least one initial role to assign to the user. For example, the following request assigns two initial roles to the user <literal>joe@domain.example.com</literal>:
     </para>
 
     <screen>
@@ -178,7 +178,7 @@ Accept: application/xml
     </screen>
 
     <para>
-      The new user may be identified either by RHEVM user ID or via the Active Directory user principal name (UPN), as in the example given above. However, the user ID format reported from the Active Directory domain may be different to the expected RHEVM format (for example in LDIF
+      The new user may be identified either by Red Hat Enterprise Virtualization Manager user ID or via the Active Directory user principal name (UPN), as in the example given above. However, the user ID format reported from the Active Directory domain may be different to the expected Red Hat Enterprise Virtualization Manager format (for example in LDIF).
     <footnote>
       <para>
         The LDAP Data Interchange Format is described in <ulink url="http://tools.ietf.org/html/rfc2849">RFC 2849</ulink>.
@@ -189,7 +189,7 @@ Accept: application/xml
 
     <note>
       <para>
-        The user must exist <emphasis>a priori</emphasis> in the Active Directory domain, before being added to the RHEVM database. This domain may be queried out-of-band prior to the creation being attempted.
+        The user must exist <emphasis>a priori</emphasis> in the Active Directory domain, before being added to the Red Hat Enterprise Virtualization Manager database. This domain may be queried out-of-band prior to the creation being attempted.
       </para>
     </note>
 
@@ -224,7 +224,7 @@ Accept: application/xml
     </note>
 
     <para>
-      Users may be removed from the RHEVM database via <literal>DELETE</literal> on the top level <literal>users</literal> collection. The Active Directory domain will remain unchanged after such a deletion.
+      Users may be removed from the Red Hat Enterprise Virtualization Manager database via <literal>DELETE</literal> on the top level <literal>users</literal> collection. The Active Directory domain will remain unchanged after such a deletion.
     </para>
 
   </section>
