@@ -52,3 +52,17 @@ Before committing any changes, add the following to your ~/.gitconfig:
 Try and isolate logical changes into individual commits. You can
 modify your latest commit using 'git commit --amend' and modify your
 commit queue using 'git rebase -i origin/master'.
+
+== Debugging Jetty using Eclipse ==
+
+It is possible to attach Eclipse to Jetty by using mvnDebug:
+
+  $> mvnDebug jetty:run
+
+This will launch a debug server on port 8000. In Eclipse, you go to 'Run->Debug
+Configurations' and create a 'Remote Java Application'. Select your project and
+run it. Jetty will start as soon as Eclipse connects. Now you can add
+breakpoints and debug as you would normally do.
+
+See http://docs.codehaus.org/display/MAVENUSER/Dealing+with+Eclipse-based+IDE
+for more details.
