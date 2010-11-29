@@ -19,7 +19,7 @@
           </row>
           <row>
             <entry><literal>status</literal></entry>
-            <entry>One of PAUSED, RUNNING, SHUTDOWN or SHUTOFF</entry>
+            <entry>One of UNASSIGNED, DOWN, UP, POWERING_UP, POWERED_DOWN, PAUSED, MIGRATING_FROM, MIGRATING_TO, UNKNOWN, NOT_RESPONDING, WAIT_FOR_LAUNCH, REBOOT_IN_PROGRESS, SAVING_STATE, RESTORING_STATE, SUSPENDED, IMAGE_ILLEGAL, IMAGE_LOCKED or POWERING_DOWN</entry>
           </row>
           <row>
             <entry><literal>memory</literal></entry>
