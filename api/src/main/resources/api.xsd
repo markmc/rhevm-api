@@ -1246,6 +1246,10 @@
 
   <xs:element name="cdroms" type="CdRoms"/>
 
+  <xs:element name="floppy" type="Floppy"/>
+
+  <xs:element name="floppies" type="Floppies"/>
+
   <xs:element name="disk" type="Disk"/>
 
   <xs:element name="disks" type="Disks"/>
@@ -1272,6 +1276,32 @@
             <xs:annotation>
               <xs:appinfo>
                 <jaxb:property name="CdRoms"/>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Floppy">
+    <xs:complexContent>
+      <xs:extension base="BaseDevice">
+        <xs:sequence>
+          <xs:element ref="file"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Floppies">
+    <xs:complexContent>
+      <xs:extension base="BaseDevices">
+        <xs:sequence>
+          <xs:element ref="floppy" maxOccurs="unbounded">
+            <xs:annotation>
+              <xs:appinfo>
+                <jaxb:property name="Floppies"/>
               </xs:appinfo>
             </xs:annotation>
           </xs:element>
