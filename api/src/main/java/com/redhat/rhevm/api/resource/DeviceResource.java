@@ -18,7 +18,8 @@
  */
 package com.redhat.rhevm.api.resource;
 
-import javax.ws.rs.GET;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Produces;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
@@ -26,9 +27,11 @@ import com.redhat.rhevm.api.model.BaseDevice;
 
 
 @Produces(MediaType.APPLICATION_XML)
-public interface DeviceResource<D extends BaseDevice> {
+public interface DeviceResource<D extends BaseDevice> extends ReadOnlyDeviceResource<D> {
 
-    @GET
+    @PUT
     @Formatted
-    public D get();
+    @Consumes(MediaType.APPLICATION_XML)
+    public D update(D device);
+
 }

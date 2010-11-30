@@ -43,5 +43,5 @@ public interface ReadOnlyDevicesResource<D extends BaseDevice, C extends BaseDev
      * @return    matching subresource if found
      */
     @Path("{id}")
-    public DeviceResource<D> getDeviceSubResource(@PathParam("id") String id);
+    public ReadOnlyDeviceResource<D> getDeviceSubResource(@PathParam("id") String id);
 }

@@ -18,38 +18,17 @@
  */
 package com.redhat.rhevm.api.resource;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.POST;
+import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Response;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 import com.redhat.rhevm.api.model.BaseDevice;
-import com.redhat.rhevm.api.model.BaseDevices;
 
 
 @Produces(MediaType.APPLICATION_XML)
-public interface DevicesResource<D extends BaseDevice, C extends BaseDevices>
-    extends ReadOnlyDevicesResource<D, C> {
+public interface ReadOnlyDeviceResource<D extends BaseDevice> {
 
-    @POST
+    @GET
     @Formatted
-    @Consumes(MediaType.APPLICATION_XML)
-    public Response add(D device);
-
-    @DELETE
-    @Path("{id}")
-    public void remove(@PathParam("id") String id);
-
-    // Note the departure from the usual convention of naming the path
-    // parameter as "id". This is to work-around a RESTEasy bug in handling
-    // covariant return types - in this case, we've narrowed the return 
-    // type of the overridden getDeviceSubResource() method from the original
-    // ReadOnlyDeviceResource to the DeviceResource sub-interface.
-    @Path("{iden}")
-	@Override
-    public DeviceResource<D> getDeviceSubResource(@PathParam("iden") String id);
+    public D get();
 }
