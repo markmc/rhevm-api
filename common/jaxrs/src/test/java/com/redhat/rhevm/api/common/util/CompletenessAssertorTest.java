@@ -49,6 +49,22 @@ public class CompletenessAssertorTest extends Assert {
     }
 
     @Test
+    public void testOffsetMissingParameter() throws Exception {
+        VM vm = new VM();
+        vm.setDescription("incomplete");
+        try {
+            offsetValidateParameters(vm);
+            fail("expected WebApplicationException on incomplete model");
+        } catch (WebApplicationException wae) {
+            verifyIncompleteException(wae, "VM", "status");
+        }
+    }
+
+    private void offsetValidateParameters(VM vm) throws Exception {
+        CompletenessAssertor.validateParameters(vm, 2, "status");
+    }
+
+    @Test
     public void testMissingParameters() throws Exception {
         VM vm = new VM();
         vm.setDescription("incomplete");
