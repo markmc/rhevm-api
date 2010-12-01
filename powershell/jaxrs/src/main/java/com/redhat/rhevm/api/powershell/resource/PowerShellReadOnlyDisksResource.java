@@ -87,7 +87,7 @@ public class PowerShellReadOnlyDisksResource extends AbstractPowerShellDevicesRe
     }
 
     @Override
-    public PowerShellDeviceResource<Disk, Disks> getDeviceSubResource(String id) {
-        return new PowerShellDeviceResource<Disk, Disks>(this, id);
+    public PowerShellReadOnlyDeviceResource<Disk, Disks> getDeviceSubResource(String id) {
+        return new PowerShellReadOnlyDeviceResource<Disk, Disks>(this, id);
     }
 }

@@ -48,7 +48,7 @@ public class PowerShellReadOnlyCdRomsResource extends AbstractPowerShellDevicesR
         cdrom.getFile().setId(cdIsoPath);
         cdrom.setVm(new VM());
         cdrom.getVm().setId(parentId);
-        return cdrom;
+        return addLinks(cdrom);
     }
 
     @Override
@@ -78,8 +78,8 @@ public class PowerShellReadOnlyCdRomsResource extends AbstractPowerShellDevicesR
     }
 
     @Override
-    public PowerShellDeviceResource<CdRom, CdRoms> getDeviceSubResource(String id) {
-        return new PowerShellDeviceResource<CdRom, CdRoms>(this, id);
+    public PowerShellReadOnlyDeviceResource<CdRom, CdRoms> getDeviceSubResource(String id) {
+        return new PowerShellReadOnlyDeviceResource<CdRom, CdRoms>(this, id);
     }
 
     public static abstract class CdRomQuery {

@@ -114,4 +114,10 @@ public class PowerShellDisksResource
 
         PowerShellCmd.runCommand(getPool(), buf.toString());
     }
+
+    @Override
+    public PowerShellDeviceResource<Disk, Disks> getDeviceSubResource(String id) {
+        return new PowerShellDeviceResource<Disk, Disks>(this, id);
+    }
+
 }

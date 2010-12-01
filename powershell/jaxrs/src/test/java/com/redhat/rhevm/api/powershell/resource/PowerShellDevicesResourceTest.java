@@ -173,6 +173,26 @@ public class PowerShellDevicesResourceTest
     }
 
     @Test
+    public void testCdRomUpdate() throws Exception {
+        PowerShellCdRomsResource cdromsResource = new PowerShellCdRomsResource(VM_ID,
+                                                                               poolMap,
+                                                                               resource.new CdRomQuery(VM_ID),
+                                                                               uriProvider);
+
+        PowerShellDeviceResource<CdRom, CdRoms> cdromResource = cdromsResource.getDeviceSubResource(CDROM_ID);
+
+        CdRom cdrom = new CdRom();
+        cdrom.setFile(new File());
+        cdrom.getFile().setId(ISO_NAME);
+
+        String command = MessageFormat.format(UPDATE_CDROM_CMD, VM_ID, ISO_NAME);
+
+        setUriInfo(setUpCmdExpectations(new String[]{command}, new String[]{""}, "cdroms", CDROM_ID, false));
+
+        verifyCdRom(cdromResource.update(cdrom));
+    }
+
+    @Test
     public void testCdRomRemove() throws Exception {
         PowerShellCdRomsResource cdromResource = new PowerShellCdRomsResource(VM_ID,
                                                                               poolMap,
@@ -293,7 +313,12 @@ public class PowerShellDevicesResourceTest
         nicResource.remove(NIC_ID);
     }
 
+
     private UriInfo setUpCmdExpectations(String[] commands, String[] returns, String collectionType, String newId) throws Exception {
+        return setUpCmdExpectations(commands, returns, collectionType, newId, true);
+    }
+
+    private UriInfo setUpCmdExpectations(String[] commands, String[] returns, String collectionType, String newId, boolean build) throws Exception {
         mockStatic(PowerShellCmd.class);
         for (int i = 0 ; i < Math.min(commands.length, returns.length) ; i++) {
             if (commands[i] != null) {
@@ -304,10 +329,12 @@ public class PowerShellDevicesResourceTest
         UriInfo uriInfo = null;
         if (collectionType != null && newId != null) {
             uriInfo = setUpBasicUriExpectations();
-            UriBuilder uriBuilder = createMock(UriBuilder.class);
-            expect(uriInfo.getAbsolutePathBuilder()).andReturn(uriBuilder);
-            expect(uriBuilder.path(newId)).andReturn(uriBuilder);
-            expect(uriBuilder.build()).andReturn(new URI("vms/" + VM_ID + "/" + collectionType + "/" + newId)).anyTimes();
+            if (build) {
+                UriBuilder uriBuilder = createMock(UriBuilder.class);
+                expect(uriInfo.getAbsolutePathBuilder()).andReturn(uriBuilder);
+                expect(uriBuilder.path(newId)).andReturn(uriBuilder);
+                expect(uriBuilder.build()).andReturn(new URI("vms/" + VM_ID + "/" + collectionType + "/" + newId)).anyTimes();
+            }
         }
 
         replayAll();

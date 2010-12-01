@@ -18,25 +18,34 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import javax.ws.rs.WebApplicationException;
+import java.util.List;
 
 import com.redhat.rhevm.api.model.BaseDevice;
 import com.redhat.rhevm.api.model.BaseDevices;
-import com.redhat.rhevm.api.resource.DeviceResource;
+import com.redhat.rhevm.api.resource.ReadOnlyDeviceResource;
 
 
-public class PowerShellDeviceResource<D extends BaseDevice, C extends BaseDevices>
-    extends PowerShellReadOnlyDeviceResource<D, C>
-    implements DeviceResource<D> {
+public class PowerShellReadOnlyDeviceResource<D extends BaseDevice, C extends BaseDevices>
+    implements ReadOnlyDeviceResource<D> {
 
-    protected static final int NOT_IMPLEMENTED = 501;
+    protected AbstractPowerShellDevicesResource<D, C> parent;
+    protected String deviceId;
 
-    public PowerShellDeviceResource(AbstractPowerShellDevicesResource<D, C> parent, String deviceId) {
-        super(parent, deviceId);
+    public PowerShellReadOnlyDeviceResource(AbstractPowerShellDevicesResource<D, C> parent, String deviceId) {
+        this.parent = parent;
+        this.deviceId = deviceId;
     }
 
     @Override
-    public D update(D device) {
-        throw new WebApplicationException(NOT_IMPLEMENTED);
+    public D get() {
+        List<D> devices = parent.getDevices();
+
+        for (D d : devices) {
+            if (deviceId.equals(d.getId())) {
+                return parent.addLinks(d);
+            }
+        }
+
+        return null;
     }
 }

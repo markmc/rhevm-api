@@ -90,4 +90,10 @@ public class PowerShellNicsResource
 
         PowerShellCmd.runCommand(getPool(), buf.toString());
     }
+
+    @Override
+    public PowerShellDeviceResource<NIC, Nics> getDeviceSubResource(String id) {
+        return new PowerShellDeviceResource<NIC, Nics>(this, id);
+    }
+
 }

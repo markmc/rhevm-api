@@ -103,7 +103,7 @@ public class PowerShellReadOnlyNicsResource extends AbstractPowerShellDevicesRes
     }
 
     @Override
-    public PowerShellDeviceResource<NIC, Nics> getDeviceSubResource(String id) {
-        return new PowerShellDeviceResource<NIC, Nics>(this, id);
+    public PowerShellReadOnlyDeviceResource<NIC, Nics> getDeviceSubResource(String id) {
+        return new PowerShellReadOnlyDeviceResource<NIC, Nics>(this, id);
     }
 }
