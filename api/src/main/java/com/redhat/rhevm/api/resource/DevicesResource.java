@@ -46,10 +46,10 @@ public interface DevicesResource<D extends BaseDevice, C extends BaseDevices>
 
     // Note the departure from the usual convention of naming the path
     // parameter as "id". This is to work-around a RESTEasy bug in handling
-    // covariant return types - in this case, we've narrowed the return 
+    // covariant return types - in this case, we've narrowed the return
     // type of the overridden getDeviceSubResource() method from the original
     // ReadOnlyDeviceResource to the DeviceResource sub-interface.
     @Path("{iden}")
-	@Override
+    @Override
     public DeviceResource<D> getDeviceSubResource(@PathParam("iden") String id);
 }
