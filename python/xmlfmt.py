@@ -185,7 +185,7 @@ class StorageDomain(Base):
 class VM(Base):
     NAME = "vm"
     COLLECTIONS = [ "vms", ]
-    ELEMENTS = Base.ELEMENTS + ['type', 'status', 'memory', 'os', 'cpu', 'cluster', 'template', 'vmpool']
+    ELEMENTS = Base.ELEMENTS + ['type', 'status', 'memory', 'os', 'cpu', 'cluster', 'template', 'vmpool', 'host']
 
 class VmPool(Base):
     NAME = "vmpool"
