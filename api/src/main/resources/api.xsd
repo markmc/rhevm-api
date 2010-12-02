@@ -102,6 +102,10 @@
       <!-- for VM export action -->
       <xs:element name="discard_snapshots" type="xs:boolean" minOccurs="0"/>
       <xs:element name="exclusive" type="xs:boolean" minOccurs="0"/>
+      <!-- For VM start -->
+      <xs:element ref="vm" minOccurs="0" maxOccurs="1"/>
+      <!-- A VM can be started paused -->
+      <xs:element name="pause" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
       <!-- ... etc., explicitly enumerate all the parameter types -->
     </xs:sequence>
   </xs:group>
@@ -1165,6 +1169,11 @@
                 </xs:appinfo>
               </xs:annotation>
             </xs:element>
+
+            <!-- used only to represent CD-ROMs and floppies supplied to the
+                 start action. Not usually included in the VM representation -->
+            <xs:element ref="cdroms" minOccurs="0" maxOccurs="1"/>
+            <xs:element ref="floppies" minOccurs="0" maxOccurs="1"/>
             <!-- also rel="cdroms/disks/nics" links, see Devices below -->
             <!-- also rel="snapshots" links, see Snapshots below -->
             <!-- also rel="users" links, see Users above -->

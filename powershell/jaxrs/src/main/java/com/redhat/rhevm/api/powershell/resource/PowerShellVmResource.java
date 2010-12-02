@@ -164,7 +164,43 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
 
     @Override
     public Response start(Action action) {
-        return doAction(getUriInfo(), new CommandRunner(action, "start-vm", "vm", getId(), getPool()));
+        StringBuilder buf = new StringBuilder();
+
+        buf.append("start-vm");
+        buf.append(" -vmid " + PowerShellUtils.escape(getId()));
+
+        if (action.isSetPause() && action.isPause()) {
+            buf.append(" -runandpause");
+        }
+
+        if (action.isSetVm()) {
+            VM vm = action.getVm();
+
+            if (vm.isSetDisplay()) {
+                buf.append(" -displaytype '" + PowerShellVM.asString(vm.getDisplay().getType()) + "'");
+            }
+
+            String bootSequence = PowerShellVM.buildBootSequence(vm.getOs());
+            if (bootSequence != null) {
+                buf.append(" -bootdevice '" + bootSequence + "'");
+            }
+
+            if (vm.isSetCdroms() && vm.getCdroms().isSetCdRoms()) {
+                String file = vm.getCdroms().getCdRoms().get(0).getFile().getId();
+                if (file != null) {
+                    buf.append(" -isofilename '" + PowerShellUtils.escape(file) + "'");
+                }
+            }
+
+            if (vm.isSetFloppies() && vm.getFloppies().isSetFloppies()) {
+                String file = vm.getFloppies().getFloppies().get(0).getFile().getId();
+                if (file != null) {
+                    buf.append(" -floppypath '" + PowerShellUtils.escape(file) + "'");
+                }
+            }
+        }
+
+        return doAction(getUriInfo(), new CommandRunner(action, buf.toString(), getPool()));
     }
 
     @Override
