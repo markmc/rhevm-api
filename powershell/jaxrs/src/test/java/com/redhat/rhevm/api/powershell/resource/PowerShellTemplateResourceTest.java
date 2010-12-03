@@ -68,11 +68,10 @@ public class PowerShellTemplateResourceTest extends AbstractPowerShellResourceTe
     private static final String UPDATE_STATELESS_COMMAND = MessageFormat.format(UPDATE_COMMAND_TEMPLATE, " $t.isstateless = $true;")  + PROCESS_TEMPLATES;
     private static final String UPDATE_DISPLAY_COMMAND = MessageFormat.format(UPDATE_COMMAND_TEMPLATE, " $t.displaytype = 'VNC';")  + PROCESS_TEMPLATES;
     private static final String UPDATE_OS_COMMAND = MessageFormat.format(UPDATE_COMMAND_TEMPLATE, " $t.operatingsystem = \"OtherLinux\";")  + PROCESS_TEMPLATES;
-    
-    private static final String EXPORT_COMMAND = "$dest = select-storagedomain | ? { $_.domaintype -eq \"Export\" }; export-template -templateid \"" + TEMPLATE_ID + "\" -storagedomainid $dest.storagedomainid -forceoverride";
-    private static final String EXPORT_WITH_PARAMS_COMMAND = "$dest = select-storagedomain | ? { $_.domaintype -eq \"Export\" }; export-template -templateid \"" + TEMPLATE_ID + "\" -storagedomainid $dest.storagedomainid";
+
     private static final String EXPORT_WITH_STORAGE_DOMAIN_COMMAND = "export-template -templateid \"" + TEMPLATE_ID + "\" -storagedomainid \"" + STORAGE_DOMAIN_ID + "\" -forceoverride";
     private static final String EXPORT_WITH_NAMED_STORAGE_DOMAIN_COMMAND = "$dest = select-storagedomain | ? { $_.name -eq \"" + STORAGE_DOMAIN_NAME + "\" }; export-template -templateid \"" + TEMPLATE_ID + "\" -storagedomainid $dest.storagedomainid -forceoverride";
+    private static final String EXPORT_WITH_PARAMS_COMMAND = "export-template -templateid \"" + TEMPLATE_ID + "\" -storagedomainid \"" + STORAGE_DOMAIN_ID + "\"";
 
     protected PowerShellTemplateResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider) {
         return new PowerShellTemplateResource(TEMPLATE_ID, executor, uriProvider, poolMap, parser);
@@ -134,21 +133,6 @@ public class PowerShellTemplateResourceTest extends AbstractPowerShellResourceTe
     }
 
     @Test
-    public void testExport() throws Exception {
-        Action action = getAction();
-        setUriInfo(setUpActionExpectation("export", EXPORT_COMMAND));
-        verifyActionResponse(resource.export(action));
-    }
-
-    @Test
-    public void testExportWithParams() throws Exception {
-        Action action = getAction();
-        action.setExclusive(true);
-        setUriInfo(setUpActionExpectation("export", EXPORT_WITH_PARAMS_COMMAND));
-        verifyActionResponse(resource.export(action));
-    }
-
-    @Test
     public void testExportWithStorageDomain() throws Exception {
         Action action = getAction();
         action.setStorageDomain(new StorageDomain());
@@ -164,6 +148,27 @@ public class PowerShellTemplateResourceTest extends AbstractPowerShellResourceTe
         action.getStorageDomain().setName(STORAGE_DOMAIN_NAME);
         setUriInfo(setUpActionExpectation("export", EXPORT_WITH_NAMED_STORAGE_DOMAIN_COMMAND));
         verifyActionResponse(resource.export(action));
+    }
+
+    @Test
+    public void testExportWithParams() throws Exception {
+        Action action = getAction();
+        action.setStorageDomain(new StorageDomain());
+        action.getStorageDomain().setId(STORAGE_DOMAIN_ID);
+        action.setExclusive(true);
+        setUriInfo(setUpActionExpectation("export", EXPORT_WITH_PARAMS_COMMAND));
+        verifyActionResponse(resource.export(action));
+    }
+
+    @Test
+    public void testIncompleteExport() throws Exception {
+        setUriInfo(setUpActionExpectation(null, null, null, null));
+        try {
+            resource.export(getAction());
+            fail("expected WebApplicationException on incomplete parameters");
+        } catch (WebApplicationException wae) {
+             verifyIncompleteException(wae, "Action", "export", "storageDomain.id|name");
+        }
     }
 
     private UriInfo setUpActionExpectation(String verb, String command) throws Exception {

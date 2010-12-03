@@ -154,22 +154,18 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
 
     @Override
     public Response export(Action action) {
+        validateParameters(action, "storageDomain.id|name");
+
         StringBuilder buf = new StringBuilder();
 
         String storageDomainArg;
-        if (action.isSetStorageDomain()) {
-            validateParameters(action, "storageDomain.id|name");
-            if (action.getStorageDomain().isSetId()) {
-                storageDomainArg = PowerShellUtils.escape(action.getStorageDomain().getId());
-            } else {
-                buf.append("$dest = select-storagedomain ");
-                buf.append("| ? { $_.name -eq ");
-                buf.append(PowerShellUtils.escape(action.getStorageDomain().getName()));
-                buf.append(" }; ");
-                storageDomainArg = "$dest.storagedomainid";
-            }
+        if (action.getStorageDomain().isSetId()) {
+            storageDomainArg = PowerShellUtils.escape(action.getStorageDomain().getId());
         } else {
-            buf.append("$dest = select-storagedomain | ? { $_.domaintype -eq \"Export\" }; ");
+            buf.append("$dest = select-storagedomain ");
+            buf.append("| ? { $_.name -eq ");
+            buf.append(PowerShellUtils.escape(action.getStorageDomain().getName()));
+            buf.append(" }; ");
             storageDomainArg = "$dest.storagedomainid";
         }
 
