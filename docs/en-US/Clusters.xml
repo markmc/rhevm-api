@@ -38,7 +38,7 @@
   </para>
 
   <screen>
-&lt;cluster id="0" href="/rhevm-api/clusters/0"&gt;
+&lt;cluster id="99408929-82cf-4dc7-a532-9d998063fa95" href="/rhevm-api/clusters/99408929-82cf-4dc7-a532-9d998063fa95"&gt;
   &lt;name&gt;Default&lt;/name&gt;
   &lt;description&gt;The default server cluster&lt;/description&gt;
   &lt;cpu id="Intel Xeon 45nm Core2"/&gt;
@@ -47,7 +47,7 @@
   &lt;supported_versions&gt;
     &lt;version major="2" minor="3"/&gt;
   &lt;/supported_versions&gt;
-  &lt;link rel="networks" href="/rhevm-api/clusters/0/networks"/&gt;
+  &lt;link rel="networks" href="/rhevm-api/clusters/99408929-82cf-4dc7-a532-9d998063fa95/networks"/&gt;
 &lt;/cluster&gt;
   </screen>
 
@@ -73,27 +73,27 @@
     </para>
 
     <screen>
-POST /rhevm-api/clusters/0/networks HTTP/1.1
+POST /rhevm-api/clusters/99408929-82cf-4dc7-a532-9d998063fa95/networks HTTP/1.1
 Accept: application/xml
 Content-Type: application/xml
 
 &lt;network&gt;&lt;name&gt;display&lt;/name&gt;&lt;/network&gt;
 
 HTTP/1.1 201 Created
-Location: http://{host}/clusters/0/networks/da05ac09-00be-45a1-b0b5-4a6a2438665f
+Location: http://{host}/clusters/99408929-82cf-4dc7-a532-9d998063fa95/networks/da05ac09-00be-45a1-b0b5-4a6a2438665f
 Content-Type: application/xml
 
-&lt;network id="da05ac09-00be-45a1-b0b5-4a6a2438665f" href="/rhevm-api/clusters/0/networks/da05ac09-00be-45a1-b0b5-4a6a2438665f"&gt;
+&lt;network id="da05ac09-00be-45a1-b0b5-4a6a2438665f" href="/rhevm-api/clusters/99408929-82cf-4dc7-a532-9d998063fa95/networks/da05ac09-00be-45a1-b0b5-4a6a2438665f"&gt;
   &lt;name&gt;display&lt;/name&gt;
   &lt;status&gt;OPERATIONAL&lt;/status&gt;
   &lt;description&gt;Display Network&lt;/description&gt;
-  &lt;cluster id="0" href="/rhevm-api/clusters/0"/&gt;
+  &lt;cluster id="99408929-82cf-4dc7-a532-9d998063fa95" href="/rhevm-api/clusters/99408929-82cf-4dc7-a532-9d998063fa95"/&gt;
   &lt;data_center id="d70d5e2d-b8ad-494a-a4d2-c7a5631073c4" href="/rhevm-api/datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4"/&gt;
 &lt;/network&gt;
     </screen>
 
     <screen>
-DELETE /rhevm-api/clusters/0/networks/da05ac09-00be-45a1-b0b5-4a6a2438665f HTTP/1.1
+DELETE /rhevm-api/clusters/99408929-82cf-4dc7-a532-9d998063fa95/networks/da05ac09-00be-45a1-b0b5-4a6a2438665f HTTP/1.1
 
 HTTP/1.1 204 No Content
     </screen>

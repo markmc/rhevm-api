@@ -110,7 +110,7 @@
     &lt;boot dev="hd"/&gt;
   &lt;/os&gt;
   &lt;highly_available priority="20"&gt;true&lt;/highly_available&gt;
-  &lt;cluster id="0" href="/rhevm-api/clusters/0"/&gt;
+  &lt;cluster id="99408929-82cf-4dc7-a532-9d998063fa95" href="/rhevm-api/clusters/99408929-82cf-4dc7-a532-9d998063fa95"/&gt;
   &lt;template id="00000000-0000-0000-0000-000000000000" href="/rhevm-api/templates/00000000-0000-0000-0000-000000000000"/&gt;
   &lt;memory_statistics&gt;
     &lt;utilization&gt;12&lt;/utilization&gt;
@@ -416,7 +416,7 @@ Content-type: application/xml
     </note>
 
     <screen>
-POST /rhevm-api/vms/0/users HTTP/1.1
+POST /rhevm-api/vms/5114bb3e-a4e6-44b2-b783-b3eea7d84720/users HTTP/1.1
 Content-type: application/xml
 Accept: application/xml
 &lt;user&gt;
@@ -436,7 +436,7 @@ Accept: application/xml
     </para>
 
     <screen>
-POST /rhevm-api/vms/0/start HTTP/1.1
+POST /rhevm-api/vms/5114bb3e-a4e6-44b2-b783-b3eea7d84720/start HTTP/1.1
 Content-type: application/xml
     </screen>
 
@@ -452,7 +452,7 @@ Content-type: application/xml
     </para>
 
     <screen>
-POST /rhevm-api/vms/0/stop HTTP/1.1
+POST /rhevm-api/vms/5114bb3e-a4e6-44b2-b783-b3eea7d84720/stop HTTP/1.1
 Content-type: application/xml
     </screen>
 
@@ -468,7 +468,7 @@ Content-type: application/xml
     </para>
 
     <screen>
-POST /rhevm-api/vms/0/shutdown HTTP/1.1
+POST /rhevm-api/vms/5114bb3e-a4e6-44b2-b783-b3eea7d84720/shutdown HTTP/1.1
 Content-type: application/xml
     </screen>
 
@@ -484,7 +484,7 @@ Content-type: application/xml
     </para>
 
     <screen>
-POST /rhevm-api/vms/0/suspend HTTP/1.1
+POST /rhevm-api/vms/5114bb3e-a4e6-44b2-b783-b3eea7d84720/suspend HTTP/1.1
 Content-type: application/xml
     </screen>
 
@@ -500,7 +500,7 @@ Content-type: application/xml
     </para>
 
     <screen>
-POST /rhevm-api/vms/0/detach HTTP/1.1
+POST /rhevm-api/vms/5114bb3e-a4e6-44b2-b783-b3eea7d84720/detach HTTP/1.1
 Content-type: application/xml
     </screen>
 
@@ -516,7 +516,7 @@ Content-type: application/xml
     </para>
 
     <screen>
-POST /rhevm-api/vms/0/migrate HTTP/1.1
+POST /rhevm-api/vms/5114bb3e-a4e6-44b2-b783-b3eea7d84720/migrate HTTP/1.1
 Content-type: application/xml
 
 &lt;action&gt;
@@ -536,7 +536,7 @@ Content-type: application/xml
     </para>
 
     <screen>
-POST /rhevm-api/vms/0/export HTTP/1.1
+POST /rhevm-api/vms/5114bb3e-a4e6-44b2-b783-b3eea7d84720/export HTTP/1.1
 Content-type: application/xml
 
 &lt;action&gt;
@@ -585,7 +585,7 @@ Content-type: application/xml
     </para>
 
     <screen>
-POST /rhevm-api/vms/0/ticket HTTP/1.1
+POST /rhevm-api/vms/5114bb3e-a4e6-44b2-b783-b3eea7d84720/ticket HTTP/1.1
 Content-type: application/xml
 
 &lt;action&gt;
@@ -599,14 +599,14 @@ Content-type: application/xml
 Content-Type: application/xml
 
 &lt;action id="94e07552-14ba-4c27-8ce6-2cc75190d3ef"
-        href="/rhevm-api/vms/0/ticket/94e07552-14ba-4c27-8ce6-2cc75190d3ef"&gt;
+        href="/rhevm-api/vms/5114bb3e-a4e6-44b2-b783-b3eea7d84720/ticket/94e07552-14ba-4c27-8ce6-2cc75190d3ef"&gt;
   &lt;status&gt;COMPLETE&lt;/status&gt;
   &lt;ticket&gt;
     &lt;value&gt;5c7CSzK8Sw41&lt;/value&gt;
     &lt;expiry&gt;120&lt;/expiry&gt;
   &lt;/ticket&gt;
-  &lt;link rel="parent" href="/rhevm-api/vms/0"/&gt;
-  &lt;link rel="replay" href="/rhevm-api/vms/0/ticket"/&gt;
+  &lt;link rel="parent" href="/rhevm-api/vms/5114bb3e-a4e6-44b2-b783-b3eea7d84720"/&gt;
+  &lt;link rel="replay" href="/rhevm-api/vms/5114bb3e-a4e6-44b2-b783-b3eea7d84720/ticket"/&gt;
 &lt;/action&gt;
 
     </screen>

@@ -45,23 +45,23 @@
   </para>
 
   <screen>
-&lt;host id="0" href="/rhevm-api/hosts/0"&gt;
+&lt;host id="2ab5e1da-b726-4274-bbf7-0a42b16a0fc3" href="/rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3"&gt;
   &lt;name&gt;zig&lt;/name&gt;
   &lt;status&gt;UP&lt;/status&gt;
   &lt;version major="2" minor="3"/&gt;
-  &lt;cluster id="0" href="/rhevm-api/clusters/0"/&gt;
+  &lt;cluster id="99408929-82cf-4dc7-a532-9d998063fa95" href="/rhevm-api/clusters/99408929-82cf-4dc7-a532-9d998063fa95"/&gt;
   &lt;port&gt;54321&lt;/port&gt;
-  &lt;link rel="nics" href="/rhevm-api/hosts/0/nics"/&gt;
-  &lt;link rel="storage" href="/rhevm-api/hosts/0/storage"/&gt;
-  &lt;link rel="tags" href="/rhevm-api/hosts/0/tags"/&gt;
+  &lt;link rel="nics" href="/rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3/nics"/&gt;
+  &lt;link rel="storage" href="/rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3/storage"/&gt;
+  &lt;link rel="tags" href="/rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3/tags"/&gt;
   &lt;actions&gt;
-    &lt;link rel="install" href="/rhevm-api/hosts/0/install"/&gt;
-    &lt;link rel="approve" href="/rhevm-api/hosts/0/approve"/&gt;
-    &lt;link rel="activate" href="/rhevm-api/hosts/0/activate"/&gt;
-    &lt;link rel="deactivate" href="/rhevm-api/hosts/0/deactivate"/&gt;
-    &lt;link rel="commitnetconfig" href="/rhevm-api/hosts/0/commitnetconfig"/&gt;
-    &lt;link rel="iscsidiscover" href="/rhevm-api/hosts/0/iscsidiscover"/&gt;
-    &lt;link rel="iscsilogin" href="/rhevm-api/hosts/0/iscsilogin"/&gt;
+    &lt;link rel="install" href="/rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3/install"/&gt;
+    &lt;link rel="approve" href="/rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3/approve"/&gt;
+    &lt;link rel="activate" href="/rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3/activate"/&gt;
+    &lt;link rel="deactivate" href="/rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3/deactivate"/&gt;
+    &lt;link rel="commitnetconfig" href="/rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3/commitnetconfig"/&gt;
+    &lt;link rel="iscsidiscover" href="/rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3/iscsidiscover"/&gt;
+    &lt;link rel="iscsilogin" href="/rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3/iscsilogin"/&gt;
   &lt;/actions&gt;
 &lt;/host&gt;
   </screen>
@@ -130,19 +130,19 @@
     </para>
 
     <screen>
-&lt;host_nic id="e8f02fdf-3d7b-4135-86e1-1bf185570cd8" href="/rhevm-api/hosts/0/nics/e8f02fdf-3d7b-4135-86e1-1bf185570cd8"&gt;
+&lt;host_nic id="e8f02fdf-3d7b-4135-86e1-1bf185570cd8" href="/rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3/nics/e8f02fdf-3d7b-4135-86e1-1bf185570cd8"&gt;
   &lt;name&gt;bond0&lt;/name&gt;
-  &lt;host id="0" href="/rhevm-api/hosts/0"/&gt;
+  &lt;host id="2ab5e1da-b726-4274-bbf7-0a42b16a0fc3" href="/rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3"/&gt;
   &lt;network id="e657d631-657d-42bb-a536-73501a085d85" href="/rhevm-api/networks/e657d631-657d-42bb-a536-73501a085d85"/&gt;
   &lt;mac address="D6:76:F1:3A:AF:74"/&gt;
   &lt;ip address="192.168.0.128" netmask="255.255.255.0" gateway="192.168.0.1"/&gt;
   &lt;slaves&gt;
-    &lt;host_nic id="eb14e154-5e73-4f7f-bf6b-7f52609d94ec" href="/rhevm-api/hosts/0/nics/eb14e154-5e73-4f7f-bf6b-7f52609d94ec"/&gt;
-    &lt;host_nic id="6aede5ca-4c54-4b37-a81b-c0d6b53558ea" href="/rhevm-api/hosts/0/nics/6aede5ca-4c54-4b37-a81b-c0d6b53558ea"/&gt;
+    &lt;host_nic id="eb14e154-5e73-4f7f-bf6b-7f52609d94ec" href="/rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3/nics/eb14e154-5e73-4f7f-bf6b-7f52609d94ec"/&gt;
+    &lt;host_nic id="6aede5ca-4c54-4b37-a81b-c0d6b53558ea" href="/rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3/nics/6aede5ca-4c54-4b37-a81b-c0d6b53558ea"/&gt;
   &lt;/slaves&gt;
   &lt;actions&gt;
-    &lt;link rel="attach" href="/rhevm-api/hosts/0/nics/e8f02fdf-3d7b-4135-86e1-1bf185570cd8/attach"/&gt;
-    &lt;link rel="detach" href="/rhevm-api/hosts/0/nics/e8f02fdf-3d7b-4135-86e1-1bf185570cd8/detach"/&gt;
+    &lt;link rel="attach" href="/rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3/nics/e8f02fdf-3d7b-4135-86e1-1bf185570cd8/attach"/&gt;
+    &lt;link rel="detach" href="/rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3/nics/e8f02fdf-3d7b-4135-86e1-1bf185570cd8/detach"/&gt;
   &lt;/actions&gt;
 &lt;/host_nic&gt;
     </screen>
@@ -167,7 +167,7 @@
       </para>
 
       <screen>
-POST /rhevm-api/hosts/0/nics HTTP/1.1
+POST /rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3/nics HTTP/1.1
 Accept: application/xml
 Content-Type: application/xml
 
@@ -213,7 +213,7 @@ Content-Type: application/xml
       </para>
 
       <screen>
-POST /rhevm-api/hosts/0/nics/e8f02fdf-3d7b-4135-86e1-1bf185570cd8/attach HTTP/1.1
+POST /rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3/nics/e8f02fdf-3d7b-4135-86e1-1bf185570cd8/attach HTTP/1.1
 Content-type: application/xml
 
 &lt;action&gt;
@@ -239,7 +239,7 @@ Content-type: application/xml
       </para>
 
       <screen>
-POST /rhevm-api/hosts/0/nics/e8f02fdf-3d7b-4135-86e1-1bf185570cd8/detach HTTP/1.1
+POST /rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3/nics/e8f02fdf-3d7b-4135-86e1-1bf185570cd8/detach HTTP/1.1
 Content-type: application/xml
 
 &lt;action&gt;
@@ -338,7 +338,7 @@ Content-type: application/xml
 
     <screen>
 &lt;host_storage&gt;
-  &lt;storage id="5678" href="/rhevm-api/hosts/1234/storage/5678"&gt;
+  &lt;storage id="5678" href="/rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3/storage/5678"&gt;
     &lt;name&gt;LUN0&lt;/name&gt;
     &lt;type&gt;ISCSI&lt;/type&gt;
     &lt;logical_unit id="LUN0"&gt;
@@ -346,7 +346,7 @@ Content-type: application/xml
       &lt;target&gt;iqn.2009-08.com.example:mysan.foobar&lt;/target&gt;
     &lt;/logical_unit&gt;
   &lt;/storage&gt;
-  &lt;storage id="999" href="/rhevm-api/hosts/1234/storage/999"&gt;
+  &lt;storage id="999" href="/rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3/storage/999"&gt;
     &lt;name&gt;FooVG&lt;/name&gt;
     &lt;type&gt;ISCSI&lt;/type&gt;
     &lt;volume_group id="5432"&gt;
@@ -382,7 +382,7 @@ Content-type: application/xml
     </para>
 
     <screen>
-POST /rhevm-api/hosts/0/install HTTP/1.1
+POST /rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3/install HTTP/1.1
 Content-type: application/xml
 
 &lt;action&gt;
@@ -401,7 +401,7 @@ Content-type: application/xml
     </para>
 
     <screen>
-POST /rhevm-api/hosts/0/approve HTTP/1.1
+POST /rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3/approve HTTP/1.1
 Content-type: application/xml
     </screen>
 
@@ -417,7 +417,7 @@ Content-type: application/xml
     </para>
 
     <screen>
-POST /rhevm-api/hosts/0/activate HTTP/1.1
+POST /rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3/activate HTTP/1.1
 Content-type: application/xml
     </screen>
 
@@ -433,7 +433,7 @@ Content-type: application/xml
     </para>
 
     <screen>
-POST /rhevm-api/hosts/0/deactivate HTTP/1.1
+POST /rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3/deactivate HTTP/1.1
 Content-type: application/xml
     </screen>
 
@@ -449,7 +449,7 @@ Content-type: application/xml
     </para>
 
     <screen>
-POST /rhevm-api/hosts/0/commitnetconfig HTTP/1.1
+POST /rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3/commitnetconfig HTTP/1.1
 Content-type: application/xml
     </screen>
 
@@ -471,7 +471,7 @@ Content-type: application/xml
     </para>
 
     <screen>
-POST /rhevm-api/hosts/0/iscsidiscover HTTP/1.1
+POST /rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3/iscsidiscover HTTP/1.1
 Content-Type: application/xml
 Accept: application/xml
 
@@ -484,7 +484,7 @@ Accept: application/xml
 HTTP/1.1 202 Accept
 Content-Type: application/xml
 
-&lt;action id="e9126d04-0f74-4e1a-9139-13f11fcbb4ab" href="/rhevm-api/hosts/0/iscsidiscover/e9126d04-0f74-4e1a-9139-13f11fcbb4ab"&gt;
+&lt;action id="e9126d04-0f74-4e1a-9139-13f11fcbb4ab" href="/rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3/iscsidiscover/e9126d04-0f74-4e1a-9139-13f11fcbb4ab"&gt;
   &lt;iscsi_target&gt;iqn.2009-08.com.example:mysan.foobar&lt;/iscsi_target&gt;
   ...
 &lt;action&gt;
@@ -502,7 +502,7 @@ Content-Type: application/xml
     </para>
 
     <screen>
-POST /rhevm-api/hosts/0/iscsilogin HTTP/1.1
+POST /rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3/iscsilogin HTTP/1.1
 Content-Type: application/xml
 Accept: application/xml
 
