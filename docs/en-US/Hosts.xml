@@ -338,7 +338,7 @@ Content-type: application/xml
 
     <screen>
 &lt;host_storage&gt;
-  &lt;storage id="5678" href="/rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3/storage/5678"&gt;
+  &lt;storage id="82fb123b-321e-40a1-9889-95dcd2654463" href="/rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3/storage/82fb123b-321e-40a1-9889-95dcd2654463"&gt;
     &lt;name&gt;LUN0&lt;/name&gt;
     &lt;type&gt;ISCSI&lt;/type&gt;
     &lt;logical_unit id="LUN0"&gt;
@@ -346,7 +346,7 @@ Content-type: application/xml
       &lt;target&gt;iqn.2009-08.com.example:mysan.foobar&lt;/target&gt;
     &lt;/logical_unit&gt;
   &lt;/storage&gt;
-  &lt;storage id="999" href="/rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3/storage/999"&gt;
+  &lt;storage id="f1d0ced5-d727-4217-8f2a-a514dff14bd5" href="/rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3/storage/f1d0ced5-d727-4217-8f2a-a514dff14bd5"&gt;
     &lt;name&gt;FooVG&lt;/name&gt;
     &lt;type&gt;ISCSI&lt;/type&gt;
     &lt;volume_group id="5432"&gt;
