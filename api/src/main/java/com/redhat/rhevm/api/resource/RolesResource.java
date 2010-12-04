@@ -36,7 +36,7 @@ import com.redhat.rhevm.api.model.Roles;
  * Provides read-only access to the global set of roles
  */
 @Path("/roles")
-@Produces(MediaType.APPLICATION_XML)
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 public interface RolesResource {
 
     @GET
@@ -45,7 +45,7 @@ public interface RolesResource {
 
     @POST
     @Formatted
-    @Consumes(MediaType.APPLICATION_XML)
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response add(Role role);
 
     @DELETE

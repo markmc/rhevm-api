@@ -31,7 +31,7 @@ import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.resource.ReadOnlyDevicesResource;
 
-@Produces(MediaType.APPLICATION_XML)
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 public abstract class AbstractPowerShellDevicesResource<D extends BaseDevice, C extends BaseDevices>
     extends UriProviderWrapper
     implements ReadOnlyDevicesResource<D, C> {

@@ -31,7 +31,7 @@ import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 import com.redhat.rhevm.api.model.Permit;
 import com.redhat.rhevm.api.model.Permits;
 
-@Produces(MediaType.APPLICATION_XML)
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 public interface PermitsResource {
 
     @GET
@@ -47,7 +47,7 @@ public interface PermitsResource {
      */
     @POST
     @Formatted
-    @Consumes(MediaType.APPLICATION_XML)
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response add(Permit permit);
 
     @DELETE

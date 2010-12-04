@@ -27,7 +27,7 @@ import com.redhat.rhevm.api.model.Capabilities;
 
 
 @Path("/capabilities")
-@Produces(MediaType.APPLICATION_XML)
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 public interface CapabilitiesResource {
 
     @GET

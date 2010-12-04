@@ -27,7 +27,7 @@ import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 import com.redhat.rhevm.api.model.BaseResource;
 import com.redhat.rhevm.api.model.BaseResources;
 
-@Produces(MediaType.APPLICATION_XML)
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 public interface StorageDomainContentsResource<C extends BaseResources, R extends BaseResource> {
 
     @GET

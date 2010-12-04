@@ -33,7 +33,7 @@ import com.redhat.rhevm.api.model.Groups;
 
 
 @Path("/groups")
-@Produces(MediaType.APPLICATION_XML)
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 public interface GroupsResource {
 
     @GET
@@ -42,7 +42,7 @@ public interface GroupsResource {
 
     @POST
     @Formatted
-    @Consumes(MediaType.APPLICATION_XML)
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response add(Group Group);
 
     @DELETE

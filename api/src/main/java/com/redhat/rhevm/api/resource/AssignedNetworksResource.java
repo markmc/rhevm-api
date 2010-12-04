@@ -32,7 +32,7 @@ import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.Networks;
 
 
-@Produces(MediaType.APPLICATION_XML)
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 public interface AssignedNetworksResource {
 
     @GET
@@ -41,7 +41,7 @@ public interface AssignedNetworksResource {
 
     @POST
     @Formatted
-    @Consumes(MediaType.APPLICATION_XML)
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response add(Network network);
 
     @DELETE

@@ -41,7 +41,7 @@ import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 import com.redhat.rhevm.api.resource.StorageResource;
 import com.redhat.rhevm.api.resource.HostStorageResource;
 
-@Produces(MediaType.APPLICATION_XML)
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 public class PowerShellHostStorageResource
     extends UriProviderWrapper
     implements HostStorageResource {

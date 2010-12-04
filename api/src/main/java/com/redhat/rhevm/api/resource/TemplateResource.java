@@ -36,7 +36,7 @@ import com.redhat.rhevm.api.model.NIC;
 import com.redhat.rhevm.api.model.Nics;
 import com.redhat.rhevm.api.model.Template;
 
-@Produces(MediaType.APPLICATION_XML)
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 public interface TemplateResource extends UpdatableResource<Template> {
 
     @Path("{action: (export)}/{oid}")
@@ -44,7 +44,7 @@ public interface TemplateResource extends UpdatableResource<Template> {
 
     @POST
     @Formatted
-    @Consumes(MediaType.APPLICATION_XML)
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Actionable
     @Path("export")
     public Response export(Action action);

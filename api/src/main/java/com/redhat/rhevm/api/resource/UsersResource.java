@@ -33,7 +33,7 @@ import com.redhat.rhevm.api.model.Users;
 
 
 @Path("/users")
-@Produces(MediaType.APPLICATION_XML)
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 public interface UsersResource {
 
     @GET
@@ -42,7 +42,7 @@ public interface UsersResource {
 
     @POST
     @Formatted
-    @Consumes(MediaType.APPLICATION_XML)
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response add(User User);
 
     @DELETE

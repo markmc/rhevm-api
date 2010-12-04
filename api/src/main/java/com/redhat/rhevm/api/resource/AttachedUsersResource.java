@@ -34,7 +34,7 @@ import com.redhat.rhevm.api.model.Users;
 /**
  * Represents a users sub-collection, for example scoped by VM.
  */
-@Produces(MediaType.APPLICATION_XML)
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 public interface AttachedUsersResource {
 
     @GET
@@ -43,7 +43,7 @@ public interface AttachedUsersResource {
 
     @POST
     @Formatted
-    @Consumes(MediaType.APPLICATION_XML)
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response add(User User);
 
     @DELETE

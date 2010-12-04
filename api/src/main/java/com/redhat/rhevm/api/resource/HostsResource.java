@@ -33,7 +33,7 @@ import com.redhat.rhevm.api.model.Hosts;
 
 
 @Path("/hosts")
-@Produces(MediaType.APPLICATION_XML)
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 public interface HostsResource {
 
     @GET
@@ -53,7 +53,7 @@ public interface HostsResource {
      */
     @POST
     @Formatted
-    @Consumes(MediaType.APPLICATION_XML)
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response add(Host host);
 
     @DELETE

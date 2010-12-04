@@ -27,7 +27,7 @@ import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 import com.redhat.rhevm.api.model.Group;
 
 
-@Produces(MediaType.APPLICATION_XML)
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 public interface GroupResource {
 
     @GET

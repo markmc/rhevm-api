@@ -27,7 +27,7 @@ import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 
 @Path("/")
-@Produces(MediaType.APPLICATION_XML)
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 public interface ApiResource {
 
     @HEAD

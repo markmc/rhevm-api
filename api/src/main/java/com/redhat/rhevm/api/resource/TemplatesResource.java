@@ -33,7 +33,7 @@ import com.redhat.rhevm.api.model.Templates;
 
 
 @Path("/templates")
-@Produces(MediaType.APPLICATION_XML)
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 public interface TemplatesResource {
 
     @GET
@@ -42,7 +42,7 @@ public interface TemplatesResource {
 
     @POST
     @Formatted
-    @Consumes(MediaType.APPLICATION_XML)
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response add(Template template);
 
     @DELETE

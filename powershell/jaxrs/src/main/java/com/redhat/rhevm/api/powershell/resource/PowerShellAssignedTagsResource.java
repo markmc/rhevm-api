@@ -43,7 +43,7 @@ import com.redhat.rhevm.api.resource.AssignedTagsResource;
 
 import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
 
-@Produces(MediaType.APPLICATION_XML)
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 public class PowerShellAssignedTagsResource
     extends UriProviderWrapper
     implements AssignedTagsResource {

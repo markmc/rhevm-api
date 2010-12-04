@@ -31,7 +31,7 @@ import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.StorageDomains;
 
-@Produces(MediaType.APPLICATION_XML)
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 public interface AttachedStorageDomainsResource {
 
     @GET
@@ -40,7 +40,7 @@ public interface AttachedStorageDomainsResource {
 
     @POST
     @Formatted
-    @Consumes(MediaType.APPLICATION_XML)
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response add(StorageDomain storageDomain);
 
     @DELETE

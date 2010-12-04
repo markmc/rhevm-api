@@ -30,7 +30,7 @@ import com.redhat.rhevm.api.model.Actionable;
 import com.redhat.rhevm.api.model.Host;
 
 
-@Produces(MediaType.APPLICATION_XML)
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 public interface HostResource extends UpdatableResource<Host> {
 
     @Path("{action: (approve|install|fence|activate|deactivate|commitnetconfig|iscsidiscover|iscsilogin)}/{oid}")

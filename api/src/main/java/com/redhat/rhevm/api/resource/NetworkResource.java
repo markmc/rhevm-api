@@ -22,6 +22,6 @@ import javax.ws.rs.Produces;
 import com.redhat.rhevm.api.model.Network;
 
 
-@Produces(MediaType.APPLICATION_XML)
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 public interface NetworkResource extends UpdatableResource<Network> {
 }

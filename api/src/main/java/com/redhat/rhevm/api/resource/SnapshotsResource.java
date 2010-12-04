@@ -32,7 +32,7 @@ import com.redhat.rhevm.api.model.Snapshot;
 import com.redhat.rhevm.api.model.Snapshots;
 
 
-@Produces(MediaType.APPLICATION_XML)
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 public interface SnapshotsResource {
 
     @GET
@@ -41,7 +41,7 @@ public interface SnapshotsResource {
 
     @POST
     @Formatted
-    @Consumes(MediaType.APPLICATION_XML)
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response add(Snapshot snapshot);
 
     @DELETE

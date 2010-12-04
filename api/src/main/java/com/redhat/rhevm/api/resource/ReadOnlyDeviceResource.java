@@ -25,7 +25,7 @@ import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 import com.redhat.rhevm.api.model.BaseDevice;
 
 
-@Produces(MediaType.APPLICATION_XML)
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 public interface ReadOnlyDeviceResource<D extends BaseDevice> {
 
     @GET

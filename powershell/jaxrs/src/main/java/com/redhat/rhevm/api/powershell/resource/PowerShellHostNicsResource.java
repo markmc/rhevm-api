@@ -45,7 +45,7 @@ import com.redhat.rhevm.api.resource.HostNicsResource;
 
 import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
 
-@Produces(MediaType.APPLICATION_XML)
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 public class PowerShellHostNicsResource extends UriProviderWrapper implements HostNicsResource {
 
     protected String hostId;
