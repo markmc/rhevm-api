@@ -33,7 +33,7 @@ import com.redhat.rhevm.api.model.StorageDomains;
 
 
 @Path("/storagedomains")
-@Produces(MediaType.APPLICATION_XML)
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 public interface StorageDomainsResource {
 
     @GET
@@ -42,7 +42,7 @@ public interface StorageDomainsResource {
 
     @POST
     @Formatted
-    @Consumes(MediaType.APPLICATION_XML)
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response add(StorageDomain storageDomains);
 
     @DELETE

@@ -31,13 +31,13 @@ import com.redhat.rhevm.api.model.BaseDevice;
 import com.redhat.rhevm.api.model.BaseDevices;
 
 
-@Produces(MediaType.APPLICATION_XML)
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 public interface DevicesResource<D extends BaseDevice, C extends BaseDevices>
     extends ReadOnlyDevicesResource<D, C> {
 
     @POST
     @Formatted
-    @Consumes(MediaType.APPLICATION_XML)
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response add(D device);
 
     @DELETE

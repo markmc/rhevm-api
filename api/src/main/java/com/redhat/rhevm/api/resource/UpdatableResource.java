@@ -27,7 +27,7 @@ import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 import com.redhat.rhevm.api.model.BaseResource;
 
 
-@Produces(MediaType.APPLICATION_XML)
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 public interface UpdatableResource<R extends BaseResource> {
 
     @GET
@@ -36,6 +36,6 @@ public interface UpdatableResource<R extends BaseResource> {
 
     @PUT
     @Formatted
-    @Consumes(MediaType.APPLICATION_XML)
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public R update(R resource);
 }

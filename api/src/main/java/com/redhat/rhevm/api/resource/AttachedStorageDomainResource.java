@@ -35,7 +35,7 @@ import com.redhat.rhevm.api.model.Templates;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
 
-@Produces(MediaType.APPLICATION_XML)
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 public interface AttachedStorageDomainResource {
 
     @GET
@@ -47,14 +47,14 @@ public interface AttachedStorageDomainResource {
 
     @POST
     @Formatted
-    @Consumes(MediaType.APPLICATION_XML)
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Actionable
     @Path("activate")
     public Response activate(Action action);
 
     @POST
     @Formatted
-    @Consumes(MediaType.APPLICATION_XML)
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Actionable
     @Path("deactivate")
     public Response deactivate(Action action);

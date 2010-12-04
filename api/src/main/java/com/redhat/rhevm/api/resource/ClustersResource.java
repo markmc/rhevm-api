@@ -33,7 +33,7 @@ import com.redhat.rhevm.api.model.Clusters;
 
 
 @Path("/clusters")
-@Produces(MediaType.APPLICATION_XML)
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 public interface ClustersResource {
 
     @GET
@@ -42,7 +42,7 @@ public interface ClustersResource {
 
     @POST
     @Formatted
-    @Consumes(MediaType.APPLICATION_XML)
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response add(Cluster cluster);
 
     @DELETE

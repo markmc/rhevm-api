@@ -28,7 +28,7 @@ import com.redhat.rhevm.api.model.BaseDevice;
 import com.redhat.rhevm.api.model.BaseDevices;
 
 
-@Produces(MediaType.APPLICATION_XML)
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 public interface ReadOnlyDevicesResource<D extends BaseDevice, C extends BaseDevices> {
 
     @GET

@@ -32,7 +32,7 @@ import com.redhat.rhevm.api.model.HostNIC;
 import com.redhat.rhevm.api.model.HostNics;
 
 
-@Produces(MediaType.APPLICATION_XML)
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 public interface HostNicsResource {
 
     @GET
@@ -41,7 +41,7 @@ public interface HostNicsResource {
 
     @POST
     @Formatted
-    @Consumes(MediaType.APPLICATION_XML)
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public Response add(HostNIC nic);
 
     @DELETE
