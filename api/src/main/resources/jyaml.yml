@@ -20,3 +20,8 @@ transfers:
   vms: com.redhat.rhevm.api.model.VMs
   grace_period: com.redhat.rhevm.api.model.GracePeriod
   action: com.redhat.rhevm.api.model.Action
+handlers:
+  api: com.redhat.rhevm.api.resteasy.CustomBeanWrapper
+  com.redhat.rhevm.api.model.API: com.redhat.rhevm.api.resteasy.CustomBeanWrapper
+  vms: com.redhat.rhevm.api.resteasy.CustomBeanWrapper
+  com.redhat.rhevm.api.model.VMs: com.redhat.rhevm.api.resteasy.CustomBeanWrapper
