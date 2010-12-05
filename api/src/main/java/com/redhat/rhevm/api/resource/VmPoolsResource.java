@@ -33,7 +33,7 @@ import com.redhat.rhevm.api.model.VmPools;
 
 
 @Path("/vmpools")
-@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
 public interface VmPoolsResource {
 
     @GET
@@ -42,7 +42,7 @@ public interface VmPoolsResource {
 
     @POST
     @Formatted
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
     public Response add(VmPool pool);
 
     @DELETE

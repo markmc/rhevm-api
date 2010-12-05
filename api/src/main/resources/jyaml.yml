@@ -1,22 +1,157 @@
 transfers:
+  action: com.redhat.rhevm.api.model.Action
   actions: com.redhat.rhevm.api.model.Actions
-  attachment: com.redhat.rhevm.api.model.Attachment
-  attachments: com.redhat.rhevm.api.model.Attachments
   api: com.redhat.rhevm.api.model.API
+  summary: com.redhat.rhevm.api.model.ApiSummary
+  capabilities: com.redhat.rhevm.api.model.Capabilities
+  cdrom: com.redhat.rhevm.api.model.CdRom
+  cdroms: com.redhat.rhevm.api.model.CdRoms
   cluster: com.redhat.rhevm.api.model.Cluster
   clusters: com.redhat.rhevm.api.model.Clusters
-  datacenter: com.redhat.rhevm.api.model.DataCenter
-  datacenters: com.redhat.rhevm.api.model.DataCenters
+  cpu: com.redhat.rhevm.api.model.CPU
+  cpus: com.redhat.rhevm.api.model.CPUs
+  cpu_statistics: com.redhat.rhevm.api.model.CpuStatistics
+  topology: com.redhat.rhevm.api.model.CpuTopology
+  data_center: com.redhat.rhevm.api.model.DataCenter
+  data_centers: com.redhat.rhevm.api.model.DataCenters
+  disk: com.redhat.rhevm.api.model.Disk
+  disks: com.redhat.rhevm.api.model.Disks
+  display: com.redhat.rhevm.api.model.Display
+  fault: com.redhat.rhevm.api.model.Fault
+  file: com.redhat.rhevm.api.model.File
+  files: com.redhat.rhevm.api.model.Files
+  floppies: com.redhat.rhevm.api.model.Floppies
+  floppy: com.redhat.rhevm.api.model.Floppy
+  grace_period: com.redhat.rhevm.api.model.GracePeriod
+  group: com.redhat.rhevm.api.model.Group
+  groups: com.redhat.rhevm.api.model.Groups
+  highly_available: com.redhat.rhevm.api.model.HighlyAvailable
   host: com.redhat.rhevm.api.model.Host
+  host_nic: com.redhat.rhevm.api.model.HostNIC
+  host_nics: com.redhat.rhevm.api.model.HostNics
   hosts: com.redhat.rhevm.api.model.Hosts
+  host_storag: com.redhat.rhevm.api.model.HostStorage
+  ip: com.redhat.rhevm.api.model.IP
+  iscsi: com.redhat.rhevm.api.model.IscsiParameters
   link: com.redhat.rhevm.api.model.Link
+  logical_unit: com.redhat.rhevm.api.model.LogicalUnit
+  mac: com.redhat.rhevm.api.model.MAC
+  memory_statistics: com.redhat.rhevm.api.model.MemoryStatistics
   network: com.redhat.rhevm.api.model.Network
   networks: com.redhat.rhevm.api.model.Networks
-  storagedomain: com.redhat.rhevm.api.model.StorageDomain
-  storagedomains: com.redhat.rhevm.api.model.StorageDomains
+  nic: com.redhat.rhevm.api.model.NIC
+  nics: com.redhat.rhevm.api.model.Nics
+  os: com.redhat.rhevm.api.model.OperatingSystem
+  boot: com.redhat.rhevm.api.model.Boot
+  permission: com.redhat.rhevm.api.model.Permission
+  permissions: com.redhat.rhevm.api.model.Permissions
+  permit: com.redhat.rhevm.api.model.Permit
+  permits: com.redhat.rhevm.api.model.Permits
+  power_management: com.redhat.rhevm.api.model.PowerManagement
+  option: com.redhat.rhevm.api.model.PowerManagementOption
+  options: com.redhat.rhevm.api.model.PowerManagementOptions
+  power_managers: com.redhat.rhevm.api.model.PowerManagers
+  role: com.redhat.rhevm.api.model.Role
+  roles: com.redhat.rhevm.api.model.Roles
+  slaves: com.redhat.rhevm.api.model.Slaves
+  snapshot: com.redhat.rhevm.api.model.Snapshot
+  snapshots: com.redhat.rhevm.api.model.Snapshots
+  storage_domain: com.redhat.rhevm.api.model.StorageDomain
+  storage_domains: com.redhat.rhevm.api.model.StorageDomains
+  storage: com.redhat.rhevm.api.model.Storage
+  supported_versions: com.redhat.rhevm.api.model.SupportedVersions
+  tag: com.redhat.rhevm.api.model.Tag
+  parent: com.redhat.rhevm.api.model.TagParent
+  tags: com.redhat.rhevm.api.model.Tags
   template: com.redhat.rhevm.api.model.Template
   templates: com.redhat.rhevm.api.model.Templates
+  ticket: com.redhat.rhevm.api.model.Ticket
+  user: com.redhat.rhevm.api.model.User
+  users: com.redhat.rhevm.api.model.Users
+  version: com.redhat.rhevm.api.model.VersionCaps
+  version: com.redhat.rhevm.api.model.Version
+  vlan: com.redhat.rhevm.api.model.VLAN
   vm: com.redhat.rhevm.api.model.VM
+  vmpool: com.redhat.rhevm.api.model.VmPool
+  vmpools: com.redhat.rhevm.api.model.VmPools
   vms: com.redhat.rhevm.api.model.VMs
-  grace_period: com.redhat.rhevm.api.model.GracePeriod
-  action: com.redhat.rhevm.api.model.Action
+  volume_group: com.redhat.rhevm.api.model.VolumeGroup
+
+handlers:
+  com.redhat.rhevm.api.model.Action: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Actions: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.API: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.ApiSummary: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Capabilities: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.CdRom: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.CdRoms: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Cluster: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Clusters: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.CPU: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.CPUs: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.CpuStatistics: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.CpuTopology: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.DataCenter: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.DataCenters: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Disk: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Disks: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Display: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Fault: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.File: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Files: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Floppies: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Floppy: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.GracePeriod: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Group: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Groups: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.HighlyAvailable: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Host: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.HostNIC: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.HostNics: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Hosts: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.HostStorage: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.IP: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.IscsiParameters: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Link: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.LogicalUnit: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.MAC: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.MemoryStatistics: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Network: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Networks: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.NIC: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Nics: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.OperatingSystem: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.OperatingSystem.Boot: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Permission: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Permissions: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Permit: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Permits: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.PowerManagement: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.PowerManagementOption: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.PowerManagementOptions: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.PowerManagers: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Role: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Roles: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Slaves: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Snapshot: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Snapshots: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.StorageDomain: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.StorageDomains: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Storage: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.SupportedVersions: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Tag: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.TagParent: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Tags: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Template: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Templates: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Ticket: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.User: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Users: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.VersionCaps: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Version: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.VLAN: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.VM: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.VmPool: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.VmPools: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.VMs: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.VolumeGroup: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper

@@ -32,7 +32,7 @@ import com.redhat.rhevm.api.model.Tag;
 import com.redhat.rhevm.api.model.Tags;
 
 @Path("/tags")
-@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
 public interface TagsResource {
 
     @GET
@@ -41,7 +41,7 @@ public interface TagsResource {
 
     @POST
     @Formatted
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
     public Response add(Tag tag);
 
     @DELETE

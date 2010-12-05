@@ -46,7 +46,7 @@ import com.redhat.rhevm.api.powershell.util.UUID;
 import com.redhat.rhevm.api.resource.SnapshotResource;
 import com.redhat.rhevm.api.resource.SnapshotsResource;
 
-@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
 public class PowerShellSnapshotsResource extends UriProviderWrapper implements SnapshotsResource {
 
     protected String vmId;

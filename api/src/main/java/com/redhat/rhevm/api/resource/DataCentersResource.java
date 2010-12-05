@@ -33,7 +33,7 @@ import com.redhat.rhevm.api.model.DataCenters;
 
 
 @Path("/datacenters")
-@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
 public interface DataCentersResource {
 
     @GET
@@ -42,7 +42,7 @@ public interface DataCentersResource {
 
     @POST
     @Formatted
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
     public Response add(DataCenter dataCenter);
 
     @DELETE

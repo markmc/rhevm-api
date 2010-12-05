@@ -32,7 +32,7 @@ import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.HostNIC;
 
 
-@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
 public interface HostNicResource {
 
     @GET
@@ -44,14 +44,14 @@ public interface HostNicResource {
 
     @POST
     @Formatted
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
     @Actionable
     @Path("attach")
     public Response attach(Action action);
 
     @POST
     @Formatted
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
     @Actionable
     @Path("detach")
     public Response detach(Action action);

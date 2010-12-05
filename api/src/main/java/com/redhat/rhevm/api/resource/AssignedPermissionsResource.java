@@ -34,7 +34,7 @@ import com.redhat.rhevm.api.model.Permissions;
 /**
  * Represents a permission sub-collection, scoped by User or some entity type.
  */
-@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
 public interface AssignedPermissionsResource {
 
     @GET
@@ -43,7 +43,7 @@ public interface AssignedPermissionsResource {
 
     @POST
     @Formatted
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
     public Response add(Permission permission);
 
     @DELETE
