@@ -23,7 +23,7 @@ import javax.ws.rs.Produces;
 import com.redhat.rhevm.api.model.Cluster;
 
 
-@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
 public interface ClusterResource extends UpdatableResource<Cluster> {
 
     @Path("networks")

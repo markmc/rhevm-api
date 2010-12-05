@@ -31,7 +31,7 @@ import com.redhat.rhevm.api.model.Actionable;
 import com.redhat.rhevm.api.model.StorageDomain;
 
 
-@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
 public interface StorageDomainResource extends UpdatableResource<StorageDomain> {
 
     @Path("{action: (teardown)}/{oid}")
@@ -39,7 +39,7 @@ public interface StorageDomainResource extends UpdatableResource<StorageDomain> 
 
     @POST
     @Formatted
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
     @Actionable
     @Path("teardown")
     public Response teardown(Action action);

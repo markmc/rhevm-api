@@ -34,7 +34,7 @@ import com.redhat.rhevm.api.model.Roles;
 /**
  * Represents a roles sub-collection, for example scoped by User.
  */
-@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
 public interface AssignedRolesResource {
 
     @GET
@@ -43,7 +43,7 @@ public interface AssignedRolesResource {
 
     @POST
     @Formatted
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
     public Response add(Role role);
 
     @DELETE

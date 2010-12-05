@@ -80,7 +80,7 @@ public class MockTestBase extends Assert {
      */
 
     @Path("/")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
     protected interface ApiResource {
         @HEAD public ClientResponse<Object> head();
         @GET public ClientResponse<API> get();
@@ -88,11 +88,11 @@ public class MockTestBase extends Assert {
     protected static ApiResource api;
 
     @Path("/")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
     protected interface VmsResource {
         @GET public VMs list(@QueryParam("search") String query);
         @GET @Path("{id}") public VM get(@PathParam("id") String id);
-        @PUT @Path("{id}") @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON}) public VM update(@PathParam("id") String id, VM vm);
+        @PUT @Path("{id}") @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML}) public VM update(@PathParam("id") String id, VM vm);
     }
 
     protected VmsResource createVmsResource(String uri) {
@@ -100,11 +100,11 @@ public class MockTestBase extends Assert {
     }
 
     @Path("/")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
     protected interface HostsResource {
         @GET public Hosts list(@QueryParam("search") String query);
         @GET @Path("{id}") public Host get(@PathParam("id") String id);
-        @PUT @Path("{id}") @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON}) public Host update(@PathParam("id") String id, Host host);
+        @PUT @Path("{id}") @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML}) public Host update(@PathParam("id") String id, Host host);
     }
 
     protected HostsResource createHostsResource(String uri) {
@@ -112,11 +112,11 @@ public class MockTestBase extends Assert {
     }
 
     @Path("/")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
     protected interface NetworksResource {
         @GET public Networks list();
         @GET @Path("{id}") public Network get(@PathParam("id") String id);
-        @PUT @Path("{id}") @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON}) public Network update(@PathParam("id") String id, Network network);
+        @PUT @Path("{id}") @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML}) public Network update(@PathParam("id") String id, Network network);
     }
 
     protected NetworksResource createNetworksResource(String uri) {
@@ -124,7 +124,7 @@ public class MockTestBase extends Assert {
     }
 
     @Path("/")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
     protected interface TemplatesResource {
         @GET public Templates list();
         @GET @Path("{id}") public Template get(@PathParam("id") String id);
@@ -135,11 +135,11 @@ public class MockTestBase extends Assert {
     }
 
     @Path("/")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
     protected interface ClustersResource {
         @GET public Clusters list(@QueryParam("search") String query);
         @GET @Path("{id}") public Cluster get(@PathParam("id") String id);
-        @PUT @Path("{id}") @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON}) public Cluster update(@PathParam("id") String id, Cluster cluster);
+        @PUT @Path("{id}") @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML}) public Cluster update(@PathParam("id") String id, Cluster cluster);
     }
 
     protected ClustersResource createClustersResource(String uri) {
@@ -147,7 +147,7 @@ public class MockTestBase extends Assert {
     }
 
     @Path("/")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
     protected interface CapabilitiesResource {
         @GET public Capabilities get();
     }
@@ -157,7 +157,7 @@ public class MockTestBase extends Assert {
     }
 
     @Path("/")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
     protected interface StorageDomainsResource {
         @GET public StorageDomains list(@QueryParam("search") String query);
         @GET @Path("{id}") public StorageDomain get(@PathParam("id") String id);
@@ -168,9 +168,9 @@ public class MockTestBase extends Assert {
     }
 
     @Path("/")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
     protected interface ActionResource {
-        @POST @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON}) public void post(Action action);
+        @POST @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML}) public void post(Action action);
     }
 
     protected ActionResource createActionResource(String uri) {

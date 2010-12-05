@@ -33,7 +33,7 @@ import com.redhat.rhevm.api.model.VMs;
 
 
 @Path("/vms")
-@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
 public interface VmsResource {
 
     @GET
@@ -51,7 +51,7 @@ public interface VmsResource {
      */
     @POST
     @Formatted
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
     public Response add(VM vm);
 
     @DELETE

@@ -32,7 +32,7 @@ import com.redhat.rhevm.api.model.Actionable;
 import com.redhat.rhevm.api.model.BaseResource;
 import com.redhat.rhevm.api.resource.ActionResource;
 
-@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
 public interface StorageDomainContentResource<R extends BaseResource> {
 
     @Path("{action: (import)}/{oid}")
@@ -44,7 +44,7 @@ public interface StorageDomainContentResource<R extends BaseResource> {
 
     @POST
     @Formatted
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
     @Actionable
     @Path("import")
     public Response doImport(Action action);

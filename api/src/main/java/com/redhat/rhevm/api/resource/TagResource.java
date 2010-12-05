@@ -21,6 +21,6 @@ package com.redhat.rhevm.api.resource;
 import javax.ws.rs.Produces;
 import com.redhat.rhevm.api.model.Tag;
 
-@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
 public interface TagResource extends UpdatableResource<Tag> {
 }

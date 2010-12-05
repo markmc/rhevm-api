@@ -28,7 +28,7 @@ import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 import com.redhat.rhevm.api.model.DataCenter;
 
 
-@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
 public interface DataCenterResource extends UpdatableResource<DataCenter> {
 
     @GET
@@ -37,7 +37,7 @@ public interface DataCenterResource extends UpdatableResource<DataCenter> {
 
     @PUT
     @Formatted
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
     public DataCenter update(DataCenter dataCenter);
 
     @Path("files")
