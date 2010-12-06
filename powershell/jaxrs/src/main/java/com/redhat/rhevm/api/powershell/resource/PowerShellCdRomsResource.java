@@ -47,7 +47,11 @@ public class PowerShellCdRomsResource
 
         buf.append("$v = get-vm " + PowerShellUtils.escape(parentId) + ";");
         buf.append("$v.cdisopath = " + PowerShellUtils.escape(cdIsoPath) + ";");
-        buf.append("update-vm -vmobject $v");
+        buf.append("try {");
+        buf.append("mount-disk -vmobject $v -isofilename " + PowerShellUtils.escape(cdIsoPath) + ";");
+        buf.append("} catch {");
+        buf.append("update-vm -vmobject $v;");
+        buf.append("}");
 
         PowerShellCmd.runCommand(getPool(), buf.toString());
         return buildCdRom(cdIsoPath);
