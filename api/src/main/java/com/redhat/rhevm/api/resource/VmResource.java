@@ -32,6 +32,8 @@ import com.redhat.rhevm.api.model.CdRom;
 import com.redhat.rhevm.api.model.CdRoms;
 import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.Disks;
+import com.redhat.rhevm.api.model.Floppy;
+import com.redhat.rhevm.api.model.Floppies;
 import com.redhat.rhevm.api.model.NIC;
 import com.redhat.rhevm.api.model.Nics;
 import com.redhat.rhevm.api.model.VM;
@@ -104,6 +106,9 @@ public interface VmResource extends UpdatableResource<VM> {
 
     @Path("disks")
     public DevicesResource<Disk, Disks> getDisksResource();
+
+    @Path("floppies")
+    public DevicesResource<Floppy, Floppies> getFloppiesResource();
 
     @Path("nics")
     public DevicesResource<NIC, Nics> getNicsResource();

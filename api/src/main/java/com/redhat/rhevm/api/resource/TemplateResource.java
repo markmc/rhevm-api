@@ -32,6 +32,8 @@ import com.redhat.rhevm.api.model.CdRom;
 import com.redhat.rhevm.api.model.CdRoms;
 import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.Disks;
+import com.redhat.rhevm.api.model.Floppy;
+import com.redhat.rhevm.api.model.Floppies;
 import com.redhat.rhevm.api.model.NIC;
 import com.redhat.rhevm.api.model.Nics;
 import com.redhat.rhevm.api.model.Template;
@@ -54,6 +56,9 @@ public interface TemplateResource extends UpdatableResource<Template> {
 
     @Path("disks")
     public ReadOnlyDevicesResource<Disk, Disks> getDisksResource();
+
+    @Path("floppies")
+    public ReadOnlyDevicesResource<Floppy, Floppies> getFloppiesResource();
 
     @Path("nics")
     public ReadOnlyDevicesResource<NIC, Nics> getNicsResource();

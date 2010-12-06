@@ -1174,7 +1174,7 @@
                  start action. Not usually included in the VM representation -->
             <xs:element ref="cdroms" minOccurs="0" maxOccurs="1"/>
             <xs:element ref="floppies" minOccurs="0" maxOccurs="1"/>
-            <!-- also rel="cdroms/disks/nics" links, see Devices below -->
+            <!-- also rel="cdroms/disks/floppies/nics" links, see Devices below -->
             <!-- also rel="snapshots" links, see Snapshots below -->
             <!-- also rel="users" links, see Users above -->
           </xs:sequence>
