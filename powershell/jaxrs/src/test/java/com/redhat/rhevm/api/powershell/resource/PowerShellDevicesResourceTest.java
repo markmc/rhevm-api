@@ -78,7 +78,7 @@ public class PowerShellDevicesResourceTest
     private static final String FLOPPY_ID = Integer.toString("floppy".hashCode());
 
     private static final String GET_CDROMS_CMD = "get-vm \"" + VM_ID + "\"";
-    private static final String UPDATE_CDROM_CMD = "$v = get-vm \"{0}\";$v.cdisopath = \"{1}\";update-vm -vmobject $v";
+    private static final String UPDATE_CDROM_CMD = "$v = get-vm \"{0}\";$v.cdisopath = \"{1}\";try '{'mount-disk -vmobject $v -isofilename \"{1}\";'} catch {update-vm -vmobject $v;}'";
 
     private static final String GET_FLOPPIES_CMD = "get-vm \"" + VM_ID + "\"";
     private static final String UPDATE_FLOPPY_CMD = "$v = get-vm \"{0}\";$v.floppypath = \"{1}\";update-vm -vmobject $v";
