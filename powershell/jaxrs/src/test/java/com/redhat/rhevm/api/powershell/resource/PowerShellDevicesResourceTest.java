@@ -29,6 +29,8 @@ import javax.ws.rs.core.UriBuilder;
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.CdRom;
 import com.redhat.rhevm.api.model.CdRoms;
+import com.redhat.rhevm.api.model.Floppy;
+import com.redhat.rhevm.api.model.Floppies;
 import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.Disks;
 import com.redhat.rhevm.api.model.DiskType;
@@ -70,11 +72,16 @@ public class PowerShellDevicesResourceTest
     private static final String NETWORK_ID = Integer.toString(NETWORK_NAME.hashCode());
     private static final String DATA_CENTER_ID = "999";
     private static final String ISO_NAME = PowerShellVmsResourceTest.ISO_NAME;
+    private static final String VFD_NAME = PowerShellVmsResourceTest.VFD_NAME;
 
     private static final String CDROM_ID = Integer.toString("cdrom".hashCode());
+    private static final String FLOPPY_ID = Integer.toString("floppy".hashCode());
 
     private static final String GET_CDROMS_CMD = "get-vm \"" + VM_ID + "\"";
     private static final String UPDATE_CDROM_CMD = "$v = get-vm \"{0}\";$v.cdisopath = \"{1}\";update-vm -vmobject $v";
+
+    private static final String GET_FLOPPIES_CMD = "get-vm \"" + VM_ID + "\"";
+    private static final String UPDATE_FLOPPY_CMD = "$v = get-vm \"{0}\";$v.floppypath = \"{1}\";update-vm -vmobject $v";
 
     private static final long DISK_SIZE = 10;
     private static final long DISK_SIZE_BYTES = DISK_SIZE * 1024 * 1024 * 1024;
@@ -204,6 +211,85 @@ public class PowerShellDevicesResourceTest
         setUpCmdExpectations(command, "");
 
         cdromResource.remove(CDROM_ID);
+    }
+
+    @Test
+    public void testFloppyGet() throws Exception {
+        PowerShellFloppiesResource parent = new PowerShellFloppiesResource(VM_ID,
+                                                                           poolMap,
+                                                                           resource.new FloppyQuery(VM_ID),
+                                                                           uriProvider);
+        PowerShellDeviceResource<Floppy, Floppies> floppyResource =
+            new PowerShellDeviceResource<Floppy, Floppies>(parent, FLOPPY_ID);
+
+        setUriInfo(setUpBasicUriExpectations());
+        setUpCmdExpectations(GET_FLOPPIES_CMD, formatVm(VM_NAME));
+        verifyFloppy(floppyResource.get());
+    }
+
+    @Test
+    public void testFloppyList() throws Exception {
+        PowerShellFloppiesResource floppyResource = new PowerShellFloppiesResource(VM_ID,
+                                                                                   poolMap,
+                                                                                   resource.new FloppyQuery(VM_ID),
+                                                                                   uriProvider);
+
+        setUriInfo(setUpBasicUriExpectations());
+        setUpCmdExpectations(GET_FLOPPIES_CMD, formatVm(VM_NAME));
+
+        verifyFloppies(floppyResource.list());
+    }
+
+    @Test
+    public void testFloppyAdd() throws Exception {
+        PowerShellFloppiesResource floppyResource = new PowerShellFloppiesResource(VM_ID,
+                                                                                   poolMap,
+                                                                                   resource.new FloppyQuery(VM_ID),
+                                                                                   uriProvider);
+
+        Floppy floppy = new Floppy();
+        floppy.setFile(new File());
+        floppy.getFile().setId(VFD_NAME);
+
+        String command = MessageFormat.format(UPDATE_FLOPPY_CMD, VM_ID, VFD_NAME);
+
+        setUriInfo(setUpCmdExpectations(command, "", "floppies", FLOPPY_ID));
+
+        verifyFloppy((Floppy)floppyResource.add(floppy).getEntity());
+    }
+
+    @Test
+    public void testFloppyUpdate() throws Exception {
+        PowerShellFloppiesResource floppiesResource = new PowerShellFloppiesResource(VM_ID,
+                                                                                     poolMap,
+                                                                                     resource.new FloppyQuery(VM_ID),
+                                                                                     uriProvider);
+
+        PowerShellDeviceResource<Floppy, Floppies> floppyResource = floppiesResource.getDeviceSubResource(FLOPPY_ID);
+
+        Floppy floppy = new Floppy();
+        floppy.setFile(new File());
+        floppy.getFile().setId(VFD_NAME);
+
+        String command = MessageFormat.format(UPDATE_FLOPPY_CMD, VM_ID, VFD_NAME);
+
+        setUriInfo(setUpCmdExpectations(new String[]{command}, new String[]{""}, "floppies", FLOPPY_ID, false));
+
+        verifyFloppy(floppyResource.update(floppy));
+    }
+
+    @Test
+    public void testFloppyRemove() throws Exception {
+        PowerShellFloppiesResource floppyResource = new PowerShellFloppiesResource(VM_ID,
+                                                                                   poolMap,
+                                                                                   resource.new FloppyQuery(VM_ID),
+                                                                                   uriProvider);
+
+        String command = MessageFormat.format(UPDATE_FLOPPY_CMD, VM_ID, "");
+
+        setUpCmdExpectations(command, "");
+
+        floppyResource.remove(FLOPPY_ID);
     }
 
     @Test
@@ -372,6 +458,20 @@ public class PowerShellDevicesResourceTest
         assertNotNull(cdroms);
         assertEquals(cdroms.getCdRoms().size(), 1);
         verifyCdRom(cdroms.getCdRoms().get(0));
+    }
+
+    private void verifyFloppy(Floppy floppy) {
+        assertNotNull(floppy);
+        assertEquals(floppy.getId(), FLOPPY_ID);
+        assertNotNull(floppy.getVm());
+        assertEquals(floppy.getVm().getId(), VM_ID);
+        verifyLinks(floppy);
+    }
+
+    private void verifyFloppies(Floppies floppies) {
+        assertNotNull(floppies);
+        assertEquals(floppies.getFloppies().size(), 1);
+        verifyFloppy(floppies.getFloppies().get(0));
     }
 
     private void verifyDisk(Disk disk) {

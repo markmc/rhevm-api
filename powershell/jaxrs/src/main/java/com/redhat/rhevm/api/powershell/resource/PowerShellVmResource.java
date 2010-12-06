@@ -27,15 +27,12 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.CpuTopology;
 import com.redhat.rhevm.api.model.Display;
-import com.redhat.rhevm.api.model.Floppy;
-import com.redhat.rhevm.api.model.Floppies;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.Ticket;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VmType;
 import com.redhat.rhevm.api.resource.AssignedPermissionsResource;
 import com.redhat.rhevm.api.resource.AssignedTagsResource;
-import com.redhat.rhevm.api.resource.DevicesResource;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
@@ -313,6 +310,15 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
         }
     }
 
+    public class FloppyQuery extends PowerShellFloppiesResource.FloppyQuery {
+        public FloppyQuery(String id) {
+            super(id);
+        }
+        @Override protected String getFloppyPath() {
+            return runAndParseSingle("get-vm " + PowerShellUtils.escape(id)).getFloppyPath();
+        }
+    }
+
     @Override
     public PowerShellCdRomsResource getCdRomsResource() {
         return new PowerShellCdRomsResource(getId(), shellPools, new CdRomQuery(getId()), getUriProvider());
@@ -324,8 +330,8 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
     }
 
     @Override
-    public DevicesResource<Floppy, Floppies> getFloppiesResource() {
-        return null; // REVISIT
+    public PowerShellFloppiesResource getFloppiesResource() {
+        return new PowerShellFloppiesResource(getId(), shellPools, new FloppyQuery(getId()), getUriProvider());
     }
 
     @Override
