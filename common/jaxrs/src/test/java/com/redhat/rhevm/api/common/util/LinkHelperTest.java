@@ -29,6 +29,7 @@ import com.redhat.rhevm.api.model.CdRom;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.Disk;
+import com.redhat.rhevm.api.model.Floppy;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.File;
 import com.redhat.rhevm.api.model.Group;
@@ -60,6 +61,7 @@ public class LinkHelperTest extends Assert {
     private static final String FILE_ID = "faroutdude";
     private static final String CDROM_ID = "wonderful";
     private static final String DISK_ID = "fantastic";
+    private static final String FLOPPY_ID = "rapid";
     private static final String NIC_ID = "super";
     private static final String STORAGE_ID = "sensational";
     private static final String USER_ID = "doublerainbowalltheway";
@@ -87,6 +89,7 @@ public class LinkHelperTest extends Assert {
     private static final String FILE_HREF = BASE_PATH + "/datacenters/" + DATA_CENTER_ID + "/files/" + FILE_ID;
     private static final String CDROM_HREF = VM_HREF + "/cdroms/" + CDROM_ID;
     private static final String DISK_HREF = VM_HREF + "/disks/" + DISK_ID;
+    private static final String FLOPPY_HREF = VM_HREF + "/floppies/" + FLOPPY_ID;
     private static final String NIC_HREF = VM_HREF + "/nics/" + NIC_ID;
     private static final String STORAGE_HREF = HOST_HREF + "/storage/" + STORAGE_ID;
     private static final String GROUP_HREF = BASE_PATH + "/groups/" + GROUP_ID;
@@ -324,6 +327,19 @@ public class LinkHelperTest extends Assert {
         LinkHelper.addLinks(setUpUriExpectations(), disk);
 
         assertEquals(DISK_HREF, disk.getHref());
+    }
+
+    @Test
+    public void testFloppyLinks() throws Exception {
+        Floppy floppy = new Floppy();
+        floppy.setId(FLOPPY_ID);
+
+        floppy.setVm(new VM());
+        floppy.getVm().setId(VM_ID);
+
+        LinkHelper.addLinks(setUpUriExpectations(), floppy);
+
+        assertEquals(FLOPPY_HREF, floppy.getHref());
     }
 
     @Test

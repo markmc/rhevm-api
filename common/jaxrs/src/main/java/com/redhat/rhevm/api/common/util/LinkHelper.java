@@ -31,6 +31,7 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.BaseResource;
 import com.redhat.rhevm.api.model.CdRom;
+import com.redhat.rhevm.api.model.Floppy;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.Disk;
@@ -159,6 +160,9 @@ public class LinkHelper {
         map = new ParentToCollectionMap(DeviceResource.class, DevicesResource.class, VM.class);
         TYPES.put(Disk.class, map);
 
+        map = new ParentToCollectionMap(DeviceResource.class, DevicesResource.class, VM.class);
+        TYPES.put(Floppy.class, map);
+
         map = new ParentToCollectionMap(HostResource.class, HostsResource.class);
         TYPES.put(Host.class, map);
 
@@ -267,12 +271,44 @@ public class LinkHelper {
         for (Method method : parent.getMethods()) {
             if (method.getName().startsWith("get") &&
                 clz.isAssignableFrom(method.getReturnType()) &&
-                method.getName().toLowerCase().contains(type.getSimpleName().toLowerCase())) {
+                isPluralResourceGetter(method.getName(), type.getSimpleName())) {
                 Path pathAnnotation = (Path)method.getAnnotation(Path.class);
                 return pathAnnotation.value();
             }
         }
         return null;
+    }
+
+    private static boolean isPluralResourceGetter(String method, String type) {
+        method = method.toLowerCase();
+        type = type.toLowerCase();
+
+        method = chopStart(method, "get");
+        method = chopEnd(method, "resource");
+        method = chopEnd(method, "s");
+
+        if (type.endsWith("y")) {
+            method = chopEnd(method, "ie");
+            type = chopEnd(type, "y");
+        }
+
+        return method.contains(type);
+    }
+
+    private static String chopStart(String str, String chop) {
+        if (str.startsWith(chop)) {
+            return str.substring(chop.length());
+        } else {
+            return str;
+        }
+    }
+
+    private static String chopEnd(String str, String chop) {
+        if (str.endsWith(chop)) {
+            return str.substring(0, str.length() - chop.length());
+        } else {
+            return str;
+        }
     }
 
     /**
