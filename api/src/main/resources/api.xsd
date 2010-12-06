@@ -708,18 +708,7 @@
                new user, therafter modification of role assignments are
                only supported via the rel="roles" sub-collection -->
           <xs:element name="roles" type="Roles" minOccurs="0" maxOccurs="1"/>
-          <xs:element name="groups" minOccurs="0">
-            <xs:complexType>
-              <xs:sequence>
-                <xs:annotation>
-                  <xs:appinfo>
-                    <jaxb:property name="Groups"/>
-                  </xs:appinfo>
-                </xs:annotation>
-                <xs:element name="group" type="xs:string" maxOccurs="unbounded"/>
-              </xs:sequence>
-            </xs:complexType>
-          </xs:element>
+          <xs:element ref="groups" minOccurs="0"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>

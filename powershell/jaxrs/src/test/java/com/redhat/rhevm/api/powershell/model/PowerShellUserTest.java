@@ -61,7 +61,7 @@ public class PowerShellUserTest extends PowerShellModelTest {
         assertNotNull(u.getGroups());
         assertTrue(!u.getGroups().getGroups().isEmpty());
         for (int i = 0 ; i < GROUPS.length ; i++) {
-            assertEquals(GROUPS[i], u.getGroups().getGroups().get(i));
+            assertEquals(GROUPS[i], u.getGroups().getGroups().get(i).getName());
         }
         assertEquals(LOGGED_IN, u.isLoggedIn());
     }

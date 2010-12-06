@@ -18,6 +18,7 @@
  */
 package com.redhat.rhevm.api.command.users;
 
+import com.redhat.rhevm.api.model.Group;
 import com.redhat.rhevm.api.model.User;
 
 import com.redhat.rhevm.api.command.base.VerboseDisplay;
@@ -45,8 +46,8 @@ public class UserVerboseDisplay implements VerboseDisplay<User> {
         }
         if (model.isSetGroups()) {
             String prefix = "  groups: ";
-            for (String group : model.getGroups().getGroups()) {
-                System.out.println(prefix + group);
+            for (Group group : model.getGroups().getGroups()) {
+                System.out.println(prefix + group.getName());
                 prefix = "          ";
             }
         }

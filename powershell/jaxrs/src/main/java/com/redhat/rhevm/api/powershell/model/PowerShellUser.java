@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.redhat.rhevm.api.model.User;
+import com.redhat.rhevm.api.model.Group;
+import com.redhat.rhevm.api.model.Groups;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 
 public class PowerShellUser {
@@ -53,8 +55,10 @@ public class PowerShellUser {
     @SuppressWarnings("unchecked")
     private static void parseGroups(User user, List groups) {
         if (!(groups == null || groups.isEmpty())) {
-             user.setGroups(new User.Groups());
-             for (String group : (List<String>)groups) {
+             user.setGroups(new Groups());
+             for (String name : (List<String>)groups) {
+                 Group group = new Group();
+                 group.setName(name);
                  user.getGroups().getGroups().add(group);
              }
         }
