@@ -188,14 +188,14 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
             if (vm.isSetCdroms() && vm.getCdroms().isSetCdRoms()) {
                 String file = vm.getCdroms().getCdRoms().get(0).getFile().getId();
                 if (file != null) {
-                    buf.append(" -isofilename '" + PowerShellUtils.escape(file) + "'");
+                    buf.append(" -isofilename " + PowerShellUtils.escape(file));
                 }
             }
 
             if (vm.isSetFloppies() && vm.getFloppies().isSetFloppies()) {
                 String file = vm.getFloppies().getFloppies().get(0).getFile().getId();
                 if (file != null) {
-                    buf.append(" -floppypath '" + PowerShellUtils.escape(file) + "'");
+                    buf.append(" -floppypath " + PowerShellUtils.escape(file));
                 }
             }
         }
