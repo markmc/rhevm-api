@@ -73,12 +73,27 @@ public class MutabilityAssertor {
      * @return          error Response if appropriate
      */
     public static <T extends BaseResource> Response imposeConstraints(String[] strict, T incoming, T existing) {
+        return imposeConstraints(strict, incoming, existing, BROKEN_CONSTRAINT_REASON, BROKEN_CONSTRAINT_DETAIL);
+    }
+
+    /**
+     * Impose immutability constraints.
+     *
+     * @param <T>       representation type
+     * @param strict    array of strictly immutable field names
+     * @param incoming  incoming representation
+     * @param existing  existing representation
+     * @param reason    the fault reason
+     * @param detail    the fault detail
+     * @return          error Response if appropriate
+     */
+    public static <T extends BaseResource> Response imposeConstraints(String[] strict, T incoming, T existing, String reason, String detail) {
         for (String s: strict) {
             String field = capitalize(s);
             if (isSet(incoming, field) && different(incoming, existing, field)) {
                 Fault fault = new Fault();
-                fault.setReason(BROKEN_CONSTRAINT_REASON);
-                fault.setDetail(MessageFormat.format(BROKEN_CONSTRAINT_DETAIL, s));
+                fault.setReason(reason);
+                fault.setDetail(MessageFormat.format(detail, s));
                 return Response.status(BROKEN_CONSTRAINT_STATUS)
                                .entity(fault)
                                .build();
