@@ -57,7 +57,24 @@ public class CompletenessAssertor {
      * iff a required parameter is missing
      */
     public static void validateParameters(Object model, String... required) {
-        validateParameters(model, 2, required);
+        validateParameters(INCOMPLETE_PARAMS_REASON, INCOMPLETE_PARAMS_DETAIL, model, 2, required);
+    }
+
+    /**
+     * Validate presence of required parameters.
+     * Note the model type is java.lang.Object as opposed to a generic
+     * <T extends BaseResource> in order to accommodate parameters types
+     * such as Action.
+     *
+     * @param reason    the fault reason
+     * @param detail    the fault detail
+     * @param model     the incoming representation
+     * @param required  the required field names
+     * @throws WebApplicationException wrapping an appropriate response
+     * iff a required parameter is missing
+     */
+    public static void validateParameters(String reason, String detail, Object model, String... required) {
+        validateParameters(reason, detail, model, 2, required);
     }
 
     /**
@@ -73,7 +90,28 @@ public class CompletenessAssertor {
      * iff a required parameter is missing
      */
     public static void validateParameters(Object model, int frameOffset, String... required) {
-        Response error = assertRequired(model, frameOffset, required);
+        Response error = assertRequired(INCOMPLETE_PARAMS_REASON, INCOMPLETE_PARAMS_DETAIL, model, frameOffset, required);
+        if (error != null) {
+            throw new WebApplicationException(error);
+        }
+    }
+
+    /**
+     * Validate presence of required parameters.
+     * Note the model type is java.lang.Object as opposed to a generic
+     * <T extends BaseResource> in order to accommodate parameters types
+     * such as Action.
+     *
+     * @param reason       the fault reason
+     * @param detail       the fault detail
+     * @param model        the incoming representation
+     * @param required     the required field names
+     * @param frameOffset  the stack frame offset of the public resource method
+     * @throws WebApplicationException wrapping an appropriate response
+     * iff a required parameter is missing
+     */
+    public static void validateParameters(String reason, String detail, Object model, int frameOffset, String... required) {
+        Response error = assertRequired(reason, detail, model, frameOffset, required);
         if (error != null) {
             throw new WebApplicationException(error);
         }
@@ -82,12 +120,14 @@ public class CompletenessAssertor {
     /**
      * Validate presence of required parameters.
      *
+     * @param reason       the fault reason
+     * @param detail       the fault detail
      * @param model        the incoming representation
-     * @param required     the required field names
      * @param frameOffset  the stack frame offset of the public resource method
+     * @param required     the required field names
      * @return             error Response if appropriate
      */
-    private static Response assertRequired(Object model, int frameOffset, String... required) {
+    private static Response assertRequired(String reason, String detail, Object model, int frameOffset, String... required) {
         List<String> missing = new ArrayList<String>();
         for (String r : required) {
             if (topLevel(r)) {
@@ -115,8 +155,8 @@ public class CompletenessAssertor {
         if (!missing.isEmpty()) {
             StackTraceElement[] trace = new Throwable().getStackTrace();
             Fault fault = new Fault();
-            fault.setReason(INCOMPLETE_PARAMS_REASON);
-            fault.setDetail(MessageFormat.format(INCOMPLETE_PARAMS_DETAIL,
+            fault.setReason(reason);
+            fault.setDetail(MessageFormat.format(detail,
                                                  model.getClass().getSimpleName(),
                                                  missing,
                                                  trace[frameOffset + 1].getMethodName()));
