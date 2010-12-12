@@ -99,7 +99,7 @@
     </title>
 
     <para>
-      Export a template to an <literal>Export</literal> storage domain. A destination storage domain may be specified via a <literal>storage_domain</literal> reference. By default, the export action will overwrite any existing template by the same name in the destination domain, but this may be avoided by setting the <literal>exclusive</literal> parameter to <literal>true</literal>.
+      Export a template to an <literal>Export</literal> storage domain. A destination storage domain must be specified with a <literal>storage_domain</literal> reference. By default, the export action will overwrite any existing template by the same name in the destination domain, but this may be avoided by setting the <literal>exclusive</literal> parameter to <literal>true</literal>.
     </para>
 
     <screen>

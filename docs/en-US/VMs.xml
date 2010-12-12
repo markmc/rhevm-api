@@ -532,7 +532,7 @@ Content-type: application/xml
     </title>
 
     <para>
-      Export a VM to an <literal>Export</literal> storage domain. A destination storage domain may be specified via a <literal>storage_domain</literal> reference. By default, the export action will overwrite any existing VM by the same name in the destination domain, but this may be avoided by setting the <literal>exclusive</literal> parameter to <literal>true</literal>. Finally, if snapshots of the VM should not be included in the exported VM, the <literal>discard_snapshots</literal> parameter may be set to <literal>true</literal>.
+      Export a VM to an <literal>Export</literal> storage domain. A destination storage domain must be specified with a <literal>storage_domain</literal> reference. By default, the export action will overwrite any existing VM by the same name in the destination domain, but this may be avoided by setting the <literal>exclusive</literal> parameter to <literal>true</literal>. Finally, if snapshots of the VM should not be included in the exported VM, the <literal>discard_snapshots</literal> parameter may be set to <literal>true</literal>.
     </para>
 
     <screen>
@@ -540,7 +540,7 @@ POST /rhevm-api/vms/5114bb3e-a4e6-44b2-b783-b3eea7d84720/export HTTP/1.1
 Content-type: application/xml
 
 &lt;action&gt;
-  &lt;storage_domain name="export1"/&gt;
+  &lt;storage_domain&gt;&lt;name&gt;export1&lt;/name&gt;&lt;/storage_domain&gt;
   &lt;exclusive&gt;true&lt;exclusive/&gt;
   &lt;discard_snapshots&gt;true&lt;discard_snapshots/&gt;
 &lt;/action&gt;
