@@ -23,6 +23,10 @@
             <entry>One of ILLEGAL, LOCKED or OK</entry>
           </row>
           <row>
+            <entry><literal>creation_time</literal></entry>
+            <entry>The date and time at which this template was created, using the <literal>xsd:dateTime</literal> format: <literal>YYYY-MM-DDThh:mm:ss</literal></entry>
+          </row>
+          <row>
             <entry><literal>memory</literal></entry>
             <entry>The amount of memory allocated to the guest, in bytes</entry>
           </row>
@@ -67,6 +71,7 @@
   &lt;description&gt;Blank template&lt;/description&gt;
   &lt;type&gt;SERVER&lt;/type&gt;
   &lt;status&gt;OK&lt;/status&gt;
+  &lt;creation_time&gt;2010-08-16T14:24:29&lt;/creation_time&gt;
   &lt;memory&gt;536870912&lt;/memory&gt;
   &lt;cpu&gt;
     &lt;topology cores="1" sockets="1"/&gt;
