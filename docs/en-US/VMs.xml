@@ -43,7 +43,7 @@
           </row>
           <row>
             <entry><literal>os</literal> <literal>type</literal></entry>
-            <entry>The gues operating system type, e.g. <literal>RHEL5</literal> or <literal>WindowsXP</literal></entry>
+            <entry>The guest operating system type, e.g. <literal>RHEL5</literal> or <literal>WindowsXP</literal></entry>
           </row>
           <row>
             <entry><literal>os</literal> <literal>boot dev="cdrom|hd|network"</literal></entry>
