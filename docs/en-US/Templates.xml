@@ -31,6 +31,11 @@
             <entry>The system from which this template originated. One of RHEV, VMWARE or XEN</entry>
           </row>
           <row>
+            <entry><literal>stateless</literal></entry>
+            <entry>Boolean value specifying whether or not the template is stateless. A stateless template has a snapshot of its disk image
+ taken at boot and deleted at shutdown, meaning state changes will not persist after a reboot. One of true or false.</entry>
+          </row>
+          <row>
             <entry><literal>memory</literal></entry>
             <entry>The amount of memory allocated to the guest, in bytes</entry>
           </row>
@@ -76,6 +81,7 @@
   &lt;type&gt;SERVER&lt;/type&gt;
   &lt;status&gt;OK&lt;/status&gt;
   &lt;creation_time&gt;2010-08-16T14:24:29&lt;/creation_time&gt;
+  &lt;stateless&gt;false&lt;/stateless&gt;
   &lt;origin&gt;RHEV&lt;/origin&gt;
   &lt;memory&gt;536870912&lt;/memory&gt;
   &lt;cpu&gt;
@@ -92,7 +98,7 @@
   </screen>
 
   <para>
-    When creating a new template, the <literal>name</literal> and <literal>vm id</literal> elements are required. The <literal>name</literal>, <literal>description</literal>, <literal>type</literal>, <literal>memory</literal>, <literal>cpu topology</literal> and <literal>os boot dev</literal> properties may be updated post-creation.
+    When creating a new template, the <literal>name</literal> and <literal>vm id</literal> elements are required. The <literal>name</literal>, <literal>description</literal>, <literal>type</literal>, <literal>memory</literal>, <literal>cpu topology</literal>, <literal>os boot dev</literal> and <literal>stateless</literal> properties may be updated post-creation.
   </para>
 
   <para>

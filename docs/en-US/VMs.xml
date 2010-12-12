@@ -66,6 +66,11 @@
             <entry><literal>true</literal> if the VM should be automatically restarted if the host crashes. A <literal>priority</literal> attribute controls the order in which VMs are re-started</entry>
           </row>
           <row>
+            <entry><literal>stateless</literal></entry>
+            <entry>Boolean value specifying whether or not the VM is stateless. A stateless VM has a snapshot of its disk image
+ taken at boot and deleted at shutdown, meaning state changes will not persist after a reboot. One of true or false.</entry>
+          </row>
+          <row>
             <entry><literal>host</literal></entry>
             <entry>A reference to the host which this VM is currently running on. See <xref linkend="chap-REST_API_Guide-Hosts"/></entry>
           </row>
@@ -120,6 +125,7 @@
     &lt;boot dev="hd"/&gt;
   &lt;/os&gt;
   &lt;highly_available priority="20"&gt;true&lt;/highly_available&gt;
+  &lt;stateless&gt;false&lt;/stateless&gt;
   &lt;cluster id="99408929-82cf-4dc7-a532-9d998063fa95" href="/rhevm-api/clusters/99408929-82cf-4dc7-a532-9d998063fa95"/&gt;
   &lt;template id="00000000-0000-0000-0000-000000000000" href="/rhevm-api/templates/00000000-0000-0000-0000-000000000000"/&gt;
   &lt;memory_statistics&gt;
@@ -149,7 +155,7 @@
   </screen>
 
   <para>
-    When creating a new VM, the <literal>name</literal>, <literal>template</literal> and <literal>cluster</literal> elements are required. The  <literal>template</literal> and <literal>cluster</literal> may be identified by <literal>id</literal> or <literal>name</literal>. The <literal>name</literal>, <literal>description</literal>, <literal>type</literal>, <literal>memory</literal>, <literal>cpu topology</literal> and <literal>os</literal> properties may be updated post-creation.
+    When creating a new VM, the <literal>name</literal>, <literal>template</literal> and <literal>cluster</literal> elements are required. The  <literal>template</literal> and <literal>cluster</literal> may be identified by <literal>id</literal> or <literal>name</literal>. The <literal>name</literal>, <literal>description</literal>, <literal>type</literal>, <literal>memory</literal>, <literal>cpu topology</literal>, <literal>os</literal> and <literal>stateless</literal> properties may be updated post-creation.
   </para>
 
   <para>
