@@ -84,10 +84,6 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
             addSubCollection(uriInfo, ret, collection);
         }
 
-        if (VmType.DESKTOP.equals(ret.getType())) {
-            addSubCollection(uriInfo, ret, "users");
-        }
-
         return LinkHelper.addLinks(uriInfo, ret);
     }
 
@@ -347,11 +343,6 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
     @Override
     public AssignedTagsResource getTagsResource() {
         return new PowerShellAssignedTagsResource(VM.class, getId(), shellPools, getParser(), getUriProvider());
-    }
-
-    @Override
-    public PowerShellAttachedUsersResource getUsersResource() {
-        return new PowerShellAttachedUsersResource(getId(), getExecutor(), shellPools, getParser(), getUriProvider());
     }
 
     @Override
