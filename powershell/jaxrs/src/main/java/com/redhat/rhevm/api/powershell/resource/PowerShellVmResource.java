@@ -163,6 +163,12 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
     public Response start(Action action) {
         StringBuilder buf = new StringBuilder();
 
+        String hostArg = null;
+        if (action.isSetVm() && action.getVm().isSetHost()) {
+            validateParameters(action.getVm(), "host.id|name");
+            hostArg = getHostArg(buf, action.getVm().getHost());
+        }
+
         buf.append("start-vm");
         buf.append(" -vmid " + PowerShellUtils.escape(getId()));
 
@@ -172,6 +178,10 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
 
         if (action.isSetVm()) {
             VM vm = action.getVm();
+
+            if (hostArg != null) {
+                buf.append(" -defaulthostid " + hostArg);
+            }
 
             if (vm.isSetDisplay() && vm.getDisplay().isSetType()) {
                 buf.append(" -displaytype '" + PowerShellVM.asString(vm.getDisplay().getType()) + "'");
