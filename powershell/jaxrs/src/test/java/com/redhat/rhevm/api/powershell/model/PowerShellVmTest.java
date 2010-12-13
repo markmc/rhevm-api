@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.redhat.rhevm.api.model.BootDevice;
+import com.redhat.rhevm.api.model.DisplayType;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VmOrigin;
 import com.redhat.rhevm.api.model.VmStatus;
@@ -86,6 +87,13 @@ public class PowerShellVmTest extends PowerShellModelTest {
         }
     }
 
+    private void testDisplay(VM vm, DisplayType type, Integer port, String address) {
+        assertTrue(vm.isSetDisplay());
+        assertEquals(type, vm.getDisplay().getType());
+        assertEquals(port, vm.getDisplay().getPort());
+        assertEquals(address, vm.getDisplay().getAddress());
+    }
+
     @Test
     public void testParse() throws Exception {
         String data = readFileContents("vm.xml");
@@ -97,14 +105,18 @@ public class PowerShellVmTest extends PowerShellModelTest {
 
         testVM(vms.get(0), "142bf5b1-04fb-4221-9360-0f9b7dab3013", "foo-1", null, VmType.DESKTOP, VmStatus.UP, 536870912L, 1, 1, "OtherLinux", null, true, 100, "foo.iso", "bar.vfd", "5f38363b-7457-4884-831e-78c27cebb31d", "99408929-82cf-4dc7-a532-9d998063fa95", "3ee77811-f1eb-4d3f-991e-e539dbb2f1f9", "2010-07-20T17:28:18.000Z", VmOrigin.RHEV);
         testBootDevices(vms.get(0), BootDevice.HD);
+        testDisplay(vms.get(0), DisplayType.SPICE, 5910, "192.168.1.109");
 
         testVM(vms.get(1), "f9e37917-8382-486f-875d-4045be045d85", "foo-2", null, VmType.DESKTOP, VmStatus.DOWN, 536870912L, 1, 1, "OtherLinux", true, false, 0, null, null, null, "99408929-82cf-4dc7-a532-9d998063fa95", "3ee77811-f1eb-4d3f-991e-e539dbb2f1f9", "2010-07-20T17:33:03.000Z", VmOrigin.VMWARE);
         testBootDevices(vms.get(1), BootDevice.HD);
+        testDisplay(vms.get(1), DisplayType.SPICE, null, null);
 
         testVM(vms.get(2), "aa0e6522-5baf-4f92-86d3-716883de4359", "test", null, VmType.SERVER, VmStatus.DOWN, 536870912L, 1, 1, "WindowsXP", null, false, 0, null, null, null, "99408929-82cf-4dc7-a532-9d998063fa95", "00000000-0000-0000-0000-000000000000", "2010-07-20T10:27:02.000Z", VmOrigin.XEN);
         testBootDevices(vms.get(2), BootDevice.HD);
+        testDisplay(vms.get(2), DisplayType.VNC, 5910, null);
 
         testVM(vms.get(3), "5114bb3e-a4e6-44b2-b783-b3eea7d84720", "testf13", null, VmType.DESKTOP, VmStatus.POWERING_DOWN, 536870912L, 1, 1, "OtherLinux", null, false, 0, null, null, null, "99408929-82cf-4dc7-a532-9d998063fa95", "00000000-0000-0000-0000-000000000000", "2010-07-20T10:58:41.000Z", VmOrigin.RHEV);
         testBootDevices(vms.get(3), BootDevice.HD);
+        testDisplay(vms.get(3), DisplayType.VNC, 5910, "192.168.1.108");
     }
 }

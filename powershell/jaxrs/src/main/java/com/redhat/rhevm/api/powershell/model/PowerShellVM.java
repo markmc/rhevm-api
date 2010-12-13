@@ -51,6 +51,7 @@ public class PowerShellVM extends VM {
     private static final String VM_TYPE = "RhevmCmd.CLIVm";
     private static final String MEMORY_STATS_TYPE = "RhevmCmd.MemoryStatistics";
     private static final String CPU_STATS_TYPE = "RhevmCmd.CLICpu";
+    private static final String NIC_TYPE = "RhevmCmd.CLIHostNetworkAdapter";
 
     private String cdIsoPath;
     public String getCdIsoPath() {
@@ -158,6 +159,8 @@ public class PowerShellVM extends VM {
                 parseMemoryStats(entity, last(ret));
             } else if (CPU_STATS_TYPE.equals(entity.getType())) {
                 parseCpuStats(entity, last(ret));
+            } else if (NIC_TYPE.equals(entity.getType())) {
+                parseDisplayAddress(entity, last(ret));
             }
         }
 
@@ -268,6 +271,16 @@ public class PowerShellVM extends VM {
         vm.getCpuStatistics().setSystem(entity.get("system", BigDecimal.class));
         vm.getCpuStatistics().setIdle(entity.get("idle", BigDecimal.class));
         vm.getCpuStatistics().setLoad(entity.get("load", BigDecimal.class));
+    }
+
+    private static void parseDisplayAddress(PowerShellParser.Entity entity, PowerShellVM vm) {
+        String displayAddress = entity.get("address");
+        if (displayAddress != null) {
+            if (!vm.isSetDisplay()) {
+                vm.setDisplay(new Display());
+            }
+            vm.getDisplay().setAddress(displayAddress);
+        }
     }
 
     private static boolean isEmptyId(Object id) {

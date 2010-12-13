@@ -73,6 +73,23 @@
     <Property Name="Idle" Type="System.Decimal">30</Property>
     <Property Name="Load" Type="System.Decimal">40</Property>
   </Object>
+  <Object Type="RhevmCmd.CLIHostNetworkAdapter">
+    <Property Name="Id" Type="System.String">6704ab23-0614-4316-98f2-7b30a63cb59e</Property>
+    <Property Name="Gateway" Type="System.String" />
+    <Property Name="Subnet" Type="System.String">255.255.255.0</Property>
+    <Property Name="Address" Type="System.String">192.168.1.109</Property>
+    <Property Name="Speed" Type="System.Int32">1000</Property>
+    <Property Name="VlanId" Type="System.Int32">0</Property>
+    <Property Name="BondType" Type="System.Int32">0</Property>
+    <Property Name="BondName" Type="System.String" />
+    <Property Name="MacAddress" Type="System.String">00:13:20:F5:F9:5A</Property>
+    <Property Name="Name" Type="System.String">eth0</Property>
+    <Property Name="Network" Type="System.String">rhevm</Property>
+    <Property Name="LineSpeed" Type="System.Int32">1000</Property>
+    <Property Name="TxDropped" Type="System.Double">0</Property>
+    <Property Name="IsBond" Type="System.Boolean">False</Property>
+    <Property Name="BondInterfaces" Type="System.String[]" />
+  </Object>
   <Object Type="System.DateTime">20/07/2010 17:33:03</Object>
   <Object Type="System.String">2010:07:20:17:33:03</Object>
   <Object Type="RhevmCmd.CLIVm">
@@ -289,5 +306,22 @@
     <Property Name="System" Type="System.Decimal">20</Property>
     <Property Name="Idle" Type="System.Decimal">30</Property>
     <Property Name="Load" Type="System.Decimal">40</Property>
+  </Object>
+  <Object Type="RhevmCmd.CLIHostNetworkAdapter">
+    <Property Name="Id" Type="System.String">6704ab23-0614-4316-98f2-7b30a63cb59e</Property>
+    <Property Name="Gateway" Type="System.String" />
+    <Property Name="Subnet" Type="System.String">255.255.255.0</Property>
+    <Property Name="Address" Type="System.String">192.168.1.108</Property>
+    <Property Name="Speed" Type="System.Int32">1000</Property>
+    <Property Name="VlanId" Type="System.Int32">0</Property>
+    <Property Name="BondType" Type="System.Int32">0</Property>
+    <Property Name="BondName" Type="System.String" />
+    <Property Name="MacAddress" Type="System.String">00:13:20:F5:F9:5A</Property>
+    <Property Name="Name" Type="System.String">eth0</Property>
+    <Property Name="Network" Type="System.String">rhevm</Property>
+    <Property Name="LineSpeed" Type="System.Int32">1000</Property>
+    <Property Name="TxDropped" Type="System.Double">0</Property>
+    <Property Name="IsBond" Type="System.Boolean">False</Property>
+    <Property Name="BondInterfaces" Type="System.String[]" />
   </Object>
 </Objects>

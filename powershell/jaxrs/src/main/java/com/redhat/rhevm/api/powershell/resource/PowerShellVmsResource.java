@@ -48,7 +48,23 @@ public class PowerShellVmsResource
         buf.append(PowerShellUtils.getDateHack("creationdate"));
         buf.append("$_; ");
         buf.append("$_.getmemorystatistics(); ");
-        buf.append("$_.getcpustatistics() ");
+        buf.append("$_.getcpustatistics(); ");
+        buf.append("if ($_.runningonhost -ne '00000000-0000-0000-0000-000000000000') {");
+        buf.append("  $h = get-host $_.runningonhost;");
+        buf.append("  $nics = $h.getnetworkadapters();");
+        buf.append("  $nets = get-networks;");
+        buf.append("  $addr = $nics[0];");
+        buf.append("  foreach ($net in $nets) {");
+        buf.append("    if ($net.isdisplay) {");
+        buf.append("      foreach ($nic in $nics) {");
+        buf.append("        if ($nic.network -eq $net.name) {");
+        buf.append("          $addr = $nic;");
+        buf.append("        }");
+        buf.append("      }");
+        buf.append("    }");
+        buf.append("  }");
+        buf.append("  $addr;");
+        buf.append("}");
         buf.append("}");
         PROCESS_VMS = buf.toString();
     }
