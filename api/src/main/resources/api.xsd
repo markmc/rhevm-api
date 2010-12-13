@@ -167,7 +167,7 @@
             <jaxb:property name="Links"/>
         </xs:appinfo>
       </xs:annotation>
-      <xs:element ref="link" maxOccurs="unbounded"/>
+      <xs:element ref="link" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -617,7 +617,7 @@
                 <jaxb:property name="Hosts"/>
             </xs:appinfo>
           </xs:annotation>
-          <xs:element ref="host" maxOccurs="unbounded"/>
+          <xs:element ref="host" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -723,7 +723,7 @@
                 <jaxb:property name="Users"/>
             </xs:appinfo>
           </xs:annotation>
-          <xs:element ref="user" maxOccurs="unbounded"/>
+          <xs:element ref="user" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -996,7 +996,7 @@
                 <jaxb:property name="StorageDomains"/>
             </xs:appinfo>
           </xs:annotation>
-          <xs:element ref="storage_domain" maxOccurs="unbounded"/>
+          <xs:element ref="storage_domain" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -1180,7 +1180,7 @@
                 <jaxb:property name="VMs"/>
             </xs:appinfo>
           </xs:annotation>
-          <xs:element ref="vm" maxOccurs="unbounded"/>
+          <xs:element ref="vm" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
