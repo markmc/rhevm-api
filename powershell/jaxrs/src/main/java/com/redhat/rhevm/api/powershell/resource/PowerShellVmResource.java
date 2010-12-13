@@ -183,6 +183,10 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
                 buf.append(" -defaulthostid " + hostArg);
             }
 
+            if (vm.isSetStateless() && vm.isStateless()) {
+                buf.append(" -runasstateless");
+            }
+
             if (vm.isSetDisplay() && vm.getDisplay().isSetType()) {
                 buf.append(" -displaytype '" + PowerShellVM.asString(vm.getDisplay().getType()) + "'");
             }
