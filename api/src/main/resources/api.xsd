@@ -1080,6 +1080,7 @@
   <xs:complexType name="Display">
     <xs:sequence>
       <xs:element name="type" type="DisplayType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="address" type="xs:string" minOccurs="0" maxOccurs="1"/>
       <xs:element name="port" type="xs:unsignedShort" minOccurs="0" maxOccurs="1"/>
       <xs:element name="monitors" type="xs:int" minOccurs="0" maxOccurs="1"/>
     </xs:sequence>
