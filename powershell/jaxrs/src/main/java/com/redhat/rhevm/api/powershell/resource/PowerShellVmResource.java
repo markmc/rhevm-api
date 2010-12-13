@@ -27,6 +27,7 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.CpuTopology;
 import com.redhat.rhevm.api.model.Display;
+import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.Ticket;
 import com.redhat.rhevm.api.model.VM;
@@ -224,15 +225,7 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
         validateParameters(action, "host.id|name");
         StringBuilder buf = new StringBuilder();
 
-        String hostArg;
-        if (action.getHost().isSetId()) {
-            hostArg = PowerShellUtils.escape(action.getHost().getId());
-        } else {
-            buf.append("$h = select-host -searchtext ");
-            buf.append(PowerShellUtils.escape("name=" + action.getHost().getName()));
-            buf.append(";");
-            hostArg = "$h.hostid";
-        }
+        String hostArg = getHostArg(buf, action.getHost());
 
         buf.append("migrate-vm");
         buf.append(" -vmid " + PowerShellUtils.escape(getId()));
@@ -355,5 +348,18 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
         link.setRel(collection);
         link.setHref(LinkHelper.getUriBuilder(uriInfo, vm).path(collection).build().toString());
         vm.getLinks().add(link);
+    }
+
+    private String getHostArg(StringBuilder buf, Host host) {
+        String arg;
+        if (host.isSetId()) {
+            arg = PowerShellUtils.escape(host.getId());
+        } else {
+            buf.append("$h = select-host -searchtext ");
+            buf.append(PowerShellUtils.escape("name=" + host.getName()));
+            buf.append(";");
+            arg = "$h.hostid";
+        }
+        return arg;
     }
 }
