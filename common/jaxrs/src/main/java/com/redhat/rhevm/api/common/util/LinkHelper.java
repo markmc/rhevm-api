@@ -97,7 +97,6 @@ import com.redhat.rhevm.api.resource.TemplateResource;
 import com.redhat.rhevm.api.resource.TemplatesResource;
 import com.redhat.rhevm.api.resource.UserResource;
 import com.redhat.rhevm.api.resource.UsersResource;
-import com.redhat.rhevm.api.resource.AttachedUsersResource;
 import com.redhat.rhevm.api.resource.VmPoolResource;
 import com.redhat.rhevm.api.resource.VmPoolsResource;
 import com.redhat.rhevm.api.resource.VmResource;
@@ -220,7 +219,6 @@ public class LinkHelper {
         TYPES.put(Template.class, map);
 
         map = new ParentToCollectionMap(UserResource.class, UsersResource.class);
-        map.add(UserResource.class, AttachedUsersResource.class, VM.class);
         TYPES.put(User.class, map);
 
         map = new ParentToCollectionMap(VmResource.class, VmsResource.class);
