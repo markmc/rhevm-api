@@ -57,12 +57,12 @@ public class PowerShellClustersResource
 
     @Override
     public Response add(Cluster cluster) {
-        validateParameters(cluster, "name", "dataCenter.id", "cpu.id");
+        validateParameters(cluster, "name", "dataCenter.id|name", "cpu.id");
         StringBuilder buf = new StringBuilder();
 
-        buf.append("foreach ($v in get-clustercompatibilityversions -datacenterid ");
-        buf.append(PowerShellUtils.escape(cluster.getDataCenter().getId()));
-        buf.append(") { ");
+        String dataCenterArg = getDataCenterArg(buf, cluster);
+
+        buf.append("foreach ($v in get-clustercompatibilityversions -datacenterid " + dataCenterArg + ") { ");
         if (cluster.isSetVersion() &&
             cluster.getVersion().isSetMajor() &&
             cluster.getVersion().isSetMinor()) {
@@ -86,7 +86,7 @@ public class PowerShellClustersResource
             buf.append(" -clusterdescription " + PowerShellUtils.escape(cluster.getDescription()));
         }
         buf.append(" -clustercpuname " + PowerShellUtils.escape(cluster.getCpu().getId()));
-        buf.append(" -datacenterid " + PowerShellUtils.escape(cluster.getDataCenter().getId()));
+        buf.append(" -datacenterid " + dataCenterArg);
         buf.append(" -compatibilityversion $version");
 
         cluster = PowerShellClusterResource.addLinks(getUriInfo(), getPool(), getParser(), runAndParseSingle(buf.toString()));
@@ -109,5 +109,20 @@ public class PowerShellClustersResource
 
     protected PowerShellClusterResource createSubResource(String id) {
         return new PowerShellClusterResource(id, getExecutor(), this, shellPools, getParser());
+    }
+
+    private String getDataCenterArg(StringBuilder buf, Cluster cluster) {
+        String arg = "";
+        if (cluster.isSetDataCenter()) {
+            if (cluster.getDataCenter().isSetId()) {
+                arg = PowerShellUtils.escape(cluster.getDataCenter().getId());
+            } else if (cluster.getDataCenter().isSetName())  {
+                buf.append("$d = select-datacenter -searchtext ");
+                buf.append(PowerShellUtils.escape("name=" + cluster.getDataCenter().getName()));
+                buf.append("; ");
+                arg = "$d.datacenterid";
+            }
+        }
+        return arg;
     }
 }

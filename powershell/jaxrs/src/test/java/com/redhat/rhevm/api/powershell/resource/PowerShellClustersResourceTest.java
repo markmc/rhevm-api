@@ -31,7 +31,8 @@ import org.junit.Test;
 public class PowerShellClustersResourceTest extends AbstractPowerShellCollectionResourceTest<Cluster, PowerShellClusterResource, PowerShellClustersResource> {
 
     private static final String CLUSTER_CPU = "xeon";
-    private static final String DATA_CENTER_ID = "12345";
+    private static final String DATA_CENTER_NAME = "welcometoourimfoverlords";
+    private static final String DATA_CENTER_ID = Integer.toString(DATA_CENTER_NAME.hashCode());
     private static final int MAJOR = 10;
     private static final int MINOR = 16;
 
@@ -84,8 +85,20 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
     }
 
     @Test
+    public void testAddWithNamedDataCenter() throws Exception {
+        String [] commands = { getAddCommand(true, false), getSupportedVersionCommand(NEW_NAME) };
+        String [] returns = { getAddReturn(), formatVersion(MAJOR, MINOR) };
+        Cluster model = getModel(NEW_NAME, NEW_DESCRIPTION);
+        model.getDataCenter().setId(null);
+        model.getDataCenter().setName(DATA_CENTER_NAME);
+        model.setVersion(null);
+        resource.setUriInfo(setUpResourceExpectations(2, commands, returns, true, null, NEW_NAME));
+        verifyResponse(resource.add(model), NEW_NAME, NEW_DESCRIPTION);
+    }
+
+    @Test
     public void testAddWithVersion() throws Exception {
-        String [] commands = { getAddCommand(true), getSupportedVersionCommand(NEW_NAME) };
+        String [] commands = { getAddCommand(false, true), getSupportedVersionCommand(NEW_NAME) };
         String [] returns = { getAddReturn(), formatVersion(MAJOR, MINOR) };
         resource.setUriInfo(setUpResourceExpectations(2, commands, returns, true, null, NEW_NAME));
         verifyResponse(resource.add(getModel(NEW_NAME, NEW_DESCRIPTION)), NEW_NAME, NEW_DESCRIPTION);
@@ -100,7 +113,7 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
             resource.add(model);
             fail("expected WebApplicationException on incomplete parameters");
         } catch (WebApplicationException wae) {
-             verifyIncompleteException(wae, "Cluster", "add", "dataCenter.id", "cpu.id");
+             verifyIncompleteException(wae, "Cluster", "add", "dataCenter.id|name", "cpu.id");
         }
     }
 
@@ -138,13 +151,20 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
     }
 
     protected String getAddCommand() {
-        return getAddCommand(false);
+        return getAddCommand(false, false);
     }
 
-    protected String getAddCommand(boolean withVersion) {
+    protected String getAddCommand(boolean withNamedDataCenter, boolean withVersion) {
         StringBuilder buf = new StringBuilder();
 
-        buf.append("foreach ($v in get-clustercompatibilityversions -datacenterid \"" + DATA_CENTER_ID + "\") {");
+        String dataCenterArg = "\"" + DATA_CENTER_ID + "\"";
+
+        if (withNamedDataCenter) {
+            buf.append("$d = select-datacenter -searchtext \"name=" + DATA_CENTER_NAME + "\"; ");
+            dataCenterArg = "$d.datacenterid";
+        }
+
+        buf.append("foreach ($v in get-clustercompatibilityversions -datacenterid " + dataCenterArg + ") {");
 
         if (withVersion) {
             buf.append(" if ($v.major -eq " + Integer.toString(MAJOR) + " -and $v.minor -eq " + Integer.toString(MINOR) + ") {");
@@ -158,7 +178,7 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
         buf.append(" -clustername \"" + NEW_NAME + "\"");
         buf.append(" -clusterdescription \"" + NEW_DESCRIPTION + "\"");
         buf.append(" -clustercpuname \"" + CLUSTER_CPU + "\"");
-        buf.append(" -datacenterid \"" + DATA_CENTER_ID + "\"");
+        buf.append(" -datacenterid " + dataCenterArg);
         buf.append(" -compatibilityversion $version");
 
 	return buf.toString();
