@@ -172,7 +172,7 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
         if (action.isSetVm()) {
             VM vm = action.getVm();
 
-            if (vm.isSetDisplay()) {
+            if (vm.isSetDisplay() && vm.getDisplay().isSetType()) {
                 buf.append(" -displaytype '" + PowerShellVM.asString(vm.getDisplay().getType()) + "'");
             }
 
