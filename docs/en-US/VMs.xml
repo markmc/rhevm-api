@@ -454,6 +454,8 @@ Accept: application/xml
     <screen>
 POST /rhevm-api/vms/5114bb3e-a4e6-44b2-b783-b3eea7d84720/start HTTP/1.1
 Content-type: application/xml
+
+&lt;action/&gt;
     </screen>
 
   </section>
@@ -470,6 +472,8 @@ Content-type: application/xml
     <screen>
 POST /rhevm-api/vms/5114bb3e-a4e6-44b2-b783-b3eea7d84720/stop HTTP/1.1
 Content-type: application/xml
+
+&lt;action/&gt;
     </screen>
 
   </section>
@@ -486,6 +490,8 @@ Content-type: application/xml
     <screen>
 POST /rhevm-api/vms/5114bb3e-a4e6-44b2-b783-b3eea7d84720/shutdown HTTP/1.1
 Content-type: application/xml
+
+&lt;action/&gt;
     </screen>
 
   </section>
@@ -502,6 +508,8 @@ Content-type: application/xml
     <screen>
 POST /rhevm-api/vms/5114bb3e-a4e6-44b2-b783-b3eea7d84720/suspend HTTP/1.1
 Content-type: application/xml
+
+&lt;action/&gt;
     </screen>
 
   </section>
@@ -518,6 +526,8 @@ Content-type: application/xml
     <screen>
 POST /rhevm-api/vms/5114bb3e-a4e6-44b2-b783-b3eea7d84720/detach HTTP/1.1
 Content-type: application/xml
+
+&lt;action/&gt;
     </screen>
 
   </section>
