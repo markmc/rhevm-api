@@ -28,10 +28,17 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.Action;
+import com.redhat.rhevm.api.model.BootDevice;
+import com.redhat.rhevm.api.model.CdRom;
+import com.redhat.rhevm.api.model.CdRoms;
 import com.redhat.rhevm.api.model.Display;
 import com.redhat.rhevm.api.model.DisplayType;
 import com.redhat.rhevm.api.model.Fault;
+import com.redhat.rhevm.api.model.File;
+import com.redhat.rhevm.api.model.Floppies;
+import com.redhat.rhevm.api.model.Floppy;
 import com.redhat.rhevm.api.model.Host;
+import com.redhat.rhevm.api.model.OperatingSystem;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.Ticket;
 import com.redhat.rhevm.api.model.VM;
@@ -87,6 +94,11 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     private static final String MIGRATE_COMMAND_WITH_HOST_NAME =
         "$h = select-host -searchtext \"name=" + DEST_HOST_NAME + "\";" +
         "migrate-vm -vmid \"" + VM_ID + "\" -desthostid $h.hostid";
+
+    private static final String CDROM_FILE_ID = "foo.iso";
+    private static final String FLOPPY_FILE_ID = "bar.vfd";
+
+    private static final String START_WITH_PARAMS = "start-vm -vmid \"" + VM_ID + "\" -runandpause -defaulthostid \"" + DEST_HOST_ID + "\" -runasstateless -displaytype 'VNC' -bootdevice 'D' -isofilename \"" + CDROM_FILE_ID + "\" -floppypath \"" + FLOPPY_FILE_ID + "\"";
 
     protected PowerShellVmResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider) {
         return new PowerShellVmResource(VM_ID, executor, uriProvider, poolMap, parser);
@@ -177,6 +189,34 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     public void testStart() throws Exception {
         setUriInfo(setUpActionExpectation("start", "start-vm"));
         verifyActionResponse(resource.start(getAction()), false);
+    }
+
+    @Test
+    public void testStartWithParams() throws Exception {
+        VM vm = new VM();
+        vm.setHost(new Host());
+        vm.getHost().setId(DEST_HOST_ID);
+        vm.setStateless(true);
+        vm.setDisplay(new Display());
+        vm.getDisplay().setType(DisplayType.VNC);
+        vm.setOs(new OperatingSystem());
+        vm.getOs().getBoot().add(new OperatingSystem.Boot());
+        vm.getOs().getBoot().get(0).setDev(BootDevice.CDROM);
+        vm.setCdroms(new CdRoms());
+        vm.getCdroms().getCdRoms().add(new CdRom());
+        vm.getCdroms().getCdRoms().get(0).setFile(new File());
+        vm.getCdroms().getCdRoms().get(0).getFile().setId(CDROM_FILE_ID);
+        vm.setFloppies(new Floppies());
+        vm.getFloppies().getFloppies().add(new Floppy());
+        vm.getFloppies().getFloppies().get(0).setFile(new File());
+        vm.getFloppies().getFloppies().get(0).getFile().setId(FLOPPY_FILE_ID);
+
+        Action action = getAction();
+        action.setPause(true);
+        action.setVm(vm);
+
+        setUriInfo(setUpActionExpectation("start", START_WITH_PARAMS, false, null));
+        verifyActionResponse(resource.start(action), false);
     }
 
     @Test
