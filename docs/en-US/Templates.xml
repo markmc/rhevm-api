@@ -10,13 +10,16 @@
     The elements which may be contained in the template description are as follows:
   </para>
   <para>
-
+    <inlinemediaobject><imageobject><imagedata fileref="images/required.png" format="PNG" /></imageobject></inlinemediaobject> = Required
+    <inlinemediaobject><imageobject><imagedata fileref="images/updateable.png" format="PNG" /></imageobject></inlinemediaobject> = Updateable
+  </para>
+  <para>
     <informaltable frame="none">
       <tgroup cols="4">
         <colspec colwidth="2*"/>
         <colspec colwidth="4*"/>
         <colspec colwidth="6*"/>
-        <colspec colwidth="2*"/>
+        <colspec colwidth="3*" colname="prop"/>
         <thead>
           <row>
             <entry>Element</entry>
@@ -30,19 +33,19 @@
             <entry><literal>name</literal></entry>
             <entry>string</entry>
             <entry>The template name</entry>
-            <entry><mediaobject><imageobject><imagedata fileref="images/required.png" format="PNG" /></imageobject></mediaobject><mediaobject><imageobject><imagedata fileref="images/updateable.png" format="PNG" /></imageobject></mediaobject></entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/required.png" format="PNG" /></imageobject></inlinemediaobject><inlinemediaobject><imageobject><imagedata fileref="images/updateable.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>description</literal></entry>
             <entry>string</entry>
             <entry>Textual description of the template</entry>
-            <entry><mediaobject><imageobject><imagedata fileref="images/updateable.png" format="PNG" /></imageobject></mediaobject></entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/updateable.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>type</literal></entry>
             <entry>One of DESKTOP or SERVER</entry>
             <entry>The type of virtual machine the template provides</entry>
-            <entry><mediaobject><imageobject><imagedata fileref="images/updateable.png" format="PNG" /></imageobject></mediaobject></entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/updateable.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>status</literal></entry>
@@ -66,25 +69,25 @@
             <entry><literal>stateless</literal></entry>
             <entry>Boolean: true or false</entry>
             <entry>A stateless template has a snapshot of its disk image taken at boot and deleted at shutdown, meaning state changes will not persist after a reboot</entry>
-            <entry><mediaobject><imageobject><imagedata fileref="images/updateable.png" format="PNG" /></imageobject></mediaobject></entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/updateable.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>memory</literal></entry>
             <entry>integer</entry>
             <entry>The amount of memory allocated to the guest, in bytes</entry>
-            <entry><mediaobject><imageobject><imagedata fileref="images/updateable.png" format="PNG" /></imageobject></mediaobject></entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/updateable.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>cpu</literal></entry>
             <entry>complex</entry>
             <entry>The CPU <literal>topology</literal> (i.e. number of <literal>sockets</literal> and <literal>cores</literal>) available to the guest</entry>
-            <entry><mediaobject><imageobject><imagedata fileref="images/updateable.png" format="PNG" /></imageobject></mediaobject></entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/updateable.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>os</literal> <literal>boot dev="cdrom|hd|network"</literal></entry>
             <entry>One of <literal>cdrom</literal>, <literal>hd</literal> or <literal>network</literal></entry>
             <entry>A list of boot devices, described by a <literal>dev</literal> attribute on a <literal>boot</literal> element</entry>
-            <entry><mediaobject><imageobject><imagedata fileref="images/updateable.png" format="PNG" /></imageobject></mediaobject></entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/updateable.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>os</literal> <literal>kernel</literal></entry>
@@ -114,7 +117,7 @@
             <entry><literal>vm</literal></entry>
             <entry>vm resource</entry>
             <entry>A reference to the VM on which this template is based. See <xref linkend="chap-REST_API_Guide-VMs"/></entry>
-            <entry><mediaobject><imageobject><imagedata fileref="images/required.png" format="PNG" /></imageobject></mediaobject></entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/required.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
         </tbody>
       </tgroup>
