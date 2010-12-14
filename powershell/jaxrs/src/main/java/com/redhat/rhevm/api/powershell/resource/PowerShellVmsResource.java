@@ -49,7 +49,7 @@ public class PowerShellVmsResource
         buf.append("$_; ");
         buf.append("$_.getmemorystatistics(); ");
         buf.append("$_.getcpustatistics(); ");
-        buf.append("if ($_.runningonhost -ne '00000000-0000-0000-0000-000000000000') {");
+        buf.append("if ($_.runningonhost -ne '-1') {");
         buf.append("  $h = get-host $_.runningonhost;");
         buf.append("  $nics = $h.getnetworkadapters();");
         buf.append("  $nets = get-networks;");
