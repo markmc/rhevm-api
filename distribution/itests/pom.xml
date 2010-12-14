@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.redhat.rhevm.api</groupId>
     <artifactId>distribution-parent</artifactId>
-    <version>0.9-SNAPSHOT</version>
+    <version>0.9-milestone6.1</version>
   </parent>
 
   <artifactId>rhevm-itests</artifactId>
