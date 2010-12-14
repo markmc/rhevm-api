@@ -11,7 +11,7 @@
   </para>
   <para>
     <inlinemediaobject><imageobject><imagedata fileref="images/required.png" format="PNG" /></imageobject></inlinemediaobject> = Required
-    <inlinemediaobject><imageobject><imagedata fileref="images/updateable.png" format="PNG" /></imageobject></inlinemediaobject> = Updateable
+    <inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject> = Not updateable (locked)
   </para>
   <para>
     <informaltable frame="none">
@@ -33,91 +33,91 @@
             <entry><literal>name</literal></entry>
             <entry>string</entry>
             <entry>The template name</entry>
-            <entry><inlinemediaobject><imageobject><imagedata fileref="images/required.png" format="PNG" /></imageobject></inlinemediaobject><inlinemediaobject><imageobject><imagedata fileref="images/updateable.png" format="PNG" /></imageobject></inlinemediaobject></entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/required.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>description</literal></entry>
             <entry>string</entry>
             <entry>Textual description of the template</entry>
-            <entry><inlinemediaobject><imageobject><imagedata fileref="images/updateable.png" format="PNG" /></imageobject></inlinemediaobject></entry>
+            <entry> </entry>
           </row>
           <row>
             <entry><literal>type</literal></entry>
             <entry>One of DESKTOP or SERVER</entry>
             <entry>The type of virtual machine the template provides</entry>
-            <entry><inlinemediaobject><imageobject><imagedata fileref="images/updateable.png" format="PNG" /></imageobject></inlinemediaobject></entry>
+            <entry> </entry>
           </row>
           <row>
             <entry><literal>status</literal></entry>
             <entry>One of ILLEGAL, LOCKED or OK</entry>
             <entry>The template status</entry>
-            <entry> </entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>creation_time</literal></entry>
             <entry><literal>xsd:dateTime</literal> format: <literal>YYYY-MM-DDThh:mm:ss</literal></entry>
             <entry>The date and time at which this template was created</entry>
-            <entry> </entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>origin</literal></entry>
             <entry>One of RHEV, VMWARE or XEN</entry>
             <entry>The system from which this template originated</entry>
-            <entry> </entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>stateless</literal></entry>
             <entry>Boolean: true or false</entry>
             <entry>A stateless template has a snapshot of its disk image taken at boot and deleted at shutdown, meaning state changes will not persist after a reboot</entry>
-            <entry><inlinemediaobject><imageobject><imagedata fileref="images/updateable.png" format="PNG" /></imageobject></inlinemediaobject></entry>
+            <entry> </entry>
           </row>
           <row>
             <entry><literal>memory</literal></entry>
             <entry>integer</entry>
             <entry>The amount of memory allocated to the guest, in bytes</entry>
-            <entry><inlinemediaobject><imageobject><imagedata fileref="images/updateable.png" format="PNG" /></imageobject></inlinemediaobject></entry>
+            <entry> </entry>
           </row>
           <row>
             <entry><literal>cpu</literal></entry>
             <entry>complex</entry>
             <entry>The CPU <literal>topology</literal> (i.e. number of <literal>sockets</literal> and <literal>cores</literal>) available to the guest</entry>
-            <entry><inlinemediaobject><imageobject><imagedata fileref="images/updateable.png" format="PNG" /></imageobject></inlinemediaobject></entry>
+            <entry> </entry>
           </row>
           <row>
             <entry><literal>os</literal> <literal>boot dev="cdrom|hd|network"</literal></entry>
             <entry>One of <literal>cdrom</literal>, <literal>hd</literal> or <literal>network</literal></entry>
             <entry>A list of boot devices, described by a <literal>dev</literal> attribute on a <literal>boot</literal> element</entry>
-            <entry><inlinemediaobject><imageobject><imagedata fileref="images/updateable.png" format="PNG" /></imageobject></inlinemediaobject></entry>
+            <entry> </entry>
           </row>
           <row>
             <entry><literal>os</literal> <literal>kernel</literal></entry>
             <entry>string</entry>
             <entry>A path to a kernel image which the template is configured to boot from</entry>
-            <entry> </entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>os</literal> <literal>initrd</literal></entry>
             <entry>string</entry>
             <entry>A path to an initrd image to be used with the kernel above</entry>
-            <entry> </entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>os</literal> <literal>cmdline</literal></entry>
             <entry>string</entry>
             <entry>A kernel command line parameter string to be used with the kernel above</entry>
-            <entry> </entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>cluster</literal></entry>
             <entry>cluster resource</entry>
             <entry>A reference to the cluster on which an instance of this template will run. See <xref linkend="chap-REST_API_Guide-Clusters"/></entry>
-            <entry> </entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>vm</literal></entry>
             <entry>vm resource</entry>
             <entry>A reference to the VM on which this template is based. See <xref linkend="chap-REST_API_Guide-VMs"/></entry>
-            <entry><inlinemediaobject><imageobject><imagedata fileref="images/required.png" format="PNG" /></imageobject></inlinemediaobject></entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/required.png" format="PNG" /></imageobject></inlinemediaobject><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
         </tbody>
       </tgroup>
