@@ -100,7 +100,7 @@ public class PowerShellStorageDomain extends StorageDomain {
         if (value != null) {
             try {
                 Method m = storageDomain.getClass().getMethod("set" + field, Long.class);
-                m.invoke(storageDomain, Long.valueOf(value));
+                m.invoke(storageDomain, Long.valueOf(value) * 1024 * 1024 * 1024);
             } catch (Exception e) {
                 // simple setter shouldn't fail
             }
