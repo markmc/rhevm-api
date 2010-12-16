@@ -9,10 +9,13 @@
   <para>
     The elements which may be contained in the template description are as follows:
   </para>
-  <para>
-    <inlinemediaobject><imageobject><imagedata fileref="images/required.png" format="PNG" /></imageobject></inlinemediaobject> = Required
-    <inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject> = Not updateable (locked)
-  </para>
+  <note>
+    <title>Element property icons</title>
+    <para>
+      The icons used in the properties column of this table are described in <xref linkend="table-Property_Icons" />
+    </para>
+  </note> 
+
   <para>
     <informaltable frame="none">
       <tgroup cols="4">
@@ -29,18 +32,6 @@
           </row>
         </thead>
         <tbody>
-          <row>
-            <entry><literal>name</literal></entry>
-            <entry>string</entry>
-            <entry>The template name</entry>
-            <entry><inlinemediaobject><imageobject><imagedata fileref="images/required.png" format="PNG" /></imageobject></inlinemediaobject></entry>
-          </row>
-          <row>
-            <entry><literal>description</literal></entry>
-            <entry>string</entry>
-            <entry>Textual description of the template</entry>
-            <entry> </entry>
-          </row>
           <row>
             <entry><literal>type</literal></entry>
             <entry>One of DESKTOP or SERVER</entry>

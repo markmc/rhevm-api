@@ -7,55 +7,119 @@
   <title>Common Idioms For All Resources</title>
   <para>
     Resources are represented by XML documents e.g.
-    </para>
-
-  <screen>
+  </para>
+  <para>
+    <screen>
 &lt;resource id="d9a0e106-9273-4812-bb05-ed75fe1ac652" href="/rhevm-api/resources/d9a0e106-9273-4812-bb05-ed75fe1ac652"&gt;
   &lt;name&gt;foo&lt;/name&gt;
   &lt;description&gt;This is the foo resource&lt;/description&gt;
 &lt;/resource&gt;
-  </screen>
-
+    </screen>
+  </para>  
   <para>
     The following attributes are common to all resource descriptions:
-
+  </para>
+  <para>
     <informaltable frame="none">
-      <tgroup cols="2">
+      <tgroup cols="4">
         <colspec colwidth="2*"/>
-        <colspec colwidth="5*"/>
+        <colspec colwidth="4*"/>
+        <colspec colwidth="6*"/>
+        <colspec colwidth="3*" colname="prop"/>
+        <thead>
+          <row>
+            <entry>Element</entry>
+            <entry>Type</entry>
+            <entry>Description</entry>
+            <entry>Properties</entry>
+          </row>
+        </thead>
         <tbody>
           <row>
             <entry><literal>id</literal></entry>
+            <entry>GUID</entry>
             <entry>An opaque server-generated identifier for the resource which is guaranteed to be unique across all resources in this Red Hat Enterprise Virtualization Manager instance</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/required.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>href</literal></entry>
+            <entry>string</entry>
             <entry>The canonical location of the resource as an absolute path</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/required.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
         </tbody>
       </tgroup>
     </informaltable>
-
-    and the common elements:
-
+  </para>
+  <para>
+    The following elements are common to all resource descriptions:
+  </para>
+  <para>
     <informaltable frame="none">
-      <tgroup cols="2">
+      <tgroup cols="4">
         <colspec colwidth="2*"/>
-        <colspec colwidth="5*"/>
+        <colspec colwidth="4*"/>
+        <colspec colwidth="6*"/>
+        <colspec colwidth="3*" colname="prop"/>
+        <thead>
+          <row>
+            <entry>Element</entry>
+            <entry>Type</entry>
+            <entry>Description</entry>
+            <entry>Properties</entry>
+          </row>
+        </thead>
         <tbody>
           <row>
             <entry><literal>name</literal></entry>
+            <entry>string</entry>
             <entry>A user-supplied human readable name for the resource which also must be unique across all resources</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/required.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>description</literal></entry>
+            <entry>string</entry>
             <entry>A free-form user-supplied human readable description of the resource</entry>
+            <entry> </entry>
           </row>
         </tbody>
       </tgroup>
     </informaltable>
 
   </para>
+  <note>
+    <title>Element property icons</title>
+    <para>
+      Throughout this guide, the elements of each resource are detailed in tables. These tables include a properties column, displaying icons depicting element properties. The meaning of these icons is shown in <xref linkend="table-Property_Icons" />
+    </para>
+  </note>
+  <table frame="none" id="table-Property_Icons">
+    <title>Element property icons</title>
+    <tgroup cols="3">
+      <colspec colwidth="2*"/>
+      <colspec colwidth="4*"/>
+      <colspec colwidth="1*"/>
+      <thead>
+        <row>
+          <entry>Property</entry>
+          <entry>Description</entry>
+          <entry>Icon</entry>
+        </row>
+      </thead>
+      <tbody>
+        <row>
+          <entry>Required for creation</entry>
+          <entry>These elements must be included in the client-provided representation of a resource on creation, but are not mandatory for an update of a resource.</entry>
+          <entry><inlinemediaobject><imageobject><imagedata fileref="images/required.png" format="PNG" /></imageobject></inlinemediaobject></entry>
+        </row>
+        <row>
+          <entry>Non-updateable</entry>
+          <entry>These elements cannot have their value changed when updating a resource. They may only be included in a client-provided representation on update if their values have not been altered. Otherwise they should be omitted from an update action.</entry>
+          <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
+        </row>
+      </tbody>
+    </tgroup>
+  </table>
 
   <section id="sect-REST_API_Guide-Common_Idioms-Listing_Resources">
     <title>
