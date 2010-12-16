@@ -36,16 +36,7 @@ public class MockStorageDomainResourceTest extends MockTestBase {
         assertNotNull(domain.getId());
         assertNotNull(domain.getHref());
         assertTrue(domain.getHref().endsWith("storagedomains/" + domain.getId()));
-        assertNotNull(domain.getActions());
-        assertTrue(domain.getActions().getLinks().size() > 0);
-        boolean includesLink = false;
-        for (Link actionLink : domain.getActions().getLinks()) {
-            includesLink = actionLink.getHref().endsWith("storagedomains/" + domain.getId() + "/teardown");
-            if (includesLink) {
-                break;
-            }
-        }
-        assertTrue("expected teardown link", includesLink);
+        assertNull(domain.getActions());
     }
 
     @Test

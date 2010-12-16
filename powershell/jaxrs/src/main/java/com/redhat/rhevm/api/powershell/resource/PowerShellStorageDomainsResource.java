@@ -18,7 +18,6 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import java.util.HashMap;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
@@ -33,6 +32,7 @@ import com.redhat.rhevm.api.model.StorageDomainType;
 import com.redhat.rhevm.api.model.StorageType;
 import com.redhat.rhevm.api.resource.StorageDomainResource;
 import com.redhat.rhevm.api.resource.StorageDomainsResource;
+import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
@@ -41,12 +41,6 @@ import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validatePara
 public class PowerShellStorageDomainsResource extends AbstractPowerShellCollectionResource<StorageDomain, PowerShellStorageDomainResource> implements StorageDomainsResource {
 
     private static final String NAME_REQUIRED_ERROR = "A name is require when creating a new storage domain";
-
-    /* Storage domains that have been torn down but not deleted
-     * FIXME: this map shouldn't be static and needs synchronization
-     */
-    private static HashMap<String, PowerShellStorageDomainResource> tornDownDomains =
-        new HashMap<String, PowerShellStorageDomainResource>();
 
     public List<StorageDomain> runAndParse(String command) {
         return PowerShellStorageDomainResource.runAndParse(getPool(), getParser(), command);
@@ -64,11 +58,6 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
 
         for (StorageDomain storageDomain : storageDomains) {
             ret.getStorageDomains().add(PowerShellStorageDomainResource.addLinks(getUriInfo(), storageDomain));
-        }
-
-        for (String id : tornDownDomains.keySet()) {
-            PowerShellStorageDomainResource resource = tornDownDomains.get(id);
-            ret.getStorageDomains().add(PowerShellStorageDomainResource.addLinks(getUriInfo(), resource.getTornDown()));
         }
 
         return ret;
@@ -284,36 +273,30 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
     }
 
     @Override
-    public void remove(String id) {
-        tornDownDomains.remove(id);
+    public void remove(String id, StorageDomain storageDomain) {
+        validateParameters(storageDomain, "host.id|name");
+
+        StringBuilder buf = new StringBuilder();
+
+        String hostArg = setUpHostArg(storageDomain.getHost(), buf);
+
+        buf.append("remove-storagedomain");
+        buf.append(" -force");
+        buf.append(" -storagedomainid " + PowerShellUtils.escape(id));
+        buf.append(" -hostid " + hostArg);
+
+        PowerShellCmd.runCommand(getPool(), buf.toString());
+
         removeSubResource(id);
     }
 
     @Override
     public StorageDomainResource getStorageDomainSubResource(String id) {
-        if (tornDownDomains.containsKey(id)) {
-            return tornDownDomains.get(id);
-        } else {
-            return getSubResource(id);
-        }
+        return getSubResource(id);
     }
 
     protected PowerShellStorageDomainResource createSubResource(String id) {
         return new PowerShellStorageDomainResource(id, this, shellPools, getParser());
-    }
-
-    /**
-     * Add a storage domain from the set of torn down storage domains.
-     * <p>
-     * This method should be called when a storage domain is torn down. At
-     * this point it no longer exists in RHEV-M itself and just needs to
-     * be removed using DELETE.
-     *
-     * @param id the RHEV-M ID of the StorageDomain
-     * @param resource the PowerShellStorageDomainResource
-     */
-    public void addToTornDownDomains(String id, PowerShellStorageDomainResource resource) {
-        tornDownDomains.put(id, resource);
     }
 
     /**

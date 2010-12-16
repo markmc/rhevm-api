@@ -20,13 +20,11 @@ package com.redhat.rhevm.api.mock.resource;
 
 import java.util.concurrent.Executor;
 
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
-import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.StorageDomain;
@@ -84,27 +82,7 @@ public class MockStorageDomainResource extends AbstractMockResource<StorageDomai
     }
 
     @Override
-    public Response teardown(Action action) {
-        // FIXME: error if not unattached
-        return doAction(getUriInfo(), new StorageDomainStatusSetter(action, StorageDomainStatus.TORNDOWN));
-    }
-
-    @Override
     public AssignedPermissionsResource getPermissionsResource() {
         return null;
-    }
-
-    private class StorageDomainStatusSetter extends AbstractActionTask {
-        private StorageDomainStatus status;
-        public StorageDomainStatusSetter(Action action, StorageDomainStatus status) {
-            super(action, "StorageDomain status failed with {0}");
-            this.status = status;
-        }
-        public void execute() {
-            if (status.equals(MockStorageDomainResource.this.getModel().getStatus())) {
-                throw new IllegalStateException("StorageDomain status already: " + status);
-            }
-            MockStorageDomainResource.this.getModel().setStatus(status);
-        }
     }
 }

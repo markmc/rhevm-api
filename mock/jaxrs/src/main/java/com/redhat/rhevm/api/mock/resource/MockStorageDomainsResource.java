@@ -100,8 +100,7 @@ public class MockStorageDomainsResource extends AbstractMockQueryableResource<St
     }
 
     @Override
-    public void remove(String id) {
-        // FIXME: error if not torndown
+    public void remove(String id, StorageDomain storageDomain) {
         storageDomains.remove(id);
     }
 

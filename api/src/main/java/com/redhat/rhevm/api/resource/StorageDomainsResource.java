@@ -28,6 +28,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
+import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.StorageDomains;
 
@@ -46,8 +47,9 @@ public interface StorageDomainsResource {
     public Response add(StorageDomain storageDomains);
 
     @DELETE
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
     @Path("{id}")
-    public void remove(@PathParam("id") String id);
+    public void remove(@PathParam("id") String id, StorageDomain storageDomain);
 
     /**
      * Sub-resource locator method, returns individual DataCenterResource on which the

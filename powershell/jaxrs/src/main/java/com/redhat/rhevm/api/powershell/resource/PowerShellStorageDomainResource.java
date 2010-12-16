@@ -21,16 +21,13 @@ package com.redhat.rhevm.api.powershell.resource;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
-import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.StorageDomain;
-import com.redhat.rhevm.api.model.StorageDomainStatus;
 import com.redhat.rhevm.api.resource.AssignedPermissionsResource;
 import com.redhat.rhevm.api.resource.StorageDomainResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellStorageDomain;
@@ -40,13 +37,9 @@ import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
-import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
-
-
 public class PowerShellStorageDomainResource extends AbstractPowerShellActionableResource<StorageDomain> implements StorageDomainResource {
 
     private PowerShellStorageDomainsResource parent;
-    private StorageDomain tornDown;
 
     public PowerShellStorageDomainResource(String id,
                                            PowerShellStorageDomainsResource parent,
@@ -54,10 +47,6 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
                                            PowerShellParser parser) {
         super(id, parent.getExecutor(), parent, shellPools, parser);
         this.parent = parent;
-    }
-
-    public StorageDomain getTornDown() {
-        return tornDown;
     }
 
     public static List<StorageDomain> runAndParse(PowerShellPool pool, PowerShellParser parser, String command) {
@@ -102,13 +91,7 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
 
     @Override
     public StorageDomain get() {
-        StorageDomain storageDomain;
-        if (tornDown != null) {
-            storageDomain = tornDown;
-        } else {
-            storageDomain = runAndParseSingle("get-storagedomain " + PowerShellUtils.escape(getId()));
-        }
-        return addLinks(getUriInfo(), storageDomain);
+        return addLinks(getUriInfo(), runAndParseSingle("get-storagedomain " + PowerShellUtils.escape(getId())));
     }
 
     @Override
@@ -116,71 +99,20 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
         validateUpdate(storageDomain);
 
         StringBuilder buf = new StringBuilder();
-        if (tornDown != null) {
-            // update writable fields only
-            if (storageDomain.isSetName()) {
-                tornDown.setName(storageDomain.getName());
-            }
-            storageDomain = tornDown;
-        } else {
-            buf.append("$d = get-storagedomain " + PowerShellUtils.escape(getId()) + ";");
 
-            if (storageDomain.isSetName()) {
-                buf.append("$d.name = " + PowerShellUtils.escape(storageDomain.getName()) + ";");
-            }
+        buf.append("$d = get-storagedomain " + PowerShellUtils.escape(getId()) + ";");
 
-            buf.append("update-storagedomain -storagedomainobject $d");
-
-            storageDomain = runAndParseSingle(buf.toString());
+        if (storageDomain.isSetName()) {
+            buf.append("$d.name = " + PowerShellUtils.escape(storageDomain.getName()) + ";");
         }
-        return addLinks(getUriInfo(), storageDomain);
-    }
 
-    @Override
-    public Response teardown(Action action) {
-        validateParameters(action, "host.id|name");
-        return doAction(getUriInfo(), new StorageDomainTeardowner(action));
+        buf.append("update-storagedomain -storagedomainobject $d");
+
+        return addLinks(getUriInfo(), runAndParseSingle(buf.toString()));
     }
 
     @Override
     public AssignedPermissionsResource getPermissionsResource() {
         return null;
-    }
-
-    private class StorageDomainTeardowner extends AbstractPowerShellActionTask {
-
-        public StorageDomainTeardowner(Action action) {
-            super(action, "remove-storagedomain -force");
-        }
-
-        public void execute() {
-            String id = PowerShellStorageDomainResource.this.getId();
-
-            StorageDomain storageDomain = runAndParseSingle("get-storagedomain " + PowerShellUtils.escape(id));
-
-            StringBuilder buf = new StringBuilder();
-
-            String hostArg = null;
-            if (action.getHost().isSetId()) {
-                hostArg = PowerShellUtils.escape(action.getHost().getId());
-            } else {
-                buf.append("$h = select-host -searchtext ");
-                buf.append(PowerShellUtils.escape("name=" +  action.getHost().getName()));
-                buf.append(";");
-                hostArg = "$h.hostid";
-            }
-
-            buf.append(command);
-
-            buf.append(" -storagedomainid " + PowerShellUtils.escape(id));
-
-            buf.append(" -hostid " + hostArg);
-
-            PowerShellCmd.runCommand(getPool(), buf.toString());
-
-            storageDomain.setStatus(StorageDomainStatus.TORNDOWN);
-            PowerShellStorageDomainResource.this.tornDown = storageDomain;
-            PowerShellStorageDomainResource.this.parent.addToTornDownDomains(id, PowerShellStorageDomainResource.this);
-        }
     }
 }

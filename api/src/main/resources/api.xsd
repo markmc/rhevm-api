@@ -83,7 +83,7 @@
   <xs:group name="ActionParameterGroup">
     <xs:sequence>
       <xs:element name="grace_period" type="GracePeriod" minOccurs="0"/>
-      <!-- for StorageDomain teardown and VM migrate actions -->
+      <!-- for StorageDomain VM migrate action -->
       <xs:element name="host" type="Host" minOccurs="0"/>
       <!-- for host NIC attach action -->
       <xs:element name="network" type="Network" minOccurs="0"/>
@@ -274,7 +274,6 @@
       <xs:enumeration value="LOCKED"/>
       <xs:enumeration value="MIXED"/>
       <xs:enumeration value="UNATTACHED"/>
-      <xs:enumeration value="TORNDOWN"/>
     </xs:restriction>
   </xs:simpleType>
 
