@@ -96,10 +96,6 @@
     Once a storage domain has been initialized it can be attached to a data center. See <xref linkend="sect-REST_API_Guide-Data_Centers-Attached_Storage_Domains"/>.
   </para>
 
-  <para>
-    The storage domain actions block may report the availability of a <literal>teardown</literal> action, which must be invoked before the storage domain can be deleted.
-  </para>
-
   <section id="sect-REST_API_Guide-Storage_Domains-iSCSI_and_FCP">
     <title>
       iSCSI and FCP
@@ -201,28 +197,21 @@ Accept: application/xml
 
   </section>
 
-  <section id="sect-REST_API_Guide-Storage_Domains-Teardown">
+  <section id="sect-REST_API_Guide-Storage_Domains-Delete">
     <title>
-      Teardown Action
+      Deleting a Storage Domain
     </title>
 
     <para>
-      The teardown removes the storage domain from the physical storage. A <literal>host</literal> (identified by <literal>id</literal> or <literal>name</literal>) which has physical access to the storage must be supplied.
+      A <literal>storage_domain</literal> reference must be passed in the body of a <literal>DELETE</literal> request for a storage domain. The <literal>storage_domain</literal> reference must be in the form:
     </para>
-
-    <screen>
-POST /rhevm-api/storagedomains/fabe0451-701f-4235-8f7e-e20e458819ed/teardown HTTP/1.1
-Content-type: application/xml
-
-&lt;action&gt;
-  &lt;host id="2ab5e1da-b726-4274-bbf7-0a42b16a0fc3"/&gt;
-&lt;/action&gt;
+    <screen>&lt;storage_domain&gt;&lt;host id="..."/&gt;&lt;/storage_domain&gt;
     </screen>
-
     <para>
-      A storage domain must be detached from all data centers before it can be torn down. See <xref linkend="sect-REST_API_Guide-Data_Centers-Attached_Storage_Domains"/>.
+      OR
     </para>
-
+    <screen>&lt;storage_domain&gt;&lt;host&gt;&lt;name&gt;...&lt;/name&gt;&lt;/host&gt;&lt;/storage_domain&gt;
+    </screen>
   </section>
 
   <section id="sect-REST_API_Guide-Storage_Domains-Activate">
