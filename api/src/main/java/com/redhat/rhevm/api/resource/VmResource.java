@@ -40,7 +40,7 @@ import com.redhat.rhevm.api.model.VM;
 
 
 @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
-public interface VmResource extends UpdatableResource<VM> {
+public interface VmResource extends UpdatableResource<VM>, AsynchronouslyCreatedResource {
 
     @Path("{action: (start|stop|shutdown|suspend|detach|migrate|export|ticket)}/{oid}")
     public ActionResource getActionSubresource(@PathParam("action")String action, @PathParam("oid")String oid);

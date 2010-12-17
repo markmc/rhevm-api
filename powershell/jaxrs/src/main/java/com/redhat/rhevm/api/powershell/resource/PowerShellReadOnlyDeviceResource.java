@@ -22,6 +22,7 @@ import java.util.List;
 
 import com.redhat.rhevm.api.model.BaseDevice;
 import com.redhat.rhevm.api.model.BaseDevices;
+import com.redhat.rhevm.api.resource.CreationResource;
 import com.redhat.rhevm.api.resource.ReadOnlyDeviceResource;
 
 
@@ -46,6 +47,12 @@ public class PowerShellReadOnlyDeviceResource<D extends BaseDevice, C extends Ba
             }
         }
 
+        return null;
+    }
+
+    @Override
+    public CreationResource getCreationSubresource(String ids) {
+        // REVISIT
         return null;
     }
 }

@@ -26,6 +26,7 @@ import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Snapshot;
 import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.resource.CreationResource;
 import com.redhat.rhevm.api.resource.SnapshotResource;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
@@ -68,5 +69,11 @@ public class PowerShellSnapshotResource
         buf.append(" -vmsnapshotid " + PowerShellUtils.escape(getId()));
 
         return doAction(getUriInfo(), new CommandRunner(action, buf.toString(), getPool()));
+    }
+
+    @Override
+    public CreationResource getCreationSubresource(String ids) {
+        // REVISIT
+        return null;
     }
 }

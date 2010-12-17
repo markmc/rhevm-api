@@ -27,6 +27,7 @@ import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.resource.AssignedPermissionsResource;
 import com.redhat.rhevm.api.resource.AssignedTagsResource;
+import com.redhat.rhevm.api.resource.CreationResource;
 import com.redhat.rhevm.api.resource.DevicesResource;
 import com.redhat.rhevm.api.resource.SnapshotsResource;
 import com.redhat.rhevm.api.resource.VmResource;
@@ -154,4 +155,5 @@ public class MockVmResource extends AbstractMockResource<VM> implements VmResour
     @Override public SnapshotsResource           getSnapshotsResource()   { return null; }
     @Override public AssignedPermissionsResource getPermissionsResource() { return null; }
     @Override public AssignedTagsResource        getTagsResource()        { return null; }
+    @Override public CreationResource            getCreationSubresource(String ids) { return null; }
 }

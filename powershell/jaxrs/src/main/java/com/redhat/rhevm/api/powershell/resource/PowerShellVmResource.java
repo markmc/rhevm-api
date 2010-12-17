@@ -34,6 +34,7 @@ import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VmType;
 import com.redhat.rhevm.api.resource.AssignedPermissionsResource;
 import com.redhat.rhevm.api.resource.AssignedTagsResource;
+import com.redhat.rhevm.api.resource.CreationResource;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
@@ -354,6 +355,12 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
 
     @Override
     public AssignedPermissionsResource getPermissionsResource() {
+        return null;
+    }
+
+    @Override
+    public CreationResource getCreationSubresource(String ids) {
+        // REVISIT
         return null;
     }
 

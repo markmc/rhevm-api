@@ -39,7 +39,7 @@ import com.redhat.rhevm.api.model.Nics;
 import com.redhat.rhevm.api.model.Template;
 
 @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
-public interface TemplateResource extends UpdatableResource<Template> {
+public interface TemplateResource extends UpdatableResource<Template>, AsynchronouslyCreatedResource {
 
     @Path("{action: (export)}/{oid}")
     public ActionResource getActionSubresource(@PathParam("action") String action, @PathParam("oid") String oid);

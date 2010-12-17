@@ -18,17 +18,12 @@
  */
 package com.redhat.rhevm.api.resource;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Produces;
-import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 
-import com.redhat.rhevm.api.model.BaseDevice;
+public interface AsynchronouslyCreatedResource {
 
+    @Path("creation_status/{oid}")
+    public CreationResource getCreationSubresource(@PathParam("oid")String oid);
 
-@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
-public interface ReadOnlyDeviceResource<D extends BaseDevice> extends AsynchronouslyCreatedResource {
-
-    @GET
-    @Formatted
-    public D get();
 }

@@ -25,6 +25,7 @@ import javax.ws.rs.core.Response;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.resource.AssignedPermissionsResource;
+import com.redhat.rhevm.api.resource.CreationResource;
 import com.redhat.rhevm.api.resource.DevicesResource;
 import com.redhat.rhevm.api.resource.TemplateResource;
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
@@ -81,4 +82,5 @@ public class MockTemplateResource extends AbstractMockResource<Template> impleme
     @Override public DevicesResource             getFloppiesResource()    { return null; }
     @Override public DevicesResource             getNicsResource()        { return null; }
     @Override public AssignedPermissionsResource getPermissionsResource() { return null; }
+    @Override public CreationResource            getCreationSubresource(String ids) { return null; }
 }
