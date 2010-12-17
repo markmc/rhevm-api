@@ -35,15 +35,15 @@
           </row>
           <row>
             <entry><literal>available</literal></entry>
-            <entry>Space available in Gb</entry>
+            <entry>Space available in bytes</entry>
           </row>
           <row>
             <entry><literal>used</literal></entry>
-            <entry>Space used in Gb</entry>
+            <entry>Space used in bytes</entry>
           </row>
           <row>
             <entry><literal>committed</literal></entry>
-            <entry>Space committed in Gb</entry>
+            <entry>Space committed in bytes</entry>
           </row>
         </tbody>
       </tgroup>
