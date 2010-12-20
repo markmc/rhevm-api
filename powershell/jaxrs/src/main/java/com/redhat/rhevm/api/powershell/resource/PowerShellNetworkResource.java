@@ -116,6 +116,13 @@ public class PowerShellNetworkResource extends AbstractPowerShellActionableResou
                 buf.append("$i.stp = $false; ");
             }
         }
+        if (network.isDisplay() != null) {
+            if (network.isDisplay()) {
+                buf.append("$i.isdisplay = $true; ");
+            } else {
+                buf.append("$i.isdisplay = $false; ");
+            }
+        }
 
         buf.append("update-network");
         buf.append(" -networkobject $i");

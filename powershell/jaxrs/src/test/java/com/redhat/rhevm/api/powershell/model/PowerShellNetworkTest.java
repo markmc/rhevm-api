@@ -28,7 +28,7 @@ import com.redhat.rhevm.api.model.NetworkStatus;
 
 public class PowerShellNetworkTest extends PowerShellModelTest {
 
-    private void testNetwork(Network n, String id, String name, String description, String dataCenterId, String ipAddress, String ipNetmask, String ipGateway, String vlanId, Boolean stp, NetworkStatus status) {
+    private void testNetwork(Network n, String id, String name, String description, String dataCenterId, String ipAddress, String ipNetmask, String ipGateway, String vlanId, Boolean stp, Boolean display, NetworkStatus status) {
         assertEquals(n.getId(), id);
         assertEquals(n.getName(), name);
         assertEquals(n.getDescription(), description);
@@ -49,6 +49,7 @@ public class PowerShellNetworkTest extends PowerShellModelTest {
             assertNull(n.getVlan());
         }
         assertEquals(n.isStp(), stp);
+        assertEquals(n.isDisplay(), display);
         assertEquals(n.getStatus(), status);
     }
 
@@ -61,6 +62,6 @@ public class PowerShellNetworkTest extends PowerShellModelTest {
 
         assertEquals(networks.size(), 1);
 
-        testNetwork(networks.get(0), "00000000-0000-0000-0000-000000000009", "rhevm", "Management Network", "bb0fd622-5b2a-4c69-bfc5-29493932844a", null, null, null, "5", null, NetworkStatus.OPERATIONAL);
+        testNetwork(networks.get(0), "00000000-0000-0000-0000-000000000009", "rhevm", "Management Network", "bb0fd622-5b2a-4c69-bfc5-29493932844a", null, null, null, "5", null, null, NetworkStatus.OPERATIONAL);
     }
 }

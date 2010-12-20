@@ -888,6 +888,7 @@
           <xs:element ref="vlan" minOccurs="0"/>
           <xs:element name="stp" type="xs:boolean" minOccurs="0"/>
           <xs:element name="status" type="NetworkStatus" minOccurs="0"/>
+          <xs:element name="display" type="xs:boolean" minOccurs="0"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>

@@ -54,6 +54,7 @@ public class PowerShellNetworkResourceTest extends AbstractPowerShellResourceTes
     private static final String UPDATE_NAME_COMMAND = UPDATE_COMMAND_PREFIX + "$i.name = \"eris\"; " + UPDATE_COMMAND_SUFFIX;
     private static final String UPDATE_IP_COMMAND = UPDATE_COMMAND_PREFIX + "$i.address = \"172.31.0.110\"; " + UPDATE_COMMAND_SUFFIX;
     private static final String DISABLE_STP_COMMAND = UPDATE_COMMAND_PREFIX + "$i.stp = $false; " + UPDATE_COMMAND_SUFFIX;
+    private static final String ENABLE_DISPLAY_COMMAND = UPDATE_COMMAND_PREFIX + "$i.isdisplay = $true; " + UPDATE_COMMAND_SUFFIX;
 
     protected PowerShellNetworkResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider) {
         return new PowerShellNetworkResource(NETWORK_ID, executor, uriProvider, poolMap, parser);
@@ -102,6 +103,16 @@ public class PowerShellNetworkResourceTest extends AbstractPowerShellResourceTes
                                             "eris"));
         Network network = new Network();
         network.setStp(false);
+        verifyNetwork(resource.update(network), "eris");
+    }
+
+    @Test
+    public void testEnableDisplay() throws Exception {
+        setUriInfo(setUpNetworkExpectations(ENABLE_DISPLAY_COMMAND,
+                                            formatNetwork("eris"),
+                                            "eris"));
+        Network network = new Network();
+        network.setDisplay(true);
         verifyNetwork(resource.update(network), "eris");
     }
 

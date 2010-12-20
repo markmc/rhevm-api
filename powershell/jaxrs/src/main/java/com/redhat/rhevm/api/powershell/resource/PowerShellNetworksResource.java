@@ -90,6 +90,10 @@ public class PowerShellNetworksResource
             buf.append(" -stp");
         }
 
+        if (network.isDisplay() != null && network.isDisplay()) {
+            buf.append(" -isdisplay $true");
+        }
+
         network = LinkHelper.addLinks(getUriInfo(), runAndParseSingle(buf.toString()));
 
         UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(network.getId());
