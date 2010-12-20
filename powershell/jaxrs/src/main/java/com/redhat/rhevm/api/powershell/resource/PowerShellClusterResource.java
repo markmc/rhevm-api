@@ -25,6 +25,9 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.Link;
+import com.redhat.rhevm.api.model.SchedulingPolicy;
+import com.redhat.rhevm.api.model.SchedulingPolicyThresholds;
+import com.redhat.rhevm.api.model.SchedulingPolicyType;
 import com.redhat.rhevm.api.model.SupportedVersions;
 import com.redhat.rhevm.api.model.Version;
 import com.redhat.rhevm.api.resource.AssignedNetworksResource;
@@ -152,6 +155,28 @@ public class PowerShellClusterResource extends AbstractPowerShellActionableResou
             buf.append("$c.maxhostmemoryovercommit = ");
             buf.append(Integer.toString(cluster.getMemoryPolicy().getOverCommit().getPercent()));
             buf.append("; ");
+        }
+
+        if (cluster.isSetSchedulingPolicy() &&
+            cluster.getSchedulingPolicy().isSetPolicy()) {
+            SchedulingPolicyType policy = cluster.getSchedulingPolicy().getPolicy();
+            buf.append("$c.selectionalgorithm = ");
+            buf.append(policy == SchedulingPolicyType.POWER_SAVING ? "PowerSave" : "EvenlyDistribute");
+            buf.append("; ");
+        }
+
+        if (cluster.isSetSchedulingPolicy() &&
+            cluster.getSchedulingPolicy().isSetThresholds()) {
+            SchedulingPolicyThresholds thresholds = cluster.getSchedulingPolicy().getThresholds();
+            if (thresholds.isSetLow()) {
+                buf.append("$c.lowutilization = " + Integer.toString(thresholds.getLow()) + "; ");
+            }
+            if (thresholds.isSetHigh()) {
+                buf.append("$c.highutilization = " + Integer.toString(thresholds.getHigh()) + "; ");
+            }
+            if (thresholds.isSetDuration()) {
+                buf.append("$c.cpuovercommitdurationinminutes = " + Integer.toString(thresholds.getDuration() / 60) + "; ");
+            }
         }
 
         buf.append("update-cluster -clusterobject $c; break ");

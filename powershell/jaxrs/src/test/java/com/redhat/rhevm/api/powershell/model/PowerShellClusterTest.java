@@ -23,11 +23,11 @@ import org.junit.Test;
 import java.util.List;
 
 import com.redhat.rhevm.api.model.Cluster;
-
+import com.redhat.rhevm.api.model.SchedulingPolicyType;
 
 public class PowerShellClusterTest extends PowerShellModelTest {
 
-    private void testCluster(Cluster c, String id, String name, String description, String cpuName, String dataCenterId, int major, int minor, int overcommit) {
+    private void testCluster(Cluster c, String id, String name, String description, String cpuName, String dataCenterId, int major, int minor, int overcommit, SchedulingPolicyType schedPolicy, int high, int duration) {
         assertEquals(c.getId(), id);
         assertEquals(c.getName(), name);
         assertEquals(c.getDescription(), description);
@@ -41,6 +41,16 @@ public class PowerShellClusterTest extends PowerShellModelTest {
         assertNotNull(c.getMemoryPolicy());
         assertNotNull(c.getMemoryPolicy().getOverCommit());
         assertEquals(overcommit, c.getMemoryPolicy().getOverCommit().getPercent());
+        if (schedPolicy != null) {
+            assertNotNull(c.getSchedulingPolicy());
+            assertEquals(schedPolicy, c.getSchedulingPolicy().getPolicy());
+            assertNotNull(c.getSchedulingPolicy().getThresholds());
+            assertFalse(c.getSchedulingPolicy().getThresholds().isSetLow());
+            assertEquals(high, c.getSchedulingPolicy().getThresholds().getHigh());
+            assertEquals(duration, c.getSchedulingPolicy().getThresholds().getDuration());
+        } else {
+            assertNull(c.getSchedulingPolicy());
+        }
     }
 
     @Test
@@ -52,6 +62,6 @@ public class PowerShellClusterTest extends PowerShellModelTest {
 
         assertEquals(clusters.size(), 1);
 
-        testCluster(clusters.get(0), "99408929-82cf-4dc7-a532-9d998063fa95", "Default", "The default server cluster", "Intel Xeon 45nm Core2", "bb0fd622-5b2a-4c69-bfc5-29493932844a", 2, 2, 200);
+        testCluster(clusters.get(0), "99408929-82cf-4dc7-a532-9d998063fa95", "Default", "The default server cluster", "Intel Xeon 45nm Core2", "bb0fd622-5b2a-4c69-bfc5-29493932844a", 2, 2, 200, SchedulingPolicyType.EVENLY_DISTRIBUTED, 75, 120);
     }
 }

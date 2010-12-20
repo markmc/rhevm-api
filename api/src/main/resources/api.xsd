@@ -372,6 +372,13 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <xs:simpleType name="SchedulingPolicyType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="POWER_SAVING"/>
+      <xs:enumeration value="EVENLY_DISTRIBUTED"/>
+    </xs:restriction>
+  </xs:simpleType>
+
   <!-- CPUs -->
 
   <xs:element name="cpu" type="CPU"/>
@@ -541,6 +548,19 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="SchedulingPolicyThresholds">
+    <xs:attribute name="low" type="xs:int"/>
+    <xs:attribute name="high" type="xs:int"/>
+    <xs:attribute name="duration" type="xs:int"/>
+  </xs:complexType>
+
+  <xs:complexType name="SchedulingPolicy">
+    <xs:sequence>
+      <xs:element name="policy" type="SchedulingPolicyType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="thresholds" type="SchedulingPolicyThresholds" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="Cluster">
     <xs:complexContent>
       <xs:extension base="BaseResource">
@@ -548,6 +568,7 @@
           <xs:element ref="cpu" minOccurs="0" maxOccurs="1"/>
           <xs:element ref="data_center" minOccurs="0" maxOccurs="1"/>
           <xs:element name="memory_policy" type="MemoryPolicy" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="scheduling_policy" type="SchedulingPolicy" minOccurs="0" maxOccurs="1"/>
           <xs:element name="version" type="Version" minOccurs="0"/>
           <xs:element name="supported_versions" type="SupportedVersions" minOccurs="0"/>
           <!-- Also a rel="networks" link -->

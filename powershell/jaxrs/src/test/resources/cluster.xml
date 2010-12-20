@@ -6,7 +6,7 @@
     <Property Name="Description" Type="System.String">The default server cluster</Property>
     <Property Name="CpuName" Type="System.String">Intel Xeon 45nm Core2</Property>
     <Property Name="SelectionAlgorithm" Type="RhevmCmd.HostSelectionAlgorithm">
-      <Property Name="value__" Type="System.Int32">0</Property>
+      <Property Name="value__" Type="System.Int32">1</Property>
     </Property>
     <Property Name="HighUtilization" Type="System.Int32">75</Property>
     <Property Name="LowUtilization" Type="System.Int32">0</Property>

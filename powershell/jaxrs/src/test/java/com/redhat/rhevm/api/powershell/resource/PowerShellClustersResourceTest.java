@@ -25,6 +25,9 @@ import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.MemoryOverCommit;
 import com.redhat.rhevm.api.model.MemoryPolicy;
+import com.redhat.rhevm.api.model.SchedulingPolicy;
+import com.redhat.rhevm.api.model.SchedulingPolicyThresholds;
+import com.redhat.rhevm.api.model.SchedulingPolicyType;
 import com.redhat.rhevm.api.model.Version;
 
 import org.junit.Test;
@@ -120,6 +123,22 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
     }
 
     @Test
+    public void testAddWithSchedulingPolicy() throws Exception {
+        String [] commands = { getAddCommand(SchedulingPolicyType.EVENLY_DISTRIBUTED, null, 60, 5),
+                               getSupportedVersionCommand(NEW_NAME) };
+        String [] returns = { getAddReturn(), formatVersion(MAJOR, MINOR) };
+        Cluster model = getModel(NEW_NAME, NEW_DESCRIPTION);
+        model.setVersion(null);
+        model.setSchedulingPolicy(new SchedulingPolicy());
+        model.getSchedulingPolicy().setPolicy(SchedulingPolicyType.EVENLY_DISTRIBUTED);
+        model.getSchedulingPolicy().setThresholds(new SchedulingPolicyThresholds());
+        model.getSchedulingPolicy().getThresholds().setHigh(60);
+        model.getSchedulingPolicy().getThresholds().setDuration(300);
+        resource.setUriInfo(setUpResourceExpectations(2, commands, returns, true, null, NEW_NAME));
+        verifyResponse(resource.add(model), NEW_NAME, NEW_DESCRIPTION);
+    }
+
+    @Test
     public void testAddIncompleteParameters() throws Exception {
         Cluster model = new Cluster();
         model.setName(NEW_NAME);
@@ -166,18 +185,28 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
     }
 
     protected String getAddCommand() {
-        return getAddCommand(false, false, null);
+        return getAddCommand(false, false, null, null, null, null, null);
     }
 
     protected String getAddCommand(boolean withNamedDataCenter, boolean withVersion) {
-        return getAddCommand(withNamedDataCenter, withVersion, null);
+        return getAddCommand(withNamedDataCenter, withVersion, null, null, null, null, null);
     }
 
     protected String getAddCommand(Integer overCommit) {
-        return getAddCommand(false, false, overCommit);
+        return getAddCommand(false, false, overCommit, null, null, null, null);
     }
 
-    protected String getAddCommand(boolean withNamedDataCenter, boolean withVersion, Integer overCommit) {
+    protected String getAddCommand(SchedulingPolicyType schedPolicy, Integer low, Integer high, Integer duration) {
+        return getAddCommand(false, false, null, schedPolicy, low, high, duration);
+    }
+
+    protected String getAddCommand(boolean withNamedDataCenter,
+                                   boolean withVersion,
+                                   Integer overCommit,
+                                   SchedulingPolicyType schedPolicy,
+                                   Integer low,
+                                   Integer high,
+                                   Integer duration) {
         StringBuilder buf = new StringBuilder();
 
         String dataCenterArg = "\"" + DATA_CENTER_ID + "\"";
@@ -204,6 +233,20 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
 
         if (overCommit != null) {
             buf.append(" -maxmemoryovercommit " + Integer.toString(overCommit));
+        }
+
+        if (schedPolicy != null) {
+            buf.append(" -selectionalgorithm ");
+            buf.append(schedPolicy == SchedulingPolicyType.EVENLY_DISTRIBUTED ? "EvenlyDistribute" : "PowerSave");
+        }
+        if (low != null) {
+            buf.append(" -lowutilization " + Integer.toString(low));
+        }
+        if (high != null) {
+            buf.append(" -highutilization " + Integer.toString(high));
+        }
+        if (duration != null) {
+            buf.append(" -cpuovercommitdurationinminutes " + Integer.toString(duration));
         }
 
         buf.append(" -datacenterid " + dataCenterArg);

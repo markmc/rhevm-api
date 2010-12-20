@@ -26,11 +26,44 @@ import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.MemoryPolicy;
 import com.redhat.rhevm.api.model.MemoryOverCommit;
+import com.redhat.rhevm.api.model.SchedulingPolicy;
+import com.redhat.rhevm.api.model.SchedulingPolicyThresholds;
+import com.redhat.rhevm.api.model.SchedulingPolicyType;
 import com.redhat.rhevm.api.model.Version;
+import com.redhat.rhevm.api.powershell.enums.PowerShellHostSelectionAlgorithm;
 import com.redhat.rhevm.api.powershell.model.PowerShellCluster;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 
 public class PowerShellCluster {
+
+    protected static SchedulingPolicy parseSchedulingPolicy(PowerShellParser.Entity entity) {
+        SchedulingPolicyType type = entity.get("selectionalgorithm", PowerShellHostSelectionAlgorithm.class).map();
+
+        if (type == null) {
+            return null;
+        }
+
+        int low = entity.get("lowutilization", Integer.class);
+        int high = entity.get("highutilization", Integer.class);
+        int duration = entity.get("cpuovercommitdurationminutes", Integer.class) * 60;
+
+        SchedulingPolicy policy = new SchedulingPolicy();
+        policy.setPolicy(type);
+        policy.setThresholds(new SchedulingPolicyThresholds());
+
+        switch (type) {
+        case POWER_SAVING:
+            policy.getThresholds().setLow(low);
+        case EVENLY_DISTRIBUTED:
+            policy.getThresholds().setHigh(high);
+            policy.getThresholds().setDuration(duration);
+            break;
+        default:
+            break;
+        }
+
+        return policy;
+    }
 
     public static List<Cluster> parse(PowerShellParser parser, String output) {
         List<Cluster> ret = new ArrayList<Cluster>();
@@ -45,6 +78,8 @@ public class PowerShellCluster {
             cluster.setMemoryPolicy(new MemoryPolicy());
             cluster.getMemoryPolicy().setOverCommit(new MemoryOverCommit());
             cluster.getMemoryPolicy().getOverCommit().setPercent(entity.get("maxhostmemoryovercommit", Integer.class));
+
+            cluster.setSchedulingPolicy(parseSchedulingPolicy(entity));
 
             cluster.setVersion(entity.get("compatibilityversion", Version.class));
 

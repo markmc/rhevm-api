@@ -25,6 +25,9 @@ import javax.ws.rs.core.UriBuilder;
 
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.Clusters;
+import com.redhat.rhevm.api.model.SchedulingPolicy;
+import com.redhat.rhevm.api.model.SchedulingPolicyThresholds;
+import com.redhat.rhevm.api.model.SchedulingPolicyType;
 import com.redhat.rhevm.api.model.Version;
 import com.redhat.rhevm.api.resource.ClusterResource;
 import com.redhat.rhevm.api.resource.ClustersResource;
@@ -86,11 +89,38 @@ public class PowerShellClustersResource
             buf.append(" -clusterdescription " + PowerShellUtils.escape(cluster.getDescription()));
         }
         buf.append(" -clustercpuname " + PowerShellUtils.escape(cluster.getCpu().getId()));
+
         if (cluster.isSetMemoryPolicy() &&
             cluster.getMemoryPolicy().isSetOverCommit() &&
             cluster.getMemoryPolicy().getOverCommit().isSetPercent()) {
             buf.append(" -maxmemoryovercommit " + Integer.toString(cluster.getMemoryPolicy().getOverCommit().getPercent()));
         }
+
+        if (cluster.isSetSchedulingPolicy() &&
+            cluster.getSchedulingPolicy().isSetPolicy()) {
+            SchedulingPolicyType policy = cluster.getSchedulingPolicy().getPolicy();
+            SchedulingPolicyThresholds thresholds = cluster.getSchedulingPolicy().getThresholds();
+
+            buf.append(" -selectionalgorithm ");
+            if (policy == SchedulingPolicyType.POWER_SAVING) {
+                buf.append("PowerSave");
+                if (thresholds != null && thresholds.isSetLow()) {
+                    buf.append(" -lowutilization " + Integer.toString(thresholds.getLow()));
+                }
+            } else {
+                buf.append("EvenlyDistribute");
+            }
+
+            if (thresholds != null) {
+                if (thresholds.isSetHigh()) {
+                    buf.append(" -highutilization " + Integer.toString(thresholds.getHigh()));
+                }
+                if (thresholds.isSetDuration()) {
+                    buf.append(" -cpuovercommitdurationinminutes " + Integer.toString(thresholds.getDuration() / 60));
+                }
+            }
+        }
+
         buf.append(" -datacenterid " + dataCenterArg);
         buf.append(" -compatibilityversion $version");
 

@@ -20,6 +20,8 @@ package com.redhat.rhevm.api.powershell.enums;
 
 import java.util.HashMap;
 
+import com.redhat.rhevm.api.model.SchedulingPolicyType;
+
 public enum PowerShellHostSelectionAlgorithm {
     None(0), EvenlyDistribute(1), PowerSave(2);
 
@@ -39,6 +41,20 @@ public enum PowerShellHostSelectionAlgorithm {
 
     public int getValue() {
         return value;
+    }
+
+    public SchedulingPolicyType map() {
+        switch (this) {
+        case None:
+            return null;
+        case EvenlyDistribute:
+            return SchedulingPolicyType.EVENLY_DISTRIBUTED;
+        case PowerSave:
+            return SchedulingPolicyType.POWER_SAVING;
+        default:
+            assert false : this;
+            return null;
+        }
     }
 
     public static PowerShellHostSelectionAlgorithm forValue(int value) {
