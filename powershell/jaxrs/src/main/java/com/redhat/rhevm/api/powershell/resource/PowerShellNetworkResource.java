@@ -81,6 +81,7 @@ public class PowerShellNetworkResource extends AbstractPowerShellActionableResou
 
         StringBuilder buf = new StringBuilder();
 
+        buf.append("$n = get-networks;");
         buf.append("foreach ($i in $n) { ");
         buf.append("if ($i.networkid -eq " + PowerShellUtils.escape(getId()) + ") { ");
 

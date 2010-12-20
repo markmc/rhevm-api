@@ -49,7 +49,7 @@ public class PowerShellNetworkResourceTest extends AbstractPowerShellResourceTes
     private static final String DATA_CENTER_ID = PowerShellNetworksResourceTest.DATA_CENTER_ID;
 
     private static final String GET_COMMAND = "$n = get-networks;foreach ($i in $n) {  if ($i.networkid -eq \"" + NETWORK_ID + "\") {    $i  }}";
-    private static final String UPDATE_COMMAND_PREFIX = "foreach ($i in $n) { if ($i.networkid -eq \"" + NETWORK_ID + "\") { ";
+    private static final String UPDATE_COMMAND_PREFIX = "$n = get-networks;foreach ($i in $n) { if ($i.networkid -eq \"" + NETWORK_ID + "\") { ";
     private static final String UPDATE_COMMAND_SUFFIX = "update-network -networkobject $i -datacenterid $i.datacenterid } }";
     private static final String UPDATE_NAME_COMMAND = UPDATE_COMMAND_PREFIX + "$i.name = \"eris\"; " + UPDATE_COMMAND_SUFFIX;
     private static final String UPDATE_IP_COMMAND = UPDATE_COMMAND_PREFIX + "$i.address = \"172.31.0.110\"; " + UPDATE_COMMAND_SUFFIX;
