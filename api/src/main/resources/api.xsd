@@ -525,12 +525,29 @@
 
   <xs:element name="clusters" type="Clusters"/>
 
+  <xs:complexType name="MemoryOverCommit">
+    <xs:attribute name="percent" type="xs:int"/>
+  </xs:complexType>
+
+  <xs:complexType name="MemoryPolicy">
+    <xs:sequence>
+      <xs:element name="overcommit" type="MemoryOverCommit" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:appinfo>
+            <jaxb:property name="OverCommit"/>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:complexType name="Cluster">
     <xs:complexContent>
       <xs:extension base="BaseResource">
         <xs:sequence>
           <xs:element ref="cpu" minOccurs="0" maxOccurs="1"/>
           <xs:element ref="data_center" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="memory_policy" type="MemoryPolicy" minOccurs="0" maxOccurs="1"/>
           <xs:element name="version" type="Version" minOccurs="0"/>
           <xs:element name="supported_versions" type="SupportedVersions" minOccurs="0"/>
           <!-- Also a rel="networks" link -->

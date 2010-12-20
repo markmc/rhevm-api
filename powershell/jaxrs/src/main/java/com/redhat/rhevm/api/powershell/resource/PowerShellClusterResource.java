@@ -146,6 +146,14 @@ public class PowerShellClusterResource extends AbstractPowerShellActionableResou
             buf.append(" } } ");
         }
 
+        if (cluster.isSetMemoryPolicy() &&
+            cluster.getMemoryPolicy().isSetOverCommit() &&
+            cluster.getMemoryPolicy().getOverCommit().isSetPercent()) {
+            buf.append("$c.maxhostmemoryovercommit = ");
+            buf.append(Integer.toString(cluster.getMemoryPolicy().getOverCommit().getPercent()));
+            buf.append("; ");
+        }
+
         buf.append("update-cluster -clusterobject $c; break ");
 
         buf.append("} }");

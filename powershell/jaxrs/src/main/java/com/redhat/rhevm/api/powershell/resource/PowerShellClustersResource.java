@@ -86,6 +86,11 @@ public class PowerShellClustersResource
             buf.append(" -clusterdescription " + PowerShellUtils.escape(cluster.getDescription()));
         }
         buf.append(" -clustercpuname " + PowerShellUtils.escape(cluster.getCpu().getId()));
+        if (cluster.isSetMemoryPolicy() &&
+            cluster.getMemoryPolicy().isSetOverCommit() &&
+            cluster.getMemoryPolicy().getOverCommit().isSetPercent()) {
+            buf.append(" -maxmemoryovercommit " + Integer.toString(cluster.getMemoryPolicy().getOverCommit().getPercent()));
+        }
         buf.append(" -datacenterid " + dataCenterArg);
         buf.append(" -compatibilityversion $version");
 

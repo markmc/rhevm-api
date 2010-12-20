@@ -24,6 +24,8 @@ import java.util.List;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.DataCenter;
+import com.redhat.rhevm.api.model.MemoryPolicy;
+import com.redhat.rhevm.api.model.MemoryOverCommit;
 import com.redhat.rhevm.api.model.Version;
 import com.redhat.rhevm.api.powershell.model.PowerShellCluster;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
@@ -39,6 +41,11 @@ public class PowerShellCluster {
             cluster.setId(entity.get("clusterid", String.class, Integer.class).toString());
             cluster.setName(entity.get("name"));
             cluster.setDescription(entity.get("description"));
+
+            cluster.setMemoryPolicy(new MemoryPolicy());
+            cluster.getMemoryPolicy().setOverCommit(new MemoryOverCommit());
+            cluster.getMemoryPolicy().getOverCommit().setPercent(entity.get("maxhostmemoryovercommit", Integer.class));
+
             cluster.setVersion(entity.get("compatibilityversion", Version.class));
 
             CPU cpu = new CPU();

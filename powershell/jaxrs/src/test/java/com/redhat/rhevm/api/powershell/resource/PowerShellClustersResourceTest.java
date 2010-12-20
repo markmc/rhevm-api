@@ -23,6 +23,8 @@ import javax.ws.rs.WebApplicationException;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.DataCenter;
+import com.redhat.rhevm.api.model.MemoryOverCommit;
+import com.redhat.rhevm.api.model.MemoryPolicy;
 import com.redhat.rhevm.api.model.Version;
 
 import org.junit.Test;
@@ -105,6 +107,19 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
     }
 
     @Test
+    public void testAddWithOverCommit() throws Exception {
+        String [] commands = { getAddCommand(500), getSupportedVersionCommand(NEW_NAME) };
+        String [] returns = { getAddReturn(), formatVersion(MAJOR, MINOR) };
+        Cluster model = getModel(NEW_NAME, NEW_DESCRIPTION);
+        model.setVersion(null);
+        model.setMemoryPolicy(new MemoryPolicy());
+        model.getMemoryPolicy().setOverCommit(new MemoryOverCommit());
+        model.getMemoryPolicy().getOverCommit().setPercent(500);
+        resource.setUriInfo(setUpResourceExpectations(2, commands, returns, true, null, NEW_NAME));
+        verifyResponse(resource.add(model), NEW_NAME, NEW_DESCRIPTION);
+    }
+
+    @Test
     public void testAddIncompleteParameters() throws Exception {
         Cluster model = new Cluster();
         model.setName(NEW_NAME);
@@ -151,10 +166,18 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
     }
 
     protected String getAddCommand() {
-        return getAddCommand(false, false);
+        return getAddCommand(false, false, null);
     }
 
     protected String getAddCommand(boolean withNamedDataCenter, boolean withVersion) {
+        return getAddCommand(withNamedDataCenter, withVersion, null);
+    }
+
+    protected String getAddCommand(Integer overCommit) {
+        return getAddCommand(false, false, overCommit);
+    }
+
+    protected String getAddCommand(boolean withNamedDataCenter, boolean withVersion, Integer overCommit) {
         StringBuilder buf = new StringBuilder();
 
         String dataCenterArg = "\"" + DATA_CENTER_ID + "\"";
@@ -178,6 +201,11 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
         buf.append(" -clustername \"" + NEW_NAME + "\"");
         buf.append(" -clusterdescription \"" + NEW_DESCRIPTION + "\"");
         buf.append(" -clustercpuname \"" + CLUSTER_CPU + "\"");
+
+        if (overCommit != null) {
+            buf.append(" -maxmemoryovercommit " + Integer.toString(overCommit));
+        }
+
         buf.append(" -datacenterid " + dataCenterArg);
         buf.append(" -compatibilityversion $version");
 
