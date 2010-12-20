@@ -615,6 +615,7 @@
           <!-- unsigned to avoid issues with port values greater than 32767,
                e.g. the standard VDSM port 54321 -->
           <xs:element name="port" type="xs:unsignedShort" minOccurs="0"/>
+          <xs:element name="storage_manager" type="xs:boolean" minOccurs="0"/>
           <xs:element name="version" type="Version" minOccurs="0"/>
           <xs:element ref="power_management" minOccurs="0"/>
           <!-- when creating a new host, a root password is required, but

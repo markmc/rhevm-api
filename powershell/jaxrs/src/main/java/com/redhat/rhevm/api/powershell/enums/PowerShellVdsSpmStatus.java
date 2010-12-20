@@ -44,4 +44,8 @@ public enum PowerShellVdsSpmStatus {
     public static PowerShellVdsSpmStatus forValue(int value) {
         return mapping.get(value);
     }
+
+    public boolean map() {
+        return this == SPM;
+    }
 }

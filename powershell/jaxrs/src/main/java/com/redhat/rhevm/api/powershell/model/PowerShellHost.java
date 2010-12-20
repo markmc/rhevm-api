@@ -27,6 +27,7 @@ import com.redhat.rhevm.api.model.HostStatus;
 import com.redhat.rhevm.api.model.PowerManagement;
 import com.redhat.rhevm.api.model.PowerManagementOption;
 import com.redhat.rhevm.api.model.PowerManagementOptions;
+import com.redhat.rhevm.api.powershell.enums.PowerShellVdsSpmStatus;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 
 public class PowerShellHost {
@@ -92,6 +93,7 @@ public class PowerShellHost {
             host.setPort(entity.get("port", Integer.class));
             host.setName(entity.get("name"));
             host.setStatus(parseStatus(entity.get("status")));
+            host.setStorageManager(entity.get("spmstatus", PowerShellVdsSpmStatus.class).map());
 
             host.setPowerManagement(parsePowerManagement(entity.get("powermanagement",
                                                                     PowerShellParser.PowerManagement.class)));
