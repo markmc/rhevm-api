@@ -65,13 +65,13 @@ public class PowerShellApiResource
     private void addLink(API api, String rel, boolean searchable) {
         Link link = new Link();
         link.setRel(rel);
-        link.setHref(combine(getUriInfo().getBaseUri().getPath(), rel) + "/");
+        link.setHref(combine(getUriInfo().getBaseUri().getPath(), rel));
         api.getLinks().add(link);
 
         if (searchable) {
             link = new Link();
             link.setRel(rel + SEARCH_RELATION);
-            link.setHref(combine(getUriInfo().getBaseUri().getPath(), rel) + "/" + SEARCH_TEMPLATE);
+            link.setHref(combine(getUriInfo().getBaseUri().getPath(), rel) + SEARCH_TEMPLATE);
             api.getLinks().add(link);
         }
     }
