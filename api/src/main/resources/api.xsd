@@ -146,8 +146,8 @@
         <!-- action-specific response(s) for the operation (if required) -->
         <xs:group ref="ActionResponseGroup"/>
     </xs:sequence>
-    <xs:attribute name="href" minOccurs="0" type="xs:string"/>
-    <xs:attribute name="id" minOccurs="0" type="xs:string"/>
+    <xs:attribute name="href" type="xs:string"/>
+    <xs:attribute name="id" type="xs:string"/>
   </xs:complexType>
 
   <xs:simpleType name="Status">
