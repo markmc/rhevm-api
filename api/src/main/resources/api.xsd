@@ -908,7 +908,7 @@
   <xs:element name="vlan" type="VLAN"/>
 
   <xs:complexType name="VLAN">
-    <xs:attribute name="id" type="xs:string"/>
+    <xs:attribute name="id" type="xs:unsignedShort"/>
   </xs:complexType>
 
   <xs:element name="network" type="Network"/>
