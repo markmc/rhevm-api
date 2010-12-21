@@ -51,7 +51,7 @@ public class NetworksAddCommand extends AbstractAddCommand<Network> {
     private String gateway;
 
     @Option(name = "-v", aliases = { "--vlan-id" }, description = "VLAN ID", required = false, multiValued = false)
-    private String vlan;
+    private int vlan;
 
     @Option(name = "-s", aliases = { "--stp" }, description = "STP", required = false, multiValued = false)
     private boolean stp;
@@ -72,7 +72,7 @@ public class NetworksAddCommand extends AbstractAddCommand<Network> {
             model.getIp().setNetmask(netmask);
             model.getIp().setGateway(gateway);
         }
-        if (vlan != null) {
+        if (vlan != -1) {
             model.setVlan(new VLAN());
             model.getVlan().setId(vlan);
         }

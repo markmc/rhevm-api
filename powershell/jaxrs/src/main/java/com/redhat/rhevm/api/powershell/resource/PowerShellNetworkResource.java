@@ -107,7 +107,7 @@ public class PowerShellNetworkResource extends AbstractPowerShellActionableResou
         }
 
         if (network.getVlan() != null) {
-            buf.append("$i.vlanid " + PowerShellUtils.escape(network.getVlan().getId()) + "; ");
+            buf.append("$i.vlanid " + Integer.toString(network.getVlan().getId()) + "; ");
         }
         if (network.isStp() != null) {
             if (network.isStp()) {

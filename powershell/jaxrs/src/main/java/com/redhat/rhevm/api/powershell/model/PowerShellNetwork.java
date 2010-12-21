@@ -58,7 +58,7 @@ public class PowerShellNetwork {
 
             if (entity.isSet("vlanid")) {
                 VLAN vlan = new VLAN();
-                vlan.setId(entity.get("vlanid", Integer.class).toString());
+                vlan.setId(entity.get("vlanid", Integer.class));
                 network.setVlan(vlan);
             }
 

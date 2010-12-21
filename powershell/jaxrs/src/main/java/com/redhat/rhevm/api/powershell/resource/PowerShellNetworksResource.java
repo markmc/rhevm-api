@@ -83,7 +83,7 @@ public class PowerShellNetworksResource
         }
 
         if (network.getVlan() != null) {
-            buf.append(" -vlanid " + PowerShellUtils.escape(network.getVlan().getId()));
+            buf.append(" -vlanid " + Integer.toString(network.getVlan().getId()));
         }
 
         if (network.isStp() != null && network.isStp()) {
