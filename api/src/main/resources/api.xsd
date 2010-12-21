@@ -408,6 +408,8 @@
 
   <!-- Version numbers -->
 
+  <xs:element name="version" type="Version"/>
+
   <xs:complexType name="Version">
     <xs:sequence/>
     <xs:attribute name="major" type="xs:unsignedShort"/>
