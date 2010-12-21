@@ -1164,68 +1164,68 @@
   </xs:complexType>
 
   <xs:element name="vms" type="VMs"/>
+  <xs:element name="vm" type="VM"/>
 
-  <xs:element name="vm">
+  <xs:complexType name="VM">
     <xs:annotation>
       <xs:appinfo>
          <jaxb:class name="VM"/>
       </xs:appinfo>
     </xs:annotation>
-    <xs:complexType>
-      <xs:complexContent>
-        <xs:extension base="BaseResource">
-          <xs:sequence>
-            <xs:element name="type" type="VmType" minOccurs="0"/>
-            <xs:element name="status" type="VmStatus" minOccurs="0"/>
-            <xs:element name="memory" type="xs:long" minOccurs="0"/>
-            <xs:element name="cpu" type="CPU" minOccurs="0"/>
-            <xs:element name="os" type="OperatingSystem" minOccurs="0"/>
-            <xs:element name="highly_available" type="HighlyAvailable" minOccurs="0"/>
-            <xs:element name="display" type="Display" minOccurs="0" maxOccurs="1"/>
-            <xs:element ref="host" minOccurs="0" maxOccurs="1"/>
-            <xs:element ref="cluster" minOccurs="0" maxOccurs="1"/>
-            <xs:element ref="template" minOccurs="0" maxOccurs="1"/>
-            <xs:element ref="storage_domain" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="start_time" type="xs:dateTime" minOccurs="0"/>
-            <xs:element name="creation_time" type="xs:dateTime" minOccurs="0"/>
-            <xs:element name="origin" type="VmOrigin" minOccurs="0"/>
-            <xs:element name="stateless" type="xs:boolean" minOccurs="0"/>
+    <xs:complexContent>
+      <xs:extension base="BaseResource">
+        <xs:sequence>
+          <xs:element name="type" type="VmType" minOccurs="0"/>
+          <xs:element name="status" type="VmStatus" minOccurs="0"/>
+          <xs:element name="memory" type="xs:long" minOccurs="0"/>
+          <xs:element name="cpu" type="CPU" minOccurs="0"/>
+          <xs:element name="os" type="OperatingSystem" minOccurs="0"/>
+          <xs:element name="highly_available" type="HighlyAvailable" minOccurs="0"/>
+          <xs:element name="display" type="Display" minOccurs="0" maxOccurs="1"/>
+          <xs:element ref="host" minOccurs="0" maxOccurs="1"/>
+          <xs:element ref="cluster" minOccurs="0" maxOccurs="1"/>
+          <xs:element ref="template" minOccurs="0" maxOccurs="1"/>
+          <xs:element ref="storage_domain" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="start_time" type="xs:dateTime" minOccurs="0"/>
+          <xs:element name="creation_time" type="xs:dateTime" minOccurs="0"/>
+          <xs:element name="origin" type="VmOrigin" minOccurs="0"/>
+          <xs:element name="stateless" type="xs:boolean" minOccurs="0"/>
 
-            <xs:element name="memory_statistics" type="MemoryStatistics" minOccurs="0" maxOccurs="1">
-              <xs:annotation>
-                <xs:appinfo>
-                  <jaxb:property name="MemoryStatistics"/>
-                </xs:appinfo>
-              </xs:annotation>
-            </xs:element>
+          <xs:element name="memory_statistics" type="MemoryStatistics" minOccurs="0" maxOccurs="1">
+            <xs:annotation>
+              <xs:appinfo>
+                <jaxb:property name="MemoryStatistics"/>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
 
-            <xs:element name="cpu_statistics" type="CpuStatistics" minOccurs="0" maxOccurs="1">
-              <xs:annotation>
-                <xs:appinfo>
-                  <jaxb:property name="CpuStatistics"/>
-                </xs:appinfo>
-              </xs:annotation>
-            </xs:element>
+          <xs:element name="cpu_statistics" type="CpuStatistics" minOccurs="0" maxOccurs="1">
+            <xs:annotation>
+              <xs:appinfo>
+                <jaxb:property name="CpuStatistics"/>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
 
-            <xs:element ref="vmpool" minOccurs="0" maxOccurs="1">
-              <xs:annotation>
-                <xs:appinfo>
-                  <jaxb:property name="VmPool"/>
-                </xs:appinfo>
-              </xs:annotation>
-            </xs:element>
+          <xs:element ref="vmpool" minOccurs="0" maxOccurs="1">
+            <xs:annotation>
+              <xs:appinfo>
+                <jaxb:property name="VmPool"/>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
 
-            <!-- used only to represent CD-ROMs and floppies supplied to the
-                 start action. Not usually included in the VM representation -->
-            <xs:element ref="cdroms" minOccurs="0" maxOccurs="1"/>
-            <xs:element ref="floppies" minOccurs="0" maxOccurs="1"/>
-            <!-- also rel="cdroms/disks/floppies/nics" links, see Devices below -->
-            <!-- also rel="snapshots" links, see Snapshots below -->
-          </xs:sequence>
-        </xs:extension>
-      </xs:complexContent>
-    </xs:complexType>
-  </xs:element>
+          <!-- used only to represent CD-ROMs and floppies supplied to the
+               start action. Not usually included in the VM representation -->
+          <xs:element ref="cdroms" minOccurs="0" maxOccurs="1"/>
+          <xs:element ref="floppies" minOccurs="0" maxOccurs="1"/>
+          <!-- also rel="cdroms/disks/floppies/nics" links, see Devices below -->
+          <!-- also rel="snapshots" links, see Snapshots below -->
+          <!-- also rel="users" links, see Users above -->
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
 
   <xs:complexType name="VMs">
     <xs:complexContent>
