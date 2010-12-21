@@ -87,7 +87,7 @@ public class PowerShellApiResource
         // otherwise UriBuilder.build() will substitute {query}
         if (path.contains("?")) {
             query = path.substring(path.indexOf("?"));
-            path = path.substring(0, path.indexOf("?") - 1);
+            path = path.substring(0, path.indexOf("?"));
         }
 
         link = JAXBHelper.clone(OBJECT_FACTORY.createLink(link));

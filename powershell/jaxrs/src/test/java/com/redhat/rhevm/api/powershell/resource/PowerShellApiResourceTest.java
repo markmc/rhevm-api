@@ -69,26 +69,26 @@ public class PowerShellApiResourceTest
     };
 
     private static final String[] hrefs = {
-        BASE_PATH + "/capabilities/",
-        BASE_PATH + "/clusters/",
-        BASE_PATH + "/clusters/?search={query}",
-        BASE_PATH + "/datacenters/",
-        BASE_PATH + "/datacenters/?search={query}",
-        BASE_PATH + "/hosts/",
-        BASE_PATH + "/hosts/?search={query}",
-        BASE_PATH + "/networks/",
-        BASE_PATH + "/roles/",
-        BASE_PATH + "/storagedomains/",
-        BASE_PATH + "/storagedomains/?search={query}",
-        BASE_PATH + "/tags/",
-        BASE_PATH + "/templates/",
-        BASE_PATH + "/templates/?search={query}",
-        BASE_PATH + "/users/",
-        BASE_PATH + "/users/?search={query}",
-        BASE_PATH + "/vmpools/",
-        BASE_PATH + "/vmpools/?search={query}",
-        BASE_PATH + "/vms/",
-        BASE_PATH + "/vms/?search={query}",
+        BASE_PATH + "/capabilities",
+        BASE_PATH + "/clusters",
+        BASE_PATH + "/clusters?search={query}",
+        BASE_PATH + "/datacenters",
+        BASE_PATH + "/datacenters?search={query}",
+        BASE_PATH + "/hosts",
+        BASE_PATH + "/hosts?search={query}",
+        BASE_PATH + "/networks",
+        BASE_PATH + "/roles",
+        BASE_PATH + "/storagedomains",
+        BASE_PATH + "/storagedomains?search={query}",
+        BASE_PATH + "/tags",
+        BASE_PATH + "/templates",
+        BASE_PATH + "/templates?search={query}",
+        BASE_PATH + "/users",
+        BASE_PATH + "/users?search={query}",
+        BASE_PATH + "/vmpools",
+        BASE_PATH + "/vmpools?search={query}",
+        BASE_PATH + "/vms",
+        BASE_PATH + "/vms?search={query}",
     };
 
     private static String GET_SYSTEM_STATS_COMMAND = "get-systemstatistics";
@@ -127,7 +127,7 @@ public class PowerShellApiResourceTest
             if (rel.endsWith("/search")) {
                 expect(uriBuilder.path(rel.replace("/search", ""))).andReturn(colUriBuilder);
             } else {
-                expect(uriBuilder.path(rel + SLASH)).andReturn(colUriBuilder);
+                expect(uriBuilder.path(rel)).andReturn(colUriBuilder);
             }
         }
 
