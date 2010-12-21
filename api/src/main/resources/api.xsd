@@ -1061,31 +1061,30 @@
   <!-- Virtual Machine Templates -->
 
   <xs:element name="templates" type="Templates"/>
+  <xs:element name="template" type="Template"/>
 
-  <xs:element name="template">
-    <xs:complexType>
-      <xs:complexContent>
-        <xs:extension base="BaseResource">
-          <xs:sequence>
-            <xs:element ref="vm" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="type" type="VmType" minOccurs="0"/>
-            <xs:element name="status" type="TemplateStatus" minOccurs="0"/>
-            <xs:element name="memory" type="xs:long" minOccurs="0"/>
-            <xs:element name="cpu" type="CPU" minOccurs="0"/>
-            <xs:element name="os" type="OperatingSystem" minOccurs="0"/>
-            <xs:element ref="cluster" minOccurs="0" maxOccurs="1"/>
-            <xs:element ref="storage_domain" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="creation_time" type="xs:dateTime" minOccurs="0"/>
-            <xs:element name="origin" type="VmOrigin" minOccurs="0"/>
-            <xs:element name="highly_available" type="HighlyAvailable" minOccurs="0"/>
-            <xs:element name="display" type="Display" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="stateless" type="xs:boolean" minOccurs="0"/>
-            <!-- also rel="cdroms/disks/nics" links, see Devices below -->
-          </xs:sequence>
-        </xs:extension>
-      </xs:complexContent>
-    </xs:complexType>
-  </xs:element>
+  <xs:complexType name="Template">
+    <xs:complexContent>
+      <xs:extension base="BaseResource">
+        <xs:sequence>
+          <xs:element ref="vm" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="type" type="VmType" minOccurs="0"/>
+          <xs:element name="status" type="TemplateStatus" minOccurs="0"/>
+          <xs:element name="memory" type="xs:long" minOccurs="0"/>
+          <xs:element name="cpu" type="CPU" minOccurs="0"/>
+          <xs:element name="os" type="OperatingSystem" minOccurs="0"/>
+          <xs:element ref="cluster" minOccurs="0" maxOccurs="1"/>
+          <xs:element ref="storage_domain" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="creation_time" type="xs:dateTime" minOccurs="0"/>
+          <xs:element name="origin" type="VmOrigin" minOccurs="0"/>
+          <xs:element name="highly_available" type="HighlyAvailable" minOccurs="0"/>
+          <xs:element name="display" type="Display" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="stateless" type="xs:boolean" minOccurs="0"/>
+          <!-- also rel="cdroms/disks/nics" links, see Devices below -->
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
 
   <xs:complexType name="Templates">
     <xs:complexContent>
