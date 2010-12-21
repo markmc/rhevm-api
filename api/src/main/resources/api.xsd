@@ -519,7 +519,7 @@
                 <jaxb:property name="DataCenters"/>
             </xs:appinfo>
           </xs:annotation>
-          <xs:element ref="data_center" maxOccurs="unbounded"/>
+          <xs:element ref="data_center" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -601,7 +601,7 @@
 
   <xs:complexType name="PowerManagementOptions">
     <xs:sequence>
-      <xs:element name="option" type="PowerManagementOption" maxOccurs="unbounded">
+      <xs:element name="option" type="PowerManagementOption" minOccurs="0" maxOccurs="unbounded">
         <xs:annotation>
           <xs:appinfo>
             <jaxb:property name="Options"/>
@@ -616,10 +616,10 @@
   <xs:complexType name="PowerManagement">
     <xs:sequence>
       <xs:element name="enabled" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
-      <xs:element name="address" type="xs:string"/>
-      <xs:element name="username" type="xs:string"/>
-      <xs:element name="password" type="xs:string"/>
-      <xs:element name="options" type="PowerManagementOptions"/>
+      <xs:element name="address" type="xs:string" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="username" type="xs:string" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="password" type="xs:string" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="options" type="PowerManagementOptions" minOccurs="0"/>
     </xs:sequence>
     <xs:attribute name="type" type="xs:string"/>
   </xs:complexType>
@@ -628,7 +628,7 @@
 
   <xs:complexType name="PowerManagers">
     <xs:sequence>
-      <xs:element ref="power_management" maxOccurs="unbounded">
+      <xs:element ref="power_management" minOccurs="0" maxOccurs="unbounded">
         <xs:annotation>
           <xs:appinfo>
             <jaxb:property name="PowerManagers"/>
