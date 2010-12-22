@@ -1037,9 +1037,9 @@
           <xs:element ref="storage" minOccurs="0"/>
           <!-- host is only relevant at creation time -->
           <xs:element ref="host" minOccurs="0"/>
-          <xs:element name="available" type="xs:unsignedInt" minOccurs="0"/>
-          <xs:element name="used" type="xs:unsignedInt" minOccurs="0"/>
-          <xs:element name="committed" type="xs:unsignedInt" minOccurs="0"/>
+          <xs:element name="available" type="xs:long" minOccurs="0"/>
+          <xs:element name="used" type="xs:long" minOccurs="0"/>
+          <xs:element name="committed" type="xs:long" minOccurs="0"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
