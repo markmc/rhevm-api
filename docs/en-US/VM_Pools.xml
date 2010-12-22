@@ -8,23 +8,47 @@
 
   <para>
     The VM pool specific elements which may be contained in the VM pool description are as follows:
+  </para>
+  <note>
+    <title>Element property icons</title>
+    <para>
+      The icons used in the properties column of this table are described in <xref linkend="table-Property_Icons" />
+    </para>
+  </note> 
 
+  <para>
     <informaltable frame="none">
-      <tgroup cols="2">
+      <tgroup cols="4">
         <colspec colwidth="2*"/>
-        <colspec colwidth="5*"/>
+        <colspec colwidth="4*"/>
+        <colspec colwidth="6*"/>
+        <colspec colwidth="3*" colname="prop"/>
+        <thead>
+          <row>
+            <entry>Element</entry>
+            <entry>Type</entry>
+            <entry>Description</entry>
+            <entry>Properties</entry>
+          </row>
+        </thead>
         <tbody>
           <row>
             <entry><literal>size</literal></entry>
+            <entry>integer</entry>
             <entry>The number of VMs in the pool</entry>
+            <entry> </entry>
           </row>
           <row>
             <entry><literal>cluster</literal></entry>
+            <entry>Cluster resource</entry>
             <entry>A reference to the cluster which VMs in this pool run on</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/required.png" format="PNG" /></imageobject></inlinemediaobject><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>template</literal></entry>
+            <entry>Template resource</entry>
             <entry>A reference to the template which VMs in this pool are based on</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/required.png" format="PNG" /></imageobject></inlinemediaobject><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
         </tbody>
       </tgroup>
@@ -43,9 +67,4 @@
   &lt;actions/&gt;
 &lt;/vmpool&gt;
   </screen>
-
-  <para>
-    When creating a new VM pool, the <literal>name</literal>, <literal>template id</literal> and <literal>cluster id</literal> properties are required. Only the <literal>name</literal>, <literal>description</literal> and <literal>size</literal> elements may be updated post-creation.
-  </para>
-
 </chapter>

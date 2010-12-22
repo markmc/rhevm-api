@@ -39,7 +39,8 @@ Content-Type: application/xml
       </para>
     </footnote>
     and the <literal>link</literal> elements in the response provides the client with URIs for all of the resource collections exposed by the API. Each collection is identified by a relation type which the client must use to find the URI it needs. The following relation types are available:
-
+  </para>
+  <para>
     <informaltable frame="none">
       <tgroup cols="2">
         <colspec colwidth="2*"/>
