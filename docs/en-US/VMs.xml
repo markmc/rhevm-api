@@ -190,7 +190,7 @@
             <tbody>
               <row>
                 <entry><literal>iso id</literal></entry>
-                <entry>A reference to an ISO image. See <xref linkend="sect-REST_API_Guide-Data_Centers-ISO_Images"/></entry>
+                <entry>A reference to an ISO image. See <xref linkend="sect-REST_API_Guide-Data_Centers-Files"/></entry>
               </row>
             </tbody>
           </tgroup>

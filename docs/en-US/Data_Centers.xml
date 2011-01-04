@@ -22,8 +22,8 @@
             <entry>A link to a description of the storage domains attached to this data center</entry>
           </row>
           <row>
-            <entry><literal>link rel="isos"</literal></entry>
-            <entry>A link to a description of the ISO images available in this data center</entry>
+            <entry><literal>link rel="files"</literal></entry>
+            <entry>A link to a description of the files available in this data center</entry>
           </row>
           <row>
             <entry><literal>version</literal></entry>
@@ -46,7 +46,7 @@
   &lt;description&gt;The default Data Center&lt;/description&gt;
   &lt;storage_type&gt;NFS&lt;/storage_type&gt;
   &lt;link rel="storagedomains" href="/rhevm-api/datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/storagedomains"/&gt;
-  &lt;link rel="isos" href="/rhevm-api/datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/isos"/&gt;
+  &lt;link rel="files" href="/rhevm-api/datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/files"/&gt;
   &lt;version major="2" minor="2"/&gt;
   &lt;supported_versions&gt;
     &lt;version major="2" minor="3"/&gt;
@@ -111,27 +111,34 @@ Content-Type: application/xml
 
   </section>
 
-  <section id="sect-REST_API_Guide-Data_Centers-ISO_Images">
+  <section id="sect-REST_API_Guide-Data_Centers-Files">
     <title>
-      ISO Images
+      Files
     </title>
     <para>
-      When adding a CD-ROM device to a VM, an ISO image needs to be supplied. See <xref linkend="chap-REST_API_Guide-VMs"/>. The ISOs collection under each data center provides a way for clients to list the available ISO images.
+       The files collection under each data center provides a way for clients to list the files made available by the data center. These files include ISO images and virtual floppy disks (VFDs). When adding a CD-ROM device to a VM, an ISO image needs to be supplied. See <xref linkend="chap-REST_API_Guide-VMs"/> for details.
     </para>
 
     <screen>
-GET /rhevm-api/datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/isos HTTP/1.1
+GET /rhevm-api/datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/files HTTP/1.1
 Accept: application/xml
 
-&lt;isos&gt;
-  &lt;iso id="en_winxp_pro_with_sp2.iso" href="/rhevm-api/datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/isos/en_winxp_pro_with_sp2.iso"&gt;
+&lt;files&gt;
+  &lt;file id="en_winxp_pro_with_sp2.iso" href="/rhevm-api/datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/files/en_winxp_pro_with_sp2.iso"&gt;
     &lt;name&gt;en_winxp_pro_with_sp2.iso&lt;/name&gt;
-  &lt;/iso&gt;
-&lt;/isos&gt;
+    &lt;type&gt;ISO&lt;/type&gt;
+    &lt;data_center id="d70d5e2d-b8ad-494a-a4d2-c7a5631073c4" href="/rhevm-api/datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4"/&gt;
+  &lt;/file&gt;
+  &lt;file id="boot.vfd" href="/rhevm-api/datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4/files/boot.vfd"&gt;
+    &lt;name&gt;boot.vfd&lt;/name&gt;
+    &lt;type&gt;VFD&lt;/type&gt;
+    &lt;data_center id="d70d5e2d-b8ad-494a-a4d2-c7a5631073c4" href="/rhevm-api/datacenters/d70d5e2d-b8ad-494a-a4d2-c7a5631073c4"/&gt;
+  &lt;/file&gt;
+&lt;/files&gt;
     </screen>
 
     <para>
-      Like other resources, ISOs have opaque <literal>id</literal> and <literal>href</literal> attributes. The <literal>name</literal> element actually contains the filename of the ISO.
+      Like other resources, files have opaque <literal>id</literal> and <literal>href</literal> attributes. The <literal>name</literal> element actually contains the filename.
     </para>
   </section>
 
