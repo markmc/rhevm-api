@@ -1,4 +1,4 @@
-package com.redhat.rhevm.api.resteasy;
+package com.redhat.rhevm.api.resteasy.json;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;

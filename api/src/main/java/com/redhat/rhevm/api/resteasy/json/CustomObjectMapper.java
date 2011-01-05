@@ -1,4 +1,4 @@
-package com.redhat.rhevm.api.resteasy;
+package com.redhat.rhevm.api.resteasy.json;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.ObjectMapper;

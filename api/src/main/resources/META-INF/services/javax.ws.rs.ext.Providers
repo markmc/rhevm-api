@@ -1,1 +1,1 @@
-com.redhat.rhevm.api.resteasy.JsonProvider
+com.redhat.rhevm.api.resteasy.json.JsonProvider
