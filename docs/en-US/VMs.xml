@@ -96,7 +96,7 @@
           </row>
           <row>
             <entry><literal>devices</literal></entry>
-            <entry>A collection of <literal>cdrom</literal>, <literal>disk</literal> or <literal>nic</literal> elements</entry>
+            <entry>A collection of <literal>cdrom</literal>, <literal>floppy</literal>, <literal>disk</literal> or <literal>nic</literal> elements</entry>
           </row>
         </tbody>
       </tgroup>
@@ -136,6 +136,7 @@
     &lt;system&gt;20&lt;/system&gt;
   &lt;/cpu_statistics&gt;
   &lt;link rel="cdroms" href="/rhevm-api/vms/082c794b-771f-452f-83c9-b2b5a19c0399/cdroms"/&gt;
+  &lt;link rel="floppies" href="/rhevm-api/vms/082c794b-771f-452f-83c9-b2b5a19c0399/floppies"/&gt;
   &lt;link rel="disks" href="/rhevm-api/vms/082c794b-771f-452f-83c9-b2b5a19c0399/disks"/&gt;
   &lt;link rel="nics" href="/rhevm-api/vms/082c794b-771f-452f-83c9-b2b5a19c0399/nics"/&gt;
   &lt;link rel="snapshots" href="/rhevm-api/vms/082c794b-771f-452f-83c9-b2b5a19c0399/snapshots"/&gt;
@@ -172,7 +173,7 @@
     </para>
 
     <para>
-      There are three device collections available for each VM - <literal>cdroms</literal>, <literal>disks</literal> and <literal>nics</literal>. The URI for each of these collections are available via <literal>link</literal> elements in the VM representation.
+      There are four device collections available for each VM - <literal>cdroms</literal>, <literal>floppies</literal>, <literal>disks</literal> and <literal>nics</literal>. The URI for each of these collections are available via <literal>link</literal> elements in the VM representation.
     </para>
 
     <section id="sect-REST_API_Guide-VMs-CDROMs">
@@ -205,10 +206,46 @@
         </para>
       </note>
       <screen>
-  &lt;cdrom id="00000000-0000-0000-0000-000000000000" href="/rhevm-api/vms/cdc0b102-fbfe-444a-b9cb-57d2af94f401/cdroms/00000000-0000-0000-0000-000000000000"&gt;
+&lt;cdrom id="00000000-0000-0000-0000-000000000000" href="/rhevm-api/vms/cdc0b102-fbfe-444a-b9cb-57d2af94f401/cdroms/00000000-0000-0000-0000-000000000000"&gt;
   &lt;iso id="en_winxp_pro_with_sp2.iso"/&gt;
   &lt;vm id="cdc0b102-fbfe-444a-b9cb-57d2af94f401" href="/rhevm-api/vms/cdc0b102-fbfe-444a-b9cb-57d2af94f401"/&gt;
 &lt;/cdrom&gt;
+      </screen>
+    </section>
+
+    <section id="sect-REST_API_Guide-VMs-Floppies">
+      <title>
+        Floppy disk devices
+      </title>
+
+      <para>
+        Floppy disk devices are represented by a <literal>floppies</literal> element containing the following properties:
+
+        <informaltable frame="none">
+          <tgroup cols="2">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="5*"/>
+            <tbody>
+              <row>
+                <entry><literal>id</literal></entry>
+                <entry>A reference to a floppy image. See <xref linkend="sect-REST_API_Guide-Data_Centers-Files"/></entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+      </para>
+      <para>
+        When adding a new floppy, the <literal>id</literal> property is required.
+      </para>
+      <note>
+        <para>
+          Note that a VM may currently only have a single floppy and it is not possible to modify the floppy properties using <literal>PUT</literal>.
+        </para>
+      </note>
+      <screen>
+&lt;floppy id="00000000-0000-0000-0000-000000000000" href="/rhevm-api/vms/0/floppies/00000000-0000-0000-0000-000000000000"&gt;
+  &lt;file id="boot.vfd"/&gt;
+&lt;/floppy&gt;
       </screen>
     </section>
 
@@ -278,7 +315,7 @@
         </para>
       </note>
       <screen>
-  &lt;disk id="ed7feafe-9aaf-458c-809a-ed789cdbd5b4" href="/rhevm-api/vms/cdc0b102-fbfe-444a-b9cb-57d2af94f401/disks/ed7feafe-9aaf-458c-809a-ed789cdbd5b4"&gt;
+&lt;disk id="ed7feafe-9aaf-458c-809a-ed789cdbd5b4" href="/rhevm-api/vms/cdc0b102-fbfe-444a-b9cb-57d2af94f401/disks/ed7feafe-9aaf-458c-809a-ed789cdbd5b4"&gt;
   &lt;size&gt;10737418240&lt;/size&gt;
   &lt;type&gt;SYSTEM&lt;/type&gt;
   &lt;status&gt;OK&lt;/status&gt;
@@ -337,7 +374,7 @@
       </note>
 
       <screen>
-  &lt;nic id="7a3cff5e-3cc4-47c2-8388-9adf16341f5e" href="/rhevm-api/vms/cdc0b102-fbfe-444a-b9cb-57d2af94f401/nics/7a3cff5e-3cc4-47c2-8388-9adf16341f5e"&gt;
+&lt;nic id="7a3cff5e-3cc4-47c2-8388-9adf16341f5e" href="/rhevm-api/vms/cdc0b102-fbfe-444a-b9cb-57d2af94f401/nics/7a3cff5e-3cc4-47c2-8388-9adf16341f5e"&gt;
   &lt;name&gt;nic1&lt;/name&gt;
   &lt;type&gt;PV&lt;/type&gt;
   &lt;mac address="00:1a:4a:16:84:07"/&gt;
