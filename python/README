@@ -1,0 +1,13 @@
+python-rhev is a Python interface for RHEV
+
+== Installation ==
+
+ $ python setup.py build
+ # python setup.py install
+
+== Running the tests ==
+
+ $ export RHEV_URL="https://server/path"
+ $ export RHEV_USERNAME="user@domain"
+ $ export RHEV_PASSWORD="s3cret"
+ $ nosetests

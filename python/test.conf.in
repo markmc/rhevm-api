@@ -1,0 +1,93 @@
+#
+# python-rhev test configuration file
+#
+# Edit this file, and copy it to test.conf in the root directory of a
+# checked out python-rhev source tree.
+#
+# IMPORTANT NOTE: THE RHEV TEST SUITE MAY COMPLETELY DESTROY THE RHEV
+# INSTANCE THAT IT CONNECTS TO WITHOUT ANY WARNING OR CONFIRMATION. USE
+# ONLY WITH SUITABLE TEST INSTALLATIONS. THERE ARE NO GUARANTEES!!!
+#
+# As a general rule, the test suite considers it is allowed to run
+# non-destructive tests on any object in the RHEV instance that is
+# specified here, and destructive tests on objects in that instance that
+# are mentioned by name in this file. However, you should not depend on
+# this behavior. Assume that any data that is present in the RHEV
+# instance configure here, and any storage connected to it, may be lost.
+
+[test]
+# How to reach the API
+url = <url>
+username = <username>
+password = <password>
+
+# We need an unused test network for network/NIC tests. Specify one here
+address = 192.168.123.0
+netmask = 255.255.255.0
+
+# Default datacenter/cluster/templates used for testing. These will not be
+# destroyed.
+datacenter = Default
+cluster = Default
+template = Blank
+
+# The test suite will run tests for hosts mentioned here. For best test
+# coverage, include at lest one RHEL and RHEV-H host. The hosts
+# specified here need to be in status UP or MAINTENANCE in RHEV. If they
+# are in MAINTENACE they must be activateable. If the hosts have
+# multiple NICs, tests on VLANs and bonds are performed. If the hosts have
+# power management enabled, that is tested as well.
+hosts = node1 node2
+
+# Each storage configuration provided here will be tested.
+storage = nfsdata iscsidata
+
+[node1]
+type = RHEV_H
+cpu = <cpu>
+isofile = <isofile>
+
+[node2]
+type = RHEL
+cpu = <cpu>
+address = <address>
+password = <password>
+
+[nfsdata]
+type = NFS
+address = <address>
+path = <path>
+iso = nfsiso
+export = nfsexport
+
+[nfsiso]
+type = NFS
+address = <address>
+path = <path>
+
+[nfsexport]
+type = NFS
+address = <address>
+path = <path>
+
+[iscsidata]
+type = ISCSI
+address = <address>
+port = 3260
+target = <target>
+username = <username>
+password = <password>
+# Specify either a set of LUNS here, or one volume group
+luns = <lun1> <lun2>
+volume_group = <vg>
+iso = nfsiso
+export = iscsiexport
+
+[iscsiexport]
+type = ISCSI
+host = node1
+address = <address>
+port = 3260
+username = <username>
+password = <password>
+luns = <luns>
