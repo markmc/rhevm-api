@@ -7,67 +7,118 @@
   <title>Storage Domains</title>
   <para>
     The storage domain specific elements which may be contained in the storage domain description are as follows:
+  </para>
+  <note>
+    <title>Element property icons</title>
+    <para>
+      The icons used in the properties column of this table are described in <xref linkend="table-Property_Icons" />
+    </para>
+  </note> 
 
+  <para>
     <informaltable frame="none">
-      <tgroup cols="2">
+      <tgroup cols="4">
         <colspec colwidth="2*"/>
-        <colspec colwidth="5*"/>
+        <colspec colwidth="4*"/>
+        <colspec colwidth="6*"/>
+        <colspec colwidth="3*" colname="prop"/>
+        <thead>
+          <row>
+            <entry>Element</entry>
+            <entry>Type</entry>
+            <entry>Description</entry>
+            <entry>Properties</entry>
+          </row>
+        </thead>
         <tbody>
           <row>
             <entry><literal>type</literal></entry>
             <entry>One of <literal>DATA</literal>, <literal>ISO</literal> or <literal>EXPORT</literal></entry>
+            <entry>The storage domain type</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/required.png" format="PNG" /></imageobject></inlinemediaobject><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>status</literal></entry>
             <entry>One of <literal>ACTIVE</literal>, <literal>INACTIVE</literal>, <literal>LOCKED</literal>, <literal>MIXED</literal>, <literal>UNATTACHED</literal> and <literal>UNINITIALIZED</literal></entry>
+            <entry>The storage domain status</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>storage</literal></entry>
+            <entry>complex</entry>
             <entry>Describes the underlying storage of the storage domain. See below.</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/required.png" format="PNG" /></imageobject></inlinemediaobject><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>master</literal></entry>
+            <entry>boolean: true or false</entry>
             <entry><literal>true</literal> if this is the master storage domain of a data center</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>host</literal></entry>
+            <entry>complex</entry>
             <entry>A reference to the host on which this storage domain should be initialized. The only restriction on this host is that it should have access to the physical storage specified.</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/required.png" format="PNG" /></imageobject></inlinemediaobject><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>available</literal></entry>
+            <entry>integer</entry>
             <entry>Space available in bytes</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>used</literal></entry>
+            <entry>integer</entry>
             <entry>Space used in bytes</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>committed</literal></entry>
+            <entry>integer</entry>
             <entry>Space committed in bytes</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
         </tbody>
       </tgroup>
     </informaltable>
-
+  </para>
+  <para>
     The <literal>storage</literal> element has a <literal>type</literal> element with the physical storage type and a number of elements specific to that storage type. The <literal>NFS</literal> specific elements are:
-
+  </para>
+  <para>
     <informaltable frame="none">
-      <tgroup cols="2">
+      <tgroup cols="4">
         <colspec colwidth="2*"/>
-        <colspec colwidth="5*"/>
+        <colspec colwidth="4*"/>
+        <colspec colwidth="6*"/>
+        <colspec colwidth="3*" colname="prop"/>
+        <thead>
+          <row>
+            <entry>Element</entry>
+            <entry>Type</entry>
+            <entry>Description</entry>
+            <entry>Properties</entry>
+          </row>
+        </thead>
         <tbody>
           <row>
             <entry><literal>address</literal></entry>
+            <entry>string</entry>
             <entry>The host name or IP address of the NFS server</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>path</literal></entry>
+            <entry>string</entry>
             <entry>The path of NFS mountable directory on the server</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
         </tbody>
       </tgroup>
     </informaltable>
-
+  </para>
+  <para>
     For example:
   </para>
 
@@ -103,24 +154,40 @@
 
     <para>
       The <literal>iSCSI</literal> and <literal>FCP</literal> specific elements in a <literal>storage</literal> description are:
-
-      <informaltable frame="none">
-        <tgroup cols="2">
-          <colspec colwidth="2*"/>
-          <colspec colwidth="5*"/>
-          <tbody>
+    </para>
+    <para>
+    <informaltable frame="none">
+      <tgroup cols="4">
+        <colspec colwidth="2*"/>
+        <colspec colwidth="4*"/>
+        <colspec colwidth="6*"/>
+        <colspec colwidth="3*" colname="prop"/>
+        <thead>
+          <row>
+            <entry>Element</entry>
+            <entry>Type</entry>
+            <entry>Description</entry>
+            <entry>Properties</entry>
+          </row>
+        </thead>
+        <tbody>
             <row>
               <entry><literal>logical_unit id</literal></entry>
+              <entry>complex</entry>
               <entry>A storage domain may be composed of multiple iSCSI or FCP logical units</entry>
+              <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
             </row>
             <row>
               <entry><literal>volume_group id</literal></entry>
+              <entry>complex</entry>
               <entry>Alternatively, a storage domain may be based on a single LVM Volume Group which, in turn, may be composed of multiple iSCSI or FCP logical units</entry>
+              <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
             </row>
           </tbody>
         </tgroup>
       </informaltable>
-
+    </para>
+    <para>
       See <xref linkend="sect-REST_API_Guide-Hosts-Storage"/> for more details.
     </para>
 

@@ -7,35 +7,64 @@
   <title>Networks</title>
   <para>
     The network specific elements which may be contained in the network description are as follows:
-
+  </para>
+  <note>
+    <title>Element property icons</title>
+    <para>
+      The icons used in the properties column of this table are described in <xref linkend="table-Property_Icons" />
+    </para>
+  </note>
+  <para>
     <informaltable frame="none">
-      <tgroup cols="2">
+      <tgroup cols="4">
         <colspec colwidth="2*"/>
-        <colspec colwidth="5*"/>
+        <colspec colwidth="4*"/>
+        <colspec colwidth="6*"/>
+        <colspec colwidth="3*" colname="prop"/>
+        <thead>
+          <row>
+            <entry>Element</entry>
+            <entry>Type</entry>
+            <entry>Description</entry>
+            <entry>Properties</entry>
+          </row>
+        </thead>
         <tbody>
           <row>
             <entry><literal>status</literal></entry>
-            <entry>Either <literal>OPERATIONAL</literal> or <literal>NON_OPERATIONAL</literal></entry>
+            <entry>One of <literal>OPERATIONAL</literal> or <literal>NON_OPERATIONAL</literal></entry>
+            <entry>The status of the network</entry>
+            <entry></entry>
           </row>
           <row>
             <entry><literal>datacenter</literal></entry>
-            <entry>A reference to the data center of which this cluster is a member. See <xref linkend="chap-REST_API_Guide-Data_Centers"/>></entry>
+            <entry>complex</entry>
+            <entry>A reference to the data center of which this cluster is a member. See <xref linkend="chap-REST_API_Guide-Data_Centers"/></entry>
+            <entry></entry>
           </row>
           <row>
             <entry><literal>ip address= netmask= gateway=</literal></entry>
+            <entry>complex</entry>
             <entry>Static IP configuration for the network</entry>
+            <entry></entry>
           </row>
           <row>
             <entry><literal>vlan id=</literal></entry>
+            <entry>complex</entry>
             <entry>A VLAN tag</entry>
+            <entry></entry>
           </row>
           <row>
             <entry><literal>stp</literal></entry>
+            <entry>boolean: true or false</entry>
             <entry><literal>true</literal> if Spanning Tree Protocol is enabled on this network</entry>
+            <entry></entry>
           </row>
           <row>
             <entry><literal>display</literal></entry>
+            <entry>boolean: true or false</entry>
             <entry><literal>true</literal> if this network is the display network</entry>
+            <entry></entry>
           </row>
         </tbody>
       </tgroup>

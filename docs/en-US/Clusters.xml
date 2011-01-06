@@ -8,27 +8,52 @@
 
   <para>
     The cluster specific elements which may be contained in the cluster description are as follows:
-
+  </para>
+  <note>
+    <title>Element property icons</title>
+    <para>
+      The icons used in the properties column of this table are described in <xref linkend="table-Property_Icons" />
+    </para>
+  </note>
+  <para>
     <informaltable frame="none">
-      <tgroup cols="2">
+      <tgroup cols="4">
         <colspec colwidth="2*"/>
-        <colspec colwidth="5*"/>
+        <colspec colwidth="4*"/>
+        <colspec colwidth="6*"/>
+        <colspec colwidth="3*" colname="prop"/>
+        <thead>
+          <row>
+            <entry>Element</entry>
+            <entry>Type</entry>
+            <entry>Description</entry>
+            <entry>Properties</entry>
+          </row>
+        </thead>
         <tbody>
           <row>
             <entry><literal>cpu</literal></entry>
+            <entry>complex</entry>
             <entry>A server CPU reference which defines which CPU type must be supported by all hosts in the cluster. See <xref linkend="sect-REST_API_Guide-Capabilities-CPUs"/></entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/required.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>data_center</literal></entry>
+            <entry>complex</entry>
             <entry>A reference to the data center of which this cluster is a member. See <xref linkend="chap-REST_API_Guide-Data_Centers"/></entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/required.png" format="PNG" /></imageobject></inlinemediaobject><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>version</literal></entry>
+            <entry>complex</entry>
             <entry>The compatibility level of the cluster (see <xref linkend="chap-REST_API_Guide-Cluster_Level_Versions"/>)</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>supported_versions</literal></entry>
+            <entry>complex</entry>
             <entry>A list of the <literal>version</literal>s to which the cluster may be updated (see <xref linkend="chap-REST_API_Guide-Cluster_Level_Versions"/>)</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
         </tbody>
       </tgroup>

@@ -7,101 +7,160 @@
   <title>Virtual Machines</title>
   <para>
     The VM specific elements which may be contained in the virtual machine description are as follows:
-
+  </para>
+  <note>
+    <title>Element property icons</title>
+    <para>
+      The icons used in the properties column of this table are described in <xref linkend="table-Property_Icons" />
+    </para>
+  </note>
+  <para>
     <informaltable frame="none">
-      <tgroup cols="2">
+      <tgroup cols="4">
         <colspec colwidth="2*"/>
-        <colspec colwidth="5*"/>
+        <colspec colwidth="4*"/>
+        <colspec colwidth="6*"/>
+        <colspec colwidth="3*" colname="prop"/>
+        <thead>
+          <row>
+            <entry>Element</entry>
+            <entry>Type</entry>
+            <entry>Description</entry>
+            <entry>Properties</entry>
+          </row>
+        </thead>
         <tbody>
           <row>
             <entry><literal>type</literal></entry>
-            <entry>One of DESKTOP or SERVER</entry>
+            <entry>One of <literal>DESKTOP</literal> or <literal>SERVER</literal></entry>
+            <entry>The virtual machine type</entry>
+            <entry> </entry>
           </row>
           <row>
             <entry><literal>status</literal></entry>
-            <entry>One of UNASSIGNED, DOWN, UP, POWERING_UP, POWERED_DOWN, PAUSED, MIGRATING_FROM, MIGRATING_TO, UNKNOWN, NOT_RESPONDING, WAIT_FOR_LAUNCH, REBOOT_IN_PROGRESS, SAVING_STATE, RESTORING_STATE, SUSPENDED, IMAGE_ILLEGAL, IMAGE_LOCKED or POWERING_DOWN</entry>
+            <entry>One of <literal>UNASSIGNED</literal>, <literal>DOWN</literal>, <literal>UP</literal>, <literal>POWERING_UP</literal>, <literal>POWERED_DOWN</literal>, <literal>PAUSED</literal>, <literal>MIGRATING_FROM</literal>, <literal>MIGRATING_TO</literal>, <literal>UNKNOWN</literal>, <literal>NOT_RESPONDING</literal>, <literal>WAIT_FOR_LAUNCH</literal>, <literal>REBOOT_IN_PROGRESS</literal>, <literal>SAVING_STATE</literal>, <literal>RESTORING_STATE</literal>, <literal>SUSPENDED</literal>, <literal>IMAGE_ILLEGAL</literal>, <literal>IMAGE_LOCKED</literal> or <literal>POWERING_DOWN</literal></entry>
+            <entry>The VM status</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>creation_time</literal></entry>
-            <entry>The date and time at which this VM was created, using the <literal>xsd:dateTime</literal> format: <literal>YYYY-MM-DDThh:mm:ss</literal></entry>
+            <entry><literal>xsd:dateTime</literal> format: <literal>YYYY-MM-DDThh:mm:ss</literal></entry>
+            <entry>The date and time at which this VM was created</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>start_time</literal></entry>
-            <entry>The date and time at which this VM was started, using the <literal>xsd:dateTime</literal> format: <literal>YYYY-MM-DDThh:mm:ss</literal></entry>
+            <entry><literal>xsd:dateTime</literal> format: <literal>YYYY-MM-DDThh:mm:ss</literal></entry>
+            <entry>The date and time at which this VM was started</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>origin</literal></entry>
-            <entry>The system from which this VM originated. One of RHEV, VMWARE or XEN</entry>
+            <entry>One of <literal>RHEV</literal>, <literal>VMWARE</literal> or <literal>XEN</literal></entry>
+            <entry>The system from which this VM originated</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>memory</literal></entry>
+            <entry>integer</entry>
             <entry>The amount of memory allocated to the guest, in bytes</entry>
+            <entry> </entry>
           </row>
           <row>
             <entry><literal>cpu</literal></entry>
+            <entry>complex</entry>
             <entry>The CPU <literal>topology</literal> (i.e. number of <literal>sockets</literal> and <literal>cores</literal> available to the guest)</entry>
+            <entry> </entry>
           </row>
           <row>
             <entry><literal>display</literal></entry>
+            <entry>complex</entry>
             <entry>The display <literal>type</literal> (either <literal>VNC</literal> or <literal>SPICE</literal>), port, and the number of <literal>monitors</literal></entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>os</literal> <literal>type</literal></entry>
-            <entry>The guest operating system type, e.g. <literal>RHEL5</literal> or <literal>WindowsXP</literal></entry>
+            <entry>string, e.g. <literal>RHEL5</literal> or <literal>WindowsXP</literal></entry>
+            <entry>The guest operating system type</entry>
+            <entry> </entry>
           </row>
           <row>
             <entry><literal>os</literal> <literal>boot dev="cdrom|hd|network"</literal></entry>
-            <entry>A list of boot devices (described by a <literal>dev</literal> attribute on a <literal>boot</literal> element) - either <literal>cdrom</literal>, <literal>hd</literal> or <literal>network</literal></entry>
+            <entry>One of <literal>cdrom</literal>, <literal>hd</literal> or <literal>network</literal></entry>
+            <entry>A list of boot devices (described by a <literal>dev</literal> attribute on a <literal>boot</literal> element)</entry>
+            <entry> </entry>
           </row>
           <row>
             <entry><literal>os</literal> <literal>kernel</literal></entry>
+            <entry>string</entry>
             <entry>A path to a kernel image which the VM is configured to boot from</entry>
+            <entry> </entry>
           </row>
           <row>
             <entry><literal>os</literal> <literal>initrd</literal></entry>
+            <entry>string</entry>
             <entry>A path to an initrd image to be used with the kernel above</entry>
+            <entry> </entry>
           </row>
           <row>
             <entry><literal>os</literal> <literal>cmdline</literal></entry>
+            <entry>string</entry>
             <entry>A kernel command line parameter string to be used with the kernel above</entry>
+            <entry> </entry>
           </row>
           <row>
             <entry><literal>highly_available</literal></entry>
+            <entry>boolean: true or false</entry>
             <entry><literal>true</literal> if the VM should be automatically restarted if the host crashes. A <literal>priority</literal> attribute controls the order in which VMs are re-started</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>stateless</literal></entry>
-            <entry>Boolean value specifying whether or not the VM is stateless. A stateless VM has a snapshot of its disk image
- taken at boot and deleted at shutdown, meaning state changes will not persist after a reboot. One of true or false.</entry>
+            <entry>boolean: true or false</entry>
+            <entry><literal>true</literal> if the VM is stateless. A stateless VM has a snapshot of its disk image taken at boot and deleted at shutdown, meaning state changes will not persist after a reboot. One of true or false.</entry>
+            <entry> </entry>
           </row>
           <row>
             <entry><literal>host</literal></entry>
+            <entry>complex</entry>
             <entry>A reference to the host which this VM is currently running on. See <xref linkend="chap-REST_API_Guide-Hosts"/></entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>cluster</literal></entry>
+            <entry>complex</entry>
             <entry>A reference to the cluster on which this VM will run. See <xref linkend="chap-REST_API_Guide-Clusters"/></entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/required.png" format="PNG" /></imageobject></inlinemediaobject><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>template</literal></entry>
+            <entry>complex</entry>
             <entry>A reference to the template on which this VM is based. See <xref linkend="chap-REST_API_Guide-Templates"/></entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/required.png" format="PNG" /></imageobject></inlinemediaobject><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>vmpool</literal></entry>
+            <entry>complex</entry>
             <entry>A reference to the VM pool which this VM is a member of. See <xref linkend="chap-REST_API_Guide-VM_Pools"/></entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>memory_statistics</literal></entry>
+            <entry>complex</entry>
             <entry>The memory <literal>utilization</literal> in percentage terms</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>cpu_statistics</literal></entry>
+            <entry>complex</entry>
             <entry>The cpu <literal>user</literal> and <literal>system</literal> utilization in percentage terms</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
         </tbody>
       </tgroup>
     </informaltable>
-
+  </para>
+  <para>
     For example:
   </para>
 

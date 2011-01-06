@@ -7,31 +7,58 @@
   <title>Data Centers</title>
   <para>
     The data center specific elements which may be contained in the data center description are as follows:
-
+  </para>
+  <note>
+    <title>Element property icons</title>
+    <para>
+      The icons used in the properties column of this table are described in <xref linkend="table-Property_Icons" />
+    </para>
+  </note>
+  <para>
     <informaltable frame="none">
-      <tgroup cols="2">
+      <tgroup cols="4">
         <colspec colwidth="2*"/>
-        <colspec colwidth="5*"/>
+        <colspec colwidth="4*"/>
+        <colspec colwidth="6*"/>
+        <colspec colwidth="3*" colname="prop"/>
+        <thead>
+          <row>
+            <entry>Element</entry>
+            <entry>Type</entry>
+            <entry>Description</entry>
+            <entry>Properties</entry>
+          </row>
+        </thead>
         <tbody>
           <row>
             <entry><literal>storage_type</literal></entry>
-            <entry>Describes which storage type is allowed in this datacenter. Either <literal>ISCSI</literal>, <literal>NFS</literal> or <literal>FCP</literal></entry>
+            <entry>One of <literal>ISCSI</literal>, <literal>NFS</literal> or <literal>FCP</literal></entry>
+            <entry>Describes which storage type is allowed in this datacenter</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/required.png" format="PNG" /></imageobject></inlinemediaobject><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>link rel="storagedomains"</literal></entry>
+            <entry>string</entry>
             <entry>A link to a description of the storage domains attached to this data center</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>link rel="files"</literal></entry>
+            <entry>string</entry>
             <entry>A link to a description of the files available in this data center</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>version</literal></entry>
+            <entry>complex</entry>
             <entry>The compatibility level of the data center (see <xref linkend="chap-REST_API_Guide-Cluster_Level_Versions"/>)</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>supported_versions</literal></entry>
+            <entry>complex</entry>
             <entry>A list of the <literal>version</literal>s to which the data center may be updated (see <xref linkend="chap-REST_API_Guide-Cluster_Level_Versions"/>)</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
         </tbody>
       </tgroup>

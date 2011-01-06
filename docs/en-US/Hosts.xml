@@ -7,44 +7,76 @@
   <title>Hosts</title>
   <para>
     The host specific elements which may be contained in the host description are as follows:
-
+  </para>
+  <note>
+    <title>Element property icons</title>
+    <para>
+      The icons used in the properties column of this table are described in <xref linkend="table-Property_Icons" />
+    </para>
+  </note>
+  <para>
     <informaltable frame="none">
-      <tgroup cols="2">
+      <tgroup cols="4">
         <colspec colwidth="2*"/>
-        <colspec colwidth="5*"/>
+        <colspec colwidth="4*"/>
+        <colspec colwidth="6*"/>
+        <colspec colwidth="3*" colname="prop"/>
+        <thead>
+          <row>
+            <entry>Element</entry>
+            <entry>Type</entry>
+            <entry>Description</entry>
+            <entry>Properties</entry>
+          </row>
+        </thead>
         <tbody>
           <row>
             <entry><literal>status</literal></entry>
-            <entry>One of DOWN, ERROR, INITIALIZING, INSTALLING, INSTALL_FAILED, MAINTENANCE, NON_OPERATIONAL, NON_RESPONSIVE, PENDING_APPROVAL, PREPARING_FOR_MAINTENANCE, PROBLEMATIC, REBOOT, UNASSIGNED or UP</entry>
+            <entry>One of <literal>DOWN</literal>, <literal>ERROR</literal>, <literal>INITIALIZING</literal>, <literal>INSTALLING</literal>, <literal>INSTALL_FAILED</literal>, <literal>MAINTENANCE</literal>, <literal>NON_OPERATIONAL</literal>, <literal>NON_RESPONSIVE</literal>, <literal>PENDING_APPROVAL</literal>, <literal>PREPARING_FOR_MAINTENANCE</literal>, <literal>PROBLEMATIC</literal>, <literal>REBOOT</literal>, <literal>UNASSIGNED</literal> or <literal>UP</literal></entry>
+            <entry>The host status</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>address</literal></entry>
+            <entry>string</entry>
             <entry>The IP address or hostname of the host</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/required.png" format="PNG" /></imageobject></inlinemediaobject><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>cluster</literal></entry>
+            <entry>complex</entry>
             <entry>The cluster that includes this host</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>port</literal></entry>
+            <entry>integer</entry>
             <entry>The listen port of the VDSM daemon running on this host</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>root_password</literal></entry>
+            <entry>string</entry>
             <entry>The root password of this host, by convention only included in the client-provided host representation on creation</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/required.png" format="PNG" /></imageobject></inlinemediaobject><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>version</literal></entry>
+            <entry>complex</entry>
             <entry>The compatibility level of the host (see <xref linkend="chap-REST_API_Guide-Cluster_Level_Versions"/>)</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>storage_manager</literal></entry>
+            <entry>boolean: true or false</entry>
             <entry><literal>true</literal> if the host is the storage pool manager (SPM)</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
         </tbody>
       </tgroup>
     </informaltable>
-
+  </para>
+  <para>
     For example:
   </para>
 
@@ -130,7 +162,8 @@
           </tbody>
         </tgroup>
       </informaltable>
-
+    </para>
+    <para>
       For example:
     </para>
 

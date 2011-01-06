@@ -7,7 +7,7 @@
   <title>Templates</title>
 
   <para>
-    The elements which may be contained in the template description are as follows:
+    The template specific elements which may be contained in the template description are as follows:
   </para>
   <note>
     <title>Element property icons</title>
@@ -52,13 +52,13 @@
           </row>
           <row>
             <entry><literal>origin</literal></entry>
-            <entry>One of RHEV, VMWARE or XEN</entry>
+            <entry>One of <literal>RHEV</literal>, <literal>VMWARE</literal> or <literal>XEN</literal></entry>
             <entry>The system from which this template originated</entry>
             <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>stateless</literal></entry>
-            <entry>Boolean: true or false</entry>
+            <entry>boolean: true or false</entry>
             <entry>A stateless template has a snapshot of its disk image taken at boot and deleted at shutdown, meaning state changes will not persist after a reboot</entry>
             <entry> </entry>
           </row>
