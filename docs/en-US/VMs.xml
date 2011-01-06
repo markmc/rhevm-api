@@ -94,10 +94,6 @@
             <entry><literal>cpu_statistics</literal></entry>
             <entry>The cpu <literal>user</literal> and <literal>system</literal> utilization in percentage terms</entry>
           </row>
-          <row>
-            <entry><literal>devices</literal></entry>
-            <entry>A collection of <literal>cdrom</literal>, <literal>floppy</literal>, <literal>disk</literal> or <literal>nic</literal> elements</entry>
-          </row>
         </tbody>
       </tgroup>
     </informaltable>
