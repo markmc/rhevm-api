@@ -22,6 +22,24 @@ Content-Type: application/xml
   &lt;link rel="hosts" href="{base}/hosts"/&gt;
   &lt;link rel="vms" href="{base}/vms"/&gt;
   ...
+  &lt;summary&gt;
+    &lt;vms&gt;
+      &lt;total&gt;10&lt;/total&gt;
+      &lt;active&gt;3&lt;/active&gt;
+    &lt;/vms&gt;
+    &lt;hosts&gt;
+      &lt;total&gt;2&lt;/total&gt;
+      &lt;active&gt;2&lt;/active&gt;
+    &lt;/hosts&gt;
+   &lt;users&gt;
+      &lt;total&gt;8&lt;/total&gt;
+      &lt;active&gt;2&lt;/active&gt;
+    &lt;/users&gt;
+    &lt;storage_domains&gt;
+      &lt;total&gt;2&lt;/total&gt;
+      &lt;active&gt;2&lt;/active&gt;
+    &lt;/storage_domains&gt;
+  &lt;/summary&gt;
 &lt;/api&gt;
   </screen>
 
@@ -30,7 +48,8 @@ Content-Type: application/xml
       For simplicity, in all other examples we omit the <literal>Host</literal> request header and assume <varname>{base}</varname> is <literal>/rhevm-api</literal>. This base path will differ depending on the implementation, for example it is <literal>/rhevm-api-powershell</literal> for the PowerShell-based implementation.
     </para>
   </note>
-
+  <section id="sect-REST_API_Guide-Entry_Point-Link">
+    <title>Link elements</title>
   <para>
     The <literal>Link</literal> header
     <footnote>
@@ -189,5 +208,35 @@ Content-Type: application/xml
     </informaltable>
 
   </para>
-
+  </section>
+  <section id="sect-REST_API_Guide-Entry_Point-Summary">
+    <title>Summary element</title>
+    <para>
+      The summary element shows a high level summary of the system's statistics. It includes the following elements:
+    </para>
+    <informaltable frame="none">
+      <tgroup cols="2">
+        <colspec colwidth="2*"/>
+        <colspec colwidth="5*"/>
+        <tbody>
+          <row>
+            <entry><literal>vms</literal></entry>
+            <entry>Total number of vms and total number of active vms</entry>
+          </row>
+          <row>
+            <entry><literal>hosts</literal></entry>
+            <entry>Total number of hosts and total number of active hosts</entry>
+          </row>
+          <row>
+            <entry><literal>users</literal></entry>
+            <entry>Total number of users and total number of active users</entry>
+          </row>
+          <row>
+            <entry><literal>storage_domains</literal></entry>
+            <entry>Total number of storage domains and total number of active storage domains</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+  </section>
 </chapter>
