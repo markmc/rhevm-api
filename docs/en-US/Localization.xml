@@ -18,6 +18,7 @@
         The format for language tags is described in <ulink url="http://www.ietf.org/rfc/rfc1766.txt">RFC 1766</ulink>
       </para>
     </footnote>
+    Currently, limited content is available in German (de), Dutch (nl) and Italian (it). Support for wider localization is a work in progress.
   </para>
   <example>
     <title>Using Accept-Language to request simplified Chinese output</title>
