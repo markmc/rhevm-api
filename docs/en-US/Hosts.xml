@@ -37,6 +37,10 @@
             <entry><literal>version</literal></entry>
             <entry>The compatibility level of the host (see <xref linkend="chap-REST_API_Guide-Cluster_Level_Versions"/>)</entry>
           </row>
+          <row>
+            <entry><literal>storage_manager</literal></entry>
+            <entry><literal>true</literal> if the host is the storage pool manager (SPM)</entry>
+          </row>
         </tbody>
       </tgroup>
     </informaltable>
@@ -51,6 +55,7 @@
   &lt;version major="2" minor="3"/&gt;
   &lt;cluster id="99408929-82cf-4dc7-a532-9d998063fa95" href="/rhevm-api/clusters/99408929-82cf-4dc7-a532-9d998063fa95"/&gt;
   &lt;port&gt;54321&lt;/port&gt;
+  &lt;storage_manager&gt;true&lt;/storage_manager&gt;
   &lt;link rel="nics" href="/rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3/nics"/&gt;
   &lt;link rel="storage" href="/rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3/storage"/&gt;
   &lt;link rel="tags" href="/rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3/tags"/&gt;
