@@ -33,6 +33,10 @@
             <entry><literal>stp</literal></entry>
             <entry><literal>true</literal> if Spanning Tree Protocol is enabled on this network</entry>
           </row>
+          <row>
+            <entry><literal>display</literal></entry>
+            <entry><literal>true</literal> if this network is the display network</entry>
+          </row>
         </tbody>
       </tgroup>
     </informaltable>
