@@ -122,42 +122,76 @@
 
     <para>
       Each network interface is represented by a <literal>host_nic</literal> element which may contain the following properties:
-      <informaltable frame="none">
-        <tgroup cols="2">
-          <colspec colwidth="2*"/>
-          <colspec colwidth="5*"/>
-          <tbody>
+    </para>
+  <note>
+    <title>Element property icons</title>
+    <para>
+      The icons used in the properties column of this table are described in <xref linkend="table-Property_Icons" />
+    </para>
+  </note>
+  <para>
+    <informaltable frame="none">
+      <tgroup cols="4">
+        <colspec colwidth="2*"/>
+        <colspec colwidth="4*"/>
+        <colspec colwidth="6*"/>
+        <colspec colwidth="3*" colname="prop"/>
+        <thead>
+          <row>
+            <entry>Element</entry>
+            <entry>Type</entry>
+            <entry>Description</entry>
+            <entry>Properties</entry>
+          </row>
+        </thead>
+        <tbody>
             <row>
               <entry><literal>name</literal></entry>
+              <entry>string</entry>
               <entry>The name of the host network interface, e.g. <literal>eth0</literal></entry>
+              <entry><inlinemediaobject><imageobject><imagedata fileref="images/required.png" format="PNG" /></imageobject></inlinemediaobject><footnote><para>Only required when adding bonded interfaces. Other interfaces are read-only and cannot be added.</para></footnote><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
             </row>
             <row>
               <entry><literal>host id</literal></entry>
+              <entry>GUID</entry>
               <entry>A reference to the host</entry>
+              <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
             </row>
             <row>
               <entry><literal>network id</literal></entry>
+              <entry>GUID</entry>
               <entry>A reference to the network, if any, that the interface is attached to</entry>
+              <entry><inlinemediaobject><imageobject><imagedata fileref="images/required.png" format="PNG" /></imageobject></inlinemediaobject><footnote><para>Only required when adding bonded interfaces. Other interfaces are read-only and cannot be added.</para></footnote><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
             </row>
             <row>
               <entry><literal>mac address</literal></entry>
+              <entry>string</entry>
               <entry>The MAC address of the interface</entry>
+              <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
             </row>
             <row>
               <entry><literal>ip address/netmask/gateway</literal></entry>
+              <entry>complex</entry>
               <entry>The IP level configuration of the interface</entry>
+              <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
             </row>
             <row>
               <entry><literal>vlan id</literal></entry>
+              <entry>GUID</entry>
               <entry>The VLAN which this interface represents, if any</entry>
+              <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
             </row>
             <row>
               <entry><literal>slaves</literal></entry>
+              <entry>complex</entry>
               <entry>A list of slave <literal>host_nic</literal> elements, if this is a bonded interface</entry>
+              <entry><inlinemediaobject><imageobject><imagedata fileref="images/required.png" format="PNG" /></imageobject></inlinemediaobject><footnote><para>Only required when adding bonded interfaces. Other interfaces are read-only and cannot be added.</para></footnote><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
             </row>
             <row>
               <entry><literal>link rel="master"</literal></entry>
+              <entry>complex</entry>
               <entry>A reference to the master bonded interface, if this is a slave interface</entry>
+              <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
             </row>
           </tbody>
         </tgroup>
@@ -306,37 +340,64 @@ Content-type: application/xml
 
     <para>
       Each <literal>storage</literal> description in the collection represents either a SCSI LUN or an LVM volume group. A <literal>logical_unit</literal> representation may contain:
-    </para>
-
+  </para>
+  <note>
+    <title>Element property icons</title>
     <para>
-      <informaltable frame="none">
-        <tgroup cols="2">
-          <colspec colwidth="2*"/>
-          <colspec colwidth="5*"/>
-          <tbody>
+      The icons used in the properties column of this table are described in <xref linkend="table-Property_Icons" />
+    </para>
+  </note>
+  <para>
+    <informaltable frame="none">
+      <tgroup cols="4">
+        <colspec colwidth="2*"/>
+        <colspec colwidth="4*"/>
+        <colspec colwidth="6*"/>
+        <colspec colwidth="3*" colname="prop"/>
+        <thead>
+          <row>
+            <entry>Element</entry>
+            <entry>Type</entry>
+            <entry>Description</entry>
+            <entry>Properties</entry>
+          </row>
+        </thead>
+        <tbody>
             <row>
               <entry><literal>id</literal></entry>
+              <entry>GUID</entry>
               <entry>An opaque identifier for the logical unit</entry>
+              <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
             </row>
             <row>
               <entry><literal>address</literal></entry>
+              <entry>string</entry>
               <entry>The address of the iSCSI portal containing the LUN, in the case of iSCSI</entry>
+              <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
             </row>
             <row>
               <entry><literal>port</literal></entry>
+              <entry>integer</entry>
               <entry>The port number of the iSCSI portal</entry>
+              <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
             </row>
             <row>
               <entry><literal>target</literal></entry>
+              <entry>string</entry>
               <entry>The iSCSI target IQN</entry>
+              <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
             </row>
             <row>
               <entry><literal>username</literal></entry>
+              <entry>string</entry>
               <entry>A CHAP user name for logging into an iSCSI target</entry>
+              <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
             </row>
             <row>
               <entry><literal>password</literal></entry>
+              <entry>string</entry>
               <entry>A CHAP password for logging into an iSCSI target</entry>
+              <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
             </row>
           </tbody>
         </tgroup>
@@ -348,22 +409,38 @@ Content-type: application/xml
     </para>
 
     <para>
-      <informaltable frame="none">
-        <tgroup cols="2">
-          <colspec colwidth="2*"/>
-          <colspec colwidth="5*"/>
-          <tbody>
+    <informaltable frame="none">
+      <tgroup cols="4">
+        <colspec colwidth="2*"/>
+        <colspec colwidth="4*"/>
+        <colspec colwidth="6*"/>
+        <colspec colwidth="3*" colname="prop"/>
+        <thead>
+          <row>
+            <entry>Element</entry>
+            <entry>Type</entry>
+            <entry>Description</entry>
+            <entry>Properties</entry>
+          </row>
+        </thead>
+        <tbody>
             <row>
               <entry><literal>id</literal></entry>
+              <entry>GUID</entry>
               <entry>An opaque identifier for the volume group</entry>
+              <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
             </row>
             <row>
               <entry><literal>name</literal></entry>
+              <entry>string</entry>
               <entry>An volume group name</entry>
+              <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
             </row>
             <row>
               <entry><literal>logical_unit</literal></entry>
+              <entry>complex</entry>
               <entry>Details of any SCSI LUNs on which the volume group is based</entry>
+              <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
             </row>
           </tbody>
         </tgroup>

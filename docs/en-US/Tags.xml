@@ -8,23 +8,46 @@
 
   <para>
     The tag specific elements which may be contained in the tag description are as follows:
-
+  </para>
+  <note>
+    <title>Element property icons</title>
+    <para>
+      The icons used in the properties column of this table are described in <xref linkend="table-Property_Icons" />
+    </para>
+  </note>
+  <para>
     <informaltable frame="none">
-      <tgroup cols="2">
+      <tgroup cols="4">
         <colspec colwidth="2*"/>
-        <colspec colwidth="5*"/>
+        <colspec colwidth="4*"/>
+        <colspec colwidth="6*"/>
+        <colspec colwidth="3*" colname="prop"/>
+        <thead>
+          <row>
+            <entry>Element</entry>
+            <entry>Type</entry>
+            <entry>Description</entry>
+            <entry>Properties</entry>
+          </row>
+        </thead>
         <tbody>
           <row>
             <entry><literal>host</literal></entry>
+            <entry>complex</entry>
             <entry>A reference to the host which the tag is attached. See <xref linkend="chap-REST_API_Guide-Hosts"/></entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>user</literal></entry>
+            <entry>complex</entry>
             <entry>A reference to the user which the tag is attached. See <xref linkend="chap-REST_API_Guide-Users-and-Roles"/></entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>vm</literal></entry>
+            <entry>complex</entry>
             <entry>A reference to the VM which the tag is attached. See <xref linkend="chap-REST_API_Guide-VMs"/></entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
         </tbody>
       </tgroup>

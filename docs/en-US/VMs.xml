@@ -316,51 +316,88 @@
 
       <para>
         Disk devices are represented by a <literal>disk</literal> element containing the following properties:
-
-        <informaltable frame="none">
-          <tgroup cols="2">
-            <colspec colwidth="2*"/>
-            <colspec colwidth="5*"/>
-            <tbody>
+  </para>
+  <note>
+    <title>Element property icons</title>
+    <para>
+      The icons used in the properties column of this table are described in <xref linkend="table-Property_Icons" />
+    </para>
+  </note>
+  <para>
+    <informaltable frame="none">
+      <tgroup cols="4">
+        <colspec colwidth="2*"/>
+        <colspec colwidth="4*"/>
+        <colspec colwidth="6*"/>
+        <colspec colwidth="3*" colname="prop"/>
+        <thead>
+          <row>
+            <entry>Element</entry>
+            <entry>Type</entry>
+            <entry>Description</entry>
+            <entry>Properties</entry>
+          </row>
+        </thead>
+        <tbody>
               <row>
                 <entry><literal>size</literal></entry>
-                <entry>The size, in bytes, of the disk</entry>
+                <entry>integer</entry>
+                <entry>Size of the disk in bytes</entry>
+                <entry><inlinemediaobject><imageobject><imagedata fileref="images/required.png" format="PNG" /></imageobject></inlinemediaobject><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
               </row>
               <row>
                 <entry><literal>type</literal></entry>
-                <entry>DATA, SHARED, SWAP, SYSTEM or TEMP</entry>
+                <entry>One of <literal>DATA</literal>, <literal>SHARED</literal>, <literal>SWAP</literal>, <literal>SYSTEM</literal> or <literal>TEMP</literal></entry>
+                <entry>The type (function) of the disk device</entry>
+                <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
               </row>
               <row>
                 <entry><literal>status</literal></entry>
-                <entry>ILLEGAL, INVALID, LOCKED or OK</entry>
+                <entry>One of <literal>ILLEGAL</literal>, <literal>INVALID</literal>, <literal>LOCKED</literal> or <literal>OK</literal></entry>
+                <entry>The status of the disk device</entry>
+                <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
               </row>
               <row>
                 <entry><literal>interface</literal></entry>
-                <entry>IDE, SCSI or VIRTIO</entry>
+                <entry>One of <literal>IDE</literal>, <literal>SCSI</literal> or <literal>VIRTIO</literal></entry>
+                <entry>The type of interface driver used to connect to the disk device</entry>
+                <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
               </row>
               <row>
                 <entry><literal>format</literal></entry>
-                <entry>COW or RAW</entry>
+                <entry>One of <literal>COW</literal> or <literal>RAW</literal></entry>
+                <entry>The underlying storage format. Copy On Write (COW) allows snapshots, with a small performance overhead. Raw does not allow snapshots, but offers improved performance.</entry>
+                <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
               </row>
               <row>
                 <entry><literal>sparse</literal></entry>
+                <entry>boolean: true or false</entry>
                 <entry><literal>true</literal> if the physical storage for the disk should not be preallocated</entry>
+                <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
               </row>
               <row>
                 <entry><literal>bootable</literal></entry>
+                <entry>boolean: true or false</entry>
                 <entry><literal>true</literal> if this disk is to be marked as bootable</entry>
+                <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
               </row>
               <row>
                 <entry><literal>wipe_after_delete</literal></entry>
+                <entry>boolean: true or false</entry>
                 <entry><literal>true</literal> if the underlying physical storage for the disk should be zeroed when the disk is deleted</entry>
+                <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
               </row>
               <row>
                 <entry><literal>propagate_errors</literal></entry>
+                <entry>boolean: true or false</entry>
                 <entry><literal>true</literal> if disk errors should not cause VM to be paused and, instead, disk errors should be propagated to the guest OS</entry>
+                <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
               </row>
               <row>
                 <entry><literal>storage_domain</literal></entry>
+                <entry>GUID</entry>
                 <entry>The ID of the associated storage domain, only used when adding the first disk to a VM that was not itself created from a template</entry>
+                <entry><inlinemediaobject><imageobject><imagedata fileref="images/required.png" format="PNG" /></imageobject></inlinemediaobject><footnote><para>Only required when the first disk is being added to a VM that was not itself created from a template.</para></footnote><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
               </row>
             </tbody>
           </tgroup>
@@ -394,30 +431,58 @@
 
       <para>
         Network interface devices are represented by a <literal>nic</literal> element containing the following properties:
+      </para>
+      <note>
+        <title>Element property icons</title>
+        <para>
+          The icons used in the properties column of this table are described in <xref linkend="table-Property_Icons" />
+        </para>
+      </note>
+      <para>
         <informaltable frame="none">
-          <tgroup cols="2">
+          <tgroup cols="4">
             <colspec colwidth="2*"/>
-            <colspec colwidth="5*"/>
+            <colspec colwidth="4*"/>
+            <colspec colwidth="6*"/>
+            <colspec colwidth="3*" colname="prop"/>
+            <thead>
+              <row>
+                <entry>Element</entry>
+                <entry>Type</entry>
+                <entry>Description</entry>
+                <entry>Properties</entry>
+              </row>
+            </thead>
             <tbody>
               <row>
                 <entry><literal>name</literal></entry>
+                <entry>string</entry>
                 <entry>The name of the guest network device, e.g. <literal>eth0</literal></entry>
+                <entry><inlinemediaobject><imageobject><imagedata fileref="images/required.png" format="PNG" /></imageobject></inlinemediaobject><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
               </row>
               <row>
                 <entry><literal>network id</literal></entry>
+                <entry>GUID</entry>
                 <entry>A reference to the network which the interface should be connected</entry>
+                <entry><inlinemediaobject><imageobject><imagedata fileref="images/required.png" format="PNG" /></imageobject></inlinemediaobject><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
               </row>
               <row>
                 <entry><literal>type</literal></entry>
-                <entry>E1000, PV, RTL8139 or RTL8139_PV</entry>
+                <entry>One of <literal>E1000</literal>, <literal>PV</literal>, <literal>RTL8139</literal> or <literal>RTL8139_PV</literal></entry>
+                <entry>The type of driver used for the nic</entry>
+                <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
               </row>
               <row>
                 <entry><literal>mac address</literal></entry>
+                <entry>string</entry>
                 <entry>The MAC address of the interface</entry>
+                <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
               </row>
               <row>
                 <entry><literal>ip address/netmask/gateway</literal></entry>
+                <entry>complex</entry>
                 <entry>IP level details on the interface configuration, obtained from a guest agent if available</entry>
+                <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
               </row>
             </tbody>
           </tgroup>
@@ -457,23 +522,46 @@
 
     <para>
       VM snapshots are represented by a <literal>snapshot</literal> element containing the following snapshot-specific properties:
-
+    </para>
+    <note>
+      <title>Element property icons</title>
+      <para>
+        The icons used in the properties column of this table are described in <xref linkend="table-Property_Icons" />
+      </para>
+    </note>
+    <para>
       <informaltable frame="none">
-        <tgroup cols="2">
+        <tgroup cols="4">
           <colspec colwidth="2*"/>
-          <colspec colwidth="5*"/>
+          <colspec colwidth="4*"/>
+          <colspec colwidth="6*"/>
+          <colspec colwidth="3*" colname="prop"/>
+          <thead>
+            <row>
+              <entry>Element</entry>
+              <entry>Type</entry>
+              <entry>Description</entry>
+              <entry>Properties</entry>
+            </row>
+          </thead>
           <tbody>
             <row>
               <entry><literal>vm</literal></entry>
+              <entry>complex</entry>
               <entry>The ID and URI of the VM to which this snapshot pertains</entry>
+              <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
             </row>
             <row>
               <entry><literal>date</literal></entry>
-              <entry>The date and time at which this snapshot was created, using the <literal>xsd:dateTime</literal> format: <literal>YYYY-MM-DDThh:mm:ss</literal></entry>
+              <entry><literal>xsd:dateTime</literal> format: <literal>YYYY-MM-DDThh:mm:ss</literal></entry>
+              <entry>The date and time at which this snapshot was created.</entry>
+              <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
             </row>
             <row>
               <entry><literal>link rel="prev"</literal></entry>
+              <entry>complex</entry>
               <entry>A link to the previous snapshot of this VM</entry>
+              <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
             </row>
           </tbody>
         </tgroup>
@@ -481,7 +569,7 @@
     </para>
 
     <para>
-      When adding a new disk, only the <literal>description</literal> property may be specified.
+      When adding a new snapshot, only the <literal>description</literal> property may be specified.
     </para>
 
     <note>

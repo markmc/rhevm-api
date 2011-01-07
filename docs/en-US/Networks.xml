@@ -50,7 +50,7 @@
           </row>
           <row>
             <entry><literal>vlan id=</literal></entry>
-            <entry>complex</entry>
+            <entry>GUID</entry>
             <entry>A VLAN tag</entry>
             <entry></entry>
           </row>

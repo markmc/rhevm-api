@@ -14,32 +14,58 @@
     <title>Roles</title>
     <para>
       The <literal>rel="roles"</literal> link obtained from the entry point URI (see <xref linkend="chap-REST_API_Guide-Entry_Point"/>) provides access to a static set of system roles. Each individual <literal>role</literal> elements contain the following:
-
-      <informaltable frame="none">
-        <tgroup cols="2">
-          <colspec colwidth="2*"/>
-          <colspec colwidth="5*"/>
-          <tbody>
+  </para>
+  <note>
+    <title>Element property icons</title>
+    <para>
+      The icons used in the properties column of this table are described in <xref linkend="table-Property_Icons" />
+    </para>
+  </note>
+  <para>
+    <informaltable frame="none">
+      <tgroup cols="4">
+        <colspec colwidth="2*"/>
+        <colspec colwidth="4*"/>
+        <colspec colwidth="6*"/>
+        <colspec colwidth="3*" colname="prop"/>
+        <thead>
+          <row>
+            <entry>Element</entry>
+            <entry>Type</entry>
+            <entry>Description</entry>
+            <entry>Properties</entry>
+          </row>
+        </thead>
+        <tbody>
             <row>
               <entry><literal>id</literal></entry>
+              <entry>GUID</entry>
               <entry>Globally unique identifier for this role</entry>
+              <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
             </row>
             <row>
               <entry><literal>name</literal></entry>
+              <entry>string</entry>
               <entry>The role name (may be used as a more convenient identifier in any role-specific operations)</entry>
+              <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
             </row>
             <row>
               <entry><literal>description</literal></entry>
+              <entry>string</entry>
               <entry>A free-text description of the role</entry>
+              <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
             </row>
             <row>
               <entry><literal>user</literal></entry>
+              <entry>complex</entry>
               <entry>A reference to the associated user (only present in the context of the role represented being assigned to an individual user)</entry>
+              <entry> </entry>
             </row>
           </tbody>
         </tgroup>
       </informaltable>
-
+   </para>
+   <para>
       For example:
     </para>
 
@@ -93,43 +119,76 @@ Content-Type: application/xml
 
     <para>
       Users are exposed via a top-level collection, referenced by the <literal>rel="users"</literal> link. Individual <literal>user</literal> elements contain the following:
-      <informaltable frame="none">
-        <tgroup cols="2">
-          <colspec colwidth="2*"/>
-          <colspec colwidth="5*"/>
-          <tbody>
+  </para>
+  <note>
+    <title>Element property icons</title>
+    <para>
+      The icons used in the properties column of this table are described in <xref linkend="table-Property_Icons" />
+    </para>
+  </note>
+  <para>
+    <informaltable frame="none">
+      <tgroup cols="4">
+        <colspec colwidth="2*"/>
+        <colspec colwidth="4*"/>
+        <colspec colwidth="6*"/>
+        <colspec colwidth="3*" colname="prop"/>
+        <thead>
+          <row>
+            <entry>Element</entry>
+            <entry>Type</entry>
+            <entry>Description</entry>
+            <entry>Properties</entry>
+          </row>
+        </thead>
+        <tbody>
             <row>
               <entry><literal>id</literal></entry>
+              <entry>GUID</entry>
               <entry>Globally unique identifier for this user</entry>
+              <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
             </row>
             <row>
               <entry><literal>user_name</literal></entry>
+              <entry>string</entry>
               <entry>The user principal name (may be used as a more convenient identifier when adding a new user)</entry>
+              <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
             </row>
             <row>
               <entry><literal>name</literal></entry>
+              <entry>string</entry>
               <entry>A free-text name for the user</entry>
+              <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
             </row>
             <row>
               <entry><literal>description</literal></entry>
+              <entry>string</entry>
               <entry>A free-text description of the user</entry>
+              <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
             </row>
             <row>
               <entry><literal>domain</literal></entry>
+              <entry>string</entry>
               <entry>The containing Active Directory domain</entry>
+              <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
             </row>
             <row>
               <entry><literal>groups</literal></entry>
+              <entry>complex</entry>
               <entry>A list of Active Directory groups for this user</entry>
+              <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
             </row>
             <row>
               <entry><literal>logged_in</literal></entry>
-              <entry><literal>True</literal> if the user is currently logged in</entry>
+              <entry>boolean: true or false</entry>
+              <entry><literal>true</literal> if the user is currently logged in</entry>
+              <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
             </row>
           </tbody>
         </tgroup>
       </informaltable>
-
+    </para>
+    <para>
        For example:
     </para>
 
