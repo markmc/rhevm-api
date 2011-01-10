@@ -75,6 +75,12 @@
             <entry> </entry>
           </row>
           <row>
+            <entry><literal>display</literal></entry>
+            <entry>complex</entry>
+            <entry>The display <literal>type</literal> (either <literal>VNC</literal> or <literal>SPICE</literal>), port, and the number of <literal>monitors</literal></entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
+          </row>
+          <row>
             <entry><literal>os</literal> <literal>boot dev="cdrom|hd|network"</literal></entry>
             <entry>One of <literal>cdrom</literal>, <literal>hd</literal> or <literal>network</literal></entry>
             <entry>A list of boot devices, described by a <literal>dev</literal> attribute on a <literal>boot</literal> element</entry>
@@ -96,6 +102,12 @@
             <entry><literal>os</literal> <literal>cmdline</literal></entry>
             <entry>string</entry>
             <entry>A kernel command line parameter string to be used with the kernel above</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
+          </row>
+          <row>
+            <entry><literal>highly_available</literal></entry>
+            <entry>boolean: true or false</entry>
+            <entry><literal>true</literal> if the VM should be automatically restarted if the host crashes. A <literal>priority</literal> attribute controls the order in which VMs are re-started</entry>
             <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
@@ -130,9 +142,15 @@
   &lt;cpu&gt;
     &lt;topology cores="1" sockets="1"/&gt;
   &lt;/cpu&gt;
+  &lt;display&gt;
+    &lt;type&gt;VNC&lt;/type&gt;
+    &lt;port&gt;5910&lt;/port&gt;
+    &lt;monitors&gt;1&lt;/monitors&gt;
+  &lt;/display&gt;
   &lt;os&gt;
     &lt;boot dev="hd"/&gt;
   &lt;/os&gt;
+  &lt;highly_available priority="20"&gt;true&lt;/highly_available&gt;
   &lt;cluster id="99408929-82cf-4dc7-a532-9d998063fa95" href="/rhevm-api/clusters/99408929-82cf-4dc7-a532-9d998063fa95"/&gt;
   &lt;actions&gt;
     &lt;link rel="export" href="/rhevm-api/templates/00000000-0000-0000-0000-000000000000/export"/&gt;
