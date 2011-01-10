@@ -72,12 +72,19 @@
   &lt;supported_versions&gt;
     &lt;version major="2" minor="3"/&gt;
   &lt;/supported_versions&gt;
+  &lt;memory_policy&gt;
+    &lt;overcommit percent="200"/&gt;
+  &lt;/memory_policy&gt;
+  &lt;scheduling_policy&gt;
+    &lt;policy&gt;POWER_SAVING&lt;/policy&gt;
+    &lt;thresholds low="10" high="75" duration="120"/&gt;
+  &lt;/scheduling_policy&gt;
   &lt;link rel="networks" href="/rhevm-api/clusters/99408929-82cf-4dc7-a532-9d998063fa95/networks"/&gt;
 &lt;/cluster&gt;
   </screen>
 
   <para>
-    When creating a new cluster, the <literal>name</literal>, <literal>cpu id</literal> and <literal>datacenter id</literal> properties are required. Only the <literal>name</literal>, <literal>description</literal> and <literal>cpu id</literal> elements may be updated post-creation.
+    When creating a new cluster, the <literal>name</literal>, <literal>cpu id</literal> and <literal>datacenter</literal> properties are required. The datacenter may be identified by either name or id. Only the <literal>name</literal>, <literal>description</literal> and <literal>cpu id</literal> elements may be updated post-creation.
   </para>
 
   <section id="sect-REST_API_Guide-Clusters-Networks">
