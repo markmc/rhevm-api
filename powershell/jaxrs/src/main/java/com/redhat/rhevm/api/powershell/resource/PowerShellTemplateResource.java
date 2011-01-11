@@ -21,6 +21,7 @@ package com.redhat.rhevm.api.powershell.resource;
 import java.util.List;
 import java.util.concurrent.Executor;
 
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
@@ -56,8 +57,10 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
                                       Executor executor,
                                       UriInfoProvider uriProvider,
                                       PowerShellPoolMap shellPools,
-                                      PowerShellParser parser) {
+                                      PowerShellParser parser,
+                                      HttpHeaders httpHeaders) {
         super(id, executor, uriProvider, shellPools, parser);
+        setHttpHeaders(httpHeaders);
     }
 
     public static List<PowerShellTemplate> runAndParse(PowerShellPool pool,

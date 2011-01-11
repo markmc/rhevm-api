@@ -32,7 +32,6 @@ import com.redhat.rhevm.api.resource.TemplatesResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellTemplate;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
-import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
@@ -48,7 +47,7 @@ public class PowerShellTemplatesResource
         buf.append("foreach { ");
         buf.append(PowerShellUtils.getDateHack("creationdate"));
         buf.append("$_; ");
-        buf.append("}");
+        buf.append("};");
         PROCESS_TEMPLATES = buf.toString();
     }
 
@@ -73,6 +72,7 @@ public class PowerShellTemplatesResource
     public Response add(Template template) {
         validateParameters(template, "name", "vm.id|name");
         StringBuilder buf = new StringBuilder();
+        Response response = null;
 
         if (template.getVm().isSetId()) {
             buf.append("$v = get-vm " + PowerShellUtils.escape(template.getVm().getId())+ ";");
@@ -95,7 +95,6 @@ public class PowerShellTemplatesResource
         }
 
         buf.append("add-template");
-        buf.append(" -async");
         buf.append(" -name " + PowerShellUtils.escape(template.getName()) + "");
         if (template.getDescription() != null) {
             buf.append(" -description " + PowerShellUtils.escape(template.getDescription()));
@@ -134,13 +133,26 @@ public class PowerShellTemplatesResource
                 buf.append(" -displaytype " + PowerShellVM.asString(display.getType()));
             }
         }
-        PowerShellTemplate ret = runAndParseSingle(buf.toString() + PROCESS_TEMPLATES);
+        
+        boolean expectBlocking = expectBlocking();
+        if (expectBlocking) {
+            buf.append(PROCESS_TEMPLATES);
+        } else {
+            buf.append(ASYNC_OPTION).append(PROCESS_TEMPLATES).append(ASYNC_TASKS);
+        }
 
-        template = PowerShellTemplateResource.addLinks(getUriInfo(), ret);
+        PowerShellTemplate created = runAndParseSingle(buf.toString());
 
-        UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(ret.getId());
+        if (expectBlocking || created.getTaskIds() == null) {
+            template = PowerShellTemplateResource.addLinks(getUriInfo(), created);
+            UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(template.getId());
+            response = Response.created(uriBuilder.build()).entity(template).build();
+        } else {
+            template = addStatus(getUriInfo(), PowerShellTemplateResource.addLinks(getUriInfo(), created), created.getTaskIds());
+            response = Response.status(202).entity(template).build();
+        }
 
-        return Response.created(uriBuilder.build()).entity(template).build();
+        return response;
     }
 
     @Override
@@ -155,6 +167,7 @@ public class PowerShellTemplatesResource
     }
 
     protected PowerShellTemplateResource createSubResource(String id) {
-        return new PowerShellTemplateResource(id, getExecutor(), this, shellPools, getParser());
+        return new PowerShellTemplateResource(id, getExecutor(), this, shellPools, getParser(), httpHeaders);
     }
+
 }

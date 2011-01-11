@@ -19,6 +19,7 @@
 package com.redhat.rhevm.api.powershell.resource;
 
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 
 import org.junit.Test;
 
@@ -64,9 +65,10 @@ public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectio
     private static final String STATEFUL_ADD_COMMAND_EPILOG = " -stateless ";
     private static final String DISPLAY_TYPE_ADD_COMMAND_EPILOG = " -displaytype VNC";
     private static final String OS_ADD_COMMAND_EPILOG = " -os \"OtherLinux\"";
+    private static final String ASYNC_EPILOG =  ASYNC_OPTION  + PROCESS_TEMPLATES + ASYNC_TASKS;
 
     public PowerShellTemplatesResourceTest() {
-        super(new PowerShellTemplateResource("0", null, null, null, null), "templates", "template", extraArgs);
+        super(new PowerShellTemplateResource("0", null, null, null, null, null), "templates", "template", extraArgs);
     }
 
     @Test
@@ -91,129 +93,174 @@ public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectio
     }
 
     @Test
-    public void testAddWithVmId() throws Exception {
+    public void testAddBlocking() throws Exception {
+        setUpHttpHeaderExpectations("Expect", "201-created");
+
         resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND_PROLOG
-                                                         + getAddCommand(true)
+                                                         + getAddCommand()
                                                          + ADD_COMMAND_EPILOG
                                                          + PROCESS_TEMPLATES,
                                                          getAddReturn(),
                                                          NEW_NAME));
-        verifyResponse(resource.add(getModel(NEW_NAME, NEW_DESCRIPTION)),
-                       NEW_NAME,
-                       NEW_DESCRIPTION);
+        Response response = resource.add(getModel(NEW_NAME, NEW_DESCRIPTION));
+        verifyResponse(response, NEW_NAME, NEW_DESCRIPTION);
+        assertEquals(201, response.getStatus());
+    }
+
+    @Test
+    public void testAddWithVmId() throws Exception {
+        setUpHttpHeaderExpectations("Expect", null);
+
+        resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND_PROLOG
+                                                         + getAddCommand()
+                                                         + ADD_COMMAND_EPILOG
+                                                         + ASYNC_EPILOG,
+                                                         getAddReturn(),
+                                                         false,
+                                                         NEW_NAME));
+        verifyCreated(resource.add(getModel(NEW_NAME, NEW_DESCRIPTION)),
+                      Template.class,
+                      NEW_NAME,
+                      NEW_DESCRIPTION);
     }
 
     @Test
     public void testAddWithNoCluster() throws Exception {
+        setUpHttpHeaderExpectations("Expect", null);
+
         Template model = getModel(NEW_NAME, NEW_DESCRIPTION);
         model.setCluster(null);
         resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND_PROLOG
-                                                         + getAddCommand(true)
+                                                         + getAddCommand()
                                                          + ADD_COMMAND_NO_CLUSTER_EPILOG
-                                                         + PROCESS_TEMPLATES,
+                                                         + ASYNC_EPILOG,
                                                          getAddReturn(),
+                                                         false,
                                                          NEW_NAME));
 
-        verifyResponse(resource.add(model), NEW_NAME, NEW_DESCRIPTION);
+        verifyCreated(resource.add(model), Template.class, NEW_NAME, NEW_DESCRIPTION);
     }
 
     @Test
     public void testAddWithVmName() throws Exception {
+        setUpHttpHeaderExpectations("Expect", null);
+
         Template model = getModel(NEW_NAME, NEW_DESCRIPTION);
         model.getVm().setId(null);
         model.getVm().setName(VM_NAME);
+
         resource.setUriInfo(setUpAddResourceExpectations(VM_BY_NAME_ADD_COMMAND_PROLOG
-                                                         + getAddCommand(true)
+                                                         + getAddCommand()
                                                          + ADD_COMMAND_EPILOG
-                                                         + PROCESS_TEMPLATES,
+                                                         + ASYNC_EPILOG,
                                                          getAddReturn(),
+                                                         false,
                                                          NEW_NAME));
 
-        verifyResponse(resource.add(model), NEW_NAME, NEW_DESCRIPTION);
+        verifyCreated(resource.add(model), Template.class, NEW_NAME, NEW_DESCRIPTION);
     }
 
     @Test
     public void testAddWithClusterName() throws Exception {
+        setUpHttpHeaderExpectations("Expect", null);
+
         Template model = getModel(NEW_NAME, NEW_DESCRIPTION);
         model.getVm().setId(null);
         model.getVm().setName(VM_NAME);
         model.getCluster().setId(null);
         model.getCluster().setName(CLUSTER_NAME);
         resource.setUriInfo(setUpAddResourceExpectations(CLUSTER_BY_NAME_ADD_COMMAND_PROLOG
-                                                         + getAddCommand(true)
+                                                         + getAddCommand()
                                                          + CLUSTER_BY_NAME_ADD_COMMAND_EPILOG
-                                                         + PROCESS_TEMPLATES,
+                                                         + ASYNC_EPILOG,
                                                          getAddReturn(),
+                                                         false,
                                                          NEW_NAME));
 
-        verifyResponse(resource.add(model), NEW_NAME, NEW_DESCRIPTION);
+        verifyCreated(resource.add(model), Template.class, NEW_NAME, NEW_DESCRIPTION);
     }
 
     @Test
     public void testAddHighlyAvailble() throws Exception {
+        setUpHttpHeaderExpectations("Expect", null);
+
         resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND_PROLOG
-                                                         + getAddCommand(true)
+                                                         + getAddCommand()
                                                          + ADD_COMMAND_EPILOG
                                                          + HIGHLY_AVAILABLE_ADD_COMMAND_EPILOG
-                                                         + PROCESS_TEMPLATES,
+                                                         + ASYNC_EPILOG,
                                                          getAddReturn(),
+                                                         false,
                                                          NEW_NAME));
         Template template = getModel(NEW_NAME, NEW_DESCRIPTION);
         template.setHighlyAvailable(new HighlyAvailable());
         template.getHighlyAvailable().setValue(true);
-        verifyResponse(resource.add(template),
-                       NEW_NAME,
-                       NEW_DESCRIPTION);
+        verifyCreated(resource.add(template),
+                      Template.class,
+                      NEW_NAME,
+                      NEW_DESCRIPTION);
     }
 
     @Test
     public void testAddStateless() throws Exception {
+        setUpHttpHeaderExpectations("Expect", null);
+
         resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND_PROLOG
-                                                         + getAddCommand(true)
+                                                         + getAddCommand()
                                                          + ADD_COMMAND_EPILOG
                                                          + STATEFUL_ADD_COMMAND_EPILOG
-                                                         + PROCESS_TEMPLATES,
+                                                         + ASYNC_EPILOG,
                                                          getAddReturn(),
+                                                         false,
                                                          NEW_NAME));
         Template template = getModel(NEW_NAME, NEW_DESCRIPTION);
         template.setStateless(false);
-        verifyResponse(resource.add(template),
-                       NEW_NAME,
-                       NEW_DESCRIPTION);
+        verifyCreated(resource.add(template),
+                      Template.class,
+                      NEW_NAME,
+                      NEW_DESCRIPTION);
     }
 
     @Test
     public void testAddWithDisplayType() throws Exception {
+        setUpHttpHeaderExpectations("Expect", null);
+
         resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND_PROLOG
-                                                         + getAddCommand(true)
+                                                         + getAddCommand()
                                                          + ADD_COMMAND_EPILOG
                                                          + DISPLAY_TYPE_ADD_COMMAND_EPILOG
-                                                         + PROCESS_TEMPLATES,
+                                                         + ASYNC_EPILOG,
                                                          getAddReturn(),
+                                                         false,
                                                          NEW_NAME));
         Template template = getModel(NEW_NAME, NEW_DESCRIPTION);
         template.setDisplay(new Display());
         template.getDisplay().setType(DisplayType.VNC);
-        verifyResponse(resource.add(template),
-                       NEW_NAME,
-                       NEW_DESCRIPTION);
+        verifyCreated(resource.add(template),
+                      Template.class,
+                      NEW_NAME,
+                      NEW_DESCRIPTION);
     }
 
     @Test
     public void testAddWithOperatingSystem() throws Exception {
+        setUpHttpHeaderExpectations("Expect", null);
+
         resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND_PROLOG
-                                                         + getAddCommand(true)
+                                                         + getAddCommand()
                                                          + ADD_COMMAND_EPILOG
                                                          + OS_ADD_COMMAND_EPILOG
-                                                         + PROCESS_TEMPLATES,
+                                                         + ASYNC_EPILOG,
                                                          getAddReturn(),
+                                                         false,
                                                          NEW_NAME));
         Template template = getModel(NEW_NAME, NEW_DESCRIPTION);
         template.setOs(new OperatingSystem());
         template.getOs().setType("OtherLinux");
-        verifyResponse(resource.add(template),
-                       NEW_NAME,
-                       NEW_DESCRIPTION);
+        verifyCreated(resource.add(template),
+                      Template.class,
+                      NEW_NAME,
+                      NEW_DESCRIPTION);
     }
 
     @Test
@@ -256,4 +303,5 @@ public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectio
         cluster.setId(CLUSTER_ID);
         template.setCluster(cluster);
     }
+
 }

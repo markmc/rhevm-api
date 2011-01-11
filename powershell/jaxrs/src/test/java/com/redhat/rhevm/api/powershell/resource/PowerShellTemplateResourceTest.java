@@ -74,7 +74,7 @@ public class PowerShellTemplateResourceTest extends AbstractPowerShellResourceTe
     private static final String EXPORT_WITH_PARAMS_COMMAND = "export-template -templateid \"" + TEMPLATE_ID + "\" -storagedomainid \"" + STORAGE_DOMAIN_ID + "\"";
 
     protected PowerShellTemplateResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider) {
-        return new PowerShellTemplateResource(TEMPLATE_ID, executor, uriProvider, poolMap, parser);
+        return new PowerShellTemplateResource(TEMPLATE_ID, executor, uriProvider, poolMap, parser, httpHeaders);
     }
 
     protected String formatTemplate(String name) {

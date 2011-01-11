@@ -39,6 +39,8 @@ import com.redhat.rhevm.api.powershell.enums.PowerShellVmType;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
+import static com.redhat.rhevm.api.powershell.util.PowerShellUtils.last;
+
 public class PowerShellTemplate extends Template {
 
     private String cdIsoPath;
@@ -47,6 +49,16 @@ public class PowerShellTemplate extends Template {
     }
     public void setCdIsoPath(String cdIsoPath) {
         this.cdIsoPath = cdIsoPath;
+    }
+
+    private String taskIds;
+
+    public String getTaskIds() {
+        return taskIds;
+    }
+
+    public void setTaskIds(String taskIds) {
+        this.taskIds = taskIds;
     }
 
     public static List<PowerShellTemplate> parse(PowerShellParser parser, String output) {
@@ -62,6 +74,12 @@ public class PowerShellTemplate extends Template {
             } else if (PowerShellParser.STRING_TYPE.equals(entity.getType())) {
                 dates.put(date, PowerShellUtils.parseDate(entity.getValue()));
                 date = null;
+                continue;
+            } else if (PowerShellAsyncTask.isTask(entity)) {
+                last(ret).setTaskIds(PowerShellAsyncTask.parseTask(entity, last(ret).getTaskIds()));
+                continue;
+            } else if (PowerShellAsyncTask.isStatus(entity)) {
+                last(ret).setCreationStatus(PowerShellAsyncTask.parseStatus(entity, last(ret).getCreationStatus()));
                 continue;
             }
 
