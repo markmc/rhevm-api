@@ -18,9 +18,13 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import javax.ws.rs.core.UriInfo;
+
 import com.redhat.rhevm.api.common.resource.AbstractUpdatableResource;
+import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.common.util.ReapedMap;
 import com.redhat.rhevm.api.model.BaseResource;
+import com.redhat.rhevm.api.model.Link;
 
 public abstract class AbstractPowerShellCollectionResource<R extends BaseResource,
                                                            U extends AbstractUpdatableResource<R>>
@@ -51,4 +55,15 @@ public abstract class AbstractPowerShellCollectionResource<R extends BaseResourc
     }
 
     protected abstract U createSubResource(String id);
+
+    protected R addStatus(UriInfo uriInfo, R model, String taskIds) {
+        if (taskIds != null) {
+            Link link = new Link();
+            link.setRel(CREATION_STATUS);
+            link.setHref(LinkHelper.getUriBuilder(uriInfo, model).path(CREATION_STATUS).path(taskIds).build().toString());
+            model.getLinks().add(link);
+        }
+        return model;
+    }
+
 }

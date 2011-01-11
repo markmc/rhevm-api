@@ -36,6 +36,7 @@ public class AbstractPowerShellResource {
     protected final static String SEARCH_TEXT = " -searchtext ";
     private static final String EXPECT_HEADER = "Expect";
     private static final String BLOCKING_EXPECTATION = "201-created";
+    protected final static String CREATION_STATUS = "creation_status";
 
     protected PowerShellParser parser;
     protected PowerShellPoolMap shellPools;
