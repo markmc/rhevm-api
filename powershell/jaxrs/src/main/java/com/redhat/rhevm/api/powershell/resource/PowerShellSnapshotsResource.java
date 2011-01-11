@@ -26,8 +26,10 @@ import java.util.Map;
 import java.util.concurrent.Executor;
 
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.resource.MediaType;
 
@@ -58,7 +60,7 @@ public class PowerShellSnapshotsResource extends UriProviderWrapper implements S
         buf.append("foreach { ");
         buf.append(PowerShellUtils.getDateHack("lastmodified"));
         buf.append("$_; ");
-        buf.append("}");
+        buf.append("};");
         PROCESS_DISKS = buf.toString();
     }
 
@@ -66,8 +68,10 @@ public class PowerShellSnapshotsResource extends UriProviderWrapper implements S
                                        Executor executor,
                                        PowerShellPoolMap shellPools,
                                        PowerShellParser parser,
-                                       UriInfoProvider uriProvider) {
+                                       UriInfoProvider uriProvider,
+                                       HttpHeaders httpHeaders) {
         super(executor, shellPools, parser, uriProvider);
+        setHttpHeaders(httpHeaders);
         this.vmId = vmId;
     }
 
@@ -156,20 +160,33 @@ public class PowerShellSnapshotsResource extends UriProviderWrapper implements S
     @Override
     public Response add(Snapshot snapshot) {
         StringBuilder buf = new StringBuilder();
+        Response response = null;
 
         buf.append("$vm = create-snapshot");
         buf.append(" -vmid " + PowerShellUtils.escape(vmId));
         if (snapshot.isSetDescription()) {
             buf.append(" -description " + PowerShellUtils.escape(snapshot.getDescription()));
         }
-        buf.append(" -async; ");
-        buf.append("$vm.getdiskimages()");
 
-        snapshot = buildFromDisk(runAndParseSingle(buf.toString() + PROCESS_DISKS));
+        boolean expectBlocking = expectBlocking();
+        final String getDisks = ";$vm.getdiskimages()";
+        if (expectBlocking) {
+            buf.append(getDisks).append(PROCESS_DISKS);
+        } else {
+            buf.append(ASYNC_OPTION).append(getDisks).append(PROCESS_DISKS).append(ASYNC_TASKS); 
+        }
 
-        UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(snapshot.getId());
+        PowerShellDisk disk = runAndParseSingle(buf.toString());
+        snapshot = buildFromDisk(disk);
 
-        return Response.created(uriBuilder.build()).entity(snapshot).build();
+        if (expectBlocking || disk.getTaskIds() == null) {
+            UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(snapshot.getId());
+            response = Response.created(uriBuilder.build()).entity(snapshot).build();
+        } else {
+            snapshot = addStatus(getUriInfo(), snapshot, disk);
+            response = Response.status(202).entity(snapshot).build();
+        }
+        return response;
     }
 
     @Override
@@ -193,5 +210,16 @@ public class PowerShellSnapshotsResource extends UriProviderWrapper implements S
         List<String> keys = new ArrayList<String>(map.keySet());
         Collections.sort(keys);
         return keys;
+    }
+
+    private Snapshot addStatus(UriInfo uriInfo, Snapshot snapshot, PowerShellDisk disk) {
+        if (disk.getTaskIds() != null) {
+            snapshot.setCreationStatus(disk.getCreationStatus());
+            Link link = new Link();
+            link.setRel(CREATION_STATUS);
+            link.setHref(LinkHelper.getUriBuilder(uriInfo, snapshot).path(CREATION_STATUS).path(disk.getTaskIds()).build().toString());
+            snapshot.getLinks().add(link);
+        }
+        return snapshot;
     }
 }
