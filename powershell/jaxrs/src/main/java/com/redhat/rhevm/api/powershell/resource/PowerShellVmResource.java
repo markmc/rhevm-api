@@ -21,6 +21,7 @@ package com.redhat.rhevm.api.powershell.resource;
 import java.util.List;
 import java.util.concurrent.Executor;
 
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
@@ -49,7 +50,7 @@ import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
-import static com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource.PROCESS_VMS;
+import static com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource.PROCESS_VMS_LIST;
 
 public class PowerShellVmResource extends AbstractPowerShellActionableResource<VM> implements VmResource {
 
@@ -57,8 +58,10 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
                                 Executor executor,
                                 UriInfoProvider uriProvider,
                                 PowerShellPoolMap shellPools,
-                                PowerShellParser parser) {
+                                PowerShellParser parser,
+                                HttpHeaders httpHeaders) {
         super(id, executor, uriProvider, shellPools, parser);
+        setHttpHeaders(httpHeaders);
     }
 
     public static List<PowerShellVM> runAndParse(PowerShellPool pool, PowerShellParser parser, String command) {
@@ -91,7 +94,7 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
 
     @Override
     public VM get() {
-        return addLinks(getUriInfo(), runAndParseSingle("get-vm " + PowerShellUtils.escape(getId()) + PROCESS_VMS));
+        return addLinks(getUriInfo(), runAndParseSingle("get-vm " + PowerShellUtils.escape(getId()) + PROCESS_VMS_LIST));
     }
 
     @Override
@@ -153,7 +156,7 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
 
         buf.append("update-vm -vmobject $v");
 
-        return addLinks(getUriInfo(), runAndParseSingle(buf.toString() + PROCESS_VMS));
+        return addLinks(getUriInfo(), runAndParseSingle(buf.toString() + PROCESS_VMS_LIST));
     }
 
     protected String[] getStrictlyImmutable() {
@@ -330,7 +333,7 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
 
     @Override
     public PowerShellDisksResource getDisksResource() {
-        return new PowerShellDisksResource(getId(), shellPools, getParser(), "get-vm", getUriProvider());
+        return new PowerShellDisksResource(getId(), shellPools, getParser(), "get-vm", getUriProvider(), getHttpHeaders());
     }
 
     @Override
@@ -345,7 +348,7 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
 
     @Override
     public PowerShellSnapshotsResource getSnapshotsResource() {
-        return new PowerShellSnapshotsResource(getId(), getExecutor(), shellPools, getParser(), getUriProvider());
+        return new PowerShellSnapshotsResource(getId(), getExecutor(), shellPools, getParser(), getUriProvider(), getHttpHeaders());
     }
 
     @Override

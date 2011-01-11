@@ -19,6 +19,7 @@
 package com.redhat.rhevm.api.powershell.resource;
 
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.Display;
@@ -29,7 +30,8 @@ import com.redhat.rhevm.api.powershell.enums.PowerShellBootSequence;
 
 import org.junit.Test;
 
-import static com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource.PROCESS_VMS;
+import static com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource.PROCESS_VMS_ADD;
+import static com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource.PROCESS_VMS_LIST;
 
 public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResourceTest<VM, PowerShellVmResource, PowerShellVmsResource> {
 
@@ -52,18 +54,18 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     public static final String[] noHostArgs = new String[] { CLUSTER_ID, TEMPLATE_ID, Integer.toString(MEMSIZE), Integer.toString(BOOTSEQUENCE), Integer.toString(N_SOCKETS), Integer.toString(N_CPUS), ISO_NAME, VFD_NAME, "-1", POOL_ID };
 
     private static final String ADD_COMMAND_PROLOG =
-        "$templ = get-template -templateid \"" + TEMPLATE_ID + "\";";
+        "$templ = get-template -templateid \"" + TEMPLATE_ID + "\";$v = ";
     private static final String ADD_COMMAND_EPILOG =
         " -templateobject $templ -hostclusterid \"" + CLUSTER_ID + "\"";
 
     private static final String TEMPLATE_BY_NAME_ADD_COMMAND_PROLOG =
         "$t = select-template -searchtext \"name=" + TEMPLATE_NAME + "\";" +
-        "$templ = get-template -templateid $t.TemplateId;";
+        "$templ = get-template -templateid $t.TemplateId;$v = ";
 
     private static final String CLUSTER_BY_NAME_ADD_COMMAND_PROLOG =
         "$t = select-template -searchtext \"name=" + TEMPLATE_NAME + "\";" +
         "$c = select-cluster -searchtext \"name=" + CLUSTER_NAME + "\";" +
-        "$templ = get-template -templateid $t.TemplateId;";
+        "$templ = get-template -templateid $t.TemplateId;$v = ";
 
     private static final String CLUSTER_BY_NAME_ADD_COMMAND_EPILOG =
         " -templateobject $templ -hostclusterid $c.ClusterId";
@@ -71,14 +73,15 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     private static final String DISPLAY_ADD_COMMAND_EPILOG =
         " -numofmonitors 4 -displaytype VNC" + ADD_COMMAND_EPILOG;
 
+    private static final String ASYNC_EPILOG =  ASYNC_ENDING + "$v;" + ASYNC_TASKS + "$v" + PROCESS_VMS_ADD;
 
     public PowerShellVmsResourceTest() {
-        super(new PowerShellVmResource("0", null, null, null, null), "vms", "vm", extraArgs);
+        super(new PowerShellVmResource("0", null, null, null, null, null), "vms", "vm", extraArgs);
     }
 
     @Test
     public void testList() throws Exception {
-        resource.setUriInfo(setUpResourceExpectations(getSelectCommand() + PROCESS_VMS,
+        resource.setUriInfo(setUpResourceExpectations(getSelectCommand() + PROCESS_VMS_LIST,
                                                       getSelectReturn(),
                                                       null,
                                                       NAMES));
@@ -87,7 +90,7 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
 
     @Test
     public void testQuery() throws Exception {
-        resource.setUriInfo(setUpResourceExpectations(getQueryCommand(VM.class) + PROCESS_VMS,
+        resource.setUriInfo(setUpResourceExpectations(getQueryCommand(VM.class) + PROCESS_VMS_LIST,
                                                       getQueryReturn(),
                                                       getQueryParam(),
                                                       NAMES_SUBSET));
@@ -95,45 +98,69 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     }
 
     @Test
+    public void testAddBlocking() throws Exception {
+        setUpHttpHeaderExpectations("Expect", "201-created");
+
+        resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND_PROLOG + getAddCommand() + ADD_COMMAND_EPILOG + ";$v;$v" + PROCESS_VMS_ADD,
+                getAddReturn(),
+                NEW_NAME));
+        Response response = resource.add(getModel(NEW_NAME, NEW_DESCRIPTION));
+        verifyResponse(response, NEW_NAME, NEW_DESCRIPTION);
+        assertEquals(201, response.getStatus());
+    }
+
+    @Test
     public void testAddWithTemplateId() throws Exception {
-        resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND_PROLOG + getAddCommand() + ADD_COMMAND_EPILOG + PROCESS_VMS,
+        setUpHttpHeaderExpectations("Expect", null);
+
+        resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND_PROLOG + getAddCommand() + ADD_COMMAND_EPILOG + ASYNC_EPILOG,
                                                          getAddReturn(),
+                                                         false,
                                                          NEW_NAME));
-        verifyResponse(resource.add(getModel(NEW_NAME, NEW_DESCRIPTION)), NEW_NAME, NEW_DESCRIPTION);
+        verifyCreated(resource.add(getModel(NEW_NAME, NEW_DESCRIPTION)), VM.class, NEW_NAME, NEW_DESCRIPTION);
     }
 
     @Test
     public void testAddWithTemplateName() throws Exception {
+        setUpHttpHeaderExpectations("Expect", null);
+
         VM model = getModel(NEW_NAME, NEW_DESCRIPTION);
         model.getTemplate().setId(null);
         model.getTemplate().setName(TEMPLATE_NAME);
 
-        resource.setUriInfo(setUpAddResourceExpectations(TEMPLATE_BY_NAME_ADD_COMMAND_PROLOG + getAddCommand() + ADD_COMMAND_EPILOG + PROCESS_VMS,
+        resource.setUriInfo(setUpAddResourceExpectations(TEMPLATE_BY_NAME_ADD_COMMAND_PROLOG + getAddCommand() + ADD_COMMAND_EPILOG + ASYNC_EPILOG,
                                                          getAddReturn(),
+                                                         false,
                                                          NEW_NAME));
-        verifyResponse(resource.add(model), NEW_NAME, NEW_DESCRIPTION);
+        verifyCreated(resource.add(model), VM.class, NEW_NAME, NEW_DESCRIPTION);
     }
 
     @Test
     public void testAddWithClusterName() throws Exception {
+        setUpHttpHeaderExpectations("Expect", null);
+
         VM model = getModel(NEW_NAME, NEW_DESCRIPTION);
         model.getTemplate().setId(null);
         model.getTemplate().setName(TEMPLATE_NAME);
         model.getCluster().setId(null);
         model.getCluster().setName(CLUSTER_NAME);
 
-        resource.setUriInfo(setUpAddResourceExpectations(CLUSTER_BY_NAME_ADD_COMMAND_PROLOG + getAddCommand() + CLUSTER_BY_NAME_ADD_COMMAND_EPILOG + PROCESS_VMS,
+        resource.setUriInfo(setUpAddResourceExpectations(CLUSTER_BY_NAME_ADD_COMMAND_PROLOG + getAddCommand() + CLUSTER_BY_NAME_ADD_COMMAND_EPILOG + ASYNC_EPILOG,
                                                          getAddReturn(),
+                                                         false,
                                                          NEW_NAME));
-        verifyResponse(resource.add(model), NEW_NAME, NEW_DESCRIPTION);
+        verifyCreated(resource.add(model), VM.class, NEW_NAME, NEW_DESCRIPTION);
     }
 
     @Test
     public void testAddWithDisplay() throws Exception {
-        resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND_PROLOG + getAddCommand() + DISPLAY_ADD_COMMAND_EPILOG + PROCESS_VMS,
+        setUpHttpHeaderExpectations("Expect", null);
+
+        resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND_PROLOG + getAddCommand() + DISPLAY_ADD_COMMAND_EPILOG + ASYNC_EPILOG,
                                                          getAddReturn(),
+                                                         false,
                                                          NEW_NAME));
-        verifyResponse(resource.add(updateDisplay(getModel(NEW_NAME, NEW_DESCRIPTION))), NEW_NAME, NEW_DESCRIPTION);
+        verifyCreated(resource.add(updateDisplay(getModel(NEW_NAME, NEW_DESCRIPTION))), VM.class, NEW_NAME, NEW_DESCRIPTION);
     }
 
     @Test

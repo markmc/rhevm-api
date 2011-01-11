@@ -65,7 +65,7 @@ public class PowerShellAssignedTagsResourceTest
     private static final String REMOVE_VM_TAG_CMD = "$tag = get-tag \"" + asId(TAGS[0]) +"\"; detach-tag -tagobject $tag -vmid \"" + asId(VM_NAME) + "\"";
 
     protected  PowerShellVmResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider) {
-        return new PowerShellVmResource(asId(VM_NAME), executor, uriProvider, poolMap, parser);
+        return new PowerShellVmResource(asId(VM_NAME), executor, uriProvider, poolMap, parser, httpHeaders);
     }
 
     protected String formatTags(String[] names, String[] args) {

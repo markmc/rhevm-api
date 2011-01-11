@@ -19,9 +19,9 @@
 package com.redhat.rhevm.api.powershell.util;
 
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.TimeZone;
 import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.Duration;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.logging.Log;
@@ -94,5 +94,9 @@ public class PowerShellUtils {
 
     public static String encode(Boolean b) {
         return Boolean.TRUE.equals(b) ? "$true" : "$false";
+    }
+
+    public static <T> T last(List<T> list) {
+        return list.get(list.size() - 1);
     }
 }

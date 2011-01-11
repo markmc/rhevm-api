@@ -57,7 +57,7 @@ import static org.powermock.api.easymock.PowerMock.createMock;
 import static org.powermock.api.easymock.PowerMock.mockStatic;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 
-import static com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource.PROCESS_VMS;
+import static com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource.PROCESS_VMS_LIST;
 
 public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM, PowerShellVmResource> {
 
@@ -101,7 +101,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     private static final String START_WITH_PARAMS = "start-vm -vmid \"" + VM_ID + "\" -runandpause -defaulthostid \"" + DEST_HOST_ID + "\" -runasstateless -displaytype 'VNC' -bootdevice 'D' -isofilename \"" + CDROM_FILE_ID + "\" -floppypath \"" + FLOPPY_FILE_ID + "\"";
 
     protected PowerShellVmResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider) {
-        return new PowerShellVmResource(VM_ID, executor, uriProvider, poolMap, parser);
+        return new PowerShellVmResource(VM_ID, executor, uriProvider, poolMap, parser, httpHeaders);
     }
 
     protected String formatVm(String name) {
@@ -121,7 +121,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
 
     @Test
     public void testGet() throws Exception {
-        setUriInfo(setUpVmExpectations("get-vm \"" + VM_ID + "\"" + PROCESS_VMS,
+        setUriInfo(setUpVmExpectations("get-vm \"" + VM_ID + "\"" + PROCESS_VMS_LIST,
                                        formatVm(VM_NAME),
                                        VM_NAME));
         verifyVM(resource.get(), VM_NAME);
@@ -129,7 +129,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
 
     @Test
     public void testGet22() throws Exception {
-        setUriInfo(setUpVmExpectations("get-vm \"" + VM_ID + "\"" + PROCESS_VMS,
+        setUriInfo(setUpVmExpectations("get-vm \"" + VM_ID + "\"" + PROCESS_VMS_LIST,
                                        formatVm("vm22", VM_NAME),
                                        VM_NAME));
         verifyVM(resource.get(), VM_NAME);
@@ -137,7 +137,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
 
     @Test
     public void testGet22NoHost() throws Exception {
-        setUriInfo(setUpVmExpectations("get-vm \"" + VM_ID + "\"" + PROCESS_VMS,
+        setUriInfo(setUpVmExpectations("get-vm \"" + VM_ID + "\"" + PROCESS_VMS_LIST,
                                        formatVm("vm22",
                                                 VM_NAME,
                                                 PowerShellVmsResourceTest.noHostArgs),
@@ -147,7 +147,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
 
     @Test
     public void testGoodUpdate() throws Exception {
-        setUriInfo(setUpVmExpectations(UPDATE_COMMAND + PROCESS_VMS,
+        setUriInfo(setUpVmExpectations(UPDATE_COMMAND + PROCESS_VMS_LIST,
                                        formatVm(NEW_NAME),
                                        NEW_NAME));
         verifyVM(resource.update(getVM(NEW_NAME)), NEW_NAME);
@@ -155,7 +155,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
 
     @Test
     public void testUpdateDisplay() throws Exception {
-        setUriInfo(setUpVmExpectations(UPDATE_DISPLAY_COMMAND + PROCESS_VMS,
+        setUriInfo(setUpVmExpectations(UPDATE_DISPLAY_COMMAND + PROCESS_VMS_LIST,
                                        formatVm(NEW_NAME),
                                        NEW_NAME));
         verifyVM(resource.update(updateDisplay(getVM(NEW_NAME))), NEW_NAME);

@@ -46,6 +46,8 @@ import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 import com.redhat.rhevm.api.powershell.util.UUID;
 
+import static com.redhat.rhevm.api.powershell.util.PowerShellUtils.last;
+
 public class PowerShellVM extends VM {
 
     private static final String VM_TYPE = "RhevmCmd.CLIVm";
@@ -67,6 +69,16 @@ public class PowerShellVM extends VM {
     }
     public void setFloppyPath(String floppyPath) {
         this.floppyPath = floppyPath;
+    }
+
+    private String taskIds;
+
+    public String getTaskIds() {
+        return taskIds;
+    }
+
+    public void setTaskIds(String taskIds) {
+        this.taskIds = taskIds;
     }
 
     public static String buildBootSequence(OperatingSystem os) {
@@ -151,6 +163,12 @@ public class PowerShellVM extends VM {
                 dates.put(date, PowerShellUtils.parseDate(entity.getValue()));
                 date = null;
                 continue;
+            } else if (PowerShellAsyncTask.isTask(entity)) {
+                last(ret).setTaskIds(PowerShellAsyncTask.parseTask(entity, last(ret).getTaskIds()));
+                continue;
+            } else if (PowerShellAsyncTask.isStatus(entity)) {
+                last(ret).setCreationStatus(PowerShellAsyncTask.parseStatus(entity, last(ret).getCreationStatus()));
+                continue;
             }
 
             if (VM_TYPE.equals(entity.getType())) {
@@ -165,10 +183,6 @@ public class PowerShellVM extends VM {
         }
 
         return ret;
-    }
-
-    private static PowerShellVM last(List<PowerShellVM> list) {
-        return list.get(list.size() - 1);
     }
 
     private static PowerShellVM parseVm(PowerShellParser.Entity entity, Map<String, XMLGregorianCalendar> dates) {

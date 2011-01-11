@@ -18,6 +18,7 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
@@ -40,16 +41,16 @@ public class PowerShellVmsResource
     extends AbstractPowerShellCollectionResource<VM, PowerShellVmResource>
     implements VmsResource {
 
-    static final String PROCESS_VMS;
+    private static final String PROCESS_VMS;
     static {
         StringBuilder buf = new StringBuilder();
         buf.append(" | ");
-        buf.append("foreach { ");
+        buf.append("foreach '{ ");
         buf.append(PowerShellUtils.getDateHack("creationdate"));
-        buf.append("$_; ");
+        buf.append("'{0} ");
         buf.append("$_.getmemorystatistics(); ");
         buf.append("$_.getcpustatistics(); ");
-        buf.append("if ($_.runningonhost -ne '-1') {");
+        buf.append("if ($_.runningonhost -ne ''-1'') '{");
         buf.append("  $h = get-host $_.runningonhost;");
         buf.append("  $nics = $h.getnetworkadapters();");
         buf.append("  $nets = get-networks;");
@@ -65,9 +66,12 @@ public class PowerShellVmsResource
         buf.append("  }");
         buf.append("  $addr;");
         buf.append("}");
-        buf.append("}");
+        buf.append("}'");
         PROCESS_VMS = buf.toString();
     }
+
+    static final String PROCESS_VMS_LIST = MessageFormat.format(PROCESS_VMS, "$_; ");
+    static final String PROCESS_VMS_ADD = MessageFormat.format(PROCESS_VMS, " ");
 
     public List<PowerShellVM> runAndParse(String command) {
         return PowerShellVmResource.runAndParse(getPool(), getParser(), command);
@@ -80,7 +84,7 @@ public class PowerShellVmsResource
     @Override
     public VMs list() {
         VMs ret = new VMs();
-        for (PowerShellVM vm : runAndParse(getSelectCommand("select-vm", getUriInfo(), VM.class) + PROCESS_VMS)) {
+        for (PowerShellVM vm : runAndParse(getSelectCommand("select-vm", getUriInfo(), VM.class) + PROCESS_VMS_LIST)) {
             ret.getVMs().add(PowerShellVmResource.addLinks(getUriInfo(), vm));
         }
         return ret;
@@ -90,6 +94,7 @@ public class PowerShellVmsResource
     public Response add(VM vm) {
         validateParameters(vm, "name", "template.id|name", "cluster.id|name");
         StringBuilder buf = new StringBuilder();
+        Response response = null;
 
         String templateArg = null;
         if (vm.getTemplate().isSetId()) {
@@ -113,7 +118,7 @@ public class PowerShellVmsResource
 
         buf.append("$templ = get-template -templateid " + templateArg + ";");
 
-        buf.append("add-vm");
+        buf.append("$v = add-vm");
 
         buf.append(" -name " + PowerShellUtils.escape(vm.getName()) + "");
         if (vm.getDescription() != null) {
@@ -161,13 +166,28 @@ public class PowerShellVmsResource
             buf.append(" -os " + PowerShellUtils.escape(vm.getOs().getType()));
         }
 
-        PowerShellVM ret = runAndParseSingle(buf.toString() + PROCESS_VMS);
+        boolean expectBlocking = expectBlocking();
+        final String displayVm = ";$v;";
+        if (expectBlocking) {
+            buf.append(displayVm);
+        } else {
+            buf.append(ASYNC_OPTION).append(displayVm).append(ASYNC_TASKS);
+        }
 
-        vm = PowerShellVmResource.addLinks(getUriInfo(), ret);
+        buf.append("$v").append(PROCESS_VMS_ADD);
 
-        UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(ret.getId());
+        PowerShellVM created = runAndParseSingle(buf.toString());
 
-        return Response.created(uriBuilder.build()).entity(vm).build();
+        if (expectBlocking || created.getTaskIds() == null) {
+            vm = PowerShellVmResource.addLinks(getUriInfo(), created);
+            UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(vm.getId());
+            response = Response.created(uriBuilder.build()).entity(vm).build();
+        } else {
+            vm = addStatus(getUriInfo(), PowerShellVmResource.addLinks(getUriInfo(), created), created.getTaskIds());
+            response = Response.status(202).entity(vm).build();
+        }
+
+        return response;
     }
 
     @Override
@@ -183,6 +203,7 @@ public class PowerShellVmsResource
 
     @Override
     protected PowerShellVmResource createSubResource(String id) {
-        return new PowerShellVmResource(id, getExecutor(), this, shellPools, getParser());
+        return new PowerShellVmResource(id, getExecutor(), this, shellPools, getParser(), getHttpHeaders());
     }
+
 }
