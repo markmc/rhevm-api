@@ -24,6 +24,7 @@ import com.redhat.rhevm.api.model.CPUs;
 import com.redhat.rhevm.api.model.PowerManagement;
 import com.redhat.rhevm.api.model.PowerManagementOption;
 import com.redhat.rhevm.api.model.PowerManagementOptions;
+import com.redhat.rhevm.api.model.PowerManagementOptionType;
 import com.redhat.rhevm.api.model.PowerManagers;
 import com.redhat.rhevm.api.model.VersionCaps;
 import com.redhat.rhevm.api.resource.CapabilitiesResource;
@@ -75,16 +76,16 @@ public class DefaultCapabilitiesResource implements CapabilitiesResource {
     private PowerManagers powerManagers = new PowerManagers();
 
     {
-        addPowerManager("alom", "secure=secure,port=ipport");
-        addPowerManager("apc", "secure=secure,port=ipport,slot=port");
-        addPowerManager("bladecenter", "secure=secure,port=ipport,slot=port");
-        addPowerManager("drac5", "secure=secure,port=ipport");
-        addPowerManager("eps", "slot=port");
-        addPowerManager("ilo", "secure=ssl,port=ipport");
+        addPowerManager("alom", "secure=BOOL,port=INT");
+        addPowerManager("apc", "secure=BOOL,port=INT,slot=INT");
+        addPowerManager("bladecenter", "secure=BOOL,port=INT,slot=INT");
+        addPowerManager("drac5", "secure=BOOL,port=INT");
+        addPowerManager("eps", "slot=INT");
+        addPowerManager("ilo", "secure=BOOL,port=INT");
         addPowerManager("ipmilan", "");
-        addPowerManager("rsa", "secure=secure,port=ipport");
+        addPowerManager("rsa", "secure=BOOL,port=INT");
         addPowerManager("rsb", "");
-        addPowerManager("wti", "secure=secure,port=ipport,slot=port");
+        addPowerManager("wti", "secure=BOOL,port=INT,slot=INT");
     }
 
     private void addPowerManager(String type, String options) {
@@ -109,7 +110,7 @@ public class DefaultCapabilitiesResource implements CapabilitiesResource {
 
             PowerManagementOption option = new PowerManagementOption();
             option.setName(parts[0]);
-            option.setValue(parts[1]);
+            option.setType(PowerManagementOptionType.valueOf(parts[1]));
             powerManagement.getOptions().getOptions().add(option);
         }
 
