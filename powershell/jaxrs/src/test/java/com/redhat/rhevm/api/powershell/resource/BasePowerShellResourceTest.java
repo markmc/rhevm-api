@@ -144,6 +144,18 @@ public class BasePowerShellResourceTest extends Assert {
         }
     }
 
+    protected static void verifyLink(BaseResource model, String rel) {
+        Link link = null;
+        for (Link l : model.getLinks()) {
+            if (rel.equals(l.getRel())) {
+                link = l;
+                break;
+            }
+        }
+        assertNotNull(link);
+        assertTrue(link.getHref().startsWith("/rhevm-api-powershell"));
+    }
+
     protected static String[] asArray(String s) {
         return new String[] { s };
     }

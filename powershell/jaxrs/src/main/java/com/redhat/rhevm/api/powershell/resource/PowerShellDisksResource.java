@@ -18,13 +18,18 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.Disks;
+import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
+import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.common.util.ReflectionHelper;
+import com.redhat.rhevm.api.powershell.model.PowerShellDisk;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
@@ -42,12 +47,16 @@ public class PowerShellDisksResource
                                    PowerShellPoolMap shellPools,
                                    PowerShellParser parser,
                                    String getCommand,
-                                   UriInfoProvider uriProvider) {
+                                   UriInfoProvider uriProvider,
+                                   HttpHeaders httpHeaders) {
         super(parentId, shellPools, parser, getCommand, uriProvider);
+        setHttpHeaders(httpHeaders);
     }
 
     @Override
     public Response add(Disk disk) {
+        Response response = null;
+
         validateParameters(disk, "size");
         StringBuilder buf = new StringBuilder();
 
@@ -97,11 +106,23 @@ public class PowerShellDisksResource
             buf.append(" -storagedomainid " + disk.getStorageDomain().getId());
         }
 
-        disk = addLinks(runAndParseSingle(buf.toString()));
+        boolean expectBlocking = expectBlocking();
+        if (!expectBlocking) {
+            buf.append(ASYNC_ENDING + ASYNC_TASKS);
+        }
 
-        UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(disk.getId());
+        PowerShellDisk created = (PowerShellDisk)runAndParseSingle(buf.toString());
 
-        return Response.created(uriBuilder.build()).entity(disk).build();
+        if (expectBlocking || created.getTaskIds() == null) {
+            disk = addLinks(created);
+            UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(disk.getId());
+            response = Response.created(uriBuilder.build()).entity(disk).build();
+        } else {
+            disk = addStatus(getUriInfo(), addLinks(created), created.getTaskIds());
+            response = Response.status(202).entity(disk).build();
+        }
+
+        return response;
     }
 
     @Override
@@ -120,4 +141,13 @@ public class PowerShellDisksResource
         return new PowerShellDeviceResource<Disk, Disks>(this, id);
     }
 
+    private Disk addStatus(UriInfo uriInfo, Disk disk, String taskIds) {
+        if (taskIds != null) {
+            Link link = new Link();
+            link.setRel(CREATION_STATUS);
+            link.setHref(LinkHelper.getUriBuilder(uriInfo, disk).path(CREATION_STATUS).path(taskIds).build().toString());
+            disk.getLinks().add(link);
+        }
+        return disk;
+    }
 }

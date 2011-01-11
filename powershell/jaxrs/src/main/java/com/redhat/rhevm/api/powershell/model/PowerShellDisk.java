@@ -36,12 +36,15 @@ import com.redhat.rhevm.api.powershell.enums.PowerShellVolumeType;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
+import static com.redhat.rhevm.api.powershell.util.PowerShellUtils.last;
+
 public class PowerShellDisk extends Disk {
 
     private String vmSnapshotId;
     private String parentId;
     private XMLGregorianCalendar lastModified;
     private String internalDriveMapping;
+    private String taskIds;
 
     public String getVmSnapshotId() {
         return vmSnapshotId;
@@ -71,6 +74,14 @@ public class PowerShellDisk extends Disk {
         this.internalDriveMapping = internalDriveMapping;
     }
 
+    public String getTaskIds() {
+        return taskIds;
+    }
+
+    public void setTaskIds(String taskIds) {
+        this.taskIds = taskIds;
+    }
+
     public static List<PowerShellDisk> parse(PowerShellParser parser, String vmId, String output) {
         List<PowerShellDisk> ret = new ArrayList<PowerShellDisk>();
 
@@ -84,6 +95,12 @@ public class PowerShellDisk extends Disk {
             } else if (PowerShellParser.STRING_TYPE.equals(entity.getType())) {
                 dates.put(date, PowerShellUtils.parseDate(entity.getValue()));
                 date = null;
+                continue;
+            } else if (PowerShellAsyncTask.isTask(entity)) {
+                last(ret).setTaskIds(PowerShellAsyncTask.parseTask(entity, last(ret).getTaskIds()));
+                continue;
+            } else if (PowerShellAsyncTask.isStatus(entity)) {
+                last(ret).setCreationStatus(PowerShellAsyncTask.parseStatus(entity, last(ret).getCreationStatus()));
                 continue;
             }
 

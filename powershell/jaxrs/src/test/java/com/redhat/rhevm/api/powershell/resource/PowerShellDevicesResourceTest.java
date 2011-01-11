@@ -23,6 +23,7 @@ import java.text.MessageFormat;
 
 import java.util.concurrent.Executor;
 
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.UriBuilder;
 
@@ -38,6 +39,7 @@ import com.redhat.rhevm.api.model.File;
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.NIC;
 import com.redhat.rhevm.api.model.Nics;
+import com.redhat.rhevm.api.model.Status;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
@@ -103,7 +105,7 @@ public class PowerShellDevicesResourceTest
     private static final String REMOVE_NIC_COMMAND = "$v = get-vm \"{0}\";foreach ($i in $v.GetNetworkAdapters()) '{'  if ($i.id -eq \"{1}\") '{    $n = $i  }}'remove-networkadapter -vmobject $v -networkadapterobject $n";
 
     protected PowerShellVmResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider) {
-        return new PowerShellVmResource(VM_ID, executor, uriProvider, poolMap, parser);
+        return new PowerShellVmResource(VM_ID, executor, uriProvider, poolMap, parser, httpHeaders);
     }
 
     protected String formatVm(String name) {
@@ -294,7 +296,7 @@ public class PowerShellDevicesResourceTest
 
     @Test
     public void testDiskGet() throws Exception {
-        PowerShellDisksResource parent = new PowerShellDisksResource(VM_ID, poolMap, parser, "get-vm", uriProvider);
+        PowerShellDisksResource parent = new PowerShellDisksResource(VM_ID, poolMap, parser, "get-vm", uriProvider, httpHeaders);
         PowerShellDeviceResource<Disk, Disks> diskResource =
             new PowerShellDeviceResource<Disk, Disks>(parent, DISK_ID);
 
@@ -305,7 +307,7 @@ public class PowerShellDevicesResourceTest
 
     @Test
     public void testDiskList() throws Exception {
-        PowerShellDisksResource diskResource = new PowerShellDisksResource(VM_ID, poolMap, parser, "get-vm", uriProvider);
+        PowerShellDisksResource diskResource = new PowerShellDisksResource(VM_ID, poolMap, parser, "get-vm", uriProvider, httpHeaders);
 
         setUriInfo(setUpBasicUriExpectations());
         setUpCmdExpectations(GET_DISKS_CMD, formatDisk(DISK_NAME));
@@ -315,7 +317,30 @@ public class PowerShellDevicesResourceTest
 
     @Test
     public void testDiskAdd() throws Exception {
-        PowerShellDisksResource diskResource = new PowerShellDisksResource(VM_ID, poolMap, parser, "get-vm", uriProvider);
+        PowerShellDisksResource diskResource = new PowerShellDisksResource(VM_ID, poolMap, parser, "get-vm", uriProvider, httpHeaders);
+        setUpHttpHeaderExpectations("Expect", null);
+
+        Disk disk = new Disk();
+        disk.setType(DiskType.SYSTEM);
+        disk.setSize(DISK_SIZE_BYTES);
+
+        String command = MessageFormat.format(ADD_DISK_COMMAND, DISK_SIZE, VM_ID) + ASYNC_ENDING + " " + ASYNC_TASKS;
+
+        setUriInfo(setUpCmdExpectations(asArray(command), asArray(formatDisk(DISK_NAME)), "disks", DISK_ID, false));
+
+        Response response = diskResource.add(disk);
+
+        Disk created = (Disk)response.getEntity();
+        verifyDisk(created);
+        assertEquals(202, response.getStatus());
+        assertEquals(Status.PENDING, created.getCreationStatus());
+        verifyLink(created, "creation_status");
+    }
+
+    @Test
+    public void testDiskAddBlocking() throws Exception {
+        PowerShellDisksResource diskResource = new PowerShellDisksResource(VM_ID, poolMap, parser, "get-vm", uriProvider, httpHeaders);
+        setUpHttpHeaderExpectations("Expect", "201-created");
 
         Disk disk = new Disk();
         disk.setType(DiskType.SYSTEM);
@@ -325,12 +350,15 @@ public class PowerShellDevicesResourceTest
 
         setUriInfo(setUpCmdExpectations(command, formatDisk(DISK_NAME), "disks", DISK_ID));
 
-        verifyDisk((Disk)diskResource.add(disk).getEntity());
+        Response response = diskResource.add(disk);
+
+        verifyDisk((Disk)response.getEntity());
+        assertEquals(201, response.getStatus());
     }
 
     @Test
     public void testDiskRemove() throws Exception {
-        PowerShellDisksResource diskResource = new PowerShellDisksResource(VM_ID, poolMap, parser, "get-vm", uriProvider);
+        PowerShellDisksResource diskResource = new PowerShellDisksResource(VM_ID, poolMap, parser, "get-vm", uriProvider, httpHeaders);
 
         String command = MessageFormat.format(REMOVE_DISK_COMMAND, VM_ID, DISK_ID);
 
