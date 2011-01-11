@@ -60,6 +60,12 @@ public abstract class AbstractPowerShellResourceTest<R /* extends BaseResource *
                                                      A /* extends AbstractPowerShellActionableResource<R> */>
     extends BasePowerShellResourceTest {
 
+    protected final static String ASYNC_OPTION = " -async";
+    protected final static String ASYNC_ENDING = " -async;";
+    protected final static String ASYNC_TASKS =
+        "$tasks = get-lastcommandtasks ;"
+        + " if ($tasks) { $tasks ; get-tasksstatus -commandtaskidlist $tasks } ; ";
+
     protected A resource;
     protected ControllableExecutor executor;
     protected PowerShellPoolMap poolMap;

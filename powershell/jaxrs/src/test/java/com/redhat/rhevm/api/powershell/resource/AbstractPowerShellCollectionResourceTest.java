@@ -89,6 +89,12 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
 
     private static final String SEARCH_OPTION = " -searchtext ";
 
+    protected final static String ASYNC_OPTION = " -async";
+    protected final static String ASYNC_ENDING = " -async;";
+    protected final static String ASYNC_TASKS =
+        "$tasks = get-lastcommandtasks ;"
+        + " if ($tasks) { $tasks ; get-tasksstatus -commandtaskidlist $tasks } ; ";
+
     protected static final String[] NOTHING = null;
 
     protected T resource;
@@ -295,6 +301,16 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
         assertNotNull(resource);
         assertEquals(resource.getId(), Integer.toString(name.hashCode()));
         assertSame(resource.getExecutor(), executor);
+    }
+
+    protected void verifyCreated(Response response, Class<R> clz, String name, String description) {
+        R created = clz.cast(response.getEntity());
+        assertEquals(202, response.getStatus());
+        assertEquals(Status.PENDING, created.getCreationStatus());
+        verifyLink(created, "creation_status");
+        assertEquals(Integer.toString(name.hashCode()), created.getId());
+        assertEquals(name, created.getName());
+        assertEquals(description, created.getDescription());
     }
 
     protected abstract T getResource();

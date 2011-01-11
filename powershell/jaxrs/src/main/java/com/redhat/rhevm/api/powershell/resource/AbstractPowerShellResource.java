@@ -37,6 +37,11 @@ public class AbstractPowerShellResource {
     private static final String EXPECT_HEADER = "Expect";
     private static final String BLOCKING_EXPECTATION = "201-created";
     protected final static String CREATION_STATUS = "creation_status";
+    protected final static String ASYNC_OPTION = " -async";
+    protected final static String ASYNC_ENDING = " -async; ";
+    protected final static String ASYNC_TASKS =
+        "$tasks = get-lastcommandtasks ;"
+        + " if ($tasks) { $tasks ; get-tasksstatus -commandtaskidlist $tasks } ; ";
 
     protected PowerShellParser parser;
     protected PowerShellPoolMap shellPools;
@@ -77,6 +82,10 @@ public class AbstractPowerShellResource {
 
     public void setPowerShellPoolMap(PowerShellPoolMap shellPools) {
         this.shellPools = shellPools;
+    }
+
+    public PowerShellPoolMap getPowerShellPoolMap() {
+        return shellPools;
     }
 
     protected PowerShellPool getPool() {
