@@ -31,6 +31,7 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.BaseResource;
 import com.redhat.rhevm.api.model.CdRom;
+import com.redhat.rhevm.api.model.Event;
 import com.redhat.rhevm.api.model.Floppy;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.DataCenter;
@@ -64,6 +65,8 @@ import com.redhat.rhevm.api.resource.DataCenterResource;
 import com.redhat.rhevm.api.resource.DataCentersResource;
 import com.redhat.rhevm.api.resource.DeviceResource;
 import com.redhat.rhevm.api.resource.DevicesResource;
+import com.redhat.rhevm.api.resource.EventResource;
+import com.redhat.rhevm.api.resource.EventsResource;
 import com.redhat.rhevm.api.resource.ReadOnlyDeviceResource;
 import com.redhat.rhevm.api.resource.ReadOnlyDevicesResource;
 import com.redhat.rhevm.api.resource.RolesResource;
@@ -227,6 +230,9 @@ public class LinkHelper {
 
         map = new ParentToCollectionMap(VmPoolResource.class, VmPoolsResource.class);
         TYPES.put(VmPool.class, map);
+        
+        map = new ParentToCollectionMap(EventResource.class, EventsResource.class);
+        TYPES.put(Event.class, map);
     }
 
     /**

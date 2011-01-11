@@ -1,4 +1,6 @@
 transfers:
+  event: com.redhat.rhevm.api.model.Event
+  events: com.redhat.rhevm.api.model.Events
   action: com.redhat.rhevm.api.model.Action
   actions: com.redhat.rhevm.api.model.Actions
   api: com.redhat.rhevm.api.model.API

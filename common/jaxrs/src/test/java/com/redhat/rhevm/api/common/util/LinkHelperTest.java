@@ -29,6 +29,7 @@ import com.redhat.rhevm.api.model.CdRom;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.Disk;
+import com.redhat.rhevm.api.model.Event;
 import com.redhat.rhevm.api.model.Floppy;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.File;
@@ -66,6 +67,7 @@ public class LinkHelperTest extends Assert {
     private static final String STORAGE_ID = "sensational";
     private static final String USER_ID = "doublerainbowalltheway";
     private static final String GROUP_ID = "bankruptnation";
+    private static final String EVENT_ID = "eventtest";
 
     private static final String URI_ROOT = "http://localhost:8080";
     private static final String BASE_PATH = "/rhevm-api-powershell";
@@ -93,6 +95,17 @@ public class LinkHelperTest extends Assert {
     private static final String NIC_HREF = VM_HREF + "/nics/" + NIC_ID;
     private static final String STORAGE_HREF = HOST_HREF + "/storage/" + STORAGE_ID;
     private static final String GROUP_HREF = BASE_PATH + "/groups/" + GROUP_ID;
+    private static final String EVENT_HREF = BASE_PATH + "/events/" + EVENT_ID;
+
+    @Test
+    public void testEventLinks() throws Exception {
+        Event event = new Event();
+        event.setId(EVENT_ID);
+
+        LinkHelper.addLinks(setUpUriExpectations(), event);
+
+        assertEquals(EVENT_HREF, event.getHref());
+    }
 
     @Test
     public void testVmLinks() throws Exception {

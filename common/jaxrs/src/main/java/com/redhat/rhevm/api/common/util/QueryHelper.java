@@ -32,6 +32,7 @@ import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.User;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VmPool;
+import com.redhat.rhevm.api.model.Event;
 
 /**
  * A container of static methods related to query resolution.
@@ -64,6 +65,7 @@ public class QueryHelper {
         RETURN_TYPES.put(Template.class, "Template" + RETURN_TYPE_SEPARTOR);
         RETURN_TYPES.put(User.class, "Users");
         RETURN_TYPES.put(VmPool.class, "Pools" + RETURN_TYPE_SEPARTOR);
+        RETURN_TYPES.put(Event.class, "Events" + RETURN_TYPE_SEPARTOR);
     }
 
     /**

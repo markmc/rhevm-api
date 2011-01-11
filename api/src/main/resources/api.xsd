@@ -859,6 +859,51 @@
     </xs:complexContent>
   </xs:complexType>
 
+  <!-- Events -->
+  <xs:element name="event" type="Event" />
+  <xs:element name="events" type="Events" />
+
+  <xs:simpleType name="LogSeverity">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="NORMAL" />
+      <xs:enumeration value="WARNING" />
+      <xs:enumeration value="ERROR" />
+      <xs:enumeration value="ALERT" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="Event">
+    <xs:complexContent>
+      <xs:extension base="BaseResource">
+        <xs:sequence>
+          <xs:element name="type" type="xs:int" minOccurs="0" maxOccurs="1" />
+          <xs:element name="severity" type="LogSeverity" minOccurs="0" maxOccurs="1" />
+          <xs:element name="time" type="xs:dateTime" minOccurs="0" maxOccurs="1" />
+          <xs:element ref="user" minOccurs="0" />
+          <xs:element ref="vm" minOccurs="0" />
+          <xs:element ref="storage_domain" minOccurs="0" />
+          <xs:element ref="host" minOccurs="0" />
+          <xs:element ref="template" minOccurs="0" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Events">
+    <xs:complexContent>
+      <xs:extension base="BaseResources">
+        <xs:sequence>
+          <xs:annotation>
+            <xs:appinfo>
+              <jaxb:property name="Event" />
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:element ref="event" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
   <!-- Files (ISO or VFD files) -->
 
   <xs:element name="file" type="File"/>
