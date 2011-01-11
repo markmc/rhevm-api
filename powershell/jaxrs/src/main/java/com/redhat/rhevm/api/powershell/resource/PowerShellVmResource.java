@@ -363,8 +363,11 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
 
     @Override
     public CreationResource getCreationSubresource(String ids) {
-        // REVISIT
-        return null;
+        return new PowerShellCreationResource(ids,
+                                              getExecutor(),
+                                              getUriProvider(),
+                                              getShellPools(),
+                                              getParser());
     }
 
     private static void addSubCollection(UriInfo uriInfo, VM vm, String collection) {

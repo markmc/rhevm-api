@@ -224,7 +224,10 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
 
     @Override
     public CreationResource getCreationSubresource(String ids) {
-        // REVISIT
-        return null;
+        return new PowerShellCreationResource(ids,
+                                              getExecutor(),
+                                              getUriProvider(),
+                                              getShellPools(),
+                                              getParser());
     }
 }

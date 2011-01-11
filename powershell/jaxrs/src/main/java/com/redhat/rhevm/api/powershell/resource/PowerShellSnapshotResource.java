@@ -73,7 +73,10 @@ public class PowerShellSnapshotResource
 
     @Override
     public CreationResource getCreationSubresource(String ids) {
-        // REVISIT
-        return null;
+        return new PowerShellCreationResource(ids,
+                                              getExecutor(),
+                                              getUriProvider(),
+                                              getShellPools(),
+                                              getParser());
     }
 }

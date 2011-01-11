@@ -52,7 +52,10 @@ public class PowerShellReadOnlyDeviceResource<D extends BaseDevice, C extends Ba
 
     @Override
     public CreationResource getCreationSubresource(String ids) {
-        // REVISIT
-        return null;
+        return new PowerShellCreationResource(ids,
+                                              parent.getExecutor(),
+                                              parent.getUriProvider(),
+                                              parent.getPowerShellPoolMap(),
+                                              parent.getParser());
     }
 }
