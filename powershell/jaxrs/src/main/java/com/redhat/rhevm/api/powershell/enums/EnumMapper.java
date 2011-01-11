@@ -61,6 +61,10 @@ public class EnumMapper {
         mapping.put("VdcCommon.BusinessEntities.VolumeFormat",              PowerShellVolumeFormat.class);
         mapping.put("VdcDAL.VolumeType",                                    PowerShellVolumeType.class);
         mapping.put("VdcCommon.BusinessEntities.VolumeType",                PowerShellVolumeType.class);
+        mapping.put("VdcCommon.AsyncTasks.AsyncTaskStatusEnum",             PowerShellAsyncTaskStatus.class);
+        mapping.put("VdcCommon.BusinessEntities.AsyncTaskStatusEnum",       PowerShellAsyncTaskStatus.class);
+        mapping.put("VdcCommon.AsyncTasks.AsyncTaskResultEnum",             PowerShellAsyncTaskResult.class);
+        mapping.put("VdcCommon.BusinessEntities.AsyncTaskResultEnum",       PowerShellAsyncTaskResult.class);
     };
 
     public boolean isEnum(String type) {

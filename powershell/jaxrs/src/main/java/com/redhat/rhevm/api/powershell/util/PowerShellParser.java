@@ -283,7 +283,8 @@ public class PowerShellParser {
             } else if (type.contains("System.String") ||
                        type.contains("System.Guid") ||
                        type.contains("System.DateTime") ||
-                       type.contains("System.TimeSpan")) {
+                       type.contains("System.TimeSpan") ||
+                       type.contains("System.Exception")) {
                 return text;
             } else {
                 assert false : type;
