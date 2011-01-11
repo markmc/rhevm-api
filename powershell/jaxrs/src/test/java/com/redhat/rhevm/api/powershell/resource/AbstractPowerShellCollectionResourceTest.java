@@ -25,12 +25,14 @@ import java.util.List;
 import java.util.concurrent.Executor;
 
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.UriBuilder;
 
 import com.redhat.rhevm.api.model.BaseResource;
+import com.redhat.rhevm.api.model.Status;
 import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.common.resource.AbstractUpdatableResource;
 import com.redhat.rhevm.api.common.util.QueryHelper;
@@ -46,7 +48,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 
-import static org.easymock.classextension.EasyMock.expect;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
 
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -95,6 +98,7 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
     protected String[] extraArgs;
     protected Executor executor;
     protected PowerShellParser parser;
+    protected HttpHeaders httpHeaders;
 
     protected AbstractPowerShellCollectionResourceTest(U updatable,
                                                        String collectionName,
@@ -113,6 +117,7 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
         resource = getResource();
         resource.setExecutor(executor);
         resource.setParser(parser);
+        resource.setHttpHeaders(httpHeaders = createMock(HttpHeaders.class));
     }
 
     @After
@@ -130,6 +135,10 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
 
     protected UriInfo setUpAddResourceExpectations(String command, String ret, String name) throws Exception {
         return setUpAddResourceExpectations(asArray(command), asArray(ret), name);
+    }
+
+    protected UriInfo setUpAddResourceExpectations(String command, String ret, boolean build, String name) throws Exception {
+        return setUpResourceExpectations(asArray(command), asArray(ret), build, null, name);
     }
 
     protected UriInfo setUpAddResourceExpectations(String[] commands, String[] rets, String name) throws Exception {
@@ -213,6 +222,14 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
         PowerShellPool pool = createMock(PowerShellPool.class);
         expect(poolMap.get()).andReturn(pool).times(times);
         return pool;
+    }
+
+    protected void setUpHttpHeaderExpectations(String name, String value) {
+        List<String> values = new ArrayList<String>();
+        if (value != null) {
+            values.add(value);
+        }
+        expect(httpHeaders.getRequestHeader(eq(name))).andReturn(values);
     }
 
     protected String getSelectCommand() {

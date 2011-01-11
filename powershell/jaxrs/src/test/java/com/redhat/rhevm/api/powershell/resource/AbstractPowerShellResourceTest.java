@@ -18,8 +18,11 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executor;
 
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
@@ -39,6 +42,7 @@ import org.junit.Ignore;
 
 import org.junit.runner.RunWith;
 
+import static org.easymock.classextension.EasyMock.eq;
 import static org.easymock.classextension.EasyMock.expect;
 
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -61,6 +65,7 @@ public abstract class AbstractPowerShellResourceTest<R /* extends BaseResource *
     protected PowerShellPoolMap poolMap;
     protected PowerShellParser parser;
     protected PlaceHolderUriInfoProvider uriProvider;
+    protected HttpHeaders httpHeaders;
 
     @Before
     public void setUp() throws Exception {
@@ -68,6 +73,7 @@ public abstract class AbstractPowerShellResourceTest<R /* extends BaseResource *
         poolMap = createMock(PowerShellPoolMap.class);
         parser = PowerShellParser.newInstance();
         uriProvider = new PlaceHolderUriInfoProvider();
+        httpHeaders = createMock(HttpHeaders.class);
         resource = getResource(executor, poolMap, parser, uriProvider);
     }
 
@@ -110,6 +116,14 @@ public abstract class AbstractPowerShellResourceTest<R /* extends BaseResource *
         replayAll();
 
         return uriInfo;
+    }
+
+    protected void setUpHttpHeaderExpectations(String name, String value) {
+        List<String> values = new ArrayList<String>();
+        if (value != null) {
+            values.add(value);
+        }
+        expect(httpHeaders.getRequestHeader(eq(name))).andReturn(values);
     }
 
     protected PowerShellPool setUpPoolExpectations() {

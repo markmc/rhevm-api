@@ -20,6 +20,8 @@ package com.redhat.rhevm.api.powershell.resource;
 
 import java.util.concurrent.Executor;
 
+import javax.ws.rs.core.HttpHeaders;
+
 import com.redhat.rhevm.api.common.resource.AbstractActionableResource;
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.BaseResource;
@@ -31,6 +33,7 @@ public abstract class AbstractPowerShellActionableResource<R extends BaseResourc
 
     protected PowerShellPoolMap shellPools;
     protected PowerShellParser parser;
+    protected HttpHeaders httpHeaders;
 
     public AbstractPowerShellActionableResource(String id , PowerShellPoolMap shellPools) {
         super(id);
@@ -70,7 +73,20 @@ public abstract class AbstractPowerShellActionableResource<R extends BaseResourc
         return shellPools.get();
     }
 
+    protected PowerShellPoolMap getShellPools() {
+        return shellPools;
+    }
+
     protected PowerShellParser getParser() {
         return parser;
     }
+
+    public HttpHeaders getHttpHeaders() {
+        return httpHeaders;
+    }
+
+    public void setHttpHeaders(HttpHeaders httpHeaders) {
+        this.httpHeaders = httpHeaders;
+    }
+
 }

@@ -18,8 +18,11 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.util.List;
 import java.util.concurrent.Executor;
 
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.common.util.QueryHelper;
@@ -31,10 +34,13 @@ import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 public class AbstractPowerShellResource {
 
     protected final static String SEARCH_TEXT = " -searchtext ";
+    private static final String EXPECT_HEADER = "Expect";
+    private static final String BLOCKING_EXPECTATION = "201-created";
 
     protected PowerShellParser parser;
     protected PowerShellPoolMap shellPools;
     protected Executor executor;
+    protected HttpHeaders httpHeaders;
 
     protected AbstractPowerShellResource() {
     }
@@ -76,6 +82,15 @@ public class AbstractPowerShellResource {
         return shellPools.get();
     }
 
+    public HttpHeaders getHttpHeaders() {
+        return httpHeaders;
+    }
+
+    @Context
+    public void setHttpHeaders(HttpHeaders httpHeaders) {
+        this.httpHeaders = httpHeaders;
+    }
+
     protected String getSelectCommand(String root, UriInfo uriInfo, Class<?> collectionType) {
         return getSelectCommand(root, uriInfo, collectionType, true);
     }
@@ -89,6 +104,17 @@ public class AbstractPowerShellResource {
                                         .toString();
         }
         return ret;
+    }
+
+    protected boolean expectBlocking() {
+        boolean expectBlocking = false;
+        if (httpHeaders != null) {
+            List<String> expect = httpHeaders.getRequestHeader(EXPECT_HEADER);
+            if (expect != null && expect.size() > 0) {
+                expectBlocking = expect.get(0).equalsIgnoreCase(BLOCKING_EXPECTATION);
+            }
+        }
+        return expectBlocking;
     }
 
 }
