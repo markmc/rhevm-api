@@ -36,6 +36,7 @@ import com.redhat.rhevm.api.resource.AssignedTagsResource;
 import com.redhat.rhevm.api.resource.HostResource;
 import com.redhat.rhevm.api.resource.HostNicsResource;
 import com.redhat.rhevm.api.resource.HostStorageResource;
+import com.redhat.rhevm.api.resource.StatisticsResource;
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellHost;
@@ -278,6 +279,12 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
 
     @Override
     public AssignedPermissionsResource getPermissionsResource() {
+        return null;
+    }
+
+    @Override
+    public StatisticsResource getStatisticsResource() {
+        // REVISIT
         return null;
     }
 

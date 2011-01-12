@@ -30,6 +30,7 @@ import com.redhat.rhevm.api.resource.AssignedTagsResource;
 import com.redhat.rhevm.api.resource.HostResource;
 import com.redhat.rhevm.api.resource.HostNicsResource;
 import com.redhat.rhevm.api.resource.HostStorageResource;
+import com.redhat.rhevm.api.resource.StatisticsResource;
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
@@ -136,4 +137,6 @@ public class MockHostResource extends AbstractMockResource<Host> implements Host
     @Override public HostStorageResource  getHostStorageResource() { return null; }
     @Override public AssignedTagsResource getTagsResource()        { return null; }
     @Override public AssignedPermissionsResource getPermissionsResource() { return null; }
+    @Override public StatisticsResource getStatisticsResource()    { return null; }
+
 }

@@ -18,41 +18,30 @@
  */
 package com.redhat.rhevm.api.resource;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.POST;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
-import javax.ws.rs.core.Response;
 
-import com.redhat.rhevm.api.model.Actionable;
-import com.redhat.rhevm.api.model.Action;
-import com.redhat.rhevm.api.model.HostNIC;
+import com.redhat.rhevm.api.model.Statistic;
+import com.redhat.rhevm.api.model.Statistics;
 
 
 @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
-public interface HostNicResource extends MeasurableResource {
+public interface StatisticsResource {
 
     @GET
     @Formatted
-    public HostNIC get();
+    public Statistics list();
 
-    @Path("{action: (attach|detach)}/{oid}")
-    public ActionResource getActionSubresource(@PathParam("action") String action, @PathParam("oid") String oid);
-
-    @POST
-    @Formatted
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
-    @Actionable
-    @Path("attach")
-    public Response attach(Action action);
-
-    @POST
-    @Formatted
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
-    @Actionable
-    @Path("detach")
-    public Response detach(Action action);
+    /**
+     * Sub-resource locator method, returns individual StatisticResource, on
+     * which the remainder of the URI is dispatched.
+     *
+     * @param id  the Statistic ID
+     * @return    matching subresource if found
+     */
+    @Path("{id}")
+    public StatisticResource getStatisticSubResource(@PathParam("id") String id);
 }

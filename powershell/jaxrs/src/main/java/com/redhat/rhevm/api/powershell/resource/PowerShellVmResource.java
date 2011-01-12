@@ -36,6 +36,7 @@ import com.redhat.rhevm.api.model.VmType;
 import com.redhat.rhevm.api.resource.AssignedPermissionsResource;
 import com.redhat.rhevm.api.resource.AssignedTagsResource;
 import com.redhat.rhevm.api.resource.CreationResource;
+import com.redhat.rhevm.api.resource.StatisticsResource;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
@@ -368,6 +369,12 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
                                               getUriProvider(),
                                               getShellPools(),
                                               getParser());
+    }
+
+    @Override
+    public StatisticsResource getStatisticsResource() {
+        // REVISIT
+        return null;
     }
 
     private static void addSubCollection(UriInfo uriInfo, VM vm, String collection) {

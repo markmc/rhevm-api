@@ -31,7 +31,7 @@ import com.redhat.rhevm.api.model.Host;
 
 
 @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
-public interface HostResource extends UpdatableResource<Host> {
+public interface HostResource extends UpdatableResource<Host>, MeasurableResource {
 
     @Path("{action: (approve|install|fence|activate|deactivate|commitnetconfig|iscsidiscover|iscsilogin)}/{oid}")
     public ActionResource getActionSubresource(@PathParam("action")String action, @PathParam("oid")String oid);

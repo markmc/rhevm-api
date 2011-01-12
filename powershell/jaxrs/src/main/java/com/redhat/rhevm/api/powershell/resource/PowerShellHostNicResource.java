@@ -27,6 +27,7 @@ import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.HostNIC;
 import com.redhat.rhevm.api.resource.HostNicResource;
+import com.redhat.rhevm.api.resource.StatisticsResource;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
@@ -101,5 +102,11 @@ public class PowerShellHostNicResource
     @Override
     public Response detach(Action action) {
         return doNetworkAdapterAction(action, "detach-logicalnetworkfromnetworkadapter");
+    }
+
+    @Override
+    public StatisticsResource getStatisticsResource() {
+        // REVISIT
+        return null;
     }
 }
