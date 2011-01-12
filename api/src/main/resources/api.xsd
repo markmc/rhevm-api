@@ -186,6 +186,89 @@
     </xs:complexContent>
   </xs:complexType>
 
+  <!-- Statictics -->
+
+  <xs:element name="statistic" type="Statistic"/>
+
+  <xs:element name="statistics" type="Statistics"/>
+
+  <xs:complexType name="Statistic">
+    <xs:complexContent>
+      <xs:extension base="BaseResource">
+        <xs:sequence>
+          <xs:annotation>
+            <xs:appinfo>
+              <jaxb:property name="Values"/>
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:element ref="values" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="type" type="StatisticType" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="unit" type="StatisticUnit" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Statistics">
+    <xs:sequence>
+      <xs:annotation>
+        <xs:appinfo>
+            <jaxb:property name="Statistics"/>
+        </xs:appinfo>
+      </xs:annotation>
+      <xs:element ref="statistic" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="value" type="Value"/>
+
+  <xs:element name="values" type="Values"/>
+
+  <xs:complexType name="Value">
+    <xs:sequence>
+      <xs:element name="datum" type="xs:double" minOccurs="1" maxOccurs="1"/>
+      <!-- will in the future also include a timestamp element,
+           when historical data is supported -->
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Values">
+    <xs:sequence>
+      <xs:annotation>
+        <xs:appinfo>
+            <jaxb:property name="Values"/>
+        </xs:appinfo>
+      </xs:annotation>
+      <xs:element ref="value" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="type" type="ValueType"/>
+  </xs:complexType>
+
+  <xs:simpleType name="ValueType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="INTEGER"/>
+      <xs:enumeration value="DECIMAL"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="StatisticType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="GAUGE"/>
+      <xs:enumeration value="COUNTER"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="StatisticUnit">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="NONE"/>
+      <xs:enumeration value="BYTES"/>
+      <xs:enumeration value="SECONDS"/>
+      <xs:enumeration value="BYTES_PER_SECOND"/>
+      <xs:enumeration value="BITS_PER_SECOND"/>
+      <xs:enumeration value="PERCENT"/>
+    </xs:restriction>
+  </xs:simpleType>
+
   <!-- Enums -->
 
   <xs:simpleType name="BootDevice">
