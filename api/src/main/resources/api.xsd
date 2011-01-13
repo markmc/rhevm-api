@@ -1164,8 +1164,10 @@
           <xs:element name="status" type="StorageDomainStatus" minOccurs="0"/>
           <xs:element name="master" type="xs:boolean" minOccurs="0"/>
           <xs:element ref="storage" minOccurs="0"/>
-          <!-- host is only relevant at creation time -->
+          <!-- host is only relevant at creation and deletion time -->
           <xs:element ref="host" minOccurs="0"/>
+          <!-- format is only relevant at deletion time -->
+          <xs:element name="format" type="xs:boolean" minOccurs="0"/>
           <xs:element name="available" type="xs:long" minOccurs="0"/>
           <xs:element name="used" type="xs:long" minOccurs="0"/>
           <xs:element name="committed" type="xs:long" minOccurs="0"/>
