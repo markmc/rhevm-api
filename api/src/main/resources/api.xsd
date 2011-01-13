@@ -196,14 +196,15 @@
     <xs:complexContent>
       <xs:extension base="BaseResource">
         <xs:sequence>
-          <xs:annotation>
-            <xs:appinfo>
-              <jaxb:property name="Values"/>
-            </xs:appinfo>
-          </xs:annotation>
           <xs:element ref="values" minOccurs="0" maxOccurs="unbounded"/>
           <xs:element name="type" type="StatisticType" minOccurs="1" maxOccurs="1"/>
           <xs:element name="unit" type="StatisticUnit" minOccurs="1" maxOccurs="1"/>
+          <!-- only one of the following entity references is set -->
+          <xs:element ref="disk" minOccurs="0" maxOccurs="1"/>
+          <xs:element ref="host" minOccurs="0" maxOccurs="1"/>
+          <xs:element ref="host_nic" minOccurs="0" maxOccurs="1"/>
+          <xs:element ref="nic" minOccurs="0" maxOccurs="1"/>
+          <xs:element ref="vm" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
