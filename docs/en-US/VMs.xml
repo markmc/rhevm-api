@@ -643,6 +643,37 @@ Content-type: application/xml
 &lt;action/&gt;
     </screen>
 
+    <para>
+      The start action allows a <literal>vm</literal> element to be provided as a parameter. If a <literal>vm</literal> element is provided, boot-specific properties of the VM will be overridden at start time, using the values from the provided element. The properties will only be overriden for this boot of the VM, and will not be persisted for the next boot.
+    </para>
+    <screen>
+POST /rhevm-api/vms/0/start HTTP/1.1
+Content-type: application/xml
+
+&lt;action&gt;
+  &lt;pause&gt;true&lt;/pause&gt;
+  &lt;vm&gt;
+    &lt;host id="02447ac6-bcba-448d-ba2b-f0f453544ed2"/&gt;
+    &lt;stateless&gt;true&lt;/stateless&gt;
+    &lt;display&gt;
+      &lt;type&gt;SPICE&lt;/type&gt;
+    &lt;/display&gt;
+    &lt;os&gt;
+      &lt;boot dev="cdrom"/&gt;
+    &lt;/os&gt;
+    &lt;cdroms&gt;
+      &lt;cdrom&gt;
+        &lt;file id="foo.iso"/&gt;
+      &lt;/cdrom&gt;
+    &lt;/cdroms&gt;
+    &lt;floppies&gt;
+      &lt;floppy&gt;
+        &lt;file id="bar.vfd"/&gt;
+      &lt;/floppy&gt;
+    &lt;/floppies&gt;
+  &lt;/vm&gt;
+&lt;/action&gt;
+    </screen>
   </section>
 
   <section id="sect-REST_API_Guide-VMs-Stop">
