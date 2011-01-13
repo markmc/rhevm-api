@@ -36,6 +36,7 @@ import com.redhat.rhevm.api.model.File;
 import com.redhat.rhevm.api.model.Group;
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.NIC;
+import com.redhat.rhevm.api.model.Statistic;
 import com.redhat.rhevm.api.model.Storage;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.Tag;
@@ -68,6 +69,7 @@ public class LinkHelperTest extends Assert {
     private static final String USER_ID = "doublerainbowalltheway";
     private static final String GROUP_ID = "bankruptnation";
     private static final String EVENT_ID = "eventtest";
+    private static final String STATISTIC_ID = "bleedindeadly";
 
     private static final String URI_ROOT = "http://localhost:8080";
     private static final String BASE_PATH = "/rhevm-api-powershell";
@@ -96,6 +98,7 @@ public class LinkHelperTest extends Assert {
     private static final String STORAGE_HREF = HOST_HREF + "/storage/" + STORAGE_ID;
     private static final String GROUP_HREF = BASE_PATH + "/groups/" + GROUP_ID;
     private static final String EVENT_HREF = BASE_PATH + "/events/" + EVENT_ID;
+    private static final String STATISTIC_HREF = VM_HREF + "/statistics/" + STATISTIC_ID;
 
     @Test
     public void testEventLinks() throws Exception {
@@ -390,6 +393,19 @@ public class LinkHelperTest extends Assert {
         LinkHelper.addLinks(setUpUriExpectations(), group);
 
         assertEquals(GROUP_HREF, group.getHref());
+    }
+
+    @Test
+    public void testStatisticLinks() throws Exception {
+        Statistic statistic = new Statistic();
+        statistic.setId(STATISTIC_ID);
+
+        statistic.setVm(new VM());
+        statistic.getVm().setId(VM_ID);
+
+        LinkHelper.addLinks(setUpUriExpectations(), statistic);
+
+        assertEquals(STATISTIC_HREF, statistic.getHref());
     }
 
     @Test

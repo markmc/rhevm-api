@@ -46,6 +46,7 @@ import com.redhat.rhevm.api.model.Permission;
 import com.redhat.rhevm.api.model.Permit;
 import com.redhat.rhevm.api.model.Role;
 import com.redhat.rhevm.api.model.Snapshot;
+import com.redhat.rhevm.api.model.Statistic;
 import com.redhat.rhevm.api.model.Storage;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.Tag;
@@ -89,6 +90,8 @@ import com.redhat.rhevm.api.resource.RoleResource;
 import com.redhat.rhevm.api.resource.AssignedRolesResource;
 import com.redhat.rhevm.api.resource.SnapshotResource;
 import com.redhat.rhevm.api.resource.SnapshotsResource;
+import com.redhat.rhevm.api.resource.StatisticResource;
+import com.redhat.rhevm.api.resource.StatisticsResource;
 import com.redhat.rhevm.api.resource.StorageResource;
 import com.redhat.rhevm.api.resource.StorageDomainContentResource;
 import com.redhat.rhevm.api.resource.StorageDomainContentsResource;
@@ -233,6 +236,13 @@ public class LinkHelper {
         
         map = new ParentToCollectionMap(EventResource.class, EventsResource.class);
         TYPES.put(Event.class, map);
+        
+        map = new ParentToCollectionMap(StatisticResource.class, StatisticsResource.class, Disk.class);
+        map.add(StatisticResource.class, StatisticsResource.class, Host.class);
+        map.add(StatisticResource.class, StatisticsResource.class, HostNIC.class);
+        map.add(StatisticResource.class, StatisticsResource.class, NIC.class);
+        map.add(StatisticResource.class, StatisticsResource.class, VM.class);
+        TYPES.put(Statistic.class, map);
     }
 
     /**
