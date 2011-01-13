@@ -281,9 +281,13 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
         String hostArg = setUpHostArg(storageDomain.getHost(), buf);
 
         buf.append("remove-storagedomain");
-        buf.append(" -force");
         buf.append(" -storagedomainid " + PowerShellUtils.escape(id));
         buf.append(" -hostid " + hostArg);
+        if (storageDomain.isSetFormat() && storageDomain.isFormat()) {
+            buf.append(" -formatstorage");
+        } else {
+            buf.append(" -force");
+        }
 
         PowerShellCmd.runCommand(getPool(), buf.toString());
 
