@@ -533,6 +533,7 @@
           </xs:element>
           <xs:element ref="power_managers" minOccurs="0"/>
           <xs:element ref="storage_types" minOccurs="0"/>
+          <xs:element name="hooks_env" type="VmHooksEnv" minOccurs="0"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -1311,6 +1312,7 @@
   <xs:complexType name="VmHooksEnv">
     <xs:attribute name="name" type="xs:string"/>
     <xs:attribute name="value" type="xs:string"/>
+    <xs:attribute name="regexp" type="xs:string"/>
   </xs:complexType>
 
   <xs:complexType name="VmHooksEnvs">
