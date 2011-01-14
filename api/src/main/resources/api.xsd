@@ -382,6 +382,7 @@
       <xs:enumeration value="ISCSI"/>
       <xs:enumeration value="FCP"/>
       <xs:enumeration value="NFS"/>
+      <xs:enumeration value="LOCAL"/>
     </xs:restriction>
   </xs:simpleType>
 
