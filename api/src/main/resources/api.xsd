@@ -196,7 +196,7 @@
     <xs:complexContent>
       <xs:extension base="BaseResource">
         <xs:sequence>
-          <xs:element ref="values" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element ref="values" minOccurs="1" maxOccurs="1"/>
           <xs:element name="type" type="StatisticType" minOccurs="1" maxOccurs="1"/>
           <xs:element name="unit" type="StatisticUnit" minOccurs="1" maxOccurs="1"/>
           <!-- only one of the following entity references is set -->
@@ -262,11 +262,12 @@
   <xs:simpleType name="StatisticUnit">
     <xs:restriction base="xs:string">
       <xs:enumeration value="NONE"/>
+      <xs:enumeration value="PERCENT"/>
       <xs:enumeration value="BYTES"/>
       <xs:enumeration value="SECONDS"/>
       <xs:enumeration value="BYTES_PER_SECOND"/>
       <xs:enumeration value="BITS_PER_SECOND"/>
-      <xs:enumeration value="PERCENT"/>
+      <xs:enumeration value="COUNT_PER_SECOND"/>
     </xs:restriction>
   </xs:simpleType>
 
