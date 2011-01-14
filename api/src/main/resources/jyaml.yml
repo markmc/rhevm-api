@@ -19,6 +19,7 @@ transfers:
   disk: com.redhat.rhevm.api.model.Disk
   disks: com.redhat.rhevm.api.model.Disks
   display: com.redhat.rhevm.api.model.Display
+  env: com.redhat.rhevm.api.model.VmHooksEnv
   fault: com.redhat.rhevm.api.model.Fault
   features: com.redhat.rhevm.api.model.Features
   file: com.redhat.rhevm.api.model.File
@@ -29,6 +30,7 @@ transfers:
   group: com.redhat.rhevm.api.model.Group
   groups: com.redhat.rhevm.api.model.Groups
   highly_available: com.redhat.rhevm.api.model.HighlyAvailable
+  hooks_env: com.redhat.rhevm.api.model.VmHooksEnvs
   host: com.redhat.rhevm.api.model.Host
   host_nic: com.redhat.rhevm.api.model.HostNIC
   host_nics: com.redhat.rhevm.api.model.HostNics
@@ -167,6 +169,8 @@ handlers:
   com.redhat.rhevm.api.model.Version: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.VLAN: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.VM: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.VmHooksEnv: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.VmHooksEnvs: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.VmPool: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.VmPools: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.VMs: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
