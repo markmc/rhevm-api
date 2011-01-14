@@ -30,7 +30,7 @@ import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Fault;
 import com.redhat.rhevm.api.model.Host;
-import com.redhat.rhevm.api.model.IscsiParameters;
+import com.redhat.rhevm.api.model.IscsiDetails;
 import com.redhat.rhevm.api.model.PowerManagement;
 import com.redhat.rhevm.api.model.PowerManagementOption;
 import com.redhat.rhevm.api.model.PowerManagementOptions;
@@ -201,7 +201,7 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
     @Test
     public void testIscsiDiscover() throws Exception {
         Action action = getAction();
-        action.setIscsi(new IscsiParameters());
+        action.setIscsi(new IscsiDetails());
         action.getIscsi().setAddress(ISCSI_PORTAL);
         setUriInfo(setUpActionExpectation("/hosts/" + HOST_ID + "/",
                                           "iscsidiscover",
@@ -215,7 +215,7 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
     @Test
     public void testIscsiLogin() throws Exception {
         Action action = getAction();
-        action.setIscsi(new IscsiParameters());
+        action.setIscsi(new IscsiDetails());
         action.getIscsi().setAddress(ISCSI_PORTAL);
         action.getIscsi().setTarget(ISCSI_TARGET);
         setUriInfo(setUpActionExpectation("/hosts/" + HOST_ID + "/",

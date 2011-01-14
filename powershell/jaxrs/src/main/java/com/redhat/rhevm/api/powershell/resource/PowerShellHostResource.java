@@ -27,7 +27,7 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Host;
-import com.redhat.rhevm.api.model.IscsiParameters;
+import com.redhat.rhevm.api.model.IscsiDetails;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.PowerManagement;
 import com.redhat.rhevm.api.model.PowerManagementOption;
@@ -219,7 +219,7 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
     public Response iscsiDiscover(Action action) {
         validateParameters(action, "iscsi.address");
 
-        IscsiParameters params = action.getIscsi();
+        IscsiDetails params = action.getIscsi();
 
         StringBuilder buf = new StringBuilder();
 
@@ -250,7 +250,7 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
     public Response iscsiLogin(Action action) {
         validateParameters(action, "iscsi.address", "iscsi.target");
 
-        IscsiParameters params = action.getIscsi();
+        IscsiDetails params = action.getIscsi();
 
         StringBuilder buf = new StringBuilder();
 

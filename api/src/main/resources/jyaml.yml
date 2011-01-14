@@ -37,7 +37,7 @@ transfers:
   hosts: com.redhat.rhevm.api.model.Hosts
   host_storag: com.redhat.rhevm.api.model.HostStorage
   ip: com.redhat.rhevm.api.model.IP
-  iscsi: com.redhat.rhevm.api.model.IscsiParameters
+  iscsi: com.redhat.rhevm.api.model.IscsiDetails
   link: com.redhat.rhevm.api.model.Link
   logical_unit: com.redhat.rhevm.api.model.LogicalUnit
   mac: com.redhat.rhevm.api.model.MAC
@@ -124,7 +124,7 @@ handlers:
   com.redhat.rhevm.api.model.Hosts: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.HostStorage: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.IP: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
-  com.redhat.rhevm.api.model.IscsiParameters: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.IscsiDetails: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.Link: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.LogicalUnit: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.MAC: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper

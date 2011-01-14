@@ -74,9 +74,12 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="IscsiParameters">
+  <xs:complexType name="IscsiDetails">
     <xs:sequence>
-      <xs:group ref="IscsiTarget"/>
+      <xs:choice>
+        <xs:group ref="IscsiTarget"/>
+        <xs:element name="initiator" type="xs:string"/>
+      </xs:choice>
     </xs:sequence>
   </xs:complexType>
 
@@ -94,7 +97,7 @@
       <!-- for VM ticket actions -->
       <xs:element name="ticket" type="Ticket" minOccurs="0"/>
       <!-- for Host ISCSI actions -->
-      <xs:element name="iscsi" type="IscsiParameters" minOccurs="0"/>
+      <xs:element name="iscsi" type="IscsiDetails" minOccurs="0"/>
       <!-- for VM import and export actions -->
       <xs:element name="storage_domain" type="StorageDomain" minOccurs="0"/>
       <!-- for VM import action -->
@@ -770,6 +773,7 @@
           <xs:element ref="power_management" minOccurs="0"/>
           <xs:element name="ksm" type="xs:boolean" minOccurs="0"/>
           <xs:element name="transparent_hugepages" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="iscsi" type="IscsiDetails" minOccurs="0"/>
           <!-- when creating a new host, a root password is required, but
                this is not subsequently included in the representation -->
           <xs:element name="root_password" type="xs:string" minOccurs="0" maxOccurs="1"/>
