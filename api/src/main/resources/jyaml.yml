@@ -20,6 +20,7 @@ transfers:
   disks: com.redhat.rhevm.api.model.Disks
   display: com.redhat.rhevm.api.model.Display
   fault: com.redhat.rhevm.api.model.Fault
+  features: com.redhat.rhevm.api.model.Features
   file: com.redhat.rhevm.api.model.File
   files: com.redhat.rhevm.api.model.Files
   floppies: com.redhat.rhevm.api.model.Floppies
@@ -106,6 +107,7 @@ handlers:
   com.redhat.rhevm.api.model.Disks: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.Display: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.Fault: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Features: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.File: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.Files: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.Floppies: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper

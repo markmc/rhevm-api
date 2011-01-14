@@ -523,6 +523,7 @@
       <xs:extension base="Version">
         <xs:sequence>
           <xs:element name="current" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="features" type="Features" minOccurs="0"/>
           <xs:element name="cpus" type="CPUs" minOccurs="0">
             <xs:annotation>
               <xs:appinfo>
@@ -547,6 +548,14 @@
         </xs:annotation>
       </xs:element>
       <xs:element name="permits" type="Permits" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="features" type="Features"/>
+
+  <xs:complexType name="Features">
+    <xs:sequence>
+      <xs:element name="transparent_hugepages" type="xs:boolean" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
 
