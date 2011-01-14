@@ -58,6 +58,8 @@ transfers:
   slaves: com.redhat.rhevm.api.model.Slaves
   snapshot: com.redhat.rhevm.api.model.Snapshot
   snapshots: com.redhat.rhevm.api.model.Snapshots
+  statistic: com.redhat.rhevm.api.model.Statistic
+  statistics: com.redhat.rhevm.api.model.Statistics
   storage_domain: com.redhat.rhevm.api.model.StorageDomain
   storage_domains: com.redhat.rhevm.api.model.StorageDomains
   storage: com.redhat.rhevm.api.model.Storage
@@ -70,6 +72,8 @@ transfers:
   ticket: com.redhat.rhevm.api.model.Ticket
   user: com.redhat.rhevm.api.model.User
   users: com.redhat.rhevm.api.model.Users
+  value: com.redhat.rhevm.api.model.Value
+  values: com.redhat.rhevm.api.model.Values
   version: com.redhat.rhevm.api.model.VersionCaps
   version: com.redhat.rhevm.api.model.Version
   vlan: com.redhat.rhevm.api.model.VLAN
@@ -89,6 +93,8 @@ handlers:
   com.redhat.rhevm.api.model.CdRoms: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.Cluster: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.Clusters: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Event: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Events: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.CPU: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.CPUs: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.CpuStatistics: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
@@ -137,6 +143,8 @@ handlers:
   com.redhat.rhevm.api.model.Slaves: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.Snapshot: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.Snapshots: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Statistic: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Statistics: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.StorageDomain: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.StorageDomains: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.Storage: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
@@ -149,6 +157,8 @@ handlers:
   com.redhat.rhevm.api.model.Ticket: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.User: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.Users: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Value: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Values: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.VersionCaps: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.Version: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.VLAN: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
