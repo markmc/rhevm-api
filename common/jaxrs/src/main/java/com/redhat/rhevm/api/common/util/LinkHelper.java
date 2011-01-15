@@ -66,6 +66,7 @@ import com.redhat.rhevm.api.resource.DataCenterResource;
 import com.redhat.rhevm.api.resource.DataCentersResource;
 import com.redhat.rhevm.api.resource.DeviceResource;
 import com.redhat.rhevm.api.resource.DevicesResource;
+import com.redhat.rhevm.api.resource.DiskResource;
 import com.redhat.rhevm.api.resource.EventResource;
 import com.redhat.rhevm.api.resource.EventsResource;
 import com.redhat.rhevm.api.resource.ReadOnlyDeviceResource;
@@ -82,6 +83,7 @@ import com.redhat.rhevm.api.resource.GroupResource;
 import com.redhat.rhevm.api.resource.GroupsResource;
 import com.redhat.rhevm.api.resource.NetworkResource;
 import com.redhat.rhevm.api.resource.NetworksResource;
+import com.redhat.rhevm.api.resource.NicResource;
 import com.redhat.rhevm.api.resource.PermissionResource;
 import com.redhat.rhevm.api.resource.AssignedPermissionsResource;
 import com.redhat.rhevm.api.resource.PermitResource;
@@ -165,6 +167,9 @@ public class LinkHelper {
         map = new ParentToCollectionMap(DeviceResource.class, DevicesResource.class, VM.class);
         TYPES.put(Disk.class, map);
 
+        map = new ParentToCollectionMap(DiskResource.class, DevicesResource.class, VM.class);
+        TYPES.put(Disk.class, map);
+
         map = new ParentToCollectionMap(DeviceResource.class, DevicesResource.class, VM.class);
         TYPES.put(Floppy.class, map);
 
@@ -194,6 +199,9 @@ public class LinkHelper {
         TYPES.put(NIC.class, map);
 
         map = new ParentToCollectionMap(DeviceResource.class, DevicesResource.class, VM.class);
+        TYPES.put(NIC.class, map);
+
+        map = new ParentToCollectionMap(NicResource.class, DevicesResource.class, VM.class);
         TYPES.put(NIC.class, map);
 
         map = new ParentToCollectionMap(PermitResource.class, PermitsResource.class, Role.class);
