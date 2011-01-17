@@ -660,6 +660,7 @@
           </xs:appinfo>
         </xs:annotation>
       </xs:element>
+      <xs:element ref="transparent_hugepages" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
 
