@@ -536,7 +536,7 @@
           </xs:element>
           <xs:element ref="power_managers" minOccurs="0"/>
           <xs:element ref="storage_types" minOccurs="0"/>
-          <xs:element name="hooks_env" type="VmHooksEnv" minOccurs="0"/>
+          <xs:element name="hooks_env" type="VmHooksEnvs" minOccurs="0"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -1367,7 +1367,7 @@
           <xs:element name="creation_time" type="xs:dateTime" minOccurs="0"/>
           <xs:element name="origin" type="VmOrigin" minOccurs="0"/>
           <xs:element name="stateless" type="xs:boolean" minOccurs="0"/>
-          <xs:element name="hooks_env" type="VmHooksEnv" minOccurs="0"/>
+          <xs:element name="hooks_env" type="VmHooksEnvs" minOccurs="0"/>
 
           <xs:element name="memory_statistics" type="MemoryStatistics" minOccurs="0" maxOccurs="1">
             <xs:annotation>
