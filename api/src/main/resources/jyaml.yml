@@ -38,6 +38,7 @@ transfers:
   host_storag: com.redhat.rhevm.api.model.HostStorage
   ip: com.redhat.rhevm.api.model.IP
   iscsi: com.redhat.rhevm.api.model.IscsiDetails
+  ksm: com.redhat.rhevm.api.model.KSM
   link: com.redhat.rhevm.api.model.Link
   logical_unit: com.redhat.rhevm.api.model.LogicalUnit
   mac: com.redhat.rhevm.api.model.MAC
@@ -74,6 +75,7 @@ transfers:
   template: com.redhat.rhevm.api.model.Template
   templates: com.redhat.rhevm.api.model.Templates
   ticket: com.redhat.rhevm.api.model.Ticket
+  transparent_hugepages: com.redhat.rhevm.api.model.TransparentHugePages
   user: com.redhat.rhevm.api.model.User
   users: com.redhat.rhevm.api.model.Users
   value: com.redhat.rhevm.api.model.Value
@@ -125,6 +127,7 @@ handlers:
   com.redhat.rhevm.api.model.HostStorage: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.IP: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.IscsiDetails: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.KSM: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.Link: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.LogicalUnit: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.MAC: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
@@ -161,6 +164,7 @@ handlers:
   com.redhat.rhevm.api.model.Template: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.Templates: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.Ticket: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.TransparentHugePages: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.User: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.Users: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.Value: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper

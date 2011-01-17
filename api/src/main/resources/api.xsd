@@ -559,7 +559,7 @@
 
   <xs:complexType name="Features">
     <xs:sequence>
-      <xs:element name="transparent_hugepages" type="xs:boolean" minOccurs="0"/>
+      <xs:element ref="transparent_hugepages" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -754,6 +754,22 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:element name="ksm" type="KSM"/>
+
+  <xs:complexType name="KSM">
+    <xs:sequence>
+      <xs:element name="enabled" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="transparent_hugepages" type="TransparentHugePages"/>
+
+  <xs:complexType name="TransparentHugePages">
+    <xs:sequence>
+      <xs:element name="enabled" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <xs:element name="host" type="Host"/>
 
   <xs:element name="hosts" type="Hosts"/>
@@ -771,8 +787,8 @@
           <xs:element name="storage_manager" type="xs:boolean" minOccurs="0"/>
           <xs:element name="version" type="Version" minOccurs="0"/>
           <xs:element ref="power_management" minOccurs="0"/>
-          <xs:element name="ksm" type="xs:boolean" minOccurs="0"/>
-          <xs:element name="transparent_hugepages" type="xs:boolean" minOccurs="0"/>
+          <xs:element ref="ksm" minOccurs="0"/>
+          <xs:element ref="transparent_hugepages" minOccurs="0"/>
           <xs:element name="iscsi" type="IscsiDetails" minOccurs="0"/>
           <!-- when creating a new host, a root password is required, but
                this is not subsequently included in the representation -->
