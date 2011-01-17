@@ -993,6 +993,7 @@
     <xs:complexContent>
       <xs:extension base="BaseResource">
         <xs:sequence>
+          <xs:element name="code" type="xs:int" minOccurs="0" maxOccurs="1" />
           <xs:element name="severity" type="LogSeverity" minOccurs="0" maxOccurs="1" />
           <xs:element name="time" type="xs:dateTime" minOccurs="0" maxOccurs="1" />
           <xs:element ref="user" minOccurs="0" />
