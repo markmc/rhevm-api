@@ -33,6 +33,7 @@
           </xs:appinfo>
         </xs:annotation>
       </xs:element>
+      <xs:element ref="system_version"/>
       <xs:element ref="summary"/>
     </xs:sequence>
   </xs:complexType>
@@ -503,6 +504,17 @@
     <xs:sequence/>
     <xs:attribute name="major" type="xs:unsignedShort"/>
     <xs:attribute name="minor" type="xs:unsignedShort"/>
+  </xs:complexType>
+
+  <xs:element name="system_version" type="SystemVersion"/>
+
+  <xs:complexType name="SystemVersion">
+    <xs:complexContent>
+      <xs:extension base="Version">
+        <xs:attribute name="build" type="xs:unsignedShort"/>
+        <xs:attribute name="revision" type="xs:unsignedShort"/>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <xs:complexType name="SupportedVersions">

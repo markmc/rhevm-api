@@ -69,6 +69,7 @@ transfers:
   storage_types: com.redhat.rhevm.api.model.StorageDomains
   storage: com.redhat.rhevm.api.model.Storage
   supported_versions: com.redhat.rhevm.api.model.SupportedVersions
+  system_version: com.redhat.rhevm.api.model.SystemVersion
   tag: com.redhat.rhevm.api.model.Tag
   parent: com.redhat.rhevm.api.model.TagParent
   tags: com.redhat.rhevm.api.model.Tags
@@ -158,6 +159,7 @@ handlers:
   com.redhat.rhevm.api.model.StorageTypes: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.Storage: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.SupportedVersions: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.SystemVersion: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.Tag: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.TagParent: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.Tags: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
