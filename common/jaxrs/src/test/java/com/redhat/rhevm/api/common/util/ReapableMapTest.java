@@ -20,6 +20,7 @@ package com.redhat.rhevm.api.common.util;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.lang.ref.ReferenceQueue;
@@ -87,6 +88,7 @@ public class ReapableMapTest extends Assert {
     }
 
     @Test
+    @Ignore
     public void testReapingOnGetWithAccessBasedAging() throws Exception {
         setUpAccessBaseAgingExpectations();
 
