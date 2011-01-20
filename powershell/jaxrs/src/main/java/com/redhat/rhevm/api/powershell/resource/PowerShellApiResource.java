@@ -18,6 +18,8 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.util.List;
+
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
@@ -29,9 +31,11 @@ import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.LinkHeader;
 import com.redhat.rhevm.api.model.ObjectFactory;
 import com.redhat.rhevm.api.model.StorageDomains;
+import com.redhat.rhevm.api.model.SystemVersion;
 import com.redhat.rhevm.api.model.Users;
 import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.powershell.model.PowerShellSystemStats;
+import com.redhat.rhevm.api.powershell.model.PowerShellSystemVersion;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.resource.ApiResource;
 
@@ -130,16 +134,27 @@ public class PowerShellApiResource
 
     @Override
     public Response get() {
-        API api = addSummary(addLinks(new API()));
+        API api = addSummary(addSystemVersion(addLinks(new API())));
         return getResponseBuilder(api).entity(api).build();
     }
 
-    private PowerShellSystemStats runAndParse(String command) {
+    private SystemVersion runAndParseSystemVersion(String command) {
+        List<SystemVersion> versions = PowerShellSystemVersion.parse(getParser(),
+                                                                     PowerShellCmd.runCommand(getPool(), command));
+        return !versions.isEmpty() ? versions.get(0) : null;
+    }
+
+    private API addSystemVersion(API api) {
+        api.setSystemVersion(runAndParseSystemVersion("get-version"));
+        return api;
+    }
+
+    private PowerShellSystemStats runAndParseSummary(String command) {
         return PowerShellSystemStats.parse(getParser(), PowerShellCmd.runCommand(getPool(), command));
     }
 
     private API addSummary(API api) {
-        PowerShellSystemStats stats = runAndParse("get-systemstatistics");
+        PowerShellSystemStats stats = runAndParseSummary("get-systemstatistics");
 
         ApiSummary summary = new ApiSummary();
 

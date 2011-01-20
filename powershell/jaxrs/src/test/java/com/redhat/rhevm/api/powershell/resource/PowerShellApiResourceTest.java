@@ -91,7 +91,12 @@ public class PowerShellApiResourceTest
         BASE_PATH + "/vms?search={query}",
     };
 
+    private static String GET_SYSTEM_VERSION_COMMAND = "get-version";
     private static String GET_SYSTEM_STATS_COMMAND = "get-systemstatistics";
+
+    private String formatSystemVersion() {
+        return PowerShellTestUtils.readClassPathFile("systemversion.xml");
+    }
 
     private String formatSystemStats() {
         return PowerShellTestUtils.readClassPathFile("systemstats.xml");
@@ -107,13 +112,18 @@ public class PowerShellApiResourceTest
 
     @Test
     public void testGet() throws Exception {
+        mockStatic(PowerShellCmd.class);
+        setUpSystemVersionExpectations(GET_SYSTEM_VERSION_COMMAND, formatSystemVersion());
         setUpSystemStatsExpectations(GET_SYSTEM_STATS_COMMAND, formatSystemStats());
         resource.setUriInfo(setUpUriInfo());
         verifyResponse(resource.get());
     }
 
+    private void setUpSystemVersionExpectations(String command, String ret) throws Exception {
+        expect(PowerShellCmd.runCommand(setUpPoolExpectations(), command)).andReturn(ret);
+    }
+
     private void setUpSystemStatsExpectations(String command, String ret) throws Exception {
-        mockStatic(PowerShellCmd.class);
         expect(PowerShellCmd.runCommand(setUpPoolExpectations(), command)).andReturn(ret);
     }
 
@@ -156,6 +166,12 @@ public class PowerShellApiResourceTest
             assertEquals(relationships[i], l.getRel());
             assertEquals(hrefs[i], l.getHref());
         }
+
+        assertNotNull(api.getSystemVersion());
+        assertEquals(2, api.getSystemVersion().getMajor());
+        assertEquals(2, api.getSystemVersion().getMinor());
+        assertEquals(0, api.getSystemVersion().getBuild());
+        assertEquals(46267, api.getSystemVersion().getRevision());
 
         assertNotNull(api.getSummary());
         assertEquals(1L, api.getSummary().getVMs().getTotal());
