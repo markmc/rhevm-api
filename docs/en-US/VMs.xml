@@ -250,7 +250,7 @@
             <colspec colwidth="5*"/>
             <tbody>
               <row>
-                <entry><literal>iso id</literal></entry>
+                <entry><literal>file id</literal></entry>
                 <entry>A reference to an ISO image. See <xref linkend="sect-REST_API_Guide-Data_Centers-Files"/></entry>
               </row>
             </tbody>
@@ -258,7 +258,7 @@
         </informaltable>
       </para>
       <para>
-        When adding a new CD-ROM, the <literal>iso id</literal> property is required.
+        When adding a new CD-ROM, the <literal>file id</literal> property is required.
       </para>
       <note>
         <para>
@@ -267,7 +267,7 @@
       </note>
       <screen>
 &lt;cdrom id="00000000-0000-0000-0000-000000000000" href="/rhevm-api/vms/cdc0b102-fbfe-444a-b9cb-57d2af94f401/cdroms/00000000-0000-0000-0000-000000000000"&gt;
-  &lt;iso id="en_winxp_pro_with_sp2.iso"/&gt;
+  &lt;file id="en_winxp_pro_with_sp2.iso"/&gt;
   &lt;vm id="cdc0b102-fbfe-444a-b9cb-57d2af94f401" href="/rhevm-api/vms/cdc0b102-fbfe-444a-b9cb-57d2af94f401"/&gt;
 &lt;/cdrom&gt;
       </screen>
