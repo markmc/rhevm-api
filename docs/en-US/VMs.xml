@@ -196,7 +196,6 @@
     &lt;system&gt;20&lt;/system&gt;
   &lt;/cpu_statistics&gt;
   &lt;link rel="cdroms" href="/rhevm-api/vms/082c794b-771f-452f-83c9-b2b5a19c0399/cdroms"/&gt;
-  &lt;link rel="floppies" href="/rhevm-api/vms/082c794b-771f-452f-83c9-b2b5a19c0399/floppies"/&gt;
   &lt;link rel="disks" href="/rhevm-api/vms/082c794b-771f-452f-83c9-b2b5a19c0399/disks"/&gt;
   &lt;link rel="nics" href="/rhevm-api/vms/082c794b-771f-452f-83c9-b2b5a19c0399/nics"/&gt;
   &lt;link rel="snapshots" href="/rhevm-api/vms/082c794b-771f-452f-83c9-b2b5a19c0399/snapshots"/&gt;
@@ -233,7 +232,7 @@
     </para>
 
     <para>
-      There are four device collections available for each VM - <literal>cdroms</literal>, <literal>floppies</literal>, <literal>disks</literal> and <literal>nics</literal>. The URI for each of these collections are available via <literal>link</literal> elements in the VM representation.
+      There are four device collections available for each VM - <literal>cdroms</literal>, <literal>disks</literal> and <literal>nics</literal>. The URI for each of these collections are available via <literal>link</literal> elements in the VM representation.
     </para>
 
     <section id="sect-REST_API_Guide-VMs-CDROMs">
@@ -270,42 +269,6 @@
   &lt;file id="en_winxp_pro_with_sp2.iso"/&gt;
   &lt;vm id="cdc0b102-fbfe-444a-b9cb-57d2af94f401" href="/rhevm-api/vms/cdc0b102-fbfe-444a-b9cb-57d2af94f401"/&gt;
 &lt;/cdrom&gt;
-      </screen>
-    </section>
-
-    <section id="sect-REST_API_Guide-VMs-Floppies">
-      <title>
-        Floppy disk devices
-      </title>
-
-      <para>
-        Floppy disk devices are represented by a <literal>floppies</literal> element containing the following properties:
-
-        <informaltable frame="none">
-          <tgroup cols="2">
-            <colspec colwidth="2*"/>
-            <colspec colwidth="5*"/>
-            <tbody>
-              <row>
-                <entry><literal>id</literal></entry>
-                <entry>A reference to a floppy image. See <xref linkend="sect-REST_API_Guide-Data_Centers-Files"/></entry>
-              </row>
-            </tbody>
-          </tgroup>
-        </informaltable>
-      </para>
-      <para>
-        When adding a new floppy, the <literal>id</literal> property is required.
-      </para>
-      <note>
-        <para>
-          Note that a VM may currently only have a single floppy and it is not possible to modify the floppy properties using <literal>PUT</literal>.
-        </para>
-      </note>
-      <screen>
-&lt;floppy id="00000000-0000-0000-0000-000000000000" href="/rhevm-api/vms/0/floppies/00000000-0000-0000-0000-000000000000"&gt;
-  &lt;file id="boot.vfd"/&gt;
-&lt;/floppy&gt;
       </screen>
     </section>
 
