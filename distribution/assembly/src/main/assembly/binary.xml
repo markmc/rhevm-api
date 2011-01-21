@@ -35,8 +35,11 @@
       <directory>${basedir}/../../python</directory>
       <outputDirectory>/python</outputDirectory>
       <includes>
-        <include>*.py</include>
+        <include>**/*</include>
       </includes>
+      <excludes>
+        <exclude>.gitignore</exclude>
+      </excludes>
     </fileSet>
 
   </fileSets>
