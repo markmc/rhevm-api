@@ -28,12 +28,10 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.CpuTopology;
-import com.redhat.rhevm.api.model.CpuStatistics;
 import com.redhat.rhevm.api.model.Display;
 import com.redhat.rhevm.api.model.DisplayType;
 import com.redhat.rhevm.api.model.HighlyAvailable;
 import com.redhat.rhevm.api.model.Host;
-import com.redhat.rhevm.api.model.MemoryStatistics;
 import com.redhat.rhevm.api.model.OperatingSystem;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VM;
@@ -51,8 +49,6 @@ import static com.redhat.rhevm.api.powershell.util.PowerShellUtils.last;
 public class PowerShellVM extends VM {
 
     private static final String VM_TYPE = "RhevmCmd.CLIVm";
-    private static final String MEMORY_STATS_TYPE = "RhevmCmd.MemoryStatistics";
-    private static final String CPU_STATS_TYPE = "RhevmCmd.CLICpu";
     private static final String NIC_TYPE = "RhevmCmd.CLIHostNetworkAdapter";
 
     private String cdIsoPath;
@@ -165,10 +161,6 @@ public class PowerShellVM extends VM {
 
             if (VM_TYPE.equals(entity.getType())) {
                 ret.add(parseVm(entity, dates));
-            } else if (MEMORY_STATS_TYPE.equals(entity.getType())) {
-                parseMemoryStats(entity, last(ret));
-            } else if (CPU_STATS_TYPE.equals(entity.getType())) {
-                parseCpuStats(entity, last(ret));
             } else if (NIC_TYPE.equals(entity.getType())) {
                 parseDisplayAddress(entity, last(ret));
             }
@@ -259,23 +251,6 @@ public class PowerShellVM extends VM {
         vm.setOrigin(parseOrigin(entity.get("origin")));
 
         return vm;
-    }
-
-    private static void parseMemoryStats(PowerShellParser.Entity entity, PowerShellVM vm) {
-        if (!vm.isSetMemoryStatistics()) {
-            vm.setMemoryStatistics(new MemoryStatistics());
-        }
-        vm.getMemoryStatistics().setUtilization((long)entity.get("usagemempercent", Integer.class));
-    }
-
-    private static void parseCpuStats(PowerShellParser.Entity entity, PowerShellVM vm) {
-        if (!vm.isSetCpuStatistics()) {
-            vm.setCpuStatistics(new CpuStatistics());
-        }
-        vm.getCpuStatistics().setUser(entity.get("user", BigDecimal.class));
-        vm.getCpuStatistics().setSystem(entity.get("system", BigDecimal.class));
-        vm.getCpuStatistics().setIdle(entity.get("idle", BigDecimal.class));
-        vm.getCpuStatistics().setLoad(entity.get("load", BigDecimal.class));
     }
 
     private static void parseDisplayAddress(PowerShellParser.Entity entity, PowerShellVM vm) {

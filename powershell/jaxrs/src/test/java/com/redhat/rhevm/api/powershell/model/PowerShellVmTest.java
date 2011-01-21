@@ -20,7 +20,6 @@ package com.redhat.rhevm.api.powershell.model;
 
 import org.junit.Test;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import com.redhat.rhevm.api.model.BootDevice;
@@ -58,13 +57,6 @@ public class PowerShellVmTest extends PowerShellModelTest {
         assertEquals(clusterId, v.getCluster().getId());
         assertNotNull(v.getTemplate());
         assertEquals(templateId, v.getTemplate().getId());
-        assertTrue(v.isSetMemoryStatistics());
-        assertEquals(Long.valueOf(50L), v.getMemoryStatistics().getUtilization());
-        assertTrue(v.isSetCpuStatistics());
-        assertEquals(BigDecimal.valueOf(10L), v.getCpuStatistics().getUser());
-        assertEquals(BigDecimal.valueOf(20L), v.getCpuStatistics().getSystem());
-        assertEquals(BigDecimal.valueOf(30L), v.getCpuStatistics().getIdle());
-        assertEquals(BigDecimal.valueOf(40L), v.getCpuStatistics().getLoad());
         if (hostId != null) {
             assertTrue(v.isSetHost());
             assertEquals(hostId, v.getHost().getId());

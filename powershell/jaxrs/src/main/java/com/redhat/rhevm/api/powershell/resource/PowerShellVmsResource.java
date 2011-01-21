@@ -48,8 +48,6 @@ public class PowerShellVmsResource
         buf.append("foreach '{ ");
         buf.append(PowerShellUtils.getDateHack("creationdate"));
         buf.append("'{0} ");
-        buf.append("$_.getmemorystatistics(); ");
-        buf.append("$_.getcpustatistics(); ");
         buf.append("if ($_.runningonhost -ne ''-1'') '{");
         buf.append("  $h = get-host $_.runningonhost;");
         buf.append("  $nics = $h.getnetworkadapters();");

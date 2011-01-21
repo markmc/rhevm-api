@@ -18,7 +18,6 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
-import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.concurrent.Executor;
 
@@ -456,13 +455,6 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
         assertEquals(DisplayType.SPICE, vm.getDisplay().getType());
         assertEquals(Integer.valueOf(1), vm.getDisplay().getMonitors());
         assertTrue(vm.getDisplay().getPort() == null || vm.getDisplay().getPort() != -1);
-        assertTrue(vm.isSetMemoryStatistics());
-        assertEquals(Long.valueOf(50L), vm.getMemoryStatistics().getUtilization());
-        assertTrue(vm.isSetCpuStatistics());
-        assertEquals(BigDecimal.valueOf(10L), vm.getCpuStatistics().getUser());
-        assertEquals(BigDecimal.valueOf(20L), vm.getCpuStatistics().getSystem());
-        assertEquals(BigDecimal.valueOf(30L), vm.getCpuStatistics().getIdle());
-        assertEquals(BigDecimal.valueOf(40L), vm.getCpuStatistics().getLoad());
         if (hostExpected) {
             assertTrue(vm.isSetHost());
         } else {
