@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<Objects>
+  <Object Type="RhevmCmd.MemoryStatistics">
+    <Property Name="memSizeMb" Type="System.Int32">512</Property>
+    <Property Name="usageMemPercent" Type="System.Int32">50</Property>
+  </Object>
+  <Object Type="RhevmCmd.CLICpu">
+    <Property Name="Name" Type="System.String">Virtual CPU</Property>
+    <Property Name="Model" Type="System.String">Virtual CPU</Property>
+    <Property Name="Cores" Type="System.Int32">1</Property>
+    <Property Name="Speed" Type="System.Decimal">0</Property>
+    <Property Name="User" Type="System.Decimal">33.5</Property>
+    <Property Name="System" Type="System.Decimal">21.7</Property>
+    <Property Name="Idle" Type="System.Decimal">0</Property>
+    <Property Name="Load" Type="System.Decimal">0</Property>
+  </Object>
+</Objects>
