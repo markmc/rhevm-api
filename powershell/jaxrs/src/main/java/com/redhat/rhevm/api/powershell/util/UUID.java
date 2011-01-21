@@ -20,4 +20,8 @@ package com.redhat.rhevm.api.powershell.util;
 
 public class UUID {
     public static final String EMPTY = "00000000-0000-0000-0000-000000000000";
+
+    public static String asId(String name) {
+        return java.util.UUID.nameUUIDFromBytes(name.getBytes()).toString();
+    }
 }
