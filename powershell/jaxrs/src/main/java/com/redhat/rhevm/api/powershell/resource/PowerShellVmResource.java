@@ -18,6 +18,7 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.concurrent.Executor;
 
@@ -30,6 +31,7 @@ import com.redhat.rhevm.api.model.CpuTopology;
 import com.redhat.rhevm.api.model.Display;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.Link;
+import com.redhat.rhevm.api.model.Statistic;
 import com.redhat.rhevm.api.model.Ticket;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VmType;
@@ -44,6 +46,7 @@ import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.common.util.ReflectionHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellTicket;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
+import com.redhat.rhevm.api.powershell.model.PowerShellVmStatisticsParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPool;
@@ -82,11 +85,11 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
     public static VM addLinks(UriInfo uriInfo, PowerShellVM vm) {
         VM ret = JAXBHelper.clone("vm", VM.class, vm);
 
-        String [] deviceCollections = { "cdroms", "disks", "nics", "snapshots", "tags" };
+        String [] subCollections = { "cdroms", "disks", "nics", "snapshots", "tags", "statistics" };
 
         ret.getLinks().clear();
 
-        for (String collection : deviceCollections) {
+        for (String collection : subCollections) {
             addSubCollection(uriInfo, ret, collection);
         }
 
@@ -359,8 +362,22 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
 
     @Override
     public StatisticsResource getStatisticsResource() {
-        // REVISIT
-        return null;
+        AbstractStatisticalQuery<VM> query = new AbstractStatisticalQuery<VM>(VM.class) {
+            public String resolve() {
+                String command = MessageFormat.format(PowerShellVmStatisticsParser.GET_VMS_STATS,
+                                                      PowerShellUtils.escape(getId()));
+                return PowerShellCmd.runCommand(getPool(), command);
+            }
+            public List<Statistic> getStatistics(String output) {
+                return PowerShellVmStatisticsParser.parse(getParser(), output);
+            }
+            public Statistic adopt(Statistic statistic) {
+                statistic.setVm(new VM());
+                statistic.getVm().setId(getId());
+                return statistic;
+            }
+        };
+        return new PowerShellStatisticsResource<VM>(getUriProvider(), query);
     }
 
     private static void addSubCollection(UriInfo uriInfo, VM vm, String collection) {
