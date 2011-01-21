@@ -109,10 +109,3 @@ And test it using the python tests:
 
  $> ./python/test.py --port=8099
 
-
-== Using the Command Line Interface ==
-
-The RHEVM-API project provides a simple CLI with command-completion
-based on the Apache Felix Gogo shell. To use the CLI, simply install
-a built RHEVM-API distribution and see rhevm-admin/README for more
-details.

@@ -113,8 +113,8 @@ security exception on the fly, so that you can assign trust to the
 rhevm-api certificate when it is first encountered by the client.
 
 On the other hand, if your client requires trust to be established
-a priori (for example the rhevm-admin CLI), you will need to export
-the certificate and import it into a truststore.
+a priori, you will need to export the certificate and import it into
+a truststore.
 
 Unix:
 
@@ -132,18 +132,3 @@ Windows:
   > keytool -import -v -trustcacerts -noprompt -alias rhevm -keypass password ^
       -file rhevm.cer -keystore rhevm-truststore -storepass password
 
-Additionally, if using rhevm-admin CLI, set the following environment
-variables to identify the truststore:
-
-Unix:
-
-  $ export RHEVM_TRUSTSTORE_PATH=./rhevm-truststore
-  $ export RHEVM_TRUSTSTORE_PASSWORD=password
-
-Windows:
-
-  > set RHEVM_TRUSTSTORE_PATH=.\rhevm-truststore
-  > set RHEVM_TRUSTSTORE_PASSWORD=password
-
-Assuming the rhevm-truststore generated earlier has been copied to the
-directory you are running rhevm-admin from.

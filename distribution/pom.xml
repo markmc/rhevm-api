@@ -15,7 +15,6 @@
 
   <modules>
     <module>assembly</module>
-    <module>itests</module>
   </modules>
 
 </project>
