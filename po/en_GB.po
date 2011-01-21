@@ -1,10 +1,10 @@
-#. extracted from Messages.properties
+#. extracted from Merged.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-07 11:58+0100\n"
-"PO-Revision-Date: 2011-01-07 11:58+0000\n"
+"POT-Creation-Date: 2011-01-21 14:47+0100\n"
+"PO-Revision-Date: 2011-01-21 14:47+0000\n"
 "Last-Translator: Abigail Brady <morwen@evilmagic.org>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -43,3 +43,3750 @@ msgstr "Broken immutability constraint"
 #: BROKEN_CONSTRAINT_DETAIL_TEMPLATE
 msgid "Attempt to set immutable field: {0}"
 msgstr "Attempt to set immutable field: {0}"
+
+#: AD_GROUP_CANNOT_REMOVE_AD_GROUP_ATTACHED_TO_VM_POOL
+msgid "Cannot remove Active Directory Group attached to VM Pool"
+msgstr "Cannot remove Active Directory Group attached to VM Pool"
+
+#: DB
+msgid "Database error"
+msgstr "Database error"
+
+#: DB_INIT
+msgid "Database initialization error"
+msgstr "Database initialisation error"
+
+#: DB_NO_SUCH_VM
+msgctxt "DB_NO_SUCH_VM"
+msgid "VM not found"
+msgstr "VM not found"
+
+#: IO_CD_IMAGE_FILE_ALREADY_EXIST
+msgid "Image file already exists"
+msgstr "Image file already exists"
+
+#: IO_CD_IMAGE_FILE_NOT_EXIST
+msgid "Image file does not exist"
+msgstr "Image file does not exist"
+
+#: IO_INVALID_CD_IMAGE_EXTENSION
+msgid "Invalid CD image extension"
+msgstr "Invalid CD image extension"
+
+#: IO_ISO_DIRECTORY_NOT_EXIST
+msgid "ISO directory does not exist"
+msgstr "ISO directory does not exist"
+
+#: IRS_REPOSITORY_NOT_FOUND
+msgid "Storage Managment Service cannot be found"
+msgstr "Storage Managment Service cannot be found"
+
+#: IRS_FAILED_CREATING_SNAPSHOT
+msgid "Snapshot creation failed"
+msgstr "Snapshot creation failed"
+
+#: IRS_FAILED_RETRIEVING_SNAPSHOT_INFO
+msgid "Internal error, snapshot cannot be retrieved."
+msgstr "Internal error, snapshot cannot be retrieved."
+
+#: IRS_NETWORK_ERROR
+msgid "Storage Manager Service not responding"
+msgstr "Storage Manager Service not responding"
+
+#: IRS_PROTOCOL_ERROR
+msgid "Storage Manager protocol error"
+msgstr "Storage Manager protocol error"
+
+#: IRS_RESPONSE_ERROR
+msgid "Storage Manager response error"
+msgstr "Storage Manager response error"
+
+#: MAC_POOL_NO_MACS_LEFT
+msgid "No MAC addresses left in MAC Address Pool"
+msgstr "No MAC addresses left in MAC Address Pool"
+
+#: MAC_POOL_NOT_ENOUGH_MAC_ADDRESSES
+msgid "Not enough MAC addresses left in MAC Address Pool"
+msgstr "Not enough MAC addresses left in MAC Address Pool"
+
+#: VMT_CANNOT_REMOVE_DETECTED_DERIVED_VM
+msgid "Cannot delete template. Template is being used by existing VMs"
+msgstr "Cannot delete template. Template is being used by existing VMs"
+
+#: ACTION_TYPE_FAILED_VM_IMAGE_DOES_NOT_EXIST
+msgid "Cannot ${action} ${type}. VM's Image doesn't exist."
+msgstr "Cannot ${action} ${type}. VM's Image doesn't exist."
+
+#: ACTION_TYPE_FAILED_VM_SNAPSHOT_DOES_NOT_EXIST
+msgid "Cannot ${action} ${type}. VM's Snapshot doesn't exist."
+msgstr "Cannot ${action} ${type}. VM's Snapshot doesn't exist."
+
+#: IMAGE_REPOSITORY_NOT_FOUND
+msgid ""
+"Storage Domain cannot be accessed. please check that at least one Host is "
+"operational and Repository state is Up."
+msgstr ""
+"Storage Domain cannot be accessed. please check that at least one Host is "
+"operational and Repository state is Up."
+
+#: VM_TEMPLATE_IMAGE_IS_LOCKED
+msgid "Template's Image is locked"
+msgstr "Template's Image is locked"
+
+#: VM_TEMPLATE_IMAGE_IS_ILLEGAL
+msgid "Template's Image is invalid"
+msgstr "Template's Image is invalid"
+
+#: VM_NAME_CANNOT_BE_EMPTY
+msgid "VM name cannot be empty."
+msgstr "VM name cannot be empty."
+
+#: VM_CANNOT_UPDATE_ILLEGAL_FIELD
+msgid ""
+"VM update failed, Check fields values; note that some fields cannot be "
+"changed while VM is not in \"Down\" state."
+msgstr ""
+"VM update failed, Check fields values; note that some fields cannot be "
+"changed while VM is not in \"Down\" state."
+
+#: VM_CANNOT_RUN_FROM_NETWORK_WITHOUT_NETWORK
+msgid ""
+"Cannot run VM without network if network is selected in the VM's boot "
+"sequence - please run again after removing network from the boot sequence."
+msgstr ""
+"Cannot run VM without network if network is selected in the VM's boot "
+"sequence - please run again after removing network from the boot sequence."
+
+#: VM_CANNOT_RUN_FROM_CD_WITHOUT_ACTIVE_STORAGE_DOMAIN_ISO
+msgid ""
+"Cannot ${action} ${type} without active ISO domain if CD is selected in the "
+"VM's boot sequence first place- please run again after removing CD from the "
+"boot sequence first place."
+msgstr ""
+"Cannot ${action} ${type} without active ISO domain if CD is selected in the "
+"VM's boot sequence first place- please run again after removing CD from the "
+"boot sequence first place."
+
+#: VM_CANNOT_RUN_FROM_DISK_WITHOUT_DISK
+msgid ""
+"Cannot ${action} ${type} without any Disks if Disk is selected in the VM's "
+"boot sequence first place- please run again after adding at least one Disk."
+msgstr ""
+"Cannot ${action} ${type} without any Disks if Disk is selected in the VM's "
+"boot sequence first place- please run again after adding at least one Disk."
+
+#: MAC_POOL_NOT_INITIALIZED
+msgid "MAC Address Pool not initialized"
+msgstr "MAC Address Pool not initialised"
+
+#: RESOURCE_MANAGER_CANT_ALLOC_VDS_MIGRATION
+msgid "Migration operation canceled, no available Destination Host"
+msgstr "Migration operation cancelled, no available Destination Host"
+
+#: RESOURCE_MANAGER_FAILED_ATTACHING_VM_TO_USERS
+msgid "Failed to attach VM to User"
+msgstr "Failed to attach VM to User"
+
+#: RESOURCE_MANAGER_MIGRATING_VM_IS_NOT_UP
+msgid "Migration failed, VM is not running"
+msgstr "Migration failed, VM is not running"
+
+#: RESOURCE_MANAGER_MIGRATION_FAILED_AT_DST
+msgid "Migration failed (destination Host error)"
+msgstr "Migration failed (destination Host error)"
+
+#: RESOURCE_MANAGER_VDS_NOT_FOUND
+msgid "Host not found"
+msgstr "Host not found"
+
+#: RESOURCE_MANAGER_VM_NOT_FOUND
+msgctxt "RESOURCE_MANAGER_VM_NOT_FOUND"
+msgid "VM not found"
+msgstr "VM not found"
+
+#: RESOURCE_MANAGER_VM_SNAPSHOT_MISSMATCH
+msgid "VM snapshot mismatch"
+msgstr "VM snapshot mismatch"
+
+#: SEARCH
+msgid "Search  error"
+msgstr "Search  error"
+
+#: SEARCH_ERRORNOUS_SEARCH_TEXT
+msgid "Error in search text"
+msgstr "Error in search text"
+
+#: SEARCH_INVALID_SEARCH_TEXT
+msgid "Invalid search text"
+msgstr "Invalid search text"
+
+#: SEARCH_UNSUPPORTED_BUSINESS_OBJECT
+msgid "Search unsupported business object"
+msgstr "Search unsupported business object"
+
+#: TEMPLATE_IMAGE_LOCKED
+msgid ""
+"Cannot create new VM. The disk image is being copied. Please wait for the "
+"copy operation to complete."
+msgstr ""
+"Cannot create new VM. The disk image is being copied. Please wait for the "
+"copy operation to complete."
+
+#: USER_CANNOT_ATTACH_TO_VM_IN_POOL
+msgid "Cannot attach user to a VM that belongs to a VM pool"
+msgstr "Cannot attach user to a VM that belongs to a VM pool"
+
+#: USER_CANNOT_REMOVE_USER_ATTACHED_POOL
+msgid ""
+"Cannot remove User attached to VM Pool. Remove User from VM Pool first by "
+"going to 'VM Pool(s)' window, selecting the VM Pool and clicking on 'Manage "
+"Pool Users' from the menu bar"
+msgstr ""
+"Cannot remove User attached to VM Pool. Remove User from VM Pool first by "
+"going to 'VM Pool(s)' window, selecting the VM Pool and clicking on 'Manage "
+"Pool Users' from the menu bar"
+
+#: USER_CANNOT_REMOVE_USER_NOT_ATTACHED_POOL
+msgid "Cannot remove User, user is not attached to VM Pool."
+msgstr "Cannot remove User, user is not attached to VM Pool."
+
+#: USER_CANNOT_REMOVE_USER_DETECTED_RUNNING_VM
+msgid ""
+"Cannot remove a User that is attached to a VM. Remove VM from VMs tab first."
+msgstr ""
+"Cannot remove a User that is attached to a VM. Remove VM from VMs tab first."
+
+#: USER_CANNOT_REMOVE_HIMSELF
+msgid "Cannot remove the User that is currently logged in."
+msgstr "Cannot remove the User that is currently logged in."
+
+#: USER_FAILED_POPULATE_DATA
+msgctxt "USER_FAILED_POPULATE_DATA"
+msgid "Failed to get User data from Active Directory"
+msgstr "Failed to get User data from Active Directory"
+
+#: USER_FAILED_SET_USER_ROLE
+msgid "Failed set User role, operation canceled"
+msgstr "Failed set User role, operation cancelled"
+
+#: VDC
+msgid "RHEV Manager error"
+msgstr "RHEV Manager error"
+
+#: VDS_CANNOT_MAINTENANCE_VDS_IS_NOT_RESPONDING_WITH_DESKTOPS
+msgid ""
+"Cannot switch Host to Maintenance mode, Host still has running VMs on it and "
+"it is non-responsive."
+msgstr ""
+"Cannot switch Host to Maintenance mode, Host still has running VMs on it and "
+"it is non-responsive."
+
+#: VDS_CANNOT_MAINTENANCE_VDS_IS_NOT_RESPONDING_AND_SPM
+msgid ""
+"Cannot switch Host to Maintenance mode, Host is Storage Pool Manager and it "
+"is non-responsive."
+msgstr ""
+"Cannot switch Host to Maintenance mode, Host is Storage Pool Manager and it "
+"is non-responsive."
+
+#: VDS_CANNOT_MAINTENANCE_VDS_IS_NOT_OPERATIONAL
+msgid "Cannot switch Host to Maintenance mode, Host is not operational."
+msgstr "Cannot switch Host to Maintenance mode, Host is not operational."
+
+#: VDS_CANNOT_MAINTENANCE_VDS_IS_IN_MAINTENANCE
+msgid ""
+"Cannot switch Host to Maintenance mode, Host is already in Maintenance mode."
+msgstr ""
+"Cannot switch Host to Maintenance mode, Host is already in Maintenance mode."
+
+#: VDS_CANNOT_MAINTENANCE_SPM_WITH_RUNNING_TASKS
+msgid ""
+"Cannot switch Host to Maintenance mode, Host has asynchronous running tasks, "
+"please retry later."
+msgstr ""
+"Cannot switch Host to Maintenance mode, Host has asynchronous running tasks, "
+"please retry later."
+
+#: VDS_CANNOT_MAINTENANCE_SPM_CONTENDING
+msgid ""
+"Cannot switch Host to Maintenance mode, Host is contending for Storage Pool "
+"Manager."
+msgstr ""
+"Cannot switch Host to Maintenance mode, Host is contending for Storage Pool "
+"Manager."
+
+#: VDS_CANNOT_MAINTENANCE_IT_INCLUDES_NON_MIGRATABLE_VM
+msgid ""
+"Cannot switch Host to maintenance mode, one or more VMs are non migratable. "
+"The non migratable VMs are: ${VmsList}"
+msgstr ""
+"Cannot switch Host to maintenance mode, one or more VMs are non migratable. "
+"The non migratable VMs are: ${VmsList}"
+
+#: VDS_CANNOT_REMOVE_DEFAULT_VDS_GROUP
+msgid "Cannot remove default Host cluster"
+msgstr "Cannot remove default Host cluster"
+
+#: VDS_CANNOT_REMOVE_VDS_DETECTED_RUNNING_VM
+msgid "Host hosts one or more running VMs"
+msgstr "Host hosts one or more running VMs"
+
+#: VDS_CANNOT_REMOVE_VDS_GROUP_VDS_DETECTED
+msgid "Host cluster contains one or more Host(s)"
+msgstr "Host cluster contains one or more Host(s)"
+
+#: VDS_CANNOT_REMOVE_VDS_STATUS_ILLEGAL
+msgid "Host is operational. Switch Host to Maintenance Mode first."
+msgstr "Host is operational. Switch Host to Maintenance Mode first."
+
+#: VDS_NETWORK_ERROR
+msgid "Host network error"
+msgstr "Host network error"
+
+#: VDS_NOT_EXIST
+msgid "Host does not exists in DB"
+msgstr "Host does not exists in DB"
+
+#: VDS_PROTOCOL_ERROR
+msgid "Host protocol error"
+msgstr "Host protocol error"
+
+#: VDS_RESPONSE_ERROR
+msgid "Host response error"
+msgstr "Host response error"
+
+#: VDS_STATUS_NOT_VALID_FOR_STOP
+msgid ""
+"Cannot perform Stop operation, Host has to be in Maintenance mode in order "
+"to be stopped."
+msgstr ""
+"Cannot perform Stop operation, Host has to be in Maintenance mode in order "
+"to be stopped."
+
+#: VDS_STATUS_NOT_VALID_FOR_START
+msgid ""
+"Cannot perform Start operation, Host has to be in one of the following "
+"statuses: Down or Non-Responsive."
+msgstr ""
+"Cannot perform Start operation, Host has to be in one of the following "
+"statuses: Down or Non-Responsive."
+
+#: VDS_NO_VDS_PROXY_FOUND
+msgid ""
+"There is no other host in the data center that can be used to test the power "
+"management settings."
+msgstr ""
+"There is no other host in the data centre that can be used to test the power "
+"management settings."
+
+#: VDS_STATUS_NOT_VALID_FOR_UPDATE
+msgid ""
+"Host parameters cannot be modified while Host is operational. Switch Host to "
+"Maintenance Mode first."
+msgstr ""
+"Host parameters cannot be modified while Host is operational. Switch Host to "
+"Maintenance Mode first."
+
+#: VDS_CANNOT_ACTIVATE_VDS_ALREADY_UP
+msgid "Cannot Activate Host in Up status."
+msgstr "Cannot Activate Host in Up status."
+
+#: VDS_CANNOT_ACTIVATE_VDS_NOT_EXIST
+msgid "Cannot Activate Host, Host not exist."
+msgstr "Cannot Activate Host, Host not exist."
+
+#: VDS_INVALID_SERVER_ID
+msgid "Invalid Host Id."
+msgstr "Invalid Host Id."
+
+#: VDS_TRY_CREATE_WITH_EXISTING_PARAMS
+msgid "Cannot ${action} ${type}. Host with the same name already exists."
+msgstr "Cannot ${action} ${type}. Host with the same name already exists."
+
+#: VDS_EMPTY_NAME
+msgid "Cannot ${action} ${type}. Host name cannot be empty."
+msgstr "Cannot ${action} ${type}. Host name cannot be empty."
+
+#: VDS_CANNOT_INSTALL_EMPTY_PASSWORD
+msgid "Cannot install Host with empty password."
+msgstr "Cannot install Host with empty password."
+
+#: VDS_CANNOT_INSTALL_STATUS_ILLEGAL
+msgid ""
+"Cannot install Host - illegal status, please move host to Maintenance mode "
+"first."
+msgstr ""
+"Cannot install Host - illegal status, please move host to Maintenance mode "
+"first."
+
+#: VDS_PORT_CHANGE_REQUIRE_INSTALL
+msgid "Host's port number cannot be changed without reinstalling the Host."
+msgstr "Host's port number cannot be changed without reinstalling the Host."
+
+#: VDS_PORT_IS_NOT_LEGAL
+msgid "Hosts port number must be between 1-65536"
+msgstr "Hosts port number must be between 1-65536"
+
+#: VDS_TRY_CREATE_SECURE_CERTIFICATE_NOT_FOUND
+msgid ""
+"Cannot add new Host in secure connection because Certificate file could not "
+"be found."
+msgstr ""
+"Cannot add new Host in secure connection because Certificate file could not "
+"be found."
+
+#: VDS_FENCING_DISABLED
+msgid "Cannot fence Host, Host fencing is disabled."
+msgstr "Cannot fence Host, Host fencing is disabled."
+
+#: TEMPLATE_IMAGE_NOT_EXIST
+msgid "Template's Image doesn't exist."
+msgstr "Template's Image doesn't exist."
+
+#: VM_CANNOT_REMOVE_VDS_GROUP_VMS_DETECTED
+msgid "One or more VMs are still assigned to the cluster"
+msgstr "One or more VMs are still assigned to the cluster"
+
+#: VMT_CANNOT_REMOVE_VDS_GROUP_VMTS_DETECTED
+msgid "One or more Template(s) are still associated with it"
+msgstr "One or more Template(s) are still associated with it"
+
+#: VDS_GROUP_CANNOT_REMOVE_HAS_VM_POOLS
+msgid ""
+"Cannot ${action} ${type}.One or more VM Pools are still associated with it"
+msgstr ""
+"Cannot ${action} ${type}.One or more VM Pools are still associated with it"
+
+#: VM_IMAGE_LOCKED
+msgid ""
+"Cannot run VM. The disk image is being copied. Please wait for the copy "
+"operation to complete."
+msgstr ""
+"Cannot run VM. The disk image is being copied. Please wait for the copy "
+"operation to complete."
+
+#: VM_POOL_CANNOT_ADD_VM_WITH_USERS_ATTACHED_TO_POOL
+msgid "Cannot attach VM to VM Pool because it is already attached to a user"
+msgstr "Cannot attach VM to VM Pool because it is already attached to a user"
+
+#: ACTION_TYPE_FAILED_USER_ATTACHED_TO_POOL
+msgid "User is already atached to this VM Pool"
+msgstr "User is already atached to this VM Pool"
+
+#: VM_POOL_CANNOT_ADD_VM_ATTACHED_TO_POOL
+msgid "Cannot attach VM to pool because it is already attached to another pool"
+msgstr "Cannot attach VM to pool because it is already attached to another pool"
+
+#: VM_POOL_CANNOT_DETACH_VM_NOT_ATTACHED_TO_POOL
+msgid "Cannot detach VM from pool because it is not attached to the pool"
+msgstr "Cannot detach VM from pool because it is not attached to the pool"
+
+#: VM_POOL_CANNOT_ADD_VM_DIFFERENT_CLUSTER
+msgid ""
+"Cannot attach VM to VM Pool because VM resides on different Host Cluster "
+"than VM Pool"
+msgstr ""
+"Cannot attach VM to VM Pool because VM resides on different Host Cluster "
+"than VM Pool"
+
+#: VM_POOL_CANNOT_REMOVE_VM_POOL_WITH_ATTACHED_AD_GROUPS
+msgid "Cannot remove VM Pool. Remove User Groups from VM Pool first"
+msgstr "Cannot remove VM Pool. Remove User Groups from VM Pool first"
+
+#: VM_POOL_CANNOT_REMOVE_VM_POOL_WITH_ATTACHED_USERS
+msgid "Cannot remove VM Pool. Remove Users from VM Pool first"
+msgstr "Cannot remove VM Pool. Remove Users from VM Pool first"
+
+#: VM_POOL_CANNOT_REMOVE_VM_POOL_WITH_VMS
+msgid "Cannot remove VM Pool. Remove VMs from VM Pool first"
+msgstr "Cannot remove VM Pool. Remove VMs from VM Pool first"
+
+#: VM_POOL_CANNOT_REMOVE_RUNNING_VM_FROM_POOL
+msgid "Cannot remove VM from VM Pool because VM is running."
+msgstr "Cannot remove VM from VM Pool because VM is running."
+
+#: VM_POOL_CANNOT_ADD_RUNNING_VM_TO_POOL
+msgid "Cannot attach VM to VM Pool because VM is running."
+msgstr "Cannot attach VM to VM Pool because VM is running."
+
+#: VM_TEMPLATE_CANT_LOCATE_DISKS_IN_DB
+msgid "Cannot locate the templates' disks in the database"
+msgstr "Cannot locate the templates' disks in the database"
+
+#: VM_WITH_SAME_NAME_EXIST
+msgid "VM with the same name alredy exists"
+msgstr "VM with the same name alredy exists"
+
+#: VM_INVALID_SERVER_CLUSTER_ID
+msgid "Invalid Host cluster id."
+msgstr "Invalid Host cluster id."
+
+#: VMT_CANNOT_CREATE_TEMPLATE_FROM_DOWN_VM
+msgid "VM still running, stop the VM and try again."
+msgstr "VM still running, stop the VM and try again."
+
+#: VMT_CANNOT_REMOVE_BLANK_TEMPLATE
+msgid "Removing Blank Template is not allowed."
+msgstr "Removing Blank Template is not allowed."
+
+#: VMT_CANNOT_EXPORT_BLANK_TEMPLATE
+msgid "Cannot export Blank Template."
+msgstr "Cannot export Blank Template."
+
+#: AD_GROUP_CANNOT_REMOVE_AD_GROUP_ATTACHED_TO_VM
+msgid "Cannot remove Active Directory Group attached to VM"
+msgstr "Cannot remove Active Directory Group attached to VM"
+
+#: AD_COMPUTER_WITH_THE_SAME_NAME_ALREADY_EXITS
+msgid "A Computer with the same name already exists."
+msgstr "A Computer with the same name already exists."
+
+#: VM_NOT_FOUND
+msgctxt "VM_NOT_FOUND"
+msgid "VM not found"
+msgstr "VM not found"
+
+#: ACTION_TYPE_FAILED_VM_IN_PREVIEW
+msgid "Cannot ${action} ${type}. VM is previewing a snapshot."
+msgstr "Cannot ${action} ${type}. VM is previewing a snapshot."
+
+#: ACTION_TYPE_FAILED_VM_IMAGE_IS_LOCKED
+msgid ""
+"Cannot ${action} ${type}: VM's image is locked. Please try again in a few "
+"minutes."
+msgstr ""
+"Cannot ${action} ${type}: VM's image is locked. Please try again in a few "
+"minutes."
+
+#: ACTION_TYPE_FAILED_VM_IMAGE_IS_ILLEGAL
+msgid "Cannot ${action} ${type}. VM's Image might be corrupted."
+msgstr "Cannot ${action} ${type}. VM's Image might be corrupted."
+
+#: ACTION_TYPE_FAILED_VM_HAS_NO_DISKS
+msgid "Cannot ${action} ${type}. VM has no disks."
+msgstr "Cannot ${action} ${type}. VM has no disks."
+
+#: ACTION_TYPE_FAILED_IMAGE_REPOSITORY_NOT_FOUND
+msgid ""
+"Cannot ${action} ${type}: Storage Domain cannot be accessed. Please check "
+"that at least one Host is operational and Repository state is up."
+msgstr ""
+"Cannot ${action} ${type}: Storage Domain cannot be accessed. Please check "
+"that at least one Host is operational and Repository state is up."
+
+#: ACTION_TYPE_FAILED_VM_IS_RUNNING
+msgid "Cannot ${action} ${type}. VM is running."
+msgstr "Cannot ${action} ${type}. VM is running."
+
+#: ACTION_TYPE_FAILED_VM_IS_NOT_RUNNING
+msgid "Cannot ${action} ${type}. VM is not running."
+msgstr "Cannot ${action} ${type}. VM is not running."
+
+#: ACTION_TYPE_FAILED_VM_IS_NOT_UP
+msgid "Cannot ${action} ${type}. VM is not up."
+msgstr "Cannot ${action} ${type}. VM is not up."
+
+#: ACTION_TYPE_FAILED_VM_IS_NOT_DOWN
+msgid "Cannot ${action} ${type}. VM is not down."
+msgstr "Cannot ${action} ${type}. VM is not down."
+
+#: ACTION_TYPE_FAILED_VM_IS_SAVING_RESTORING
+msgid ""
+"Cannot ${action} ${type}. VM is in saving/restoring state. Please wait until "
+"the VM's status is changed."
+msgstr ""
+"Cannot ${action} ${type}. VM is in saving/restoring state. Please wait until "
+"the VM's status is changed."
+
+#: ACTION_TYPE_FAILED_VM_STATUS_ILLEGAL
+msgid "Cannot ${action} ${type}. The VM status is illegal."
+msgstr "Cannot ${action} ${type}. The VM status is illegal."
+
+#: ACTION_TYPE_FAILED_VM_NOT_FOUND
+msgid "Cannot ${action} ${type}. VM is not found."
+msgstr "Cannot ${action} ${type}. VM is not found."
+
+#: ACTION_TYPE_FAILED_VM_IS_NON_MIGRTABLE_AND_IS_NOT_FORCED_BY_USER_TO_MIGRATE
+msgid ""
+"Cannot ${action} ${type}. VM is non migratable and user did not specify the "
+"force-migration flag"
+msgstr ""
+"Cannot ${action} ${type}. VM is non migratable and user did not specify the "
+"force-migration flag"
+
+#: ACTION_TYPE_FAILED_VM_IS_PINNED_TO_HOST
+msgid "Cannot ${action} ${type}. VM is pinned to host."
+msgstr "Cannot ${action} ${type}. VM is pinned to host."
+
+#: VM_PINNED_TO_HOST_CANNOT_RUN_ON_THE_DEFAULT_VDS
+msgid ""
+"Cannot ${action} ${type}. VM is pinned to host and cannot run on it. Please "
+"check the host status"
+msgstr ""
+"Cannot ${action} ${type}. VM is pinned to host and cannot run on it. Please "
+"check the host status"
+
+#: ACTION_TYPE_FAILED_VM_NOT_EXIST
+msgid "Cannot ${action} ${type}. VM doesn't exist."
+msgstr "Cannot ${action} ${type}. VM doesn't exist."
+
+#: ACTION_TYPE_FAILED_VM_ALREADY_EXIST
+msgid "Cannot ${action} ${type}. VM with the same name already exists."
+msgstr "Cannot ${action} ${type}. VM with the same name already exists."
+
+#: ACTION_TYPE_FAILED_VM_CANNOT_BE_HIGHLY_AVAILABLE_AND_PINNED_TO_HOST
+msgid ""
+"Cannot ${action} ${type}. A highly available VM cannot be pinned to a "
+"specific host"
+msgstr ""
+"Cannot ${action} ${type}. A highly available VM cannot be pinned to a "
+"specific host"
+
+#: ACTION_TYPE_FAILED_VM_GUID_ALREADY_EXIST
+msgid "Cannot ${action} ${type}. VM with the same identifier already exists."
+msgstr "Cannot ${action} ${type}. VM with the same identifier already exists."
+
+#: ACTION_TYPE_FAILED_VM_ATTACHED_TO_POOL
+msgid "Cannot ${action} ${type}. VM is attached to a VM Pool."
+msgstr "Cannot ${action} ${type}. VM is attached to a VM Pool."
+
+#: ACTION_TYPE_FAILED_NO_AVAILABLE_POOL_VMS
+msgid "Cannot ${action} ${type}. There are no available VMs in the VM Pool."
+msgstr "Cannot ${action} ${type}. There are no available VMs in the VM Pool."
+
+#: ACTION_TYPE_FAILED_VM_FROM_POOL_CANNOT_BE_STATELESS
+msgid "Cannot ${action} ${type}. VM from Pool cannot be stateless."
+msgstr "Cannot ${action} ${type}. VM from Pool cannot be stateless."
+
+#: ACTION_TYPE_FAILED_VM_WITH_BLANK_TEMPLATE
+msgid ""
+"Cannot ${action} ${type}: VM was created from the Blank template and does "
+"not contain an operating system. Please run the VM using 'Boot from CD' or "
+"'Boot from Network' options from the 'Run Once' menu."
+msgstr ""
+"Cannot ${action} ${type}: VM was created from the Blank template and does "
+"not contain an operating system. Please run the VM using 'Boot from CD' or "
+"'Boot from Network' options from the 'Run Once' menu."
+
+#: ACTION_TYPE_FAILED_DISK_SPACE_LOW
+msgid "Cannot ${action} ${type}. Low disk space on relevant Storage Domain."
+msgstr "Cannot ${action} ${type}. Low disk space on relevant Storage Domain."
+
+#: ACTION_TYPE_FAILED_DEDICATED_VDS_NOT_IN_SAME_CLUSTER
+msgid ""
+"Cannot ${action} ${type}. Dedicated host cluster is not identical to VM "
+"cluster."
+msgstr ""
+"Cannot ${action} ${type}. Dedicated host cluster is not identical to VM "
+"cluster."
+
+#: ACTION_TYPE_FAILED_DISK_CONFIGURATION_NOT_SUPPORTED
+msgid ""
+"Cannot ${action} ${type}. The selected disk configuration is not supported."
+msgstr ""
+"Cannot ${action} ${type}. The selected disk configuration is not supported."
+
+#: ACTION_TYPE_FAILED_MIGRATION_IN_PROGRESS
+msgid "Cannot ${action} ${type}. VM migration is in progress"
+msgstr "Cannot ${action} ${type}. VM migration is in progress"
+
+#: ACTION_TYPE_FAILED_MIGRATION_TO_SAME_HOST
+msgid "Cannot ${action} ${type}. source and destination is the same."
+msgstr "Cannot ${action} ${type}. source and destination is the same."
+
+#: ACTION_TYPE_FAILED_INVALID_CUSTOM_VM_PROPERTIES_INVALID_SYNTAX
+msgid ""
+"Cannot ${action} ${type} if custom VM properties are in invalid format. "
+"Please check the input."
+msgstr ""
+"Cannot ${action} ${type} if custom VM properties are in invalid format. "
+"Please check the input."
+
+#: ACTION_TYPE_FAILED_INVALID_CUSTOM_VM_PROPERTIES_INVALID_KEYS
+msgid ""
+"Cannot ${action} ${type} if some of the specified custom properties are not "
+"configured by the system. These keys are: $InvalidKeys"
+msgstr ""
+"Cannot ${action} ${type} if some of the specified custom properties are not "
+"configured by the system. These keys are: $InvalidKeys"
+
+#: ACTION_TYPE_FAILED_INVALID_CUSTOM_VM_PROPERTIES_INVALID_VALUES
+msgid ""
+"Cannot ${action} ${type} if some of the specified custom properties have "
+"illegal values. These keys are: $WrongValueKeys"
+msgstr ""
+"Cannot ${action} ${type} if some of the specified custom properties have "
+"illegal values. These keys are: $WrongValueKeys"
+
+#: ACTION_TYPE_FAILED_VDS_BUSY_NO_ALGORITHM
+msgid "Cannot ${action} ${type}. The selected default Host cannot run the VM."
+msgstr "Cannot ${action} ${type}. The selected default Host cannot run the VM."
+
+#: You
+msgid "may:"
+msgstr "may:"
+
+#: -
+msgid "Run the Guest on another Host manually (using Run Once)"
+msgstr "Run the Guest on another Host manually (using Run Once)"
+
+#: -
+msgid "Free resources from the Default Host by migrating other Guests"
+msgstr "Free resources from the Default Host by migrating other Guests"
+
+#: -
+msgid "Change Default Host for this Guest (Edit command)."
+msgstr "Change Default Host for this Guest (Edit command)."
+
+#: ACTION_TYPE_FAILED_VDS_VM_CLUSTER
+msgid ""
+"Cannot ${action} ${type}. There are no available running Hosts in the Host "
+"Cluster."
+msgstr ""
+"Cannot ${action} ${type}. There are no available running Hosts in the Host "
+"Cluster."
+
+#: ACTION_TYPE_FAILED_VDS_VM_MEMORY
+msgid ""
+"Cannot ${action} ${type}. There are no available running Hosts with "
+"sufficient memory in VM's cluster ."
+msgstr ""
+"Cannot ${action} ${type}. There are no available running Hosts with "
+"sufficient memory in VM's cluster ."
+
+#: ACTION_TYPE_FAILED_VDS_VM_CPUS
+msgid ""
+"Cannot ${action} ${type}. There are no available running Hosts with enough "
+"cores in VM's cluster ."
+msgstr ""
+"Cannot ${action} ${type}. There are no available running Hosts with enough "
+"cores in VM's cluster ."
+
+#: CANNOT_MAINTANANCE_VDS_RUN_VMS_NO_OTHER_RUNNING_VDS
+msgid ""
+"Cannot maintenance hosts that contain running Vms if there are no other "
+"hosts in UP state in their cluster. Problematic clusters are: "
+"${ClustersList}"
+msgstr ""
+"Cannot maintenance hosts that contain running Vms if there are no other "
+"hosts in UP state in their cluster. Problematic clusters are: "
+"${ClustersList}"
+
+#: ACTION_TYPE_FAILED_VDS_VM_VERSION
+msgid ""
+"Cannot ${action} ${type}. VM's tools version (${toolsVersion}) is more "
+"advanced than the version installed on the Host (${serverVersion})."
+msgstr ""
+"Cannot ${action} ${type}. VM's tools version (${toolsVersion}) is more "
+"advanced than the version installed on the Host (${serverVersion})."
+
+#: ACTION_TYPE_FAILED_VDS_VM_SWAP
+msgid ""
+"Cannot ${action} ${type}. VM's swap percentage is above the threshold. "
+"(check your configuration parameters for Host Swap Percentage)."
+msgstr ""
+"Cannot ${action} ${type}. VM's swap percentage is above the threshold. "
+"(check your configuration parameters for Host Swap Percentage)."
+
+#: ACTION_TYPE_FAILED_NO_VDS_AVAILABLE_IN_CLUSTER
+msgid ""
+"Cannot ${action} ${type}. There is no available operational Host in the "
+"relevant Cluster."
+msgstr ""
+"Cannot ${action} ${type}. There is no available operational Host in the "
+"relevant Cluster."
+
+#: ACTION_TYPE_FAILED_CANNOT_REMOVE_IMAGE_TEMPLATE
+msgid ""
+"Cannot ${action} ${type}. Removing the template snapshot is not allowed."
+msgstr ""
+"Cannot ${action} ${type}. Removing the template snapshot is not allowed."
+
+#: ACTION_TYPE_FAILED_CANNOT_REMOVE_ACTIVE_IMAGE
+msgid ""
+"Cannot ${action} ${type}. Removing the VM active snapshot is not allowed."
+msgstr ""
+"Cannot ${action} ${type}. Removing the VM active snapshot is not allowed."
+
+#: ACTION_TYPE_FAILED_PROBLEM_WITH_CANDIDATE_INFO
+msgid "Cannot ${action} ${type}. Failed to parse import candidate data."
+msgstr "Cannot ${action} ${type}. Failed to parse import candidate data."
+
+#: ACTION_TYPE_FAILED_TEMPLATE_DOES_NOT_EXIST
+msgid "Cannot ${action} ${type}. The relevant Template doesn't exist."
+msgstr "Cannot ${action} ${type}. The relevant Template doesn't exist."
+
+#: ACTION_TYPE_FAILED_IMAGE_ALREADY_EXISTS
+msgid "Cannot ${action} ${type}. One of its Images already exists."
+msgstr "Cannot ${action} ${type}. One of its Images already exists."
+
+#: ACTION_TYPE_FAILED_TEMPLATE_NAME_ALREADY_EXISTS
+msgid "Cannot ${action} ${type}. Template's name already exists."
+msgstr "Cannot ${action} ${type}. Template's name already exists."
+
+#: ACTION_TYPE_FAILED_TEMPLATE_GUID_ALREADY_EXISTS
+msgid ""
+"Cannot ${action} ${type}. A Template with the same identifier already "
+"exists."
+msgstr ""
+"Cannot ${action} ${type}. A Template with the same identifier already "
+"exists."
+
+#: ACTION_TYPE_FAILED_CANDIDATE_ALREADY_EXISTS
+msgid ""
+"Cannot ${action} ${type}. The export candidate already exists in the "
+"specified path. Try exporting with 'Force Override'."
+msgstr ""
+"Cannot ${action} ${type}. The export candidate already exists in the "
+"specified path. Try exporting with 'Force Override'."
+
+#: ACTION_TYPE_FAILED_ROLE_IS_READ_ONLY
+msgid "Cannot ${action} ${type}. The Role is Read-Only."
+msgstr "Cannot ${action} ${type}. The Role is Read-Only."
+
+#: ACTION_TYPE_FAILED_STORAGE_POOL_NOT_MATCH
+msgid ""
+"Cannot ${action} ${type}. The source and target Data Center does not match. "
+"Please check that target Data Center matches the selected ${type}."
+msgstr ""
+"Cannot ${action} ${type}. The source and target Data Centre does not match. "
+"Please check that target Data Centre matches the selected ${type}."
+
+#: ACTION_TYPE_FAILED_STORAGE_DOMAIN_ALREADY_CONTAINS_DISK
+msgid ""
+"Cannot ${action} ${type}. The Storage Domain already contains the target "
+"disk(s)."
+msgstr ""
+"Cannot ${action} ${type}. The Storage Domain already contains the target "
+"disk(s)."
+
+#: ACTION_TYPE_FAILED_STORAGE_DOMAIN_NAME_ALREADY_EXIST
+msgid "Cannot ${action} ${type}. The Storage Domain name is already in use."
+msgstr "Cannot ${action} ${type}. The Storage Domain name is already in use."
+
+#: ACTION_TYPE_FAILED_STORAGE_DOMAIN_ALREADY_EXIST
+msgid "Cannot ${action} ${type}. The Storage Domain already added."
+msgstr "Cannot ${action} ${type}. The Storage Domain already added."
+
+#: ACTION_TYPE_FAILED_STORAGE_POOL_NAME_ALREADY_EXIST
+msgid "Cannot ${action} ${type}. The Data Center name is already in use."
+msgstr "Cannot ${action} ${type}. The Data Centre name is already in use."
+
+#: ACTION_TYPE_FAILED_TEMPLATE_NOT_FOUND_ON_DESTINATION_DOMAIN
+msgid ""
+"Cannot ${action} ${type}. The selected Storage Domain does not contain the "
+"Vm Template."
+msgstr ""
+"Cannot ${action} ${type}. The selected Storage Domain does not contain the "
+"Vm Template."
+
+#: VM_CANNOT_UPDATE_DEFAULT_VDS_NOT_VALID
+msgid "Cannot Update VM. The selected Default Server is not valid."
+msgstr "Cannot Update VM. The selected Default Server is not valid."
+
+#: ACTION_TYPE_FAILED_NO_VDS_IN_POOL
+msgid "Cannot ${action} ${type}. There is no active host in the Data Center."
+msgstr "Cannot ${action} ${type}. There is no active host in the Data Centre."
+
+#: LICENSE
+msgid "License Error"
+msgstr "License Error"
+
+#: ERROR_LICENSE_NO_LICENSE
+msgid "There is no valid license for RHEV Manager"
+msgstr "There is no valid license for RHEV Manager"
+
+#: ERROR_LICENSE_ILLEGAL
+msgid ""
+"Login failed, if the RHEV Manager Service was restarted please wait few "
+"seconds and try again, if the problem persists please check your RHEV "
+"Manager license."
+msgstr ""
+"Login failed, if the RHEV Manager Service was restarted please wait few "
+"seconds and try again, if the problem persists please check your RHEV "
+"Manager license."
+
+#: ERROR_LICENSE_SYSTEM_CLOCK_MODIFIED
+msgid "RHEV Manager has detected that the system clock has been modified"
+msgstr "RHEV Manager has detected that the system clock has been modified"
+
+#: ERROR_LICENSE_EXPIRED
+msgid "RHEV Manager's evaluation period has expired"
+msgstr "RHEV Manager's evaluation period has expired"
+
+#: MESSAGE_LICENSE_EVALUATION__PARAM_DAYS_LEFT
+msgid ""
+"RHEV Manager is in evaluation mode. Evaluation period will end in "
+"${DaysLeft} days"
+msgstr ""
+"RHEV Manager is in evaluation mode. Evaluation period will end in "
+"${DaysLeft} days"
+
+#: VAR__TYPE__HOST
+msgid "$type Host"
+msgstr "$type Host"
+
+#: VAR__TYPE__NETWORK
+msgid "$type Network"
+msgstr "$type Network"
+
+#: VAR__TYPE__VM
+msgid "$type VM"
+msgstr "$type VM"
+
+#: VAR__TYPE__COMPUTER_ACCOUNT
+msgid "$type Computer Account"
+msgstr "$type Computer Account"
+
+#: VAR__TYPE__VM_TEMPLATE
+msgid "$type Template"
+msgstr "$type Template"
+
+#: VAR__TYPE__SNAPSHOT
+msgid "$type Snapshot"
+msgstr "$type Snapshot"
+
+#: VAR__TYPE__DESKTOP_POOL
+msgid "$type VM Pool"
+msgstr "$type VM Pool"
+
+#: VAR__TYPE__VM_FROM_VM_POOL
+msgid "$type VM from VM Pool"
+msgstr "$type VM from VM Pool"
+
+#: VAR__TYPE__CLUSTER
+msgid "$type Cluster"
+msgstr "$type Cluster"
+
+#: VAR__TYPE__ROLE
+msgid "$type Role"
+msgstr "$type Role"
+
+#: VAR__TYPE__INTERFACE
+msgid "$type Interface"
+msgstr "$type Interface"
+
+#: VAR__TYPE__VM_DISK
+msgid "$type Virtual Machine Disk"
+msgstr "$type Virtual Machine Disk"
+
+#: VAR__TYPE__BOOKMARK
+msgid "$type Bookmark"
+msgstr "$type Bookmark"
+
+#: VAR__TYPE__VM_TICKET
+msgid "$type Virtual Machine Ticket"
+msgstr "$type Virtual Machine Ticket"
+
+#: VAR__ACTION__RUN
+msgid "$action run"
+msgstr "$action run"
+
+#: VAR__ACTION__REMOVE
+msgid "$action remove"
+msgstr "$action remove"
+
+#: VAR__ACTION__ADD
+msgid "$action add"
+msgstr "$action add"
+
+#: VAR__ACTION__CREATE
+msgid "$action create"
+msgstr "$action create"
+
+#: VAR__ACTION__PAUSE
+msgid "$action suspend"
+msgstr "$action suspend"
+
+#: VAR__ACTION__HIBERNATE
+msgid "$action hibernate"
+msgstr "$action hibernate"
+
+#: VAR__ACTION__MIGRATE
+msgid "$action migrate"
+msgstr "$action migrate"
+
+#: VAR__ACTION__ATTACHE_DESKTOP_TO
+msgid "$action attache VM to"
+msgstr "$action attache VM to"
+
+#: VAR__ACTION__REVERT_TO
+msgid "$action revert to"
+msgstr "$action revert to"
+
+#: VAR__ACTION__PREVIEW
+msgid "$action preview"
+msgstr "$action preview"
+
+#: VAR__ACTION__STOP
+msgid "$action stop"
+msgstr "$action stop"
+
+#: VAR__ACTION__START
+msgid "$action start"
+msgstr "$action start"
+
+#: VAR__ACTION__RESTART
+msgid "$action restart"
+msgstr "$action restart"
+
+#: VAR__ACTION__SHUTDOWN
+msgid "$action shutdown"
+msgstr "$action shutdown"
+
+#: VAR__ACTION__EXPORT
+msgid "$action export"
+msgstr "$action export"
+
+#: VAR__ACTION__EXTEND
+msgid "$action extend"
+msgstr "$action extend"
+
+#: VAR__ACTION__IMPORT
+msgid "$action import"
+msgstr "$action import"
+
+#: VAR__ACTION__ATTACH_ACTION_TO
+msgid "$action attach Action to"
+msgstr "$action attach Action to"
+
+#: VAR__ACTION__DETACH_ACTION_TO
+msgid "$action Dettach Action from"
+msgstr "$action Dettach Action from"
+
+#: VAR__ACTION__MOVE
+msgid "$action move"
+msgstr "$action move"
+
+#: VAR__ACTION__COPY
+msgid "$action copy"
+msgstr "$action copy"
+
+#: VAR__ACTION__CHANGE_CD
+msgid "$action Change CD"
+msgstr "$action Change CD"
+
+#: VAR__ACTION__EJECT_CD
+msgid "$action Eject CD"
+msgstr "$action Eject CD"
+
+#: VAR__ACTION__ALLOCATE_AND_RUN
+msgid "$action allocate and run"
+msgstr "$action allocate and run"
+
+#: VAR__ACTION__MANUAL_FENCE
+msgid "$action manually fence"
+msgstr "$action manually fence"
+
+#: VAR__ACTION__SET
+msgid "$action set"
+msgstr "$action set"
+
+#: ACTION_TYPE_FAILED_DISK_LETTER_ALREADY_IN_USE
+msgid ""
+"Cannot ${action} ${type}. The chosen drive letter is already in use, please "
+"select another."
+msgstr ""
+"Cannot ${action} ${type}. The chosen drive letter is already in use, please "
+"select another."
+
+#: ACTION_TYPE_FAILED_DISK_LIMITATION_EXCEEDED
+msgid ""
+"Cannot ${action} ${type}. The VM has exceeded maximum number of available "
+"disks."
+msgstr ""
+"Cannot ${action} ${type}. The VM has exceeded maximum number of available "
+"disks."
+
+#: ACTION_TYPE_FAILED_VM_MAX_RESOURCE_EXEEDED
+msgid ""
+"Cannot ${action} ${type}. Maximum value for concurrently running VMs "
+"exeeded. See Help About for details."
+msgstr ""
+"Cannot ${action} ${type}. Maximum value for concurrently running VMs "
+"exeeded. See Help About for details."
+
+#: ACTION_TYPE_FAILED_CPU_NOT_FOUND
+msgid "Cannot ${action} ${type}. The chosen CPU could not be found."
+msgstr "Cannot ${action} ${type}. The chosen CPU could not be found."
+
+#: ACTION_TYPE_FAILED_EXCEEDED_MAX_PCI_SLOTS
+msgid "Cannot ${action} ${type}. Maximum PCI devices exceeded."
+msgstr "Cannot ${action} ${type}. Maximum PCI devices exceeded."
+
+#: ACTION_TYPE_FAILED_EXCEEDED_MAX_IDE_SLOTS
+msgid "Cannot ${action} ${type}. Maximum IDE devices exceeded."
+msgstr "Cannot ${action} ${type}. Maximum IDE devices exceeded."
+
+#: USER_CANNOT_ATTACH_TO_VM_ALREADY_ATTACHED
+msgid "User is already attached to VM"
+msgstr "User is already attached to VM"
+
+#: USER_CANNOT_ATTACH_TO_VM_NOT_ATTACHED
+msgid "The user is not attached to this VM."
+msgstr "The user is not attached to this VM."
+
+#: USER_FAILED_TO_AUTHENTICATE
+msgid ""
+"Login failed. Please verify your login information or contact the system "
+"administrator."
+msgstr ""
+"Login failed. Please verify your login information or contact the system "
+"administrator."
+
+#: USER_FAILED_TO_AUTHENTICATION_WRONG_AUTHENTICATION_METHOD
+msgid ""
+"Login failed. Please verify that the correct authentication method is used "
+"in your system."
+msgstr ""
+"Login failed. Please verify that the correct authentication method is used "
+"in your system."
+
+#: VAR__ACTION__MERGE
+msgid "$action merge"
+msgstr "$action merge"
+
+#: VMT_CANNOT_CREATE_DUPLICATE_NAME
+msgid "Cannot ${action} ${type}. Template name already exists."
+msgstr "Cannot ${action} ${type}. Template name already exists."
+
+#: VMT_CLUSTER_IS_NOT_VALID
+msgctxt "VMT_CLUSTER_IS_NOT_VALID"
+msgid "Cannot ${action} ${type}. Cluster id is not valid."
+msgstr "Cannot ${action} ${type}. Cluster id is not valid."
+
+#: USER_PASSWORD_EXPIRED
+msgid "Cannot Login. User Password has expired, Please change your password."
+msgstr "Cannot Login. User Password has expired, Please change your password."
+
+#: USER_ACCOUNT_DISABLED
+msgid ""
+"Cannot Login. User Account is Disabled or Locked, Please contact your "
+"administrator."
+msgstr ""
+"Cannot Login. User Account is Disabled or Locked, Please contact your "
+"administrator."
+
+#: USER_PERMISSION_DENIED
+msgid "Permission denied. RHEV Manager Administrator permission is required."
+msgstr "Permission denied. RHEV Manager Administrator permission is required."
+
+#: USER_CANNOT_RUN_QUERY_NOT_PUBLIC
+msgid "Permission denied. Query you try to run not public."
+msgstr "Permission denied. Query you try to run not public."
+
+#: USER_CANNOT_LOGIN_DOMAIN_NOT_SUPPORTED
+msgid ""
+"Cannot Login. The Domain provided is not configured, please contact your "
+"administrator."
+msgstr ""
+"Cannot Login. The Domain provided is not configured, please contact your "
+"administrator."
+
+#: USER_MUST_EXIST_IN_DB
+msgid "User must exist in Database."
+msgstr "User must exist in Database."
+
+#: USER_MUST_EXIST_IN_AD
+msgid "User must exist in Active Directory."
+msgstr "User must exist in Active Directory."
+
+#: USER_IS_ALREADY_LOGGED_IN
+msgid "User is already logged in."
+msgstr "User is already logged in."
+
+#: USER_IS_NOT_LOGGED_IN
+msgid "User is not logged in."
+msgstr "User is not logged in."
+
+#: USER_DOES_NOT_HAVE_A_VALID_EMAIL
+msgid "User does not have a valid e-mail."
+msgstr "User does not have a valid e-mail."
+
+#: VAR__ACTION__UPDATE
+msgid "$action update"
+msgstr "$action update"
+
+#: VM_POOL_CANNOT_CREATE_DUPLICATE_NAME
+msgid "Cannot ${action} VM pool. VM pool with same name already exists."
+msgstr "Cannot ${action} VM pool. VM pool with same name already exists."
+
+#: VM_POOL_CANNOT_CREATE_FROM_BLANK_TEMPLATE
+msgid "Cannot create VM pool from blank template."
+msgstr "Cannot create VM pool from blank template."
+
+#: VM_POOL_CANNOT_UPDATE_POOL_NOT_FOUND
+msgid "Cannot update VM pool - VM pool not found."
+msgstr "Cannot update VM pool - VM pool not found."
+
+#: VM_POOL_CANNOT_DECREASE_VMS_FROM_POOL
+msgid ""
+"Cannot decrease VMs from VM pool - use detach in order to remove VMs from "
+"pool."
+msgstr ""
+"Cannot decrease VMs from VM pool - use detach in order to remove VMs from "
+"pool."
+
+#: VM_CANNOT_START_ONCE_SUSPENDED
+msgid "Cannot Run-Once suspended VM."
+msgstr "Cannot Run-Once suspended VM."
+
+#: VM_CANNOT_SUSPENDE_HAS_RUNNING_TASKS
+msgid ""
+"Cannot suspend VM. VM has asynchronous running tasks, please retry later."
+msgstr ""
+"Cannot suspend VM. VM has asynchronous running tasks, please retry later."
+
+#: VM_CANNOT_SUSPEND_STATELESS_VM
+msgid "Cannot suspend stateless VM."
+msgstr "Cannot suspend stateless VM."
+
+#: VM_CANNOT_SUSPEND_VM_FROM_POOL
+msgid "Cannot suspend VM from VM Pool."
+msgstr "Cannot suspend VM from VM Pool."
+
+#: ERROR_PERMISSION_ALREADY_EXIST
+msgid "Cannot create permission. Permission already exists"
+msgstr "Cannot create permission. Permission already exists"
+
+#: USER_NOT_AUTHORIZED_TO_PERFORM_ACTION
+msgid "User is not authorized to perform this action"
+msgstr "User is not authorised to perform this action"
+
+#: ERROR_CANNOT_REMOVE_ROLE_ATTACHED_TO_PERMISSION
+msgid ""
+"One or more Permissions still associated with role. Please remove any "
+"permission first."
+msgstr ""
+"One or more Permissions still associated with role. Please remove any "
+"permission first."
+
+#: ERROR_CANNOT_REMOVE_ROLE_INVALID_ROLE_ID
+msgid "Cannot remove role, invalid role id."
+msgstr "Cannot remove role, invalid role id."
+
+#: ERROR_CANNOT_ATTACH_ACTION_GROUP_TO_ROLE_ATTACHED
+msgid ""
+"Cannot attach action group to role. This action group already attached to "
+"role."
+msgstr ""
+"Cannot attach action group to role. This action group already attached to "
+"role."
+
+#: ERROR_CANNOT_ATTACH_ACTION_GROUP_TO_ROLE_INVALID_ACTION
+msgid "Cannot attach action group to role. The action group is invalid."
+msgstr "Cannot attach action group to role. The action group is invalid."
+
+#: ERROR_CANNOT_DETACH_ACTION_GROUP_TO_ROLE_NOT_ATTACHED
+msgid ""
+"Cannot detach action group from role. This action group not attached to this "
+"role."
+msgstr ""
+"Cannot detach action group from role. This action group not attached to this "
+"role."
+
+#: ERROR_CANNOT_UPDATE_ROLE_NAME
+msgid "Cannot ${action} role. Role with same name already exists."
+msgstr "Cannot ${action} role. Role with same name already exists."
+
+#: ERROR_CANNOT_UPDATE_ROLE_ID
+msgid "Cannot ${action} role. Role id is not updateable."
+msgstr "Cannot ${action} role. Role id is not updateable."
+
+#: ERROR_CANNOT_UPDATE_ROLE_TYPE
+msgid "Cannot ${action} role. Changing Role type is not allowed."
+msgstr "Cannot ${action} role. Changing Role type is not allowed."
+
+#: VDS_REGISTER_NO_HOSTNAME_INPUT
+msgid "Cannot register Host - no Hostname address specified."
+msgstr "Cannot register Host - no Hostname address specified."
+
+#: VDS_REGISTER_UNIQUE_ID_AMBIGUOUS
+msgid "Cannot register Host - unique id is ambigious."
+msgstr "Cannot register Host - unique id is ambigious."
+
+#: VDS_REGISTER_UNIQUE_ID_DIFFERENT_TYPE
+msgid ""
+"Cannot register Host - A host with the same unique id was found, but "
+"requested Host type does not match."
+msgstr ""
+"Cannot register Host - A host with the same unique id was found, but "
+"requested Host type does not match."
+
+#: AUTO_MIGRATE_DISABLED
+msgid "Cannot migrate - check relevant configuration options."
+msgstr "Cannot migrate - check relevant configuration options."
+
+#: AUTO_MIGRATE_VDS_NOT_FOUND
+msgid "Cannot migrate - Host not found."
+msgstr "Cannot migrate - Host not found."
+
+#: AUTO_MIGRATE_POWERCLIENT_NOT_FOUND
+msgid "Cannot migrate - Power Client not found."
+msgstr "Cannot migrate - Power Client not found."
+
+#: AUTO_MIGRATE_ALREADY_ON_POWERCLIENT
+msgid "Cannot migrate - VM already resides on Power Client."
+msgstr "Cannot migrate - VM already resides on Power Client."
+
+#: AUTO_MIGRATE_ALREADY_RUNNING_ON_VDS
+msgid "Cannot migrate - VM already running on Host."
+msgstr "Cannot migrate - VM already running on Host."
+
+#: AUTO_MIGRATE_UNSUCCESSFUL
+msgid "Cannot migrate - Previous migration was unsuccessful."
+msgstr "Cannot migrate - Previous migration was unsuccessful."
+
+#: APPROVE_VDS_VDS_NOT_FOUND
+msgid "Cannot approve Host - Host not found."
+msgstr "Cannot approve Host - Host not found."
+
+#: VDS_APPROVE_WRONG_VDS_TYPE
+msgid "Cannot approve Host - Host type must be RHEVH."
+msgstr "Cannot approve Host - Host type must be RHEVH."
+
+#: VDS_APPROVE_VDS_IN_WRONG_STATUS
+msgid ""
+"Cannot approve Host - Host must be in \"Pending Approval\" or \"Install Failed\" "
+"status in order to be approved."
+msgstr ""
+"Cannot approve Host - Host must be in \"Pending Approval\" or \"Install Failed\" "
+"status in order to be approved."
+
+#: VDS_SHUTDOWN_VDS_NOT_FOUND
+msgid "Cannot shutdown Host - Host not found."
+msgstr "Cannot shutdown Host - Host not found."
+
+#: VDS_SHUTDOWN_NO_RESPONSE
+msgid "Cannot shutdown Host - Host is down or not responding."
+msgstr "Cannot shutdown Host - Host is down or not responding."
+
+#: VDS_NEW_CLUSTER_ILLEGAL
+msgid "Cannot update Host - Cluster CPU illegal for the Host CPU."
+msgstr "Cannot update Host - Cluster CPU illegal for the Host CPU."
+
+#: VDS_CLUSTER_IS_NOT_VALID
+msgctxt "VDS_CLUSTER_IS_NOT_VALID"
+msgid "Cannot ${action} ${type}. Cluster id is not valid."
+msgstr "Cannot ${action} ${type}. Cluster id is not valid."
+
+#: VDS_GROUP_CANNOT_UPDATE_CPU_ILLEGAL
+msgid ""
+"Cannot update Cluster CPU to different CPU type when there are Hosts "
+"attached to this Cluster."
+msgstr ""
+"Cannot update Cluster CPU to different CPU type when there are Hosts "
+"attached to this Cluster."
+
+#: VDS_GROUP_CANNOT_UPDATE_CPU_WITH_LOWER_HOSTS
+msgid ""
+"Cannot update Cluster CPU to higher CPU type when there are active Hosts "
+"with lower CPU type, please move hosts with lower CPU to maintenance first."
+msgstr ""
+"Cannot update Cluster CPU to higher CPU type when there are active Hosts "
+"with lower CPU type, please move hosts with lower CPU to maintenance first."
+
+#: VDS_GROUP_CANNOT_UPDATE_COMPATIBILITY_VERSION_WITH_LOWER_HOSTS
+msgid ""
+"Cannot update Cluster Compatibility Version to higher version when there are "
+"active Hosts with lower version, please move hosts with lower version to "
+"maintenance first."
+msgstr ""
+"Cannot update Cluster Compatibility Version to higher version when there are "
+"active Hosts with lower version, please move hosts with lower version to "
+"maintenance first."
+
+#: VDS_GROUP_CANNOT_ADD_COMPATIBILITY_VERSION_WITH_LOWER_STORAGE_POOL
+msgid ""
+"Cannot add Cluster with Compatibility Version lower than the Data Center "
+"Compatibility Version."
+msgstr ""
+"Cannot add Cluster with Compatibility Version lower than the Data Centre "
+"Compatibility Version."
+
+#: VDS_GROUP_CANNOT_DO_ACTION_NAME_IN_USE
+msgid "Cannot ${action} Cluster. Cluster name is already in use."
+msgstr "Cannot ${action} Cluster. Cluster name is already in use."
+
+#: VDS_GROUP_CLUSTER_IS_NOT_VALID
+msgid "Cannot ${action} Cluster. Cluster id is not valid."
+msgstr "Cannot ${action} Cluster. Cluster id is not valid."
+
+#: NETWORK_NETWORK_NAME_ALREADY_EXISTS
+msgid "Network name already exists"
+msgstr "Network name already exists"
+
+#: NETWORK_INTERFACE_NAME_ALREAY_EXISTS
+msgid "Network file is already in use"
+msgstr "Network file is already in use"
+
+#: ACTION_TYPE_FAILED_STORAGE_CONNECTION
+msgid "Cannot connect server to Storage"
+msgstr "Cannot connect server to Storage"
+
+#: ACTION_TYPE_FAILED_STORAGE_CONNECTION_NOT_EXIST
+msgid "Cannot ${action} ${type}. Storage Connection doesn't exist"
+msgstr "Cannot ${action} ${type}. Storage Connection doesn't exist"
+
+#: ACTION_TYPE_FAILED_STORAGE_DOMAIN_NOT_EXIST
+msgid "Cannot ${action} ${type}. Storage Domain doesn't exist"
+msgstr "Cannot ${action} ${type}. Storage Domain doesn't exist"
+
+#: ACTION_TYPE_FAILED_CANNOT_CHANGE_STORAGE_DOMAIN_TYPE
+msgid "Cannot ${action} ${type}. Storage Domain type change not allowed"
+msgstr "Cannot ${action} ${type}. Storage Domain type change not allowed"
+
+#: ACTION_TYPE_FAILED_STORAGE_DOMAIN_STATUS_ILLEGAL
+msgid ""
+"Cannot ${action} ${type}. The relevant Storage Domain is inaccessible. "
+"Please handle Storage Domain issues and retry the operation."
+msgstr ""
+"Cannot ${action} ${type}. The relevant Storage Domain is inaccessible. "
+"Please handle Storage Domain issues and retry the operation."
+
+#: ACTION_TYPE_FAILED_STORAGE_DOMAIN_STATUS_ILLEGAL2
+msgid "Cannot ${action} ${type}. Storage status illegal."
+msgstr "Cannot ${action} ${type}. Storage status illegal."
+
+#: ACTION_TYPE_FAILED_STORAGE_POOL_NOT_EXIST
+msgid "Cannot ${action} ${type}. Data Center doesn't exist"
+msgstr "Cannot ${action} ${type}. Data Centre doesn't exist"
+
+#: STORAGE_DOMAIN_TYPE_ILLEGAL_FOR_ADDING_EXISTING
+msgid "Storage from this type not allowed to be added"
+msgstr "Storage from this type not allowed to be added"
+
+#: VAR__ACTION__ATTACH
+msgid "$action attach"
+msgstr "$action attach"
+
+#: VAR__ACTION__DETACH
+msgid "$action detach"
+msgstr "$action detach"
+
+#: VAR__TYPE__STORAGE__CONNECTION
+msgid "$type Storage Connection"
+msgstr "$type Storage Connection"
+
+#: VAR__TYPE__STORAGE__DOMAIN
+msgid "$type Storage"
+msgstr "$type Storage"
+
+#: VAR__TYPE__STORAGE__POOL
+msgid "$type Repository"
+msgstr "$type Repository"
+
+#: VAR__TYPE__USER_FROM_VM
+msgid "$type User to VM"
+msgstr "$type User to VM"
+
+#: ERROR_CANNOT_DETACH_STORAGE_DOMAIN_WITH_IMAGES
+msgid ""
+"Cannot detach Storage Domain while VMs/Templates reside on it. Please remove "
+"all objects and try again."
+msgstr ""
+"Cannot detach Storage Domain while VMs/Templates reside on it. Please remove "
+"all objects and try again."
+
+#: ERROR_CANNOT_REMOVE_STORAGE_POOL_WITH_IMAGES
+msgid ""
+"Cannot remove data center - there are volumes on it. Please remove all VMs "
+"and Templates first."
+msgstr ""
+"Cannot remove data centre - there are volumes on it. Please remove all VMs "
+"and Templates first."
+
+#: ERROR_CANNOT_REMOVE_STORAGE_DOMAIN_DO_FORMAT
+msgid ""
+"Cannot remove storage domain. Data storage must be formated after remove"
+msgstr ""
+"Cannot remove storage domain. Data storage must be formated after remove"
+
+#: ACTION_TYPE_FAILED_STORAGE_POOL_STATUS_ILLEGAL
+msgid "Cannot ${action} ${type}. Illegal Data Center status."
+msgstr "Cannot ${action} ${type}. Illegal Data Centre status."
+
+#: VAR__ACTION__ACTIVATE
+msgid "$action activate"
+msgstr "$action activate"
+
+#: VAR__ACTION__DEACTIVATE
+msgid "$action deactivate"
+msgstr "$action deactivate"
+
+#: VAR__ACTION__RECONSTRUCT_MASTER
+msgid "$action reconstruct master"
+msgstr "$action reconstruct master"
+
+#: VAR__ACTION__RECOVER_POOL
+msgid "$action recover data center"
+msgstr "$action recover data centre"
+
+#: VAR__ACTION__DESTROY_DOMAIN
+msgid "$action destroy"
+msgstr "$action destroy"
+
+#: NETWORK_BOND_NAME_EXISTS
+msgid "Bond name already exists"
+msgstr "Bond name already exists"
+
+#: NETWORK_BOND_NOT_EXISTS
+msgid "Bond name doesn't exist on host"
+msgstr "Bond name doesn't exist on host"
+
+#: NETWORK_CHECK_CONNECTIVITY
+msgid "Cannot check connectivity on non management network"
+msgstr "Cannot check connectivity on non management network"
+
+#: NETWORK_BOND_PARAMETERS_INVALID
+msgid ""
+"Invalid parameters: bond name must be formatted as bondYYY and must have at "
+"least two interfaces"
+msgstr ""
+"Invalid parameters: bond name must be formatted as bondYYY and must have at "
+"least two interfaces"
+
+#: NETWORK_DEFAULT_UPDATE_NAME_INVALID
+msgid "Network rhevm is mandatory, it cannot be changed"
+msgstr "Network rhevm is mandatory, it cannot be changed"
+
+#: NETWORK_INTERFACE_ALREADY_IN_BOND
+msgid "Interface already belongs to the bond"
+msgstr "Interface already belongs to the bond"
+
+#: NETWORK_INVALID_BOND_NAME
+msgid "Bond name must be formatted as bondYYY"
+msgstr "Bond name must be formatted as bondYYY"
+
+#: NETWORK_INTERFACE_NOT_EXISTS
+msgid "Network name doesn't exist"
+msgstr "Network name doesn't exist"
+
+#: ERROR_CANNOT_ATTACH_STORAGE_DOMAIN_TYPE_ILLEGAL
+msgid ""
+"Cannot attach storage to Repository. Storage type is illegal (there is only "
+"one storage with this type allowed in the Repository)"
+msgstr ""
+"Cannot attach storage to Repository. Storage type is illegal (there is only "
+"one storage with this type allowed in the Repository)"
+
+#: ERROR_CANNOT_ATTACH_STORAGE_DOMAIN_STORAGE_TYPE_NOT_MATCH
+msgid ""
+"Cannot attach storage to Repository. Storage type doesn't match the "
+"Repository type"
+msgstr ""
+"Cannot attach storage to Repository. Storage type doesn't match the "
+"Repository type"
+
+#: ERROR_CANNOT_CHANGE_STORAGE_POOL_TYPE_WITH_DOMAINS
+msgid "Cannot change Repository type with Storage Domains attached to it"
+msgstr "Cannot change Repository type with Storage Domains attached to it"
+
+#: NETWORK_INTERFACE_ALREADY_HAVE_NETWORK
+msgid "The Interface is already attached to a Network"
+msgstr "The Interface is already attached to a Network"
+
+#: NETWORK_NETWORK_ALREAY_ATTACH_TO_INTERFACE
+msgid "Network is already attached to an interface"
+msgstr "Network is already attached to an interface"
+
+#: NETWORK_INTERFACE_NOT_HAVE_DISPLAY_FLAG
+msgid "The specified interface is not a display interface"
+msgstr "The specified interface is not a display interface"
+
+#: NETWORK_NETWORK_NOT_EXISTS
+msgid "Specified network doesn't exist"
+msgstr "Specified network doesn't exist"
+
+#: ERROR_CANNOT_RECOVERY_STORAGE_POOL_THERE_IS_ACTIVE_DATA_DOMAINS
+msgid "Cannot recover data center with active data storages in data center."
+msgstr "Cannot recover data centre with active data storages in data centre."
+
+#: ERROR_CANNOT_RECOVERY_STORAGE_POOL_STORAGE_TYPE_MISSMATCH
+msgid ""
+"Cannot recover data center. New master storage not fit data center type."
+msgstr ""
+"Cannot recover data centre. New master storage not fit data centre type."
+
+#: ERROR_CANNOT_DETACH_LAST_STORAGE_DOMAIN
+msgid ""
+"Cannot remove the master storage domain from the data center without another "
+"active storage domain to take its place. Either activate another storage "
+"domain in the data center, or remove the data center all together."
+msgstr ""
+"Cannot remove the master storage domain from the data centre without another "
+"active storage domain to take its place. Either activate another storage "
+"domain in the data centre, or remove the data centre all together."
+
+#: ERROR_CANNOT_DESTROY_LAST_STORAGE_DOMAIN
+msgid ""
+"Cannot destroy the master storage domain from the data center without "
+"another active storage domain to take its place. Either activate another "
+"storage domain in the data center, or remove the data center all together. "
+"If you have problems with master domain, consider recovery process"
+msgstr ""
+"Cannot destroy the master storage domain from the data centre without "
+"another active storage domain to take its place. Either activate another "
+"storage domain in the data centre, or remove the data centre all together. "
+"If you have problems with master domain, consider recovery process"
+
+#: NETWORK_NETWORK_VLAN_OUT_OF_RANGE
+msgid "VLAN ID must be a number between 2 and 4905"
+msgstr "VLAN ID must be a number between 2 and 4905"
+
+#: ERROR_CANNOT_ADD_STORAGE_POOL_WITHOUT_DATA_AND_ISO_DOMAINS
+msgid "Cannot create Repository - There must be at least one Data storage."
+msgstr "Cannot create Repository - There must be at least one Data storage."
+
+#: ERROR_CANNOT_ADD_STORAGE_POOL_WITHOUT_DATA_DOMAIN
+msgid "The first storage in a Repository must be Data storage."
+msgstr "The first storage in a Repository must be Data storage."
+
+#: ERROR_CANNOT_REMOVE_POOL_WITH_ACTIVE_DOMAINS
+msgid ""
+"Cannot remove Repository with active storage domains. Please deactivate all "
+"domains before removing the Repository."
+msgstr ""
+"Cannot remove Repository with active storage domains. Please deactivate all "
+"domains before removing the Repository."
+
+#: ACTION_TYPE_FAILED_VMS_IN_STORAGE_POOL
+msgid "Cannot ${action} ${type}. There are VMs in Data Center."
+msgstr "Cannot ${action} ${type}. There are VMs in Data Centre."
+
+#: ERROR_CANNOT_CHANGE_STORAGE_POOL_VDSS_UP
+msgid "Please move all servers to maintenance before updating the Data Center"
+msgstr "Please move all servers to maintenance before updating the Data Centre"
+
+#: VDS_GROUP_CANNOT_CHANGE_STORAGE_POOL
+msgid "Cannot update Data Center for Cluster"
+msgstr "Cannot update Data Centre for Cluster"
+
+#: NETWORK_NETWORK_IN_USE
+msgid ""
+"The Network is in use. Please remove it from all hosts in cluster and try "
+"again."
+msgstr ""
+"The Network is in use. Please remove it from all hosts in cluster and try "
+"again."
+
+#: NETWORK_NETWORK_STORAGE_POOL_MUST_BE_SPECIFY
+msgid "Data Center must be specified"
+msgstr "Data Centre must be specified"
+
+#: ERROR_CANNOT_CREATE_STORAGE_DOMAIN_WITHOUT_VG_LV
+msgid "Volume group and logical volumes are not specified"
+msgstr "Volume group and logical volumes are not specified"
+
+#: NETWORK_INTERFACE_TEMPLATE_CANNOT_BE_SET
+msgid "Cannot ${action} ${type}. VM Template id must be empty."
+msgstr "Cannot ${action} ${type}. VM Template id must be empty."
+
+#: NETWORK_INTERFACE_VM_CANNOT_BE_SET
+msgid "Cannot ${action} ${type}. VM id must be empty."
+msgstr "Cannot ${action} ${type}. VM id must be empty."
+
+#: NETWORK_INTERFACE_NAME_ALREAY_IN_USE
+msgid "Network interface is already in use"
+msgstr "Network interface is already in use"
+
+#: EN_UNKNOWN_NOTIFICATION_METHOD
+msgid "The notification method is unknown."
+msgstr "The notification method is unknown."
+
+#: EN_EVENT_UP_SUBJECT_TEXT
+msgid "RHEVM - Alert Notification."
+msgstr "RHEVM - Alert Notification."
+
+#: EN_EVENT_DOWN_SUBJECT_TEXT
+msgid "RHEVM - Issue Solved Notification."
+msgstr "RHEVM - Issue Solved Notification."
+
+#: EN_UNKNOWN_TAG_NAME
+msgid "Unknown tag name."
+msgstr "Unknown tag name."
+
+#: EN_ALREADY_SUBSCRIBED
+msgid ""
+"User is already subscribed to this event with the same notification method, "
+"please unsubscribe from current subscription first."
+msgstr ""
+"User is already subscribed to this event with the same notification method, "
+"please unsubscribe from current subscription first."
+
+#: EN_NOT_SUBSCRIBED
+msgid ""
+"User is not subscribed to this event with the given notification method."
+msgstr ""
+"User is not subscribed to this event with the given notification method."
+
+#: ACTION_TYPE_FAILED_STORAGE_DOMAIN_TYPE_ILLEGAL
+msgid "Cannot ${action} ${type}. Storage domain type not specified."
+msgstr "Cannot ${action} ${type}. Storage domain type not specified."
+
+#: ERROR_CANNOT_EXTEND_NON_DATA_DOMAIN
+msgid "Cannot extend Storage domain that is not data or master domain."
+msgstr "Cannot extend Storage domain that is not data or master domain."
+
+#: ERROR_CANNOT_EXTEND_CONNECTION_FAILED
+msgid ""
+"Cannot extend Storage domain due to failure in connecting hosts to device."
+msgstr ""
+"Cannot extend Storage domain due to failure in connecting hosts to device."
+
+#: ERROR_CANNOT_CHANGE_STORAGE_DOMAIN_FIELDS
+msgid "Cannot change Storage domain fields except storage name."
+msgstr "Cannot change Storage domain fields except storage name."
+
+#: ERROR_CANNOT_UPDATE_STORAGE_POOL_COMPATIBILITY_VERSION_BIGGER_THAN_CLUSTERS
+msgid ""
+"Cannot update Data Center compatibility version to grater than its Cluster's "
+"version."
+msgstr ""
+"Cannot update Data Centre compatibility version to grater than its Cluster's "
+"version."
+
+#: ERROR_CANNOT_ADD_EXISTING_STORAGE_DOMAIN_CONNECTION_DATA_ILLEGAL
+msgid "Cannot import storage domain. The connection data is illegal"
+msgstr "Cannot import storage domain. The connection data is illegal"
+
+#: ERROR_CANNOT_ADD_EXISTING_STORAGE_DOMAIN_LUNS_PROBLEM
+msgid "Cannot import storage domain. Not all luns connected to storage"
+msgstr "Cannot import storage domain. Not all luns connected to storage"
+
+#: ERROR_CANNOT_ATTACH_STORAGE_DOMAIN_SHARED_NOT_SUPPORTED_IN_THIS_POOL
+msgid ""
+"Cannot attach Storage Domain, Shared Domains not supported in this Data "
+"Center compatibility version."
+msgstr ""
+"Cannot attach Storage Domain, Shared Domains not supported in this Data "
+"Centre compatibility version."
+
+#: ERROR_CANNOT_ATTACH_STORAGE_DOMAIN_SHARED_NOT_SUPPORTED_IN_OTHER_POOL
+msgid ""
+"Cannot attach Storage Domain, Shared Domains not supported in other Data "
+"Center compatibility version."
+msgstr ""
+"Cannot attach Storage Domain, Shared Domains not supported in other Data "
+"Centre compatibility version."
+
+#: NETWORK_MAC_ADDRESS_IN_USE
+msgid "Mac address is in use"
+msgstr "Mac address is in use"
+
+#: NETWORK_INTERFACE_IN_USE_BY_VM
+msgid "The network is in use by a VM"
+msgstr "The network is in use by a VM"
+
+#: NETWORK_CLUSTER_NETWORK_IN_USE
+msgid "Network is in use by a cluster"
+msgstr "Network is in use by a cluster"
+
+#: ERROR_CANNOT_DEACTIVATE_MASTER_WITH_NON_DATA_DOMAINS
+msgid ""
+"You are trying to deactivate a Master storage while there are other non-Data "
+"active domains in the Data Center. Please deactivate all of these domains "
+"first."
+msgstr ""
+"You are trying to deactivate a Master storage while there are other non-Data "
+"active domains in the Data Centre. Please deactivate all of these domains "
+"first."
+
+#: ERROR_CANNOT_DEACTIVATE_DOMAIN_WITH_TASKS
+msgid ""
+"Cannot deactivate Data Domain while there are running tasks in the Data "
+"Center, please wait until tasks will finish and try again."
+msgstr ""
+"Cannot deactivate Data Domain while there are running tasks in the Data "
+"Centre, please wait until tasks will finish and try again."
+
+#: ERROR_CANNOT_REMOVE_POOL_WITH_NETWORKS
+msgid ""
+"Cannot remove Data Center with networks, please remove all networks first."
+msgstr ""
+"Cannot remove Data Centre with networks, please remove all networks first."
+
+#: ERROR_CANNOT_REMOVE_LAST_SUPER_USER_ROLE
+msgid "Cannot remove the last Super User role"
+msgstr "Cannot remove the last Super User role"
+
+#: ACTION_TYPE_FAILED_UP_VDSS_IN_CLUSTER
+msgid ""
+"Cannot ${action} ${type}. Some Hosts in the cluster are in Up state. Please "
+"move all Hosts to maintenance mode first."
+msgstr ""
+"Cannot ${action} ${type}. Some Hosts in the cluster are in Up state. Please "
+"move all Hosts to maintenance mode first."
+
+#: VM_CANNOT_REMOVE_VM_WHEN_STATUS_IS_NOT_DOWN
+msgid ""
+"Cannot remove VM that its state is not down, please try to stop the VM "
+"first."
+msgstr ""
+"Cannot remove VM that its state is not down, please try to stop the VM "
+"first."
+
+#: ACTION_TYPE_FAILED_MASTER_STORAGE_DOMAIN_NOT_ACTIVE
+msgid ""
+"Failed to ${action} ${type} due to an error on the Data Center Master "
+"Domain. Activate the Master Domain first."
+msgstr ""
+"Failed to ${action} ${type} due to an error on the Data Centre Master "
+"Domain. Activate the Master Domain first."
+
+#: TAGS_AD_ELEMENT_TAG_IS_MISSING
+msgid "Tag AdElement is missing in requested user"
+msgstr "Tag AdElement is missing in requested user"
+
+#: TAGS_CANNOT_REMOVE_TAG_NOT_EXIST
+msgid "Cannot remove tag. Tag does not exist"
+msgstr "Cannot remove tag. Tag does not exist"
+
+#: AD_GROUP_CANNOT_ATTACH_TO_VM_ALREADY_ATTACHED
+msgid "A Group is already attached to this VM"
+msgstr "A Group is already attached to this VM"
+
+#: AD_GROUP_NOT_ATTACH_TO_VM
+msgid "A Group is not attached to the specified VM"
+msgstr "A Group is not attached to the specified VM"
+
+#: ERROR_CANNOT_DEFAULT_AD_ELEMENT_TAG
+msgid "Cannot remove the default active directory tag"
+msgstr "Cannot remove the default active directory tag"
+
+#: TAGS_SPECIFY_TAG_IS_NOT_EXISTS
+msgid "Specified tag does't exist"
+msgstr "Specified tag does't exist"
+
+#: UPDATE_TAGS_VM_DEFAULT_DISPLAY_TYPE
+msgid "Default display type updated"
+msgstr "Default display type updated"
+
+#: UPDATE_TAGS_VM_DEFAULT_DISPLAY_TYPE_FAILED
+msgid "Failed to change default display type"
+msgstr "Failed to change default display type"
+
+#: ACTION_TYPE_FAILED_NO_VDS_SUPPLIED
+msgid "Cannot ${action} ${type}. No Host supplied."
+msgstr "Cannot ${action} ${type}. No Host supplied."
+
+#: NETWORK_CAN_NOT_REMOVE_DEFAULT_NETWORK
+msgid "Cannot remove default Network"
+msgstr "Cannot remove default Network"
+
+#: NETWORK_CANNOT_REMOVE_NETWORK_IN_USE_BY_TEMPLATE
+msgid "Network is in use by a Template"
+msgstr "Network is in use by a Template"
+
+#: NETWORK_CANNOT_CHANGE_STATUS_WHEN_NOT_DOWN
+msgid "Cannot change Network status when the VM is not Down"
+msgstr "Cannot change Network status when the VM is not Down"
+
+#: NETWORK_NETWORK_VLAN_IN_USE
+msgid "Specified VLAN ID is in use"
+msgstr "Specified VLAN ID is in use"
+
+#: NETWORK_CLUSTER_HAVE_NOT_EXISTING_DATA_CENTER_NETWORK
+msgid "Cluster has Networks that doesn't exist in the Data Center."
+msgstr "Cluster has Networks that doesn't exist in the Data Centre."
+
+#: Please
+msgid "remove those Networks first."
+msgstr "remove those Networks first."
+
+#: NETWORK_NOT_EXISTS_IN_CURRENT_CLUSTER
+msgid "Network doesn't exist in the current Cluster"
+msgstr "Network doesn't exist in the current Cluster"
+
+#: CANNOT_PREIEW_CURRENT_IMAGE
+msgid "Cannot preview the current VM snapshot."
+msgstr "Cannot preview the current VM snapshot."
+
+#: CONFIG_UNKNOWN_KEY
+msgid "Cannot find entry with the given key in the configuration settings."
+msgstr "Cannot find entry with the given key in the configuration settings."
+
+#: TAGS_CANNOT_ASSING_TAG
+msgid "The specified Tag cannot be assigned"
+msgstr "The specified Tag cannot be assigned"
+
+#: TAGS_SPECIFIED_TAG_CANNOT_BE_THE_PARENT_OF_ITSELF
+msgid "The specified Tag cannot be the parent of itself."
+msgstr "The specified Tag cannot be the parent of itself."
+
+#: VM_CANNOT_MOVE_TO_CLUSTER_IN_OTHER_STORAGE_POOL
+msgid "Cannot move the VM to a Cluster in other Data Center."
+msgstr "Cannot move the VM to a Cluster in other Data Centre."
+
+#: VM_CLUSTER_IS_NOT_VALID
+msgctxt "VM_CLUSTER_IS_NOT_VALID"
+msgid "Cannot ${action} ${type}. Cluster id is not valid."
+msgstr "Cannot ${action} ${type}. Cluster id is not valid."
+
+#: NETWORK_CANNOT_REMOVE_MANAGEMENT_NETWORK
+msgid "Cannot remove the management Network"
+msgstr "Cannot remove the management Network"
+
+#: ACTION_TYPE_FAILED_XP_MEMORY_ERROR
+msgid "Cannot ${action} ${type}. Illegal memory defined for Windows XP."
+msgstr "Cannot ${action} ${type}. Illegal memory defined for Windows XP."
+
+#: NETWORK_INTERFACE_CANNOT_UPDATE_INTERFACE_VLAN
+msgid ""
+"Cannot update Network with VLAN, you need to set the interface to \"None\" "
+"Network"
+msgstr ""
+"Cannot update Network with VLAN, you need to set the interface to \"None\" "
+"Network"
+
+#: NETWORK_NETWORK_OLD_NETWORK_NOT_SPECIFIED
+msgid "Old network name is required"
+msgstr "Old network name is required"
+
+#: NETWORK_INTERFACE_EXITED_MAX_INTERFACES
+msgid "Cannot ${action} ${type}. VM cannot have more than 8 interfaces"
+msgstr "Cannot ${action} ${type}. VM cannot have more than 8 interfaces"
+
+#: ACTION_TYPE_FAILED_DETECTED_RUNNING_VMS
+msgid "Cannot ${action} ${type}. Detected running VMs."
+msgstr "Cannot ${action} ${type}. Detected running VMs."
+
+#: ACTION_TYPE_FAILED_NAME_LENGTH_IS_TOO_LONG
+msgid "Cannot ${action} ${type}. The given name is too long."
+msgstr "Cannot ${action} ${type}. The given name is too long."
+
+#: ACTION_TYPE_FAILED_NAME_MAY_NOT_BE_EMPTY
+msgid "Can not ${action} ${type}. The given name is empty."
+msgstr "Can not ${action} ${type}. The given name is empty."
+
+#: ACTION_TYPE_FAILED_NAME_MAY_NOT_CONTAIN_SPECIAL_CHARS
+msgid ""
+"Can not ${action} ${type}. The given name contains special characters. Only "
+"lower-case and upper-case letters, numbers, '_', '-' allowed."
+msgstr ""
+"Can not ${action} ${type}. The given name contains special characters. Only "
+"lower-case and upper-case letters, numbers, '_', '-' allowed."
+
+#: ACTION_TYPE_FAILED_NAME_MAY_NOT_CONTAIN_SPECIAL_CHARS_OR_DASH
+msgid ""
+"Can not ${action} ${type}. The given name contains special characters. Only "
+"lower-case and upper-case letters, numbers, '_', allowed."
+msgstr ""
+"Can not ${action} ${type}. The given name contains special characters. Only "
+"lower-case and upper-case letters, numbers, '_', allowed."
+
+#: ACTION_TYPE_FAILED_INVALID_VDS_HOSTNAME
+msgid ""
+"Can not ${action} ${type}. The given hostname is invalid. Only hostnames "
+"corresponding to RFC-952 and RFC-1123 are allowed."
+msgstr ""
+"Can not ${action} ${type}. The given hostname is invalid. Only hostnames "
+"corresponding to RFC-952 and RFC-1123 are allowed."
+
+#: ACTION_TYPE_FAILED_INVALID_VDS_NAME
+msgid ""
+"Can not ${action} ${type}. The given name is invalid. Valid name should "
+"contain alpha-numeric, colon, underscore and dash characters."
+msgstr ""
+"Can not ${action} ${type}. The given name is invalid. Valid name should "
+"contain alpha-numeric, colon, underscore and dash characters."
+
+#: ACTION_TYPE_FAILED_HOST_NOT_EXIST
+msgid "The provided host does not exist."
+msgstr "The provided host does not exist."
+
+#: TAGS_SPECIFY_TAG_IS_IN_USE
+msgid "Specified tag is in use"
+msgstr "Specified tag is in use"
+
+#: NETWORK_NETWORK_NET_EXISTS_IN_CLUSTER
+msgid "Network not exists in cluster"
+msgstr "Network not exists in cluster"
+
+#: ACTION_LIST_CANNOT_BE_EMPTY
+msgid "Actions list cannot be empty"
+msgstr "Actions list cannot be empty"
+
+#: ACTION_TYPE_FAILED_BOOKMARK_NAME_ALREADY_EXISTS
+msgid "Cannot ${action} ${type}. A Bookmark with the same name already exists."
+msgstr "Cannot ${action} ${type}. A Bookmark with the same name already exists."
+
+#: ACTION_TYPE_FAILED_BOOKMARK_INVALID_ID
+msgid "Cannot ${action} ${type}. Bookmark id is not valid."
+msgstr "Cannot ${action} ${type}. Bookmark id is not valid."
+
+#: ILLEAGAL_USER_PROVIDED
+msgid "Illegal user was supplied"
+msgstr "Illegal user was supplied"
+
+#: USER_CANNOT_BE_ADDED_TO_VM
+msgid "User cannot be added to vm"
+msgstr "User cannot be added to vm"
+
+#: USER_CANNOT_BE_ADDED_TO_VM_POOL
+msgid "User cannot be added to VM Pool"
+msgstr "User cannot be added to VM Pool"
+
+#: ACTION_TYPE_FAILED_VDS_STATUS_ILLEGAL
+msgid "Cannot ${action} ${type}. Host status is illegal."
+msgstr "Cannot ${action} ${type}. Host status is illegal."
+
+#: VDS_CANNOT_CHECK_VERSION_HOST_NON_RESPONSIVE
+msgid "Cannot check Host version when in Non Responsive status."
+msgstr "Cannot check Host version when in Non Responsive status."
+
+#: ACTION_TYPE_FAILED_VDS_INTERMITENT_CONNECTIVITY
+msgid ""
+"Due to intermittent connectivity to this Host Manual fencing is not allowed "
+"at this time. The system is trying to reconnect, please try again in 30 "
+"seconds."
+msgstr ""
+"Due to intermittent connectivity to this Host Manual fencing is not allowed "
+"at this time. The system is trying to reconnect, please try again in 30 "
+"seconds."
+
+#: ACTION_TYPE_FAILED_PM_ENABLED_WITHOUT_AGENT
+msgid ""
+"Cannot ${action} ${type}. Power Management enabled for host but no agent "
+"selected."
+msgstr ""
+"Cannot ${action} ${type}. Power Management enabled for host but no agent "
+"selected."
+
+#: ACTION_TYPE_FAILED_AGENT_NOT_SUPPORTED
+msgid ""
+"Cannot ${action} ${type}. Selected Power Management Agent not supported."
+msgstr ""
+"Cannot ${action} ${type}. Selected Power Management Agent not supported."
+
+#: NETWORK_BOND_NOT_ATTACCH_TO_NETWORK
+msgid "Bond is not attached to network"
+msgstr "Bond is not attached to network"
+
+#: NETWORK_INTERFACE_NOT_ATTACCH_TO_NETWORK
+msgid "Interface is not attached to network"
+msgstr "Interface is not attached to network"
+
+#: NETWORK_INTERFACE_IN_USE_BY_VLAN
+msgid ""
+"The specify interface is in use with vlan, you need to detach that interface "
+"before doing this actoin"
+msgstr ""
+"The specify interface is in use with vlan, you need to detach that interface "
+"before doing this actoin"
+
+#: NETWORK_NETWORK_ALREADY_ATTACH_TO_CLUSTER
+msgid "Network already attached to cluster"
+msgstr "Network already attached to cluster"
+
+#: ACTION_TYPE_FAILED_VDS_WITH_SAME_HOST_EXIST
+msgid "Cannot ${action} ${type}. Host with the same address already exists."
+msgstr "Cannot ${action} ${type}. Host with the same address already exists."
+
+#: ACTION_TYPE_FAILED_ILLEGAL_MEMORY_SIZE
+msgid ""
+"Cannot ${action} ${type}. Illegal memory size is provided, size needs to be "
+"between ${minMemorySize} MB and ${maxMemorySize} MB."
+msgstr ""
+"Cannot ${action} ${type}. Illegal memory size is provided, size needs to be "
+"between ${minMemorySize} MB and ${maxMemorySize} MB."
+
+#: ACTION_TYPE_FAILED_ILLEGAL_DOMAIN_NAME
+msgid ""
+"Cannot ${action} ${type}. Illegal domain name: ${Domain}. Domain name has "
+"unsupported special character ${Char}."
+msgstr ""
+"Cannot ${action} ${type}. Illegal domain name: ${Domain}. Domain name has "
+"unsupported special character ${Char}."
+
+#: ACTION_TYPE_FAILED_CANNOT_DECREASE_COMPATIBILITY_VERSION
+msgid ""
+"Cannot ${action} ${type}. Decreasing of compatibility version is illegal."
+msgstr ""
+"Cannot ${action} ${type}. Decreasing of compatibility version is illegal."
+
+#: ACTION_TYPE_FAILED_GIVEN_VERSION_NOT_SUPPORTED
+msgid ""
+"Cannot ${action} ${type}. Selected Compatibility Version is not supported."
+msgstr ""
+"Cannot ${action} ${type}. Selected Compatibility Version is not supported."
+
+#: VDS_FENCING_OPERATION_FAILED
+msgid "Cannot ${action} ${type}. Fencing operation failed."
+msgstr "Cannot ${action} ${type}. Fencing operation failed."
+
+#: VDS_MANUAL_FENCING_CANNOT_FENCE_NON_SPM_WITHOUT_UNKNOWN_VMS
+msgid ""
+"Cannot manual fence Host that is not SPM and does not have VMs in Unknown "
+"status."
+msgstr ""
+"Cannot manual fence Host that is not SPM and does not have VMs in Unknown "
+"status."
+
+#: NETWORK_NETWORK_ADDR_MANDATORY_IN_STATIC_IP
+msgid "Netwrok address must be specify when using static ip"
+msgstr "Netwrok address must be specify when using static ip"
+
+#: ACTION_TYPE_FAILED_OBJECT_LOCKED
+msgid "Cannot ${action} ${type}. Same action in progress."
+msgstr "Cannot ${action} ${type}. Same action in progress."
+
+#: NETWORK_BOND_HAVE_ATTACHED_VLANS
+msgid "Bond attached to vlan, remove bonds vlan first"
+msgstr "Bond attached to vlan, remove bonds vlan first"
+
+#: NETWORK_INTERFACE_CONNECT_TO_VLAN
+msgid "Cannot attach non vlan network to vlan interface"
+msgstr "Cannot attach non vlan network to vlan interface"
+
+#: NETWORK_CANNOT_REMOVE_NETWORK_IN_USE_BY_VM
+msgid "Cannot remove network '${NetworkName}', it's in use by a Vm"
+msgstr "Cannot remove network '${NetworkName}', it's in use by a Vm"
+
+#: ACTION_TYPE_FAILED_DISK_MAX_SIZE_EXCEEDED
+msgid "Cannot create disk more then ${max}_disk_size GB"
+msgstr "Cannot create disk more then ${max}_disk_size GB"
+
+#: NETWORK_NETWORK_HOST_IS_BUSY
+msgid ""
+"Cannot edit network while host is active, change the host to maintenance and "
+"try again"
+msgstr ""
+"Cannot edit network while host is active, change the host to maintenance and "
+"try again"
+
+#: VMT_CANNOT_CHANGE_IMAGES_TEMPLATE
+msgid "Cannot change template images format"
+msgstr "Cannot change template images format"
+
+#: VMT_CANNOT_IMPORT_RAW_IMAGE_WITH_SNAPSHOTS
+msgid "Cannot chage image format to raw when image have snapshots"
+msgstr "Cannot chage image format to raw when image have snapshots"
+
+#: VMT_CANNOT_IMPORT_RAW_IMAGE_WITH_TEMPLATE
+msgid "Cannot change image format to raw when Vm has Template"
+msgstr "Cannot change image format to raw when Vm has Template"
+
+#: VM_CANNOT_EXPORT_RAW_FORMAT
+msgid "Cannot change format to RAW on export vm"
+msgstr "Cannot change format to RAW on export vm"
+
+#: ACTION_TYPE_FAILED_TEMPLATE_NOT_FOUND_ON_EXPORT_DOMAIN
+msgid ""
+"Cannot export VM. Template ${TemplateName} does not exist on the export "
+"domain. if you want to export VM without its template please use "
+"TemplateMustExists=false"
+msgstr ""
+"Cannot export VM. Template ${TemplateName} does not exist on the export "
+"domain. if you want to export VM without its template please use "
+"TemplateMustExists=false"
+
+#: ACTION_TYPE_FAILED_VM_NOT_FOUND_ON_EXPORT_DOMAIN
+msgid "Cannot delete Vm, Vm not exists in export domain"
+msgstr "Cannot delete Vm, Vm not exists in export domain"
+
+#: ACTION_NOT_SUPPORTED_FOR_CLUSTER_POOL_LEVEL
+msgid ""
+"The Action ${action} is not supported for this Cluster or Data Center "
+"compatibility version"
+msgstr ""
+"The Action ${action} is not supported for this Cluster or Data Centre "
+"compatibility version"
+
+#: ACTION_TYPE_FAILED_MAX_CPU_PER_SOCKET
+msgid "Cannot ${action} ${type}. Max number of cpu per socket exceeded"
+msgstr "Cannot ${action} ${type}. Max number of cpu per socket exceeded"
+
+#: ACTION_TYPE_FAILED_MAX_NUM_CPU
+msgid "Cannot ${action} ${type}. Max number of cpu exceeded"
+msgstr "Cannot ${action} ${type}. Max number of cpu exceeded"
+
+#: ACTION_TYPE_FAILED_MAX_NUM_SOCKETS
+msgid "Cannot ${action} ${type}. Max number of sockets exceeded"
+msgstr "Cannot ${action} ${type}. Max number of sockets exceeded"
+
+#: VMT_CANNOT_IMPORT_TEMPLATE_EXISTS
+msgid ""
+"Import Template failed - Template Id already exist in the system. Please "
+"remove the Template (${TemplateName}) from RHEV-M system first"
+msgstr ""
+"Import Template failed - Template Id already exist in the system. Please "
+"remove the Template (${TemplateName}) from RHEV-M system first"
+
+#: VM_CANNOT_IMPORT_TEMPLATE_NAME_EXISTS
+msgid ""
+"Import Template failed - Template Name already exist in the system. Please "
+"rename the Template in RHEV-M system first"
+msgstr ""
+"Import Template failed - Template Name already exist in the system. Please "
+"rename the Template in RHEV-M system first"
+
+#: VM_CANNOT_IMPORT_VM_EXISTS
+msgid ""
+"Import VM failed - VM Id already exist in the system. Please remove the VM "
+"(${VmName}) from RHEV-M system first"
+msgstr ""
+"Import VM failed - VM Id already exist in the system. Please remove the VM "
+"(${VmName}) from RHEV-M system first"
+
+#: VM_CANNOT_IMPORT_VM_NAME_EXISTS
+msgid ""
+"Import VM failed - VM Name already exist in the system. Please rename the VM "
+"in RHEV-M system first"
+msgstr ""
+"Import VM failed - VM Name already exist in the system. Please rename the VM "
+"in RHEV-M system first"
+
+#: TAGS_CANNOT_EDIT_READONLY_TAG
+msgid "Cannot edit readonly tag"
+msgstr "Cannot edit readonly tag"
+
+#: VM_CANNOT_REMOVE_HAS_RUNNING_TASKS
+msgid "Cannot force remove VM when there are running tasks."
+msgstr "Cannot force remove VM when there are running tasks."
+
+#: ACTION_TYPE_FAILED_IMPORTED_TEMPLATE_IS_MISSING
+msgid ""
+"Cannot import and collapse Vm, Template is missing in domain ${DomainName}"
+msgstr ""
+"Cannot import and collapse Vm, Template is missing in domain ${DomainName}"
+
+#: VM_POOL_CANNOT_CREATE_WITH_NO_VMS
+msgid "Cannot create Pool with 0 Vms"
+msgstr "Cannot create Pool with 0 Vms"
+
+#: ACTION_TYPE_FAILED_DISK_BOOT_IN_USE
+msgid "Cannot ${action} ${type}. Disk ${DiskName} already marked as boot"
+msgstr "Cannot ${action} ${type}. Disk ${DiskName} already marked as boot"
+
+#: VDS_GROUP_CANNOT_UPDATE_CPU_WHEN_RUNNING_VMS
+msgid "Cannot change cpu level when VMs are running."
+msgstr "Cannot change cpu level when VMs are running."
+
+#: VM_OR_TEMPLATE_ILLEGAL_PRIORITY_VALUE
+msgid ""
+"VM priority value passed the permitted max value, value should be between 0 "
+"and ${MaxValue}."
+msgstr ""
+"VM priority value passed the permitted max value, value should be between 0 "
+"and ${MaxValue}."
+
+#: ACTION_TYPE_FAILED_MIN_CPU_PER_SOCKET
+msgid "Minimum number of CPU per socket cannot be less than 1"
+msgstr "Minimum number of CPU per socket cannot be less than 1"
+
+#: ACTION_TYPE_FAILED_MIN_NUM_SOCKETS
+msgid "Minimum number of sockets cannot be less then 1"
+msgstr "Minimum number of sockets cannot be less then 1"
+
+#: ACTION_TYPE_FAILED_SPECIFY_DOMAIN_IS_NOT_EXPORT_DOMAIN
+msgid "The specify domain is not export domain"
+msgstr "The specify domain is not export domain"
+
+#: NETWORK_NETWORK_ADDR_IN_STATIC_IP_BAD_FORMAT
+msgid "Bad format of IP address"
+msgstr "Bad format of IP address"
+
+#: NETWORK_NETWORK_ADDR_IN_GATEWAY_BAD_FORMAT
+msgid "Bad format of gateway address"
+msgstr "Bad format of gateway address"
+
+#: NETWORK_NETWORK_ADDR_IN_SUBNET_BAD_FORMAT
+msgid "Bad format of subnet mask"
+msgstr "Bad format of subnet mask"
+
+#: NETWORK_CANNOT_CONTAIN_BOND_NAME
+msgid "Bad network name, network cannot start with 'bond'"
+msgstr "Bad network name, network cannot start with 'bond'"
+
+#: ACTION_TYPE_FAILED_STORAGE_POOL_IS_NOT_LOCAL
+msgid "Data center must be \"Local Storage\""
+msgstr "Data centre must be \"Local Storage\""
+
+#: ACTION_TYPE_FAILED_VDS_IS_NOT_IN_STORAGE_POOL
+msgid "Host is not attached to Data Center"
+msgstr "Host is not attached to Data Centre"
+
+#: VDS_CANNOT_ADD_MORE_THEN_ONE_HOST_TO_LOCAL_STORAGE
+msgid "Cannot add more then one host to \"Local Storage\" data center"
+msgstr "Cannot add more then one host to \"Local Storage\" data centre"
+
+#: VDS_CANNOT_REMOVE_HOST_WITH_LOCAL_STORAGE
+msgid "Cannot remove Host, Please remove the local storage first"
+msgstr "Cannot remove Host, Please remove the local storage first"
+
+#: VDS_CANNOT_ADD_LOCAL_STORAGE_TO_NON_LOCAL_HOST
+msgid "Can not add local storage domain to non local storage host"
+msgstr "Can not add local storage domain to non local storage host"
+
+#: VDS_CANNOT_REMOVE_LOCAL_STORAGE_ON_NON_LOCAL_HOST
+msgid "Can not remove local storage domain from non local storage host"
+msgstr "Can not remove local storage domain from non local storage host"
+
+#: VDS_GROUP_CANNOT_ADD_MORE_THEN_ONE_HOST_TO_LOCAL_STORAGE
+msgid "Cannot add more then one cluster to \"Local Storage\" data center"
+msgstr "Cannot add more then one cluster to \"Local Storage\" data centre"
+
+#: VDS_GROUP_SELECTION_ALGORITHM_MUST_BE_SET_TO_NONE_ON_LOCAL_STORAGE
+msgid ""
+"Selection algorithm must be set to \"None\" on \"Local Storage\" data center"
+msgstr ""
+"Selection algorithm must be set to \"None\" on \"Local Storage\" data centre"
+
+#: VDS_GROUP_CANNOT_DETACH_DATA_DOMAIN_FROM_LOCAL_STORAGE
+msgid "\"Local Storage\" data domain cannot be detached from data center"
+msgstr "\"Local Storage\" data domain cannot be detached from data centre"
+
+#: DATA_CENTER_LOCAL_STORAGE_NOT_SUPPORTED_IN_CURRENT_VERSION
+msgid "\"Local Storage\" is not supported with data center computability version"
+msgstr "\"Local Storage\" is not supported with data centre computability version"
+
+#: VDS_CANNOT_UPDATE_CLUSTER
+msgid "Updating Host's cluster is forbidden through update cluster action."
+msgstr "Updating Host's cluster is forbidden through update cluster action."
+
+#: VM_CANNOT_UPDATE_CLUSTER
+msgid "Updating VM's cluster is forbidden update vm action."
+msgstr "Updating VM's cluster is forbidden update vm action."
+
+#: VM_STATUS_NOT_VALID_FOR_UPDATE
+msgid "Cannot update a VM in this status. Try stopping the VM first."
+msgstr "Cannot update a VM in this status. Try stopping the VM first."
+
+#: PERMISSION_ADD_FAILED_PERMISSION_NOT_SENT
+msgid "Cannot add permission, no permission sent"
+msgstr "Cannot add permission, no permission sent"
+
+#: PERMISSION_ADD_FAILED_INVALID_ROLE_ID
+msgid "Cannot add permission, invalid role id"
+msgstr "Cannot add permission, invalid role id"
+
+#: PERMISSION_ADD_FAILED_INVALID_OBJECT_ID
+msgid "Cannot add permission, invalid object id or type"
+msgstr "Cannot add permission, invalid object id or type"
+
+#: PERMISSION_ADD_FAILED_USER_ID_MISMATCH
+msgid "Cannot add permission, no user/group id or id's mismatch"
+msgstr "Cannot add permission, no user/group id or id's mismatch"
+
+#: PERMISSION_ADD_FAILED_ONLY_SYSTEM_SUPER_USER_CAN_GIVE_ADMIN_ROLES
+msgid ""
+"Cannot add permission, only system super user can give permissions with "
+"admin role"
+msgstr ""
+"Cannot add permission, only system super user can give permissions with "
+"admin role"
+
+#: PERMISSION_ADD_FAILED_VM_IN_POOL
+msgid ""
+"Cannot add permission, VM is part of Vm-Pool, permission should be given on "
+"Vm-Pool instead"
+msgstr ""
+"Cannot add permission, VM is part of Vm-Pool, permission should be given on "
+"Vm-Pool instead"
+
+#: ROLE_WITH_ROLE_ID_DO_NOT_EXIST
+msgid "Role with this id does not exit"
+msgstr "Role with this id does not exit"
+
+#: VDS_GROUP_CANNOT_SET_THP_WITH_MEM_OVER_COMMIT
+msgid "Cluster cannot use transparent hugepages with memory over commit"
+msgstr "Cluster cannot use transparent hugepages with memory over commit"
+
+#: NETWORK_ATTACH_ILLEGAL_GATEWAY
+msgid "The default gateway should be set only on rhevm network"
+msgstr "The default gateway should be set only on rhevm network"
+
+#: MISSING_AD_ELEMENT_ID
+msgid "User/group id cannot be empty."
+msgstr "User/group id cannot be empty."
+
+#: NETWORK_ILEGAL_NETWORK_NAME
+msgid ""
+"Network name must be 1-15 long and can contain only 'A-Z', 'a-z', '0-9', '_' "
+"characters"
+msgstr ""
+"Network name must be 1-15 long and can contain only 'A-Z', 'a-z', '0-9', '_' "
+"characters"
+
+#: STORAGE_OPERATION_FAILED_SPM_NETWORK_PROBLEMS
+msgid ""
+"Storage related operations can't be performed while the Storage Pool Manager "
+"is down.\n"
+"Please make sure the Storage Pool Manager is up and running, and check "
+"network connectivity."
+msgstr ""
+"Storage related operations can't be performed while the Storage Pool Manager "
+"is down.\n"
+"Please make sure the Storage Pool Manager is up and running, and check "
+"network connectivity."
+
+#: VALIDATION.TAGS.INVALID_TAG_NAME
+msgid ""
+"Invalid tag name. Only 'A-Z', 'a-z', '0-9', '_' and '-' characters are "
+"valid."
+msgstr ""
+"Invalid tag name. Only 'A-Z', 'a-z', '0-9', '_' and '-' characters are "
+"valid."
+
+#: ERROR_CANNOT_FIND_ISO_IMAGE_PATH
+msgid "Invalid ISO image path"
+msgstr "Invalid ISO image path"
+
+#: ERROR_CANNOT_FIND_FLOPPY_IMAGE_PATH
+msgid "Invalid Floppy image path"
+msgstr "Invalid Floppy image path"
+
+#: VDS_ADD_STORAGE_SERVER_STATUS_MUST_BE_UP
+msgid "Cannot add storage server connection when host status is not up"
+msgstr "Cannot add storage server connection when host status is not up"
+
+#: USER_FAILED_TO_AUTHENTICATE_WRONG_USERNAME_OR_PASSWORD
+msgid "The user name or password is incorrect."
+msgstr "The user name or password is incorrect."
+
+#: StorageServerAccessPermissionError
+msgid "Host Agent does not have enough access permissions to mount point"
+msgstr "Host Agent does not have enough access permissions to mount point"
+
+#: MountTypeError
+msgid "Mount type error"
+msgstr "Mount type error"
+
+#: MountParsingError
+msgid "Mount parsing error"
+msgstr "Mount parsing error"
+
+#: InvalidIpAddress
+msgid "Invalid IP address"
+msgstr "Invalid IP address"
+
+#: VDS_GROUP_CANNOT_UPDATE_CPU_WITH_SUSPENDED_VMS
+msgid ""
+"Cannot update cluster and change CPU cluster level if there are suspended "
+"VMs in the cluster"
+msgstr ""
+"Cannot update cluster and change CPU cluster level if there are suspended "
+"VMs in the cluster"
+
+#: VDS_GROUP_CANNOT_LOWER_CPU_LEVEL
+msgid ""
+"Cannot update cluster and lower CPU cluster level if not all virtual "
+"machines in cluster are down"
+msgstr ""
+"Cannot update cluster and lower CPU cluster level if not all virtual "
+"machines in cluster are down"
+
+#: VDS_GROUP_CANNOT_UPDATE_COMPATIBILITY_VERSION_WITH_RUNNING_VMS
+msgid ""
+"Cannot update cluster and change its compatibility version if there are "
+"running VMs"
+msgstr ""
+"Cannot update cluster and change its compatibility version if there are "
+"running VMs"
+
+#: CUSTOM_VM_PROPERTIES_INVALID_VALUES_NOT_ALLOWED_IN_CURRENT_CLUSTER
+msgid "Cannot run VM with custom properties in current cluster"
+msgstr "Cannot run VM with custom properties in current cluster"
+
+#: USER_FAILED_TO_AUTHENTICATE_ACCOUNT_IS_LOCKED_OR_DISABLED
+msgid "Authentication failed. The user is either locked or disabled"
+msgstr "Authentication failed. The user is either locked or disabled"
+
+#: USER_FAILED_TO_AUTHENTICATE_DNS_ERROR
+msgid ""
+"Authentication Failed. Error in DNS configuration. Please verify the RHEV "
+"Manager host has a valid reverse DNS (PTR) record."
+msgstr ""
+"Authentication Failed. Error in DNS configuration. Please verify the RHEV "
+"Manager host has a valid reverse DNS (PTR) record."
+
+#: USER_FAILED_TO_AUTHENTICATE_NO_KDCS_FOUND
+msgid ""
+"Authentication Failed. Please verify the fully qualified domain name that is "
+"used for authentication is correct."
+msgstr ""
+"Authentication Failed. Please verify the fully qualified domain name that is "
+"used for authentication is correct."
+
+#: USER_FAILED_TO_AUTHENTICATE_CLOCK_SKEW_TOO_GREAT
+msgid ""
+"Authentication Failed. RHEV Manager clock is not synchronized with directory "
+"services (must be within 5 minutes difference). Please verify the clocks "
+"are synchronized"
+msgstr ""
+"Authentication Failed. RHEV Manager clock is not synchronised with directory "
+"services (must be within 5 minutes difference). Please verify the clocks "
+"are synchronised"
+
+#: USER_FAILED_TO_AUTHENTICATE_CONNECTION_TIMED_OUT
+msgid ""
+"Authentication Failed. Connection to Active-Directory server has timed out. "
+"Please contact your system administrator"
+msgstr ""
+"Authentication Failed. Connection to Active-Directory server has timed out. "
+"Please contact your system administrator"
+
+#: USER_FAILED_TO_AUTHENTICATE_WRONG_REALM
+msgid ""
+"Authentication Failed. Wrong domain name was provided for "
+"authenticationBlockDeviceActionError=Error block device action"
+msgstr ""
+"Authentication Failed. Wrong domain name was provided for "
+"authenticationBlockDeviceActionError=Error block device action"
+
+#: BlockStorageDomainMasterFSCKError
+msgid "BlockSD master file system FSCK error"
+msgstr "BlockSD master file system FSCK error"
+
+#: BlockStorageDomainMasterMountError
+msgid "BlockSD master file system mount error"
+msgstr "BlockSD master file system mount error"
+
+#: CannotAccessLogicalVolume
+msgid "Cannot access Logical Volume"
+msgstr "Cannot access Logical Volume"
+
+#: CannotCreateLogicalVolume
+msgid "Cannot create Logical Volume"
+msgstr "Cannot create Logical Volume"
+
+#: CannotDeactivateLogicalVolume
+msgid "Cannot deactivate Logical Volume"
+msgstr "Cannot deactivate Logical Volume"
+
+#: CannotRemoveLogicalVolume
+msgid "Cannot remove Logical Volume"
+msgstr "Cannot remove Logical Volume"
+
+#: ExportError
+msgid "Error exporting VM"
+msgstr "Error exporting VM"
+
+#: GeneralException
+msgctxt "GeneralException"
+msgid "General Exception"
+msgstr "General Exception"
+
+#: HostIdMismatch
+msgid "Host id not found or does not match manager host id"
+msgstr "Host id not found or does not match manager host id"
+
+#: ImageDeleteError
+msgid "Could not remove all files"
+msgstr "Could not remove all files"
+
+#: ImageIsNotEmpty
+msgid "Image is not empty"
+msgstr "Image is not empty"
+
+#: ImageMissingFromVm
+msgid "Image missing from VM"
+msgstr "Image missing from VM"
+
+#: ImagePathError
+msgid "Image path does not exist or cannot be accessed/created"
+msgstr "Image path does not exist or cannot be accessed/created"
+
+#: ImagesActionError
+msgid "Error images action"
+msgstr "Error images action"
+
+#: ImageValidationError
+msgid "Image validation error"
+msgstr "Image validation error"
+
+#: ImportError
+msgid "Error importing image"
+msgstr "Error importing image"
+
+#: ImportInfoError
+msgid "Import candidate info error"
+msgstr "Import candidate info error"
+
+#: ImportUnknownType
+msgid "Unknown import type"
+msgstr "Unknown import type"
+
+#: IncorrectFormat
+msgid "Incorrect Volume format"
+msgstr "Incorrect Volume format"
+
+#: InvalidParameterException
+msgid "Invalid parameter"
+msgstr "Invalid parameter"
+
+#: InvalidTask
+msgid "Task invalid"
+msgstr "Task invalid"
+
+#: LogicalVolumeExtendError
+msgid "Logical Volume extend failed"
+msgstr "Logical Volume extend failed"
+
+#: MergeSnapshotsError
+msgid "Error merging snapshots"
+msgstr "Error merging snapshots"
+
+#: MetaDataKeyError
+msgid "Meta data key error"
+msgstr "Meta data key error"
+
+#: MetaDataKeyNotFoundError
+msgid "Meta Data key not found error"
+msgstr "Meta Data key not found error"
+
+#: MetaDataSealIsBroken
+msgid "Meta Data seal is broken (checksum mismatch)"
+msgstr "Meta Data seal is broken (checksum mismatch)"
+
+#: MetaDataValidationError
+msgid "Meta Data self-validation failed"
+msgstr "Meta Data self-validation failed"
+
+#: MoveImageError
+msgid "Error moving image"
+msgstr "Error moving image"
+
+#: NotImplementedException
+msgid "Method not implemented"
+msgstr "Method not implemented"
+
+#: PhysDevInitializationError
+msgid ""
+"Physical device initialization failed. Check that the device is empty. "
+"Please remove all files and partitions from the device."
+msgstr ""
+"Physical device initialisation failed. Check that the device is empty. "
+"Please remove all files and partitions from the device."
+
+#: ReconstructMasterError
+msgid "Cannot reconstruct master domain"
+msgstr "Cannot reconstruct master domain"
+
+#: ResourceException
+msgctxt "ResourceException"
+msgid "General Exception"
+msgstr "General Exception"
+
+#: AcquireLockFailure
+msgid "Could not obtain lock"
+msgstr "Could not obtain lock"
+
+#: SpmFenceError
+msgid "Error fencing SPM"
+msgstr "Error fencing SPM"
+
+#: SpmParamsMismatch
+msgid "Pool previous lver/id don't match request"
+msgstr "Pool previous lver/id don't match request"
+
+#: SpmStartError
+msgid "Error starting SPM"
+msgstr "Error starting SPM"
+
+#: SpmStatusError
+msgid "Not SPM"
+msgstr "Not SPM"
+
+#: SpmStopError
+msgid "Error stopping SPM"
+msgstr "Error stopping SPM"
+
+#: StorageDomainActionError
+msgid "Error in storage domain action"
+msgstr "Error in storage domain action"
+
+#: StorageDomainActivateError
+msgid "Error activating storage domain"
+msgstr "Error activating storage domain"
+
+#: StorageDomainAlreadyExists
+msgid "Storage domain already exists"
+msgstr "Storage domain already exists"
+
+#: StorageDomainAttachError
+msgid "Error attaching storage domain"
+msgstr "Error attaching storage domain"
+
+#: StorageDomainCreationError
+msgid "Error creating a storage domain"
+msgstr "Error creating a storage domain"
+
+#: StorageDomainDeactivateError
+msgid "Error deactivating storage domain"
+msgstr "Error deactivating storage domain"
+
+#: StorageDomainDetachError
+msgid "Error detaching storage domain"
+msgstr "Error detaching storage domain"
+
+#: StorageDomainDoesNotExist
+msgid ""
+"Storage domain cannot be reached from the selected Host. Try to select "
+"another Host."
+msgstr ""
+"Storage domain cannot be reached from the selected Host. Try to select "
+"another Host."
+
+#: StorageDomainFormatError
+msgid "Error formating a storage domain"
+msgstr "Error formating a storage domain"
+
+#: StorageDomainNotEmpty
+msgid ""
+"Error in creating a Storage Domain. The selected storage path is not empty "
+"(probably contains another Storage Domain). Either remove the existing "
+"Storage Domain from this path, or change the Storage path)."
+msgstr ""
+"Error in creating a Storage Domain. The selected storage path is not empty "
+"(probably contains another Storage Domain). Either remove the existing "
+"Storage Domain from this path, or change the Storage path)."
+
+#: StorageDomainFSNotMounted
+msgid "Storage domain remote path not mounted"
+msgstr "Storage domain remote path not mounted"
+
+#: StorageDomainLayoutError
+msgid "Storage domain layout corrupted"
+msgstr "Storage domain layout corrupted"
+
+#: StorageDomainMasterCopyError
+msgid "Error copying master storage domain's data"
+msgstr "Error copying master storage domain's data"
+
+#: StorageDomainMasterError
+msgid "Error marking master storage domain"
+msgstr "Error marking master storage domain"
+
+#: StorageDomainMasterUnmountError
+msgid "Error unmounting master storage domain"
+msgstr "Error unmounting master storage domain"
+
+#: StorageDomainMetadataCreationError
+msgid "Error creating a storage domain's metadata"
+msgstr "Error creating a storage domain's metadata"
+
+#: StorageDomainMetadataFileMissing
+msgid "Could not retrieve metadata file name for domain"
+msgstr "Could not retrieve metadata file name for domain"
+
+#: StorageDomainMetadataNotFound
+msgid "Storage domain invalid, metadata not found"
+msgstr "Storage domain invalid, metadata not found"
+
+#: StorageDomainNotActive
+msgid "Storage domain not active"
+msgstr "Storage domain not active"
+
+#: StorageDomainNotInPool
+msgid "Storage domain not in pool"
+msgstr "Storage domain not in pool"
+
+#: StorageException
+msgid "General Storage Exception"
+msgstr "General Storage Exception"
+
+#: StoragePoolActionError
+msgid "Error Data Center Storage action"
+msgstr "Error Data Centre Storage action"
+
+#: StoragePoolConnectionError
+msgid "Error Data Center Storage connection"
+msgstr "Error Data Centre Storage connection"
+
+#: StoragePoolCreationError
+msgid "Error creating Data Center Storage"
+msgstr "Error creating Data Centre Storage"
+
+#: StoragePoolDestroyingError
+msgid "Error destroying Data Center Storage"
+msgstr "Error destroying Data Centre Storage"
+
+#: StoragePoolDisconnectionError
+msgid "Error Data Center Storage disconnection"
+msgstr "Error Data Centre Storage disconnection"
+
+#: StoragePoolHasPotentialMaster
+msgid "Master role should be moved to another domain"
+msgstr "Master role should be moved to another domain"
+
+#: StoragePoolInternalError
+msgid "Data Center Storage not defined"
+msgstr "Data Centre Storage not defined"
+
+#: StoragePoolMasterNotFound
+msgid "Cannot find master domain"
+msgstr "Cannot find master domain"
+
+#: StoragePoolNotConnected
+msgid "Data Center Storage not connected"
+msgstr "Data Centre Storage not connected"
+
+#: StoragePoolTooManyMasters
+msgid "Too many masters for StoragePool"
+msgstr "Too many masters for StoragePool"
+
+#: StoragePoolWrongMaster
+msgid "Wrong Master domain or its version"
+msgstr "Wrong Master domain or its version"
+
+#: StoragePoolUnknown
+msgid "Unknown pool id, pool not connected"
+msgstr "Unknown pool id, pool not connected"
+
+#: StorageServerActionError
+msgid "Error storage server action"
+msgstr "Error storage server action"
+
+#: StorageServerConnectionError
+msgid "Error storage server connection"
+msgstr "Error storage server connection"
+
+#: StorageServerDisconnectionError
+msgid "Error storage server disconnection"
+msgstr "Error storage server disconnection"
+
+#: StorageServeriSCSIError
+msgid "iSCSI connection error"
+msgstr "iSCSI connection error"
+
+#: StorageServerValidationError
+msgid "Error storage server validation"
+msgstr "Error storage server validation"
+
+#: StorageUpdateVmError
+msgid "Cannot update VM"
+msgstr "Cannot update VM"
+
+#: TaskClearError
+msgid "Could not clear task"
+msgstr "Could not clear task"
+
+#: TemplateCreationError
+msgid "Error creating template from VM"
+msgstr "Error creating template from VM"
+
+#: UnknownTask
+msgid "Task id unknown"
+msgstr "Task id unknown"
+
+#: VolumeAccessError
+msgid "Error accessing a volume"
+msgstr "Error accessing a volume"
+
+#: VolumeAlreadyExists
+msgid "Volume already exists"
+msgstr "Volume already exists"
+
+#: VolumeCreationError
+msgid "Error creating a new volume"
+msgstr "Error creating a new volume"
+
+#: VolumeDoesNotExist
+msgid "Volume does not exist"
+msgstr "Volume does not exist"
+
+#: VolumeExtendingError
+msgid "Error extending volume"
+msgstr "Error extending volume"
+
+#: VolumeGeneralException
+msgctxt "VolumeGeneralException"
+msgid "General Exception"
+msgstr "General Exception"
+
+#: UnicodeArgumentException
+msgid "Unicode arguments are not supported"
+msgstr "Unicode arguments are not supported"
+
+#: VolumeGroupActionError
+msgid "Error volume group action"
+msgstr "Error volume group action"
+
+#: VolumeGroupAlreadyExistsError
+msgid "Volume Group Already Exists"
+msgstr "Volume Group Already Exists"
+
+#: VolumeGroupCreateError
+msgid "Cannot create Volume Group"
+msgstr "Cannot create Volume Group"
+
+#: VolumeGroupDoesNotExist
+msgid "Volume Group does not exist"
+msgstr "Volume Group does not exist"
+
+#: VolumeGroupExtendError
+msgid "Cannot extend Volume Group"
+msgstr "Cannot extend Volume Group"
+
+#: VolumeGroupPermissionsError
+msgid "Could not update/change volume group permissions"
+msgstr "Could not update/change volume group permissions"
+
+#: VolumeGroupSizeError
+msgid "Volume Group not big enough"
+msgstr "Volume Group not big enough"
+
+#: OrphanVolumeError
+msgid "Orphan volume, volume hasn't image"
+msgstr "Orphan volume, volume hasn't image"
+
+#: VolumeImageHasChildren
+msgid "Cannot delete volume image which has  children (non-ethical)"
+msgstr "Cannot delete volume image which has  children (non-ethical)"
+
+#: VolumeIsBusy
+msgid "Volume is busy"
+msgstr "Volume is busy"
+
+#: VolumeMetadataReadError
+msgid "Error while processing volume meta data"
+msgstr "Error while processing volume meta data"
+
+#: VolumeMetadataWriteError
+msgid "Error while updating volume meta data"
+msgstr "Error while updating volume meta data"
+
+#: VolumeUnlinkError
+msgid "Volume unlink failed"
+msgstr "Volume unlink failed"
+
+#: copyerr
+msgid "Copy failed"
+msgstr "Copy failed"
+
+#: createErr
+msgid "Error creating the requested Desktop"
+msgstr "Error creating the requested Desktop"
+
+#: down
+msgid "Desktop is down"
+msgstr "Desktop is down"
+
+#: exist
+msgid "Desktop already exists"
+msgstr "Desktop already exists"
+
+#: imageErr
+msgid "Drive image file could not be found"
+msgstr "Drive image file could not be found"
+
+#: migrateErr
+msgid "Fatal error during migration"
+msgstr "Fatal error during migration"
+
+#: MissParam
+msgid "Missing required parameter"
+msgstr "Missing required parameter"
+
+#: nfsErr
+msgid "Storage Domain access timeout"
+msgstr "Storage Domain access timeout"
+
+#: noConPeer
+msgid "Could not connect to peer VDS"
+msgstr "Could not connect to peer VDS"
+
+#: nonresp
+msgid "Guest agent non-responsive"
+msgstr "Guest agent non-responsive"
+
+#: noVM
+msgid "Desktop does not exist"
+msgstr "Desktop does not exist"
+
+#: noVmType
+msgid "Unsupported VM type"
+msgstr "Unsupported VM type"
+
+#: outOfMem
+msgid "Not enough free memory to create Desktop"
+msgstr "Not enough free memory to create Desktop"
+
+#: recovery
+msgid "Recovering from crash or Initializing"
+msgstr "Recovering from crash or Initialising"
+
+#: sparse
+msgid "sparse creation faild"
+msgstr "sparse creation faild"
+
+#: ticketErr
+msgid "Error while setting spice ticket"
+msgstr "Error while setting spice ticket"
+
+#: unexpected
+msgid "Unexpected exception"
+msgstr "Unexpected exception"
+
+#: unsupFormat
+msgid "Unsupported image format"
+msgstr "Unsupported image format"
+
+#: AddiSCSINodeError
+msgid "Add iSCSI node error"
+msgstr "Add iSCSI node error"
+
+#: AddiSCSIPortalError
+msgid "Add iSCSI portal error"
+msgstr "Add iSCSI portal error"
+
+#: AddTaskError
+msgid "TaskManager error, unable to add task"
+msgstr "TaskManager error, unable to add task"
+
+#: CannotActivateLogicalVolume
+msgid "Cannot activate Logical Volume"
+msgstr "Cannot activate Logical Volume"
+
+#: CannotCloneVolume
+msgid "Cannot clone volume"
+msgstr "Cannot clone volume"
+
+#: CannotShareVolume
+msgid "Cannot share volume"
+msgstr "Cannot share volume"
+
+#: CopyImageError
+msgid "low level Image copy failed"
+msgstr "low level Image copy failed"
+
+#: DestImageActionError
+msgid "Error during destination image manipulation"
+msgstr "Error during destination image manipulation"
+
+#: GetAllLogicalVolumeTagsError
+msgid "Cannot get tags of all Logical Volumes of Volume Group"
+msgstr "Cannot get tags of all Logical Volumes of Volume Group"
+
+#: GetFloppyListError
+msgid "Cannot get floppy list"
+msgstr "Cannot get floppy list"
+
+#: GetiSCSISessionListError
+msgid "Get iSCSI session list error"
+msgstr "Get iSCSI session list error"
+
+#: GetIsoListError
+msgid "Cannot get ISO list"
+msgstr "Cannot get ISO list"
+
+#: GetLogicalVolumeDevError
+msgid "Cannot get physical devices of logical volume"
+msgstr "Cannot get physical devices of logical volume"
+
+#: GetLogicalVolumesByTagError
+msgid "Cannot get Logical Volumes with specific tag"
+msgstr "Cannot get Logical Volumes with specific tag"
+
+#: GetLogicalVolumeTagError
+msgid "Cannot get tags of Logical Volumes"
+msgstr "Cannot get tags of Logical Volumes"
+
+#: GetStorageDomainListError
+msgid "Cannot get Storage Domains list"
+msgstr "Cannot get Storage Domains list"
+
+#: GetVolumeGroupListError
+msgid "Get Volume Group list error"
+msgstr "Get Volume Group list error"
+
+#: ImageIsEmpty
+msgid "Image is empty"
+msgstr "Image is empty"
+
+#: InternalVolumeNonWritable
+msgid "Volume cannot be access to writes, it's Internal volume"
+msgstr "Volume cannot be access to writes, it's Internal volume"
+
+#: InvalidTaskType
+msgid "Invalid task type"
+msgstr "Invalid task type"
+
+#: iSCSILoginError
+msgid "Failed to login to iSCSI node"
+msgstr "Failed to login to iSCSI node"
+
+#: iSCSISetupError
+msgid "Failed to setup iSCSI subsystem"
+msgstr "Failed to setup iSCSI subsystem"
+
+#: IsoCannotBeMasterDomain
+msgid "ISO domain cannot be a master storage domain"
+msgstr "ISO domain cannot be a master storage domain"
+
+#: IsSpm
+msgid "Operatino not allowed while SPM is active"
+msgstr "Operatino not allowed while SPM is active"
+
+#: LogicalVolumeAddTagError
+msgid "Add tag to Logical Volume error"
+msgstr "Add tag to Logical Volume error"
+
+#: LogicalVolumePermissionsError
+msgid "Cannot update/change logical volume permissions"
+msgstr "Cannot update/change logical volume permissions"
+
+#: LogicalVolumeRefreshError
+msgid "Cannot refresh Logical Volume"
+msgstr "Cannot refresh Logical Volume"
+
+#: LogicalVolumeRemoveTagError
+msgid "Remove tag from Logical Volume error"
+msgstr "Remove tag from Logical Volume error"
+
+#: LogicalVolumeScanError
+msgctxt "LogicalVolumeScanError"
+msgid "Logical volume scanning error"
+msgstr "Logical volume scanning error"
+
+#: LogicalVolumesListError
+msgid "Cannot get Logical Volumes list from Volume Group"
+msgstr "Cannot get Logical Volumes list from Volume Group"
+
+#: MetaDataMappingError
+msgid "Meta Data mapping failed"
+msgstr "Meta Data mapping failed"
+
+#: MiscBlockReadException
+msgid "Internal block device read failure"
+msgstr "Internal block device read failure"
+
+#: MiscBlockWriteException
+msgid "Internal block device write failure"
+msgstr "Internal block device write failure"
+
+#: MiscFileReadException
+msgid "Internal file read failure"
+msgstr "Internal file read failure"
+
+#: MiscFileWriteException
+msgid "Internal file write failure"
+msgstr "Internal file write failure"
+
+#: MultipathRestartError
+msgid "Multipath service restart error"
+msgstr "Multipath service restart error"
+
+#: OperationInProgress
+msgid "Operation is already in progress"
+msgstr "Operation is already in progress"
+
+#: RemoveiSCSINodeError
+msgid "Remove iSCSI node error"
+msgstr "Remove iSCSI node error"
+
+#: RemoveiSCSIPortalError
+msgid "Remove iSCSI portal error"
+msgstr "Remove iSCSI portal error"
+
+#: SetiSCSIAuthError
+msgid "Set iSCSI authentication error"
+msgstr "Set iSCSI authentication error"
+
+#: SetiSCSIPasswdError
+msgid "Set iSCSI password error"
+msgstr "Set iSCSI password error"
+
+#: SetiSCSIUsernameError
+msgid "Set iSCSI username error"
+msgstr "Set iSCSI username error"
+
+#: SharedVolumeNonWritable
+msgid "Shared volume is read only"
+msgstr "Shared volume is read only"
+
+#: SourceImageActionError
+msgid "Error during source image manipulation"
+msgstr "Error during source image manipulation"
+
+#: StorageDomainTypeError
+msgid "Unsupported Storage Domain type"
+msgstr "Unsupported Storage Domain type"
+
+#: StoragePoolAlreadyExists
+msgid "Error creating Data Center Storage (already exists)"
+msgstr "Error creating Data Centre Storage (already exists)"
+
+#: TaskInProgress
+msgid "Running Task in progress"
+msgstr "Running Task in progress"
+
+#: TaskNotFinished
+msgid "Task not finished"
+msgstr "Task not finished"
+
+#: VolumeCannotGetParent
+msgid "Cannot get parent volume"
+msgstr "Cannot get parent volume"
+
+#: VolumeGroupAddTagError
+msgid "Add tag to Volume Group error"
+msgstr "Add tag to Volume Group error"
+
+#: VolumeGroupHasDomainTag
+msgid "Volume Group has domain tag - requires cleaning"
+msgstr "Volume Group has domain tag - requires cleaning"
+
+#: VolumeGroupReadTagError
+msgid "Read Volume Group's tag error"
+msgstr "Read Volume Group's tag error"
+
+#: VolumeGroupRemoveTagError
+msgid "Remove tag from Volume Group error"
+msgstr "Remove tag from Volume Group error"
+
+#: VolumeGroupScanError
+msgid "Volume Group scanning error"
+msgstr "Volume Group scanning error"
+
+#: VolumeGroupUninitialized
+msgid "Volume Group not initialize"
+msgstr "Volume Group not initialise"
+
+#: VolumeNonShareable
+msgid "Volume cannot be shared, it's not Shared/Template volume"
+msgstr "Volume cannot be shared, it's not Shared/Template volume"
+
+#: VolumeNonWritable
+msgid "Volume cannot be access to writes"
+msgstr "Volume cannot be access to writes"
+
+#: VolumeOwnershipError
+msgid "Volume ownership error"
+msgstr "Volume ownership error"
+
+#: VolumesZeroingError
+msgid "Cannot zero out volume"
+msgstr "Cannot zero out volume"
+
+#: StorageDomainNotMemberOfPool
+msgid "Domain is not member in pool"
+msgstr "Domain is not member in pool"
+
+#: StorageDomainAccessError
+msgid "Domain is not accessible"
+msgstr "Domain is not accessible"
+
+#: ERR_BAD_PARAMS
+msgid "Illegal Network parameters"
+msgstr "Illegal Network parameters"
+
+#: ERR_BAD_ADDR
+msgid "Illegal or Incomplete IP Address"
+msgstr "Illegal or Incomplete IP Address"
+
+#: ERR_BAD_NIC
+msgid "Interface name can't be found"
+msgstr "Interface name can't be found"
+
+#: ERR_USED_NIC
+msgid "Interface already in use"
+msgstr "Interface already in use"
+
+#: ERR_BAD_BONDING
+msgid "Invalid Bonding definition"
+msgstr "Invalid Bonding definition"
+
+#: ERR_BAD_VLAN
+msgid "Invalid VLan definition"
+msgstr "Invalid VLan definition"
+
+#: ERR_BAD_BRIDGE
+msgid "Invalid Network name"
+msgstr "Invalid Network name"
+
+#: ERR_USED_BRIDGE
+msgid "Network is currently being used"
+msgstr "Network is currently being used"
+
+#: VDC
+msgid "Internal RHEVM Error"
+msgstr "Internal RHEVM Error"
+
+#: DB
+msgid "Internal RHEVM Data-Base Error"
+msgstr "Internal RHEVM Data-Base Error"
+
+#: LICENSE
+msgid "Internal RHEVM License Error"
+msgstr "Internal RHEVM License Error"
+
+#: RESOURCE_MANAGER_VDS_NOT_FOUND
+msgid "Host does not exist in RHEVM cache"
+msgstr "Host does not exist in RHEVM cache"
+
+#: IRS_IMAGE_STATUS_ILLEGAL
+msgid "Illegal Image status in Storage Server"
+msgstr "Illegal Image status in Storage Server"
+
+#: RESOURCE_MANAGER_VM_SNAPSHOT_MISSMATCH
+msgid "Wrong Vm Snapshot - Snapshot does not belong to the Vm history"
+msgstr "Wrong Vm Snapshot - Snapshot does not belong to the Vm history"
+
+#: VDS_SHUTDOWN_ERROR
+msgid "Error Shutting Down Host"
+msgstr "Error Shutting Down Host"
+
+#: IRS_REPOSITORY_NOT_FOUND
+msgid "Error Allocating Storage Pool Manager"
+msgstr "Error Allocating Storage Pool Manager"
+
+#: MAC_POOL_INITIALIZATION_FAILED
+msgid "Error Initializing MAC Pool"
+msgstr "Error Initialising MAC Pool"
+
+#: MAC_POOL_NOT_INITIALIZED
+msgid "MAC Pool is not Initialized"
+msgstr "MAC Pool is not Initialised"
+
+#: MAC_POOL_NO_MACS_LEFT
+msgid "There is no available MAC addresses left in the MAC Pool."
+msgstr "There is no available MAC addresses left in the MAC Pool."
+
+#: DB_INIT
+msgid "Data-Base module is not Initialized"
+msgstr "Data-Base module is not Initialised"
+
+#: VM_POOL_CANNOT_ALLOCATE_VM
+msgid "Cannot Allocate Vm in VM Pool"
+msgstr "Cannot Allocate Vm in VM Pool"
+
+#: RESOURCE_MANAGER_CANT_ALLOC_VDS_MIGRATION
+msgid "Could not allocate Host to run a new VM"
+msgstr "Could not allocate Host to run a new VM"
+
+#: RESOURCE_MANAGER_MIGRATION_FAILED_AT_DST
+msgid "Migration process failed on destination Host"
+msgstr "Migration process failed on destination Host"
+
+#: VM_INVALID_SERVER_CLUSTER_ID
+msgid "Illegal Host Cluster Id given"
+msgstr "Illegal Host Cluster Id given"
+
+#: VM_TEMPLATE_CANT_LOCATE_DISKS_IN_DB
+msgid "Cannot locate Template Disks in Data-Base"
+msgstr "Cannot locate Template Disks in Data-Base"
+
+#: USER_FAILED_POPULATE_DATA
+msgctxt "USER_FAILED_POPULATE_DATA"
+msgid "Failed to get User data from Active Directory"
+msgstr "Failed to get User data from Active Directory"
+
+#: DB_NO_SUCH_VM
+msgid "Could not find Vm in Data-Base"
+msgstr "Could not find Vm in Data-Base"
+
+#: VDS_FENCING_OPERATION_FAILED
+msgid "VDS Fencing operation failed."
+msgstr "VDS Fencing operation failed."
+
+#: VDS_NETWORK_ERROR
+msgid "Network error during communication with Host."
+msgstr "Network error during communication with Host."
+
+#: DeviceNotFound
+msgid "Device not found or not accessible"
+msgstr "Device not found or not accessible"
+
+#: CannotModifyVolumeTime
+msgid "Cannot change volume's modify time"
+msgstr "Cannot change volume's modify time"
+
+#: CannotDeleteVolume
+msgid "Volume deletion error"
+msgstr "Volume deletion error"
+
+#: CannotDeleteSharedVolume
+msgid "Shared Volume cannot be deleted"
+msgstr "Shared Volume cannot be deleted"
+
+#: NonLeafVolumeNotWritable
+msgid "Volume cannot be accessed to writes, it's not a leaf volume\t"
+msgstr "Volume cannot be accessed to writes, it's not a leaf volume\t"
+
+#: VolumeCopyError
+msgid "Volume copy failed"
+msgstr "Volume copy failed"
+
+#: ImageIsNotLegalChain
+msgid "Image is not a legal chain"
+msgstr "Image is not a legal chain"
+
+#: CouldNotValideTemplateOnTargetDomain
+msgid "Cannot validate template on target domain"
+msgstr "Cannot validate template on target domain"
+
+#: StoragePoolCheckError
+msgid "Pool check failed"
+msgstr "Pool check failed"
+
+#: BackupCannotBeMasterDomain
+msgid "Export domain cannot be a master storage domain"
+msgstr "Export domain cannot be a master storage domain"
+
+#: MissingOvfFileFromVM
+msgid "Missing OVF file from VM"
+msgstr "Missing OVF file from VM"
+
+#: ImageNotOnTargetDomain
+msgid "Image cannot be found on the specified domain"
+msgstr "Image cannot be found on the specified domain"
+
+#: VMPathNotExists
+msgid "Cannot found VMs directory"
+msgstr "Cannot found VMs directory"
+
+#: CannotConnectMultiplePools
+msgid "Cannot connect pool, already connected to another pool"
+msgstr "Cannot connect pool, already connected to another pool"
+
+#: StorageDomainStatusError
+msgid "Unsupported Storage Domain status"
+msgstr "Unsupported Storage Domain status"
+
+#: StorageDomainCheckError
+msgid "Domain has errors"
+msgstr "Domain has errors"
+
+#: StorageDomainTypeNotBackup
+msgid "Domain type should be 'Export' but is not"
+msgstr "Domain type should be 'Export' but is not"
+
+#: LogicalVolumeRenameError
+msgid "Cannot rename Logical Volume"
+msgstr "Cannot rename Logical Volume"
+
+#: CannotWriteAccessLogialVolume
+msgid "Cannot access logical volume for write"
+msgstr "Cannot access logical volume for write"
+
+#: CannotSetRWLogicalVolume
+msgid "Cannot set Logical volume RW permission"
+msgstr "Cannot set Logical volume RW permission"
+
+#: LVMSetupError
+msgid "LVM setup failed"
+msgstr "LVM setup failed"
+
+#: CouldNotRetrievePhysicalVolumeList
+msgctxt "CouldNotRetrievePhysicalVolumeList"
+msgid "Could not retrieve pv list"
+msgstr "Could not retrieve pv list"
+
+#: LogicalVolumeAlreadyExists
+msgid "Cannot create logical volume - already exists"
+msgstr "Cannot create logical volume - already exists"
+
+#: StorageDomainAlreadyAttached
+msgid ""
+"The Domain is already used by another Data Center.\n"
+"In order to use it, detach it from the Data Center it is currently attached "
+"to."
+msgstr ""
+"The Domain is already used by another Data Centre.\n"
+"In order to use it, detach it from the Data Centre it is currently attached "
+"to."
+
+#: MultipathSetupError
+msgid "Failed to setup multipath"
+msgstr "Failed to setup multipath"
+
+#: LogicalVolumesScanError
+msgctxt "LogicalVolumesScanError"
+msgid "Logical volume scanning error"
+msgstr "Logical volume scanning error"
+
+#: CannotActivateLogicalVolumes
+msgid "Cannot activate Logical Volumes"
+msgstr "Cannot activate Logical Volumes"
+
+#: GetLogicalVolumeDataError
+msgid "Cannot get Logical Volume Info"
+msgstr "Cannot get Logical Volume Info"
+
+#: CouldNotRetrieveLogicalVolumesList
+msgctxt "CouldNotRetrieveLogicalVolumesList"
+msgid "Could not retrieve pv list"
+msgstr "Could not retrieve pv list"
+
+#: MetaDataParamError
+msgid "Meta Data parameter invalid"
+msgstr "Meta Data parameter invalid"
+
+#: MiscBlockWriteIncomplete
+msgid "Internal block device write incomplete"
+msgstr "Internal block device write incomplete"
+
+#: NO_FREE_VM_IN_POOL
+msgid "Can not allocate VM. There is no available VMs in pool"
+msgstr "Can not allocate VM. There is no available VMs in pool"
+
+#: CannotDetachMasterStorageDomain
+msgid "Illegal action"
+msgstr "Illegal action"
+
+#: createIllegalVolumeSnapshotError
+msgid "Cannot create volume snapshot from illegal volume"
+msgstr "Cannot create volume snapshot from illegal volume"
+
+#: createVolumeRollbackError
+msgid "Failure create volume rollback"
+msgstr "Failure create volume rollback"
+
+#: createVolumeSizeError
+msgid "Requested size is too small. Must be larger or equal to 1."
+msgstr "Requested size is too small. Must be larger or equal to 1."
+
+#: DomainAlreadyLocked
+msgid "Cannot acquire lock, resource marked as locked"
+msgstr "Cannot acquire lock, resource marked as locked"
+
+#: DomainLockDoesNotExist
+msgid "Cannot release lock, resource not found"
+msgstr "Cannot release lock, resource not found"
+
+#: FileStorageDomainStaleNFSHandle
+msgid "Stale NFS handle on underlying NFS server"
+msgstr "Stale NFS handle on underlying NFS server"
+
+#: InvalidJob
+msgid "Job is invalid"
+msgstr "Job is invalid"
+
+#: InvalidPhysDev
+msgid "Invalid physical device"
+msgstr "Invalid physical device"
+
+#: PartitionedPhysDev
+msgid "Partitioned physical device"
+msgstr "Partitioned physical device"
+
+#: InvalidRecovery
+msgid "Recovery is invalid"
+msgstr "Recovery is invalid"
+
+#: InvalidTaskMng
+msgid "invalid Task Manager"
+msgstr "invalid Task Manager"
+
+#: MoveTemplateImageError
+msgid "Cannot move template's image because it is used by a VM."
+msgstr "Cannot move template's image because it is used by a VM."
+
+#: MultipleMoveImageError
+msgid "Error moving multiple image"
+msgstr "Error moving multiple image"
+
+#: OverwriteImageError
+msgid "Can't overwrite image"
+msgstr "Can't overwrite image"
+
+#: prepareIllegalVolumeError
+msgid "Cannot prepare illegal volume"
+msgstr "Cannot prepare illegal volume"
+
+#: StorageDomainActive
+msgid "Illegal action, domain active"
+msgstr "Illegal action, domain active"
+
+#: StorageDomainClassError
+msgid "Invalid domain class value"
+msgstr "Invalid domain class value"
+
+#: StorageDomainInsufficientPermissions
+msgid "Insufficient access permissions to underlying storage"
+msgstr "Insufficient access permissions to underlying storage"
+
+#: StorageDomainStateTransitionIllegal
+msgid "Domain state change illegal"
+msgstr "Domain state change illegal"
+
+#: StoragePoolConnected
+msgid "Cannot perform action while storage pool is connected"
+msgstr "Cannot perform action while storage pool is connected"
+
+#: StoragePoolHigherVersionMasterFound
+msgid "Found master domain with higher master version than input"
+msgstr "Found master domain with higher master version than input"
+
+#: StorageTypeError
+msgid "Storage type error"
+msgstr "Storage type error"
+
+#: TaskAborted
+msgid "Task is aborted"
+msgstr "Task is aborted"
+
+#: TaskDirError
+msgid "Can't find/access task dir"
+msgstr "Can't find/access task dir"
+
+#: TaskHasRefs
+msgid "operation cannot be performed - task has active references"
+msgstr "operation cannot be performed - task has active references"
+
+#: ActionStopped
+msgid "Action was stopped"
+msgstr "Action was stopped"
+
+#: TaskMetaDataLoadError
+msgid "Can't load Task Metadata"
+msgstr "Can't load Task Metadata"
+
+#: TaskMetaDataSaveError
+msgid "Can't save Task Metadata"
+msgstr "Can't save Task Metadata"
+
+#: TaskPersistError
+msgid "Can't persist task"
+msgstr "Can't persist task"
+
+#: TaskStateError
+msgid "Operation is not allowed in this task state"
+msgstr "Operation is not allowed in this task state"
+
+#: TaskStateTransitionError
+msgid "cannot move task to requested state"
+msgstr "cannot move task to requested state"
+
+#: UnmanagedTask
+msgid "Operation can't be performed on unmanaged task"
+msgstr "Operation can't be performed on unmanaged task"
+
+#: VolumeGroupRemoveError
+msgid "Volume Group remove error"
+msgstr "Volume Group remove error"
+
+#: VolumeGroupRenameError
+msgid "Volume Group rename error"
+msgstr "Volume Group rename error"
+
+#: InvalidDefaultExceptionException
+msgid "Cannot set exception as default, type not supported"
+msgstr "Cannot set exception as default, type not supported"
+
+#: MiscDirCleanupFailure
+msgid "Directory cleanup failure"
+msgstr "Directory cleanup failure"
+
+#: ResourceNamespaceNotEmpty
+msgid "Resource Namespace is not empty"
+msgstr "Resource Namespace is not empty"
+
+#: ResourceTimeout
+msgid "Resource timeout"
+msgstr "Resource timeout"
+
+#: StoragePoolDescriptionTooLongError
+msgid "Storage pool description is too long"
+msgstr "Storage pool description is too long"
+
+#: TooManyDomainsInStoragePoolError
+msgid "Too many domains in storage pool"
+msgstr "Too many domains in storage pool"
+
+#: StorageDomainDescriptionTooLongError
+msgid "Storage domain description is too long"
+msgstr "Storage domain description is too long"
+
+#: StorageDomainIsMadeFromTooManyPVs
+msgid "Storage domain is made from too many PVs"
+msgstr "Storage domain is made from too many PVs"
+
+#: TooManyPVsInVG
+msgid "Tried to create a VG from too many PVs"
+msgstr "Tried to create a VG from too many PVs"
+
+#: MetadataOverflowError
+msgid "Metadata is too big. Cannot change Metadata"
+msgstr "Metadata is too big. Cannot change Metadata"
+
+#: MergeVolumeRollbackError
+msgid "Cannot rollback merge volume"
+msgstr "Cannot rollback merge volume"
+
+#: ResourceReferenceInvalid
+msgid "Cannot perform operation. This resource has been released or expired"
+msgstr "Cannot perform operation. This resource has been released or expired"
+
+#: ResourceAcqusitionFailed
+msgid ""
+"Could not acquire resource. Probably resource factory threw an exception"
+msgstr ""
+"Could not acquire resource. Probably resource factory threw an exception"
+
+#: RHEVM_ERROR_CREATING_STORAGE_POOL
+msgid ""
+"Cannot create Storage Pool, please check all hosts can connect to the "
+"storage domains."
+msgstr ""
+"Cannot create Storage Pool, please check all hosts can connect to the "
+"storage domains."
+
+#: FAILED_CHANGE_CD_IS_MOUNTED
+msgid ""
+"Failed to perform \"Change CD\" operation, CD might be still in use by the VM.\n"
+"Please try to manually detach the CD from withing the VM:\n"
+"  1. Log in to the VM\n"
+"  2  For Linux VMs, un-mount the CD using umount command;\n"
+"     For Windows VMs, right click on the CD drive and click 'Eject';"
+msgstr ""
+"Failed to perform \"Change CD\" operation, CD might be still in use by the VM.\n"
+"Please try to manually detach the CD from withing the VM:\n"
+"  1. Log in to the VM\n"
+"  2  For Linux VMs, un-mount the CD using umount command;\n"
+"     For Windows VMs, right click on the CD drive and click 'Eject';"
+
+#: StorageDomainIllegalRemotePath
+msgid "Remote path is illegal"
+msgstr "Remote path is illegal"
+
+#: CannotFormatAttachedStorageDomain
+msgid "Cannot format attached storage domain"
+msgstr "Cannot format attached storage domain"
+
+#: CannotFormatStorageDomainInConnectedPool
+msgid "Cannot format storage domain in connected pool"
+msgstr "Cannot format storage domain in connected pool"
+
+#: VolumeGroupReplaceTagError
+msgid "Replace Volume Group tag error"
+msgstr "Replace Volume Group tag error"
+
+#: LogicalVolumeReplaceTagError
+msgid "Replace Logical Volume tag error"
+msgstr "Replace Logical Volume tag error"
+
+#: MkfsError
+msgid "Cannot create file system on device"
+msgstr "Cannot create file system on device"
+
+#: MissingTagOnLogicalVolume
+msgid "Missing logical volume tag."
+msgstr "Missing logical volume tag."
+
+#: LogicalVolumeDoesNotExistError
+msgid "Logical volume does not exist"
+msgstr "Logical volume does not exist"
+
+#: LogicalVolumeCachingError
+msgid "Logical volume cache error"
+msgstr "Logical volume cache error"
+
+#: LogicalVolumeWrongTagError
+msgid "Wrong logical volume tag"
+msgstr "Wrong logical volume tag"
+
+#: MetaDataGeneralError
+msgid "General Meta data error"
+msgstr "General Meta data error"
+
+#: ResourceDoesNotExist
+msgid "Resource does not exist"
+msgstr "Resource does not exist"
+
+#: InvalidResourceName
+msgid "Invalid resource name"
+msgstr "Invalid resource name"

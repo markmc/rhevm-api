@@ -104,6 +104,7 @@ sub do_trans {
 }
 
 sub query_trans {
+    return; # markmc hack
     my ($tf, $tt, $context) = @_;
     if ( $msg_str =~ m/\b$tf/i ) {
            my $result;

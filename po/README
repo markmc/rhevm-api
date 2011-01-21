@@ -1,0 +1,39 @@
+
+The .properties files are what the RHEV-M backend uses to translate
+error messages.
+
+rhevm-api.pot contains all of the messages from those files in .pot
+format.
+
+Place your translated .po files here and add to ALL_LINGUAS in the
+Makefile and just run make to generate the translated .properties
+files.
+
+The en_GB translation is given as an example.
+
+== Hacks ==
+
+A couple of hacks here:
+
+  - disabled en_GB.pl's interactive querying and assumed
+    no in query_trans()
+
+  - see:
+
+      po2prop: warning: Error processing: input en_GB.po, output en_GB.properties, template Merged.properties: 'NoneType' object has no attribute 'isfuzzy'
+
+    so did:
+
+      --- /usr/lib/python2.6/site-packages/translate/convert/po2prop.py~      2011-01-21 12:01:54.625931997 +0000
+      +++ /usr/lib/python2.6/site-packages/translate/convert/po2prop.py       2011-01-21 12:13:01.168931754 +0000
+      @@ -85,9 +85,8 @@
+                       postspaceend = len(line[delimiter_pos+1:].lstrip())
+                       postspace = line[delimiter_pos+1:delimiter_pos+(postspacestart-postspaceend)+1]
+                       delimiter = prespace + delimiter_char + postspace
+      -            if key in self.inputstore.locationindex:
+      +            if key in self.inputstore.locationindex and not self.inputstore.locationindex[key] is None:
+                       unit = self.inputstore.locationindex[key]
+      -                print key
+                       if unit.isfuzzy() and not self.includefuzzy or len(unit.target) == 0:
+                           value = unit.source
+                       else:
