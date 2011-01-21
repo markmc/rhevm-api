@@ -151,7 +151,6 @@ public class MockVmResource extends AbstractMockResource<VM> implements VmResour
 
     @Override public DevicesResource             getCdRomsResource()      { return null; }
     @Override public DevicesResource             getDisksResource()       { return null; }
-    @Override public DevicesResource             getFloppiesResource()    { return null; }
     @Override public DevicesResource             getNicsResource()        { return null; }
     @Override public SnapshotsResource           getSnapshotsResource()   { return null; }
     @Override public AssignedPermissionsResource getPermissionsResource() { return null; }

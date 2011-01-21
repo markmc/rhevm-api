@@ -36,7 +36,7 @@
     <Property Name="Stateless" Type="System.Boolean">False</Property>
     <Property Name="DisplayType" Type="System.String">Spice</Property>
     <Property Name="CdIsoPath" Type="System.String">foo.iso</Property>
-    <Property Name="FloppyPath" Type="System.String">bar.vfd</Property>
+    <Property Name="FloppyPath" Type="System.String" />
     <Property Name="Origin" Type="System.String">RHEV</Property>
     <Property Name="KvmEnabled" Type="System.Boolean">True</Property>
     <Property Name="RunAndPause" Type="System.Boolean">False</Property>

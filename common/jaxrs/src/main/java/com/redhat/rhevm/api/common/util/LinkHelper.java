@@ -32,7 +32,6 @@ import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.BaseResource;
 import com.redhat.rhevm.api.model.CdRom;
 import com.redhat.rhevm.api.model.Event;
-import com.redhat.rhevm.api.model.Floppy;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.Disk;
@@ -169,9 +168,6 @@ public class LinkHelper {
 
         map = new ParentToCollectionMap(DiskResource.class, DevicesResource.class, VM.class);
         TYPES.put(Disk.class, map);
-
-        map = new ParentToCollectionMap(DeviceResource.class, DevicesResource.class, VM.class);
-        TYPES.put(Floppy.class, map);
 
         map = new ParentToCollectionMap(HostResource.class, HostsResource.class);
         TYPES.put(Host.class, map);

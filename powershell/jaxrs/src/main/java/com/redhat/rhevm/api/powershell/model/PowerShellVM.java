@@ -63,14 +63,6 @@ public class PowerShellVM extends VM {
         this.cdIsoPath = cdIsoPath;
     }
 
-    private String floppyPath;
-    public String getFloppyPath() {
-        return floppyPath;
-    }
-    public void setFloppyPath(String floppyPath) {
-        this.floppyPath = floppyPath;
-    }
-
     private String taskIds;
 
     public String getTaskIds() {
@@ -194,7 +186,6 @@ public class PowerShellVM extends VM {
         vm.setType(entity.get("vmtype", PowerShellVmType.class).map());
         vm.setMemory(entity.get("memorysize", Integer.class) * 1024L * 1024L);
         vm.setCdIsoPath(entity.get("cdisopath"));
-        vm.setFloppyPath(entity.get("floppypath"));
 
         VmStatus status = parseStatus(entity.get("status"));
         if (status != null) {

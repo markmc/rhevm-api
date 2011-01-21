@@ -1,4 +1,4 @@
-  <!-- args: id, name, description, clusterId, templateId, memsize, bootSequence, nSockets, nCpus, cdIsoPath, floppyPath, runningOnHost, poolId -->
+  <!-- args: id, name, description, clusterId, templateId, memsize, bootSequence, nSockets, nCpus, cdIsoPath, runningOnHost, poolId -->
   <Object Type="RhevmCmd.CLIVm">
     <Property Name="VmId" Type="System.String">{0}</Property>
     <Property Name="Name" Type="System.String">{1}</Property>
@@ -33,7 +33,7 @@
     <Property Name="Stateless" Type="System.Boolean">False</Property>
     <Property Name="DisplayType" Type="System.String">Spice</Property>
     <Property Name="CdIsoPath" Type="System.String">{9}</Property>
-    <Property Name="FloppyPath" Type="System.String">{10}</Property>
+    <Property Name="FloppyPath" Type="System.String" />
     <Property Name="Origin" Type="System.String">RHEV</Property>
     <Property Name="KvmEnabled" Type="System.Boolean">True</Property>
     <Property Name="RunAndPause" Type="System.Boolean">False</Property>
@@ -46,7 +46,7 @@
     <Property Name="CurrentUserName" Type="System.String">Unknown</Property>
     <Property Name="LastLogoutTime" Type="System.Nullable`1[[System.DateTime, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
     <Property Name="ElapsedTime" Type="System.Decimal">384</Property>
-    <Property Name="RunningOnHost" Type="System.Guid">{11}</Property>
+    <Property Name="RunningOnHost" Type="System.Guid">{10}</Property>
     <Property Name="MigratingToHost" Type="System.Guid">00000000-0000-0000-0000-000000000000</Property>
     <Property Name="ApplicationList" Type="System.String[]">
       <Property Type="System.String" />
@@ -54,7 +54,7 @@
     <Property Name="DisplayPort" Type="System.Int32">5910</Property>
     <Property Name="HighlyAvailable" Type="System.Boolean">False</Property>
     <Property Name="TimeZone" Type="System.String" />
-    <Property Name="PoolId" Type="System.Guid">{12}</Property>
+    <Property Name="PoolId" Type="System.Guid">{11}</Property>
   </Object>
   <Object Type="RhevmCmd.MemoryStatistics">
     <Property Name="memSizeMb" Type="System.Int32">1024</Property>

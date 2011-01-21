@@ -79,7 +79,6 @@ public class MockTemplateResource extends AbstractMockResource<Template> impleme
 
     @Override public DevicesResource             getCdRomsResource()      { return null; }
     @Override public DevicesResource             getDisksResource()       { return null; }
-    @Override public DevicesResource             getFloppiesResource()    { return null; }
     @Override public DevicesResource             getNicsResource()        { return null; }
     @Override public AssignedPermissionsResource getPermissionsResource() { return null; }
     @Override public CreationResource            getCreationSubresource(String ids) { return null; }

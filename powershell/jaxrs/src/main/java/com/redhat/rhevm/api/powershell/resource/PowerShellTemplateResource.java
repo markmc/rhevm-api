@@ -28,8 +28,6 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.CpuTopology;
 import com.redhat.rhevm.api.model.Display;
-import com.redhat.rhevm.api.model.Floppy;
-import com.redhat.rhevm.api.model.Floppies;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.resource.AssignedPermissionsResource;
@@ -204,12 +202,6 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
     @Override
     public PowerShellReadOnlyDisksResource getDisksResource() {
         return new PowerShellReadOnlyDisksResource(getId(), shellPools, getParser(), "get-template", getUriProvider());
-    }
-
-    @Override
-    public ReadOnlyDevicesResource<Floppy, Floppies> getFloppiesResource() {
-        // Not available in powershell, so we cannot support this
-        return null;
     }
 
     @Override

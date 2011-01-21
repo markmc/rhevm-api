@@ -82,7 +82,7 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
     public static VM addLinks(UriInfo uriInfo, PowerShellVM vm) {
         VM ret = JAXBHelper.clone("vm", VM.class, vm);
 
-        String [] deviceCollections = { "cdroms", "disks", "floppies", "nics", "snapshots", "tags" };
+        String [] deviceCollections = { "cdroms", "disks", "nics", "snapshots", "tags" };
 
         ret.getLinks().clear();
 
@@ -318,15 +318,6 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
         }
     }
 
-    public class FloppyQuery extends PowerShellFloppiesResource.FloppyQuery {
-        public FloppyQuery(String id) {
-            super(id);
-        }
-        @Override protected String getFloppyPath() {
-            return runAndParseSingle("get-vm " + PowerShellUtils.escape(id)).getFloppyPath();
-        }
-    }
-
     @Override
     public PowerShellCdRomsResource getCdRomsResource() {
         return new PowerShellCdRomsResource(getId(), shellPools, new CdRomQuery(getId()), getUriProvider());
@@ -335,11 +326,6 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
     @Override
     public PowerShellDisksResource getDisksResource() {
         return new PowerShellDisksResource(getId(), shellPools, getParser(), "get-vm", getUriProvider(), getHttpHeaders());
-    }
-
-    @Override
-    public PowerShellFloppiesResource getFloppiesResource() {
-        return new PowerShellFloppiesResource(getId(), shellPools, new FloppyQuery(getId()), getUriProvider());
     }
 
     @Override

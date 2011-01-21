@@ -45,13 +45,12 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     public static int N_SOCKETS = 2;
     public static int N_CPUS = 4;
     public static String ISO_NAME = "foo.iso";
-    public static String VFD_NAME = "bar.vfd";
     public static String HOST_ID = "2";
     public static String POOL_ID = "3";
 
-    public static final String[] extraArgs = new String[] { CLUSTER_ID, TEMPLATE_ID, Integer.toString(MEMSIZE), Integer.toString(BOOTSEQUENCE), Integer.toString(N_SOCKETS), Integer.toString(N_CPUS), ISO_NAME, VFD_NAME, HOST_ID, POOL_ID };
+    public static final String[] extraArgs = new String[] { CLUSTER_ID, TEMPLATE_ID, Integer.toString(MEMSIZE), Integer.toString(BOOTSEQUENCE), Integer.toString(N_SOCKETS), Integer.toString(N_CPUS), ISO_NAME, HOST_ID, POOL_ID };
 
-    public static final String[] noHostArgs = new String[] { CLUSTER_ID, TEMPLATE_ID, Integer.toString(MEMSIZE), Integer.toString(BOOTSEQUENCE), Integer.toString(N_SOCKETS), Integer.toString(N_CPUS), ISO_NAME, VFD_NAME, "-1", POOL_ID };
+    public static final String[] noHostArgs = new String[] { CLUSTER_ID, TEMPLATE_ID, Integer.toString(MEMSIZE), Integer.toString(BOOTSEQUENCE), Integer.toString(N_SOCKETS), Integer.toString(N_CPUS), ISO_NAME, "-1", POOL_ID };
 
     private static final String ADD_COMMAND_PROLOG =
         "$templ = get-template -templateid \"" + TEMPLATE_ID + "\";$v = ";
