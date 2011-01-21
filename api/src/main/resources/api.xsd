@@ -1355,21 +1355,6 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="MemoryStatistics">
-    <xs:sequence>
-      <xs:element name="utilization" type="xs:unsignedInt" minOccurs="0" maxOccurs="1"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="CpuStatistics">
-    <xs:sequence>
-      <xs:element name="user" type="xs:decimal" minOccurs="0" maxOccurs="1"/>
-      <xs:element name="system" type="xs:decimal" minOccurs="0" maxOccurs="1"/>
-      <xs:element name="idle" type="xs:decimal" minOccurs="0" maxOccurs="1"/>
-      <xs:element name="load" type="xs:decimal" minOccurs="0" maxOccurs="1"/>
-    </xs:sequence>
-  </xs:complexType>
-
   <xs:element name="vms" type="VMs"/>
   <xs:element name="vm" type="VM"/>
 
@@ -1398,22 +1383,6 @@
           <xs:element name="origin" type="VmOrigin" minOccurs="0"/>
           <xs:element name="stateless" type="xs:boolean" minOccurs="0"/>
           <xs:element name="hooks_env" type="VmHooksEnvs" minOccurs="0"/>
-
-          <xs:element name="memory_statistics" type="MemoryStatistics" minOccurs="0" maxOccurs="1">
-            <xs:annotation>
-              <xs:appinfo>
-                <jaxb:property name="MemoryStatistics"/>
-              </xs:appinfo>
-            </xs:annotation>
-          </xs:element>
-
-          <xs:element name="cpu_statistics" type="CpuStatistics" minOccurs="0" maxOccurs="1">
-            <xs:annotation>
-              <xs:appinfo>
-                <jaxb:property name="CpuStatistics"/>
-              </xs:appinfo>
-            </xs:annotation>
-          </xs:element>
 
           <xs:element ref="vmpool" minOccurs="0" maxOccurs="1">
             <xs:annotation>
