@@ -51,7 +51,7 @@ public class PowerShellVmsResource
         buf.append("if ($_.runningonhost -ne ''-1'') '{");
         buf.append("  $h = get-host $_.runningonhost;");
         buf.append("  $nics = $h.getnetworkadapters();");
-        buf.append("  $nets = get-networks;");
+        buf.append("  $nets = get-networks -clusterid $h.hostclusterid;");
         buf.append("  $addr = $nics[0];");
         buf.append("  foreach ($net in $nets) {");
         buf.append("    if ($net.isdisplay) {");
