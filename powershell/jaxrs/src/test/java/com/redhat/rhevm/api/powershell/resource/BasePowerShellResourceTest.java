@@ -75,6 +75,16 @@ public class BasePowerShellResourceTest extends Assert {
         return buffer.toString();
     }
 
+    protected String formatXmlReturn(String type, Object[] args) {
+        String tmpl = PowerShellTestUtils.readClassPathFile(type + ".tmpl");
+        StringBuilder buffer = new StringBuilder();
+        buffer.append("<?xml version=\"1.0\"?>");
+        buffer.append("<Objects>");
+        buffer.append(MessageFormat.format(tmpl, args));
+        buffer.append("</Objects>");
+        return buffer.toString();
+    }
+
     protected String formatVersion(int major, int minor) {
         String tmpl = PowerShellTestUtils.readClassPathFile("version.tmpl");
         StringBuilder buffer = new StringBuilder();
