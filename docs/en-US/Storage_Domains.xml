@@ -272,13 +272,30 @@ Accept: application/xml
     <para>
       A <literal>storage_domain</literal> reference must be passed in the body of a <literal>DELETE</literal> request for a storage domain. The <literal>storage_domain</literal> reference must be in the form:
     </para>
-    <screen>&lt;storage_domain&gt;&lt;host id="..."/&gt;&lt;/storage_domain&gt;
+    <screen>&lt;storage_domain&gt;
+  &lt;host id="..."/&gt;
+&lt;/storage_domain&gt;
     </screen>
     <para>
       OR
     </para>
-    <screen>&lt;storage_domain&gt;&lt;host&gt;&lt;name&gt;...&lt;/name&gt;&lt;/host&gt;&lt;/storage_domain&gt;
+    <screen>&lt;storage_domain&gt;
+  &lt;host&gt;
+    &lt;name&gt;...&lt;/name&gt;
+  &lt;/host&gt;
+&lt;/storage_domain&gt;
     </screen>
+    <para>
+      Optionally, a <literal>format</literal> element may be passed to specify whether or not to format the storage domain after deletion. To format the storage domain after deletion:
+    </para>
+    <screen>&lt;storage_domain&gt;
+  &lt;host id="..."/&gt;
+  &lt;format&gt;true&lt;/format&gt;
+&lt;/storage_domain&gt;
+    </screen>
+    <para>  
+      If no <literal>format</literal> element is passed, the storage domain will not be formatted.
+    </para>
   </section>
 
   <section id="sect-REST_API_Guide-Storage_Domains-Activate">
