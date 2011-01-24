@@ -290,7 +290,7 @@ public class TestExpect extends TestCase {
      * resources somewhere.
      * @throws Exception on trouble.
      */
-    public void testSpawnLeaks1() throws Exception {
+    private void spawnLeaks1() throws Exception {
         Spawnable dummySpawn = (Spawnable)Mockito.mock(Spawnable.class);
         Mockito.when(Boolean.valueOf(dummySpawn.isClosed())).thenReturn(Boolean.TRUE);
         InputStream empty = new ByteArrayInputStream(new byte[0]);
@@ -309,7 +309,7 @@ public class TestExpect extends TestCase {
      * resources somewhere.
      * @throws Exception on trouble.
      */
-    public void testSpawnLeaks2() throws Exception {
+    private void sawnLeaks2() throws Exception {
         for (int i = 0; i < getLeakTestIterations(); i++) {
             try {
                 getSpawn(new String[0]).expectClose(1);
@@ -374,7 +374,7 @@ public class TestExpect extends TestCase {
      *
      * @throws Exception on trouble.
      */
-    public void testSpawnLeaks3() throws Exception {
+    private void spawnLeaks3() throws Exception {
         StringServer dropper = new StringServer();
         for (int i = 0; i < getLeakTestIterations(); i++) {
             try {
@@ -391,7 +391,7 @@ public class TestExpect extends TestCase {
      * leak resources somewhere.
      * @throws Exception on trouble.
      */
-    public void testSpawnLeaks4() throws Exception {
+    private void spawnLeaks4() throws Exception {
         // Spawn several processes in parallel as it goes a lot faster than
         // doing one at a time.  More than 10 didn't help.
         final int PARALLELLISM = 10;
@@ -443,7 +443,7 @@ public class TestExpect extends TestCase {
      *
      * @throws Exception on trouble.
      */
-    public void testSpawnLeaks5() throws Exception {
+    private void spawnLeaks5() throws Exception {
         // Spawn several processes in parallel as it goes a lot faster than
         // doing one at a time.  More than 10 didn't help.
         final int PARALLELLISM = 10;
