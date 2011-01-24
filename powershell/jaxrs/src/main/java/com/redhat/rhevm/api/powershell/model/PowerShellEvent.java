@@ -25,9 +25,16 @@ import java.util.Map;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import com.redhat.rhevm.api.model.Event;
+import com.redhat.rhevm.api.model.Host;
+import com.redhat.rhevm.api.model.LogSeverity;
+import com.redhat.rhevm.api.model.StorageDomain;
+import com.redhat.rhevm.api.model.Template;
+import com.redhat.rhevm.api.model.User;
+import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.powershell.enums.PowerShellLogSeverity;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
+import com.redhat.rhevm.api.powershell.util.UUID;
 
 public class PowerShellEvent {
 
@@ -65,7 +72,32 @@ public class PowerShellEvent {
             event.setTime(dates.get(entity.get("logtime")));
         }
 
+        if (entity.isSet("userid") && !entity.get("userid").equals(UUID.EMPTY)) {
+            User user = new User();
+            user.setId(entity.get("userid"));
+            event.setUser(user);
+        }
+        if (entity.isSet("vmid") && !entity.get("vmid").equals(UUID.EMPTY)) {
+            VM vm = new VM();
+            vm.setId(entity.get("vmid"));
+            event.setVm(vm);
+        }
+        if (entity.isSet("storagedomainid") && !entity.get("storagedomainid").equals(UUID.EMPTY)) {
+            StorageDomain sd = new StorageDomain();
+            sd.setId(entity.get("storagedomainid"));
+            event.setStorageDomain(sd);
+        }
+        if (entity.isSet("hostid")) {
+            Host host = new Host();
+            host.setId(entity.get("hostid", Integer.class).toString());
+            event.setHost(host);
+        }
+        if (entity.isSet("vmtemplateid") && !entity.get("vmtemplateid").equals(UUID.EMPTY)) {
+            Template template = new Template();
+            template.setId(entity.get("vmtemplateid"));
+            event.setTemplate(template);
+        }
+
         return event;
     }
-
 }
