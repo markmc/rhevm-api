@@ -316,12 +316,13 @@ public class Spawn {
             }
 
             buffer.rewind();
-            if (readMe.read(buffer) == -1) {
+            int nbytes = readMe.read(buffer);
+            if (nbytes == -1) {
                 // End of stream
                 throw new IOException("End of stream reached, no match found");
             }
             buffer.rewind();
-            for (int i = 0; i < buffer.limit(); i++) {
+            for (int i = 0; i < nbytes; i++) {
                 line.append((char)buffer.get(i));
             }
             if (line.toString().trim().toUpperCase().indexOf(pattern.toUpperCase()) != -1) {
