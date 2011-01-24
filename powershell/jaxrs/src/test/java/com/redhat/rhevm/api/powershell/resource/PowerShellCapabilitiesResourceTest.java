@@ -41,7 +41,7 @@ public class PowerShellCapabilitiesResourceTest extends BasePowerShellResourceTe
         assertNotNull(cpu.getLevel());
     }
 
-    private void checkVersion(VersionCaps version, int major, int minor, Boolean current) {
+    private void checkVersion(VersionCaps version, int major, int minor, boolean current) {
         assertEquals(major, version.getMajor());
         assertEquals(minor, version.getMinor());
         assertEquals(current, version.isCurrent());
@@ -64,6 +64,6 @@ public class PowerShellCapabilitiesResourceTest extends BasePowerShellResourceTe
         assertEquals(2, caps.getVersions().size());
 
         checkVersion(caps.getVersions().get(0), 2, 2, true);
-        checkVersion(caps.getVersions().get(1), 2, 1, null);
+        checkVersion(caps.getVersions().get(1), 2, 1, false);
     }
 }

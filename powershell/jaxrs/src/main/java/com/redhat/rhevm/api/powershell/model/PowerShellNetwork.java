@@ -62,13 +62,8 @@ public class PowerShellNetwork {
                 network.setVlan(vlan);
             }
 
-            if (entity.get("stp", Boolean.class)) {
-                network.setStp(true);
-            }
-
-            if (entity.get("isdisplay", Boolean.class)) {
-                network.setDisplay(true);
-            }
+            network.setStp(entity.get("stp", Boolean.class));
+            network.setDisplay(entity.get("isdisplay", Boolean.class));
 
             ret.add(network);
         }

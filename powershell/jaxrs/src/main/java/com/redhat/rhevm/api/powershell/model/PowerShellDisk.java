@@ -121,18 +121,10 @@ public class PowerShellDisk extends Disk {
             } catch (ClassCastException ex) {
                 disk.setFormat(entity.get("volumeformat", PowerShellVolumeFormat22.class).map());
             }
-            if (entity.get("volumetype", PowerShellVolumeType.class).map()) {
-                disk.setSparse(true);
-            }
-            if (entity.get("boot", Boolean.class)) {
-                disk.setBootable(true);
-            }
-            if (entity.get("wipeafterdelete", Boolean.class)) {
-                disk.setWipeAfterDelete(true);
-            }
-            if (entity.get("propagateerrors", PowerShellPropagateErrors.class).map()) {
-                disk.setPropagateErrors(true);
-            }
+            disk.setSparse(entity.get("volumetype", PowerShellVolumeType.class).map());
+            disk.setBootable(entity.get("boot", Boolean.class));
+            disk.setWipeAfterDelete(entity.get("wipeafterdelete", Boolean.class));
+            disk.setPropagateErrors(entity.get("propagateerrors", PowerShellPropagateErrors.class).map());
 
             disk.setVmSnapshotId(entity.get("vmsnapshotid"));
             disk.setParentId(entity.get("parentid"));

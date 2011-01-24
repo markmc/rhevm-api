@@ -39,9 +39,7 @@ public class DefaultCapabilitiesResource implements CapabilitiesResource {
         version.setMajor(major);
         version.setMinor(minor);
         version.setCPUs(new CPUs());
-        if (current) {
-            version.setCurrent(true);
-        }
+        version.setCurrent(current);
         return version;
     }
 

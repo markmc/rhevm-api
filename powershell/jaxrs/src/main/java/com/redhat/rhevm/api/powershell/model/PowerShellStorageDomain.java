@@ -53,9 +53,9 @@ public class PowerShellStorageDomain extends StorageDomain {
             storageDomain.setVgId(entity.get("vgid"));
 
             String domainType = entity.get("domaintype").toUpperCase();
-            if (domainType.endsWith(" (MASTER)")) {
+            storageDomain.setMaster(domainType.endsWith(" (MASTER)"));
+            if (storageDomain.isMaster()) {
                 domainType = domainType.split(" ")[0];
-                storageDomain.setMaster(true);
             }
             storageDomain.setType(StorageDomainType.fromValue(domainType));
 

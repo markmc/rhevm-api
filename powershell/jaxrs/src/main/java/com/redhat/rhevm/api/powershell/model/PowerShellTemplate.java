@@ -107,15 +107,10 @@ public class PowerShellTemplate extends Template {
             }
             template.setOs(os);
 
-            if (Boolean.TRUE.equals(entity.get("autostartup", Boolean.class))) {
-                template.setHighlyAvailable(new HighlyAvailable());
-                template.getHighlyAvailable().setValue(true);
-            }
+            template.setHighlyAvailable(new HighlyAvailable());
+            template.getHighlyAvailable().setValue(entity.get("autostartup", Boolean.class));
 
-            Boolean stateless = entity.get("isstateless", Boolean.class);
-            if (stateless != null) {
-                template.setStateless(stateless);
-            }
+            template.setStateless(entity.get("isstateless", Boolean.class));
 
             DisplayType displayType = PowerShellVM.parseDisplayType(entity.get("displaytype"));
             if (displayType != null) {
