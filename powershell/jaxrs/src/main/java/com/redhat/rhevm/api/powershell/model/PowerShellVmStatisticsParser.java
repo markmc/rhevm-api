@@ -17,11 +17,11 @@ public class PowerShellVmStatisticsParser extends AbstractStatisticsParser {
 
     public static final String GET_VMS_STATS = "$vm = get-vm {0} ; $vm.getmemorystatistics() ; $vm.getcpustatistics()";
 
-    private static boolean isMemory(PowerShellParser.Entity entity) {
+    static boolean isMemory(PowerShellParser.Entity entity) {
         return MEMORY_STATS_TYPE.equals(entity.getType());
     }
 
-    private static boolean isCpu(PowerShellParser.Entity entity) {
+    static boolean isCpu(PowerShellParser.Entity entity) {
         return CPU_STATS_TYPE.equals(entity.getType());
     }
 
@@ -39,7 +39,7 @@ public class PowerShellVmStatisticsParser extends AbstractStatisticsParser {
         return statistics;
     }
 
-    private static List<Statistic> parseMemoryStats(PowerShellParser.Entity entity) {
+    static List<Statistic> parseMemoryStats(PowerShellParser.Entity entity) {
         List<Statistic> statistics = new ArrayList<Statistic>();
         Statistic statistic = null;
 
@@ -63,7 +63,7 @@ public class PowerShellVmStatisticsParser extends AbstractStatisticsParser {
         return statistics;
     }
 
-    private static List<Statistic> parseCpuStats(PowerShellParser.Entity entity) {
+    static List<Statistic> parseCpuStats(PowerShellParser.Entity entity) {
         List<Statistic> statistics = new ArrayList<Statistic>();
         Statistic statistic = null;
 

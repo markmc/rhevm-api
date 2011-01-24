@@ -59,6 +59,20 @@
     <Property Name="TimeZone" Type="System.String" />
     <Property Name="PoolId" Type="System.Guid">1de2d827-4569-47cb-a3c7-643124ecc083</Property>
   </Object>
+  <Object Type="RhevmCmd.MemoryStatistics">
+    <Property Name="memSizeMb" Type="System.Int32">1024</Property>
+    <Property Name="usageMemPercent" Type="System.Int32">50</Property>
+  </Object>
+  <Object Type="RhevmCmd.CLICpu">
+    <Property Name="Name" Type="System.String">Virtual CPU</Property>
+    <Property Name="Model" Type="System.String">Virtual CPU</Property>
+    <Property Name="Cores" Type="System.Int32">1</Property>
+    <Property Name="Speed" Type="System.Decimal">0</Property>
+    <Property Name="User" Type="System.Decimal">10</Property>
+    <Property Name="System" Type="System.Decimal">20</Property>
+    <Property Name="Idle" Type="System.Decimal">30</Property>
+    <Property Name="Load" Type="System.Decimal">40</Property>
+  </Object>
   <Object Type="RhevmCmd.CLIHostNetworkAdapter">
     <Property Name="Id" Type="System.String">6704ab23-0614-4316-98f2-7b30a63cb59e</Property>
     <Property Name="Gateway" Type="System.String" />
@@ -133,6 +147,20 @@
     <Property Name="TimeZone" Type="System.String" />
     <Property Name="PoolId" Type="System.Guid">1de2d827-4569-47cb-a3c7-643124ecc083</Property>
   </Object>
+  <Object Type="RhevmCmd.MemoryStatistics">
+    <Property Name="memSizeMb" Type="System.Int32">1024</Property>
+    <Property Name="usageMemPercent" Type="System.Int32">50</Property>
+  </Object>
+  <Object Type="RhevmCmd.CLICpu">
+    <Property Name="Name" Type="System.String">Virtual CPU</Property>
+    <Property Name="Model" Type="System.String">Virtual CPU</Property>
+    <Property Name="Cores" Type="System.Int32">1</Property>
+    <Property Name="Speed" Type="System.Decimal">0</Property>
+    <Property Name="User" Type="System.Decimal">10</Property>
+    <Property Name="System" Type="System.Decimal">20</Property>
+    <Property Name="Idle" Type="System.Decimal">30</Property>
+    <Property Name="Load" Type="System.Decimal">40</Property>
+  </Object>
   <Object Type="System.DateTime">02/07/2010 10:27:02</Object>
   <Object Type="System.String">2010:07:20:10:27:02</Object>
   <Object Type="RhevmCmd.CLIVm">
@@ -192,6 +220,20 @@
     <Property Name="TimeZone" Type="System.String">GMT Standard Time</Property>
     <Property Name="PoolId" Type="System.Guid">00000000-0000-0000-0000-000000000000</Property>
   </Object>
+  <Object Type="RhevmCmd.MemoryStatistics">
+    <Property Name="memSizeMb" Type="System.Int32">1024</Property>
+    <Property Name="usageMemPercent" Type="System.Int32">50</Property>
+  </Object>
+  <Object Type="RhevmCmd.CLICpu">
+    <Property Name="Name" Type="System.String">Virtual CPU</Property>
+    <Property Name="Model" Type="System.String">Virtual CPU</Property>
+    <Property Name="Cores" Type="System.Int32">1</Property>
+    <Property Name="Speed" Type="System.Decimal">0</Property>
+    <Property Name="User" Type="System.Decimal">10</Property>
+    <Property Name="System" Type="System.Decimal">20</Property>
+    <Property Name="Idle" Type="System.Decimal">30</Property>
+    <Property Name="Load" Type="System.Decimal">40</Property>
+  </Object>
   <Object Type="System.DateTime">02/07/2010 10:58:41</Object>
   <Object Type="System.String">2010:07:20:10:58:41</Object>
   <Object Type="RhevmCmd.CLIVm">
@@ -250,6 +292,20 @@
     <Property Name="HighlyAvailable" Type="System.Boolean">False</Property>
     <Property Name="TimeZone" Type="System.String" />
     <Property Name="PoolId" Type="System.Guid">00000000-0000-0000-0000-000000000000</Property>
+  </Object>
+  <Object Type="RhevmCmd.MemoryStatistics">
+    <Property Name="memSizeMb" Type="System.Int32">1024</Property>
+    <Property Name="usageMemPercent" Type="System.Int32">50</Property>
+  </Object>
+  <Object Type="RhevmCmd.CLICpu">
+    <Property Name="Name" Type="System.String">Virtual CPU</Property>
+    <Property Name="Model" Type="System.String">Virtual CPU</Property>
+    <Property Name="Cores" Type="System.Int32">1</Property>
+    <Property Name="Speed" Type="System.Decimal">0</Property>
+    <Property Name="User" Type="System.Decimal">10</Property>
+    <Property Name="System" Type="System.Decimal">20</Property>
+    <Property Name="Idle" Type="System.Decimal">30</Property>
+    <Property Name="Load" Type="System.Decimal">40</Property>
   </Object>
   <Object Type="RhevmCmd.CLIHostNetworkAdapter">
     <Property Name="Id" Type="System.String">6704ab23-0614-4316-98f2-7b30a63cb59e</Property>

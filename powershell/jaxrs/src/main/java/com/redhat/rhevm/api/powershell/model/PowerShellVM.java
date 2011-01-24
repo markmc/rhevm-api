@@ -33,6 +33,8 @@ import com.redhat.rhevm.api.model.DisplayType;
 import com.redhat.rhevm.api.model.HighlyAvailable;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.OperatingSystem;
+import com.redhat.rhevm.api.model.Statistic;
+import com.redhat.rhevm.api.model.Statistics;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VmOrigin;
@@ -157,6 +159,12 @@ public class PowerShellVM extends VM {
             } else if (PowerShellAsyncTask.isStatus(entity)) {
                 last(ret).setCreationStatus(PowerShellAsyncTask.parseStatus(entity, last(ret).getCreationStatus()));
                 continue;
+            } else if (PowerShellVmStatisticsParser.isMemory(entity)) {
+                getStatistics(ret).addAll(PowerShellVmStatisticsParser.parseMemoryStats(entity));
+                continue;
+            }  else if (PowerShellVmStatisticsParser.isCpu(entity)) {
+                getStatistics(ret).addAll(PowerShellVmStatisticsParser.parseCpuStats(entity));
+                continue;
             }
 
             if (VM_TYPE.equals(entity.getType())) {
@@ -262,5 +270,13 @@ public class PowerShellVM extends VM {
     private static boolean isEmptyId(Object id) {
         return id instanceof String && id.equals(UUID.EMPTY)
                || id instanceof Integer && id.equals(-1);
+    }
+
+    private static List<Statistic> getStatistics(List<PowerShellVM> vms) {
+        VM vm = last(vms);
+        if (!vm.isSetStatistics()) {
+            vm.setStatistics(new Statistics());
+        }
+        return vm.getStatistics().getStatistics();
     }
 }

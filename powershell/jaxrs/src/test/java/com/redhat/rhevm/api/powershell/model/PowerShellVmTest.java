@@ -24,7 +24,11 @@ import java.util.List;
 
 import com.redhat.rhevm.api.model.BootDevice;
 import com.redhat.rhevm.api.model.DisplayType;
+import com.redhat.rhevm.api.model.Statistic;
+import com.redhat.rhevm.api.model.StatisticType;
+import com.redhat.rhevm.api.model.StatisticUnit;
 import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.model.ValueType;
 import com.redhat.rhevm.api.model.VmOrigin;
 import com.redhat.rhevm.api.model.VmStatus;
 import com.redhat.rhevm.api.model.VmType;
@@ -61,6 +65,7 @@ public class PowerShellVmTest extends PowerShellModelTest {
         }
         assertEquals(creationTime, v.getCreationTime().toString());
         assertEquals(origin, v.getOrigin());
+        verifyStatistics(v);
     }
 
     private void testBootDevices(VM vm, BootDevice ... bootDevices) {
@@ -79,6 +84,59 @@ public class PowerShellVmTest extends PowerShellModelTest {
         assertEquals(type, vm.getDisplay().getType());
         assertEquals(port, vm.getDisplay().getPort());
         assertEquals(address, vm.getDisplay().getAddress());
+    }
+
+    private void verifyStatistics(VM vm) {
+        assertTrue(vm.isSetStatistics());
+        List<Statistic> statistics = vm.getStatistics().getStatistics();
+        assertNotNull(statistics);
+        assertEquals(4, statistics.size());
+        verifyStatistic(statistics.get(0),
+                        "memory.installed",
+                        "Total mem configured",
+                        StatisticType.GAUGE,
+                        StatisticUnit.BYTES,
+                        ValueType.INTEGER,
+                        1024*1024*1024D);
+        verifyStatistic(statistics.get(1),
+                        "memory.used",
+                        "Memory used (agent)",
+                        StatisticType.GAUGE,
+                        StatisticUnit.BYTES,
+                        ValueType.INTEGER,
+                        1024*1024*1024/2D);
+        verifyStatistic(statistics.get(2),
+                        "cpu.current.guest",
+                        "CPU used by guest",
+                        StatisticType.GAUGE,
+                        StatisticUnit.PERCENT,
+                        ValueType.DECIMAL,
+                        10D);
+        verifyStatistic(statistics.get(3),
+                        "cpu.current.hypervisor",
+                        "CPU overhead",
+                        StatisticType.GAUGE,
+                        StatisticUnit.PERCENT,
+                        ValueType.DECIMAL,
+                        20D);
+    }
+
+    private void verifyStatistic(Statistic statistic,
+                                 String name,
+                                 String description,
+                                 StatisticType type,
+                                 StatisticUnit unit,
+                                 ValueType valueType,
+                                 double datum) {
+        assertEquals(name, statistic.getName());
+        assertEquals(description, statistic.getDescription());
+        assertEquals(type, statistic.getType());
+        assertEquals(unit, statistic.getUnit());
+        assertTrue(statistic.isSetValues());
+        assertEquals(valueType, statistic.getValues().getType());
+        assertTrue(statistic.getValues().isSetValues());
+        assertEquals(1, statistic.getValues().getValues().size());
+        assertEquals(datum, statistic.getValues().getValues().get(0).getDatum(), 0.1D);
     }
 
     @Test
