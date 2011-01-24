@@ -23,8 +23,9 @@ import java.io.File;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response.Status;
 
-import expectj.ExpectJ;
-import expectj.Spawn;
+import com.redhat.rhevm.api.powershell.expectj.ExpectJ;
+import com.redhat.rhevm.api.powershell.expectj.Spawn;
+import com.redhat.rhevm.api.powershell.expectj.TimeoutException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -82,7 +83,7 @@ public class PowerShellCmd {
 
         try {
             process.expect("</output>");
-        } catch (expectj.TimeoutException te) {
+        } catch (TimeoutException te) {
             // should never happen
         } catch (java.io.IOException ex) {
             throw new PowerShellException("Reading from powershell process failed", ex);
