@@ -1,0 +1,1368 @@
+<?xml version="1.0"?>
+<Objects>
+  <Object Type="System.DateTime">24/01/2011 15:20:35</Object>
+  <Object Type="System.String">2011:01:24:15:20:35</Object>
+  <Object Type="System.DateTime">24/01/2011 15:20:14</Object>
+  <Object Type="System.String">2011:01:24:15:20:14</Object>
+  <Object Type="System.DateTime">24/01/2011 15:19:58</Object>
+  <Object Type="System.String">2011:01:24:15:19:58</Object>
+  <Object Type="System.DateTime">24/01/2011 15:19:58</Object>
+  <Object Type="System.String">2011:01:24:15:19:58</Object>
+  <Object Type="System.DateTime">24/01/2011 15:19:58</Object>
+  <Object Type="System.String">2011:01:24:15:19:58</Object>
+  <Object Type="System.DateTime">24/01/2011 15:19:58</Object>
+  <Object Type="System.String">2011:01:24:15:19:58</Object>
+  <Object Type="System.DateTime">24/01/2011 15:19:58</Object>
+  <Object Type="System.String">2011:01:24:15:19:58</Object>
+  <Object Type="System.DateTime">24/01/2011 15:19:58</Object>
+  <Object Type="System.String">2011:01:24:15:19:58</Object>
+  <Object Type="System.DateTime">24/01/2011 15:17:01</Object>
+  <Object Type="System.String">2011:01:24:15:17:01</Object>
+  <Object Type="System.DateTime">24/01/2011 15:16:42</Object>
+  <Object Type="System.String">2011:01:24:15:16:42</Object>
+  <Object Type="System.DateTime">24/01/2011 15:16:38</Object>
+  <Object Type="System.String">2011:01:24:15:16:38</Object>
+  <Object Type="System.DateTime">24/01/2011 15:15:56</Object>
+  <Object Type="System.String">2011:01:24:15:15:56</Object>
+  <Object Type="System.DateTime">24/01/2011 15:14:56</Object>
+  <Object Type="System.String">2011:01:24:15:14:56</Object>
+  <Object Type="System.DateTime">24/01/2011 15:14:48</Object>
+  <Object Type="System.String">2011:01:24:15:14:48</Object>
+  <Object Type="System.DateTime">24/01/2011 11:37:53</Object>
+  <Object Type="System.String">2011:01:24:11:37:53</Object>
+  <Object Type="System.DateTime">24/01/2011 11:37:33</Object>
+  <Object Type="System.String">2011:01:24:11:37:33</Object>
+  <Object Type="System.DateTime">24/01/2011 11:35:09</Object>
+  <Object Type="System.String">2011:01:24:11:35:09</Object>
+  <Object Type="System.DateTime">24/01/2011 11:03:09</Object>
+  <Object Type="System.String">2011:01:24:11:03:09</Object>
+  <Object Type="System.DateTime">24/01/2011 11:03:09</Object>
+  <Object Type="System.String">2011:01:24:11:03:09</Object>
+  <Object Type="System.DateTime">24/01/2011 11:02:47</Object>
+  <Object Type="System.String">2011:01:24:11:02:47</Object>
+  <Object Type="System.DateTime">24/01/2011 11:02:10</Object>
+  <Object Type="System.String">2011:01:24:11:02:10</Object>
+  <Object Type="System.DateTime">24/01/2011 11:01:37</Object>
+  <Object Type="System.String">2011:01:24:11:01:37</Object>
+  <Object Type="System.DateTime">24/01/2011 11:01:26</Object>
+  <Object Type="System.String">2011:01:24:11:01:26</Object>
+  <Object Type="System.DateTime">24/01/2011 11:01:26</Object>
+  <Object Type="System.String">2011:01:24:11:01:26</Object>
+  <Object Type="System.DateTime">24/01/2011 11:01:25</Object>
+  <Object Type="System.String">2011:01:24:11:01:25</Object>
+  <Object Type="System.DateTime">24/01/2011 11:01:12</Object>
+  <Object Type="System.String">2011:01:24:11:01:12</Object>
+  <Object Type="System.DateTime">24/01/2011 11:01:11</Object>
+  <Object Type="System.String">2011:01:24:11:01:11</Object>
+  <Object Type="System.DateTime">24/01/2011 10:59:04</Object>
+  <Object Type="System.String">2011:01:24:10:59:04</Object>
+  <Object Type="System.DateTime">24/01/2011 10:59:04</Object>
+  <Object Type="System.String">2011:01:24:10:59:04</Object>
+  <Object Type="System.DateTime">24/01/2011 10:59:02</Object>
+  <Object Type="System.String">2011:01:24:10:59:02</Object>
+  <Object Type="System.DateTime">24/01/2011 10:58:56</Object>
+  <Object Type="System.String">2011:01:24:10:58:56</Object>
+  <Object Type="System.DateTime">24/01/2011 10:58:56</Object>
+  <Object Type="System.String">2011:01:24:10:58:56</Object>
+  <Object Type="System.DateTime">24/01/2011 10:58:54</Object>
+  <Object Type="System.String">2011:01:24:10:58:54</Object>
+  <Object Type="System.DateTime">24/01/2011 10:58:45</Object>
+  <Object Type="System.String">2011:01:24:10:58:45</Object>
+  <Object Type="System.DateTime">24/01/2011 10:58:02</Object>
+  <Object Type="System.String">2011:01:24:10:58:02</Object>
+  <Object Type="System.DateTime">24/01/2011 10:58:02</Object>
+  <Object Type="System.String">2011:01:24:10:58:02</Object>
+  <Object Type="System.DateTime">24/01/2011 10:58:01</Object>
+  <Object Type="System.String">2011:01:24:10:58:01</Object>
+  <Object Type="System.DateTime">24/01/2011 10:57:56</Object>
+  <Object Type="System.String">2011:01:24:10:57:56</Object>
+  <Object Type="System.DateTime">24/01/2011 10:57:56</Object>
+  <Object Type="System.String">2011:01:24:10:57:56</Object>
+  <Object Type="System.DateTime">24/01/2011 10:55:44</Object>
+  <Object Type="System.String">2011:01:24:10:55:44</Object>
+  <Object Type="System.DateTime">24/01/2011 10:55:44</Object>
+  <Object Type="System.String">2011:01:24:10:55:44</Object>
+  <Object Type="System.DateTime">24/01/2011 10:55:43</Object>
+  <Object Type="System.String">2011:01:24:10:55:43</Object>
+  <Object Type="System.DateTime">24/01/2011 10:55:43</Object>
+  <Object Type="System.String">2011:01:24:10:55:43</Object>
+  <Object Type="System.DateTime">24/01/2011 10:55:43</Object>
+  <Object Type="System.String">2011:01:24:10:55:43</Object>
+  <Object Type="System.DateTime">24/01/2011 10:55:43</Object>
+  <Object Type="System.String">2011:01:24:10:55:43</Object>
+  <Object Type="System.DateTime">24/01/2011 10:55:43</Object>
+  <Object Type="System.String">2011:01:24:10:55:43</Object>
+  <Object Type="System.DateTime">24/01/2011 10:55:43</Object>
+  <Object Type="System.String">2011:01:24:10:55:43</Object>
+  <Object Type="System.DateTime">24/01/2011 10:55:43</Object>
+  <Object Type="System.String">2011:01:24:10:55:43</Object>
+  <Object Type="System.DateTime">24/01/2011 10:51:19</Object>
+  <Object Type="System.String">2011:01:24:10:51:19</Object>
+  <Object Type="System.DateTime">24/01/2011 10:51:18</Object>
+  <Object Type="System.String">2011:01:24:10:51:18</Object>
+  <Object Type="System.DateTime">24/01/2011 10:51:18</Object>
+  <Object Type="System.String">2011:01:24:10:51:18</Object>
+  <Object Type="System.DateTime">24/01/2011 10:51:18</Object>
+  <Object Type="System.String">2011:01:24:10:51:18</Object>
+  <Object Type="System.DateTime">24/01/2011 10:51:18</Object>
+  <Object Type="System.String">2011:01:24:10:51:18</Object>
+  <Object Type="System.DateTime">24/01/2011 10:51:18</Object>
+  <Object Type="System.String">2011:01:24:10:51:18</Object>
+  <Object Type="System.DateTime">24/01/2011 10:49:52</Object>
+  <Object Type="System.String">2011:01:24:10:49:52</Object>
+  <Object Type="System.DateTime">24/01/2011 10:49:52</Object>
+  <Object Type="System.String">2011:01:24:10:49:52</Object>
+  <Object Type="System.DateTime">24/01/2011 10:49:50</Object>
+  <Object Type="System.String">2011:01:24:10:49:50</Object>
+  <Object Type="System.DateTime">24/01/2011 10:49:50</Object>
+  <Object Type="System.String">2011:01:24:10:49:50</Object>
+  <Object Type="System.DateTime">24/01/2011 10:49:50</Object>
+  <Object Type="System.String">2011:01:24:10:49:50</Object>
+  <Object Type="System.DateTime">24/01/2011 10:49:50</Object>
+  <Object Type="System.String">2011:01:24:10:49:50</Object>
+  <Object Type="System.DateTime">24/01/2011 10:49:50</Object>
+  <Object Type="System.String">2011:01:24:10:49:50</Object>
+  <Object Type="System.DateTime">24/01/2011 10:49:50</Object>
+  <Object Type="System.String">2011:01:24:10:49:50</Object>
+  <Object Type="System.DateTime">24/01/2011 10:49:49</Object>
+  <Object Type="System.String">2011:01:24:10:49:49</Object>
+  <Object Type="System.DateTime">24/01/2011 10:49:30</Object>
+  <Object Type="System.String">2011:01:24:10:49:30</Object>
+  <Object Type="System.DateTime">24/01/2011 10:48:14</Object>
+  <Object Type="System.String">2011:01:24:10:48:14</Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">64</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 15:20:35</Property>
+    <Property Name="LogType" Type="System.Int32">942</Property>
+    <Property Name="Message" Type="System.String">Network foo was added to data center: Default </Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">63</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 15:20:14</Property>
+    <Property Name="LogType" Type="System.Int32">30</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged in.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">62</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 15:19:58</Property>
+    <Property Name="LogType" Type="System.Int32">31</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged out.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">61</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 15:19:58</Property>
+    <Property Name="LogType" Type="System.Int32">31</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged out.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">60</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 15:19:58</Property>
+    <Property Name="LogType" Type="System.Int32">31</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged out.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">59</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 15:19:58</Property>
+    <Property Name="LogType" Type="System.Int32">30</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged in.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">58</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 15:19:58</Property>
+    <Property Name="LogType" Type="System.Int32">30</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged in.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">57</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 15:19:58</Property>
+    <Property Name="LogType" Type="System.Int32">30</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged in.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">56</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 15:17:01</Property>
+    <Property Name="LogType" Type="System.Int32">944</Property>
+    <Property Name="Message" Type="System.String">Network foo was removed from data center: Default</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">55</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 15:16:42</Property>
+    <Property Name="LogType" Type="System.Int32">30</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged in.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">54</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 15:16:38</Property>
+    <Property Name="LogType" Type="System.Int32">942</Property>
+    <Property Name="Message" Type="System.String">Network foo was added to data center: Default </Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">53</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 15:15:56</Property>
+    <Property Name="LogType" Type="System.Int32">30</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged in.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">52</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 15:14:56</Property>
+    <Property Name="LogType" Type="System.Int32">30</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged in.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">51</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 15:14:48</Property>
+    <Property Name="LogType" Type="System.Int32">30</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged in.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">50</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 11:37:53</Property>
+    <Property Name="LogType" Type="System.Int32">966</Property>
+    <Property Name="Message" Type="System.String">Storage Domain iso0 (Data Center Default) was activated by rhevmadmin</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Guid">d774cab7-a26e-41ef-ad62-dae1723b54d3</Property>
+    <Property Name="StorageDomainName" Type="System.String">iso0</Property>
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">49</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 11:37:33</Property>
+    <Property Name="LogType" Type="System.Int32">962</Property>
+    <Property Name="Message" Type="System.String">Storage Domain iso0 was attached to Data Center Default by rhevmadmin</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Int32">0</Property>
+    <Property Name="HostName" Type="System.String">zig</Property>
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Guid">d774cab7-a26e-41ef-ad62-dae1723b54d3</Property>
+    <Property Name="StorageDomainName" Type="System.String">iso0</Property>
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">48</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 11:35:09</Property>
+    <Property Name="LogType" Type="System.Int32">956</Property>
+    <Property Name="Message" Type="System.String">Storage Domain iso0 was added by rhevmadmin</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Int32">0</Property>
+    <Property Name="HostName" Type="System.String">zig</Property>
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Guid">d774cab7-a26e-41ef-ad62-dae1723b54d3</Property>
+    <Property Name="StorageDomainName" Type="System.String">iso0</Property>
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">47</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 11:03:09</Property>
+    <Property Name="LogType" Type="System.Int32">966</Property>
+    <Property Name="Message" Type="System.String">Storage Domain images0 (Data Center Default) was activated by rhevmadmin</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Guid">93ce8248-7cec-482c-b1aa-97453e433ef0</Property>
+    <Property Name="StorageDomainName" Type="System.String">images0</Property>
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">46</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 11:03:09</Property>
+    <Property Name="LogType" Type="System.Int32">204</Property>
+    <Property Name="Message" Type="System.String">Storage Pool Manager runs on Host zig (IP Address: 192.168.1.107).</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="UserName" Type="System.String" />
+    <Property Name="HostId" Type="System.Int32">0</Property>
+    <Property Name="HostName" Type="System.String">zig</Property>
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">45</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 11:02:47</Property>
+    <Property Name="LogType" Type="System.Int32">986</Property>
+    <Property Name="Message" Type="System.String">Error getting Data Center Default status - setting status to Non-Responsive (Host Unavailable) - Trying to search for another host.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">1</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="UserName" Type="System.String" />
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String">Unavailable</Property>
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">44</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 11:02:10</Property>
+    <Property Name="LogType" Type="System.Int32">956</Property>
+    <Property Name="Message" Type="System.String">Storage Domain images0 was added by rhevmadmin</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Int32">0</Property>
+    <Property Name="HostName" Type="System.String">zig</Property>
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Guid">93ce8248-7cec-482c-b1aa-97453e433ef0</Property>
+    <Property Name="StorageDomainName" Type="System.String">images0</Property>
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">43</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 11:01:37</Property>
+    <Property Name="LogType" Type="System.Int32">30</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged in.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">42</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 11:01:26</Property>
+    <Property Name="LogType" Type="System.Int32">835</Property>
+    <Property Name="Message" Type="System.String">Host cluster Default was updated by system</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="UserName" Type="System.String" />
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">41</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 11:01:26</Property>
+    <Property Name="LogType" Type="System.Int32">994</Property>
+    <Property Name="Message" Type="System.String">Failed to connect Host zig to Storage Servers</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">1</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="UserName" Type="System.String" />
+    <Property Name="HostId" Type="System.Int32">0</Property>
+    <Property Name="HostName" Type="System.String">zig</Property>
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">40</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 11:01:25</Property>
+    <Property Name="LogType" Type="System.Int32">13</Property>
+    <Property Name="Message" Type="System.String">Detected new Host zig. Host state was set to Up .</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="UserName" Type="System.String" />
+    <Property Name="HostId" Type="System.Int32">0</Property>
+    <Property Name="HostName" Type="System.String">zig</Property>
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">39</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 11:01:12</Property>
+    <Property Name="LogType" Type="System.Int32">1</Property>
+    <Property Name="Message" Type="System.String">Starting RHEV Manager.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String" />
+    <Property Name="UserName" Type="System.String" />
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String" />
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">38</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 11:01:11</Property>
+    <Property Name="LogType" Type="System.Int32">2</Property>
+    <Property Name="Message" Type="System.String">Stopping RHEV Manager.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String" />
+    <Property Name="UserName" Type="System.String" />
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String" />
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">37</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:59:04</Property>
+    <Property Name="LogType" Type="System.Int32">16</Property>
+    <Property Name="Message" Type="System.String">Host zig was activated by rhevmadmin.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Int32">0</Property>
+    <Property Name="HostName" Type="System.String">zig</Property>
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">36</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:59:04</Property>
+    <Property Name="LogType" Type="System.Int32">12</Property>
+    <Property Name="Message" Type="System.String">Host zig is non-responsive.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">2</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="UserName" Type="System.String" />
+    <Property Name="HostId" Type="System.Int32">0</Property>
+    <Property Name="HostName" Type="System.String">zig</Property>
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">35</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:59:02</Property>
+    <Property Name="LogType" Type="System.Int32">600</Property>
+    <Property Name="Message" Type="System.String">Host zig was switched to Maintenance mode by rhevmadmin.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Int32">0</Property>
+    <Property Name="HostName" Type="System.String">zig</Property>
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">34</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:58:56</Property>
+    <Property Name="LogType" Type="System.Int32">9003</Property>
+    <Property Name="Message" Type="System.String">Power Management operation VdsNotRespondingTreatment skipped on Host zig because it is not configured.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">10</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="UserName" Type="System.String" />
+    <Property Name="HostId" Type="System.Int32">0</Property>
+    <Property Name="HostName" Type="System.String">zig</Property>
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">33</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:58:56</Property>
+    <Property Name="LogType" Type="System.Int32">12</Property>
+    <Property Name="Message" Type="System.String">Host zig is non-responsive.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">2</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="UserName" Type="System.String" />
+    <Property Name="HostId" Type="System.Int32">0</Property>
+    <Property Name="HostName" Type="System.String">zig</Property>
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">32</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:58:54</Property>
+    <Property Name="LogType" Type="System.Int32">16</Property>
+    <Property Name="Message" Type="System.String">Host zig was activated by rhevmadmin.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Int32">0</Property>
+    <Property Name="HostName" Type="System.String">zig</Property>
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">31</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:58:45</Property>
+    <Property Name="LogType" Type="System.Int32">30</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged in.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">30</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:58:02</Property>
+    <Property Name="LogType" Type="System.Int32">505</Property>
+    <Property Name="Message" Type="System.String">Host zig installation failed. .</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">2</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Int32">0</Property>
+    <Property Name="HostName" Type="System.String">zig</Property>
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">29</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:58:02</Property>
+    <Property Name="LogType" Type="System.Int32">511</Property>
+    <Property Name="Message" Type="System.String">Failed to install Host zig. Step: INSTALLER LIB; Details: deployUtil.py download failed. Pathname could not be resolved (verify computer/domain name)..</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">2</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="UserName" Type="System.String" />
+    <Property Name="HostId" Type="System.Int32">0</Property>
+    <Property Name="HostName" Type="System.String">zig</Property>
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">28</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:58:01</Property>
+    <Property Name="LogType" Type="System.Int32">509</Property>
+    <Property Name="Message" Type="System.String">Installing Host zig. Step: INSTALLER; Details: Test platform succeeded.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="UserName" Type="System.String" />
+    <Property Name="HostId" Type="System.Int32">0</Property>
+    <Property Name="HostName" Type="System.String">zig</Property>
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">27</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:57:56</Property>
+    <Property Name="LogType" Type="System.Int32">42</Property>
+    <Property Name="Message" Type="System.String">Host zig was added by rhevmadmin.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Int32">0</Property>
+    <Property Name="HostName" Type="System.String">zig</Property>
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">26</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:57:56</Property>
+    <Property Name="LogType" Type="System.Int32">9000</Property>
+    <Property Name="Message" Type="System.String">Power Management is not configured for Host zig.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">10</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Int32">0</Property>
+    <Property Name="HostName" Type="System.String">zig</Property>
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">25</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:55:44</Property>
+    <Property Name="LogType" Type="System.Int32">30</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged in.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">24</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:55:44</Property>
+    <Property Name="LogType" Type="System.Int32">31</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged out.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">23</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:55:43</Property>
+    <Property Name="LogType" Type="System.Int32">30</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged in.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">22</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:55:43</Property>
+    <Property Name="LogType" Type="System.Int32">30</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged in.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">21</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:55:43</Property>
+    <Property Name="LogType" Type="System.Int32">31</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged out.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">20</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:55:43</Property>
+    <Property Name="LogType" Type="System.Int32">31</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged out.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">19</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:55:43</Property>
+    <Property Name="LogType" Type="System.Int32">30</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged in.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">18</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:55:43</Property>
+    <Property Name="LogType" Type="System.Int32">30</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged in.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">17</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:55:43</Property>
+    <Property Name="LogType" Type="System.Int32">30</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged in.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">16</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:51:19</Property>
+    <Property Name="LogType" Type="System.Int32">31</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged out.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">15</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:51:18</Property>
+    <Property Name="LogType" Type="System.Int32">31</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged out.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">14</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:51:18</Property>
+    <Property Name="LogType" Type="System.Int32">31</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged out.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">13</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:51:18</Property>
+    <Property Name="LogType" Type="System.Int32">30</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged in.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">12</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:51:18</Property>
+    <Property Name="LogType" Type="System.Int32">30</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged in.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">11</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:51:18</Property>
+    <Property Name="LogType" Type="System.Int32">30</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged in.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">10</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:49:52</Property>
+    <Property Name="LogType" Type="System.Int32">30</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged in.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">9</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:49:52</Property>
+    <Property Name="LogType" Type="System.Int32">31</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged out.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">8</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:49:50</Property>
+    <Property Name="LogType" Type="System.Int32">30</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged in.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">7</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:49:50</Property>
+    <Property Name="LogType" Type="System.Int32">30</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged in.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">6</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:49:50</Property>
+    <Property Name="LogType" Type="System.Int32">31</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged out.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">5</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:49:50</Property>
+    <Property Name="LogType" Type="System.Int32">31</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged out.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">4</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:49:50</Property>
+    <Property Name="LogType" Type="System.Int32">30</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged in.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">3</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:49:50</Property>
+    <Property Name="LogType" Type="System.Int32">30</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged in.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">2</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:49:49</Property>
+    <Property Name="LogType" Type="System.Int32">30</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged in.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">1</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:49:30</Property>
+    <Property Name="LogType" Type="System.Int32">30</Property>
+    <Property Name="Message" Type="System.String">User rhevmadmin logged in.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String">225f15cd-e891-434d-8262-a66808fcb9b1</Property>
+    <Property Name="UserName" Type="System.String">rhevmadmin</Property>
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String">00000000-0000-0000-0000-000000000000</Property>
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+  <Object Type="RhevmCmd.CLIEvent">
+    <Property Name="Id" Type="System.Int64">0</Property>
+    <Property Name="LogTime" Type="System.DateTime">24/01/2011 10:48:14</Property>
+    <Property Name="LogType" Type="System.Int32">1</Property>
+    <Property Name="Message" Type="System.String">Starting RHEV Manager.</Property>
+    <Property Name="Severity" Type="VdcDAL.AuditLogSeverity">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="UserId" Type="System.String" />
+    <Property Name="UserName" Type="System.String" />
+    <Property Name="HostId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="HostName" Type="System.String" />
+    <Property Name="VmId" Type="System.String" />
+    <Property Name="VmName" Type="System.String" />
+    <Property Name="VmTemplateId" Type="System.String" />
+    <Property Name="VmTemplateName" Type="System.String" />
+    <Property Name="StorageDomainId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="StorageDomainName" Type="System.String" />
+  </Object>
+</Objects>

@@ -27,6 +27,7 @@ public class EnumMapper {
     {
         mapping = new HashMap<String, Class<? extends Enum<?>>>();
         mapping.put("RhevmCmd.HostSelectionAlgorithm",                      PowerShellHostSelectionAlgorithm.class);
+        mapping.put("VdcDAL.AuditLogSeverity",                              PowerShellLogSeverity.class);
         mapping.put("VdcDAL.BootSequence",                                  PowerShellBootSequence.class);
         mapping.put("VdcCommon.BusinessEntities.BootSequence",              PowerShellBootSequence.class);
         mapping.put("VdcDAL.DiskType",                                      PowerShellDiskType.class);
