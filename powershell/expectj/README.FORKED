@@ -1,0 +1,25 @@
+This is a temporary fork of ExpectJ 2.0.7 with the fix for this issue:
+
+  http://sourceforge.net/tracker/?func=detail&aid=3140839&group_id=98171&atid=620206
+
+The fix is simply:
+
+=== modified file 'src/main/java/expectj/Spawn.java'
+--- src/main/java/expectj/Spawn.java    2010-07-16 18:50:16 +0000
++++ src/main/java/expectj/Spawn.java    2010-12-20 15:04:07 +0000
+@@ -316,12 +316,13 @@
+             }
+ 
+             buffer.rewind();
+-            if (readMe.read(buffer) == -1) {
++            int nbytes = readMe.read(buffer);
++            if (nbytes == -1) {
+                 // End of stream
+                 throw new IOException("End of stream reached, no match found");
+             }
+             buffer.rewind();
+-            for (int i = 0; i < buffer.limit(); i++) {
++            for (int i = 0; i < nbytes; i++) {
+                 line.append((char)buffer.get(i));
+             }
+             if (line.toString().trim().toUpperCase().indexOf(pattern.toUpperCase()) != -1) {

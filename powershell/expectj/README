@@ -1,0 +1,11 @@
+ExpectJ can be used for automating interaction with either a process
+(through stdin / stdout) or a telnet session. It is a Java
+implementation of the Unix expect utility.
+
+Information about the latest release of ExpectJ is available here:
+http://expectj.sourceforge.net/
+
+To generate more up-to-date documentation now that you have the source
+code, do "mvn site" and open target/site/index.html in your favorite
+browser.  The documentation front page is generated from
+site/apt/index.apt.
