@@ -54,6 +54,7 @@ public class PowerShellApiResource
         addLink(api, "capabilities", false);
         addLink(api, "clusters");
         addLink(api, "datacenters");
+        addLink(api, "events");
         addLink(api, "hosts");
         addLink(api, "networks", false); // powershell has no select-network command
         addLink(api, "roles", false);
