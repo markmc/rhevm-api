@@ -36,6 +36,7 @@ import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
+import static com.redhat.rhevm.api.common.util.DetailHelper.include;
 
 public class PowerShellVmsResource
     extends AbstractPowerShellCollectionResource<VM, PowerShellVmResource>
@@ -48,6 +49,7 @@ public class PowerShellVmsResource
         buf.append("foreach '{ ");
         buf.append(PowerShellUtils.getDateHack("creationdate"));
         buf.append("'{0} ");
+        buf.append(" {1} ");
         buf.append("if ($_.runningonhost -ne ''-1'') '{");
         buf.append("  $h = get-host $_.runningonhost;");
         buf.append("  $nics = $h.getnetworkadapters();");
@@ -68,8 +70,11 @@ public class PowerShellVmsResource
         PROCESS_VMS = buf.toString();
     }
 
-    static final String PROCESS_VMS_LIST = MessageFormat.format(PROCESS_VMS, "$_; ");
-    static final String PROCESS_VMS_ADD = MessageFormat.format(PROCESS_VMS, " ");
+    private static final String GET_STATS = "$_.getmemorystatistics(); $_.getcpustatistics(); ";
+    static final String PROCESS_VMS_LIST = MessageFormat.format(PROCESS_VMS, "$_; ", " ");
+    static final String PROCESS_VMS_LIST_STATS = MessageFormat.format(PROCESS_VMS, "$_; ", GET_STATS);
+    static final String PROCESS_VMS_ADD = MessageFormat.format(PROCESS_VMS, " ", " ");
+    static final String PROCESS_VMS_ADD_STATS = MessageFormat.format(PROCESS_VMS, " ", GET_STATS);
 
     public List<PowerShellVM> runAndParse(String command) {
         return PowerShellVmResource.runAndParse(getPool(), getParser(), command);
@@ -82,7 +87,7 @@ public class PowerShellVmsResource
     @Override
     public VMs list() {
         VMs ret = new VMs();
-        for (PowerShellVM vm : runAndParse(getSelectCommand("select-vm", getUriInfo(), VM.class) + PROCESS_VMS_LIST)) {
+        for (PowerShellVM vm : runAndParse(getSelectCommand("select-vm", getUriInfo(), VM.class) + getProcess(false))) {
             ret.getVMs().add(PowerShellVmResource.addLinks(getUriInfo(), vm));
         }
         return ret;
@@ -172,7 +177,7 @@ public class PowerShellVmsResource
             buf.append(ASYNC_OPTION).append(displayVm).append(ASYNC_TASKS);
         }
 
-        buf.append("$v").append(PROCESS_VMS_ADD);
+        buf.append("$v").append(getProcess(true));
 
         PowerShellVM created = runAndParseSingle(buf.toString());
 
@@ -204,4 +209,9 @@ public class PowerShellVmsResource
         return new PowerShellVmResource(id, getExecutor(), this, shellPools, getParser(), getHttpHeaders());
     }
 
+    private String getProcess(boolean add) {
+        return include(getHttpHeaders(), "statistics")
+               ? (add ? PROCESS_VMS_ADD_STATS : PROCESS_VMS_LIST_STATS)
+               : (add ? PROCESS_VMS_ADD : PROCESS_VMS_LIST);
+    }
 }

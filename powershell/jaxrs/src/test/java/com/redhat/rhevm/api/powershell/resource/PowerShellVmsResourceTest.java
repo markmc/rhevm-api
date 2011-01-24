@@ -18,6 +18,8 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.util.List;
+
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
@@ -32,6 +34,7 @@ import org.junit.Test;
 
 import static com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource.PROCESS_VMS_ADD;
 import static com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource.PROCESS_VMS_LIST;
+import static com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource.PROCESS_VMS_LIST_STATS;
 
 public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResourceTest<VM, PowerShellVmResource, PowerShellVmsResource> {
 
@@ -80,6 +83,7 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
 
     @Test
     public void testList() throws Exception {
+        setUpHttpHeaderNullExpectations("Accept");
         resource.setUriInfo(setUpResourceExpectations(getSelectCommand() + PROCESS_VMS_LIST,
                                                       getSelectReturn(),
                                                       null,
@@ -88,7 +92,20 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     }
 
     @Test
+    public void testListIncludeStats() throws Exception {
+        setUpHttpHeaderExpectations("Accept", "application/xml; detail=statistics");
+        resource.setUriInfo(setUpResourceExpectations(getSelectCommand() + PROCESS_VMS_LIST_STATS,
+                                                      getSelectReturn(),
+                                                      null,
+                                                      NAMES));
+        List<VM> vms = resource.list().getVMs();
+        assertTrue(vms.get(0).isSetStatistics());
+        verifyCollection(vms, NAMES, DESCRIPTIONS);
+    }
+
+    @Test
     public void testQuery() throws Exception {
+        setUpHttpHeaderNullExpectations("Accept");
         resource.setUriInfo(setUpResourceExpectations(getQueryCommand(VM.class) + PROCESS_VMS_LIST,
                                                       getQueryReturn(),
                                                       getQueryParam(),
@@ -99,6 +116,7 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     @Test
     public void testAddBlocking() throws Exception {
         setUpHttpHeaderExpectations("Expect", "201-created");
+        setUpHttpHeaderNullExpectations("Accept");
 
         resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND_PROLOG + getAddCommand() + ADD_COMMAND_EPILOG + ";$v;$v" + PROCESS_VMS_ADD,
                 getAddReturn(),
@@ -110,7 +128,7 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
 
     @Test
     public void testAddWithTemplateId() throws Exception {
-        setUpHttpHeaderExpectations("Expect", null);
+        setUpHttpHeaderNullExpectations("Expect", "Accept");
 
         resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND_PROLOG + getAddCommand() + ADD_COMMAND_EPILOG + ASYNC_EPILOG,
                                                          getAddReturn(),
@@ -121,7 +139,7 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
 
     @Test
     public void testAddWithTemplateName() throws Exception {
-        setUpHttpHeaderExpectations("Expect", null);
+        setUpHttpHeaderNullExpectations("Expect", "Accept");
 
         VM model = getModel(NEW_NAME, NEW_DESCRIPTION);
         model.getTemplate().setId(null);
@@ -136,7 +154,7 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
 
     @Test
     public void testAddWithClusterName() throws Exception {
-        setUpHttpHeaderExpectations("Expect", null);
+        setUpHttpHeaderNullExpectations("Expect", "Accept");
 
         VM model = getModel(NEW_NAME, NEW_DESCRIPTION);
         model.getTemplate().setId(null);
@@ -153,7 +171,7 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
 
     @Test
     public void testAddWithDisplay() throws Exception {
-        setUpHttpHeaderExpectations("Expect", null);
+        setUpHttpHeaderNullExpectations("Expect", "Accept");
 
         resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND_PROLOG + getAddCommand() + DISPLAY_ADD_COMMAND_EPILOG + ASYNC_EPILOG,
                                                          getAddReturn(),

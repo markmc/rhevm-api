@@ -54,7 +54,9 @@ import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
+import static com.redhat.rhevm.api.common.util.DetailHelper.include;
 import static com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource.PROCESS_VMS_LIST;
+import static com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource.PROCESS_VMS_LIST_STATS;
 
 public class PowerShellVmResource extends AbstractPowerShellActionableResource<VM> implements VmResource {
 
@@ -98,7 +100,7 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
 
     @Override
     public VM get() {
-        return addLinks(getUriInfo(), runAndParseSingle("get-vm " + PowerShellUtils.escape(getId()) + PROCESS_VMS_LIST));
+        return addLinks(getUriInfo(), runAndParseSingle("get-vm " + PowerShellUtils.escape(getId()) + getProcess()));
     }
 
     @Override
@@ -160,7 +162,7 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
 
         buf.append("update-vm -vmobject $v");
 
-        return addLinks(getUriInfo(), runAndParseSingle(buf.toString() + PROCESS_VMS_LIST));
+        return addLinks(getUriInfo(), runAndParseSingle(buf.toString() + getProcess()));
     }
 
     protected String[] getStrictlyImmutable() {
@@ -398,5 +400,9 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
             arg = "$h.hostid";
         }
         return arg;
+    }
+
+    private String getProcess() {
+        return include(getHttpHeaders(), "statistics") ? PROCESS_VMS_LIST_STATS : PROCESS_VMS_LIST;
     }
 }
