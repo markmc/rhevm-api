@@ -25,6 +25,10 @@ import java.util.List;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.HostStatus;
 import com.redhat.rhevm.api.model.PowerManagement;
+import com.redhat.rhevm.api.model.Statistic;
+import com.redhat.rhevm.api.model.StatisticType;
+import com.redhat.rhevm.api.model.StatisticUnit;
+import com.redhat.rhevm.api.model.ValueType;
 
 public class PowerShellHostTest extends PowerShellModelTest {
 
@@ -50,6 +54,109 @@ public class PowerShellHostTest extends PowerShellModelTest {
         assertEquals(clusterId, h.getCluster().getId());
         assertEquals(storageManager, h.isStorageManager());
         assertEquals(Integer.valueOf(port), h.getPort());
+        verifyStatistics(h);
+    }
+
+    private void verifyStatistics(Host host) {
+        assertTrue(host.isSetStatistics());
+        List<Statistic> statistics = host.getStatistics().getStatistics();
+        assertNotNull(statistics);
+        assertEquals(11, statistics.size());
+        verifyStatistic(statistics.get(0),
+                "memory.installed",
+                "Total physical memory",
+                StatisticType.GAUGE,
+                StatisticUnit.BYTES,
+                ValueType.INTEGER,
+                4096*1024*1024D);
+        verifyStatistic(statistics.get(1),
+                "memory.total",
+                "Total guest memory",
+                StatisticType.GAUGE,
+                StatisticUnit.BYTES,
+                ValueType.INTEGER,
+                1154*1024*1024D);
+        verifyStatistic(statistics.get(2),
+                "memory.used",
+                "Memory used",
+                StatisticType.GAUGE,
+                StatisticUnit.BYTES,
+                ValueType.INTEGER,
+                4096*1024*1024L/2D);
+        verifyStatistic(statistics.get(3),
+                "memory.free",
+                "Memory free",
+                StatisticType.GAUGE,
+                StatisticUnit.BYTES,
+                ValueType.INTEGER,
+                4096*1024*1024L/2D);
+        verifyStatistic(statistics.get(4),
+                "swap.total",
+                "Total swap",
+                StatisticType.GAUGE,
+                StatisticUnit.BYTES,
+                ValueType.INTEGER,
+                3955*1024*1024D);
+        verifyStatistic(statistics.get(5),
+                "swap.free",
+                "Free swap",
+                StatisticType.GAUGE,
+                StatisticUnit.BYTES,
+                ValueType.INTEGER,
+                2060*1024*1024D);
+        verifyStatistic(statistics.get(6),
+                "cpu.current.user",
+                "User+nic CPU usage",
+                StatisticType.GAUGE,
+                StatisticUnit.PERCENT,
+                ValueType.DECIMAL,
+                10D);
+        verifyStatistic(statistics.get(7),
+                "cpu.current.system",
+                "System CPU usage",
+                StatisticType.GAUGE,
+                StatisticUnit.PERCENT,
+                ValueType.DECIMAL,
+                20D);
+        verifyStatistic(statistics.get(8),
+                "cpu.current.idle",
+                "Idle CPU usage",
+                StatisticType.GAUGE,
+                StatisticUnit.PERCENT,
+                ValueType.DECIMAL,
+                30D);
+        verifyStatistic(statistics.get(9),
+                "cpu.load.avg.5m",
+                "5min CPU load average",
+                StatisticType.GAUGE,
+                StatisticUnit.NONE,
+                ValueType.DECIMAL,
+                2.1D);
+        verifyStatistic(statistics.get(10),
+                "ksm.cpu.current",
+                "KSM CPU usage",
+                StatisticType.GAUGE,
+                StatisticUnit.PERCENT,
+                ValueType.DECIMAL,
+                5D);
+    }
+
+    private void verifyStatistic(Statistic statistic,
+            String name,
+            String description,
+            StatisticType type,
+            StatisticUnit unit,
+            ValueType valueType,
+            double datum) {
+        assertEquals(name, statistic.getName());
+        assertEquals(description, statistic.getDescription());
+        assertEquals(type, statistic.getType());
+        assertEquals(unit, statistic.getUnit());
+        assertTrue(statistic.isSetValues());
+        assertEquals(valueType, statistic.getValues().getType());
+        assertTrue(statistic.getValues().isSetValues());
+        assertEquals(1, statistic.getValues().getValues().size());
+        assertEquals(datum, statistic.getValues().getValues().get(0).getDatum(), 0.1D);
     }
 
     @Test

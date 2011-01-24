@@ -31,4 +31,28 @@
       <Property Name="Options" Type="System.String">secure=true,port=12345</Property>
     </Property>
   </Object>
+  <Object Type="RhevmCmd.CLIMemory">
+    <Property Name="PhysicalMemory" Type="System.Int32">4096</Property>
+    <Property Name="CommitedMemory" Type="System.Int32">1154</Property>
+    <Property Name="UsagePercents" Type="System.Int32">50</Property>
+    <Property Name="SwapFree" Type="System.Int64">2060</Property>
+    <Property Name="SwapTotal" Type="System.Int64">3955</Property>
+  </Object>
+  <Object Type="RhevmCmd.CLICpu">
+    <Property Name="Name" Type="System.String">Intel Xeon Core i7</Property>
+    <Property Name="Model" Type="System.String">Intel(R) Xeon(R) CPU W3520  @ 2.67GHz</Property>
+    <Property Name="Cores" Type="System.Int32">4</Property>
+    <Property Name="Speed" Type="System.Decimal">2667</Property>
+    <Property Name="User" Type="System.Decimal">10</Property>
+    <Property Name="System" Type="System.Decimal">20</Property>
+    <Property Name="Idle" Type="System.Decimal">30</Property>
+    <Property Name="Load" Type="System.Decimal">2.1</Property>
+  </Object>
+  <Object Type="RhevmCmd.CLIKsm">
+    <Property Name="Enabled" Type="System.Boolean">False</Property>
+    <Property Name="CPU" Type="System.Int32">5</Property>
+    <Property Name="Pages" Type="System.Int64">0</Property>
+    <Property Name="MemoryShared" Type="System.Int64">8</Property>
+    <Property Name="MemoryAvailable" Type="System.Int64">-866</Property>
+  </Object>
 </Objects>

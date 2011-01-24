@@ -27,10 +27,16 @@ import com.redhat.rhevm.api.model.HostStatus;
 import com.redhat.rhevm.api.model.PowerManagement;
 import com.redhat.rhevm.api.model.PowerManagementOption;
 import com.redhat.rhevm.api.model.PowerManagementOptions;
+import com.redhat.rhevm.api.model.Statistic;
+import com.redhat.rhevm.api.model.Statistics;
 import com.redhat.rhevm.api.powershell.enums.PowerShellVdsSpmStatus;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 
+import static com.redhat.rhevm.api.powershell.util.PowerShellUtils.last;
+
 public class PowerShellHost {
+
+    private static final String HOST_TYPE = "RhevmCmd.CLIHost";
 
     private static HostStatus parseStatus(String s) {
         if (s.equals("Down"))                      return HostStatus.DOWN;
@@ -54,7 +60,7 @@ public class PowerShellHost {
     private static PowerManagementOptions parsePowerManagementOptions(String options) {
         if (options == null) {
             return null;
-        }
+         }
 
         PowerManagementOptions ret = new PowerManagementOptions();
 
@@ -85,22 +91,39 @@ public class PowerShellHost {
         List<Host> ret = new ArrayList<Host>();
 
         for (PowerShellParser.Entity entity : parser.parse(output)) {
-            Host host = new Host();
-
-            host.setId(entity.get("hostid", String.class, Integer.class).toString());
-            host.setCluster(new Cluster());
-            host.getCluster().setId(entity.get("hostclusterid", String.class, Integer.class).toString());
-            host.setPort(entity.get("port", Integer.class));
-            host.setName(entity.get("name"));
-            host.setStatus(parseStatus(entity.get("status")));
-            host.setStorageManager(entity.get("spmstatus", PowerShellVdsSpmStatus.class).map());
-
-            host.setPowerManagement(parsePowerManagement(entity.get("powermanagement",
-                                                                    PowerShellParser.PowerManagement.class)));
-
-            ret.add(host);
+            if (HOST_TYPE.equals(entity.getType())) {
+                ret.add(parseHost(entity));
+            } else if (PowerShellHostStatisticsParser.isMemory(entity)) {
+                getStatistics(ret).addAll(PowerShellHostStatisticsParser.parseMemoryStats(entity));
+            } else if (PowerShellHostStatisticsParser.isCpu(entity)) {
+                getStatistics(ret).addAll(PowerShellHostStatisticsParser.parseCpuStats(entity));
+            } else if (PowerShellHostStatisticsParser.isKsm(entity)) {
+                getStatistics(ret).addAll(PowerShellHostStatisticsParser.parseKsmStats(entity));
+            }
         }
 
         return ret;
+    }
+
+    private static Host parseHost(PowerShellParser.Entity entity) {
+        Host host = new Host();
+        host.setId(entity.get("hostid", String.class, Integer.class).toString());
+        host.setCluster(new Cluster());
+        host.getCluster().setId(entity.get("hostclusterid", String.class, Integer.class).toString());
+        host.setPort(entity.get("port", Integer.class));
+        host.setName(entity.get("name"));
+        host.setStatus(parseStatus(entity.get("status")));
+        host.setStorageManager(entity.get("spmstatus", PowerShellVdsSpmStatus.class).map());
+        host.setPowerManagement(parsePowerManagement(entity.get("powermanagement",
+                                                                PowerShellParser.PowerManagement.class)));
+        return host;
+    }
+
+    private static List<Statistic> getStatistics(List<Host> hosts) {
+        Host host = last(hosts);
+        if (!host.isSetStatistics()) {
+            host.setStatistics(new Statistics());
+        }
+        return host.getStatistics().getStatistics();
     }
 }

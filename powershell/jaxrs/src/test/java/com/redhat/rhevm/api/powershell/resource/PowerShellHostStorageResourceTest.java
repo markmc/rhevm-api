@@ -59,7 +59,7 @@ public class PowerShellHostStorageResourceTest
     private static final String GET_STORAGE_VG_CMD = GET_STORAGE_VGS_CMD + " | ? { $_.vgid -eq \"" + asId(VGS[0]) + "\" }";
 
     protected  PowerShellHostResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider) {
-        return new PowerShellHostResource(asId(HOST_NAME), executor, uriProvider, poolMap, parser);
+        return new PowerShellHostResource(asId(HOST_NAME), executor, uriProvider, poolMap, parser, httpHeaders);
     }
 
     protected String formatDevices(String[] names) {

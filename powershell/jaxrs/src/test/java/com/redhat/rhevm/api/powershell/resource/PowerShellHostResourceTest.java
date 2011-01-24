@@ -48,6 +48,8 @@ import static org.powermock.api.easymock.PowerMock.createMock;
 import static org.powermock.api.easymock.PowerMock.mockStatic;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 
+import static com.redhat.rhevm.api.powershell.resource.PowerShellHostsResource.PROCESS_HOSTS_LIST;
+import static com.redhat.rhevm.api.powershell.resource.PowerShellHostsResource.PROCESS_HOSTS_LIST_STATS;
 
 public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<Host, PowerShellHostResource> {
 
@@ -68,7 +70,7 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
     private static String ISCSI_LOGIN_COMMAND = "$cnx = new-storageserverconnection -storagetype ISCSI -connection \"" + ISCSI_PORTAL + "\" -portal \"" + ISCSI_PORTAL + "\" -iqn \"" + ISCSI_TARGET + "\"; connect-storagetohost -hostid \"" + HOST_ID + "\" -storageserverconnectionobject $cnx";
 
     protected PowerShellHostResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider) {
-        return new PowerShellHostResource(HOST_ID, executor, uriProvider, poolMap, parser);
+        return new PowerShellHostResource(HOST_ID, executor, uriProvider, poolMap, parser, httpHeaders);
     }
 
     protected String formatHost(String name) {
@@ -89,15 +91,28 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
 
     @Test
     public void testGet() throws Exception {
-        setUriInfo(setUpHostExpectations(GET_COMMAND,
+        setUpHttpHeaderNullExpectations("Accept");
+        setUriInfo(setUpHostExpectations(GET_COMMAND + PROCESS_HOSTS_LIST,
                                          formatHost(HOST_NAME),
                                          HOST_NAME));
         verifyHost(resource.get(), HOST_NAME);
     }
 
     @Test
+    public void testGetIncludeStatistics() throws Exception {
+        setUpHttpHeaderExpectations("Accept", "application/xml; detail=statistics");
+        setUriInfo(setUpHostExpectations(GET_COMMAND + PROCESS_HOSTS_LIST_STATS,
+                                         formatHost(HOST_NAME),
+                                         HOST_NAME));
+        Host host = resource.get();
+        assertTrue(host.isSetStatistics());
+        verifyHost(host, HOST_NAME);
+    }
+
+    @Test
     public void testGet22() throws Exception {
-        setUriInfo(setUpHostExpectations(GET_COMMAND,
+        setUpHttpHeaderNullExpectations("Accept");
+        setUriInfo(setUpHostExpectations(GET_COMMAND + PROCESS_HOSTS_LIST,
                                          formatHost("host22", HOST_NAME),
                                          HOST_NAME));
         verifyHost(resource.get(), HOST_NAME);
@@ -105,14 +120,28 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
 
     @Test
     public void testGoodUpdate() throws Exception {
-        setUriInfo(setUpHostExpectations(UPDATE_COMMAND,
+        setUpHttpHeaderNullExpectations("Accept");
+        setUriInfo(setUpHostExpectations(UPDATE_COMMAND + PROCESS_HOSTS_LIST,
                                          formatHost("eris"),
                                          "eris"));
         verifyHost(resource.update(getHost(HOST_ID, "eris")), "eris");
     }
 
     @Test
+    public void testUpdateIncludeStatistics() throws Exception {
+        setUpHttpHeaderExpectations("Accept", "application/xml; detail=statistics");
+        setUriInfo(setUpHostExpectations(UPDATE_COMMAND + PROCESS_HOSTS_LIST_STATS,
+                                         formatHost("eris"),
+                                         "eris"));
+        Host host = resource.update(getHost(HOST_ID, "eris"));
+        assertTrue(host.isSetStatistics());
+        verifyHost(host, "eris");
+    }
+
+
+    @Test
     public void testPowerManagementUpdate() throws Exception {
+        setUpHttpHeaderNullExpectations("Accept");
         Host host = getHost(HOST_ID, "eris");
 
         host.setPowerManagement(new PowerManagement());
@@ -126,7 +155,7 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
         host.getPowerManagement().getOptions().getOptions().add(buildOption("port", "12345"));
         host.getPowerManagement().getOptions().getOptions().add(buildOption("slot", "54321"));
 
-        setUriInfo(setUpHostExpectations(UPDATE_PM_COMMAND,
+        setUriInfo(setUpHostExpectations(UPDATE_PM_COMMAND + PROCESS_HOSTS_LIST,
                                          formatHost("eris"),
                                          "eris"));
 

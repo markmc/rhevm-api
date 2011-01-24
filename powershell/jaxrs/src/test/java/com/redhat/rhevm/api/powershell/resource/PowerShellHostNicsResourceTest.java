@@ -100,7 +100,7 @@ public class PowerShellHostNicsResourceTest
     private static final String DETAIL = "at com.redhat.rhevm.api.powershell.util.PowerShellCmd.runCommand(";
 
     protected PowerShellHostResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider) {
-        return new PowerShellHostResource(asId(HOST_NAME), executor, uriProvider, poolMap, parser);
+        return new PowerShellHostResource(asId(HOST_NAME), executor, uriProvider, poolMap, parser, httpHeaders);
     }
 
     protected String formatNics(String[] names, String[][] args) {

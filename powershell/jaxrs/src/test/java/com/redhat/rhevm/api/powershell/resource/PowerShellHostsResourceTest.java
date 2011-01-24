@@ -18,6 +18,8 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.util.List;
+
 import javax.ws.rs.WebApplicationException;
 
 import com.redhat.rhevm.api.model.Cluster;
@@ -27,6 +29,10 @@ import com.redhat.rhevm.api.model.PowerManagementOption;
 import com.redhat.rhevm.api.model.PowerManagementOptions;
 
 import org.junit.Test;
+
+import static com.redhat.rhevm.api.powershell.resource.PowerShellHostsResource.PROCESS_HOSTS_ADD;
+import static com.redhat.rhevm.api.powershell.resource.PowerShellHostsResource.PROCESS_HOSTS_LIST;
+import static com.redhat.rhevm.api.powershell.resource.PowerShellHostsResource.PROCESS_HOSTS_LIST_STATS;
 
 public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionResourceTest<Host, PowerShellHostResource, PowerShellHostsResource> {
 
@@ -45,7 +51,7 @@ public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionRes
     private static final String CLUSTER_BY_NAME_ADD_COMMAND_PROLOG =
         "$c = select-cluster -searchtext \"name=" + CLUSTER_NAME + "\";";
 
-    private static final String ADD_COMMAND = "add-host -name \"" + NEW_NAME + "\" ";
+    private static final String ADD_COMMAND = "$h = add-host -name \"" + NEW_NAME + "\" ";
     private static final String ADD_COMMAND_EPILOG = "-address \"" + ADDRESS + "\" -rootpassword \"" + PASSWORD + "\"";
     private static final String ADD_COMMAND_PM_EPILOG = " -managementtype \"fenceme\" -managementhostname \"foo\" -managementuser \"me\" -managementpassword \"mysecret\" -managementsecure -managementport \"12345\" -managementslot \"54321\" -managementoptions \"secure=true,port=12345,slot=54321\"";
     private static final String CLUSTER_BY_NAME_ADD_COMMAND_EPILOG = ADD_COMMAND_EPILOG + " -hostclusterid $c.ClusterId";
@@ -54,20 +60,34 @@ public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionRes
 
 
     public PowerShellHostsResourceTest() {
-        super(new PowerShellHostResource("0", null, null, null, null), "hosts", "host", extraArgs);
+        super(new PowerShellHostResource("0", null, null, null, null, null), "hosts", "host", extraArgs);
     }
+
 
     @Test
     public void testList() throws Exception {
-        resource.setUriInfo(setUpResourceExpectations(getSelectCommand(),
+        setUpHttpHeaderNullExpectations("Accept");
+        resource.setUriInfo(setUpResourceExpectations(getSelectCommand() + PROCESS_HOSTS_LIST,
                                                       getSelectReturn(),
                                                       NAMES));
         verifyCollection(resource.list().getHosts(), NAMES, NO_DESCRIPTIONS);
     }
 
     @Test
+    public void testListIncludeStats() throws Exception {
+        setUpHttpHeaderExpectations("Accept", "application/xml; detail=statistics");
+        resource.setUriInfo(setUpResourceExpectations(getSelectCommand() + PROCESS_HOSTS_LIST_STATS,
+                                                      getSelectReturn(),
+                                                      NAMES));
+        List<Host> hosts = resource.list().getHosts();
+        assertTrue(hosts.get(0).isSetStatistics());
+        verifyCollection(hosts, NAMES, NO_DESCRIPTIONS);
+    }
+
+    @Test
     public void testQuery() throws Exception {
-        resource.setUriInfo(setUpResourceExpectations(getQueryCommand(Host.class),
+        setUpHttpHeaderNullExpectations("Accept");
+        resource.setUriInfo(setUpResourceExpectations(getQueryCommand(Host.class) + PROCESS_HOSTS_LIST,
                                                       getQueryReturn(),
                                                       getQueryParam(),
                                                       NAMES_SUBSET));
@@ -76,7 +96,8 @@ public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionRes
 
     @Test
     public void testAdd() throws Exception {
-        resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND + ADD_COMMAND_EPILOG,
+        setUpHttpHeaderNullExpectations("Accept");
+        resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND + ADD_COMMAND_EPILOG + ";$h" + PROCESS_HOSTS_ADD,
                                                          getAddReturn(),
                                                          NEW_NAME));
         verifyResponse(resource.add(getModel(NEW_NAME, NO_DESCRIPTION)), NEW_NAME, NO_DESCRIPTION);
@@ -84,12 +105,14 @@ public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionRes
 
     @Test
     public void testAddWithClusterName() throws Exception {
+        setUpHttpHeaderNullExpectations("Accept");
         Host model = getModel(NEW_NAME, NO_DESCRIPTION);
         model.setCluster(new Cluster());
         model.getCluster().setName(CLUSTER_NAME);
         resource.setUriInfo(setUpAddResourceExpectations(CLUSTER_BY_NAME_ADD_COMMAND_PROLOG
                                                          + ADD_COMMAND
-                                                         + CLUSTER_BY_NAME_ADD_COMMAND_EPILOG,
+                                                         + CLUSTER_BY_NAME_ADD_COMMAND_EPILOG
+                                                         + ";$h" + PROCESS_HOSTS_ADD,
                                                          getAddReturn(),
                                                          NEW_NAME));
 
@@ -98,11 +121,13 @@ public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionRes
 
     @Test
     public void testAddWithClusterId() throws Exception {
+        setUpHttpHeaderNullExpectations("Accept");
         Host model = getModel(NEW_NAME, NO_DESCRIPTION);
         model.setCluster(new Cluster());
         model.getCluster().setId(CLUSTER_ID);
         resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND
-                                                         + CLUSTER_BY_ID_ADD_COMMAND_EPILOG,
+                                                         + CLUSTER_BY_ID_ADD_COMMAND_EPILOG
+                                                         + ";$h" + PROCESS_HOSTS_ADD,
                                                          getAddReturn(),
                                                          NEW_NAME));
 
@@ -111,6 +136,7 @@ public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionRes
 
     @Test
     public void testAddWithPowerManagement() throws Exception {
+        setUpHttpHeaderNullExpectations("Accept");
         Host model = getModel(NEW_NAME, NO_DESCRIPTION);
 
         model.setPowerManagement(new PowerManagement());
@@ -124,7 +150,7 @@ public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionRes
         model.getPowerManagement().getOptions().getOptions().add(buildOption("port", "12345"));
         model.getPowerManagement().getOptions().getOptions().add(buildOption("slot", "54321"));
 
-        resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND + ADD_COMMAND_EPILOG + ADD_COMMAND_PM_EPILOG,
+        resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND + ADD_COMMAND_EPILOG + ADD_COMMAND_PM_EPILOG + ";$h" + PROCESS_HOSTS_ADD,
                                                          getAddReturn(),
                                                          NEW_NAME));
 
@@ -153,10 +179,12 @@ public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionRes
 
     @Test
     public void testAddWithPort() throws Exception {
+        setUpHttpHeaderNullExpectations("Accept");
         Host model = getModel(NEW_NAME, NO_DESCRIPTION);
         model.setPort(PORT);
         resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND
-                                                         + PORT_OVERRIDE_ADD_COMMAND_EPILOG,
+                                                         + PORT_OVERRIDE_ADD_COMMAND_EPILOG
+                                                         + ";$h" + PROCESS_HOSTS_ADD,
                                                          getAddReturn(),
                                                          NEW_NAME));
 

@@ -18,10 +18,12 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
@@ -31,6 +33,7 @@ import com.redhat.rhevm.api.model.IscsiDetails;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.PowerManagement;
 import com.redhat.rhevm.api.model.PowerManagementOption;
+import com.redhat.rhevm.api.model.Statistic;
 import com.redhat.rhevm.api.resource.AssignedPermissionsResource;
 import com.redhat.rhevm.api.resource.AssignedTagsResource;
 import com.redhat.rhevm.api.resource.HostResource;
@@ -40,6 +43,7 @@ import com.redhat.rhevm.api.resource.StatisticsResource;
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellHost;
+import com.redhat.rhevm.api.powershell.model.PowerShellHostStatisticsParser;
 import com.redhat.rhevm.api.powershell.model.PowerShellStorageConnection;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellPool;
@@ -48,7 +52,10 @@ import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
+import static com.redhat.rhevm.api.common.util.DetailHelper.include;
 import static com.redhat.rhevm.api.powershell.resource.PowerShellHostsResource.joinPowerManagementOptions;
+import static com.redhat.rhevm.api.powershell.resource.PowerShellHostsResource.PROCESS_HOSTS_LIST;
+import static com.redhat.rhevm.api.powershell.resource.PowerShellHostsResource.PROCESS_HOSTS_LIST_STATS;
 
 public class PowerShellHostResource extends AbstractPowerShellActionableResource<Host> implements HostResource {
 
@@ -56,8 +63,10 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
                                   Executor executor,
                                   UriInfoProvider uriProvider,
                                   PowerShellPoolMap shellPools,
-                                  PowerShellParser parser) {
+                                  PowerShellParser parser,
+                                  HttpHeaders httpHeaders) {
         super(id, executor, uriProvider, shellPools, parser);
+        setHttpHeaders(httpHeaders);
     }
 
     public static List<Host> runAndParse(PowerShellPool pool, PowerShellParser parser, String command) {
@@ -79,7 +88,7 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
     }
 
     public static Host addLinks(UriInfo uriInfo, Host host) {
-        String [] subCollections = { "nics", "storage", "tags" };
+        String [] subCollections = { "nics", "storage", "tags", "statistics" };
 
         host.getLinks().clear();
 
@@ -92,7 +101,7 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
 
     @Override
     public Host get() {
-        return addLinks(getUriInfo(), runAndParseSingle("get-host " + PowerShellUtils.escape(getId())));
+        return addLinks(getUriInfo(), runAndParseSingle("get-host " + PowerShellUtils.escape(getId()) + getProcess()));
     }
 
     @Override
@@ -146,7 +155,7 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
 
         buf.append("update-host -hostobject $h");
 
-        return addLinks(getUriInfo(), runAndParseSingle(buf.toString()));
+        return addLinks(getUriInfo(), runAndParseSingle(buf.toString() + getProcess()));
     }
 
     @Override
@@ -284,8 +293,22 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
 
     @Override
     public StatisticsResource getStatisticsResource() {
-        // REVISIT
-        return null;
+        AbstractStatisticalQuery<Host> query = new AbstractStatisticalQuery<Host>(Host.class) {
+            public String resolve() {
+                String command = MessageFormat.format(PowerShellHostStatisticsParser.GET_HOST_STATS,
+                                                      PowerShellUtils.escape(getId()));
+                return PowerShellCmd.runCommand(getPool(), command);
+            }
+            public List<Statistic> getStatistics(String output) {
+                return PowerShellHostStatisticsParser.parse(getParser(), output);
+            }
+            public Statistic adopt(Statistic statistic) {
+                statistic.setHost(new Host());
+                statistic.getHost().setId(getId());
+                return statistic;
+            }
+        };
+        return new PowerShellStatisticsResource<Host>(getUriProvider(), query);
     }
 
     class HostInstaller extends AbstractPowerShellActionTask {
@@ -334,5 +357,9 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
         link.setRel(collection);
         link.setHref(LinkHelper.getUriBuilder(uriInfo, host).path(collection).build().toString());
         host.getLinks().add(link);
+    }
+
+    private String getProcess() {
+        return include(getHttpHeaders(), "statistics") ? PROCESS_HOSTS_LIST_STATS : PROCESS_HOSTS_LIST;
     }
 }

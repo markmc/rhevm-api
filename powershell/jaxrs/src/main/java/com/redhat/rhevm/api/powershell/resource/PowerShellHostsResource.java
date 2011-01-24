@@ -18,6 +18,7 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.List;
 
@@ -35,11 +36,20 @@ import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
+import static com.redhat.rhevm.api.common.util.DetailHelper.include;
 
 
 public class PowerShellHostsResource
     extends AbstractPowerShellCollectionResource<Host, PowerShellHostResource>
     implements HostsResource {
+
+    private static final String PROCESS_HOSTS = " | foreach '{' {0}  {1} '}'";
+
+    private static final String GET_STATS = "$_.getmemorystatistics(); $_.getcpustatistics(); ";
+    static final String PROCESS_HOSTS_LIST = MessageFormat.format(PROCESS_HOSTS, "$_; ", " ");
+    static final String PROCESS_HOSTS_LIST_STATS = MessageFormat.format(PROCESS_HOSTS, "$_; ", GET_STATS);
+    static final String PROCESS_HOSTS_ADD = MessageFormat.format(PROCESS_HOSTS, " ", " ");
+    static final String PROCESS_HOSTS_ADD_STATS = MessageFormat.format(PROCESS_HOSTS, " ", GET_STATS);
 
     public List<Host> runAndParse(String command) {
         return PowerShellHostResource.runAndParse(getPool(), getParser(), command);
@@ -52,7 +62,7 @@ public class PowerShellHostsResource
     @Override
     public Hosts list() {
         Hosts ret = new Hosts();
-        for (Host host : runAndParse(getSelectCommand("select-host", getUriInfo(), Host.class))) {
+        for (Host host : runAndParse(getSelectCommand("select-host", getUriInfo(), Host.class) + getProcess(false))) {
             ret.getHosts().add(PowerShellHostResource.addLinks(getUriInfo(), host));
         }
         return ret;
@@ -65,7 +75,7 @@ public class PowerShellHostsResource
 
         String clusterArg = getClusterArg(buf, host);
 
-        buf.append("add-host");
+        buf.append("$h = add-host");
 
         buf.append(" -name " + PowerShellUtils.escape(host.getName()));
         buf.append(" -address " + PowerShellUtils.escape(host.getAddress()));
@@ -117,6 +127,8 @@ public class PowerShellHostsResource
             }
         }
 
+        buf.append(";$h").append(getProcess(true));
+ 
         host = PowerShellHostResource.addLinks(getUriInfo(), runAndParseSingle(buf.toString()));
 
         UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(host.getId());
@@ -136,7 +148,7 @@ public class PowerShellHostsResource
     }
 
     protected PowerShellHostResource createSubResource(String id) {
-        return new PowerShellHostResource(id, getExecutor(), this, shellPools, getParser());
+        return new PowerShellHostResource(id, getExecutor(), this, shellPools, getParser(), getHttpHeaders());
     }
 
     private String getClusterArg(StringBuilder buf, Host host) {
@@ -167,5 +179,11 @@ public class PowerShellHostsResource
             }
         }
         return buf.toString();
+    }
+
+    private String getProcess(boolean add) {
+        return include(getHttpHeaders(), "statistics")
+               ? (add ? PROCESS_HOSTS_ADD_STATS : PROCESS_HOSTS_LIST_STATS)
+               : (add ? PROCESS_HOSTS_ADD : PROCESS_HOSTS_LIST);
     }
 }

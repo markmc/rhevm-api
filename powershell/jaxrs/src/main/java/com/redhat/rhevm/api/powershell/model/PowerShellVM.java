@@ -162,7 +162,7 @@ public class PowerShellVM extends VM {
             } else if (PowerShellVmStatisticsParser.isMemory(entity)) {
                 getStatistics(ret).addAll(PowerShellVmStatisticsParser.parseMemoryStats(entity));
                 continue;
-            }  else if (PowerShellVmStatisticsParser.isCpu(entity)) {
+            } else if (PowerShellVmStatisticsParser.isCpu(entity)) {
                 getStatistics(ret).addAll(PowerShellVmStatisticsParser.parseCpuStats(entity));
                 continue;
             }
