@@ -23,8 +23,8 @@ import java.io.File;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
-import expectj.ExpectJ;
-import expectj.Spawn;
+import com.redhat.rhevm.api.powershell.expectj.ExpectJ;
+import com.redhat.rhevm.api.powershell.expectj.Spawn;
 
 import org.junit.After;
 import org.junit.Assert;

@@ -40,8 +40,9 @@
     </dependency>
 
     <dependency>
-      <groupId>net.sourceforge.expectj</groupId>
-      <artifactId>expectj</artifactId>
+      <groupId>com.redhat.rhevm.api</groupId>
+      <artifactId>rhevm-api-powershell-expectj</artifactId>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>
