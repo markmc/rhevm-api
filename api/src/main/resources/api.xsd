@@ -805,6 +805,7 @@
           <!-- when creating a new host, a root password is required, but
                this is not subsequently included in the representation -->
           <xs:element name="root_password" type="xs:string" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="statistics" type="Statistics" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
