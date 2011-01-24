@@ -124,6 +124,12 @@ public abstract class AbstractPowerShellResourceTest<R /* extends BaseResource *
         return uriInfo;
     }
 
+    protected void setUpHttpHeaderNullExpectations(String... names) {
+        for (String name : names) {
+            setUpHttpHeaderExpectations(name, null);
+        }
+    }
+
     protected void setUpHttpHeaderExpectations(String name, String value) {
         List<String> values = new ArrayList<String>();
         if (value != null) {

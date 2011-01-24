@@ -230,6 +230,12 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
         return pool;
     }
 
+    protected void setUpHttpHeaderNullExpectations(String... names) {
+        for (String name : names) {
+            setUpHttpHeaderExpectations(name, null);
+        }
+    }
+
     protected void setUpHttpHeaderExpectations(String name, String value) {
         List<String> values = new ArrayList<String>();
         if (value != null) {
