@@ -324,7 +324,7 @@ public class TestExpect extends TestCase {
      *
      * @throws Exception if testing goes really bad
      */
-    public void testTelnetSpawn() throws Exception {
+    private void telnetSpawn() throws Exception {
         StringServer dropper = new StringServer();
         try {
             Spawn spawn =
