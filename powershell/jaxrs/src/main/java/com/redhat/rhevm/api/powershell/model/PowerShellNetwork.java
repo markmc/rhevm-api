@@ -63,7 +63,7 @@ public class PowerShellNetwork {
             }
 
             network.setStp(entity.get("stp", Boolean.class));
-            network.setDisplay(entity.get("isdisplay", Boolean.class));
+            network.setDisplay(Boolean.TRUE.equals(entity.get("isdisplay", Boolean.class)));
 
             ret.add(network);
         }

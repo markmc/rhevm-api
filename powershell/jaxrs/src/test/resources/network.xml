@@ -16,4 +16,20 @@
     <Property Name="Subnet" Type="System.String" />
     <Property Name="IsDisplay" Type="System.Boolean">False</Property>
   </Object>
+  <Object Type="RhevmCmd.CLINetwork">
+    <Property Name="NetworkId" Type="System.Guid">f96896ea-24dd-4e62-a701-6ca18a6d0a40</Property>
+    <Property Name="Address" Type="System.String" />
+    <Property Name="Description" Type="System.String" />
+    <Property Name="Name" Type="System.String">foo</Property>
+    <Property Name="Gateway" Type="System.String" />
+    <Property Name="Type" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="VlanId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="Status" Type="VdcCommon.BusinessEntities.NetworkStatus">
+      <Property Name="value__" Type="System.Int32">0</Property>
+    </Property>
+    <Property Name="Stp" Type="System.Boolean">False</Property>
+    <Property Name="DataCenterId" Type="System.Guid">bfb6d25c-7676-472e-9121-c1639738de45</Property>
+    <Property Name="Subnet" Type="System.String" />
+    <Property Name="IsDisplay" Type="System.Nullable`1[[System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+  </Object>
 </Objects>
