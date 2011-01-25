@@ -45,7 +45,7 @@ public class DetailHelperTest extends Assert {
 
     @Test
     public void testIncludeSome() throws Exception {
-        doTestIncludes(";detail=devices detail=statistics",
+        doTestIncludes(";detail=devices ;detail=statistics",
                        new String[] {"statistics", "permissions"},
                        new boolean[] {true, false});
     }
@@ -59,21 +59,21 @@ public class DetailHelperTest extends Assert {
 
     @Test
     public void testIncludeMore() throws Exception {
-        doTestIncludes(";detail=devices detail=statistics detail=tags detail=permissions",
+        doTestIncludes(";detail=devices; detail=statistics; detail=tags; detail=permissions",
                        new String[] {"statistics", "permissions"},
                        new boolean[] {true, true});
     }
 
     @Test
     public void testIncludeMoreCollapsed() throws Exception {
-        doTestIncludes(";detail=devices detail=statistics+tags+permissions",
+        doTestIncludes(";detail=devices; detail=statistics+tags+permissions",
                        new String[] {"statistics", "permissions"},
                        new boolean[] {true, true});
     }
 
     @Test
     public void testIncludeAll() throws Exception {
-        doTestIncludes(";detail=statistics detail=permissions",
+        doTestIncludes(";detail=statistics; detail=permissions",
                        new String[] {"statistics", "permissions"},
                        new boolean[] {true, true});
     }
@@ -87,7 +87,7 @@ public class DetailHelperTest extends Assert {
 
     @Test
     public void testIncludeWithSpacePrefix() throws Exception {
-        doTestIncludes("; detail=statistics detail=permissions",
+        doTestIncludes("; detail=statistics ; detail=permissions",
                        new String[] {"statistics", "permissions"},
                        new boolean[] {true, true});
     }
