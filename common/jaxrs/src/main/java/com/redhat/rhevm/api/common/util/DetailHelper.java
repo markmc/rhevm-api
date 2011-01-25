@@ -11,6 +11,7 @@ public class DetailHelper {
     private static final String PARAM_SEPARATOR = ";";
     private static final String SETTING_SEPARATOR = " ";
     private static final String VALUE_SEPARATOR = "=";
+    private static final String DETAIL_SEPARATOR = "\\+";
 
     public static boolean include(HttpHeaders httpheaders, String relation) {
         List<String> accepts = httpheaders.getRequestHeader(ACCEPT);
@@ -21,8 +22,10 @@ public class DetailHelper {
                 for (String setting : settings) {
                     String[] includes = setting.split(VALUE_SEPARATOR);
                     if (includes.length > 1 && DETAIL.equalsIgnoreCase(includes[0].trim())) {
-                        if (relation.equalsIgnoreCase(includes[1].trim())) {
-                            return true;
+                        for (String rel : includes[1].trim().split(DETAIL_SEPARATOR)) {
+                            if (relation.equalsIgnoreCase(rel.trim())) {
+                                return true;
+                            }
                         }
                     }
                 }
