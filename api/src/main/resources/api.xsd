@@ -1555,6 +1555,7 @@
           <xs:element name="bootable" type="xs:boolean" minOccurs="0"/>
           <xs:element name="wipe_after_delete" type="xs:boolean" minOccurs="0"/>
           <xs:element name="propagate_errors" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="statistics" type="Statistics" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -1584,6 +1585,7 @@
           <xs:element name="type" type="NicType" minOccurs="0"/>
           <xs:element ref="mac" minOccurs="0"/>
           <xs:element ref="ip" minOccurs="0"/>
+          <xs:element name="statistics" type="Statistics" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -1654,6 +1656,7 @@
           <xs:element ref="ip" minOccurs="0"/>
           <xs:element ref="vlan" minOccurs="0"/>
           <xs:element ref="slaves" minOccurs="0"/>
+          <xs:element name="statistics" type="Statistics" minOccurs="0" maxOccurs="1"/>
           <!-- Also a rel="master" link for bonded nics -->
         </xs:sequence>
       </xs:extension>
