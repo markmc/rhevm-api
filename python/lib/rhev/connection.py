@@ -88,7 +88,7 @@ class Connection(object):
         self._connection = None
         self._logger.debug('disconnected from RHEV-M')
 
-    def _retry_request(self, method, url, headers, body):
+    def _do_request_retry(self, method, url, headers, body):
         """INTERNAL: make a HTTP request, and retry if necessary."""
         if self._connection is None:
             self._connect()
@@ -112,8 +112,29 @@ class Connection(object):
             raise Error, m
         return response
 
+    def _do_request(self, method, url, headers, body):
+        """INTERNAL: perform a HTTP request."""
+        ctype = headers['Content-Type']
+        self._logger.debug('making request: %s %s (%s; %d bytes)'
+                           % (method, url, ctype, len(body)))
+        if self.verbosity > 5:
+            self._logger.debug('request body: %s' % body)
+        response = self._do_request_retry(method, url, headers, body)
+        response.body = response.body.decode('utf-8')
+        clen = response.getheader('Content-Length')
+        if clen:
+            length = '%s bytes' % clen
+        else:
+            length = response.getheader('Transfer-Encoding', 'unknown')
+        ctype = response.getheader('Content-Type')
+        self._logger.debug('got response: %s %s (%s; %s bytes)'
+                           % (response.status, response.reason, ctype, clen))
+        if self.verbosity > 5:
+            self._logger.debug('response body: %s' % response.body)
+        return response
+
     def _make_request(self, method, url, headers=None, body=None):
-        """INTERNAL: perform a HTTP request to the API."""
+        """INTERNAL: perform a HTTP request to the API, following redirects."""
         if headers is None:
             headers = {}
         if body is None:
@@ -126,23 +147,11 @@ class Connection(object):
         headers['Accept'] = 'application/xml'
         headers['Content-Type'] = 'application/xml; charset=utf-8'
         headers['Accept-Charset'] = 'utf-8'
-        ctype = headers['Content-Type']
-        self._logger.debug('making request: %s %s (%s; %d bytes)'
-                           % (method, url, ctype, len(body)))
-        if self.verbosity > 5:
-            self._logger.debug('request body: %s' % body)
-        response = self._retry_request(method, url, headers, body)
-        response.body = response.body.decode('utf-8')
-        clen = response.getheader('Content-Length')
-        if clen:
-            length = '%s bytes' % clen
-        else:
-            length = response.getheader('Transfer-Encoding', 'unknown')
-        ctype = response.getheader('Content-Type')
-        self._logger.debug('got response: %s %s (%s; %s bytes)'
-                           % (response.status, response.reason, ctype, clen))
-        if self.verbosity > 5:
-            self._logger.debug('response body: %s' % response.body)
+        for i in range(3):
+            response = self._do_request(method, url, headers, body)
+            if response.status != http.FOUND:
+                break
+            url = response.getheader('Location')
         return response
 
     def _parse_xml(self, response):
@@ -165,9 +174,6 @@ class Connection(object):
         for seg in segments:
             path += [ s for s in seg.split('/') if s ]
         joined = '/' + '/'.join(path)
-        # XXX: Jetty requires a trailing '/' to the entrypoint:
-        if joined == self.entrypoint.rstrip('/'):
-            joined += '/'
         return joined
 
     def _resolve_url(self, typ, base=None, id=None, search=None,
