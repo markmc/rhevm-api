@@ -57,6 +57,8 @@ class TestMapping(BaseTest):
             assert isinstance(vm, schema.VM)
         for i in range(len(vms)):
             assert isinstance(vms[i], schema.VM)
+        for vm in vms:
+            assert isinstance(vm, schema.VM)
 
     @depends(test_prepare)
     def test_list_search(self):

@@ -158,6 +158,10 @@ class CollectionMixin(object):
         items = getattr(self, self._resource)
         return len(items)
 
+    def __iter__(self):
+        for i in range(len(self)):
+            yield self[i]
+
 
 class ResourceMixin(object):
 
