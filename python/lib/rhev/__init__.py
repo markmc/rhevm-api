@@ -10,4 +10,3 @@ from rhev.error import Error
 from rhev.connection import Connection
 from rhev.object import *
 from rhev import schema
-from rhev._version import *

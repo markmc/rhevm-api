@@ -6,4 +6,3 @@ dist/
 header
 test.conf
 _schema.py
-_version.py

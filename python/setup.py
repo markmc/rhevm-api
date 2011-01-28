@@ -50,29 +50,6 @@ class mybuild(build):
         self.c_topdir = base
         return self.c_topdir
 
-    def _store_version(self):
-        srcdir = self._topdir()
-        setup = os.path.join(srcdir, 'setup.py')
-        version = os.path.join(srcdir, 'lib', 'rhev', '_version.py')
-        try:
-            st1 = os.stat(setup)
-        except OSError:
-            raise DistutilsError, 'Could not locate setup.py'
-        try:
-            st2 = os.stat(version)
-        except OSError:
-            st2 = None
-        if st2 and st1.st_mtime < st2.st_mtime:
-            print 'version file up to date'
-            return
-        contents = '# This is a geneated file - do not edit!\n'
-        info = tuple(map(int, version_info['version'].split('.')))
-        contents += 'version = %s\n' % repr(info)
-        fout = file(version, 'w')
-        fout.write(contents)
-        fout.close()
-        print 'version file created at %s' % version
-
     def _generate_schema(self):
         srcdir = self._topdir()
         xsd = os.path.join(srcdir, 'api.xsd')
@@ -100,7 +77,6 @@ class mybuild(build):
         print 'schema generated as %s' % schema
 
     def run(self):
-        self._store_version()
         self._generate_schema()
         build.run(self)
 
