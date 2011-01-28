@@ -33,6 +33,7 @@ _mapping_data = \
     (_schema.Template, _schema.Templates, 'templates'),
     (_schema.VmPool, _schema.VmPools, 'vmpools'),
     (_schema.User, _schema.Users, 'users'),
+    (_schema.Event, _schema.Events, 'events'),
     (_schema.Tag, _schema.Tags, 'tags'),
     (_schema.Action, _schema.Actions, None),
     (_schema.Capabilities, None, 'capabilities')
