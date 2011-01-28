@@ -26,7 +26,7 @@ class Connection(object):
     retries = 5
     verbosity = 1
 
-    def __init__(self, url, username, password):
+    def __init__(self, url=None, username=None, password=None):
         """Constructor."""
         self.url = url
         self.username = username
@@ -34,7 +34,6 @@ class Connection(object):
         self.scheme = None
         self.entrypoint = None
         self._logger = logging.getLogger('rhev.RhevConnection')
-        self._parse_url()
         self._connection = None
         self._cache = {}
         self._api = None
@@ -57,13 +56,20 @@ class Connection(object):
         self.port = port
         self.entrypoint = parsed.path
 
-    def connect(self):
+    def connect(self, url=None, username=None, password=None):
         """Connect to the REST API. It is safe to call this method multiple
         times, only one connection will be made. It is not required to call
         this method. It will be called automatically when a connection is
         required."""
         if self._connection is not None:
             return
+        if url is not None:
+            self.url = url
+        if username is not None:
+            self.username = username
+        if password is not None:
+            self.password = password
+        self._parse_url()
         self._connect()
 
     def _connect(self):
@@ -86,12 +92,11 @@ class Connection(object):
             return
         self._connection.close()
         self._connection = None
+        self._cache.clear()
         self._logger.debug('disconnected from RHEV-M')
 
     def _do_request_retry(self, method, url, headers, body):
         """INTERNAL: make a HTTP request, and retry if necessary."""
-        if self._connection is None:
-            self._connect()
         for i in range(self.retries):
             try:
                 self._connection.request(method, url, body, headers)
@@ -135,6 +140,7 @@ class Connection(object):
 
     def _make_request(self, method, url, headers=None, body=None):
         """INTERNAL: perform a HTTP request to the API, following redirects."""
+        self.connect()
         if headers is None:
             headers = {}
         if body is None:
@@ -179,6 +185,7 @@ class Connection(object):
     def _resolve_url(self, typ, base=None, id=None, search=None,
                      special=None, **query):
         """INTERNAL: resolve a relationship `name' under the URL `base'."""
+        self.connect()
         info = schema._type_info(typ)
         if info is None:
             raise TypeError, 'Unknown binding type: %s' % typ
