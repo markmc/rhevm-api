@@ -192,17 +192,18 @@ class SubResourceMixin(object):
                         break
                 else:
                     plural = inflect.plural_noun(name)
-                    if plural is not None:
-                        for link in links:
-                            if link.rel == plural:
-                                info = _type_info(plural)
-                                if info is None:
-                                    raise AttributeError
-                                func = self._connection.get
-                                cls = info[0]
-                                break
-                        else:
-                            raise AttributeError
+                    if plural is None:
+                        raise AttributeError
+                    for link in links:
+                        if link.rel == plural:
+                            info = _type_info(plural)
+                            if info is None:
+                                raise AttributeError
+                            func = self._connection.get
+                            cls = info[0]
+                            break
+                    else:
+                        raise AttributeError
                 return _bind(func, cls, base=self)
         raise AttributeError
 
