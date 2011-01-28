@@ -75,7 +75,7 @@ class Connection(object):
         elif self.scheme == 'http':
             factory = HTTPConnection
         else:
-            raise Error, 'Unsupported scheme: %s' % scheme
+            raise Error, 'Unsupported scheme: %s' % self.scheme
         self._connection = factory(self.host, self.port)
         self._logger.debug('connecting to RHEV-M at %s:%s' % (self.host, self.port))
         self._connection.connect()
