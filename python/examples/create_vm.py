@@ -10,10 +10,6 @@ import sys
 from rhev import create, schema
 from rhev import Connection as RhevConnection
 from rhev import Error as RhevError
-from rhev.util import setup_logging
-
-if '--debug' in sys.argv[1:]:
-    setup_logging(debug=True)
 
 try:
     api = create(RhevConnection)
@@ -48,6 +44,8 @@ try:
     api.create(nic, base=vm)
 
     api.action(vm, 'start')
+
+    print 'VM \'myvm\' created and started up'
 
 except RhevError, e:
     print 'Error: %s' % str(e)
