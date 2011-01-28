@@ -61,7 +61,7 @@ public class BaseActionResource<R extends BaseResource> implements ActionResourc
         Link link = new Link();
         link.setRel(rel);
         link.setHref(href);
-        action.getLink().add(link);
+        action.getLinks().add(link);
     }
 
     private void addLinks(UriInfo uriInfo) {

@@ -159,7 +159,7 @@ public abstract class AbstractPowerShellResourceTest<R /* extends BaseResource *
         Action action = (Action)entity;
         assertNotNull(action.getHref());
         assertNotNull(action.getId());
-        assertNotNull(action.getLink());
+        assertNotNull(action.getLinks());
         assertEquals(async, action.isAsync());
         if (action.getStatus() == Status.FAILED && reason == null) {
             assertNotNull(action.getFault());
@@ -173,13 +173,13 @@ public abstract class AbstractPowerShellResourceTest<R /* extends BaseResource *
                    : reason == null
                      ? action.getStatus().equals(Status.COMPLETE)
                      : action.getStatus().equals(Status.FAILED));
-        assertTrue(action.getLink().size() == 2);
-        assertEquals("expected parent link", "parent", action.getLink().get(0).getRel());
-        assertNotNull(action.getLink().get(0).getHref());
-        assertTrue(action.getLink().get(0).getHref().indexOf(baseUri) != -1);
-        assertNotNull(action.getLink().get(1).getHref());
-        assertEquals("expected replay link", "replay", action.getLink().get(1).getRel());
-        assertTrue(action.getLink().get(1).getHref().indexOf(baseUri) != -1);
+        assertTrue(action.getLinks().size() == 2);
+        assertEquals("expected parent link", "parent", action.getLinks().get(0).getRel());
+        assertNotNull(action.getLinks().get(0).getHref());
+        assertTrue(action.getLinks().get(0).getHref().indexOf(baseUri) != -1);
+        assertNotNull(action.getLinks().get(1).getHref());
+        assertEquals("expected replay link", "replay", action.getLinks().get(1).getRel());
+        assertTrue(action.getLinks().get(1).getHref().indexOf(baseUri) != -1);
         assertEquals("unexpected async task", async ? 1 : 0, executor.taskCount());
         executor.runNext();
         if (reason != null) {
