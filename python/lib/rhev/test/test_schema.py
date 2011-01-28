@@ -94,7 +94,7 @@ class TestSchema(object):
         assert hasattr(schema, 'VLAN')
         assert hasattr(schema, 'MAC')
         assert hasattr(schema, 'Slaves')
-        assert hasattr(schema, 'IscsiParameters')
+        assert hasattr(schema, 'IscsiDetails')
         assert hasattr(schema, 'LogicalUnit')
         assert hasattr(schema, 'VolumeGroup')
         assert hasattr(schema, 'CPU')

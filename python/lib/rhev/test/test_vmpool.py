@@ -45,6 +45,7 @@ class TestVmPool(BaseTest):
         disk.wipe_after_delete = False
         disk2 = self.api.create(disk, base=vm2)
         assert disk2 is not None
+        self.wait_for_status(vm2, 'DOWN')
         template = schema.new(schema.Template)
         template.name = util.random_name('tmpl')
         template.vm = schema.ref(vm2)

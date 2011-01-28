@@ -8,84 +8,82 @@
 
 import time
 
-from rhev import _schema
+from rhev import _schema, inflect
 from rhev._schema import BaseResource, BaseResources
+ComplexType = _schema.pyxb.binding.basis.complexTypeDefinition
 
 # Maintaining this table is a (small) price we pay for slight naming
 # inconsistencies in the API
 
 _mapping_data = \
-{
-    # For resources: Type: (constructor, tag, collection, relationship)
-    # For collections: Type: (constructor, tag, resource, relationship)
-    _schema.API: (_schema.api, 'api', None, '/'),
-    _schema.DataCenter: (_schema.data_center, 'data_center', _schema.DataCenters, 'datacenters'),
-    _schema.DataCenters: (_schema.data_centers, 'data_centers', _schema.DataCenter, 'datacenters'),
-    _schema.Cluster: (_schema.cluster, 'cluster', _schema.Clusters, 'clusters'),
-    _schema.Clusters: (_schema.clusters, 'clusters', _schema.Cluster, 'clusters'),
-    _schema.StorageDomain: (_schema.storage_domain, 'storage_domain', _schema.StorageDomains, 'storagedomains'),
-    _schema.StorageDomains: (_schema.storage_domains, 'storage_domains', _schema.StorageDomain,'storagedomains'),
-    _schema.Network: (_schema.network, 'network', _schema.Networks, 'networks'),
-    _schema.Networks: (_schema.networks, 'networks', _schema.Network, 'networks'),
-    _schema.Host: (_schema.host, 'host', _schema.Hosts, 'hosts'),
-    _schema.Hosts: (_schema.hosts, 'hosts', _schema.Host, 'hosts'),
-    _schema.HostNIC: (_schema.host_nic, 'host_nic', _schema.HostNics, 'nics'),
-    _schema.HostNics: (_schema.host_nics, 'host_nics', _schema.HostNIC, 'nics'),
-    _schema.Storage: (_schema.storage, 'storage', _schema.HostStorage, 'storage'),
-    _schema.HostStorage: (_schema.host_storage, 'host_storage', _schema.Storage, 'storage'),
-    _schema.VM: (_schema.vm, 'vm', _schema.VMs, 'vms'),
-    _schema.VMs: (_schema.vms, 'vms', _schema.VM, 'vms'),
-    _schema.NIC: (_schema.nic, 'nic', _schema.Nics, 'nics'),
-    _schema.Nics: (_schema.nics, 'nics', _schema.NIC, 'nics'),
-    _schema.Disk: (_schema.disk, 'disk', _schema.Disks, 'disks'),
-    _schema.Disks: (_schema.disks, 'disks', _schema.Disk, 'disks'),
-    _schema.CdRom: (_schema.cdrom, 'cdrom', _schema.CdRoms, 'cdroms'),
-    _schema.CdRoms: (_schema.cdroms, 'cdroms', _schema.CdRom, 'cdroms'),
-    _schema.Template: (_schema.template, 'template', _schema.Templates, 'templates'),
-    _schema.Templates: (_schema.templates, 'templates', _schema.Template, 'templates'),
-    _schema.VmPool: (_schema.vmpool, 'vmpool', _schema.VmPools, 'vmpools'),
-    _schema.VmPools: (_schema.vmpools, 'vmpools', _schema.VmPool, 'vmpools'),
-    _schema.User: (_schema.user, 'user', _schema.Users, 'users'),
-    _schema.Users: (_schema.users, 'users', _schema.User, 'users'),
-    _schema.Tag: (_schema.tag, 'tag', _schema.Tags, 'tags'),
-    _schema.Tags: (_schema.tags, 'tags', _schema.Tag, 'tags'),
-    _schema.TagParent: (_schema.parent, 'parent', None, None),
-    _schema.Capabilities: (_schema.capabilities, 'capabilities', None, 'capabilities'),
-    _schema.Version: (_schema.version, 'version', None, None),
-    _schema.Action: (_schema.action, 'action', None, None),
-    _schema.IP: (_schema.ip, 'ip', None, None),
-    _schema.VLAN: (_schema.vlan, 'vlan', None, None),
-    _schema.MAC: (_schema.mac, 'mac', None, None),
-    _schema.Slaves: (_schema.slaves, 'slaves', None, None),
-    _schema.IscsiParameters: (_schema.iscsi, 'iscsi', None, None),
-    _schema.LogicalUnit: (_schema.logical_unit, 'logical_unit', None, None),
-    _schema.VolumeGroup: (_schema.volume_group, 'volume_group', None, None),
-    _schema.CPU: (_schema.cpu, 'cpu', None, None),
-    _schema.CpuTopology: (_schema.topology, 'topology', None, None),
-    _schema.Display: (_schema.display, 'display', None, None),
-    _schema.HighlyAvailable: (_schema.highly_available, 'highly_available', None, None),
-    _schema.OperatingSystem: (_schema.os, 'os', None, None),
-    _schema.Boot: (_schema.boot, 'boot', None, None),
-    _schema.Fault: (_schema.fault, 'fault', None, None)
-}
+[
+    # (resource, collection, relationship)
+    (_schema.API, None, '/'),
+    (_schema.DataCenter, _schema.DataCenters, 'datacenters'),
+    (_schema.Cluster, _schema.Clusters, 'clusters'),
+    (_schema.StorageDomain, _schema.StorageDomains, 'storagedomains'),
+    (_schema.Network, _schema.Networks, 'networks'),
+    (_schema.Host, _schema.Hosts, 'hosts'),
+    (_schema.HostNIC, _schema.HostNics, 'nics'),
+    (_schema.HostStorage, _schema.Storage, 'storage'),
+    (_schema.VM, _schema.VMs, 'vms'),
+    (_schema.NIC, _schema.Nics, 'nics'),
+    (_schema.Disk, _schema.Disks, 'disks'),
+    (_schema.CdRom, _schema.CdRoms, 'cdroms'),
+    (_schema.Template, _schema.Templates, 'templates'),
+    (_schema.VmPool, _schema.VmPools, 'vmpools'),
+    (_schema.User, _schema.Users, 'users'),
+    (_schema.Tag, _schema.Tags, 'tags'),
+    (_schema.Action, _schema.Actions, None),
+    (_schema.Capabilities, None, 'capabilities')
+]
 
-_type_mapping = {}
+# This is a mapping of binding class -> element constructor. Element
+# constructors are generated for all top-level elements.
+
+_element_constructors = {}
+
+for key in _schema.Namespace.elementBindings():
+    cls = _schema.Namespace.elementBindings()[key].typeDefinition()
+    _element_constructors[cls] = getattr(_schema, key)
 
 
-def _type_info(obj):
-    """Return information for a mapping intance or type."""
-    if obj not in _type_mapping:
-        return None
-    base = _type_mapping[obj]
-    info = (base,) + _mapping_data[base]
+def _type_info(typ_or_rel):
+    """Return information for a mapping type or relationship."""
+    for info in _mapping_data:
+        if isinstance(typ_or_rel, basestring):
+            if info[2] == typ_or_rel:
+                break
+        elif isinstance(typ_or_rel, type):
+            if issubclass(typ_or_rel, info[0]) or \
+                    info[1] is not None and issubclass(typ_or_rel, info[1]):
+                break
+    else:
+        return
+    info += (_element_constructors[info[0]].name().localName(),)
+    if info[1] and info[1] in _element_constructors:
+        info += (_element_constructors[info[1]].name().localName(),)
+    else:
+        info += (None,)
+    info += (_element_constructors[info[0]],)
+    if info[1] and info[1] in _element_constructors:
+        info += (_element_constructors[info[1]],)
+    else:
+        info += (None,)
     return info
 
 def new(cls, *args, **kwargs):
     """Create a new object."""
-    if cls not in _type_mapping:
+    info = _type_info(cls)
+    if info is not None:
+        if issubclass(cls, info[0]):
+            factory = info[5]
+        elif issubclass(cls, info[1]):
+            factory = info[6]
+    elif issubclass(cls, ComplexType):
+        factory = cls
+    else:
         raise TypeError, 'Do not know how to construct %s' % cls
-    base = _type_mapping[cls]
-    factory = _mapping_data[base][0]
     obj = factory(*args, **kwargs)
     return obj
 
@@ -163,16 +161,10 @@ class CollectionMixin(object):
             yield self[i]
 
 
-class ResourceMixin(object):
-
-    def _get_mapping_type(self, name):
-        for cls in _type_mapping:
-            if issubclass(cls, BaseResources):
-                continue
-            base = _type_mapping[cls]
-            if _mapping_data[base][3] == name:
-                return cls
-        return None
+class SubResourceMixin(object):
+    """This class is used to extend "sub" resource types. "sub" resources are
+    not real resources, but they do follow <link>s and <actions>s.
+    """
 
     def __getattr__(self, name):
         if '_connection' not in self.__dict__:
@@ -189,23 +181,39 @@ class ResourceMixin(object):
         if hasattr(self.__class__, 'link'):
             links = self.link
             if links is not None:
-                cls = self._get_mapping_type(name)
-                if cls is None:
-                    # Very crude singular -> plural inflection. It works for
-                    # the types we support....
-                    if name.endswith('s'):
-                        raise AttributeError
-                    name += 's'
-                    cls = self._get_mapping_type(name)
-                    if cls is None:
-                        raise AttributeError
-                    func = self._connection.get
+                for link in links:
+                    if link.rel == name:
+                        info = _type_info(link.rel)
+                        if info is None:
+                            raise AttributeError
+                        func = self._connection.getall
+                        cls = info[1]
+                        break
                 else:
-                    func = self._connection.getall
-                if name not in [ link.rel for link in links ]:
-                    raise AttributeError
+                    plural = inflect.plural_noun(name)
+                    if plural is not None:
+                        for link in links:
+                            if link.rel == plural:
+                                info = _type_info(plural)
+                                if info is None:
+                                    raise AttributeError
+                                func = self._connection.get
+                                cls = info[0]
+                                break
+                        else:
+                            raise AttributeError
                 return _bind(func, cls, base=self)
         raise AttributeError
+
+
+class ResourceMixin(SubResourceMixin):
+    """This class is used to extend resource types. Resources have the
+    following behavior:
+
+    * <link> dereferencing
+    * <action> dereferencing
+    * various shorthand methods: reload(), add(), update(), ...
+    """
 
     def reload(self):
         new = self._connection.reload(self)
@@ -242,16 +250,26 @@ class ResourceMixin(object):
 
 module = globals()
 
-for cls in _mapping_data:
+for sym in dir(_schema):
+    cls = getattr(_schema, sym)
+    if not isinstance(cls, type) or not issubclass(cls, ComplexType):
+        continue
     name = cls.__name__
+    bases = (cls,)
     members = {}
-    if issubclass(cls, BaseResources):
-        resource = _mapping_data[cls][2]
-        members['_resource'] = _mapping_data[resource][1]
+    if cls in (BaseResource, BaseResources):
+        continue
+    elif issubclass(cls, BaseResources):
+        bases += (CollectionMixin,)
+        info = _type_info(cls)
+        if info is None:
+            continue
+        members['_resource'] = info[3]
         mixin = CollectionMixin
-    else:
-        mixin = ResourceMixin
-    derived = type(name, (cls, mixin), members)
+    elif issubclass(cls, BaseResource):
+        bases += (ResourceMixin,)
+    elif cls is _schema.API:
+        bases += (SubResourceMixin,)
+    derived = type(name, bases, members)
     cls._SetSupersedingClass(derived)
     module[name] = derived
-    _type_mapping[derived] = cls

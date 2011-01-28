@@ -182,6 +182,7 @@ class TestVM(BaseTest):
         disk2 = self.api.create(disk, base=vm)
         assert isinstance(disk2, schema.Disk)
         assert disk2.id is not None
+        self.wait_for_status(vm, 'DOWN')
         self.store.disk = disk2
 
     @depends(test_add_disk)

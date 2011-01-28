@@ -93,7 +93,7 @@ class TestStorage(BaseTest):
         host = self.store.host
         target = self.store.target
         action = schema.new(schema.Action)
-        action.iscsi = schema.new(schema.IscsiParameters)
+        action.iscsi = schema.new(schema.IscsiDetails)
         action.iscsi.address = self.store.address
         action.iscsi.port = self.store.port
         result = self.api.action(host, 'iscsidiscover', action)
@@ -105,7 +105,7 @@ class TestStorage(BaseTest):
     def _test_iscsi_login(self):
         host = self.store.host
         action = schema.new(schema.Action)
-        action.iscsi = schema.new(schema.IscsiParameters)
+        action.iscsi = schema.new(schema.IscsiDetails)
         action.iscsi.address = self.store.address
         action.iscsi.port = self.store.port
         action.iscsi.target = self.store.target

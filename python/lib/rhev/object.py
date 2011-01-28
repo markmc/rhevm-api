@@ -23,7 +23,7 @@ def create(type, *args, **kwargs):
                     raise Error, '$%s not set' % name
                 kwargs[key] = value
         obj = type(*args, **kwargs)
-    elif type in schema._type_mapping:
+    elif issubclass(type, schema.ComplexType):
         obj = schema.new(type, *args, **kwargs)
     else:
         obj = type(*args, **kwargs)
