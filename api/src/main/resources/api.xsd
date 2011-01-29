@@ -718,7 +718,7 @@
               <jaxb:property name="Clusters"/>
             </xs:appinfo>
           </xs:annotation>
-          <xs:element ref="cluster" maxOccurs="unbounded"/>
+          <xs:element ref="cluster" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -1159,11 +1159,11 @@
 
   <xs:group name="IscsiTarget">
     <xs:sequence>
-      <xs:element name="address" type="xs:string"/>
-      <xs:element name="port" type="xs:unsignedShort"/>
-      <xs:element name="target" type="xs:string"/>
-      <xs:element name="username" type="xs:string"/>
-      <xs:element name="password" type="xs:string"/>
+      <xs:element name="address" type="xs:string" minOccurs="0"/>
+      <xs:element name="port" type="xs:unsignedShort" minOccurs="0"/>
+      <xs:element name="target" type="xs:string" minOccurs="0"/>
+      <xs:element name="username" type="xs:string" minOccurs="0"/>
+      <xs:element name="password" type="xs:string" minOccurs="0"/>
     </xs:sequence>
   </xs:group>
 
@@ -1181,7 +1181,7 @@
   <xs:complexType name="VolumeGroup">
     <xs:sequence>
       <xs:element name="name" type="xs:string"/>
-      <xs:element ref="logical_unit" maxOccurs="unbounded">
+      <xs:element ref="logical_unit" minOccurs="0" maxOccurs="unbounded">
         <xs:annotation>
           <xs:appinfo>
             <jaxb:property name="LogicalUnits"/>
@@ -1194,7 +1194,7 @@
 
   <xs:group name="IscsiStorage">
     <xs:sequence>
-      <xs:element ref="logical_unit" maxOccurs="unbounded">
+      <xs:element ref="logical_unit" minOccurs="0" maxOccurs="unbounded">
         <xs:annotation>
           <xs:appinfo>
             <jaxb:property name="LogicalUnits"/>
@@ -1452,7 +1452,7 @@
                 <jaxb:property name="VmPools"/>
             </xs:appinfo>
           </xs:annotation>
-          <xs:element ref="vmpool" maxOccurs="unbounded"/>
+          <xs:element ref="vmpool" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -1508,7 +1508,7 @@
     <xs:complexContent>
       <xs:extension base="BaseDevices">
         <xs:sequence>
-          <xs:element ref="cdrom" maxOccurs="unbounded">
+          <xs:element ref="cdrom" minOccurs="0" maxOccurs="unbounded">
             <xs:annotation>
               <xs:appinfo>
                 <jaxb:property name="CdRoms"/>
@@ -1534,7 +1534,7 @@
     <xs:complexContent>
       <xs:extension base="BaseDevices">
         <xs:sequence>
-          <xs:element ref="floppy" maxOccurs="unbounded">
+          <xs:element ref="floppy" minOccurs="0" maxOccurs="unbounded">
             <xs:annotation>
               <xs:appinfo>
                 <jaxb:property name="Floppies"/>
@@ -1570,7 +1570,7 @@
     <xs:complexContent>
       <xs:extension base="BaseDevices">
         <xs:sequence>
-          <xs:element ref="disk" maxOccurs="unbounded">
+          <xs:element ref="disk" minOccurs="0" maxOccurs="unbounded">
             <xs:annotation>
               <xs:appinfo>
                 <jaxb:property name="Disks"/>
@@ -1600,7 +1600,7 @@
     <xs:complexContent>
       <xs:extension base="BaseDevices">
         <xs:sequence>
-          <xs:element ref="nic" maxOccurs="unbounded">
+          <xs:element ref="nic" minOccurs="0" maxOccurs="unbounded">
             <xs:annotation>
               <xs:appinfo>
                 <jaxb:property name="Nics"/>
@@ -1639,7 +1639,7 @@
                 <jaxb:property name="Snapshots"/>
             </xs:appinfo>
           </xs:annotation>
-          <xs:element ref="snapshot" maxOccurs="unbounded"/>
+          <xs:element ref="snapshot" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -1706,7 +1706,7 @@
     <xs:complexContent>
       <xs:extension base="BaseResources">
         <xs:sequence>
-          <xs:element ref="storage" maxOccurs="unbounded"/>
+          <xs:element ref="storage" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -1747,7 +1747,7 @@
                 <jaxb:property name="Tags"/>
             </xs:appinfo>
           </xs:annotation>
-          <xs:element ref="tag" maxOccurs="unbounded"/>
+          <xs:element ref="tag" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
