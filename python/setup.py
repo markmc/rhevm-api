@@ -7,6 +7,7 @@
 # file "AUTHORS" for a complete overview.
 
 import sys
+import os
 import os.path 
 
 from setuptools import setup
@@ -32,12 +33,15 @@ version_info = {
 }
 
 topdir = os.path.split(os.path.abspath(__file__))[0]
+if topdir == os.getcwd():
+    topdir = ''
 
 
 class mybuild(build):
 
     def _generate_schema(self):
-        xsd = os.path.join(topdir, 'api.xsd')
+        xsd = os.path.normpath(os.path.join(topdir,
+                    '../api/src/main/resources/api.xsd'))
         libdir = os.path.join(topdir, 'lib', 'rhev')
         schema = os.path.join(libdir, '_schema.py')
         try:
@@ -49,7 +53,7 @@ class mybuild(build):
         except OSError:
             st2 = None
         if st2 and st1.st_mtime < st2.st_mtime:
-            print 'schema up to date'
+            print 'schema is up to date'
             return
         try:
             pipe = Popen(('pyxbgen', '-m', '_schema', '--binding-root',
@@ -59,7 +63,8 @@ class mybuild(build):
             raise DistutilsError, 'Could not find pyxbgen.'
         if pipe.returncode:
             raise DistutilsError, 'Could not generate schema'
-        print 'schema generated as %s' % schema
+        print 'xmlschema input: %s' % xsd
+        print 'schema generated as: %s' % schema
 
     def run(self):
         self._generate_schema()
