@@ -14,7 +14,6 @@ from distutils.command.build import build
 from distutils.errors import DistutilsError
 from subprocess import Popen, PIPE
 
-
 version_info = {
     'name': 'python-rhev',
     'version': '0.9',
@@ -32,28 +31,14 @@ version_info = {
         'Programming Language :: Python' ],
 }
 
+topdir = os.path.split(os.path.abspath(__file__))[0]
+
 
 class mybuild(build):
 
-    def _topdir(self):
-        if hasattr(self, 'c_topdir'):
-            return self.c_topdir
-        fname = __file__
-        base, tail = os.path.split(fname)
-        while base != '/':
-            testname = os.path.join(base, 'setup.py')
-            if os.access(testname, os.R_OK):
-                break
-            base, tail = os.path.split(base)
-        else:
-            raise DistutilsError, 'Could not determine source directory.'
-        self.c_topdir = base
-        return self.c_topdir
-
     def _generate_schema(self):
-        srcdir = self._topdir()
-        xsd = os.path.join(srcdir, 'api.xsd')
-        libdir = os.path.join(srcdir, 'lib', 'rhev')
+        xsd = os.path.join(topdir, 'api.xsd')
+        libdir = os.path.join(topdir, 'lib', 'rhev')
         schema = os.path.join(libdir, '_schema.py')
         try:
             st1 = os.stat(xsd)
@@ -82,7 +67,7 @@ class mybuild(build):
 
 
 setup(
-    package_dir = { '': 'lib' },
+    package_dir = { '': os.path.join(topdir, 'lib') },
     packages = [ 'rhev', 'rhev.test' ],
     cmdclass = { 'build': mybuild },
     install_requires = [ 'PyXB >= 1.1.0' ],
