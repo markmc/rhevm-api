@@ -13,3 +13,6 @@ class Error(Exception):
         super(Error, self).__init__(message)
         for kw in kwargs:
             setattr(self, kw, kwargs[kw])
+
+class ParseError(Error):
+    """Parse error"""
