@@ -9,12 +9,8 @@
 import time
 
 from rhev import _schema, inflect
-from rhev.error import ParseError
 from rhev._schema import BaseResource, BaseResources
-
-from pyxb.binding.basis import complexTypeDefinition as ComplexType
-from pyxb.binding.basis import simpleTypeDefinition as SimpleType
-from pyxb.exceptions_ import PyXBException
+ComplexType = _schema.pyxb.binding.basis.complexTypeDefinition
 
 # Maintaining this table is a (small) price we pay for slight naming
 # inconsistencies in the API
@@ -22,27 +18,25 @@ from pyxb.exceptions_ import PyXBException
 _mapping_data = \
 [
     # (resource, collection, relationship)
-    (_schema.API, None, '/', True),
-    (_schema.DataCenter, _schema.DataCenters, 'datacenters', True),
-    (_schema.Cluster, _schema.Clusters, 'clusters', True),
-    (_schema.StorageDomain, _schema.StorageDomains, 'storagedomains', True),
-    (_schema.Network, _schema.Networks, 'networks', True),
-    (_schema.Host, _schema.Hosts, 'hosts', True),
-    (_schema.HostNIC, _schema.HostNics, 'nics', False),
-    (_schema.HostStorage, _schema.Storage, 'storage', False),
-    (_schema.VM, _schema.VMs, 'vms', True),
-    (_schema.NIC, _schema.Nics, 'nics', False),
-    (_schema.Disk, _schema.Disks, 'disks', False),
-    (_schema.CdRom, _schema.CdRoms, 'cdroms', False),
-    (_schema.Floppy, _schema.Floppies, 'floppies', False),
-    (_schema.Statistic, _schema.Statistics, 'statistics', False),
-    (_schema.Template, _schema.Templates, 'templates', True),
-    (_schema.VmPool, _schema.VmPools, 'vmpools', True),
-    (_schema.User, _schema.Users, 'users', True),
-    (_schema.Event, _schema.Events, 'events', True),
-    (_schema.Tag, _schema.Tags, 'tags', True),
-    (_schema.Action, _schema.Actions, None, False),
-    (_schema.Capabilities, None, 'capabilities', True)
+    (_schema.API, None, '/'),
+    (_schema.DataCenter, _schema.DataCenters, 'datacenters'),
+    (_schema.Cluster, _schema.Clusters, 'clusters'),
+    (_schema.StorageDomain, _schema.StorageDomains, 'storagedomains'),
+    (_schema.Network, _schema.Networks, 'networks'),
+    (_schema.Host, _schema.Hosts, 'hosts'),
+    (_schema.HostNIC, _schema.HostNics, 'nics'),
+    (_schema.HostStorage, _schema.Storage, 'storage'),
+    (_schema.VM, _schema.VMs, 'vms'),
+    (_schema.NIC, _schema.Nics, 'nics'),
+    (_schema.Disk, _schema.Disks, 'disks'),
+    (_schema.CdRom, _schema.CdRoms, 'cdroms'),
+    (_schema.Template, _schema.Templates, 'templates'),
+    (_schema.VmPool, _schema.VmPools, 'vmpools'),
+    (_schema.User, _schema.Users, 'users'),
+    (_schema.Event, _schema.Events, 'events'),
+    (_schema.Tag, _schema.Tags, 'tags'),
+    (_schema.Action, _schema.Actions, None),
+    (_schema.Capabilities, None, 'capabilities')
 ]
 
 # This is a mapping of binding class -> element constructor. Element
@@ -79,42 +73,14 @@ def _type_info(typ_or_rel):
         info += (None,)
     return info
 
-def subtype(prop):
-    """Return the binding type of a property."""
-    return prop.fget.im_self.elementBinding().typeDefinition()
-
-def singular(rel):
-    """Return the singular noun for a relationship name (which are plural by
-    convention)."""
-    info = _type_info(rel)
-    if info is None:
-        return None
-    if rel == 'storage':
-        s = 'host_storage'
-    else:
-        s = rel[:-1]
-    return s
-
-def plural(s):
-    """Return the relationship name for a noun that was made singular by
-    plural()."""
-    if s == 'host_storage':
-        rel = 'storage'
-    else:
-        rel = s + 's'
-    info = _type_info(rel)
-    if info is None:
-        return None
-    return rel
-
 def new(cls, *args, **kwargs):
     """Create a new object."""
     info = _type_info(cls)
     if info is not None:
         if issubclass(cls, info[0]):
-            factory = info[6]
+            factory = info[5]
         elif issubclass(cls, info[1]):
-            factory = info[7]
+            factory = info[6]
     elif issubclass(cls, ComplexType):
         factory = cls
     else:
@@ -156,12 +122,8 @@ def copy(obj):
     update(obj2, obj)
     return obj2
 
-def create_from_xml(s):
-    """Parse an XML string and return a binding instance."""
-    try:
-        return _schema.CreateFromDocument(s)
-    except PyXBException, e:
-        raise ParseError, str(e)
+_create_from_xml = _schema.CreateFromDocument
+
 
 def _bind(func, *bargs, **bkwargs):
     def _bound(*args, **kwargs):
@@ -304,7 +266,7 @@ for sym in dir(_schema):
         info = _type_info(cls)
         if info is None:
             continue
-        members['_resource'] = info[4]
+        members['_resource'] = info[3]
         mixin = CollectionMixin
     elif issubclass(cls, BaseResource):
         bases += (ResourceMixin,)
