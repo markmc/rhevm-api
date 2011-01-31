@@ -22,25 +22,27 @@ from pyxb.exceptions_ import PyXBException
 _mapping_data = \
 [
     # (resource, collection, relationship)
-    (_schema.API, None, '/'),
-    (_schema.DataCenter, _schema.DataCenters, 'datacenters'),
-    (_schema.Cluster, _schema.Clusters, 'clusters'),
-    (_schema.StorageDomain, _schema.StorageDomains, 'storagedomains'),
-    (_schema.Network, _schema.Networks, 'networks'),
-    (_schema.Host, _schema.Hosts, 'hosts'),
-    (_schema.HostNIC, _schema.HostNics, 'nics'),
-    (_schema.HostStorage, _schema.Storage, 'storage'),
-    (_schema.VM, _schema.VMs, 'vms'),
-    (_schema.NIC, _schema.Nics, 'nics'),
-    (_schema.Disk, _schema.Disks, 'disks'),
-    (_schema.CdRom, _schema.CdRoms, 'cdroms'),
-    (_schema.Template, _schema.Templates, 'templates'),
-    (_schema.VmPool, _schema.VmPools, 'vmpools'),
-    (_schema.User, _schema.Users, 'users'),
-    (_schema.Event, _schema.Events, 'events'),
-    (_schema.Tag, _schema.Tags, 'tags'),
-    (_schema.Action, _schema.Actions, None),
-    (_schema.Capabilities, None, 'capabilities')
+    (_schema.API, None, '/', True),
+    (_schema.DataCenter, _schema.DataCenters, 'datacenters', True),
+    (_schema.Cluster, _schema.Clusters, 'clusters', True),
+    (_schema.StorageDomain, _schema.StorageDomains, 'storagedomains', True),
+    (_schema.Network, _schema.Networks, 'networks', True),
+    (_schema.Host, _schema.Hosts, 'hosts', True),
+    (_schema.HostNIC, _schema.HostNics, 'nics', False),
+    (_schema.HostStorage, _schema.Storage, 'storage', False),
+    (_schema.VM, _schema.VMs, 'vms', True),
+    (_schema.NIC, _schema.Nics, 'nics', False),
+    (_schema.Disk, _schema.Disks, 'disks', False),
+    (_schema.CdRom, _schema.CdRoms, 'cdroms', False),
+    (_schema.Floppy, _schema.Floppies, 'floppies', False),
+    (_schema.Statistic, _schema.Statistics, 'statistics', False),
+    (_schema.Template, _schema.Templates, 'templates', True),
+    (_schema.VmPool, _schema.VmPools, 'vmpools', True),
+    (_schema.User, _schema.Users, 'users', True),
+    (_schema.Event, _schema.Events, 'events', True),
+    (_schema.Tag, _schema.Tags, 'tags', True),
+    (_schema.Action, _schema.Actions, None, False),
+    (_schema.Capabilities, None, 'capabilities', True)
 ]
 
 # This is a mapping of binding class -> element constructor. Element
@@ -114,9 +116,9 @@ def new(cls, *args, **kwargs):
     info = _type_info(cls)
     if info is not None:
         if issubclass(cls, info[0]):
-            factory = info[5]
-        elif issubclass(cls, info[1]):
             factory = info[6]
+        elif issubclass(cls, info[1]):
+            factory = info[7]
     elif issubclass(cls, ComplexType):
         factory = cls
     else:
@@ -306,7 +308,7 @@ for sym in dir(_schema):
         info = _type_info(cls)
         if info is None:
             continue
-        members['_resource'] = info[3]
+        members['_resource'] = info[4]
         mixin = CollectionMixin
     elif issubclass(cls, BaseResource):
         bases += (ResourceMixin,)
