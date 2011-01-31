@@ -285,13 +285,12 @@ class Connection(object):
 
     def ping(self):
         """Ping the API, to make sure we have a proper connection."""
-        response = self._make_request('OPTIONS', self.entrypoint)
+        response = self._make_request('GET', self.entrypoint)
         if response.status != http.OK:
             raise Error, 'RHEV-M returned HTTP status %s' % response.status
-        allowed = response.getheader('Allow', '')
-        allowed = [ h.strip() for h in allowed.split(',') ]
-        if 'GET' not in allowed:
-            raise Error, 'GET method not supported on API entry point'
+        reply = self._parse_xml(response)
+        if not isinstance(reply, schema.API):
+            raise Error, 'Expecting an <api> element at the entry point.'
 
     def getall(self, typ, base=None, search=None, filter=None, special=None,
                **query):
