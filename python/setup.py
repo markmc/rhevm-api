@@ -9,9 +9,11 @@
 import sys
 import os
 import os.path 
+import shutil
 
-from setuptools import setup
+from setuptools import setup, Command
 from distutils.command.build import build
+from setuptools.command.bdist_egg import bdist_egg
 from distutils.errors import DistutilsError
 from subprocess import Popen, PIPE
 
@@ -37,44 +39,75 @@ if topdir == os.getcwd():
     topdir = ''
 
 
-class mybuild(build):
+class genschema(Command):
 
-    def _generate_schema(self):
+    user_options = []
+    description = 'generate schema bindings'
+
+    def initialize_options(self):
+        pass
+
+    def finalize_options(self):
+        pass
+
+    def run(self):
         xsd = os.path.normpath(os.path.join(topdir,
                     '../api/src/main/resources/api.xsd'))
+        xsdcopy = os.path.join(topdir, 'api.xsd')
         libdir = os.path.join(topdir, 'lib', 'rhev')
         schema = os.path.join(libdir, '_schema.py')
         try:
             st1 = os.stat(xsd)
         except OSError:
-            raise DistutilsError, 'Could not find XMLSchema.'
+            st1 = None
         try:
-            st2 = os.stat(schema)
+            st2 = os.stat(xsdcopy)
         except OSError:
             st2 = None
-        if st2 and st1.st_mtime < st2.st_mtime:
+        try:
+            st3 = os.stat(schema)
+        except OSError:
+            st3 = None
+        if st1 and (st2 is None or st1.st_mtime > st2.st_mtime):
+            shutil.copy(xsd, xsdcopy)
+            print 'copied %s => %s' % (xsd, xsdcopy)
+            st2 = os.stat(xsdcopy)
+        if st1 is None and st2 is None:
+            raise DistutilsError, 'Could not find schema'
+        if st3 and st2.st_mtime < st3.st_mtime:
             print 'schema is up to date'
             return
         try:
             pipe = Popen(('pyxbgen', '-m', '_schema', '--binding-root',
-                          libdir, xsd), stdout=PIPE, stderr=PIPE)
+                          libdir, xsdcopy), stdout=PIPE, stderr=PIPE)
             pipe.communicate()
         except OSError:
             raise DistutilsError, 'Could not find pyxbgen.'
         if pipe.returncode:
             raise DistutilsError, 'Could not generate schema'
-        print 'xmlschema input: %s' % xsd
+        print 'xmlschema input: %s' % xsdcopy
         print 'schema generated as: %s' % schema
 
+
+class mybuild(build):
+
     def run(self):
-        self._generate_schema()
+        self.run_command('genschema')
         build.run(self)
+
+
+class mybdist_egg(bdist_egg):
+
+    def run(self):
+        self.run_command('genschema')
+        bdist_egg.run(self)
 
 
 setup(
     package_dir = { '': os.path.join(topdir, 'lib') },
     packages = [ 'rhev', 'rhev.test' ],
-    cmdclass = { 'build': mybuild },
+    cmdclass = { 'build': mybuild, 'bdist_egg': mybdist_egg,
+                 'genschema': genschema },
     install_requires = [ 'PyXB >= 1.1.0' ],
     test_suite = 'nose.collector',
     entry_points = {

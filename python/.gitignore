@@ -6,3 +6,4 @@ dist/
 header
 test.conf
 _schema.py
+api.xsd

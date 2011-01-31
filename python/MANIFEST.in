@@ -1,0 +1,6 @@
+include setup.py
+include api.xsd
+include README LICENSE AUTHORS MANIFEST.in
+recursive-include lib *.py
+recursive-include examples *.py
+exclude lib/rhev/_schema.py
