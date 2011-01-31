@@ -43,6 +43,12 @@ class Connection(object):
         if self.url is None:
             raise Error, 'URL not set'
         parsed = urlparse(self.url)
+        if not parsed.scheme:
+            raise Error, 'Invalid URL with no scheme: %s' % self.url
+        elif parsed.scheme not in ('http', 'https'):
+            raise Error, 'Invalid URL with unknown scheme: %s' % self.url
+        elif not parsed.path:
+            raise Error, 'Invalid URL with no path: %s' % self.url
         if parsed.netloc.count(':') == 1:
             host, port = parsed.netloc.split(':')
         elif parsed.scheme == 'http':
@@ -75,13 +81,13 @@ class Connection(object):
     def _connect(self):
         """INTERNAL: Connect to the REST API."""
         if self.username is None or self.password is None:
-            raise RuntimeError, 'RHEV username/password not set.'
+            raise Error, 'RHEV username/password not set.'
+        if self.username.count('@') != 1:
+            raise Error, 'Username must be in name@domain format.'
         if self.scheme == 'https':
             factory = HTTPSConnection
         elif self.scheme == 'http':
             factory = HTTPConnection
-        else:
-            raise Error, 'Unsupported scheme: %s' % self.scheme
         self._connection = factory(self.host, self.port)
         self._logger.debug('connecting to RHEV-M at %s:%s' % (self.host, self.port))
         self._connection.connect()

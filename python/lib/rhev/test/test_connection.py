@@ -29,3 +29,30 @@ class TestConnection(BaseTest):
         self.api._connection.sock.close()
         self.api.retries = 1
         assert_raises(Error, self.api.ping)
+
+    def test_illegal_url(self):
+        self.api.close()
+        assert_raises(Error, self.api.connect,
+                      '10.0.0.1', 'user@domain', 'pass')
+        assert_raises(Error, self.api.connect,
+                      'http://10.0.0.1', 'user@domain', 'pass')
+
+    def test_illegal_username(self):
+        self.api.close()
+        assert_raises(Error, self.api.connect,
+                      'http://10.0.0.1/foo', 'user', 'pass')
+
+    def test_connect_missing_arguments(self):
+        self.api.close()
+        url = self.api.url
+        self.api.url = None
+        assert_raises(Error, self.api.connect)
+        self.url = url
+        username = self.api.username
+        self.api.username = None
+        assert_raises(Error, self.api.connect)
+        self.api.username = username
+        password = self.api.password
+        self.api.password = None
+        assert_raises(Error, self.api.connect)
+        self.api.password = password
