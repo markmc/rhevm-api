@@ -31,6 +31,7 @@ import com.redhat.rhevm.api.model.Display;
 import com.redhat.rhevm.api.model.DisplayType;
 import com.redhat.rhevm.api.model.HighlyAvailable;
 import com.redhat.rhevm.api.model.OperatingSystem;
+import com.redhat.rhevm.api.model.Boot;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.powershell.enums.PowerShellBootSequence;
 import com.redhat.rhevm.api.powershell.enums.PowerShellOriginType;
@@ -102,7 +103,7 @@ public class PowerShellTemplate extends Template {
 
             OperatingSystem os = new OperatingSystem();
             os.setType(entity.get("operatingsystem"));
-            for (OperatingSystem.Boot boot : entity.get("defaultbootsequence", PowerShellBootSequence.class).map()) {
+            for (Boot boot : entity.get("defaultbootsequence", PowerShellBootSequence.class).map()) {
                 os.getBoot().add(boot);
             }
             template.setOs(os);

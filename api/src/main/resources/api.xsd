@@ -1303,13 +1303,13 @@
 
   <!-- Virtual Machines -->
 
+  <xs:complexType name="Boot">
+    <xs:attribute name="dev" type="BootDevice"/>
+  </xs:complexType>
+
   <xs:complexType name="OperatingSystem">
     <xs:sequence>
-      <xs:element name="boot" minOccurs="0" maxOccurs="unbounded">
-        <xs:complexType>
-          <xs:attribute name="dev" type="BootDevice"/>
-        </xs:complexType>
-      </xs:element>
+      <xs:element name="boot" type="Boot" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element name="kernel" type="xs:string" minOccurs="0"/>
       <xs:element name="initrd" type="xs:string" minOccurs="0"/>
       <xs:element name="cmdline" type="xs:string" minOccurs="0"/>

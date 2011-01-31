@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.redhat.rhevm.api.model.BootDevice;
-import com.redhat.rhevm.api.model.OperatingSystem;
+import com.redhat.rhevm.api.model.Boot;
 
 public enum PowerShellBootSequence {
     C(0),    DC(1),  N(2),
@@ -50,8 +50,8 @@ public enum PowerShellBootSequence {
         return value;
     }
 
-    public List<OperatingSystem.Boot> map() {
-        List<OperatingSystem.Boot> boots = new ArrayList<OperatingSystem.Boot>();
+    public List<Boot> map() {
+        List<Boot> boots = new ArrayList<Boot>();
         switch (this) {
         case C:
             boots.add(getBoot(BootDevice.HD));
@@ -123,8 +123,8 @@ public enum PowerShellBootSequence {
         return boots;
     }
 
-    private OperatingSystem.Boot getBoot(BootDevice device) {
-        OperatingSystem.Boot boot = new OperatingSystem.Boot();
+    private Boot getBoot(BootDevice device) {
+        Boot boot = new Boot();
         boot.setDev(device);
         return boot;
     }

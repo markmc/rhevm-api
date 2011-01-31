@@ -33,6 +33,7 @@ import com.redhat.rhevm.api.model.DisplayType;
 import com.redhat.rhevm.api.model.HighlyAvailable;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.OperatingSystem;
+import com.redhat.rhevm.api.model.Boot;
 import com.redhat.rhevm.api.model.Statistic;
 import com.redhat.rhevm.api.model.Statistics;
 import com.redhat.rhevm.api.model.Template;
@@ -76,7 +77,7 @@ public class PowerShellVM extends VM {
             return null;
         }
         String bootSequence = "";
-        for (OperatingSystem.Boot boot : os.getBoot()) {
+        for (Boot boot : os.getBoot()) {
             if (boot.getDev() == null) {
                 continue;
             }
@@ -201,7 +202,7 @@ public class PowerShellVM extends VM {
 
         OperatingSystem os = new OperatingSystem();
         os.setType(entity.get("operatingsystem"));
-        for (OperatingSystem.Boot boot : entity.get("defaultbootsequence", PowerShellBootSequence.class).map()) {
+        for (Boot boot : entity.get("defaultbootsequence", PowerShellBootSequence.class).map()) {
             os.getBoot().add(boot);
         }
         vm.setOs(os);

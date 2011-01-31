@@ -38,6 +38,7 @@ import com.redhat.rhevm.api.model.Floppies;
 import com.redhat.rhevm.api.model.Floppy;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.OperatingSystem;
+import com.redhat.rhevm.api.model.Boot;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.Ticket;
 import com.redhat.rhevm.api.model.VM;
@@ -227,7 +228,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
         vm.setDisplay(new Display());
         vm.getDisplay().setType(DisplayType.VNC);
         vm.setOs(new OperatingSystem());
-        vm.getOs().getBoot().add(new OperatingSystem.Boot());
+        vm.getOs().getBoot().add(new Boot());
         vm.getOs().getBoot().get(0).setDev(BootDevice.CDROM);
         vm.setCdroms(new CdRoms());
         vm.getCdroms().getCdRoms().add(new CdRom());

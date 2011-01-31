@@ -138,7 +138,7 @@ handlers:
   com.redhat.rhevm.api.model.NIC: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.Nics: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.OperatingSystem: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
-  com.redhat.rhevm.api.model.OperatingSystem.Boot: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
+  com.redhat.rhevm.api.model.Boot: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.Permission: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.Permissions: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
   com.redhat.rhevm.api.model.Permit: com.redhat.rhevm.api.resteasy.yaml.CustomBeanWrapper
