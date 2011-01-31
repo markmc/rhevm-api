@@ -8,7 +8,7 @@
 
 import time
 
-from rhev import _schema, inflect
+from rhev import _schema
 from rhev.error import Error
 from rhev._schema import BaseResource, BaseResources
 
@@ -80,6 +80,34 @@ def _type_info(typ_or_rel):
 def subtype(prop):
     """Return the binding type of a property."""
     return prop.fget.im_self.elementBinding().typeDefinition()
+
+def singular(rel):
+    """Return the singular noun for a relationship name (which are plural by
+    convention)."""
+    info = _type_info(rel)
+    if info is None:
+        return None
+    if rel == 'storage':
+        s = 'host_storage'
+    elif rel == 'floppies':
+        s = 'floppy'
+    else:
+        s = rel[:-1]
+    return s
+
+def plural(s):
+    """Return the relationship name for a noun that was made singular by
+    plural()."""
+    if s == 'host_storage':
+        rel = 'storage'
+    elif s == 'floppy':
+        rel = 'floppies'
+    else:
+        rel = s + 's'
+    info = _type_info(rel)
+    if info is None:
+        return None
+    return rel
 
 def new(cls, *args, **kwargs):
     """Create a new object."""
@@ -203,12 +231,12 @@ class SubResourceMixin(object):
                         cls = info[1]
                         break
                 else:
-                    plural = inflect.plural_noun(name)
-                    if plural is None:
+                    pl = plural(name)
+                    if pl is None:
                         raise AttributeError
                     for link in links:
-                        if link.rel == plural:
-                            info = _type_info(plural)
+                        if link.rel == pl:
+                            info = _type_info(pl)
                             if info is None:
                                 raise AttributeError
                             func = self._connection.get
