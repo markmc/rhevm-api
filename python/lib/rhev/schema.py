@@ -77,6 +77,10 @@ def _type_info(typ_or_rel):
         info += (None,)
     return info
 
+def subtype(prop):
+    """Return the binding type of a property."""
+    return prop.fget.im_self.elementBinding().typeDefinition()
+
 def new(cls, *args, **kwargs):
     """Create a new object."""
     info = _type_info(cls)
