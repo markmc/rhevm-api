@@ -187,7 +187,7 @@ class Connection(object):
                      special=None, **query):
         """INTERNAL: resolve a relationship `name' under the URL `base'."""
         self.connect()
-        info = schema._type_info(typ)
+        info = schema.type_info(typ)
         if info is None:
             raise TypeError, 'Unknown binding type: %s' % typ
         rel = info[2]

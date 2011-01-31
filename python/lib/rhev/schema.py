@@ -55,7 +55,7 @@ for key in _schema.Namespace.elementBindings():
     _element_constructors[cls] = getattr(_schema, key)
 
 
-def _type_info(typ_or_rel):
+def type_info(typ_or_rel):
     """Return information for a mapping type or relationship."""
     for info in _mapping_data:
         if isinstance(typ_or_rel, basestring):
@@ -86,7 +86,7 @@ def subtype(prop):
 def singular(rel):
     """Return the singular noun for a relationship name (which are plural by
     convention)."""
-    info = _type_info(rel)
+    info = type_info(rel)
     if info is None:
         return None
     if rel == 'storage':
@@ -106,14 +106,14 @@ def plural(s):
         rel = 'floppies'
     else:
         rel = s + 's'
-    info = _type_info(rel)
+    info = type_info(rel)
     if info is None:
         return None
     return rel
 
 def new(cls, *args, **kwargs):
     """Create a new object."""
-    info = _type_info(cls)
+    info = type_info(cls)
     if info is not None:
         if issubclass(cls, info[0]):
             factory = info[6]
@@ -226,7 +226,7 @@ class SubResourceMixin(object):
             if links is not None:
                 for link in links:
                     if link.rel == name:
-                        info = _type_info(link.rel)
+                        info = type_info(link.rel)
                         if info is None:
                             raise AttributeError
                         func = self._connection.getall
@@ -238,7 +238,7 @@ class SubResourceMixin(object):
                         raise AttributeError
                     for link in links:
                         if link.rel == pl:
-                            info = _type_info(pl)
+                            info = type_info(pl)
                             if info is None:
                                 raise AttributeError
                             func = self._connection.get
@@ -305,7 +305,7 @@ for sym in dir(_schema):
         continue
     elif issubclass(cls, BaseResources):
         bases += (CollectionMixin,)
-        info = _type_info(cls)
+        info = type_info(cls)
         if info is None:
             continue
         members['_resource'] = info[4]
