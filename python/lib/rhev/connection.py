@@ -158,6 +158,7 @@ class Connection(object):
             if response.status != http.FOUND:
                 break
             url = response.getheader('Location')
+            url = urlparse(url).path
         return response
 
     def _parse_xml(self, response):
