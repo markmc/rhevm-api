@@ -168,7 +168,7 @@ class Connection(object):
             reason = 'Expecting an XML response (got: %s)' % ctype
             raise Error(reason, detail=body)
         try:
-            parsed = schema._create_from_xml(body)
+            parsed = schema.create_from_xml(body)
         except Exception, e:
             reason = 'Could not parse XML response: %s' % str(e)
             raise Error(reason, detail=body)

@@ -9,8 +9,10 @@
 import time
 
 from rhev import _schema, inflect
+from rhev.error import Error
 from rhev._schema import BaseResource, BaseResources
 ComplexType = _schema.pyxb.binding.basis.complexTypeDefinition
+from pyxb.exceptions_ import PyXBException
 
 # Maintaining this table is a (small) price we pay for slight naming
 # inconsistencies in the API
@@ -122,8 +124,12 @@ def copy(obj):
     update(obj2, obj)
     return obj2
 
-_create_from_xml = _schema.CreateFromDocument
-
+def create_from_xml(s):
+    """Parse an XML string and return a binding instance."""
+    try:
+        return _schema.CreateFromDocument(s)
+    except PyXBException, e:
+        raise Error, str(e)
 
 def _bind(func, *bargs, **bkwargs):
     def _bound(*args, **kwargs):
