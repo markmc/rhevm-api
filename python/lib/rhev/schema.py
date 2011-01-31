@@ -11,7 +11,9 @@ import time
 from rhev import _schema, inflect
 from rhev.error import Error
 from rhev._schema import BaseResource, BaseResources
-ComplexType = _schema.pyxb.binding.basis.complexTypeDefinition
+
+from pyxb.binding.basis import complexTypeDefinition as ComplexType
+from pyxb.binding.basis import simpleTypeDefinition as SimpleType
 from pyxb.exceptions_ import PyXBException
 
 # Maintaining this table is a (small) price we pay for slight naming
