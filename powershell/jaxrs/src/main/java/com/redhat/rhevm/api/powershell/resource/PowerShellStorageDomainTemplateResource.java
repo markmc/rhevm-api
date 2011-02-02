@@ -52,7 +52,7 @@ public class PowerShellStorageDomainTemplateResource
 
         buf.append("$sd = get-storagedomain " + PowerShellUtils.escape(getStorageDomainId()));
         buf.append("; ");
-        buf.append("if ($sd.domaintype -eq \"Data\") { ");
+        buf.append("if ($sd.domaintype.StartsWith(\"Data\")) { ");
         buf.append("get-template");
         buf.append(" -templateid " + PowerShellUtils.escape(getId()));
         buf.append(" } elseif ($sd.domaintype -eq \"Export\") { ");
