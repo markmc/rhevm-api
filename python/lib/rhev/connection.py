@@ -92,14 +92,21 @@ class Connection(object):
         self._logger.debug('connecting to RHEV-M at %s:%s' % (self.host, self.port))
         self._connection.connect()
 
+    def _close(self):
+        """INTERNAL: Close the connection."""
+        try:
+            self._connection.close()
+        except socket.error:
+            pass
+        self._connection = None
+        self._logger.debug('disconnected from RHEV-M')
+
     def close(self):
         """Close the connection to the API."""
         if self._connection is None:
             return
-        self._connection.close()
-        self._connection = None
+        self._close()
         self._cache.clear()
-        self._logger.debug('disconnected from RHEV-M')
 
     def _do_request_retry(self, method, url, headers, body):
         """INTERNAL: make a HTTP request, and retry if necessary."""
@@ -111,10 +118,7 @@ class Connection(object):
             except (socket.error, HTTPException), e:
                 self._logger.debug('Could not complete request, retry %d/%d' %
                                    (i+1, self.retries))
-                try:
-                    self._connection.close()
-                except:
-                    pass
+                self._close()
                 self._connect()
             else:
                 break
