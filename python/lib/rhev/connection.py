@@ -146,7 +146,6 @@ class Connection(object):
 
     def _make_request(self, method, url, headers=None, body=None):
         """INTERNAL: perform a HTTP request to the API, following redirects."""
-        self.connect()
         if headers is None:
             headers = {}
         if body is None:
@@ -192,7 +191,6 @@ class Connection(object):
     def _resolve_url(self, typ, base=None, id=None, search=None,
                      special=None, **query):
         """INTERNAL: resolve a relationship `name' under the URL `base'."""
-        self.connect()
         info = schema.type_info(typ)
         if info is None:
             raise TypeError, 'Unknown binding type: %s' % typ
@@ -291,6 +289,7 @@ class Connection(object):
 
     def ping(self):
         """Ping the API, to make sure we have a proper connection."""
+        self.connect()
         response = self._make_request('GET', self.entrypoint)
         if response.status != http.OK:
             raise Error, 'RHEV-M returned HTTP status %s' % response.status
@@ -303,6 +302,7 @@ class Connection(object):
         """Get a list of resources that match the supplied arguments. In
         case of success a binding instance is returned. In case of failure
         a Error is raised."""
+        self.connect()
         url = self._resolve_url(typ, base=base, special=special,
                                 search=search, **query)
         response = self._make_request('GET', url)
@@ -321,6 +321,7 @@ class Connection(object):
         """Get a single resource that matches the supplied arguments.In
         case of success a binding instance is returned. In case of failure a
         Error is raised."""
+        self.connect()
         url = self._resolve_url(typ, base=base, id=id, search=search,
                                 special=special, **query)
         response = self._make_request('GET', url)
@@ -349,6 +350,7 @@ class Connection(object):
         if not resource.href:
             raise ValueError, 'Expecting a created binding object.'
         response = self._make_request('GET', resource.href)
+        self.connect()
         if response.status == http.OK:
             result = self._parse_xml(response)
         elif response.status == http.NOT_FOUND:
@@ -366,6 +368,7 @@ class Connection(object):
             raise TypeError, 'Expecting a binding instance.'
         if resource.href and base is None:
             raise ValueError, 'Expecting a new binding instance.'
+        self.connect()
         url = self._resolve_url(type(resource), base)
         response = self._make_request('POST', url, body=resource.toxml())
         if response.status in (http.OK, http.CREATED, http.ACCEPTED):
@@ -381,6 +384,7 @@ class Connection(object):
             raise TypeError, 'Expecting a binding instance.'
         if not resource.href:
             raise ValueError, 'Expecting a created binding instance.'
+        self.connect()
         response = self._make_request('PUT', resource.href, body=resource.toxml())
         if response.status == http.OK:
             result = self._parse_xml(response)
@@ -396,6 +400,7 @@ class Connection(object):
             raise TypeError, 'Expecting a binding instance.'
         if not resource.href:
             raise ValueError, 'Expecting a created binding instance.'
+        self.connect()
         if base is None:
             url = resource.href
         else:
@@ -418,6 +423,7 @@ class Connection(object):
             raise TypeError, 'Expecting a binding instance.'
         if not resource.href:
             raise ValueError, 'Expecting a created binding instance.'
+        self.connect()
         url = self._resolve_action(resource.href, action)
         if data is None:
             data = schema.new(schema.Action)
