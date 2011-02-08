@@ -148,20 +148,25 @@ class Connection(object):
             self._logger.debug('response body: %s' % response.body)
         return response
 
-    def _make_request(self, method, url, headers=None, body=None):
-        """INTERNAL: perform a HTTP request to the API, following redirects."""
-        if headers is None:
-            headers = {}
-        if body is None:
-            body = ''
-        elif isinstance(body, unicode):
-            body = body.encode('utf-8')
+    def _get_headers(self):
+        """INTERNAL: get the default HTTP headers."""
+        headers = {}
         authval = '%s:%s' % (self.username, self.password)
         authval = authval.encode('base64').rstrip()
         headers['Authorization'] = 'Basic %s' % authval
         headers['Accept'] = 'application/xml'
         headers['Content-Type'] = 'application/xml; charset=utf-8'
         headers['Accept-Charset'] = 'utf-8'
+        return headers
+
+    def _make_request(self, method, url, headers=None, body=None):
+        """INTERNAL: perform a HTTP request to the API, following redirects."""
+        if headers is None:
+            headers = self._get_headers()
+        if body is None:
+            body = ''
+        elif isinstance(body, unicode):
+            body = body.encode('utf-8')
         for i in range(3):
             response = self._do_request(method, url, headers, body)
             if response.status != http.FOUND:
@@ -302,14 +307,17 @@ class Connection(object):
             raise Error, 'Expecting an <api> element at the entry point.'
 
     def getall(self, typ, base=None, search=None, filter=None, special=None,
-               **query):
+               detail=None, **query):
         """Get a list of resources that match the supplied arguments. In
         case of success a binding instance is returned. In case of failure
         a Error is raised."""
         self.connect()
         url = self._resolve_url(typ, base=base, special=special,
                                 search=search, **query)
-        response = self._make_request('GET', url)
+        headers = self._get_headers()
+        if detail is not None:
+            headers['Accept'] += '; detail=%s' % detail
+        response = self._make_request('GET', url, headers)
         if response.status == http.OK:
             result = self._parse_xml(response)
             if filter:
@@ -321,14 +329,17 @@ class Connection(object):
         return result
 
     def get(self, typ, id=None, base=None, special=None, search=None,
-            filter=None, **query):
+            filter=None, detail=None, **query):
         """Get a single resource that matches the supplied arguments.In
         case of success a binding instance is returned. In case of failure a
         Error is raised."""
         self.connect()
         url = self._resolve_url(typ, base=base, id=id, search=search,
                                 special=special, **query)
-        response = self._make_request('GET', url)
+        headers = self._get_headers()
+        if detail is not None:
+            headers['Accept'] += '; detail=%s' % detail
+        response = self._make_request('GET', url, headers)
         if response.status == http.OK:
             result = self._parse_xml(response)
             if not isinstance(result, schema.BaseResources):
@@ -347,14 +358,17 @@ class Connection(object):
             raise self._create_exception(response)
         return result
 
-    def reload(self, resource):
+    def reload(self, resource, detail=None):
         """Reload an existing resource."""
         if not isinstance(resource, schema.BaseResource):
             raise TypeError, 'Expecting a binding object.'
         if not resource.href:
             raise ValueError, 'Expecting a created binding object.'
-        response = self._make_request('GET', resource.href)
         self.connect()
+        headers = self._get_headers()
+        if detail is not None:
+            headers['Accept'] += '; detail=%s' % detail
+        response = self._make_request('GET', resource.href, headers)
         if response.status == http.OK:
             result = self._parse_xml(response)
         elif response.status == http.NOT_FOUND:

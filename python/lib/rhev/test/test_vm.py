@@ -169,6 +169,53 @@ class TestVM(BaseTest):
             assert util.is_str_uuid(vm.vmpool.id)
 
     @depends(test_create_vm)
+    def test_has_statistics(self):
+        vm = self.store.vm
+        vm2 = self.api.get(schema.VM, id=vm.id)
+        assert vm2 is not None
+        assert vm2.statistics is None
+        vm2 = self.api.get(schema.VM, id=vm.id, detail='statistics')
+        assert vm2 is not None
+        assert vm2.statistics is not None
+        vms = self.api.getall(schema.VM, name=vm.name)
+        assert isinstance(vms, schema.VMs)
+        assert len(vms) == 1
+        assert vms[0] is not None
+        assert vms[0].statistics is None
+        vms = self.api.getall(schema.VM, name=vm.name, detail='statistics')
+        assert isinstance(vms, schema.VMs)
+        assert len(vms) == 1
+        assert vms[0] is not None
+        assert vms[0].statistics is not None
+        vm2 = self.api.reload(vm)
+        assert vm2 is not None
+        assert vm2.statistics is None
+        vm2 = self.api.reload(vm, detail='statistics')
+        assert vm2 is not None
+        assert vm2.statistics is not None
+        assert isinstance(vm2.statistics, schema.Statistics)
+        self.store.vm = vm2
+
+    @depends(test_has_statistics)
+    def test_statistics_attributes(self):
+        vm = self.store.vm
+        for stat in vm.statistics.statistic:
+            assert isinstance(stat, schema.Statistic)
+            assert util.is_str_uuid(stat.id)
+            assert util.is_str(stat.name) and len(stat.name) > 0
+            assert util.is_str(stat.description) and len(stat.description) > 0
+            assert isinstance(stat.values, schema.Values)
+            assert stat.values.type in ('DECIMAL', 'INTEGER')
+            for val in stat.values.value_:
+                assert isinstance(val, schema.Value)
+                assert util.is_int(val.datum) or \
+                        util.is_float(val.datum)
+            assert stat.type in ('GAUGE', 'COUNTER')
+            assert stat.unit in ('NONE', 'PERCENT', 'BYTES', 'SECONDS',
+                                 'BYTES_PER_SECOND', 'BITS_PER_SECOND',
+                                 'COUNT_PER_SECOND')
+
+    @depends(test_create_vm)
     def test_add_disk(self):
         vm = self.store.vm
         disk = schema.new(schema.Disk)

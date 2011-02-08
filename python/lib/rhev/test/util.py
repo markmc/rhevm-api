@@ -39,6 +39,7 @@ class store(object):
 
 _re_uuid = re.compile('^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$')
 _re_int = re.compile('^-?[0-9]+$')
+_re_float = re.compile('^-?[0-9]+(\\.[0-9]+([eE][0-9]+)?)?$')
 _re_ip = re.compile('^(\d|\d\d|[01]\d\d|2[0-4]\d|25[0-5])'
                     '(\.(\d|\d\d|[01]\d\d|2[0-4]\d|25[0-5])){3}$')
 _re_host = re.compile('^[a-z0-9-]+(\.[a-z0-9-]+)+$', re.I)
@@ -56,7 +57,10 @@ def is_str_uuid(s):
 
 def is_str_int(s):
     return isinstance(s, basestring) and bool(_re_int.match(s))
-                
+
+def is_str_float(s):
+    return isinstance(s, basestring) and bool(_re_float.match(s))
+
 def is_str_ip(s):
     return isinstance(s, basestring) and bool(_re_ip.match(s))
 
@@ -81,6 +85,9 @@ def is_str_date(s):
 
 def is_int(i):
     return isinstance(i, int) or isinstance(i, long)
+
+def is_float(f):
+    return isinstance(f, float)
 
 def is_bool(b):
     return isinstance(b, bool) or isinstance(b, int)
