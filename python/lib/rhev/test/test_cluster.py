@@ -6,7 +6,7 @@
 # python-rhev is copyright (c) 2010 by the python-rhev authors. See the
 # file "AUTHORS" for a complete overview.
 
-from rhev import schema
+from rhev import *
 from rhev.test import util
 from rhev.test.base import BaseTest
 from rhev.test.loader import depends
@@ -16,36 +16,33 @@ from nose.tools import assert_raises
 
 class TestCluster(BaseTest):
 
-    def _get_cpu(self):
-        if not hasattr(self.store, 'cpu'):
-            caps = self.api.get(schema.Capabilities)
-            for version in caps.version:
-                if not version.current:
-                    continue
-                self.store.cpu = version.cpus.cpu[0]
-                break
-        return self.store.cpu
-
-    def _get_version(self):
-        caps = self.api.get(schema.Capabilities)
-        for version in caps.version:
-            if not version.current:
-                continue
-            copy = schema.new(schema.Version)
-            copy.minor = version.minor
-            copy.major = version.major
-            return copy
+    def _test_use_existing(self, name):
+        cluster = self.api.get(schema.Cluster, name=name)
+        if cluster is None:
+            raise SkipTest, 'Cluster not found: %s' % name
+        assert cluster is not None
+        if cluster.data_center is None or cluster.data_center.id is None:
+            raise SkipTest, 'Skipping tests on orphaned cluster: %s' % name
+        self.store.cluster = cluster
 
     def _test_create(self):
         datacenter = schema.new(schema.DataCenter)
         datacenter.name = util.random_name('dc')
+        datacenter.version = self.get_version()
         datacenter.storage_type = 'NFS'
         datacenter = self.api.create(datacenter)
+        assert datacenter is not None
+        datacenter2 = schema.new(schema.DataCenter)
+        datacenter2.name = util.random_name('dc')
+        datacenter2.version = self.get_version()
+        datacenter2.storage_type = 'NFS'
+        datacenter2 = self.api.create(datacenter2)
+        assert datacenter2 is not None
         cluster = schema.new(schema.Cluster)
         cluster.name = util.random_name('cluster')
         cluster.data_center = schema.ref(datacenter)
-        cluster.cpu = schema.ref(self._get_cpu())
-        cluster.version = self._get_version()
+        cluster.cpu = self.get_cpu()
+        cluster.version = self.get_version()
         cluster2 = self.api.create(cluster)
         assert cluster2.id is not None
         assert cluster2.href is not None
@@ -56,36 +53,24 @@ class TestCluster(BaseTest):
         assert isinstance(cluster, schema.Cluster)
         assert cluster.id == cluster2.id
         self.store.datacenter = datacenter
+        self.store.datacenter2 = datacenter2
         self.store.cluster = cluster
 
-    @depends(_test_create)
-    def _test_prepare(self, cluster):
-        if cluster is None:
-            return
-        cluster = self.api.get(schema.Cluster, name=cluster)
-        assert cluster is not None
-        assert cluster.data_center is not None
-        if cluster.data_center.id is None:
-            raise SkipTest, 'Not testing orphaned cluster'
-        datacenter = self.api.reload(cluster.data_center)
-        self.store.cluster = cluster
-        self.store.datacenter = datacenter
-
-    @depends(_test_prepare)
+    @depends(_test_use_existing, _test_create)
     def _test_get(self):
         cluster = self.store.cluster
         cluster2 = self.api.get(schema.Cluster, id=cluster.id)
         assert isinstance(cluster2, schema.Cluster)
         assert cluster2.id == cluster.id
 
-    @depends(_test_prepare)
+    @depends(_test_use_existing, _test_create)
     def _test_reload(self):
         cluster = self.store.cluster
         cluster2 = self.api.reload(cluster)
         assert isinstance(cluster2, schema.Cluster)
         assert cluster2.id == cluster.id
 
-    @depends(_test_prepare)
+    @depends(_test_use_existing, _test_create)
     def _test_getall(self):
         cluster = self.store.cluster
         clusters = self.api.getall(schema.Cluster)
@@ -93,7 +78,7 @@ class TestCluster(BaseTest):
         assert len(clusters) > 0
         assert util.contains_id(clusters, cluster.id)
 
-    @depends(_test_prepare)
+    @depends(_test_use_existing, _test_create)
     def _test_search(self):
         cluster = self.store.cluster
         clusters = self.api.getall(schema.Cluster, name=cluster.name)
@@ -105,7 +90,7 @@ class TestCluster(BaseTest):
         assert len(clusters) == 1
         assert clusters[0].id == cluster.id
 
-    @depends(_test_prepare)
+    @depends(_test_use_existing, _test_create)
     def _test_attributes(self):
         cluster = self.store.cluster
         assert util.is_str_uuid(cluster.id) or util.is_str_int(cluster.id)
@@ -117,15 +102,15 @@ class TestCluster(BaseTest):
         assert cluster.version is not None
         assert util.is_int(cluster.version.major) and cluster.version.major > 0
         assert util.is_int(cluster.version.minor)
-        assert cluster.supported_versions is not None
-        for version in cluster.supported_versions.version:
-            assert util.is_int(version.major) and version.major > 0
-            assert util.is_int(version.minor)
+        #assert cluster.supported_versions is not None
+        #for version in cluster.supported_versions.version:
+        #    assert util.is_int(version.major) and version.major > 0
+        #    assert util.is_int(version.minor)
         assert cluster.cpu is not None
         assert util.is_str(cluster.cpu.id)
         # below have been recently added
-        assert cluster.memory_policy is not None
-        assert util.is_int(cluster.memory_policy.overcommit.percent)
+        #assert cluster.memory_policy is not None
+        #assert util.is_int(cluster.memory_policy.overcommit.percent)
         if cluster.scheduling_policy:
             assert cluster.scheduling_policy.policy in \
                         ('EVEN_DISTRIBUTION', 'POWER_SAVING')
@@ -133,7 +118,7 @@ class TestCluster(BaseTest):
             assert util.is_int(cluster.scheduling_policy.thresholds.high)
             assert util.is_int(cluster.scheduling_policy.thresholds.duration)
 
-    @depends(_test_prepare)
+    @depends(_test_create)
     def _test_update(self):
         cluster = self.store.cluster
         cluster.description = 'foobar'
@@ -142,111 +127,157 @@ class TestCluster(BaseTest):
         cluster = self.api.get(schema.Cluster, id=cluster2.id)
         assert cluster.description == 'foobar'
 
-    @depends(_test_prepare)
-    def _test_delete(self):
-        datacenter = self.store.datacenter
-        cluster = self.store.cluster
-        cluster2 = self.api.delete(cluster)
-        assert cluster2 is None
-        cluster = self.api.get(schema.Cluster, name=cluster.name)
-        assert cluster is None
-        self.api.delete(datacenter)
-
-    @depends(_test_prepare)
-    def _test_has_networks(self):
-        cluster = self.store.cluster
-        networks = self.api.getall(schema.Network, base=cluster)
-        assert isinstance(networks, schema.Networks)
-        for network in networks:
-            assert isinstance(network, schema.Network)
-            assert util.is_str_uuid(network.id)
-
-    @depends(_test_prepare)
-    def _prepare_network(self):
-        cluster = self.store.cluster
-        datacenter = self.store.datacenter
-        network = schema.new(schema.Network)
-        network.name = util.random_name('net')
-        network.data_center = schema.ref(datacenter)
-        network = self.api.create(network)
-        assert network is not None
-        self.store.network = network
-
-    @depends(_prepare_network)
+    @depends(_test_create)
     def _test_attach_network(self):
         cluster = self.store.cluster
-        network = self.store.network
-        network2 = self.api.create(network, base=cluster)
-        assert isinstance(network2, schema.Network)
-        assert network2.id == network.id
-        assert network2.href != network.href  # points to sub-collection
+        network = schema.new(schema.Network)
+        network.name = util.random_name('net')
+        network.description = 'foo'
+        network.data_center = schema.ref(self.store.datacenter)
+        network.stp = False
+        network.vlan = self.get_vlan()
+        network.ip = self.get_unused_ip()
+        network = self.api.create(network)
+        assert network is not None
+        atnetwork = self.api.create(network, base=cluster)
+        assert isinstance(atnetwork, schema.Network)
+        assert atnetwork.id == network.id
+        assert atnetwork.name == network.name
+        assert atnetwork.description == network.description
+        assert atnetwork.data_center.id == network.data_center.id
+        assert atnetwork.stp == network.stp
+        assert atnetwork.vlan.id == network.vlan.id
+        assert atnetwork.ip.address == network.ip.address
+        assert atnetwork.ip.netmask == network.ip.netmask
+        assert atnetwork.ip.gateway == network.ip.gateway
         networks = self.api.getall(schema.Network, base=cluster)
-        assert util.contains_id(networks, network.id)
+        assert util.contains_id(networks, atnetwork.id)
+        self.store.network = network
+        self.store.atnetwork = atnetwork
+
+    @depends(_test_attach_network)
+    def _test_network_attributes(self):
+        cluster = self.store.cluster
+        atnetwork = self.store.atnetwork
+        assert util.is_str_uuid(atnetwork.id)
+        assert util.is_str_href(atnetwork.href)
+        assert util.is_str(atnetwork.name) and len(atnetwork.name) > 0
+        assert util.is_str(atnetwork.description) and len(atnetwork.description) > 0
+        assert atnetwork.href.startswith(cluster.href)
+        assert isinstance(atnetwork.data_center, schema.DataCenter)
+        assert isinstance(atnetwork.cluster, schema.Cluster)
+        assert atnetwork.status in ('OPERATIONAL', 'NON_OPERATIONAL')
+        assert isinstance(atnetwork.vlan, schema.VLAN)
+        assert util.is_int(atnetwork.vlan.id)
+        assert isinstance(atnetwork.ip, schema.IP)
+        assert util.is_str_ip(atnetwork.ip.address)
+        assert util.is_str_ip(atnetwork.ip.netmask)
+        assert util.is_str_ip(atnetwork.ip.gateway)
+        assert isinstance(atnetwork.stp, bool)
+        assert isinstance(atnetwork.display, bool)
+
+    @depends(_test_attach_network)
+    def _test_update_network(self):
+        atnetwork = self.store.atnetwork
+        atnetwork.display = True
+        atnetwork2 = self.api.update(atnetwork)
+        assert isinstance(atnetwork2, schema.Network)
+        assert atnetwork2.id == atnetwork.id
+        assert atnetwork2.display is True
+        atnetwork = self.api.get(schema.Network, base=self.store.cluster,
+                                 id=atnetwork2.id)
+        assert isinstance(atnetwork, schema.Network)
+        assert atnetwork.id == atnetwork2.id
+        assert atnetwork.display is True
 
     @depends(_test_attach_network)
     def _test_detach_network(self):
         cluster = self.store.cluster
         network = self.store.network
-        self.api.delete(network, base=cluster)
+        atnetwork = self.store.atnetwork
+        self.api.delete(atnetwork)
         networks = self.api.getall(schema.Network, base=cluster)
-        assert not util.contains_id(networks, network.id)
+        assert not util.contains_id(networks, atnetwork.id)
         networks = self.api.getall(schema.Network)
         assert util.contains_id(networks, network.id)
-
-    @depends(_prepare_network)
-    def _delete_network(self):
-        network = self.store.network
         self.api.delete(network)
+        networks = self.api.getall(schema.Network)
+        assert not util.contains_id(networks, network.id)
 
-    def _get_clusters(self):
-        clusters = self.api.getall(schema.Cluster)
-        clusters = [ cluster.name for cluster in clusters ]
-        return clusters
+    @depends(_test_create)
+    def _test_change_datacenter(self):
+        host = self.store.host
+        self.api.action(host, 'deactivate')
+        assert self.wait_for_status(host, 'MAINTENANCE')
+        cluster = self.store.cluster
+        cluster.data_center = schema.ref(self.store.datacenter2)
+        cluster2 = self.api.update(cluster)
+        assert isinstance(cluster2, schema.Cluster)
+        assert cluster2.id == cluster.id
+        assert cluster2.data_center.id == self.store.datacenter2.id
+        cluster = self.api.get(schema.Cluster, name=cluster2.name)
+        assert isinstance(cluster, schema.Cluster)
+        assert cluster.id == cluster2.id
+        assert cluster.data_center.id == self.store.datacenter2.id
+
+    @depends(_test_create)
+    def _test_delete(self):
+        cluster = self.store.cluster
+        self.api.delete(cluster)
+        cluster = self.api.get(schema.Cluster, name=cluster.name)
+        assert cluster is None
+        self.api.delete(self.store.datacenter)
+        self.api.delete(self.store.datacenter2)
 
     def test_cluster(self):
-        clusters = self._get_clusters()
-        # Tests on existing clusters
+        clusters = self.api.getall(schema.Cluster)
+        clusters = [ cluster.name for cluster in clusters ]
+        # Non-intrusive tests on existing clusters
         for cluster in clusters:
-            yield self._test_prepare, cluster
+            yield self._test_use_existing, cluster
             yield self._test_get
             yield self._test_reload
             yield self._test_getall
             yield self._test_search
             yield self._test_attributes
-            yield self._test_has_networks
-        # Tests on a newly created cluster
+        # Intrusive tests on a newly created cluster
         yield self._test_create
-        yield self._test_prepare, None
         yield self._test_get
         yield self._test_reload
         yield self._test_getall
         yield self._test_search
         yield self._test_attributes
-        # BUG? asymmetry between adding networks and adding vms/hosts
-        yield self._prepare_network
         yield self._test_attach_network
+        yield self._test_network_attributes
+        yield self._test_update_network
         yield self._test_detach_network
-        yield self._delete_network
+        yield self._test_change_datacenter
         yield self._test_delete
 
-    @depends(_test_delete)
+    def test_prepare_nonexistent(self):
+        cluster = schema.new(schema.Cluster)
+        cluster.id = 'foo'
+        cluster.href = '/api/clusters/foo'
+        self.store.cluster = cluster
+
+    @depends(test_prepare_nonexistent)
     def test_get_nonexistent(self):
         cluster = self.store.cluster
         cluster = self.api.get(schema.Cluster, id=cluster.id)
         assert cluster is None
 
-    @depends(_test_delete)
+    @depends(test_prepare_nonexistent)
     def test_reload_nonexistent(self):
         cluster = self.store.cluster
         cluster = self.api.reload(cluster)
         assert cluster is None
 
-    @depends(_test_delete)
+    @depends(test_prepare_nonexistent)
     def test_update_nonexistent(self):
         cluster = self.store.cluster
-        assert_raises(KeyError, self.api.update, cluster)
+        assert_raises(NotFound, self.api.update, cluster)
 
-    @depends(_test_delete)
+    @depends(test_prepare_nonexistent)
     def test_delete_nonexistent(self):
         cluster = self.store.cluster
-        assert_raises(KeyError, self.api.delete, cluster)
+        assert_raises(NotFound, self.api.delete, cluster)

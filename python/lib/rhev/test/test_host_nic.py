@@ -9,8 +9,7 @@
 import struct
 import socket
 
-from rhev import schema
-from rhev import Error
+from rhev import *
 from rhev.test import util
 from rhev.test.base import BaseTest
 from rhev.test.loader import depends
@@ -453,7 +452,7 @@ class TestHostNic(BaseTest):
     @depends(test_prepare_failures)
     def test_update_non_existent(self):
         nonic = self.store.nonic
-        assert_raises(KeyError, self.api.update, nonic)
+        assert_raises(NotFound, self.api.update, nonic)
 
     @depends(test_prepare_failures)
     def test_attach_non_existent_nic(self):
@@ -462,7 +461,7 @@ class TestHostNic(BaseTest):
         network = self.store.network
         action = schema.new(schema.Action)
         action.network = schema.ref(network)
-        assert_raises(KeyError, self.api.action, nonic, 'attach', action)
+        assert_raises(NotFound, self.api.action, nonic, 'attach', action)
 
     @depends(test_prepare_failures)
     def test_attach_non_existent_network(self):
@@ -480,7 +479,7 @@ class TestHostNic(BaseTest):
         network = self.store.network
         action = schema.new(schema.Action)
         action.network = schema.ref(network)
-        assert_raises(KeyError, self.api.action, nonic, 'detach', action)
+        assert_raises(NotFound, self.api.action, nonic, 'detach', action)
 
     @depends(test_prepare_failures)
     def test_detach_non_existent_network(self):

@@ -12,6 +12,7 @@ import time
 
 from ConfigParser import ConfigParser, NoOptionError
 
+from rhev import schema
 from rhev.object import create
 from rhev.error import Error
 from rhev.connection import Connection
@@ -80,16 +81,16 @@ class BaseTest(object):
     def teardown(cls):
         """Overrride in a subclass."""
 
-    def setUp(self):
-        pass
-        #self.store = self.__class__._store
-
     def wait_for_status(self, resource, status, timeout=600):
+        if isinstance(status, str): 
+            status = (status,)
         start = time.time()
         delay = 1
         while time.time() < start + timeout:
             obj = self.api.reload(resource)
-            if obj.status == status:
+            if obj is None:
+                return status is None
+            if status and obj.status in status:
                 resource.status = obj.status
                 return True
             time.sleep(delay)
@@ -105,3 +106,29 @@ class BaseTest(object):
                 return True
             time.sleep(10)
         return False
+
+    def get_version(self):
+        info = self.get_config('version').split('.')
+        version = schema.new(schema.Version)
+        version.major = info[0]
+        version.minor = info[1]
+        return version
+
+    def get_cpu(self):
+        cpu = schema.new(schema.CPU)
+        cpu.id = self.get_config('cpu')
+        return cpu
+
+    def get_unused_ip(self):
+        address = self.get_config('address')
+        netmask = self.get_config('netmask')
+        ip = schema.new(schema.IP)
+        ip.address = util.ip_from_net(address, netmask, 2)
+        ip.netmask = netmask
+        ip.gateway = util.ip_from_net(address, netmask, 1)
+        return ip
+
+    def get_vlan(self):
+        vlan = schema.new(schema.VLAN)
+        vlan.id = 100
+        return vlan

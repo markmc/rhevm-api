@@ -6,7 +6,7 @@
 # python-rhev is copyright (c) 2010 by the python-rhev authors. See the
 # file "AUTHORS" for a complete overview.
 
-from rhev import schema
+from rhev import *
 from rhev.test import util
 from rhev.test.base import BaseTest
 from rhev.test.loader import depends
@@ -18,6 +18,7 @@ class TestNetwork(BaseTest):
     def _test_create(self):
         datacenter = schema.new(schema.DataCenter)
         datacenter.name = util.random_name('dc')
+        datacenter.version = self.get_version()
         datacenter.storage_type = 'NFS'
         datacenter = self.api.create(datacenter)
         network = schema.new(schema.Network)
@@ -152,9 +153,9 @@ class TestNetwork(BaseTest):
     @depends(_test_delete)
     def test_update_nonexisting(self):
         network = self.store.network
-        assert_raises(KeyError, self.api.update, network)
+        assert_raises(NotFound, self.api.update, network)
 
     @depends(_test_delete)
     def test_delete_nonexisting(self):
         network = self.store.network
-        assert_raises(KeyError, self.api.delete, network)
+        assert_raises(NotFound, self.api.delete, network)

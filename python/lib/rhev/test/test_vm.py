@@ -6,7 +6,7 @@
 # python-rhev is copyright (c) 2010 by the python-rhev authors. See the
 # file "AUTHORS" for a complete overview.
 
-from rhev import schema
+from rhev import *
 from rhev.test import util
 from rhev.test.base import BaseTest
 from rhev.test.loader import depends
@@ -33,17 +33,22 @@ class TestVM(BaseTest):
         template = self.api.get(schema.Template, name='Blank')
         if template is None:
             raise SkipTest, 'Blank template not found.'
-        #XXX: network issue: #157
-        network = schema.new(schema.Network)
-        network.id = '00000000-0000-0000-0000-000000000009'
-        # End hack
+        network = self.api.get(schema.Network, base=cluster,
+                               filter={'name': 'rhevm'})
+        if network is None:
+            raise SkipTest, 'Network not found: rhevm'
+        storagedomain = self.api.get(schema.StorageDomain, base=datacenter,
+                                     filter={'type': 'DATA'})
+        if storagedomain is None:
+            raise SkipTest, 'No data domain found in datacenter'
         self.store.datacenter = datacenter
         self.store.cluster = cluster
         self.store.template = template
         self.store.network = network
+        self.store.storagedomain = storagedomain
 
     @depends(test_prepare)
-    def test_create_vm(self):
+    def test_create(self):
         vm = schema.new(schema.VM)
         vm.name = util.random_name('vm')
         vm.type = 'SERVER'
@@ -72,21 +77,21 @@ class TestVM(BaseTest):
         assert vm.id == vm2.id
         self.store.vm = vm
 
-    @depends(test_create_vm)
+    @depends(test_create)
     def test_get(self):
         vm = self.store.vm
         vm2 = self.api.get(schema.VM, id=vm.id)
         assert isinstance(vm2, schema.VM)
         assert vm2.id == vm.id
 
-    @depends(test_create_vm)
+    @depends(test_create)
     def test_reload(self):
         vm = self.store.vm
         vm2 = self.api.reload(vm)
         assert isinstance(vm2, schema.VM)
         assert vm2.id == vm.id
 
-    @depends(test_create_vm)
+    @depends(test_create)
     def test_getall(self):
         vms = self.api.getall(schema.VM)
         assert isinstance(vms, schema.VMs)
@@ -95,7 +100,7 @@ class TestVM(BaseTest):
         vm = self.store.vm
         assert util.contains_id(vms, vm.id)
             
-    @depends(test_create_vm)
+    @depends(test_create)
     def test_search(self):
         vm = self.store.vm
         vms = self.api.getall(schema.VM, name=vm.name)
@@ -107,7 +112,7 @@ class TestVM(BaseTest):
         assert len(vms) == 1
         assert vms[0].id == vm.id
 
-    @depends(test_create_vm)
+    @depends(test_create)
     def test_update(self):
         vm = self.store.vm
         # BUG: ticket #179
@@ -119,7 +124,7 @@ class TestVM(BaseTest):
         assert vm.description == vm2.description
         self.store.vm = vm
 
-    @depends(test_create_vm)
+    @depends(test_create)
     def test_attributes(self):
         vm = self.store.vm
         vm = self.api.reload(vm)
@@ -168,7 +173,7 @@ class TestVM(BaseTest):
         if vm.vmpool is not None:
             assert util.is_str_uuid(vm.vmpool.id)
 
-    @depends(test_create_vm)
+    @depends(test_create)
     def test_has_statistics(self):
         vm = self.store.vm
         vm2 = self.api.get(schema.VM, id=vm.id)
@@ -215,7 +220,7 @@ class TestVM(BaseTest):
                                  'BYTES_PER_SECOND', 'BITS_PER_SECOND',
                                  'COUNT_PER_SECOND')
 
-    @depends(test_create_vm)
+    @depends(test_create)
     def test_add_disk(self):
         vm = self.store.vm
         disk = schema.new(schema.Disk)
@@ -226,6 +231,8 @@ class TestVM(BaseTest):
         disk.sparse = True
         disk.wipe_after_delete = True
         disk.propagate_errors = True
+        disk.bootable = True
+        disk.storage_domain = schema.ref(self.store.storagedomain)
         disk2 = self.api.create(disk, base=vm)
         assert isinstance(disk2, schema.Disk)
         assert disk2.id is not None
@@ -244,7 +251,7 @@ class TestVM(BaseTest):
         assert util.is_bool(disk.bootable)
         assert util.is_bool(disk.wipe_after_delete)
 
-    @depends(test_create_vm)
+    @depends(test_create)
     def test_add_nic(self):
         vm = self.store.vm
         network = self.store.network
@@ -268,23 +275,26 @@ class TestVM(BaseTest):
         # BUG: ticket #177
         assert util.is_str_mac(nic.mac.address)
 
-    @depends(test_create_vm)
-    def test_start_vm(self):
+    @depends(test_create)
+    def test_start(self):
         vm = self.store.vm
+        # Wait until disk image is unlocked
+        self.wait_for_status(vm, 'DOWN')
         action = self.api.action(vm, 'start')
         assert action.status == 'COMPLETE'
         assert self.wait_for_status(vm, 'POWERING_UP')
 
-    @depends(test_start_vm)
-    def test_stop_vm(self):
+    @depends(test_start)
+    def test_stop(self):
         vm = self.store.vm
         action = self.api.action(vm, 'stop')
         assert action.status == 'COMPLETE'
         assert self.wait_for_status(vm, 'DOWN')
 
-    @depends(test_stop_vm)
-    def test_delete_vm(self):
+    @depends(test_create)
+    def test_delete(self):
         vm = self.store.vm
         self.api.delete(vm)
+        self.wait_for_status(vm, None)
         vm2 = self.api.get(schema.VM, name=vm.name)
         assert vm2 is None

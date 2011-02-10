@@ -94,7 +94,7 @@ def is_bool(b):
 
 
 def random_name(id='obj'):
-    return 'tst-%s-%06d' % (id, random.randint(0, 1000000))
+    return '%s%06d' % (id, random.randint(0, 1000000))
 
 def contains_id(list, id):
     for el in list:

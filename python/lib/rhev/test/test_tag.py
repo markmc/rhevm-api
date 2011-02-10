@@ -84,12 +84,16 @@ class TestTag(BaseTest):
         assert util.is_str_int(tag.parent.tag.id) or \
                 util.is_str_uuid(tag.parent.tag.id)
 
+    @depends(test_create_child)
+    def test_delete_child(self):
+        child = self.store.child
+        self.api.delete(child)
+        tags = self.api.getall(schema.Tag)
+        assert not util.contains_id(tags, child.id)
+
     @depends(test_create)
     def test_delete(self):
         tag = self.store.tag
-        child = self.store.child
-        self.api.delete(child)
         self.api.delete(tag)
         tags = self.api.getall(schema.Tag)
         assert not util.contains_id(tags, tag.id)
-        assert not util.contains_id(tags, child.id)

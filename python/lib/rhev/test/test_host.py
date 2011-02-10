@@ -10,8 +10,7 @@ import time
 import struct
 import socket
 
-from rhev import schema
-from rhev import Error
+from rhev import *
 from rhev.test import util
 from rhev.test.base import BaseTest
 from rhev.test.loader import depends
@@ -358,9 +357,9 @@ class TestHost(BaseTest):
     @depends(test_prepare_nonexistent)
     def test_update_nonexistent(self):
         nohost = self.store.nohost
-        assert_raises(KeyError, self.api.update, nohost)
+        assert_raises(NotFound, self.api.update, nohost)
 
     @depends(test_prepare_nonexistent)
     def test_delete_nonexistent(self):
         nohost = self.store.nohost
-        assert_raises(KeyError, self.api.delete, nohost)
+        assert_raises(NotFound, self.api.delete, nohost)
