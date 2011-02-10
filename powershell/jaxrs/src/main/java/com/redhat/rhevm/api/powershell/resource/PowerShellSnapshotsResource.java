@@ -114,11 +114,12 @@ public class PowerShellSnapshotsResource extends UriProviderWrapper implements S
         StringBuilder buf = new StringBuilder();
 
         buf.append("$vm = get-vm " + PowerShellUtils.escape(vmId) + "; ");
+        buf.append("$(");
         buf.append("foreach ($d in $vm.getdiskimages()) { ");
         buf.append("foreach ($s in get-snapshot -vmid $vm.vmid -drive $d.internaldrivemapping) { ");
         buf.append("if ($s.vmsnapshotid -eq " + PowerShellUtils.escape(vmSnapshotId) + ") { ");
         buf.append("$s; break");
-        buf.append(" } } }");
+        buf.append(" } } } )");
 
         return runAndParseSingle(buf.toString() + PROCESS_DISKS);
     }
