@@ -9,7 +9,7 @@
 import time
 
 from rhev import _schema
-from rhev.error import Error
+from rhev.error import ParseError
 from rhev._schema import BaseResource, BaseResources
 
 from pyxb.binding.basis import complexTypeDefinition as ComplexType
@@ -165,7 +165,7 @@ def create_from_xml(s):
     try:
         return _schema.CreateFromDocument(s)
     except PyXBException, e:
-        raise Error, str(e)
+        raise ParseError, str(e)
 
 def _bind(func, *bargs, **bkwargs):
     def _bound(*args, **kwargs):

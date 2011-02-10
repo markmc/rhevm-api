@@ -13,3 +13,30 @@ class Error(Exception):
         super(Error, self).__init__(message)
         for kw in kwargs:
             setattr(self, kw, kwargs[kw])
+
+class ParseError(Error):
+    """Parse error"""
+
+class ConnectionError(Error):
+    """Could not connec to the API."""
+
+class RemoteError(Error):
+    """Remote error"""
+
+class IllegalMethod(RemoteError):
+    """The method is not supported on the collection or resource provided."""
+
+class NotFound(RemoteError):
+    """The collection or resource was not found."""
+
+class IllegalAction(RemoteError):
+    """The action is not supported on the resource provided."""
+
+class ResponseError(RemoteError):
+    """Got a response but it's not what we're expecting."""
+
+class Fault(RemoteError):
+    """The API returned a Fault."""
+
+class ActionError(RemoteError):
+    """An action failed."""

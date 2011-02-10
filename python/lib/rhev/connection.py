@@ -17,7 +17,7 @@ from httplib import HTTPException
 from urlparse import urlparse
 from urllib import quote as urlencode
 from rhev import schema
-from rhev.error import Error
+from rhev.error import *
 
 
 class Connection(object):
@@ -90,7 +90,10 @@ class Connection(object):
             factory = HTTPConnection
         self._connection = factory(self.host, self.port)
         self._logger.debug('connecting to RHEV-M at %s:%s' % (self.host, self.port))
-        self._connection.connect()
+        try:
+            self._connection.connect()
+        except socket.error, e:
+            raise ConnectionError, str(e)
 
     def _close(self):
         """INTERNAL: Close the connection."""
@@ -124,7 +127,7 @@ class Connection(object):
                 break
         else:
             m = 'Could not complete request after %s retries.' % self.retries
-            raise Error, m
+            raise ConnectionError, m
         return response
 
     def _do_request(self, method, url, headers, body):
@@ -181,12 +184,12 @@ class Connection(object):
         body = response.body
         if ctype not in ('application/xml', 'text/xml'):
             reason = 'Expecting an XML response (got: %s)' % ctype
-            raise Error(reason, detail=body)
+            raise ResponseError(reason, detail=body)
         try:
             parsed = schema.create_from_xml(body)
         except Exception, e:
             reason = 'Could not parse XML response: %s' % str(e)
-            raise Error(reason, detail=body)
+            raise ResponseError(reason, detail=body)
         parsed._connection = self
         return parsed
 
@@ -250,25 +253,36 @@ class Connection(object):
         if response.status != http.OK:
             raise self._create_exception(response)
         resource = self._parse_xml(response)
-        for link in resource.actions.link:
-            if link.rel == action:
-                return link.href
+        if resource.actions:
+            for link in resource.actions.link:
+                if link.rel == action:
+                    return link.href
+        raise IllegalAction, 'No such action: %s' % action
 
     def _create_exception(self, response):
         """INTERNAL: Create an exception with some useful details."""
         ctype = response.getheader('Content-Type')
         if ctype == 'application/xml':
-            fault = self._parse_xml(response)
-            if isinstance(fault, schema.Fault):
-                reason = fault.reason
-                detail = fault.detail
-            else:
-                reason = 'Unexpected HTTP status code: %s' % response.status
-                detail = response.reason
+            body = self._parse_xml(response)
         else:
+            body = None
+        if response.status == http.NOT_FOUND:
+            error = NotFound
+            reason = 'The collection or resource was not found'
+            detail = None
+        elif response.status == http.METHOD_NOT_ALLOWED:
+            error = IllegalMethod
+            reason = 'The method is not allowed on the collection or resource'
+            detail = 'Allowed methods: %s' % response.getheader('Allow')
+        elif body and isinstance(body, schema.Fault):
+            error = Fault
+            reason = fault.reason
+            detail = fault.detail
+        else:
+            error = ResponseError
             reason = 'Unexpected HTTP status code: %s' % response.status
             detail = response.reason
-        exception = Error(reason, detail=detail)
+        exception = error(reason, detail=detail)
         return exception
 
     def _filter_results(self, result, filter):
@@ -301,10 +315,11 @@ class Connection(object):
         self.connect()
         response = self._make_request('GET', self.entrypoint)
         if response.status != http.OK:
-            raise Error, 'RHEV-M returned HTTP status %s' % response.status
+            raise self._create_exception(response)
         reply = self._parse_xml(response)
         if not isinstance(reply, schema.API):
-            raise Error, 'Expecting an <api> element at the entry point.'
+            m = 'Expecting an <api> element at the API entry point.'
+            raise ResponseError, m
 
     def getall(self, typ, base=None, search=None, filter=None, special=None,
                detail=None, **query):
@@ -406,8 +421,6 @@ class Connection(object):
         response = self._make_request('PUT', resource.href, body=resource.toxml())
         if response.status == http.OK:
             result = self._parse_xml(response)
-        elif response.status == http.NOT_FOUND:
-            raise KeyError, 'Resource not found.'
         else:
             raise self._create_exception(response)
         return result
@@ -429,8 +442,6 @@ class Connection(object):
         response = self._make_request('DELETE', url, body=data)
         if response.status in (http.OK, http.NO_CONTENT):
             result = None
-        elif response.status == http.NOT_FOUND:
-            raise KeyError, 'Resource not found.'
         else:
             raise self._create_exception(response)
         return result
@@ -448,8 +459,6 @@ class Connection(object):
         response = self._make_request('POST', url, body=data.toxml())
         if response.status in (http.OK, http.NO_CONTENT):
             result = self._parse_xml(response)
-        elif response.status == http.NOT_FOUND:
-            raise KeyError, 'Resource not found.'
         else:
             raise self._create_exception(response)
         return result
