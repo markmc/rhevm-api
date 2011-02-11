@@ -44,8 +44,10 @@ public class PowerShellReadOnlyCdRomsResource extends AbstractPowerShellDevicesR
     protected CdRom buildCdRom(String cdIsoPath) {
         CdRom cdrom = new CdRom();
         cdrom.setId(CDROM_ID);
-        cdrom.setFile(new File());
-        cdrom.getFile().setId(cdIsoPath);
+        if (cdIsoPath != null) {
+            cdrom.setFile(new File());
+            cdrom.getFile().setId(cdIsoPath);
+        }
         cdrom.setVm(new VM());
         cdrom.getVm().setId(parentId);
         return addLinks(cdrom);
@@ -54,12 +56,7 @@ public class PowerShellReadOnlyCdRomsResource extends AbstractPowerShellDevicesR
     @Override
     public List<CdRom> getDevices() {
         List<CdRom> cdroms = new ArrayList<CdRom>();
-
-        String cdIsoPath = query.getCdIsoPath();
-        if (cdIsoPath != null) {
-            cdroms.add(buildCdRom(cdIsoPath));
-        }
-
+        cdroms.add(buildCdRom(query.getCdIsoPath()));
         return cdroms;
     }
 
