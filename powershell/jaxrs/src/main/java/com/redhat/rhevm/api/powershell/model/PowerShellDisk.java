@@ -40,11 +40,17 @@ import static com.redhat.rhevm.api.powershell.util.PowerShellUtils.last;
 
 public class PowerShellDisk extends Disk {
 
+    private static final String DISKS_TYPE = "RhevmCmd.CLIImage";
+
     private String vmSnapshotId;
     private String parentId;
     private XMLGregorianCalendar lastModified;
     private String internalDriveMapping;
     private String taskIds;
+
+    static boolean isDisk(PowerShellParser.Entity entity) {
+        return DISKS_TYPE.equals(entity.getType());
+    }
 
     public String getVmSnapshotId() {
         return vmSnapshotId;
