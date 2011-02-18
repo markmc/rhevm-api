@@ -97,52 +97,56 @@ public class PowerShellDisk extends Disk {
         for (PowerShellParser.Entity entity : parser.parse(output)) {
             if (PowerShellParser.DATE_TYPE.equals(entity.getType())) {
                 date = entity.getValue();
-                continue;
             } else if (PowerShellParser.STRING_TYPE.equals(entity.getType())) {
                 dates.put(date, PowerShellUtils.parseDate(entity.getValue()));
                 date = null;
-                continue;
             } else if (PowerShellAsyncTask.isTask(entity)) {
                 last(ret).setTaskIds(PowerShellAsyncTask.parseTask(entity, last(ret).getTaskIds()));
-                continue;
             } else if (PowerShellAsyncTask.isStatus(entity)) {
                 last(ret).setCreationStatus(PowerShellAsyncTask.parseStatus(entity, last(ret).getCreationStatus()));
-                continue;
+            } else if (isDisk(entity)) {
+                ret.add(parseEntity(vmId, entity, dates));
             }
-
-            PowerShellDisk disk = new PowerShellDisk();
-
-            disk.setId(entity.get("snapshotid"));
-            disk.setDescription(entity.get("description"));
-
-            disk.setVm(new VM());
-            disk.getVm().setId(vmId);
-
-            disk.setSize(entity.get("actualsizeinbytes", Double.class).longValue());
-            disk.setType(entity.get("disktype", PowerShellDiskType.class).map());
-            disk.setStatus(entity.get("status", PowerShellImageStatus.class).map());
-            disk.setInterface(DiskInterface.fromValue(entity.get("diskinterface").toUpperCase()));
-            try {
-                disk.setFormat(entity.get("volumeformat", PowerShellVolumeFormat.class).map());
-            } catch (ClassCastException ex) {
-                disk.setFormat(entity.get("volumeformat", PowerShellVolumeFormat22.class).map());
-            }
-            disk.setSparse(entity.get("volumetype", PowerShellVolumeType.class).map());
-            disk.setBootable(entity.get("boot", Boolean.class));
-            disk.setWipeAfterDelete(entity.get("wipeafterdelete", Boolean.class));
-            disk.setPropagateErrors(entity.get("propagateerrors", PowerShellPropagateErrors.class).map());
-
-            disk.setVmSnapshotId(entity.get("vmsnapshotid"));
-            disk.setParentId(entity.get("parentid"));
-            disk.setInternalDriveMapping(entity.get("internaldrivemapping"));
-
-            if (dates.containsKey(entity.get("lastmodified"))) {
-                disk.setLastModified(dates.get(entity.get("lastmodified")));
-            }
-
-            ret.add(disk);
         }
 
         return ret;
+    }
+
+    public static PowerShellDisk parseEntity(String vmId, PowerShellParser.Entity entity){
+        return parseEntity(vmId, entity, null);
+    }
+
+    private static PowerShellDisk parseEntity(String vmId, PowerShellParser.Entity entity, Map<String, XMLGregorianCalendar> dates) {
+        PowerShellDisk disk = new PowerShellDisk();
+
+        disk.setId(entity.get("snapshotid"));
+        disk.setDescription(entity.get("description"));
+
+        disk.setVm(new VM());
+        disk.getVm().setId(vmId);
+
+        disk.setSize(entity.get("actualsizeinbytes", Double.class).longValue());
+        disk.setType(entity.get("disktype", PowerShellDiskType.class).map());
+        disk.setStatus(entity.get("status", PowerShellImageStatus.class).map());
+        disk.setInterface(DiskInterface.fromValue(entity.get("diskinterface").toUpperCase()));
+        try {
+            disk.setFormat(entity.get("volumeformat", PowerShellVolumeFormat.class).map());
+        } catch (ClassCastException ex) {
+            disk.setFormat(entity.get("volumeformat", PowerShellVolumeFormat22.class).map());
+        }
+        disk.setSparse(entity.get("volumetype", PowerShellVolumeType.class).map());
+        disk.setBootable(entity.get("boot", Boolean.class));
+        disk.setWipeAfterDelete(entity.get("wipeafterdelete", Boolean.class));
+        disk.setPropagateErrors(entity.get("propagateerrors", PowerShellPropagateErrors.class).map());
+
+        disk.setVmSnapshotId(entity.get("vmsnapshotid"));
+        disk.setParentId(entity.get("parentid"));
+        disk.setInternalDriveMapping(entity.get("internaldrivemapping"));
+
+        if (dates != null && dates.containsKey(entity.get("lastmodified"))) {
+            disk.setLastModified(dates.get(entity.get("lastmodified")));
+        }
+
+        return disk;
     }
 }
