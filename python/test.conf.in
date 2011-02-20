@@ -25,11 +25,15 @@ password = <password>
 address = 192.168.123.0
 netmask = 255.255.255.0
 
-# Default datacenter/cluster/templates used for testing. These will not be
-# destroyed.
+# Default datacenter/cluster/templates. These are used for read-only testing
+# and the tests will try to leave these intact.
 datacenter = Default
 cluster = Default
 template = Blank
+
+# Default compatiblity version and CPU to use.
+version = 2.2
+cpu = <cpu>
 
 # The test suite will run tests for hosts mentioned here. For best test
 # coverage, include at lest one RHEL and RHEV-H host. The hosts
