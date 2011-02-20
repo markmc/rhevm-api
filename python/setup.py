@@ -108,6 +108,7 @@ setup(
     packages = [ 'rhev', 'rhev.test' ],
     cmdclass = { 'build': mybuild, 'bdist_egg': mybdist_egg,
                  'genschema': genschema },
+    setup_requires = [ 'pyxbbase >= 1.1.2' ],
     install_requires = [ 'pyxbbase >= 1.1.2' ],
     test_suite = 'nose.collector',
     entry_points = {
