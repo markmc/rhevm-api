@@ -108,7 +108,7 @@ setup(
     packages = [ 'rhev', 'rhev.test' ],
     cmdclass = { 'build': mybuild, 'bdist_egg': mybdist_egg,
                  'genschema': genschema },
-    install_requires = [ 'PyXB >= 1.1.0' ],
+    install_requires = [ 'pyxbbase >= 1.1.2' ],
     test_suite = 'nose.collector',
     entry_points = {
         'nose.plugins.0.10': [ 'deploader = rhev.test.loader:DepLoader' ]
