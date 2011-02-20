@@ -18,7 +18,7 @@ class ParseError(Error):
     """Parse error"""
 
 class ConnectionError(Error):
-    """Could not connec to the API."""
+    """Could not connect to the API."""
 
 class RemoteError(Error):
     """Remote error"""
