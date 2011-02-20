@@ -206,9 +206,6 @@ class TestCluster(BaseTest):
 
     @depends(_test_create)
     def _test_change_datacenter(self):
-        host = self.store.host
-        self.api.action(host, 'deactivate')
-        assert self.wait_for_status(host, 'MAINTENANCE')
         cluster = self.store.cluster
         cluster.data_center = schema.ref(self.store.datacenter2)
         cluster2 = self.api.update(cluster)
