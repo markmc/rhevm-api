@@ -27,5 +27,3 @@ class TestPackage(BaseTest):
         assert callable(rhev.instance)
         assert hasattr(rhev, 'schema')
         assert inspect.ismodule(rhev.schema)
-        assert hasattr(rhev, 'version')
-        assert isinstance(rhev.version, tuple)
