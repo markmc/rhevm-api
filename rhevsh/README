@@ -1,0 +1,12 @@
+This is a command-line interface for Red Hat Enterprise Virtualization.
+
+Installation:
+
+ # easy_install rhevsh
+
+This has been tested on RHEL 5.5 and Fedora 14.
+
+For help:
+
+ $ rhevsh --help
+ $ rhevsh
