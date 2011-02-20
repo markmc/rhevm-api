@@ -62,7 +62,7 @@ class BaseTest(object):
         cfgname = cls._find_test_config()
         if not os.access(cfgname, os.R_OK):
             raise Error, 'test.conf file missing'
-        cls.config = ConfigParser(allow_no_value=True)
+        cls.config = ConfigParser()
         cls.config.read(cfgname)
         cls.api = cls._connect()
         cls.setup()

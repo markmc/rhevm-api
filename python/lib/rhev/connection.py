@@ -14,9 +14,8 @@ import httplib as http
 
 from httplib import HTTPConnection, HTTPSConnection
 from httplib import HTTPException
-from urlparse import urlparse
 from urllib import quote as urlencode
-from rhev import schema
+from rhev import schema, compat
 from rhev.error import *
 
 
@@ -42,7 +41,7 @@ class Connection(object):
         """INTERNAL: Parse an URL into its components."""
         if self.url is None:
             raise Error, 'URL not set'
-        parsed = urlparse(self.url)
+        parsed = compat.urlparse(self.url)
         if not parsed.scheme:
             raise Error, 'Invalid URL with no scheme: %s' % self.url
         elif parsed.scheme not in ('http', 'https'):
@@ -175,7 +174,7 @@ class Connection(object):
             if response.status != http.FOUND:
                 break
             url = response.getheader('Location')
-            url = urlparse(url).path
+            url = compat.urlparse(url).path
         return response
 
     def _parse_xml(self, response):
@@ -307,7 +306,7 @@ class Connection(object):
                     break
             else:
                 matched.append(res)
-        result[:] = matched
+        compat.set_slice(result, matched)
         return result
 
     def ping(self):

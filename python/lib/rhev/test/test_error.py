@@ -27,16 +27,16 @@ class TestError(BaseTest):
 
     def test_error(self):
         error = Error('foo')
-        assert error.message == 'foo'
+        assert str(error) == 'foo'
         error = Error('foo', arg='value', arg2='value2')
-        assert error.message == 'foo'
+        assert str(error) == 'foo'
         assert error.arg == 'value'
         assert error.arg2 == 'value2'
 
     def test_create(self):
         error = create(Error, 'foo')
         assert isinstance(error, Error)
-        assert error.message == 'foo'
+        assert str(error) == 'foo'
 
     def test_illegal_action(self):
         dc = self.store.dc

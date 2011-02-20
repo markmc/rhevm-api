@@ -6,11 +6,14 @@
 # python-rhev is copyright (c) 2010 by the python-rhev authors. See the
 # file "AUTHORS" for a complete overview.
 
+from rhev import compat
+
+
 class Error(Exception):
     """RHEV error"""
     
     def __init__(self, message='', **kwargs):
-        super(Error, self).__init__(message)
+        compat.super(Error, self).__init__(message)
         for kw in kwargs:
             setattr(self, kw, kwargs[kw])
 
