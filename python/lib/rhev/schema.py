@@ -21,7 +21,7 @@ from pyxb.exceptions_ import PyXBException
 
 _mapping_data = \
 [
-    # (resource, collection, relationship)
+    # (resource, collection, relationship, toplevel)
     (_schema.API, None, '/', True),
     (_schema.DataCenter, _schema.DataCenters, 'datacenters', True),
     (_schema.Cluster, _schema.Clusters, 'clusters', True),
@@ -35,6 +35,7 @@ _mapping_data = \
     (_schema.Disk, _schema.Disks, 'disks', False),
     (_schema.CdRom, _schema.CdRoms, 'cdroms', False),
     (_schema.Floppy, _schema.Floppies, 'floppies', False),
+    (_schema.File, _schema.Files, 'files', False),
     (_schema.Statistic, _schema.Statistics, 'statistics', False),
     (_schema.Template, _schema.Templates, 'templates', True),
     (_schema.VmPool, _schema.VmPools, 'vmpools', True),
