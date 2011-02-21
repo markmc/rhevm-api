@@ -56,6 +56,16 @@ class TestCluster(BaseTest):
         self.store.datacenter2 = datacenter2
         self.store.cluster = cluster
 
+    @depends(_test_create)
+    def _test_create_duplicate_name(self):
+        cluster = self.store.cluster
+        cluster2 = schema.new(schema.Cluster)
+        cluster2.name = cluster.name
+        cluster2.data_center = schema.ref(self.store.datacenter)
+        cluster2.cpu = self.get_cpu()
+        cluster2.version = self.get_version()
+        assert_raises(Fault, self.api.create, cluster2)
+
     @depends(_test_use_existing, _test_create)
     def _test_get(self):
         cluster = self.store.cluster
@@ -102,21 +112,29 @@ class TestCluster(BaseTest):
         assert cluster.version is not None
         assert util.is_int(cluster.version.major) and cluster.version.major > 0
         assert util.is_int(cluster.version.minor)
-        #assert cluster.supported_versions is not None
-        #for version in cluster.supported_versions.version:
-        #    assert util.is_int(version.major) and version.major > 0
-        #    assert util.is_int(version.minor)
+        assert cluster.supported_versions is not None
+        for version in cluster.supported_versions.version:
+            assert util.is_int(version.major) and version.major > 0
+            assert util.is_int(version.minor)
         assert cluster.cpu is not None
         assert util.is_str(cluster.cpu.id)
-        # below have been recently added
-        #assert cluster.memory_policy is not None
-        #assert util.is_int(cluster.memory_policy.overcommit.percent)
+        assert cluster.memory_policy is not None
+        assert util.is_int(cluster.memory_policy.overcommit.percent)
         if cluster.scheduling_policy:
             assert cluster.scheduling_policy.policy in \
                         ('EVEN_DISTRIBUTION', 'POWER_SAVING')
             assert util.is_int(cluster.scheduling_policy.thresholds.low)
             assert util.is_int(cluster.scheduling_policy.thresholds.high)
             assert util.is_int(cluster.scheduling_policy.thresholds.duration)
+
+    @depends(_test_use_existing, _test_create)
+    def _test_has_networks(self):
+        cluster = self.store.cluster
+        networks = self.api.getall(schema.Network, base=cluster)
+        assert isinstance(networks, schema.Networks)
+        for network in networks:
+            assert isinstance(network, schema.Network)
+            assert network.id is not None
 
     @depends(_test_create)
     def _test_update(self):
@@ -137,19 +155,10 @@ class TestCluster(BaseTest):
         network.stp = False
         network.vlan = self.get_vlan()
         network.ip = self.get_unused_ip()
+        network.display = False
         network = self.api.create(network)
         assert network is not None
         atnetwork = self.api.create(network, base=cluster)
-        assert isinstance(atnetwork, schema.Network)
-        assert atnetwork.id == network.id
-        assert atnetwork.name == network.name
-        assert atnetwork.description == network.description
-        assert atnetwork.data_center.id == network.data_center.id
-        assert atnetwork.stp == network.stp
-        assert atnetwork.vlan.id == network.vlan.id
-        assert atnetwork.ip.address == network.ip.address
-        assert atnetwork.ip.netmask == network.ip.netmask
-        assert atnetwork.ip.gateway == network.ip.gateway
         networks = self.api.getall(schema.Network, base=cluster)
         assert util.contains_id(networks, atnetwork.id)
         self.store.network = network
@@ -158,26 +167,40 @@ class TestCluster(BaseTest):
     @depends(_test_attach_network)
     def _test_network_attributes(self):
         cluster = self.store.cluster
+        network = self.store.network
         atnetwork = self.store.atnetwork
+        assert isinstance(atnetwork, schema.Network)
         assert util.is_str_uuid(atnetwork.id)
+        assert atnetwork.id == network.id
         assert util.is_str_href(atnetwork.href)
-        assert util.is_str(atnetwork.name) and len(atnetwork.name) > 0
-        assert util.is_str(atnetwork.description) and len(atnetwork.description) > 0
+        assert atnetwork.href != network.href
         assert atnetwork.href.startswith(cluster.href)
-        assert isinstance(atnetwork.data_center, schema.DataCenter)
-        assert isinstance(atnetwork.cluster, schema.Cluster)
+        assert atnetwork.href.endswith(network.id)
+        assert util.is_str(atnetwork.name) and len(atnetwork.name) > 0
+        assert atnetwork.name == network.name
+        assert util.is_str(atnetwork.description) and len(atnetwork.description) > 0
+        assert atnetwork.description == network.description
         assert atnetwork.status in ('OPERATIONAL', 'NON_OPERATIONAL')
+        assert isinstance(atnetwork.data_center, schema.DataCenter)
+        assert atnetwork.data_center.id == network.data_center.id
+        assert isinstance(atnetwork.cluster, schema.Cluster)
+        assert atnetwork.cluster.id == cluster.id
+        assert util.is_bool(atnetwork.stp)
+        assert atnetwork.stp == network.stp
+        assert util.is_bool(atnetwork.display)
         assert isinstance(atnetwork.vlan, schema.VLAN)
         assert util.is_int(atnetwork.vlan.id)
+        assert atnetwork.vlan.id == network.vlan.id
         assert isinstance(atnetwork.ip, schema.IP)
         assert util.is_str_ip(atnetwork.ip.address)
         assert util.is_str_ip(atnetwork.ip.netmask)
         assert util.is_str_ip(atnetwork.ip.gateway)
-        assert isinstance(atnetwork.stp, bool)
-        assert isinstance(atnetwork.display, bool)
+        assert atnetwork.ip.address == network.ip.address
+        assert atnetwork.ip.netmask == network.ip.netmask
+        assert atnetwork.ip.gateway == network.ip.gateway
 
     @depends(_test_attach_network)
-    def _test_update_network(self):
+    def _test_set_display_network(self):
         atnetwork = self.store.atnetwork
         atnetwork.display = True
         atnetwork2 = self.api.update(atnetwork)
@@ -204,6 +227,38 @@ class TestCluster(BaseTest):
         networks = self.api.getall(schema.Network)
         assert not util.contains_id(networks, network.id)
 
+    @depends(_test_detach_network)
+    def _test_get_nonexistent_network(self):
+        cluster = self.store.cluster
+        atnetwork = self.store.atnetwork
+        assert_raises(NotFound, self.api.get, schema.Network,
+                      base=cluster, id=atnetwork.id)
+ 
+    @depends(_test_detach_network)
+    def _test_detach_nonexistent_network(self):
+        atnetwork = self.store.atnetwork
+        assert_raises(NotFound, self.api.delete, atnetwork)
+ 
+    @depends(_test_detach_network)
+    def _test_update_nonexistent_network(self):
+        atnetwork = self.store.atnetwork
+        assert_raises(NotFound, self.api.update, atnetwork)
+
+    @depends(_test_attach_network)
+    def _test_detach_network(self):
+        cluster = self.store.cluster
+        network = self.store.network
+        atnetwork = self.store.atnetwork
+        self.api.delete(atnetwork)
+        networks = self.api.getall(schema.Network, base=cluster)
+        assert not util.contains_id(networks, atnetwork.id)
+        networks = self.api.getall(schema.Network)
+        assert util.contains_id(networks, network.id)
+        self.api.delete(network)
+        networks = self.api.getall(schema.Network)
+        assert not util.contains_id(networks, network.id)
+
+ 
     @depends(_test_create)
     def _test_change_datacenter(self):
         cluster = self.store.cluster
@@ -237,8 +292,10 @@ class TestCluster(BaseTest):
             yield self._test_getall
             yield self._test_search
             yield self._test_attributes
+            yield self._test_has_networks
         # Intrusive tests on a newly created cluster
         yield self._test_create
+        yield self._test_create_duplicate_name
         yield self._test_get
         yield self._test_reload
         yield self._test_getall
@@ -246,15 +303,19 @@ class TestCluster(BaseTest):
         yield self._test_attributes
         yield self._test_attach_network
         yield self._test_network_attributes
-        yield self._test_update_network
+        yield self._test_set_display_network
         yield self._test_detach_network
+        yield self._test_get_nonexistent_network
+        yield self._test_update_nonexistent_network
+        yield self._test_detach_nonexistent_network
         yield self._test_change_datacenter
+        yield self._test_update
         yield self._test_delete
 
     def test_prepare_nonexistent(self):
         cluster = schema.new(schema.Cluster)
         cluster.id = 'foo'
-        cluster.href = '/api/clusters/foo'
+        cluster.href = '%s/clusters/foo' % self.api.entrypoint
         self.store.cluster = cluster
 
     @depends(test_prepare_nonexistent)

@@ -105,23 +105,19 @@ class TestHost(BaseTest):
                 'NON_RESPONSIVE', 'PENDING_APPROVAL',
                 'PREPARING_FOR_MAINTENANCE', 'PROBLEMATIC', 'REBOOT',
                 'UNASSIGNED', 'UP')
-        #assert host.type in ('RHEV_H', 'RHEL')  # BUG: missing
+        assert host.type in ('RHEV_H', 'RHEL')  # BUG: missing
         assert util.is_str_ip(host.address)  # BUG: missing
         assert util.is_str_int(host.cluster.id) or util.is_str_uuid(host.cluster.id)
         assert util.is_int(host.port) and host.port > 0
-        #BUG: do we want the password to show up here?
         assert host.root_password is None
         assert host.power_management is not None
         assert util.is_bool(host.power_management.enabled)
         if host.power_management.enabled:
-            # BUG: expose password here?
             assert util.is_str_ip(host.power_management.address)
             assert util.is_str(host.power_management.username)
             assert host.power_management.password is None
             if host.power_management.options:
                 opts = host.power_management.options.option
-                #if not isinstance(opts, list):
-                #    opts = [opts]
                 for opt in opts:
                     assert util.is_str(opt.name) and len(opt.name) > 0
                     assert util.is_str(opt.value_)
@@ -153,15 +149,6 @@ class TestHost(BaseTest):
         assert host.name == host2.name
 
     @depends(_test_prepare)
-    def _test_has_vms(self):
-        host = self.store.host
-        vms = self.api.getall(schema.VM, base=host)
-        assert isinstance(vms, schema.VMs)
-        for vm in vms:
-            assert isinstance(vm, schema.VM)
-            assert vm.id is not None
-
-    @depends(_test_prepare)
     def _test_has_nics(self):
         host = self.store.host
         nics = self.api.getall(schema.HostNIC, base=host)
@@ -187,6 +174,15 @@ class TestHost(BaseTest):
         for stor in storage:
             assert isinstance(stor, schema.Storage)
             assert stor.id is not None
+
+    @depends(_test_prepare)
+    def _test_has_statistics(self):
+        host = self.store.host
+        stats = self.api.getall(schema.Statistic, base=host)
+        assert isinstance(stats, schema.Statistics)
+        for stat in stats:
+            assert isinstance(stat, schema.Statistic)
+            assert stat.id is not None
 
     @depends(_test_prepare)
     def _test_delete(self):
@@ -233,7 +229,6 @@ class TestHost(BaseTest):
         # BUG: Ticket: #170
         elif type == 'RHEV_H':
             action.isofile = self.store.isofile
-        # BUG: no error is raised when the host is up
         self.api.action(host, 'install', action)
         host = self.api.reload(host)
         assert host.status == 'INSTALLING'
@@ -253,8 +248,11 @@ class TestHost(BaseTest):
         host = self.store.host
         if not host.power_management.enabled:
             raise SkipTest, 'Power management not enabled.'
-        # BUG: no check on maintenance mode
         assert host.status == 'UP'
+        hosts = self.api.getall(schema.Host,
+                filter={'cluster.id': host.cluster.id, 'status': 'UP'})
+        if len(hosts) < 2:
+            raise SkipTest, 'Only 1 host in cluster, not fencing.'
         self.retry_action(host, 'deactivate')
         self.wait_for_status(host, 'MAINTENANCE')
         action = schema.new(schema.Action)
@@ -287,79 +285,62 @@ class TestHost(BaseTest):
         assert result.status == 'COMPLETE'
         assert self.wait_for_status(host, 'UP')
 
-    @depends(_test_fence_restart)
-    def _test_fence_manual(self):
-        # XXX: How to test this?
-        pass
-
-    def _get_hosts(self):
+    def test_host(self):
         hosts = self.api.getall(schema.Host)
         hosts = [ host.name for host in hosts ]
-        return hosts
-
-    def test_host(self):
-        hosts = self._get_hosts()
-        test_hosts = self.get_config('hosts', default='')
-        test_hosts = test_hosts.split()
-        hosts = [ host for host in hosts if not host in test_hosts ]
+        named = self.get_config('hosts', default='').split()
         # Non-invasive tests on all hosts
         for host in hosts:
+            continue
             yield self._test_prepare, host
             yield self._test_get
             yield self._test_reload
             yield self._test_getall
             yield self._test_search
             yield self._test_attributes
-            yield self._test_has_vms
             yield self._test_has_nics
             yield self._test_has_tags
             yield self._test_has_storage
+            yield self._test_has_statistics
         # Invasive tests on named hosts
-        for host in test_hosts[1:]:
+        for host in named[1:]:
             yield self._test_prepare, host
-            yield self._test_get
-            yield self._test_reload
-            yield self._test_getall
-            yield self._test_search
-            yield self._test_attributes
-            yield self._test_update
             type = self.get_config('type', host)
             if type == 'RHEL':
                 yield self._test_delete
                 yield self._test_create
+            yield self._test_update
             yield self._test_deactivate
             yield self._test_install
             yield self._test_activate
             yield self._test_fence_stop
             yield self._test_fence_start
             yield self._test_fence_restart
-            yield self._test_fence_manual
 
     def test_prepare_nonexistent(self):
-        nohost = self.api.get(schema.Host)
-        assert nohost is not None
-        nohost.id += 'x'
-        nohost.href += 'x'
-        self.store.nohost = nohost
+        host = schema.new(schema.Host)
+        host.id = 'foo'
+        host.href = '%s/hosts/foo' % self.api.entrypoint
+        self.store.host = host
 
     @depends(test_prepare_nonexistent)
     def test_get_nonexistent(self):
-        nohost = self.store.nohost
-        host = self.api.get(schema.Host, id=nohost.id)
+        host = self.store.host
+        host = self.api.get(schema.Host, id=host.id)
         assert host is None
 
     @depends(test_prepare_nonexistent)
     def test_reload_nonexistent(self):
-        nohost = self.store.nohost
-        host = self.api.reload(nohost)
+        host = self.store.nohost
+        host = self.api.reload(host)
         assert host is None
 
     @depends(test_prepare_nonexistent)
     def test_update_nonexistent(self):
-        nohost = self.store.nohost
-        assert_raises(NotFound, self.api.update, nohost)
+        host = self.store.host
+        assert_raises(NotFound, self.api.update, host)
 
     @depends(test_prepare_nonexistent)
     def test_delete_nonexistent(self):
-        nohost = self.store.nohost
-        assert_raises(NotFound, self.api.delete, nohost)
+        host = self.store.host
+        assert_raises(NotFound, self.api.delete, host)

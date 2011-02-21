@@ -15,6 +15,14 @@ from nose.tools import assert_raises
 
 class TestNetwork(BaseTest):
 
+    def _test_use_existing(self, network):
+        network = self.api.get(schema.Network,
+                               filter={'name': network})
+        assert network is not None
+        datacenter = self.api.reload(network.data_center)
+        self.store.network = network
+        self.store.datacenter = datacenter
+
     def _test_create(self):
         datacenter = schema.new(schema.DataCenter)
         datacenter.name = util.random_name('dc')
@@ -23,9 +31,12 @@ class TestNetwork(BaseTest):
         datacenter = self.api.create(datacenter)
         network = schema.new(schema.Network)
         network.name = util.random_name('net')
+        network.description = 'foo'
         network.data_center = schema.ref(datacenter)
-        # BUG Trac ticket #12
-        #net2 = self.api.create(net, base=dc)
+        network.stp = False
+        network.vlan = self.get_vlan()
+        network.ip = self.get_unused_ip()
+        network.display = False
         network2 = self.api.create(network)
         assert isinstance(network2, schema.Network)
         assert network2.id is not None
@@ -37,32 +48,21 @@ class TestNetwork(BaseTest):
         self.store.datacenter = datacenter
         self.store.network = network
 
-    @depends(_test_create)
-    def _test_prepare(self, network):
-        if network is None:
-            return
-        network = self.api.get(schema.Network,
-                               filter={'name': network})
-        assert network is not None
-        datacenter = self.api.reload(network.data_center)
-        self.store.network = network
-        self.store.datacenter = datacenter
-
-    @depends(_test_prepare)
+    @depends(_test_use_existing, _test_create)
     def _test_get(self):
         network = self.store.network
         network2 = self.api.get(schema.Network, id=network.id)
         assert isinstance(network2, schema.Network)
         assert network2.id == network.id
 
-    @depends(_test_prepare)
+    @depends(_test_use_existing, _test_create)
     def _test_reload(self):
         network = self.store.network
         network2 = self.api.reload(network)
         assert isinstance(network2, schema.Network)
         assert network2.id == network.id
 
-    @depends(_test_prepare)
+    @depends(_test_use_existing, _test_create)
     def _test_getall(self):
         network = self.store.network
         networks = self.api.getall(schema.Network)
@@ -72,7 +72,7 @@ class TestNetwork(BaseTest):
             assert isinstance(network, schema.Network)
         assert util.contains_id(networks, network.id)
 
-    @depends(_test_prepare)
+    @depends(_test_use_existing, _test_create)
     def _test_attributes(self):
         network = self.store.network
         assert util.is_str_uuid(network.id)
@@ -89,13 +89,11 @@ class TestNetwork(BaseTest):
                     util.is_str_ip(network.ip.gateway)
         if network.vlan is not None:
             assert util.is_int(network.vlan.id)
-        # BUG: ticket #193: stp and display needs to be set always
-        assert isinstance(network.stp, bool)
-        assert isinstance(network.display, bool)
-        # XXX: statuses are missing here
+        assert util.is_bool(network.stp)
+        assert util.is_bool(network.display)
         assert network.status in ('OPERATIONAL', 'NON_OPERATIONAL')
 
-    @depends(_test_prepare)
+    @depends(_test_create)
     def _test_update(self):
         network = self.store.network
         network.description = 'foobar'
@@ -116,21 +114,18 @@ class TestNetwork(BaseTest):
         assert network2 is None
         self.api.delete(datacenter)
 
-    def _get_networks(self):
+    def test_network(self):
         networks = self.api.getall(schema.Network)
         networks = [ network.name for network in networks ]
-        return networks
-
-    def test_network(self):
-        networks = self._get_networks()
-        for network in networks[:2]:
-            yield self._test_prepare, network
+        # Non-intrusive tests on existing networks
+        for network in networks:
+            yield self._test_use_existing, network
             yield self._test_get
             yield self._test_reload
             yield self._test_getall
             yield self._test_attributes
+        # Intrusive tests on a newly created network
         yield self._test_create
-        yield self._test_prepare, None
         yield self._test_get
         yield self._test_reload
         yield self._test_getall
@@ -138,24 +133,30 @@ class TestNetwork(BaseTest):
         yield self._test_update
         yield self._test_delete
 
-    @depends(_test_delete)
+    def test_prepare_nonexisting(self):
+        network = schema.new(schema.Network)
+        network.id = 'foo'
+        network.href = '%s/networks/foo' % self.api.entrypoint
+        self.store.network = network
+
+    @depends(test_prepare_nonexisting)
     def test_get_nonexisting(self):
         network = self.store.network
         network = self.api.get(schema.Network, id=network.id)
         assert network is None
 
-    @depends(_test_delete)
+    @depends(test_prepare_nonexisting)
     def test_reload_nonexisting(self):
         network = self.store.network
         network = self.api.reload(network)
         assert network is None
 
-    @depends(_test_delete)
+    @depends(test_prepare_nonexisting)
     def test_update_nonexisting(self):
         network = self.store.network
         assert_raises(NotFound, self.api.update, network)
 
-    @depends(_test_delete)
+    @depends(test_prepare_nonexisting)
     def test_delete_nonexisting(self):
         network = self.store.network
         assert_raises(NotFound, self.api.delete, network)

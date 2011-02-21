@@ -9,13 +9,11 @@
 import sys
 import os.path
 import time
+import httplib as http
 
 from ConfigParser import ConfigParser, NoOptionError
 
-from rhev import schema
-from rhev.object import create
-from rhev.error import Error
-from rhev.connection import Connection
+from rhev import *
 from rhev.test import util
 
 
@@ -51,8 +49,9 @@ class BaseTest(object):
         url = cls.get_config('url')
         username = cls.get_config('username')
         password = cls.get_config('password')
-        api = create(Connection, url=url,username=username, password=password)
+        api = Connection(url, username, password)
         api.verbosity = 10
+        api.connect()
         return api
 
     @classmethod
@@ -86,7 +85,15 @@ class BaseTest(object):
         start = time.time()
         delay = 1
         while time.time() < start + timeout:
-            obj = self.api.reload(resource)
+            try:
+                obj = self.api.reload(resource)
+            except ResponseError, err:
+                # XXX: workaround for 404/500 issue
+                if hasattr(err, 'status') and \
+                        err.status == http.INTERNAL_SERVER_ERROR:
+                    obj = None
+                else:
+                    raise
             if obj is None:
                 return status is None
             if status and obj.status in status:

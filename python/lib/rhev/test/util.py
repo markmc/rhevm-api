@@ -12,6 +12,7 @@ import random
 import struct
 import socket
 import logging
+from datetime import datetime
 
 
 def setup_logging(debug):
@@ -45,9 +46,9 @@ _re_ip = re.compile('^(\d|\d\d|[01]\d\d|2[0-4]\d|25[0-5])'
 _re_host = re.compile('^[a-z0-9-]+(\.[a-z0-9-]+)+$', re.I)
 _re_bool = re.compile('^(true|false)$', re.I)
 _re_mac = re.compile('^[0-9a-f]{2}(:[0-9a-f]{2}){5}$', re.I)
-_re_href = re.compile('^/[a-z0-9_-]*api[a-z0-9_-]*(/[a-z0-9_-]+)+$', re.I)
+_re_href = re.compile('^/[a-z0-9_-]*api[a-z0-9_-]*(/[a-z0-9._-]+)+$', re.I)
 _re_path = re.compile('^(/[a-z0-9_-]+)+$', re.I)
-_re_date = re.compile('^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(.\d{3})?[a-z]+$', re.I)
+_re_date = re.compile('^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?[A-Z]?$')
 
 def is_str(s):
     return isinstance(s, str) or isinstance(s, unicode)
@@ -80,8 +81,8 @@ def is_str_href(s):
 def is_str_path(s):
     return isinstance(s, basestring) and bool(_re_path.match(s))
 
-def is_str_date(s):
-    return isinstance(s, basestring) and bool(_re_date.match(s))
+def is_date(d):
+    return isinstance(d, datetime) or bool(_re_date.match(str(s)))
 
 def is_int(i):
     return isinstance(i, int) or isinstance(i, long)
@@ -90,7 +91,8 @@ def is_float(f):
     return isinstance(f, float)
 
 def is_bool(b):
-    return isinstance(b, bool) or isinstance(b, int)
+    return isinstance(b, bool) or isinstance(b, int) or \
+            bool(_re_bool.match(str(b)))
 
 
 def random_name(id='obj'):

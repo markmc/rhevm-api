@@ -6,10 +6,13 @@
 # python-rhev is copyright (c) 2010 by the python-rhev authors. See the
 # file "AUTHORS" for a complete overview.
 
-from rhev import schema
+from rhev import *
 from rhev.test import util
 from rhev.test.base import BaseTest
 from rhev.test.loader import depends
+
+from nose import SkipTest
+from nose.tools import assert_raises
 
 
 class TestVmPool(BaseTest):
@@ -27,9 +30,10 @@ class TestVmPool(BaseTest):
         cluster = self.api.get(schema.Cluster, name=name)
         if cluster is None:
             raise SkipTest, 'Cluster not found: %s' % name
-        template = self.api.get(schema.Template, name='Blank')
+        name = self.get_config('template')
+        template = self.api.get(schema.Template, name=name)
         if template is None:
-            raise SkipTest, 'Template not found: Blank'
+            raise SkipTest, 'Template not found: %s' % name
         vm = schema.new(schema.VM)
         vm.name = util.random_name('vm')
         vm.memory = 512 * 1024**2
@@ -73,6 +77,16 @@ class TestVmPool(BaseTest):
         assert isinstance(pool, schema.VmPool)
         assert pool.id == pool2.id
         self.store.pool = pool
+
+    @depends(test_create)
+    def test_create_duplicate_name(self):
+        pool = self.store.pool
+        pool2 = schema.new(schema.VmPool)
+        pool2.name = pool.name
+        pool2.size = 1
+        pool2.template = schema.ref(self.store.template)
+        pool2.cluster = schema.ref(self.store.cluster)
+        assert_raises(Fault, self.api.create, pool2)
 
     @depends(test_create)
     def test_get(self):
@@ -152,3 +166,27 @@ class TestVmPool(BaseTest):
         assert not util.contains_id(pools, pool.id)
         self.api.delete(self.store.template)
         self.api.delete(self.store.vm)
+
+    def test_prepare_nonexistent(self):
+        pool = schema.new(schema.VmPool)
+        pool.id = 'foo'
+        pool.href = '%s/vmpools/foo' % self.api.entrypoint
+        self.store.pool = pool
+
+    def test_get_nonexistent(self):
+        pool = self.store.pool
+        pool = self.api.get(schema.VmPool, id=pool.id)
+        assert pool is None
+
+    def test_reload_nonexistent(self):
+        pool = self.store.pool
+        pool = self.api.reload(pool)
+        assert pool is None
+
+    def test_update_nonexistent(self):
+        pool = self.store.pool
+        assert_raises(NotFound, self.api.update, pool)
+
+    def test_delete_nonexistent(self):
+        pool = self.store.pool
+        assert_raises(NotFound, self.api.delete, pool)

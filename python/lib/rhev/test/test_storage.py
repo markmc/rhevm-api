@@ -6,11 +6,12 @@
 # python-rhev is copyright (c) 2010 by the python-rhev authors. See the
 # file "AUTHORS" for a complete overview.
 
-from rhev import schema
+from rhev import *
 from rhev.test import util
 from rhev.test.base import BaseTest
 from rhev.test.loader import depends
 from nose import SkipTest
+from nose.tools import assert_raises
 
 
 class TestStorage(BaseTest):
@@ -124,10 +125,12 @@ class TestStorage(BaseTest):
                 if stor.logical_unit[0].id == id:
                     return stor.logical_unit[0]
             elif block_type == 'vg':
-                if store.volume_group is None:
+                if not stor.volume_group:
                     continue
-                if stor.volume_group[0].id == id:
-                    return stor.volume_group
+                # BUG: volume_group.name not set
+                #if stor.volume_group[0].name == id:
+                #    return stor.volume_group
+                return stor.volume_group[0]
         return None
 
     @depends(_test_iscsi_login, _prepare)
@@ -151,7 +154,7 @@ class TestStorage(BaseTest):
     @depends(_test_host_storage)
     def _test_host_storage_attributes(self):
         host = self.store.host
-        storage = self.api.get(schema.Storage, base=host)
+        storage = self.api.get(schema.HostStorage, base=host)
         assert isinstance(storage, schema.HostStorage)
         for stor in storage:
             assert isinstance(stor, schema.Storage)
@@ -168,14 +171,14 @@ class TestStorage(BaseTest):
             else:
                 assert stor.volume_group.id == stor.id
             # BUG: missing attributes
-            #if stor.type == 'ISCSI':
-            #    assert util.is_str(stor.target)
-            #assert util.is_int(stor.size)
-            #if stor.logical_unit:
-            #    assert util.is_int(stor.multipathing)
-            #elif stor.volume_group:
-            #    assert util.is_str(volume_group.name)
-            #    assert volume_group.logical_unit is not None
+            if stor.type == 'ISCSI':
+                assert util.is_str(stor.target)
+            assert util.is_int(stor.size)
+            if stor.logical_unit:
+                assert util.is_int(stor.multipathing)
+            elif stor.volume_group:
+                assert util.is_str(volume_group.name)
+                assert volume_group.logical_unit is not None
 
     @depends(_prepare)
     def _test_create_nfs_data(self):
@@ -214,7 +217,7 @@ class TestStorage(BaseTest):
             luns = [schema.ref(lun) for lun in self.store.luns ]
             domain.storage.logical_unit = luns
         elif self.store.volume_group:
-            domain.storage.volume_group = schema.ref(self.store.volume_group)
+            domain.storage.volume_group = [schema.ref(self.store.volume_group)]
         domain.host = schema.ref(host)
         domain2 = self.api.create(domain)
         assert isinstance(domain2, schema.StorageDomain)
@@ -278,8 +281,6 @@ class TestStorage(BaseTest):
         assert util.is_int(domain.available)
         assert util.is_int(domain.used)
         assert util.is_int(domain.committed)
-        #assert domain.shared_status in ('UNATTACHED', 'MIXED', 'ACTIVE')  # BUG: missing
-        #assert util.is_bool(domain.master)  # BUG: missing when false
 
     @depends(_test_create)
     def _test_attach(self):
@@ -331,13 +332,11 @@ class TestStorage(BaseTest):
         assert util.is_int(domain.available)
         assert util.is_int(domain.used)
         assert util.is_int(domain.committed)
-        #assert util.is_bool(domain.master)  # BUG: missing when false
 
     @depends(_test_attach)
     def _test_update(self):
         domain = self.store.storagedomain
         domain.name = util.random_name('sd')
-        # BUG: this seems to be an issue with the backend not the API
         domain2 = self.api.update(domain)
         assert domain2.id == domain.id
         assert domain2.name == domain.name
@@ -461,7 +460,6 @@ class TestStorage(BaseTest):
     def _test_delete(self):
         # We'd like to detach the storage domain but that's not possible as
         # this is the only data domain left. Therefore, delete the entire DC.
-        # BUG: "format" option is missing
         domain = self.store.storagedomain
         atdomain = self.store.attachdomain
         cluster = self.store.cluster
@@ -495,17 +493,21 @@ class TestStorage(BaseTest):
         assert cluster is None
 
     def test_storage_domain(self):
-        storage = self.get_config('storage')
-        storage = storage.split()
-        for stor in storage:
-            # First create a data domain
-            yield self._prepare, stor
+        domains = self.get_config('storage')
+        domains = domains.split()
+        for domain in domains:
+            # Create the data domain
+            yield self._prepare, domain
             type = self.store.type
-            if type in ('ISCSI', 'FCP'):
-                if type == 'ISCSI':
-                    yield self._test_iscsi_discover
-                    yield self._test_iscsi_login
+            if type == 'ISCSI':
+                yield self._test_iscsi_discover
+                yield self._test_iscsi_login
                 yield self._test_host_storage
+                yield self._test_host_storage_attributes
+                yield self._test_create_block_data
+            elif type == 'FCP':
+                yield self._test_host_storage
+                yield self._test_host_storage_attributes
                 yield self._test_create_block_data
             elif type == 'NFS':
                 yield self._test_create_nfs_data
@@ -524,7 +526,7 @@ class TestStorage(BaseTest):
             yield self._test_update 
             yield self._test_deactivate
             yield self._test_activate
-            iso = self.get_config('iso', stor)
+            iso = self.get_config('iso', domain)
             if iso is not None:
                 yield self._test_create_iso, iso
                 yield self._test_attach_iso
@@ -536,3 +538,31 @@ class TestStorage(BaseTest):
                 yield self._test_delete_iso
             # TBD: export domains
             yield self._test_delete
+
+    def test_prepare_nonexistent(self):
+        domain = schema.new(schema.StorageDomain)
+        domain.id = 'foo'
+        domain.href = '%s/storagedomains/foo' % self.api.entrypoint
+        self.store.storagedomain = domain
+
+    @depends(test_prepare_nonexistent)
+    def test_get_nonexistent(self):
+        domain = self.store.storagedomain
+        domain = self.api.get(schema.StorageDomain, id=domain.id)
+        assert domain is None
+
+    @depends(test_prepare_nonexistent)
+    def test_reload_nonexistent(self):
+        domain = self.store.storagedomain
+        domain = self.api.reload(domain)
+        assert domain is None
+
+    @depends(test_prepare_nonexistent)
+    def test_update_nonexistent(self):
+        domain = self.store.storagedomain
+        assert_raises(NotFound, self.api.update, domain)
+
+    @depends(test_prepare_nonexistent)
+    def test_delete_nonexistent(self):
+        domain = self.store.storagedomain
+        assert_raises(NotFound, self.api.delete, domain)

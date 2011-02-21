@@ -153,10 +153,9 @@ class TestHostNic(BaseTest):
         assert util.is_str_int(nic.host.id) or util.is_str_uuid(nic.host.id)
         assert util.is_str_uuid(nic.network.id)
         assert util.is_str_mac(nic.mac.address)
-        # BUG: nic.ip not set due to lack of PUT
-        #assert util.is_str_ip(nic.ip.address)
-        #assert util.is_str_ip(nic.ip.netmask)
-        #assert util.is_str_ip(nic.ip.gateway)
+        assert util.is_str_ip(nic.ip.address)
+        assert util.is_str_ip(nic.ip.netmask)
+        assert util.is_str_ip(nic.ip.gateway)
         if nic.vlan is not None:
             assert util.is_int(nic.vlan.id) and nic.vlan.id > 0
         assert util.is_int(nic.speed)  # BUG: missing

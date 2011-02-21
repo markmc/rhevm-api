@@ -113,6 +113,26 @@ class TestDataCenter(BaseTest):
             assert isinstance(sd, schema.StorageDomain)
             assert util.is_str_uuid(sd.id)
 
+    @depends(_test_use_existing, _test_create)
+    def _test_has_files(self):
+        dc = self.store.dc
+        files = self.api.getall(schema.Files, base=dc)
+        assert isinstance(files, schema.Files)
+        for file in files:
+            assert isinstance(file, schema.File)
+
+    @depends(_test_has_files)
+    def _test_file_attributes(self):
+        dc = self.store.dc
+        files = self.api.getall(schema.Files, base=dc)
+        for file in files:
+            assert util.is_str(file.id) and len(file.id) > 0
+            assert util.is_str_href(file.href) and file.href.endswith(file.id)
+            assert util.is_str(file.name)
+            assert file.type in ('ISO', 'VFD')
+            assert isinstance(file.data_center, schema.DataCenter)
+            assert file.data_center.id == dc.id
+
     def test_datacenter(self):
         dcs = self.api.getall(schema.DataCenter)
         dcs = [ dc.name for dc in dcs ]
@@ -125,6 +145,8 @@ class TestDataCenter(BaseTest):
             yield self._test_search
             yield self._test_attributes
             yield self._test_has_storagedomains
+            yield self._test_has_files
+            yield self._test_file_attributes
         # intrusive tests on a newly created datacenter
         yield self._test_create
         yield self._test_get
@@ -132,12 +154,13 @@ class TestDataCenter(BaseTest):
         yield self._test_getall
         yield self._test_search
         yield self._test_attributes
+        yield self._test_update
         yield self._test_delete
 
     def test_prepare_nonexistent(self):
         dc = schema.new(schema.DataCenter)
         dc.id = 'foo'
-        dc.href = '/api/datacenters/foo'
+        dc.href = '%s/datacenters/foo' % self.api.entrypoint
         self.store.dc = dc
 
     @depends(test_prepare_nonexistent)
