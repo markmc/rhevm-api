@@ -275,8 +275,8 @@ class Connection(object):
             detail = 'Allowed methods: %s' % response.getheader('Allow')
         elif body and isinstance(body, schema.Fault):
             error = Fault
-            reason = fault.reason
-            detail = fault.detail
+            reason = body.reason
+            detail = body.detail
         else:
             error = ResponseError
             reason = 'Unexpected HTTP status code: %s' % response.status
