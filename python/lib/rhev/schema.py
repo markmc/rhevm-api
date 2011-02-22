@@ -29,7 +29,7 @@ _mapping_data = \
     (_schema.Network, _schema.Networks, 'networks', True),
     (_schema.Host, _schema.Hosts, 'hosts', True),
     (_schema.HostNIC, _schema.HostNics, 'nics', False),
-    (_schema.HostStorage, _schema.Storage, 'storage', False),
+    (_schema.Storage, _schema.HostStorage, 'storage', False),
     (_schema.VM, _schema.VMs, 'vms', True),
     (_schema.NIC, _schema.Nics, 'nics', False),
     (_schema.Disk, _schema.Disks, 'disks', False),
