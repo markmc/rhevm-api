@@ -1081,7 +1081,7 @@
                 <jaxb:property name="Files"/>
             </xs:appinfo>
           </xs:annotation>
-          <xs:element ref="file" maxOccurs="unbounded"/>
+          <xs:element ref="file" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -1180,7 +1180,7 @@
 
   <xs:complexType name="VolumeGroup">
     <xs:sequence>
-      <xs:element name="name" type="xs:string"/>
+      <xs:element name="name" type="xs:string" minOccurs="0"/>
       <xs:element ref="logical_unit" minOccurs="0" maxOccurs="unbounded">
         <xs:annotation>
           <xs:appinfo>
