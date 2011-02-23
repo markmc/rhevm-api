@@ -265,23 +265,24 @@ class Connection(object):
             body = self._parse_xml(response)
         else:
             body = None
+        kwargs = {}
         if response.status == http.NOT_FOUND:
             error = NotFound
-            reason = 'The collection or resource was not found'
-            detail = None
+            message = 'The collection or resource was not found'
         elif response.status == http.METHOD_NOT_ALLOWED:
             error = IllegalMethod
-            reason = 'The method is not allowed on the collection or resource'
-            detail = 'Allowed methods: %s' % response.getheader('Allow')
+            message = 'The method is not allowed on the collection or resource'
+            kwargs['detail'] = 'Allowed methods: %s' % response.getheader('Allow')
         elif body and isinstance(body, schema.Fault):
             error = Fault
-            reason = body.reason
-            detail = body.detail
+            message = body.reason
+            kwargs['detail'] = body.detail
         else:
             error = ResponseError
-            reason = 'Unexpected HTTP status code: %s' % response.status
-            detail = response.reason
-        exception = error(reason, detail=detail)
+            message = 'Unexpected HTTP status code: %s' % response.status
+            kwargs['status'] = response.status
+            kwargs['detail'] = response.reason
+        exception = error(message, **kwargs)
         return exception
 
     def _filter_results(self, result, filter):
