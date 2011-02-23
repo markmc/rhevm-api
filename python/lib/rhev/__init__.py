@@ -8,5 +8,4 @@
 
 from rhev.error import *
 from rhev.connection import Connection
-from rhev.object import *
 from rhev import schema
