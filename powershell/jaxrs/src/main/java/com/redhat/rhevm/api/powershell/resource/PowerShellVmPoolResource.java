@@ -127,7 +127,7 @@ public class PowerShellVmPoolResource extends AbstractPowerShellActionableResour
 
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$v = get-vmpool " + PowerShellUtils.escape(getId()) + ";");
+        buf.append("$v = get-vmpool -vmpoolid " + PowerShellUtils.escape(getId()) + ";");
 
         if (pool.getName() != null) {
             buf.append("$v.name = " + PowerShellUtils.escape(pool.getName()) + ";");
