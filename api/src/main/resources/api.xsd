@@ -1502,7 +1502,7 @@
     <xs:complexContent>
       <xs:extension base="BaseDevice">
         <xs:sequence>
-          <xs:element ref="file"/>
+          <xs:element ref="file" minOccurs="0"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
