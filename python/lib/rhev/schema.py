@@ -35,6 +35,7 @@ _mapping_data = \
     (_schema.Disk, _schema.Disks, 'disks', False),
     (_schema.CdRom, _schema.CdRoms, 'cdroms', False),
     (_schema.Floppy, _schema.Floppies, 'floppies', False),
+    (_schema.Snapshot, _schema.Snapshots, 'snapshots', False),
     (_schema.File, _schema.Files, 'files', False),
     (_schema.Statistic, _schema.Statistics, 'statistics', False),
     (_schema.Template, _schema.Templates, 'templates', True),
