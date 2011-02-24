@@ -40,6 +40,7 @@ _mapping_data = \
     (_schema.Template, _schema.Templates, 'templates', True),
     (_schema.VmPool, _schema.VmPools, 'vmpools', True),
     (_schema.User, _schema.Users, 'users', True),
+    (_schema.Role, _schema.Roles, 'roles', True),
     (_schema.Event, _schema.Events, 'events', True),
     (_schema.Tag, _schema.Tags, 'tags', True),
     (_schema.Action, _schema.Actions, None, False),
