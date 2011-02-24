@@ -1,0 +1,398 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "REST_API_Installation_Guide.ent">
+%BOOK_ENTITIES;
+]>
+<chapter>
+  <title>Installing the REST API</title>
+  <section id="sect-REST_API_Installation_Guide-Overview">
+    <title>Overview</title>
+    <para>
+      This guide outlines how a Red Hat Enterprise Virtualization administrator may add the REST API developer preview onto an existing Red Hat Enterprise Virtualization 2.2 installation. Please ensure the Red Hat Enterprise Virtualization 2.2 environment is installed and operational before installing the REST API.
+    </para>
+    <note>
+      <title>Note</title>
+      <para>The REST API will be bundled with the Red Hat Enterprise Virtualization Manager in version 2.3. The procedure in this guide applies only to Red Hat Enterprise Virtualization 2.2.</para>
+    </note>
+    <para>
+      The REST API developer preview homepage is:
+    </para>
+    <para>
+      <ulink url="https://fedorahosted.org/rhevm-api/">https://fedorahosted.org/rhevm-api/</ulink>
+    </para>
+    <para>
+      The developer documentation for the API is available at:
+    </para>
+    <para>
+      <ulink url="http://markmc.fedorapeople.org/rhevm-api/en-US/html/index.html">http://markmc.fedorapeople.org/rhevm-api/en-US/html/index.html</ulink>
+    </para>
+    <para>
+      The workflow for installing the REST API is as follows:
+      <figure id="figu-REST_API_Guide_API">
+        <title>Installation workflow</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/workflow.png" format="PNG" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+    </para>
+  </section>
+  <section id="sect-REST_API_Installation_Guide-Java_Environment_Variables">
+    <title>Java and environment variables</title>
+    <para>
+      The REST API runs on an embedded JBoss Application Server. To support this, the Oracle JDK must be installed onto the Red Hat Enterprise Virtualization Manager server. To install the JDK:
+    </para>
+    <procedure>
+      <step>
+        <para>
+          Download the current 64 bit JDK to the Red Hat Enterprise Virtualization Manager server. At the time of the writing, the current JDK is <literal>Java 6 Update 22</literal>. The JDK download is available at the Java SE landing page: <ulink url="http://www.oracle.com/technetwork/java/javase/downloads/index.html">http://www.oracle.com/technetwork/java/javase/downloads/index.html</ulink>
+        </para>
+      </step>
+      <step>
+        <para>
+          Install the JDK onto the Red Hat Enterprise Virtualization Manager server.
+        </para>
+      </step>
+      <step>
+        <para>
+          After installation of the JDK, the <literal>%JAVA_HOME%</literal> environment variable must be set to the JDK path; the JBoss Application Server will not start unless this variable is correctly defined.
+        </para>
+        <para>
+          To set the <literal>%JAVA_HOME%</literal> variable on the Red Hat Enterprise Virtualization Manager server, click <guilabel>Start</guilabel>, then right-click <guilabel>Computer</guilabel> and choose <guilabel>Properties</guilabel>. Toward the upper left of the <guilabel>System Properties</guilabel> window, click the <guilabel>Advanced system settings</guilabel> link. Next, click the <guilabel>Environment Variables...</guilabel> box, as shown below.
+        </para>
+        <para>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="images/environment_variables.png" format="PNG" />
+            </imageobject>
+          </mediaobject>
+        </para>
+        <para>
+          In the Environment Variables window, click the <guilabel>New</guilabel> button, and set the <literal>JAVA_HOME</literal> variable to the path to your newly installed JDK. In the example below, the variable is set to the default path for the 64 bit JDK 6u22 install.
+        </para>
+        <para>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="images/set_environment_variable.png" format="PNG" />
+            </imageobject>
+          </mediaobject>
+        </para>
+      </step>
+    </procedure>
+  </section>
+  <section id="sect-REST_API_Installation_Guide-Installing_JBoss">
+    <title>Installing JBoss</title>
+    <para>
+      Once the JDK is installed, download version 5.1.0 of the JBoss Application Server from: 
+    </para>
+    <para>
+      <ulink url="http://sourceforge.net/projects/jboss/files/JBoss/JBoss-5.1.0.GA/jboss-5.1.0.GA.zip/download">http://sourceforge.net/projects/jboss/files/JBoss/JBoss-5.1.0.GA/jboss-5.1.0.GA.zip/download</ulink>
+    </para>
+    <para>
+      Install JBoss by unzipping it into a directory of your choice. In the example below, JBoss was placed in the <filename>C:\Program Files\</filename> directory.
+    </para>
+    <para>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/unzip_directory.png" format="PNG" />
+        </imageobject>
+      </mediaobject>
+    </para>
+  </section>
+  <section id="sect-REST_API_Installation_Guide-Installing_REST_API">
+    <title>Installing the REST API</title>
+    <para>
+      To install the REST API follow these steps:
+    </para>
+    <procedure>
+      <step>
+        <para>
+          Download the current milestone release of the REST API from the REST API homepage on fedorahosted.org. At the time of writing, the current milestone is 5:
+        </para>
+        <para>
+          <ulink url="https://fedorahosted.org/releases/r/h/rhevm-api/rhevm-api-distro-0.9-milestone5.zip">https://fedorahosted.org/releases/r/h/rhevm-api/rhevm-api-distro-0.9-milestone5.zip</ulink>
+        </para>
+      </step>
+      <step>
+        <para>Unzip the API zip file into <filename>C:\Program Files</filename>, or any other location. Once unzipped, navigate into the <filename>webapp</filename> folder of the REST API. Copy the <filename>rhevm-api-powershell.war</filename> file and then paste it into the <filename>\server\default\deploy</filename> directory inside the JBoss install, as shown below.
+        </para>
+        <para>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="images/copy_war_file.png" format="PNG" />
+            </imageobject>
+          </mediaobject>
+        </para>
+      </step>
+      <step>
+        <para>
+          Next, create a certificate for https communication (which is also described in the <filename>README_HTTPS</filename> file). To do this, open a command prompt in Windows as an Administrator. Navigate to the <guilabel>Command Prompt</guilabel> icon in the Start menu, right-click it, and choose <guilabel>Run as Administrator</guilabel>. If the command prompt is not opened as an administrator, then you will not have write access into <filename>Program Files</filename>. With the command prompt open, navigate to your <filename>JBoss\server\default\conf</filename> directory, and run the following Java keytool command to generate a certificate:
+        </para>
+        <para>
+          <command>"C:\Program Files\Java\jdk1.6.0_22\bin\keytool.exe" -genkey -alias rhevm -keyalg RSA -keystore rhevm-keystore -keypass redhat -storepass redhat</command>
+        </para>
+        <para>
+          In this example, note that the path to <filename>keytool.exe</filename> is fully qualified and in quotes. If using a JDK other than 6U22, this path would be different, so using tab completion is advised. Also, note that the <literal>redhat</literal> values in this command are certificate passwords; please change these to any value you prefer. After running the <filename>keytool.exe</filename> command, answer the certificate creation questions when prompted. An example is below.
+        </para>
+        <para>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="images/create_certificate.png" format="PNG" />
+            </imageobject>
+          </mediaobject>
+        </para>
+      </step>
+      <step>
+        <para>
+          After creating the certificate, the next step is to modify the <filename>server.xml</filename> file in the JBoss install. Start WordPad as an Administrator and navigate to <filename>$JBOSS_HOME\server\default\deploy\jbossweb.sar\</filename> and open <filename>server.xml</filename>. With the <filename>server.xml</filename> file open, find the following section:
+        </para>
+<screen>&lt;!-- SSL/TLS Connector configuration using the admin devl guide keystore
+&lt;Connector protocol="HTTP/1.1" SSLEnabled="true"
+port="8443" address="${jboss.bind.address}"
+scheme="https" secure="true" clientAuth="false"
+keystoreFile="${jboss.server.home.dir}/conf/chap8.keystore"
+keystorePass="rmi+ssl" sslProtocol = "TLS" /&gt;
+--&gt;</screen>
+        <para>
+          First, ensure that the <literal>SSL/TLS Connector...</literal> stanza is no longer commented out; these lines are commented out by default. Next, modify the keystoreFile and keystorePass values to correspond to the filename and passwords chosen when creating the certificate. Since the example here uses rhevm-keystore as the keystore file and <literal>redhat</literal> as the password, the <filename>server.xml</filename> should be edited as shown below:
+        </para>
+<screen>&lt;!-- SSL/TLS Connector configuration using our new keystore --&gt;
+&lt;Connector protocol="HTTP/1.1" SSLEnabled="true"
+port="8443" address="${jboss.bind.address}"
+scheme="https" secure="true" clientAuth="false"
+keystoreFile="${jboss.server.home.dir}/conf/rhevm-keystore"
+keystorePass="redhat" sslProtocol = "TLS" /&gt;</screen>
+        <para>
+          Notice again how the comment at the beginning of the stanza is now closed at the end of the first line. After making these changes, save the file in WordPad.
+        </para>
+      </step>
+      <step>
+        <para>
+          Next, the JBoss <filename>run.conf.bat</filename> file will need one edit to ensure that the REST API does not produce a port conflict. Again run WordPad as an Administrator, and open the <filename>$JBOSS_HOME\bin\run.conf.bat</filename> file. Find a <literal>JAVA_OPTS</literal> line and add <literal>-Djboss.service.binding.set=ports-01</literal> to the end. For example, find the following existing section:
+        </para>
+<screen>rem # Reduce the RMI GCs to once per hour for Sun JVMs.
+set "JAVA_OPTS=%JAVA_OPTS% -Dsun.rmi.dgc.client.gcInterval=3600000 -Dsun.rmi.dgc.server.gcInterval=3600000"</screen>
+        <para>
+          And edit this as shown below:
+        </para>
+<screen>rem # Reduce the RMI GCs to once per hour for Sun JVMs.
+set "JAVA_OPTS=%JAVA_OPTS% -Dsun.rmi.dgc.client.gcInterval=3600000 -Dsun.rmi.dgc.server.gcInterval=3600000 -Djboss.service.binding.set=ports-01"</screen>
+        <para>
+          Save the file and exit WordPad.
+        </para>
+      </step>
+    </procedure>
+  </section>
+  <section id="sect-REST_API_Installation_Guide-Running_JBoss">
+    <title>Running JBoss</title>
+    <para>
+      Open a command prompt as an Administrator and navigate to the JBoss directory. Run the following command in the JBoss directory to start the JBoss Application Server:
+    </para>
+    <para><command>bin\run.bat -b 0.0.0.0</command></para>
+    <para>
+      Once JBoss starts, you'll see output similar to the example below. Starting JBoss and the REST API may take a minute.
+    </para>
+    <para>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/run_jboss.png" format="PNG" />
+        </imageobject>
+      </mediaobject>
+    </para>
+  </section>
+  <section id="sect-REST_API_Installation_Guide-Starting_JBoss_on_Boot">
+    <title>Starting JBoss on boot</title>
+    <para>
+      Once the JBoss Application Server starts correctly on the command prompt, one way to automatically start this service on Windows Server's boot is with a Scheduled Task. Another means to start JBoss on boot is by using JBossNative, which will configure JBoss to start as a Windows Service. This section lists the steps for creating a Task.
+    </para>
+    <procedure>
+      <step>
+        <para>
+          To setup a scheduled task, click on the Start menu and choose <guilabel>Administrative Tools</guilabel> -&gt; <guilabel>Task Scheduler</guilabel>. In the Task Scheduler window, click on the <guilabel>Create Task</guilabel> link, as shown below:
+        </para>
+        <para>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="images/create_task.png" format="PNG" />
+            </imageobject>
+          </mediaobject>
+        </para>
+      </step>
+      <step>
+        <para>
+          In the Create Task wizard, name the task (in this example, <literal>start jboss</literal>). Choose the <guilabel>Run whether user is logged on or not</guilabel> radio button and check the box next to <guilabel>Run with highest privileges</guilabel>, as shown in the example below.
+        </para>
+        <para>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="images/start_jboss_properties.png" format="PNG" />
+            </imageobject>
+          </mediaobject>
+        </para>
+      </step>
+      <step>
+        <para>
+          Next, click on the <guilabel>Triggers</guilabel> tab and create a trigger to start the task <guilabel>At system startup</guilabel> as depicted below:
+        </para>
+        <para>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="images/triggers.png" format="PNG" />
+            </imageobject>
+          </mediaobject>
+        </para>
+      </step>
+      <step>
+        <para>
+          Click on the <guilabel>Actions</guilabel> tab and create a new action. The action should contain the following values (if you chose to not install JBoss in <filename>Program Files</filename>, then adjust these accordingly):
+        </para>
+        <informaltable frame="none">
+          <tgroup cols="2">
+            <colspec colwidth="2*"/>
+            <colspec colwidth="4*"/>
+            <tbody>
+              <row>
+                <entry>Action:</entry>
+                <entry>Start a Program</entry>
+              </row>
+              <row>
+                <entry>Program/script:</entry>
+                <entry>"C:\Program Files\jboss-5.1.0.GA\bin\run.bat"</entry>
+              </row>
+              <row>
+                <entry>Add arguments:</entry>
+                <entry>-b 0.0.0.0</entry>
+              </row>
+              <row>
+                <entry>Start in:</entry>
+                <entry>C:\Program Files\jboss-5.1.0.GA\</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </informaltable>
+        <para>
+          Note that the <guilabel>Program/script</guilabel> value includes quotes and the <guilabel>Start in</guilabel> value does not. This is required. If the <guilabel>Start in</guilabel> value contains quotes, Windows will produce an error and will fail to start the task.
+        </para>
+        <para>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="images/edit_action.png" format="PNG" />
+            </imageobject>
+          </mediaobject>
+        </para>
+      </step>
+      <step>
+        <para>
+          Click on the <guilabel>Settings</guilabel> tab and deselect the box next to <guilabel>Stop the task if it runs longer than</guilabel>.
+        </para>
+        <para>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="images/stop_task.png" format="PNG" />
+            </imageobject>
+          </mediaobject>
+        </para>
+        <para>
+          Click <guilabel>OK</guilabel> and the task will be created. Verify that the Task works correctly by rebooting the Windows Server and observe that JBoss and the REST API start automatically on boot.
+        </para>
+      </step>
+    </procedure>
+  </section>
+  <section id="sect-REST_API_Installation_Guide-Validate_Web_Browser">
+    <title>Validating the installation using a web browser</title>
+    <para>
+      REST API functionality can be easily verified using any web browser. Start Internet Explorer or Firefox and navigate to:
+    </para>
+    <screen>https://<replaceable>&lt;rhevm-IP-address-or-FQDN&gt;</replaceable>:8543/rhevm-api-powershell/</screen>
+    <para>
+      Note that connections to the API will be on port 8543. If the Windows Firewall is enabled, ensure that this port is open.
+    </para>
+    <para>
+      Since the SSL certificate is self-signed, accept the IE or Firefox security warning. To prevent this warning from occurring again, import the certificate.
+    </para>
+    <para>
+      Next, you will be prompted to provide Red Hat Enterprise Virtualization Administrator credentials. Note that the username syntax is required to be <literal>&lt;username&gt;@&lt;domain-name&gt;</literal>. In the example below, the username is <literal>rhevadmin</literal> and the domain is <literal>jrlab.local</literal>.
+    </para>
+    <para>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/windows_security.png" format="PNG" />
+        </imageobject>
+      </mediaobject>
+    </para>
+    <para>
+      Once Red Hat Enterprise Virtualization Administrator credentials are provided, the API will output XML similar to the example below.
+    </para>
+    <para>
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="images/api_entry_point.png" format="PNG" />
+        </imageobject>
+      </mediaobject>
+    </para>
+    <para>
+      Also browse to the <literal>/rhevm-api-powershell/vms</literal> and other URLs to see more information on your Red Hat Enterprise Virtualization environment. Please consult the <citetitle>Red Hat Enterprise Virtualization REST API Guide</citetitle> for additional options and details.
+    </para>
+  </section>
+  <section id="sect-REST_API_Installation_Guide-Validate_REST_Client">
+    <title>Validating the installation using a REST client</title>
+    <para>
+      Another easy way to test the REST API is with the java rest-client available on Google Code:
+    </para>
+    <para>
+      <ulink url="http://code.google.com/p/rest-client/">http://code.google.com/p/rest-client/</ulink>
+    </para>
+    <procedure>
+      <step>
+        <para>
+          Download the jar file for the rest-client from the project homepage. On Windows, double click the jar file to run the client. On Linux, issue the command <command>java -jar <replaceable>&lt;jar-file-name&gt;</replaceable></command>.
+        </para>
+      </step>
+      <step>
+        <para>
+          To configure the rest-client, provide a URL to the client, just as when testing the API via a web browser. Under the <guilabel>Auth</guilabel> tab, choose <guilabel>BASIC</guilabel> authentication and provide Red Hat Enterprise Virtualization Administrator credentials, as shown below:
+        </para>
+        <para>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="images/rest_client.png" format="PNG" />
+            </imageobject>
+          </mediaobject>
+        </para>
+      </step>
+      <step>
+        <para>
+          Click on the <guilabel>SSL</guilabel> tab and provide the client with a copy of the rhevm-keystore file that was created during the earlier setup process. Also provide the trust store password; in this example, the trust store password was set to <literal>redhat</literal>.
+        </para>
+      </step>
+      <step>
+        <para>
+          Change the <guilabel>hostname verifier</guilabel> to <guilabel>allow all</guilabel> as shown below:
+        </para>
+        <para>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="images/allow_all.png" format="PNG" />
+            </imageobject>
+          </mediaobject>
+        </para>
+      </step>
+      <step>
+        <para>
+          To run the GET query, click the green button to the right of the URL field. After processing the query, click on the <guilabel>Body</guilabel> tab under <guilabel>HTTP Response</guilabel> to view the XML response:
+        </para>
+        <para>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="images/run_rest_client.png" format="PNG" />
+            </imageobject>
+          </mediaobject>
+        </para>
+        <para>
+          The rest-client may also be used to issue POST and PUT requests to the API. Please consult the <citetitle>Red Hat Enterprise Virtualization REST API Guide</citetitle> or the rhev-api mailing list for more details.
+        </para>
+      </step>
+    </procedure>
+  </section>
+</chapter>

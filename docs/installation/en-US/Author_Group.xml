@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!DOCTYPE authorgroup PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+<!ENTITY % BOOK_ENTITIES SYSTEM "REST_API_Guide.ent">
+%BOOK_ENTITIES;
+]>
+<authorgroup>
+	<author>
+		<firstname>James</firstname>
+		<surname>Rankin</surname>
+		<affiliation>
+			<orgname>Red Hat</orgname>
+			<orgdiv>Solutions</orgdiv>
+		</affiliation>
+		<email>jrankin@redhat.com</email>
+	</author>
+	<author>
+		<firstname>David</firstname>
+		<surname>Jorm</surname>
+		<affiliation>
+			<orgname>Red Hat</orgname>
+			<orgdiv>Engineering Content Services</orgdiv>
+		</affiliation>
+		<email>djorm@redhat.com</email>
+	</author>
+</authorgroup>
