@@ -18,7 +18,9 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
@@ -29,12 +31,10 @@ import com.redhat.rhevm.api.model.DisplayType;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.powershell.enums.PowerShellBootSequence;
+import com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource.Detail;
+import com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource.Method;
 
 import org.junit.Test;
-
-import static com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource.PROCESS_VMS_ADD;
-import static com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource.PROCESS_VMS_LIST;
-import static com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource.PROCESS_VMS_LIST_STATS;
 
 public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResourceTest<VM, PowerShellVmResource, PowerShellVmsResource> {
 
@@ -75,7 +75,7 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     private static final String DISPLAY_ADD_COMMAND_EPILOG =
         " -numofmonitors 4 -displaytype VNC" + ADD_COMMAND_EPILOG;
 
-    private static final String ASYNC_EPILOG =  ASYNC_ENDING + "$v;" + ASYNC_TASKS + "$v" + PROCESS_VMS_ADD;
+    private static final String ASYNC_EPILOG =  ASYNC_ENDING + "$v;" + ASYNC_TASKS + "$v" + getProcess(Method.ADD);
 
     public PowerShellVmsResourceTest() {
         super(new PowerShellVmResource("0", null, null, null, null, null), "vms", "vm", extraArgs);
@@ -84,7 +84,7 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     @Test
     public void testList() throws Exception {
         setUpHttpHeaderNullExpectations("Accept");
-        resource.setUriInfo(setUpResourceExpectations(getSelectCommand() + PROCESS_VMS_LIST,
+        resource.setUriInfo(setUpResourceExpectations(getSelectCommand() + getProcess(Method.GET),
                                                       getSelectReturn(),
                                                       null,
                                                       NAMES));
@@ -94,7 +94,7 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     @Test
     public void testListIncludeStats() throws Exception {
         setUpHttpHeaderExpectations("Accept", "application/xml; detail=statistics");
-        resource.setUriInfo(setUpResourceExpectations(getSelectCommand() + PROCESS_VMS_LIST_STATS,
+        resource.setUriInfo(setUpResourceExpectations(getSelectCommand() + getProcess(Method.GET, Detail.STATISTICS),
                                                       getSelectReturn(),
                                                       null,
                                                       NAMES));
@@ -106,7 +106,7 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
     @Test
     public void testQuery() throws Exception {
         setUpHttpHeaderNullExpectations("Accept");
-        resource.setUriInfo(setUpResourceExpectations(getQueryCommand(VM.class) + PROCESS_VMS_LIST,
+        resource.setUriInfo(setUpResourceExpectations(getQueryCommand(VM.class) + getProcess(Method.GET),
                                                       getQueryReturn(),
                                                       getQueryParam(),
                                                       NAMES_SUBSET));
@@ -118,7 +118,7 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
         setUpHttpHeaderExpectations("Expect", "201-created");
         setUpHttpHeaderNullExpectations("Accept");
 
-        resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND_PROLOG + getAddCommand() + ADD_COMMAND_EPILOG + ";$v;$v" + PROCESS_VMS_ADD,
+        resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND_PROLOG + getAddCommand() + ADD_COMMAND_EPILOG + ";$v;$v" + getProcess(Method.ADD),
                 getAddReturn(),
                 NEW_NAME));
         Response response = resource.add(getModel(NEW_NAME, NEW_DESCRIPTION));
@@ -226,5 +226,13 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
         vm.getDisplay().setType(DisplayType.VNC);
         vm.getDisplay().setMonitors(4);
         return vm;
+    }
+
+    static String getProcess(Method method, Detail... details) {
+        Set<Detail> detailSet = EnumSet.noneOf(Detail.class);
+        for (Detail detail : details) {
+            detailSet.add(detail);
+        }
+        return PowerShellVmsResource.getProcess(method, detailSet);
     }
 }

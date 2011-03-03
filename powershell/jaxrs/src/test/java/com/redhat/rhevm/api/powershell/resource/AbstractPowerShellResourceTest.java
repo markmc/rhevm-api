@@ -135,7 +135,7 @@ public abstract class AbstractPowerShellResourceTest<R /* extends BaseResource *
         if (value != null) {
             values.add(value);
         }
-        expect(httpHeaders.getRequestHeader(eq(name))).andReturn(values);
+        expect(httpHeaders.getRequestHeader(eq(name))).andReturn(values).anyTimes();
     }
 
     protected PowerShellPool setUpPoolExpectations() {

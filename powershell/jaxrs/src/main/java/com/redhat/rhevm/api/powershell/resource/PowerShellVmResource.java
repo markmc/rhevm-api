@@ -19,7 +19,9 @@
 package com.redhat.rhevm.api.powershell.resource;
 
 import java.text.MessageFormat;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Executor;
 
 import javax.ws.rs.core.HttpHeaders;
@@ -47,6 +49,8 @@ import com.redhat.rhevm.api.common.util.ReflectionHelper;
 import com.redhat.rhevm.api.powershell.model.PowerShellTicket;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.model.PowerShellVmStatisticsParser;
+import com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource.Detail;
+import com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource.Method;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPool;
@@ -55,8 +59,6 @@ import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
 import static com.redhat.rhevm.api.common.util.DetailHelper.include;
-import static com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource.PROCESS_VMS_LIST;
-import static com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource.PROCESS_VMS_LIST_STATS;
 
 public class PowerShellVmResource extends AbstractPowerShellActionableResource<VM> implements VmResource {
 
@@ -403,6 +405,16 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
     }
 
     private String getProcess() {
-        return include(getHttpHeaders(), "statistics") ? PROCESS_VMS_LIST_STATS : PROCESS_VMS_LIST;
+        return PowerShellVmsResource.getProcess(Method.GET, getDetails());
+    }
+
+    private Set<Detail> getDetails() {
+        Set<Detail> details = EnumSet.noneOf(Detail.class);
+        for (Detail detail : Detail.class.getEnumConstants()) {
+            if (include(getHttpHeaders(), detail.name().toLowerCase())) {
+                details.add(detail);
+            }
+        }
+        return details;
     }
 }

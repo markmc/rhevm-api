@@ -43,7 +43,8 @@ import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.Ticket;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VmType;
-
+import com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource.Detail;
+import com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource.Method;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellException;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
@@ -51,14 +52,12 @@ import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 
 import org.junit.Test;
 
+import static com.redhat.rhevm.api.powershell.resource.PowerShellVmsResourceTest.getProcess;
 import static org.easymock.classextension.EasyMock.expect;
 
 import static org.powermock.api.easymock.PowerMock.createMock;
 import static org.powermock.api.easymock.PowerMock.mockStatic;
 import static org.powermock.api.easymock.PowerMock.replayAll;
-
-import static com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource.PROCESS_VMS_LIST;
-import static com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource.PROCESS_VMS_LIST_STATS;
 
 public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM, PowerShellVmResource> {
 
@@ -123,7 +122,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     @Test
     public void testGet() throws Exception {
         setUpHttpHeaderNullExpectations("Accept");
-        setUriInfo(setUpVmExpectations("get-vm \"" + VM_ID + "\"" + PROCESS_VMS_LIST,
+        setUriInfo(setUpVmExpectations("get-vm \"" + VM_ID + "\"" + getProcess(Method.GET),
                                        formatVm(VM_NAME),
                                        VM_NAME));
         verifyVM(resource.get(), VM_NAME);
@@ -132,7 +131,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     @Test
     public void testGetIncludeStatistics() throws Exception {
         setUpHttpHeaderExpectations("Accept", "application/xml; detail=statistics");
-        setUriInfo(setUpVmExpectations("get-vm \"" + VM_ID + "\"" + PROCESS_VMS_LIST_STATS,
+        setUriInfo(setUpVmExpectations("get-vm \"" + VM_ID + "\"" + getProcess(Method.GET, Detail.STATISTICS),
                                        formatVm(VM_NAME),
                                        VM_NAME));
         VM vm = resource.get();
@@ -143,7 +142,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     @Test
     public void testGet22() throws Exception {
         setUpHttpHeaderNullExpectations("Accept");
-        setUriInfo(setUpVmExpectations("get-vm \"" + VM_ID + "\"" + PROCESS_VMS_LIST,
+        setUriInfo(setUpVmExpectations("get-vm \"" + VM_ID + "\"" + getProcess(Method.GET),
                                        formatVm("vm22", VM_NAME),
                                        VM_NAME));
         verifyVM(resource.get(), VM_NAME);
@@ -152,7 +151,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     @Test
     public void testGet22NoHost() throws Exception {
         setUpHttpHeaderNullExpectations("Accept");
-        setUriInfo(setUpVmExpectations("get-vm \"" + VM_ID + "\"" + PROCESS_VMS_LIST,
+        setUriInfo(setUpVmExpectations("get-vm \"" + VM_ID + "\"" + getProcess(Method.GET),
                                        formatVm("vm22",
                                                 VM_NAME,
                                                 PowerShellVmsResourceTest.noHostArgs),
@@ -163,7 +162,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     @Test
     public void testGoodUpdate() throws Exception {
         setUpHttpHeaderNullExpectations("Accept");
-        setUriInfo(setUpVmExpectations(UPDATE_COMMAND + PROCESS_VMS_LIST,
+        setUriInfo(setUpVmExpectations(UPDATE_COMMAND + getProcess(Method.GET),
                                        formatVm(NEW_NAME),
                                        NEW_NAME));
         verifyVM(resource.update(getVM(NEW_NAME)), NEW_NAME);
@@ -172,7 +171,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     @Test
     public void testUpdateIncludeStatistics() throws Exception {
         setUpHttpHeaderExpectations("Accept", "application/xml; detail=statistics");
-        setUriInfo(setUpVmExpectations(UPDATE_COMMAND + PROCESS_VMS_LIST_STATS,
+        setUriInfo(setUpVmExpectations(UPDATE_COMMAND + getProcess(Method.GET, Detail.STATISTICS),
                                        formatVm(NEW_NAME),
                                        NEW_NAME));
         VM vm = resource.update(getVM(NEW_NAME));
@@ -183,7 +182,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     @Test
     public void testUpdateDisplay() throws Exception {
         setUpHttpHeaderNullExpectations("Accept");
-        setUriInfo(setUpVmExpectations(UPDATE_DISPLAY_COMMAND + PROCESS_VMS_LIST,
+        setUriInfo(setUpVmExpectations(UPDATE_DISPLAY_COMMAND + getProcess(Method.GET),
                                        formatVm(NEW_NAME),
                                        NEW_NAME));
         verifyVM(resource.update(updateDisplay(getVM(NEW_NAME))), NEW_NAME);

@@ -241,7 +241,7 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
         if (value != null) {
             values.add(value);
         }
-        expect(httpHeaders.getRequestHeader(eq(name))).andReturn(values);
+        expect(httpHeaders.getRequestHeader(eq(name))).andReturn(values).anyTimes();
     }
 
     protected String getSelectCommand() {

@@ -19,7 +19,9 @@
 package com.redhat.rhevm.api.powershell.resource;
 
 import java.text.MessageFormat;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -70,11 +72,17 @@ public class PowerShellVmsResource
         PROCESS_VMS = buf.toString();
     }
 
-    private static final String GET_STATS = "$_.getmemorystatistics(); $_.getcpustatistics(); ";
-    static final String PROCESS_VMS_LIST = MessageFormat.format(PROCESS_VMS, "$_; ", " ");
-    static final String PROCESS_VMS_LIST_STATS = MessageFormat.format(PROCESS_VMS, "$_; ", GET_STATS);
-    static final String PROCESS_VMS_ADD = MessageFormat.format(PROCESS_VMS, " ", " ");
-    static final String PROCESS_VMS_ADD_STATS = MessageFormat.format(PROCESS_VMS, " ", GET_STATS);
+    enum Method { GET, ADD };
+
+    enum Detail {
+        STATISTICS("$_.getmemorystatistics(); $_.getcpustatistics(); ");
+
+        public final String powershell;
+
+        Detail(String powershell) {
+            this.powershell = powershell;
+        }
+    }
 
     public List<PowerShellVM> runAndParse(String command) {
         return PowerShellVmResource.runAndParse(getPool(), getParser(), command);
@@ -87,7 +95,7 @@ public class PowerShellVmsResource
     @Override
     public VMs list() {
         VMs ret = new VMs();
-        for (PowerShellVM vm : runAndParse(getSelectCommand("select-vm", getUriInfo(), VM.class) + getProcess(false))) {
+        for (PowerShellVM vm : runAndParse(getSelectCommand("select-vm", getUriInfo(), VM.class) + getProcess(Method.GET))) {
             ret.getVMs().add(PowerShellVmResource.addLinks(getUriInfo(), vm));
         }
         return ret;
@@ -177,7 +185,7 @@ public class PowerShellVmsResource
             buf.append(ASYNC_OPTION).append(displayVm).append(ASYNC_TASKS);
         }
 
-        buf.append("$v").append(getProcess(true));
+        buf.append("$v").append(getProcess(Method.ADD));
 
         PowerShellVM created = runAndParseSingle(buf.toString());
 
@@ -209,9 +217,27 @@ public class PowerShellVmsResource
         return new PowerShellVmResource(id, getExecutor(), this, shellPools, getParser(), getHttpHeaders());
     }
 
-    private String getProcess(boolean add) {
-        return include(getHttpHeaders(), "statistics")
-               ? (add ? PROCESS_VMS_ADD_STATS : PROCESS_VMS_LIST_STATS)
-               : (add ? PROCESS_VMS_ADD : PROCESS_VMS_LIST);
+    static String getProcess(Method method, Set<Detail> details) {
+        StringBuilder buf = new StringBuilder();
+        if (details != null) {
+            for (Detail detail : details) {
+                buf.append(detail.powershell);
+            }
+        }
+        return MessageFormat.format(PROCESS_VMS, method == Method.ADD ? " " : "$_; ", buf);
+    }
+
+    private String getProcess(Method method) {
+        return getProcess(method, getDetails());
+    }
+
+    private Set<Detail> getDetails() {
+        Set<Detail> details = EnumSet.noneOf(Detail.class);
+        for (Detail detail : Detail.class.getEnumConstants()) {
+            if (include(getHttpHeaders(), detail.name().toLowerCase())) {
+                details.add(detail);
+            }
+        }
+        return details;
     }
 }
