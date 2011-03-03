@@ -30,6 +30,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.CpuTopology;
+import com.redhat.rhevm.api.model.Disk;
+import com.redhat.rhevm.api.model.Disks;
 import com.redhat.rhevm.api.model.Display;
 import com.redhat.rhevm.api.model.DisplayType;
 import com.redhat.rhevm.api.model.HighlyAvailable;
@@ -163,6 +165,8 @@ public class PowerShellVM extends VM {
                 getStatistics(ret).addAll(PowerShellVmStatisticsParser.parseMemoryStats(entity));
             } else if (PowerShellVmStatisticsParser.isCpu(entity)) {
                 getStatistics(ret).addAll(PowerShellVmStatisticsParser.parseCpuStats(entity));
+            } else if (PowerShellDisk.isDisk(entity)) {
+                getDisks(ret).add(PowerShellDisk.parseEntity(last(ret).getId(), entity));
             } else if (VM_TYPE.equals(entity.getType())) {
                 ret.add(parseVm(entity, dates));
             } else if (NIC_TYPE.equals(entity.getType())) {
@@ -274,5 +278,13 @@ public class PowerShellVM extends VM {
             vm.setStatistics(new Statistics());
         }
         return vm.getStatistics().getStatistics();
+    }
+
+    private static List<Disk> getDisks(List<PowerShellVM> vms) {
+        VM vm = last(vms);
+        if (!vm.isSetDisks()) {
+            vm.setDisks(new Disks());
+        }
+        return vm.getDisks().getDisks();
     }
 }
