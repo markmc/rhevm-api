@@ -149,26 +149,18 @@ public class PowerShellVM extends VM {
         for (PowerShellParser.Entity entity : parser.parse(output)) {
             if (PowerShellParser.DATE_TYPE.equals(entity.getType())) {
                 date = entity.getValue();
-                continue;
             } else if (PowerShellParser.STRING_TYPE.equals(entity.getType())) {
                 dates.put(date, PowerShellUtils.parseDate(entity.getValue()));
                 date = null;
-                continue;
             } else if (PowerShellAsyncTask.isTask(entity)) {
                 last(ret).setTaskIds(PowerShellAsyncTask.parseTask(entity, last(ret).getTaskIds()));
-                continue;
             } else if (PowerShellAsyncTask.isStatus(entity)) {
                 last(ret).setCreationStatus(PowerShellAsyncTask.parseStatus(entity, last(ret).getCreationStatus()));
-                continue;
             } else if (PowerShellVmStatisticsParser.isMemory(entity)) {
                 getStatistics(ret).addAll(PowerShellVmStatisticsParser.parseMemoryStats(entity));
-                continue;
             } else if (PowerShellVmStatisticsParser.isCpu(entity)) {
                 getStatistics(ret).addAll(PowerShellVmStatisticsParser.parseCpuStats(entity));
-                continue;
-            }
-
-            if (VM_TYPE.equals(entity.getType())) {
+            } else if (VM_TYPE.equals(entity.getType())) {
                 ret.add(parseVm(entity, dates));
             } else if (NIC_TYPE.equals(entity.getType())) {
                 parseDisplayAddress(entity, last(ret));
