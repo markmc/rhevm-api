@@ -140,6 +140,29 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     }
 
     @Test
+    public void testGetIncludeDisks() throws Exception {
+        setUpHttpHeaderExpectations("Accept", "application/xml; detail=disks");
+        setUriInfo(setUpVmExpectations("get-vm \"" + VM_ID + "\"" + getProcess(Method.GET, Detail.DISKS),
+                                       formatVm(VM_NAME),
+                                       VM_NAME));
+        VM vm = resource.get();
+        assertTrue(vm.isSetDisks());
+        verifyVM(vm, VM_NAME);
+    }
+
+    @Test
+    public void testGetIncludeDisksAndStatistics() throws Exception {
+        setUpHttpHeaderExpectations("Accept", "application/xml; detail=disks; detail=statistics");
+        setUriInfo(setUpVmExpectations("get-vm \"" + VM_ID + "\"" + getProcess(Method.GET, Detail.STATISTICS, Detail.DISKS),
+                                       formatVm(VM_NAME),
+                                       VM_NAME));
+        VM vm = resource.get();
+        assertTrue(vm.isSetDisks());
+        assertTrue(vm.isSetStatistics());
+        verifyVM(vm, VM_NAME);
+    }
+
+    @Test
     public void testGet22() throws Exception {
         setUpHttpHeaderNullExpectations("Accept");
         setUriInfo(setUpVmExpectations("get-vm \"" + VM_ID + "\"" + getProcess(Method.GET),

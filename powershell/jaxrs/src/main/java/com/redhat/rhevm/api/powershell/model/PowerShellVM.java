@@ -169,6 +169,9 @@ public class PowerShellVM extends VM {
                 getDisks(ret).add(PowerShellDisk.parseEntity(last(ret).getId(), entity));
             } else if (VM_TYPE.equals(entity.getType())) {
                 ret.add(parseVm(entity, dates));
+                if (details != null && details.contains(Detail.DISKS)) {
+                    getDisks(ret);
+                }
             } else if (NIC_TYPE.equals(entity.getType())) {
                 parseDisplayAddress(entity, last(ret));
             }
