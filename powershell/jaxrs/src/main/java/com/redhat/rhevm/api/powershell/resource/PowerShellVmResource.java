@@ -72,18 +72,18 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
         setHttpHeaders(httpHeaders);
     }
 
-    public static List<PowerShellVM> runAndParse(PowerShellPool pool, PowerShellParser parser, String command) {
-        return PowerShellVM.parse(parser, PowerShellCmd.runCommand(pool, command));
+    public static List<PowerShellVM> runAndParse(PowerShellPool pool, PowerShellParser parser, String command, Set<Detail> details) {
+        return PowerShellVM.parse(parser, PowerShellCmd.runCommand(pool, command), details);
     }
 
-    public static PowerShellVM runAndParseSingle(PowerShellPool pool, PowerShellParser parser, String command) {
-        List<PowerShellVM> vms = runAndParse(pool, parser, command);
+    public static PowerShellVM runAndParseSingle(PowerShellPool pool, PowerShellParser parser, String command, Set<Detail> details) {
+        List<PowerShellVM> vms = runAndParse(pool, parser, command, details);
 
         return !vms.isEmpty() ? vms.get(0) : null;
     }
 
-    public PowerShellVM runAndParseSingle(String command) {
-        return runAndParseSingle(getPool(), getParser(), command);
+    public PowerShellVM runAndParseSingle(String command, Set<Detail> details) {
+        return runAndParseSingle(getPool(), getParser(), command, details);
     }
 
     public static VM addLinks(UriInfo uriInfo, PowerShellVM vm) {
@@ -102,7 +102,8 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
 
     @Override
     public VM get() {
-        return addLinks(getUriInfo(), runAndParseSingle("get-vm " + PowerShellUtils.escape(getId()) + getProcess()));
+        Set<Detail> details = getDetails();
+        return addLinks(getUriInfo(), runAndParseSingle("get-vm " + PowerShellUtils.escape(getId()) + getProcess(details), details));
     }
 
     @Override
@@ -164,7 +165,8 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
 
         buf.append("update-vm -vmobject $v");
 
-        return addLinks(getUriInfo(), runAndParseSingle(buf.toString() + getProcess()));
+        Set<Detail> details = getDetails();
+        return addLinks(getUriInfo(), runAndParseSingle(buf.toString() + getProcess(details), details));
     }
 
     protected String[] getStrictlyImmutable() {
@@ -321,7 +323,7 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
             super(id);
         }
         @Override protected String getCdIsoPath() {
-            return runAndParseSingle("get-vm " + PowerShellUtils.escape(id)).getCdIsoPath();
+            return runAndParseSingle("get-vm " + PowerShellUtils.escape(id), null).getCdIsoPath();
         }
     }
 
@@ -404,8 +406,8 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
         return arg;
     }
 
-    private String getProcess() {
-        return PowerShellVmsResource.getProcess(Method.GET, getDetails());
+    private String getProcess(Set<Detail> details) {
+        return PowerShellVmsResource.getProcess(Method.GET, details);
     }
 
     private Set<Detail> getDetails() {

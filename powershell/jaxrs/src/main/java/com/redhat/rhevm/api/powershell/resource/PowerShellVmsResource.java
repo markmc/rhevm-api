@@ -72,9 +72,9 @@ public class PowerShellVmsResource
         PROCESS_VMS = buf.toString();
     }
 
-    enum Method { GET, ADD };
+    public enum Method { GET, ADD };
 
-    enum Detail {
+    public enum Detail {
         STATISTICS("$_.getmemorystatistics(); $_.getcpustatistics(); ");
 
         public final String powershell;
@@ -84,18 +84,19 @@ public class PowerShellVmsResource
         }
     }
 
-    public List<PowerShellVM> runAndParse(String command) {
-        return PowerShellVmResource.runAndParse(getPool(), getParser(), command);
+    public List<PowerShellVM> runAndParse(String command, Set<Detail> details) {
+        return PowerShellVmResource.runAndParse(getPool(), getParser(), command, details);
     }
 
-    public PowerShellVM runAndParseSingle(String command) {
-        return PowerShellVmResource.runAndParseSingle(getPool(), getParser(), command);
+    public PowerShellVM runAndParseSingle(String command, Set<Detail> details) {
+        return PowerShellVmResource.runAndParseSingle(getPool(), getParser(), command, details);
     }
 
     @Override
     public VMs list() {
         VMs ret = new VMs();
-        for (PowerShellVM vm : runAndParse(getSelectCommand("select-vm", getUriInfo(), VM.class) + getProcess(Method.GET))) {
+        Set<Detail> details = getDetails();
+        for (PowerShellVM vm : runAndParse(getSelectCommand("select-vm", getUriInfo(), VM.class) + getProcess(Method.GET, details), details)) {
             ret.getVMs().add(PowerShellVmResource.addLinks(getUriInfo(), vm));
         }
         return ret;
@@ -185,9 +186,11 @@ public class PowerShellVmsResource
             buf.append(ASYNC_OPTION).append(displayVm).append(ASYNC_TASKS);
         }
 
-        buf.append("$v").append(getProcess(Method.ADD));
+        Set<Detail> details = getDetails();
 
-        PowerShellVM created = runAndParseSingle(buf.toString());
+        buf.append("$v").append(getProcess(Method.ADD, details));
+
+        PowerShellVM created = runAndParseSingle(buf.toString(), details);
 
         if (expectBlocking || created.getTaskIds() == null) {
             vm = PowerShellVmResource.addLinks(getUriInfo(), created);
@@ -225,10 +228,6 @@ public class PowerShellVmsResource
             }
         }
         return MessageFormat.format(PROCESS_VMS, method == Method.ADD ? " " : "$_; ", buf);
-    }
-
-    private String getProcess(Method method) {
-        return getProcess(method, getDetails());
     }
 
     private Set<Detail> getDetails() {

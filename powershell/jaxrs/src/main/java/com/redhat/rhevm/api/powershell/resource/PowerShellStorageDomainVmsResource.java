@@ -19,6 +19,7 @@
 package com.redhat.rhevm.api.powershell.resource;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.ws.rs.core.UriInfo;
 
@@ -29,6 +30,7 @@ import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
+import com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource.Detail;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
@@ -47,7 +49,7 @@ public class PowerShellStorageDomainVmsResource
     }
 
     public List<PowerShellVM> runAndParse(String command) {
-        return PowerShellVM.parse(getParser(), PowerShellCmd.runCommand(getPool(), command));
+        return PowerShellVM.parse(getParser(), PowerShellCmd.runCommand(getPool(), command), null);
     }
 
     @Override

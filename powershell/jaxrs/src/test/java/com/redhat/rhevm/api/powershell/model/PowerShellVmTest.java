@@ -144,7 +144,7 @@ public class PowerShellVmTest extends PowerShellModelTest {
         String data = readFileContents("vm.xml");
         assertNotNull(data);
 
-        List<PowerShellVM> vms = PowerShellVM.parse(getParser(), data);
+        List<PowerShellVM> vms = PowerShellVM.parse(getParser(), data, null);
 
         assertEquals(vms.size(), 4);
 

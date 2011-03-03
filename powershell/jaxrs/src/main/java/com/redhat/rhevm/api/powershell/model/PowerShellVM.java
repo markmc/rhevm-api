@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import com.redhat.rhevm.api.model.Cluster;
@@ -43,6 +45,7 @@ import com.redhat.rhevm.api.model.VmPool;
 import com.redhat.rhevm.api.model.VmStatus;
 import com.redhat.rhevm.api.powershell.enums.PowerShellBootSequence;
 import com.redhat.rhevm.api.powershell.enums.PowerShellVmType;
+import com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource.Detail;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 import com.redhat.rhevm.api.powershell.util.UUID;
@@ -140,7 +143,7 @@ public class PowerShellVM extends VM {
         else return null;
     }
 
-    public static List<PowerShellVM> parse(PowerShellParser parser, String output) {
+    public static List<PowerShellVM> parse(PowerShellParser parser, String output, Set<Detail> details) {
         List<PowerShellVM> ret = new ArrayList<PowerShellVM>();
 
         Map<String, XMLGregorianCalendar> dates = new HashMap<String, XMLGregorianCalendar>();
