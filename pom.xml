@@ -66,6 +66,24 @@
     </profile>
 
     <profile>
+      <id>powershell</id>
+      <modules>
+        <module>api</module>
+        <module>common</module>
+        <module>powershell</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>mock</id>
+      <modules>
+        <module>api</module>
+        <module>common</module>
+        <module>mock</module>
+      </modules>
+    </profile>
+
+    <profile>
       <id>normal</id>
       <modules>
         <module>api</module>
