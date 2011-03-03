@@ -49,7 +49,7 @@ public class PowerShellVmPoolResourceTest extends AbstractPowerShellResourceTest
     private static final String NEW_NAME = "fidelma";
 
     private static final String GET_COMMAND = "get-vmpool -vmpoolid \"" + POOL_ID + "\"";
-    private static final String UPDATE_COMMAND = "$v = get-vmpool \"" + POOL_ID + "\";$v.name = \"" + NEW_NAME + "\";update-vmpool -vmpoolobject $v";
+    private static final String UPDATE_COMMAND = "$v = get-vmpool -vmpoolid \"" + POOL_ID + "\";$v.name = \"" + NEW_NAME + "\";update-vmpool -vmpoolobject $v";
 
     protected PowerShellVmPoolResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider) {
         return new PowerShellVmPoolResource(POOL_ID, executor, uriProvider, poolMap, parser);
