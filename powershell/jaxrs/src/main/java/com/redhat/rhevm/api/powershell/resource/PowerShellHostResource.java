@@ -110,15 +110,15 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
 
         StringBuilder buf = new StringBuilder();
 
+        String clusterArg = PowerShellHostResource.getClusterArg(buf, host);
+
         buf.append("$h = get-host " + PowerShellUtils.escape(getId()) + ";");
 
         if (host.getName() != null) {
             buf.append("$h.name = " + PowerShellUtils.escape(host.getName()) + ";");
         }
 
-        if (host.isSetCluster()) {
-            buf.append("$h.hostclusterid = " + PowerShellUtils.escape(host.getCluster().getId()) + ";");
-        }
+        buf.append(clusterArg);
 
         if (host.isSetPowerManagement()) {
             PowerManagement powerManagement = host.getPowerManagement();
@@ -365,5 +365,20 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
 
     private String getProcess() {
         return include(getHttpHeaders(), "statistics") ? PROCESS_HOSTS_LIST_STATS : PROCESS_HOSTS_LIST;
+    }
+
+    static String getClusterArg(StringBuilder buf, Host host) {
+        String clusterArg = "";
+        if (host.isSetCluster()) {
+            if (host.getCluster().isSetId()) {
+                clusterArg = " -hostclusterid " + PowerShellUtils.escape(host.getCluster().getId());
+            } else if (host.getCluster().isSetName())  {
+                buf.append("$c = select-cluster -searchtext ");
+                buf.append(PowerShellUtils.escape("name=" + host.getCluster().getName()));
+                buf.append(";");
+                clusterArg = " -hostclusterid $c.ClusterId";
+            }
+        }
+        return clusterArg;
     }
 }

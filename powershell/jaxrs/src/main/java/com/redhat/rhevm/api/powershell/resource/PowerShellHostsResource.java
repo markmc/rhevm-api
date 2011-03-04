@@ -73,7 +73,7 @@ public class PowerShellHostsResource
         validateParameters(host, "name", "address", "rootPassword");
         StringBuilder buf = new StringBuilder();
 
-        String clusterArg = getClusterArg(buf, host);
+        String clusterArg = PowerShellHostResource.getClusterArg(buf, host);
 
         buf.append("$h = add-host");
 
@@ -149,21 +149,6 @@ public class PowerShellHostsResource
 
     protected PowerShellHostResource createSubResource(String id) {
         return new PowerShellHostResource(id, getExecutor(), this, shellPools, getParser(), getHttpHeaders());
-    }
-
-    private String getClusterArg(StringBuilder buf, Host host) {
-        String clusterArg = "";
-        if (host.isSetCluster()) {
-            if (host.getCluster().isSetId()) {
-                clusterArg = " -hostclusterid " + PowerShellUtils.escape(host.getCluster().getId());
-            } else if (host.getCluster().isSetName())  {
-                buf.append("$c = select-cluster -searchtext ");
-                buf.append(PowerShellUtils.escape("name=" + host.getCluster().getName()));
-                buf.append(";");
-                clusterArg = " -hostclusterid $c.ClusterId";
-            }
-        }
-        return clusterArg;
     }
 
     public static String joinPowerManagementOptions(PowerManagementOptions options) {
