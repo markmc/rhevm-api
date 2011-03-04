@@ -23,7 +23,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.Path;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 import com.redhat.rhevm.api.model.Events;
-import com.redhat.rhevm.api.resource.EventResource;
 import javax.ws.rs.PathParam;
 
 @Path("/events")

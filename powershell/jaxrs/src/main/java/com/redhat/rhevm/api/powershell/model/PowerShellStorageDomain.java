@@ -27,7 +27,6 @@ import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.StorageDomainType;
 import com.redhat.rhevm.api.powershell.enums.PowerShellStorageDomainStatus;
 import com.redhat.rhevm.api.powershell.enums.PowerShellStorageType;
-import com.redhat.rhevm.api.powershell.model.PowerShellStorageDomain;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 
 public class PowerShellStorageDomain extends StorageDomain {

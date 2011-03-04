@@ -30,7 +30,6 @@ import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Actionable;
 import com.redhat.rhevm.api.model.BaseResource;
-import com.redhat.rhevm.api.resource.ActionResource;
 
 @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
 public interface StorageDomainContentResource<R extends BaseResource> {

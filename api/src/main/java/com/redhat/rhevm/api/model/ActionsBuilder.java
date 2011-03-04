@@ -24,9 +24,6 @@ import java.lang.reflect.Method;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.UriBuilder;
 
-import com.redhat.rhevm.api.model.Actions;
-import com.redhat.rhevm.api.model.Link;
-
 public class ActionsBuilder {
 
     private UriBuilder uriBuilder;

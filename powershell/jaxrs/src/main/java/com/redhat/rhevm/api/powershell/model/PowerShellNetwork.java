@@ -26,7 +26,6 @@ import com.redhat.rhevm.api.model.IP;
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.VLAN;
 import com.redhat.rhevm.api.powershell.enums.PowerShellNetworkStatus;
-import com.redhat.rhevm.api.powershell.model.PowerShellNetwork;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 
 public class PowerShellNetwork {

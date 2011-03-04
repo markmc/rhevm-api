@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.redhat.rhevm.api.model.Link;
-
 public class LinkHeader {
 
     private static Pattern pattern = Pattern.compile("<(.+)>\\s*;\\s*(.+)");

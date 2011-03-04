@@ -31,7 +31,6 @@ import com.redhat.rhevm.api.model.SchedulingPolicyThresholds;
 import com.redhat.rhevm.api.model.SchedulingPolicyType;
 import com.redhat.rhevm.api.model.Version;
 import com.redhat.rhevm.api.powershell.enums.PowerShellHostSelectionAlgorithm;
-import com.redhat.rhevm.api.powershell.model.PowerShellCluster;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 
 public class PowerShellCluster {
