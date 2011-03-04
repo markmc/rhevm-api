@@ -237,10 +237,10 @@ public class LinkHelper {
 
         map = new ParentToCollectionMap(VmPoolResource.class, VmPoolsResource.class);
         TYPES.put(VmPool.class, map);
-        
+
         map = new ParentToCollectionMap(EventResource.class, EventsResource.class);
         TYPES.put(Event.class, map);
-        
+
         map = new ParentToCollectionMap(StatisticResource.class, StatisticsResource.class, Disk.class);
         map.add(StatisticResource.class, StatisticsResource.class, Host.class);
         map.add(StatisticResource.class, StatisticsResource.class, HostNIC.class);

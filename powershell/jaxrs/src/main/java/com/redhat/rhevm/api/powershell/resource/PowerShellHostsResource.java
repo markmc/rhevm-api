@@ -128,7 +128,7 @@ public class PowerShellHostsResource
         }
 
         buf.append(";$h").append(getProcess(true));
- 
+
         host = PowerShellHostResource.addLinks(getUriInfo(), runAndParseSingle(buf.toString()));
 
         UriBuilder uriBuilder = getUriInfo().getAbsolutePathBuilder().path(host.getId());

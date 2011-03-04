@@ -174,7 +174,7 @@ public class PowerShellSnapshotsResource extends UriProviderWrapper implements S
         if (expectBlocking) {
             buf.append(getDisks).append(PROCESS_DISKS);
         } else {
-            buf.append(ASYNC_OPTION).append(getDisks).append(PROCESS_DISKS).append(ASYNC_TASKS); 
+            buf.append(ASYNC_OPTION).append(getDisks).append(PROCESS_DISKS).append(ASYNC_TASKS);
         }
 
         PowerShellDisk disk = runAndParseSingle(buf.toString());

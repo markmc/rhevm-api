@@ -133,7 +133,7 @@ public class PowerShellTemplatesResource
                 buf.append(" -displaytype " + PowerShellVM.asString(display.getType()));
             }
         }
-        
+
         boolean expectBlocking = expectBlocking();
         if (expectBlocking) {
             buf.append(PROCESS_TEMPLATES);

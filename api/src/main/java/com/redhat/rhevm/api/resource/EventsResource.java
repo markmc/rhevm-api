@@ -35,7 +35,7 @@ public interface EventsResource {
 
     /**
      * Sub-resource locator method, returns individual EventResource on which the remainder of the URI is dispatched.
-     * 
+     *
      * @param id the Event ID
      * @return matching subresource if found
      */
