@@ -1299,7 +1299,7 @@
                 <jaxb:property name="Templates"/>
             </xs:appinfo>
           </xs:annotation>
-          <xs:element ref="template" maxOccurs="unbounded"/>
+          <xs:element ref="template" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
