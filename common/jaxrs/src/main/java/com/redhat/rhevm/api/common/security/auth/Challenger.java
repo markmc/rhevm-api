@@ -72,7 +72,7 @@ public class Challenger implements PreProcessInterceptor {
     public Response getChallenge() {
         return Response.status(Status.UNAUTHORIZED)
                        .header(HttpHeaders.WWW_AUTHENTICATE, scheme.getChallenge(realm))
-	               .build();
+                       .build();
     }
 
     @Override
