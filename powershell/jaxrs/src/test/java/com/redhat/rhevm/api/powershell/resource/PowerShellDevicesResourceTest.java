@@ -37,6 +37,7 @@ import com.redhat.rhevm.api.model.File;
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.NIC;
 import com.redhat.rhevm.api.model.Nics;
+import com.redhat.rhevm.api.model.NicType;
 import com.redhat.rhevm.api.model.Status;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
@@ -94,7 +95,7 @@ public class PowerShellDevicesResourceTest
 
     public static final String LOOKUP_NETWORK_ID_COMMAND = "$n = get-networks;foreach ($i in $n) {  if ($i.name -eq \"" + NETWORK_NAME + "\") {    $i  }}";
 
-    private static final String ADD_NIC_COMMAND = "$v = get-vm \"{0}\";foreach ($i in get-networks) '{'  if ($i.networkid -eq \"{1}\") '{    $n = $i  }}'add-networkadapter -vmobject $v -interfacename \"{2}\" -networkname $n.name";
+    private static final String ADD_NIC_COMMAND = "$v = get-vm \"{0}\";foreach ($i in get-networks) '{'  if ($i.networkid -eq \"{1}\") '{    $n = $i  }}'add-networkadapter -vmobject $v -interfacename \"{2}\" -networkname $n.name -interfacetype e1000";
     private static final String REMOVE_NIC_COMMAND = "$v = get-vm \"{0}\";foreach ($i in $v.GetNetworkAdapters()) '{'  if ($i.id -eq \"{1}\") '{    $n = $i  }}'remove-networkadapter -vmobject $v -networkadapterobject $n";
 
     protected PowerShellVmResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider) {
@@ -315,6 +316,7 @@ public class PowerShellDevicesResourceTest
 
         NIC nic = new NIC();
         nic.setName(NIC_NAME);
+        nic.setType(NicType.E_1000);
         nic.setNetwork(new Network());
         nic.getNetwork().setId(NETWORK_ID);
 

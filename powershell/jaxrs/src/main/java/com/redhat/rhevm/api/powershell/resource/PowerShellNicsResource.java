@@ -62,7 +62,7 @@ public class PowerShellNicsResource
         buf.append(" -interfacename " + PowerShellUtils.escape(nic.getName()));
         buf.append(" -networkname $n.name");
         if (nic.getType() != null) {
-            buf.append(" -interfacetype " + nic.getType().toString().toLowerCase());
+            buf.append(" -interfacetype " + nic.getType().value().toLowerCase());
         }
         if (nic.getMac() != null && nic.getMac().getAddress() != null) {
             buf.append(" -macaddress " + PowerShellUtils.escape(nic.getMac().getAddress()));
