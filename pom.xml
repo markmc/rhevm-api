@@ -60,6 +60,7 @@
     <profile>
       <id>api</id>
       <modules>
+        <module>build-tools</module>
         <module>api</module>
         <module>common</module>
       </modules>
@@ -68,6 +69,7 @@
     <profile>
       <id>powershell</id>
       <modules>
+        <module>build-tools</module>
         <module>api</module>
         <module>common</module>
         <module>powershell</module>
@@ -77,6 +79,7 @@
     <profile>
       <id>mock</id>
       <modules>
+        <module>build-tools</module>
         <module>api</module>
         <module>common</module>
         <module>mock</module>
@@ -86,6 +89,7 @@
     <profile>
       <id>normal</id>
       <modules>
+        <module>build-tools</module>
         <module>api</module>
         <module>common</module>
         <module>powershell</module>
@@ -99,6 +103,7 @@
     <profile>
       <id>all</id>
       <modules>
+        <module>build-tools</module>
         <module>api</module>
         <module>common</module>
         <module>powershell</module>
@@ -445,6 +450,29 @@
           </configuration>
         </plugin>
 
+        <plugin>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <version>2.6</version>
+          <dependencies>
+            <dependency>
+              <groupId>com.redhat.rhevm.api</groupId>
+              <artifactId>build-tools</artifactId>
+              <version>0.9-SNAPSHOT</version>
+            </dependency>
+          </dependencies>
+          <configuration>
+            <consoleOutput>true</consoleOutput>
+            <configLocation>checkstyle.xml</configLocation>
+          </configuration>
+          <executions>
+            <execution>
+              <phase>compile</phase>
+              <goals>
+                <goal>check</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
       </plugins>
     </pluginManagement>
   </build>

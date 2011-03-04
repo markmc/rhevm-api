@@ -58,6 +58,10 @@
         </configuration>
       </plugin>
 
+      <plugin>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+      </plugin>
+
     </plugins>
   </build>
 
