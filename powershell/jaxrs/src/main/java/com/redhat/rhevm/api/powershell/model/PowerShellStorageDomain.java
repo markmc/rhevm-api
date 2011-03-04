@@ -24,7 +24,6 @@ import java.util.List;
 
 import com.redhat.rhevm.api.model.Storage;
 import com.redhat.rhevm.api.model.StorageDomain;
-import com.redhat.rhevm.api.model.StorageDomainStatus;
 import com.redhat.rhevm.api.model.StorageDomainType;
 import com.redhat.rhevm.api.powershell.enums.PowerShellStorageDomainStatus;
 import com.redhat.rhevm.api.powershell.enums.PowerShellStorageType;

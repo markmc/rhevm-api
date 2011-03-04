@@ -26,7 +26,6 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import com.redhat.rhevm.api.model.Event;
 import com.redhat.rhevm.api.model.Host;
-import com.redhat.rhevm.api.model.LogSeverity;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.User;

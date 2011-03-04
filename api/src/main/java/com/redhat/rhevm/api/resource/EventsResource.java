@@ -26,8 +26,6 @@ import com.redhat.rhevm.api.model.Events;
 import com.redhat.rhevm.api.resource.EventResource;
 import javax.ws.rs.PathParam;
 
-import com.redhat.rhevm.api.model.Action;
-
 @Path("/events")
 @Produces( { MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML })
 public interface EventsResource {

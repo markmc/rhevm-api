@@ -25,7 +25,6 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.Link;
-import com.redhat.rhevm.api.model.SchedulingPolicy;
 import com.redhat.rhevm.api.model.SchedulingPolicyThresholds;
 import com.redhat.rhevm.api.model.SchedulingPolicyType;
 import com.redhat.rhevm.api.model.SupportedVersions;

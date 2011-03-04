@@ -19,7 +19,6 @@
 package com.redhat.rhevm.api.resource;
 
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 
 public interface MeasurableResource {
 

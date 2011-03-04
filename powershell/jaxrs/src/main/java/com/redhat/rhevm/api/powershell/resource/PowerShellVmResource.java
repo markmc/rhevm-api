@@ -36,7 +36,6 @@ import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.Statistic;
 import com.redhat.rhevm.api.model.Ticket;
 import com.redhat.rhevm.api.model.VM;
-import com.redhat.rhevm.api.model.VmType;
 import com.redhat.rhevm.api.resource.AssignedPermissionsResource;
 import com.redhat.rhevm.api.resource.AssignedTagsResource;
 import com.redhat.rhevm.api.resource.CreationResource;

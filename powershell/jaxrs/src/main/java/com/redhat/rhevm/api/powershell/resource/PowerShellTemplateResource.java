@@ -32,7 +32,6 @@ import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.resource.AssignedPermissionsResource;
 import com.redhat.rhevm.api.resource.CreationResource;
-import com.redhat.rhevm.api.resource.ReadOnlyDevicesResource;
 import com.redhat.rhevm.api.resource.TemplateResource;
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.JAXBHelper;

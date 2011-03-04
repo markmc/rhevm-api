@@ -20,7 +20,6 @@ package com.redhat.rhevm.api.resource;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Response;
 import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 import com.redhat.rhevm.api.model.Creation;
