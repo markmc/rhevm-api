@@ -41,37 +41,40 @@ public class PowerShellNIC {
         List<NIC> ret = new ArrayList<NIC>();
 
         for (PowerShellParser.Entity entity : parser.parse(output)) {
-            NIC nic = new NIC();
+            ret.add(parseEntity(vmId, entity));
+        }
+        return ret;
+    }
 
-            nic.setId(entity.get("id"));
-            nic.setName(entity.get("name"));
+    public static NIC parseEntity(String vmId, PowerShellParser.Entity entity){
+        NIC nic = new NIC();
 
-            nic.setVm(new VM());
-            nic.getVm().setId(vmId);
+        nic.setId(entity.get("id"));
+        nic.setName(entity.get("name"));
 
-            Network network = new Network();
-            network.setName(entity.get("network"));
-            nic.setNetwork(network);
+        nic.setVm(new VM());
+        nic.getVm().setId(vmId);
 
-            nic.setType(NicType.fromValue(entity.get("type").toUpperCase()));
+        Network network = new Network();
+        network.setName(entity.get("network"));
+        nic.setNetwork(network);
 
-            MAC mac = new MAC();
-            mac.setAddress(entity.get("macaddress"));
-            nic.setMac(mac);
+        nic.setType(NicType.fromValue(entity.get("type").toUpperCase()));
 
-            if (entity.get("address") != null ||
-                entity.get("subnet") != null ||
-                entity.get("gateway") != null) {
-                IP ip = new IP();
-                ip.setAddress(entity.get("address"));
-                ip.setNetmask(entity.get("subnet"));
-                ip.setGateway(entity.get("gateway"));
-                nic.setIp(ip);
-            }
+        MAC mac = new MAC();
+        mac.setAddress(entity.get("macaddress"));
+        nic.setMac(mac);
 
-            ret.add(nic);
+        if (entity.get("address") != null ||
+            entity.get("subnet") != null ||
+            entity.get("gateway") != null) {
+            IP ip = new IP();
+            ip.setAddress(entity.get("address"));
+            ip.setNetmask(entity.get("subnet"));
+            ip.setGateway(entity.get("gateway"));
+            nic.setIp(ip);
         }
 
-        return ret;
+        return nic;
     }
 }
