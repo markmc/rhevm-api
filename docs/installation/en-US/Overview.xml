@@ -84,7 +84,7 @@
   <section id="sect-REST_API_Installation_Guide-Installing_JBoss">
     <title>Installing JBoss</title>
     <para>
-      Once the JDK is installed, download version 5.1.0 of the JBoss Application Server from: 
+      Once the JDK is installed, download version 5.1.0 of the JBoss Application Server from:
     </para>
     <para>
       <ulink url="http://sourceforge.net/projects/jboss/files/JBoss/JBoss-5.1.0.GA/jboss-5.1.0.GA.zip/download">http://sourceforge.net/projects/jboss/files/JBoss/JBoss-5.1.0.GA/jboss-5.1.0.GA.zip/download</ulink>
@@ -108,10 +108,10 @@
     <procedure>
       <step>
         <para>
-          Download the current milestone release of the REST API from the REST API homepage on fedorahosted.org. At the time of writing, the current milestone is 5:
+          Download the current milestone release of the REST API from the REST API homepage on fedorahosted.org:
         </para>
         <para>
-          <ulink url="https://fedorahosted.org/releases/r/h/rhevm-api/rhevm-api-distro-0.9-milestone5.zip">https://fedorahosted.org/releases/r/h/rhevm-api/rhevm-api-distro-0.9-milestone5.zip</ulink>
+          <ulink url="https://fedorahosted.org/rhevm-api/wiki/milestones">https://fedorahosted.org/rhevm-api/wiki/milestones</ulink>
         </para>
       </step>
       <step>
@@ -169,15 +169,21 @@ keystorePass="redhat" sslProtocol = "TLS" /&gt;</screen>
       </step>
       <step>
         <para>
-          Next, the JBoss <filename>run.conf.bat</filename> file will need one edit to ensure that the REST API does not produce a port conflict. Again run WordPad as an Administrator, and open the <filename>$JBOSS_HOME\bin\run.conf.bat</filename> file. Find a <literal>JAVA_OPTS</literal> line and add <literal>-Djboss.service.binding.set=ports-01</literal> to the end. For example, find the following existing section:
+          Next configure JBoss to listen in all interfaces and set a port offset to avoid conflicts with the ports used by RHEV. This can be accomplished by editing the file <filename>run.bat</filename>. Find the following section:
         </para>
-<screen>rem # Reduce the RMI GCs to once per hour for Sun JVMs.
-set "JAVA_OPTS=%JAVA_OPTS% -Dsun.rmi.dgc.client.gcInterval=3600000 -Dsun.rmi.dgc.server.gcInterval=3600000"</screen>
-        <para>
+<screen>if "x%JAVA_OPTS%" == "x" (
+  set "JAVA_OPTS=-Dprogram.name=%PROGNAME%"
+) else (
+  set "JAVA_OPTS=-Dprogram.name=%PROGNAME% %JAVA_OPTS%"
+)</screen>
+         <para>
           And edit this as shown below:
         </para>
-<screen>rem # Reduce the RMI GCs to once per hour for Sun JVMs.
-set "JAVA_OPTS=%JAVA_OPTS% -Dsun.rmi.dgc.client.gcInterval=3600000 -Dsun.rmi.dgc.server.gcInterval=3600000 -Djboss.service.binding.set=ports-01"</screen>
+<screen>if "x%JAVA_OPTS%" == "x" (
+  set "JAVA_OPTS=-Dprogram.name=%PROGNAME% -Djboss.bind.address=0.0.0.0 -Djboss.service.binding.set=ports-01"
+) else (
+  set "JAVA_OPTS=-Dprogram.name=%PROGNAME% -Djboss.bind.address=0.0.0.0 -Djboss.service.binding.set=ports-01 %JAVA_OPTS%"
+)</screen>
         <para>
           Save the file and exit WordPad.
         </para>
@@ -189,9 +195,15 @@ set "JAVA_OPTS=%JAVA_OPTS% -Dsun.rmi.dgc.client.gcInterval=3600000 -Dsun.rmi.dgc
     <para>
       Open a command prompt as an Administrator and navigate to the JBoss directory. Run the following command in the JBoss directory to start the JBoss Application Server:
     </para>
-    <para><command>bin\run.bat -b 0.0.0.0</command></para>
+    <para><command>.\bin\run.bat</command></para>
+    <warning>
+      <title>Warning</title>
+      <para>
+        When using the Powershell backend, JBoss should NOT be run as the RHEV Administrator user (typically <literal>rhevadmin</literal>)
+      </para>
+    </warning>
     <para>
-      Once JBoss starts, you'll see output similar to the example below. Starting JBoss and the REST API may take a minute.
+      Once JBoss starts, you'll see the output similar to the example below. Starting JBoss and the REST API may take a minute.
     </para>
     <para>
       <mediaobject>
@@ -200,104 +212,27 @@ set "JAVA_OPTS=%JAVA_OPTS% -Dsun.rmi.dgc.client.gcInterval=3600000 -Dsun.rmi.dgc
         </imageobject>
       </mediaobject>
     </para>
+    <para>
+Before moving to the next step, it's recommended to test the API with the instructions provided in the section "Validating the installation using a web browser".
+    </para>
   </section>
   <section id="sect-REST_API_Installation_Guide-Starting_JBoss_on_Boot">
     <title>Starting JBoss on boot</title>
     <para>
-      Once the JBoss Application Server starts correctly on the command prompt, one way to automatically start this service on Windows Server's boot is with a Scheduled Task. Another means to start JBoss on boot is by using JBossNative, which will configure JBoss to start as a Windows Service. This section lists the steps for creating a Task.
+      Once the JBoss Application Server starts correctly on the command prompt, one way to automatically start this service on Windows Server's boot is by using JBossNative, which will configure JBoss to start as a Windows Service. To use this method run the following command:
     </para>
-    <procedure>
-      <step>
-        <para>
-          To setup a scheduled task, click on the Start menu and choose <guilabel>Administrative Tools</guilabel> -&gt; <guilabel>Task Scheduler</guilabel>. In the Task Scheduler window, click on the <guilabel>Create Task</guilabel> link, as shown below:
-        </para>
-        <para>
-          <mediaobject>
-            <imageobject>
-              <imagedata fileref="images/create_task.png" format="PNG" />
-            </imageobject>
-          </mediaobject>
-        </para>
-      </step>
-      <step>
-        <para>
-          In the Create Task wizard, name the task (in this example, <literal>start jboss</literal>). Choose the <guilabel>Run whether user is logged on or not</guilabel> radio button and check the box next to <guilabel>Run with highest privileges</guilabel>, as shown in the example below.
-        </para>
-        <para>
-          <mediaobject>
-            <imageobject>
-              <imagedata fileref="images/start_jboss_properties.png" format="PNG" />
-            </imageobject>
-          </mediaobject>
-        </para>
-      </step>
-      <step>
-        <para>
-          Next, click on the <guilabel>Triggers</guilabel> tab and create a trigger to start the task <guilabel>At system startup</guilabel> as depicted below:
-        </para>
-        <para>
-          <mediaobject>
-            <imageobject>
-              <imagedata fileref="images/triggers.png" format="PNG" />
-            </imageobject>
-          </mediaobject>
-        </para>
-      </step>
-      <step>
-        <para>
-          Click on the <guilabel>Actions</guilabel> tab and create a new action. The action should contain the following values (if you chose to not install JBoss in <filename>Program Files</filename>, then adjust these accordingly):
-        </para>
-        <informaltable frame="none">
-          <tgroup cols="2">
-            <colspec colwidth="2*"/>
-            <colspec colwidth="4*"/>
-            <tbody>
-              <row>
-                <entry>Action:</entry>
-                <entry>Start a Program</entry>
-              </row>
-              <row>
-                <entry>Program/script:</entry>
-                <entry>"C:\Program Files\jboss-5.1.0.GA\bin\run.bat"</entry>
-              </row>
-              <row>
-                <entry>Add arguments:</entry>
-                <entry>-b 0.0.0.0</entry>
-              </row>
-              <row>
-                <entry>Start in:</entry>
-                <entry>C:\Program Files\jboss-5.1.0.GA\</entry>
-              </row>
-            </tbody>
-          </tgroup>
-        </informaltable>
-        <para>
-          Note that the <guilabel>Program/script</guilabel> value includes quotes and the <guilabel>Start in</guilabel> value does not. This is required. If the <guilabel>Start in</guilabel> value contains quotes, Windows will produce an error and will fail to start the task.
-        </para>
-        <para>
-          <mediaobject>
-            <imageobject>
-              <imagedata fileref="images/edit_action.png" format="PNG" />
-            </imageobject>
-          </mediaobject>
-        </para>
-      </step>
-      <step>
-        <para>
-          Click on the <guilabel>Settings</guilabel> tab and deselect the box next to <guilabel>Stop the task if it runs longer than</guilabel>.
-        </para>
-        <para>
-          <mediaobject>
-            <imageobject>
-              <imagedata fileref="images/stop_task.png" format="PNG" />
-            </imageobject>
-          </mediaobject>
-        </para>
-        <para>
-          Click <guilabel>OK</guilabel> and the task will be created. Verify that the Task works correctly by rebooting the Windows Server and observe that JBoss and the REST API start automatically on boot.
-        </para>
-      </step>
-    </procedure>
+    <para><command>cd $JBOSS_HOME\bin</command></para>
+    <para><command>.\service.bat install</command></para>
+    <para>
+      Now click on the Start menu and choose <guilabel>Administrative Tools</guilabel> -&gt; <guilabel>Services</guilabel>. A new service called <literal>JBoss Application Server 5.1</literal> should be in the list. Right click over the service and select <literal>Properties</literal>. To finish the setup, change the <literal>Startup type</literal> from Manual to <literal>Automatic</literal> and click OK.
+    </para>
+    <note>
+      <title>Note</title>
+      <para>When running in service mode the console output is redirected to the file <filename>run.log</filename>. You can inspect the file for any errors during service startup.</para>
+    </note>
+    <para>
+      Please refer to the file <filename>bin\README-service.txt</filename> if need extra instructions or how to unistall the service.
+    </para>
   </section>
   <section id="sect-REST_API_Installation_Guide-Validate_Web_Browser">
     <title>Validating the installation using a web browser</title>
