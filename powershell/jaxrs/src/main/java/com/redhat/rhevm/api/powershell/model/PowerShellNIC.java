@@ -31,6 +31,12 @@ import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 
 public class PowerShellNIC {
 
+    private static final String NICS_TYPE = "RhevmCmd.CLIVmNetworkAdapter";
+
+    static boolean isNIC(PowerShellParser.Entity entity) {
+        return NICS_TYPE.equals(entity.getType());
+    }
+
     public static List<NIC> parse(PowerShellParser parser, String vmId, String output) {
         List<NIC> ret = new ArrayList<NIC>();
 
