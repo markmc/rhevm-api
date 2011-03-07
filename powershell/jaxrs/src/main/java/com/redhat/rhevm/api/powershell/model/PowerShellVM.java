@@ -161,16 +161,19 @@ public class PowerShellVM extends VM {
                 last(ret).setTaskIds(PowerShellAsyncTask.parseTask(entity, last(ret).getTaskIds()));
             } else if (PowerShellAsyncTask.isStatus(entity)) {
                 last(ret).setCreationStatus(PowerShellAsyncTask.parseStatus(entity, last(ret).getCreationStatus()));
-            } else if (PowerShellVmStatisticsParser.isMemory(entity)) {
+            } else if (hasDetail(details, Detail.STATISTICS) && PowerShellVmStatisticsParser.isMemory(entity)) {
                 getStatistics(ret).addAll(PowerShellVmStatisticsParser.parseMemoryStats(entity));
-            } else if (PowerShellVmStatisticsParser.isCpu(entity)) {
+            } else if (hasDetail(details, Detail.STATISTICS) && PowerShellVmStatisticsParser.isCpu(entity)) {
                 getStatistics(ret).addAll(PowerShellVmStatisticsParser.parseCpuStats(entity));
-            } else if (PowerShellDisk.isDisk(entity)) {
+            } else if (hasDetail(details, Detail.DISKS) && PowerShellDisk.isDisk(entity)) {
                 getDisks(ret).add(PowerShellDisk.parseEntity(last(ret).getId(), entity));
             } else if (VM_TYPE.equals(entity.getType())) {
                 ret.add(parseVm(entity, dates));
-                if (details != null && details.contains(Detail.DISKS)) {
-                    getDisks(ret);
+                if (hasDetail(details, Detail.STATISTICS)) {
+                    last(ret).setStatistics(new Statistics());
+                }
+                if (hasDetail(details, Detail.DISKS)) {
+                    last(ret).setDisks(new Disks());
                 }
             } else if (NIC_TYPE.equals(entity.getType())) {
                 parseDisplayAddress(entity, last(ret));
@@ -275,19 +278,15 @@ public class PowerShellVM extends VM {
                || id instanceof Integer && id.equals(-1);
     }
 
+    private static boolean hasDetail(Set<Detail> details, Detail detail) {
+        return details != null && details.contains(detail);
+    }
+
     private static List<Statistic> getStatistics(List<PowerShellVM> vms) {
-        VM vm = last(vms);
-        if (!vm.isSetStatistics()) {
-            vm.setStatistics(new Statistics());
-        }
-        return vm.getStatistics().getStatistics();
+        return last(vms).getStatistics().getStatistics();
     }
 
     private static List<Disk> getDisks(List<PowerShellVM> vms) {
-        VM vm = last(vms);
-        if (!vm.isSetDisks()) {
-            vm.setDisks(new Disks());
-        }
-        return vm.getDisks().getDisks();
+        return last(vms).getDisks().getDisks();
     }
 }

@@ -20,6 +20,7 @@ package com.redhat.rhevm.api.powershell.model;
 
 import org.junit.Test;
 
+import java.util.EnumSet;
 import java.util.List;
 
 import com.redhat.rhevm.api.model.BootDevice;
@@ -32,6 +33,7 @@ import com.redhat.rhevm.api.model.ValueType;
 import com.redhat.rhevm.api.model.VmOrigin;
 import com.redhat.rhevm.api.model.VmStatus;
 import com.redhat.rhevm.api.model.VmType;
+import com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource.Detail;
 
 public class PowerShellVmTest extends PowerShellModelTest {
 
@@ -144,7 +146,7 @@ public class PowerShellVmTest extends PowerShellModelTest {
         String data = readFileContents("vm.xml");
         assertNotNull(data);
 
-        List<PowerShellVM> vms = PowerShellVM.parse(getParser(), data, null);
+        List<PowerShellVM> vms = PowerShellVM.parse(getParser(), data, EnumSet.of(Detail.STATISTICS));
 
         assertEquals(vms.size(), 4);
 
