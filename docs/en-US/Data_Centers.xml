@@ -52,7 +52,7 @@
             <entry><literal>version</literal></entry>
             <entry>complex</entry>
             <entry>The compatibility level of the data center (see <xref linkend="chap-REST_API_Guide-Cluster_Level_Versions"/>)</entry>
-            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/required.png" format="PNG" /></imageobject></inlinemediaobject><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
             <entry><literal>supported_versions</literal></entry>
@@ -82,7 +82,7 @@
   </screen>
 
   <para>
-    When creating a new data center, the <literal>name</literal> and <literal>storage_type</literal> elements are required. Only the <literal>name</literal> and <literal>description</literal> elements may be updated post-creation.
+    When creating a new data center, the <literal>name</literal>, <literal>storage_type</literal> and <literal>version</literal> elements are required. Only the <literal>name</literal> and <literal>description</literal> elements may be updated post-creation.
   </para>
 
   <section id="sect-REST_API_Guide-Data_Centers-Attached_Storage_Domains">
