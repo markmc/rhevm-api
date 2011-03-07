@@ -81,6 +81,7 @@ public class PowerShellVmsResource
 
     public enum Detail {
         DISKS("$_.getdiskimages(); "),
+        NICS("$_.getnetworkadapters(); "),
         STATISTICS("$_.getmemorystatistics(); $_.getcpustatistics(); ");
 
         public final String powershell;

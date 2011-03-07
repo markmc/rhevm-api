@@ -32,6 +32,8 @@ import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.CpuTopology;
 import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.Disks;
+import com.redhat.rhevm.api.model.NIC;
+import com.redhat.rhevm.api.model.Nics;
 import com.redhat.rhevm.api.model.Display;
 import com.redhat.rhevm.api.model.DisplayType;
 import com.redhat.rhevm.api.model.HighlyAvailable;
@@ -167,6 +169,8 @@ public class PowerShellVM extends VM {
                 getStatistics(ret).addAll(PowerShellVmStatisticsParser.parseCpuStats(entity));
             } else if (hasDetail(details, Detail.DISKS) && PowerShellDisk.isDisk(entity)) {
                 getDisks(ret).add(PowerShellDisk.parseEntity(last(ret).getId(), entity));
+            } else if (hasDetail(details, Detail.NICS) && PowerShellNIC.isNIC(entity)) {
+                getNics(ret).add(PowerShellNIC.parseEntity(last(ret).getId(), entity));
             } else if (VM_TYPE.equals(entity.getType())) {
                 ret.add(parseVm(entity, dates));
                 if (hasDetail(details, Detail.STATISTICS)) {
@@ -174,6 +178,9 @@ public class PowerShellVM extends VM {
                 }
                 if (hasDetail(details, Detail.DISKS)) {
                     last(ret).setDisks(new Disks());
+                }
+                if (hasDetail(details, Detail.NICS)) {
+                    last(ret).setNics(new Nics());
                 }
             } else if (NIC_TYPE.equals(entity.getType())) {
                 parseDisplayAddress(entity, last(ret));
@@ -288,5 +295,9 @@ public class PowerShellVM extends VM {
 
     private static List<Disk> getDisks(List<PowerShellVM> vms) {
         return last(vms).getDisks().getDisks();
+    }
+
+    private static List<NIC> getNics(List<PowerShellVM> vms) {
+        return last(vms).getNics().getNics();
     }
 }
