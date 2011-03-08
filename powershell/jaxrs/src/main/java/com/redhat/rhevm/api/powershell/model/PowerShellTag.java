@@ -27,6 +27,12 @@ import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 
 public class PowerShellTag {
 
+    private static final String TAGS_TYPE = "RhevmCmd.CLITag";
+
+    static boolean isTag(PowerShellParser.Entity entity) {
+        return TAGS_TYPE.equals(entity.getType());
+    }
+
     public static List<Tag> parse(PowerShellParser parser, String output) {
         List<Tag> ret = new ArrayList<Tag>();
 
