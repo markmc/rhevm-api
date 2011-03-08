@@ -37,19 +37,22 @@ public class PowerShellTag {
         List<Tag> ret = new ArrayList<Tag>();
 
         for (PowerShellParser.Entity entity : parser.parse(output)) {
-            Tag tag = new Tag();
-
-            tag.setId(entity.get("tagid", String.class, Integer.class).toString());
-            tag.setName(entity.get("name"));
-            tag.setDescription(entity.get("description"));
-
-            tag.setParent(new TagParent());
-            tag.getParent().setTag(new Tag());
-            tag.getParent().getTag().setId(entity.get("parentid", String.class, Integer.class).toString());
-
-            ret.add(tag);
+            ret.add(parseEntity(entity));
         }
-
         return ret;
+    }
+
+    public static Tag parseEntity(PowerShellParser.Entity entity){
+        Tag tag = new Tag();
+
+        tag.setId(entity.get("tagid", String.class, Integer.class).toString());
+        tag.setName(entity.get("name"));
+        tag.setDescription(entity.get("description"));
+
+        tag.setParent(new TagParent());
+        tag.getParent().setTag(new Tag());
+        tag.getParent().getTag().setId(entity.get("parentid", String.class, Integer.class).toString());
+
+        return tag;
     }
 }
