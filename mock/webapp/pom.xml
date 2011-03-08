@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.redhat.rhevm.api</groupId>
     <artifactId>mock-parent</artifactId>
-    <version>0.9-milestone8.1</version>
+    <version>0.9-SNAPSHOT</version>
   </parent>
 
   <artifactId>rhevm-api-mock-webapp</artifactId>
