@@ -1395,6 +1395,7 @@
           <xs:element name="statistics" type="Statistics" minOccurs="0" maxOccurs="1"/>
           <xs:element name="disks" type="Disks" minOccurs="0" maxOccurs="1"/>
           <xs:element name="nics" type="Nics" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="tags" type="Tags" minOccurs="0" maxOccurs="1"/>
 
           <xs:element ref="vmpool" minOccurs="0" maxOccurs="1">
             <xs:annotation>
