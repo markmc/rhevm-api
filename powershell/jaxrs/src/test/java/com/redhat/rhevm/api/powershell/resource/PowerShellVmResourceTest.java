@@ -135,6 +135,8 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
                                        formatVm(VM_NAME),
                                        VM_NAME));
         VM vm = resource.get();
+        assertFalse(vm.isSetDisks());
+        assertFalse(vm.isSetNics());
         assertTrue(vm.isSetStatistics());
         verifyVM(vm, VM_NAME);
     }
@@ -147,6 +149,21 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
                                        VM_NAME));
         VM vm = resource.get();
         assertTrue(vm.isSetDisks());
+        assertFalse(vm.isSetNics());
+        assertFalse(vm.isSetStatistics());
+        verifyVM(vm, VM_NAME);
+    }
+
+    @Test
+    public void testGetIncludeNics() throws Exception {
+        setUpHttpHeaderExpectations("Accept", "application/xml; detail=nics");
+        setUriInfo(setUpVmExpectations("get-vm \"" + VM_ID + "\"" + getProcess(Method.GET, Detail.NICS),
+                                       formatVm(VM_NAME),
+                                       VM_NAME));
+        VM vm = resource.get();
+        assertFalse(vm.isSetDisks());
+        assertTrue(vm.isSetNics());
+        assertFalse(vm.isSetStatistics());
         verifyVM(vm, VM_NAME);
     }
 
@@ -158,6 +175,20 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
                                        VM_NAME));
         VM vm = resource.get();
         assertTrue(vm.isSetDisks());
+        assertFalse(vm.isSetNics());
+        assertTrue(vm.isSetStatistics());
+        verifyVM(vm, VM_NAME);
+    }
+
+    @Test
+    public void testGetIncludeDisksNicsAndStatistics() throws Exception {
+        setUpHttpHeaderExpectations("Accept", "application/xml; detail=disks; detail=nics; detail=statistics");
+        setUriInfo(setUpVmExpectations("get-vm \"" + VM_ID + "\"" + getProcess(Method.GET, Detail.STATISTICS, Detail.NICS, Detail.DISKS),
+                                       formatVm(VM_NAME),
+                                       VM_NAME));
+        VM vm = resource.get();
+        assertTrue(vm.isSetDisks());
+        assertTrue(vm.isSetNics());
         assertTrue(vm.isSetStatistics());
         verifyVM(vm, VM_NAME);
     }
