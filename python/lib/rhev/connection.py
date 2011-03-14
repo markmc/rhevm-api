@@ -468,3 +468,44 @@ class Connection(object):
         if self._api is None:
             self._api = self.get(schema.API)
         return self._api
+
+    def get_methods(self, obj, base=None):
+        """Return the methods that are available for `resource'."""
+        if isinstance(obj, schema.BaseResource):
+            if not obj.href:
+                raise ValueError, 'Expecting a created binding instance.'
+            url = obj.href
+        elif issubclass(obj, schema.BaseResources):
+            url = self._resolve_url(obj, base=base)
+        else:
+            m = 'Expecting BaseResource instance or BaseResources subclass.'
+            raise TypeError, m
+        methods = []
+        response = self._make_request('OPTIONS', url)
+        if response.status != http.OK:
+            raise self._create_exception(response)
+        methods = response.getheader('Allow').split(',')
+        methods = [ method.strip() for method in methods ]
+        return methods
+
+    def get_actions(self, resource):
+        """Return the actions for a resource."""
+        if not isinstance(resource, schema.BaseResource):
+            raise TypeError, 'Expecting a binding instance.'
+        if not resource.href:
+            raise ValueError, 'Expecting a created binding instance.'
+        actions = []
+        if resource.actions:
+            for link in resource.actions.link:
+                actions.append(link.rel)
+        return actions
+
+    def get_links(self, obj):
+        """Return the subcollections of a resource."""
+        if not isinstance(obj, schema.BaseResource) and \
+                not isinstance(obj, schema.API):
+            raise TypeError, 'Expecting a BaseResource or API instance.'
+        links = []
+        for link in obj.link:
+            links.append(link.rel)
+        return links

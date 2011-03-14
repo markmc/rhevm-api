@@ -27,8 +27,37 @@ class TestConnection(BaseTest):
         self.api.ping()
         # Close the socket below from under the API
         self.api._connection.sock.close()
+        retries = self.api.retries
         self.api.retries = 1
         assert_raises(Error, self.api.ping)
+        self.api.retries = retries
+
+    def test_methods(self):
+        methods = self.api.get_methods(schema.DataCenters)
+        assert 'GET' in methods
+        assert 'POST' in methods
+        assert 'PUT' not in methods
+        assert 'DELETE' not in methods
+        dc = self.api.get(schema.DataCenter)
+        methods = self.api.get_methods(dc)
+        assert 'GET' in methods
+        assert 'POST' not in methods
+        assert 'PUT' in methods
+        #assert 'DELETE' in methods  # BUG
+
+    def test_actions(self):
+        vm = self.api.get(schema.VM)
+        if vm is None:
+            raise SkipTest, 'No VM found'
+        actions = self.api.get_actions(vm)
+        assert 'start' in actions
+        assert 'stop' in actions
+        assert 'suspend' in actions
+        assert 'shutdown' in actions
+        assert 'export' in actions
+        assert 'detach' in actions
+        assert 'migrate' in actions
+        assert 'ticket' in actions
 
     def test_illegal_url(self):
         self.api.close()
@@ -47,7 +76,7 @@ class TestConnection(BaseTest):
         url = self.api.url
         self.api.url = None
         assert_raises(Error, self.api.connect)
-        self.url = url
+        self.api.url = url
         username = self.api.username
         self.api.username = None
         assert_raises(Error, self.api.connect)
