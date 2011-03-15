@@ -121,7 +121,6 @@ public class MockVmResource extends AbstractMockResource<VM> implements VmResour
 
     @Override
     public Response migrate(Action action) {
-        String migrateToHostId = action.getHost().getId();
         return doAction(getUriInfo(), new DoNothingTask(action));
     }
 

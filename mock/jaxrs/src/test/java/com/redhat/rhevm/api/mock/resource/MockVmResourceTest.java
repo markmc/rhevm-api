@@ -23,6 +23,7 @@ import org.junit.Test;
 
 import com.redhat.rhevm.api.model.Fault;
 import com.redhat.rhevm.api.model.Link;
+import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.model.VmType;
@@ -37,6 +38,13 @@ public class MockVmResourceTest extends MockTestBase {
         assertNotNull(vm.getId());
         assertNotNull(vm.getHref());
         assertTrue(vm.getHref().endsWith("vms/" + vm.getId()));
+
+        Template template = vm.getTemplate();
+        assertNotNull(template);
+        assertNotNull(template.getId());
+        assertNotNull(template.getHref());
+        assertTrue(template.getHref().endsWith("templates/" + template.getId()));
+
         assertNotNull(vm.getActions());
         assertTrue(vm.getActions().getLinks().size() > 0);
         boolean includesStartLink = false;

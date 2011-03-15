@@ -26,6 +26,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
 import com.redhat.rhevm.api.mock.util.SimpleQueryEvaluator;
+import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.model.VmType;
@@ -47,10 +48,12 @@ public class MockVmsResource extends AbstractMockQueryableResource<VM> implement
     public void populate() {
         synchronized (vms) {
             while (vms.size() < 10) {
-                MockVmResource resource = new MockVmResource(allocateId(VM.class), getExecutor(), this);
-                resource.getModel().setName("vm" + resource.getModel().getId());
-                resource.getModel().setType(VmType.SERVER);
-                vms.put(resource.getModel().getId(), resource);
+                MockVmResource vmResource = new MockVmResource(allocateId(VM.class), getExecutor(), this);
+                vmResource.getModel().setName("vm" + vmResource.getModel().getId());
+                vmResource.getModel().setType(VmType.SERVER);
+                vmResource.getModel().setTemplate(new Template());
+                vmResource.getModel().getTemplate().setId(allocateId(Template.class));
+                vms.put(vmResource.getModel().getId(), vmResource);
             }
         }
     }
