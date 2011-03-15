@@ -109,49 +109,67 @@ class ActionCommand(RhevCommand):
 
     def execute(self):
         """Execute the action command."""
-        self.check_connection()
-        typename, name, action = self.arguments
-        typ = self.resolve_singular_type(typename)
-        base = self.resolve_base(self.options)
-        obj = self.get_object(typ, name, base)
-        actionobj = schema.new(schema.Action)
-        actionobj = self.update_object(actionobj, self.options)
-        connection = self.context.connection
+        args = self.arguments
+        opts = self.options
+        connection = self.check_connection()
+        info = schema.type_info(args[0])
+        if info is None:
+            self.error('no such type: %s' % args[0])
+        base = self.resolve_base(opts)
+        obj = self.get_object(info[0], args[1], base)
+        action = schema.new(schema.Action)
+        self.update_object(action, opts)
         try:
-            result = connection.action(obj, action, actionobj)
+            result = connection.action(obj, args[2], action)
         except rhev.Error, e:
             self.error(str(e))
         if result.status != 'COMPLETE':
             self.error('action status: %s' % result.status)
+        self.context.formatter.format(self.context, result)
 
     def show_help(self):
         """Show help for the action command."""
-        subst = {}
         args = self.arguments
-        connection = self.context.connection
+        opts = self.options
+        connection = self.check_connection()
+        stdout = self.context.terminal.stdout
+        subst = {}
         if len(args) < 2:
             helptext = self.helptext0
             types = self.get_singular_types()
             subst['types'] = self.format_list(types)
-        elif len(args) >= 2:
+        elif len(args) == 2:
             helptext = self.helptext1
-            typ = self.resolve_singular_type(args[0])
+            info = schema.type_info(args[0])
+            if info is None:
+                self.error('no such type: %s' % args[0])
             subst['type'] = args[0]
             subst['id'] = args[1]
-            if connection is None:
-                subst['action'] = 'Not connected, cannot list actions.'
-            else:
-                base = self.resolve_base(self.options)
-                obj = self.get_object(typ, args[1], base)
-                if obj is None:
-                    subst['actions'] = 'No such object, cannot list actions.'
-                else:
-                    actions = self.get_actions(obj)
-                    subst['actions'] = self.format_list(actions)
-            options = self.get_attribute_options(schema.Action)
+            base = self.resolve_base(opts)
+            obj = self.get_object(info[0], args[1], base)
+            if obj is None:
+                self.error('no such %s: %s' % (args[0], args[1]))
+            actions = connection.get_actions(obj)
+            subst['actions'] = self.format_list(actions)
+        elif len(args) == 3:
+            helptext = self.helptext1
+            info = schema.type_info(args[0])
+            if info is None:
+                self.error('no such type: %s' % args[0])
+            subst['type'] = args[0]
+            subst['id'] = args[1]
+            subst['action'] = args[2]
+            base = self.resolve_base(self.options)
+            obj = self.get_object(info[0], args[1], base)
+            if obj is None:
+                self.error('no such %s: %s' % (args[0], args[1]))
+            actions = connection.get_actions(obj)
+            if args[2] not in actions:
+                self.error('no such action: %s' % args[2])
+            key = '%s/%s' % (args[0], args[2])
+            options = self.get_options(args[0], action=args[2])
             subst['options'] = self.format_list(options, bullet='')
         statuses = self.get_statuses()
         subst['statuses'] = self.format_list(statuses)
-        stdout = self.context.terminal.stdout
         helptext = self.format_help(helptext, subst)
         stdout.write(helptext)

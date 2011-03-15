@@ -57,7 +57,7 @@ class UpdateCommand(RhevCommand):
 
         This updates a virtual machine with name "myvm":
 
-          $ update vm myvm --name newname --memory 1024000000
+          $ update vm myvm --name newname --memory 1024
 
         == Return Values ==
 
@@ -92,33 +92,46 @@ class UpdateCommand(RhevCommand):
 
     def execute(self):
         """Execute the "update" command."""
-        self.check_connection()
-        connection = self.context.connection
-        typename, id = self.arguments
-        typ = self.resolve_singular_type(typename)
-        base = self.resolve_base(self.options)
-        obj = self.get_object(typ, id, base)
+        args = self.arguments
+        opts = self.options
+        connection = self.check_connection()
+        info = schema.type_info(args[0])
+        if info is None:
+            self.error('no such type: %s' % args[0])
+        base = self.resolve_base(opts)
+        obj = self.get_object(info[0], args[1], base)
         # Trac issue #179: don't set fields that already exist
         obj = schema.href(obj)
-        obj = self.update_object(obj, self.options)
+        self.update_object(obj, self.options)
         connection.update(obj)
 
     def show_help(self):
         """Show help for "update"."""
-        subst = {}
         args = self.arguments
-        if len(args) == 0:
+        opts = self.options
+        connection = self.check_connection()
+        subst = {}
+        if len(args) < 2:
             helptext = self.helptext0
             types = self.get_singular_types()
             subst['types'] = self.format_list(types)
-        else:
+        elif len(args) == 2:
+            info = schema.type_info(args[0])
+            if info is None:
+                self.error('no such type: %s' % args[0])
+            base = self.resolve_base(opts)
+            obj = self.get_object(info[0], args[1], base=base)
+            if obj is None:
+                self.error('no such %s: %s' % (args[0], args[1]))
+            methods = connection.get_methods(obj)
+            if 'PUT' not in methods:
+                self.error('type cannot be updated: %s' % args[0])
             helptext = self.helptext1
-            typ = self.resolve_singular_type(args[0])
             subst['type'] = args[0]
-            options = self.get_attribute_options(typ)
+            options = self.get_options(args[0])
             subst['options'] = self.format_list(options)
         statuses = self.get_statuses()
         subst['statuses'] = self.format_list(statuses)
-        stdout = self.context.terminal.stdout
         helptext = self.format_help(helptext, subst)
+        stdout = self.context.terminal.stdout
         stdout.write(helptext)

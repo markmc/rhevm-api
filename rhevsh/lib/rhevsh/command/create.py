@@ -62,8 +62,8 @@ class CreateCommand(RhevCommand):
         This create a new virtual machine in the Default cluster based on the
         Blank template:
 
-          $ create vm --name myvm --memory 512000000 --type SERVER \\
-                      --cluster-name Default --template-name Blank
+          $ create vm --name myvm --memory 512 --type SERVER \\
+                      --cluster Default --template Blank
 
         This example does the same but now using pre-formatted input:
 
@@ -105,34 +105,43 @@ class CreateCommand(RhevCommand):
 
     def execute(self):
         """Execute the "create" command."""
-        self.check_connection()
-        connection = self.context.connection
+        args = self.arguments
+        opts = self.options
+        connection = self.check_connection()
         stdout = self.context.terminal.stdout
-        typename = self.arguments[0]
-        typ = self.resolve_singular_type(typename)
-        base = self.resolve_base(self.options)
-        obj = self.read_input()
+        info = schema.type_info(args[0])
+        if info is None:
+            self.error('no such type: %s' % args[0])
+        obj = self.read_object()
         if obj is None:
-            obj = schema.new(typ)
-            obj = self.update_object(obj, self.options)
+            obj = self.create_object(info[0], opts)
+        base = self.resolve_base(opts)
         connection.create(obj, base=base)
 
     def show_help(self):
         """Show help for "create"."""
-        subst = {}
         args = self.arguments
+        opts = self.options
+        connection = self.check_connection()
+        stdout = self.context.terminal.stdout
+        subst = {}
         if len(args) == 0:
             helptext = self.helptext0
             types = self.get_singular_types()
             subst['types'] = self.format_list(types)
         elif len(args) == 1:
+            info = schema.type_info(args[0])
+            if info is None:
+                self.error('unknown type: %s' % args[0])
+            base = self.resolve_base(opts)
+            methods = connection.get_methods(info[1], base=base)
+            if 'POST' not in methods:
+                self.error('type cannot be created: %s' % args[0])
             helptext = self.helptext1
-            typ = self.resolve_singular_type(args[0])
             subst['type'] = args[0]
-            options = self.get_attribute_options(typ)
+            options = self.get_options(args[0])
             subst['options'] = self.format_list(options)
         statuses = self.get_statuses()
         subst['statuses'] = self.format_list(statuses)
-        stdout = self.context.terminal.stdout
         helptext = self.format_help(helptext, subst)
         stdout.write(helptext)

@@ -70,22 +70,24 @@ class ShowCommand(RhevCommand):
 
     def execute(self):
         """Execute "show"."""
+        args = self.arguments
+        opts = self.options
         self.check_connection()
-        stdout = self.context.terminal.stdout
-        typename, name = self.arguments
-        typ = self.resolve_singular_type(typename)
-        base = self.resolve_base(self.options)
-        obj = self.get_object(typ, name, base)
+        info = schema.type_info(args[0])
+        if info is None:
+            self.error('unknown type: %s' % typename)
+        base = self.resolve_base(opts)
+        obj = self.get_object(info[0], args[1], base)
         self.context.formatter.format(self.context, obj)
 
     def show_help(self):
         """Show help for "show"."""
-        helptext = self.helptext
+        self.check_connection()
         subst = {}
         types = self.get_singular_types()
         subst['types'] = self.format_list(types)
         statuses = self.get_statuses()
         subst['statuses'] = self.format_list(statuses)
+        helptext = self.format_help(self.helptext, subst)
         stdout = self.context.terminal.stdout
-        helptext = self.format_help(helptext, subst)
         stdout.write(helptext)

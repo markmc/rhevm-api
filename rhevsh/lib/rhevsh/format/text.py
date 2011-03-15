@@ -8,6 +8,8 @@
 
 from rhev import schema
 from cli.error import CommandError
+
+from rhevsh import metadata
 from rhevsh.format.format import Formatter
 
 
@@ -16,47 +18,28 @@ class TextFormatter(Formatter):
 
     name = 'text'
 
-    def _get_fields(self, tag):
-        fields = self.context.settings.get('fields.%s' % tag)
-        if fields is None:
-            fields = self.context.settings.get('fields')
-        if fields is None:
-            raise CommandError, 'required config variable not set: fields'
-        fields = fields.split(',')
-        return fields
-
-    def _get_value(self, resource, field):
-        value = resource
-        path = field.split('.')
-        for pa in path:
-            value = getattr(value, pa, None)
-            if value is None:
-                break
-        if value is None:
-            value = ''
+    def _get_fields(self, typ, flag):
+        info = schema.type_info(typ)
+        assert info is not None
+        override = self.context.settings.get('fields.%s' % info[2])
+        if override is None:
+            override = self.context.settings.get('fields')
+        if override is None:
+            fields = metadata.get_fields(typ, flag)
         else:
-            value = str(value)
-        return value
-
-    def _filter_fields(self, fields, resource):
-        filtered = []
-        for field in fields:
-            try:
-                self._get_value(resource, field)
-            except AttributeError:
-                pass
-            else:
-                filtered.append(field)
-        return filtered
+            override = override.split(',')
+            fields = metadata.get_fields(typ, '')
+            fields = filter(lambda f: f.name in override, fields)
+        return fields
 
     def _format_resource(self, resource):
         context = self.context
         settings = context.settings
         stdout = context.terminal.stdout
-        fields = self.context.command.get_attributes(type(resource))
+        fields = self._get_fields(type(resource), 'S')
         width0 = 0
         for field in fields:
-            width0 = max(width0, len(field))
+            width0 = max(width0, len(field.name))
         format0 = '%%-%ds' % width0
         if stdout.isatty() and not settings['wide']:
             width1 = context.terminal.width - width0 - 2
@@ -66,10 +49,10 @@ class TextFormatter(Formatter):
             format1 = '%s'
         stdout.write('\n')
         for field in fields:
-            value = self._get_value(resource, field)
+            value = field.get(resource, self.context)
             if not value:
                 continue
-            stdout.write(format0 % field)
+            stdout.write(format0 % field.name)
             stdout.write('  ')
             stdout.write(format1 % value)
             stdout.write('\n')
@@ -86,15 +69,13 @@ class TextFormatter(Formatter):
         settings = context.settings
         stdout = context.terminal.stdout
         info = schema.type_info(type(collection))
-        rel = info[2]
-        fields = self._get_fields(rel)
-        fields = self._filter_fields(fields, info[0])
+        fields = self._get_fields(info[0], 'L')
         # Calculate the width of each column
         if stdout.isatty() and not settings['wide']:
-            widths = [ len(f) for f in fields ]
+            widths = [ len(f.name) for f in fields ]
             for resource in collection:
                 for i in range(len(fields)):
-                    value = self._get_value(resource, fields[i])
+                    value = fields[i].get(resource, self.context)
                     widths[i] = max(widths[i], len(value))
             total = sum(widths) + 2*len(fields)
             # Now downsize if it doesn't fit
@@ -119,7 +100,7 @@ class TextFormatter(Formatter):
         if settings['header']:
             # Header
             for i in range(len(fields)):
-                stdout.write(formats[i] % fields[i])
+                stdout.write(formats[i] % fields[i].name)
                 if i != len(fields)-1:
                     stdout.write('  ')
             stdout.write('\n')
@@ -131,7 +112,7 @@ class TextFormatter(Formatter):
             stdout.write('\n')
         # Data elements
         for resource in collection:
-            values = [ self._get_value(resource, field) for field in fields ]
+            values = [ field.get(resource, self.context) for field in fields ]
             while sum([len(v) for v in values]) > 0:
                 for i in range(len(fields)):
                     stdout.write(formats[i] % values[i])

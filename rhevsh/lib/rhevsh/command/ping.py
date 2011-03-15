@@ -6,6 +6,7 @@
 # python-rhev is copyright (c) 2010-2011 by the python-rhev authors. See
 # the file "AUTHORS" for a complete overview.
 
+from rhev import Error
 from rhevsh.command.command import RhevCommand
 
 
@@ -26,12 +27,11 @@ class PingCommand(RhevCommand):
         """
 
     def execute(self):
-        self.check_connection()
-        connection = self.context.connection
+        connection = self.check_connection()
         stdout = self.context.terminal.stdout
         try:
             connection.ping()
-        except RhevError:
+        except Error:
             stdout.write('error: could NOT reach RHEV manager\n')
         else:
             stdout.write('success: RHEV manager could be reached OK\n')

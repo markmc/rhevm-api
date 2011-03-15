@@ -10,6 +10,7 @@ from string import Template
 
 import rhev
 from rhev import schema
+from rhevsh import metadata
 
 from cli.command import Command
 from cli.error import CommandError
@@ -22,90 +23,50 @@ class RhevCommand(Command):
         """ensure we have a connection."""
         if self.context.connection is None:
             self.error('not connected', help='try \'help connect\'')
-
-    def resolve_type(self, name):
-        """return a rhev.schema.* mapping type for a type name."""
-        info = schema.type_info(name)
-        if info is None:
-            plural = schema.plural(name)
-            if plural is None:
-                self.error('no such type: %s' % name)
-            info = schema.type_info(name)
-            assert info is not None
-            return info[0]._SupersedingClass()
-        return info[1]._SupersedingClass()
-
-    def resolve_plural_type(self, name):
-        """resolve a plural type only."""
-        info = schema.type_info(name)
-        if info is None:
-            self.error('no such type: %s' % name)
-        return info[1]._SupersedingClass()
-
-    def resolve_singular_type(self, name):
-        """return a singular type only."""
-        plural = schema.plural(name)
-        if plural is None:
-            self.error('no such type: %s' % name)
-        info = schema.type_info(plural)
-        assert info is not None
-        return info[0]._SupersedingClass()
+        return self.context.connection
 
     def resolve_base(self, options):
         """resolve a base object from a set of '--typeid value' options."""
-        self.check_connection()
+        connection = self.check_connection()
         path = []
         for opt in options:
             if not opt.endswith('id'):
                 continue
             typename = opt[2:-2]
-            typ = self.resolve_singular_type(typename)
-            if typ is None:
+            info = schema.type_info(typename)
+            if info is None:
                 self.error('unknown type: %s' % typename)
-            path.append((typ, typename, options[opt]))
+            path.append((info[0], typename, options[opt]))
         base = None
         for (typ,typename,id) in path:
-            try:
-                base = self.context.connection.get(typ, id=id, base=base)
-            except rhev.Error:
-                base = None  # work around RHEV issue #120
+            base = self.get_object(typ, id, base)
             if base is None:
-                base = self.context.connection.get(typ, name=id, base=base)
-                if base is None:
-                    self.error('could not locate %s: %s' %  (typename, id))
-                    return
+                self.error('could not locate %s: %s' %  (typename, id))
+                return
         return base
+
+    def create_object(self, typ, options):
+        """Create a new object of type `typ' based on the command-line
+        options in `options'."""
+        obj = schema.new(typ)
+        fields = metadata.get_fields(typ, 'C')
+        for field in fields:
+            key = '--%s' % field.name
+            if key in options:
+                field.set(obj, options[key], self.context)
+        return obj
 
     def update_object(self, obj, options):
         """Create a new binding type of type `typ', and set its attributes
         with values from `options'."""
-        attrs = [ opt for opt in options if not opt.endswith('id') ]
-        attrs.sort()
-        for attr in attrs:
-            baseobj = obj
-            basetype = type(obj)
-            walked = []
-            path = attr[2:].split('-')
-            for pa in path[:-1]:
-                walked.append(pa)
-                try:
-                    subobj = getattr(baseobj, pa) 
-                    subtype = getattr(basetype, pa)
-                except AttributeError:
-                    self.error('no such attribute: %s' % '.'.join(walked))
-                if subobj is None:
-                    subtype = schema.subtype(subtype)
-                    if issubclass(subtype, schema.ComplexType):
-                        setattr(baseobj, pa, schema.new(subtype))
-                        subobj = getattr(baseobj, pa)
-                baseobj = subobj
-                basetype = subtype
-            if not hasattr(basetype, path[-1]):
-                self.error('no such attribute: %s' % attr)
-            setattr(baseobj, path[-1], options[attr])
-        return obj 
+        fields = metadata.get_fields(type(obj), 'U')
+        for field in fields:
+            key = '--%s' % field.name
+            if key in options:
+                field.set(obj, options[key], self.context)
+        return obj
 
-    def read_input(self):
+    def read_object(self):
         """If input was provided via stdin, then parse it and return a binding
         instance."""
         stdin = self.context.terminal.stdin
@@ -120,59 +81,6 @@ class RhevCommand(Command):
             self.error('could not parse input')
         return obj
 
-    def get_singular_types(self):
-        """Return a list of valid top-level singular types."""
-        types = []
-        for info in schema._mapping_data:
-            if info[1] and info[2]:
-                name = schema.singular(info[2])
-                types.append(name)
-        return types
-
-    def get_plural_types(self):
-        """Return a list of valid top-level plural types."""
-        types = []
-        for info in schema._mapping_data:
-            if info[1] and info[2]:
-                types.append(info[2])
-        return types
-
-    def get_attributes(self, typ, prefix=''):
-        """Return a list of valid attributes for a type."""
-        attrs = []
-        for elem in typ._ElementMap:
-            name = elem.localName()
-            if name in ('actions', 'link', 'fault'):
-                continue
-            prop = getattr(typ, name)
-            if not isinstance(prop, property):
-                continue
-            subtype = schema.subtype(prop)
-            if issubclass(subtype, schema.ComplexType):
-                info = schema.type_info(subtype)
-                if info is None:
-                    attrs += self.get_attributes(subtype, prefix + name + '.')
-                elif info[3]:
-                    attrs.append('%s%s.id' % (prefix, name))
-                    attrs.append('%s%s.name' % (prefix, name))
-            elif issubclass(subtype, schema.SimpleType):
-                attrs.append('%s%s' % (prefix, name))
-        for attr in typ._AttributeMap:
-            if not prefix and attr in ('id', 'href'):
-                continue
-            name = attr.localName()
-            attrs.append('%s%s' % (prefix, name))
-        return attrs
-
-    def get_attribute_options(self, typ):
-        """Return a list of valid data binding options for a type."""
-        attrs = self.get_attributes(typ)
-        options = []
-        for attr in attrs:
-            option = '--%s' % attr.replace('.', '-')
-            options.append(option)
-        return options
-
     def get_object(self, typ, id, base):
         """Return an object by id or name."""
         self.check_connection()
@@ -185,10 +93,27 @@ class RhevCommand(Command):
             obj = connection.get(typ, name=id, base=base)
         return obj
 
-    def get_actions(self, obj):
-        """Return the actions supported for the object `obj'."""
-        actions = []
-        if hasattr(obj, 'actions') and obj.actions:
-            for link in obj.actions.link:
-                actions.append(link.rel)
-        return actions
+    def _get_types(self, plural):
+        """INTERNAL: return a list of types."""
+        connection = self.check_connection()
+        links = connection.get_links(connection.api())
+        types = [ schema.type_info(link) for link in links ]
+        ix = 2 + int(plural)
+        types = [ info[ix] for info in types if info and info[ix] ]
+        return types
+
+    def get_singular_types(self):
+        """Return a list of singular types."""
+        return self._get_types(False)
+
+    def get_plural_types(self):
+        """Return a list of plural types."""
+        return self._get_types(True)
+
+    def get_options(self, typ, action=None):
+        """Return a list of options for typ/action."""
+        flag = self.name[0].upper()
+        fields = metadata.get_fields(typ, flag, action=action)
+        options = [ '--%-20s %s' % (field.name, field.description)
+                    for field in fields ]
+        return options

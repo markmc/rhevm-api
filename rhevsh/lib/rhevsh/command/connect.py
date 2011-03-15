@@ -41,13 +41,14 @@ class ConnectCommand(RhevCommand):
         """
 
     def execute(self):
+        args = self.arguments
         settings = self.context.settings
         stdout = self.context.terminal.stdout
         if self.context.connection is not None:
             stdout.write('already connected\n')
             return
-        if len(self.arguments) == 3:
-            url, username, password = self.arguments
+        if len(args) == 3:
+            url, username, password = args
         else:
             url = settings.get('url')
             if not url:

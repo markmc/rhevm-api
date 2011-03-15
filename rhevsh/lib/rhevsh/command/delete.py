@@ -70,26 +70,28 @@ class DeleteCommand(RhevCommand):
 
     def execute(self):
         """Execute "delete"."""
-        self.check_connection()
-        stdout = self.context.terminal.stdout
-        typename, id = self.arguments
-        typ = self.resolve_singular_type(typename)
-        base = self.resolve_base(self.options)
-        obj = self.get_object(typ, id, base)
+        args = self.arguments
+        opts = self.options
+        connection = self.check_connection()
+        info = schema.type_info(args[0])
+        if info is None:
+            self.error('no such type: %s' % args[0])
+        base = self.resolve_base(opts)
+        obj = self.get_object(info[0], args[1], base)
         if obj is None:
             self.error('object does not exist')
-        connection = self.context.connection
         result = connection.delete(obj)
         self.context.formatter.format(self.context, result)
 
     def show_help(self):
         """Show help for "delete"."""
+        self.check_connection()
         helptext = self.helptext
         subst = {}
         types = self.get_singular_types()
         subst['types'] = self.format_list(types)
         statuses = self.get_statuses()
         subst['statuses'] = self.format_list(statuses)
-        stdout = self.context.terminal.stdout
         helptext = self.format_help(helptext, subst)
+        stdout = self.context.terminal.stdout
         stdout.write(helptext)

@@ -22,7 +22,7 @@ from pyxb.exceptions_ import PyXBException
 _mapping_data = \
 [
     # (resource, collection, singular, relationship)
-    (_schema.API, None, '/', None),
+    (_schema.API, None, 'api', '/'),
     (_schema.DataCenter, _schema.DataCenters, 'datacenter', 'datacenters'),
     (_schema.Cluster, _schema.Clusters, 'cluster', 'clusters'),
     (_schema.StorageDomain, _schema.StorageDomains, 'storagedomain', 'storagedomains'),

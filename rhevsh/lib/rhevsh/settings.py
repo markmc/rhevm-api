@@ -35,7 +35,6 @@ class RhevshSettings(Settings):
         'output_format': 'text',
         'wide': False,
         'header': True,
-        'fields': 'name,id,status'
     })
     example = textwrap.dedent("""\
         [main]
@@ -46,5 +45,4 @@ class RhevshSettings(Settings):
         #output_format = %(output_format)s
         #wide = %(wide)s
         #header = %(header)s
-        #fields = %(fields)s
     """) % defaults

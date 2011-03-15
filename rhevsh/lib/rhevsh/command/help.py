@@ -115,6 +115,7 @@ class HelpCommand(RhevCommand):
 
     def execute(self):
         args = self.arguments
+        opts = self.options
         stdout = self.context.terminal.stdout
         if len(args) == 0:
             subst = {}
@@ -125,7 +126,7 @@ class HelpCommand(RhevCommand):
         else:
             name = args[0]
             args = args[1:]
-            opts = [('--help', None)]
-            opts += self.options.items()
+            opts = opts.items()
+            opts += [('--help', None)]
             command = self.context._create_command(name, args, opts)
             command.run(self.context)

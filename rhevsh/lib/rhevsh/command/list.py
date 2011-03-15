@@ -74,24 +74,26 @@ class ListCommand(RhevCommand):
 
     def execute(self):
         """Execute "list"."""
-        self.check_connection()
-        stdout = self.context.terminal.stdout
-        typename = self.arguments[0]
-        typ = self.resolve_plural_type(typename)
-        base = self.resolve_base(self.options)
+        args = self.arguments
+        opts = self.options
+        connection = self.check_connection()
+        info = schema.type_info(args[0])
+        if info is None:
+            self.error('no such type: %s' % args[0])
+        base = self.resolve_base(opts)
         search = ' '.join(self.arguments[1:])
-        connection = self.context.connection
-        result = connection.getall(typ, base=base, search=search)
+        result = connection.getall(info[0], base=base, search=search)
         self.context.formatter.format(self.context, result)
 
     def show_help(self):
         """Show help for "list"."""
+        self.check_connection()
         helptext = self.helptext
         subst = {}
         types = self.get_plural_types()
         subst['types'] = self.format_list(types)
         statuses = self.get_statuses()
         subst['statuses'] = self.format_list(statuses)
-        stdout = self.context.terminal.stdout
         helptext = self.format_help(helptext, subst)
+        stdout = self.context.terminal.stdout
         stdout.write(helptext)
