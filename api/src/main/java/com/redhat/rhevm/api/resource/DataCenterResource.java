@@ -18,27 +18,13 @@
  */
 package com.redhat.rhevm.api.resource;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Produces;
-import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 
 import com.redhat.rhevm.api.model.DataCenter;
 
-
 @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
 public interface DataCenterResource extends UpdatableResource<DataCenter> {
-
-    @GET
-    @Formatted
-    public DataCenter get();
-
-    @PUT
-    @Formatted
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
-    public DataCenter update(DataCenter dataCenter);
 
     @Path("files")
     public FilesResource getFilesResource();
