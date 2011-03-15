@@ -70,4 +70,44 @@ public class MockUserResourceTest extends MockTestBase {
         checkUser(t);
         assertEquals(user.getId(), t.getId());
     }
+
+    @Test
+    public void testAddUser() throws Exception {
+        MockTestBase.UsersResource service = getService();
+        assertNotNull(service);
+
+        Users users = service.list(null);
+        assertNotNull(users);
+        assertTrue(users.getUsers().size() > 0);
+
+        User user = new User();
+        Integer id = users.getUsers().size() + 1;
+        user.setName("user" + id);
+        user.setUserName("user_" +id);
+
+        User result = service.add(user);
+        assertNotNull(result);
+        checkUser(result);
+        assertEquals(id.toString(), result.getId());
+        assertEquals(user.getName(), result.getName());
+        assertEquals(user.getUserName(), result.getUserName());
+    }
+
+    @Test
+    public void testRemoveUsers() throws Exception {
+        MockTestBase.UsersResource service = getService();
+        assertNotNull(service);
+
+        Users users = service.list(null);
+        assertNotNull(users);
+        assertTrue(users.getUsers().size() > 0);
+
+        for (User user : users.getUsers()) {
+            service.remove(user.getId());
+        }
+
+        users = service.list(null);
+        assertNotNull(users);
+        assertTrue(users.getUsers().size() == 0);
+    }
 }

@@ -28,6 +28,7 @@ import org.junit.Assert;
 import org.junit.Before;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HEAD;
 import javax.ws.rs.PUT;
@@ -118,7 +119,8 @@ public class MockTestBase extends Assert {
     protected interface UsersResource {
         @GET public Users list(@QueryParam("search") String query);
         @GET @Path("{id}") public User get(@PathParam("id") String id);
-        @PUT @Path("{id}") @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML}) public User update(@PathParam("id") String id, User user);
+        @POST @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML}) public User add(User user);
+        @DELETE @Path("{id}") public void remove(@PathParam("id") String id);
     }
 
     protected UsersResource createUsersResource(String uri) {
