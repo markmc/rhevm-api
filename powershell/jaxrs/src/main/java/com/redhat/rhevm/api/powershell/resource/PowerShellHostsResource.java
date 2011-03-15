@@ -43,13 +43,11 @@ public class PowerShellHostsResource
     extends AbstractPowerShellCollectionResource<Host, PowerShellHostResource>
     implements HostsResource {
 
-    private static final String PROCESS_HOSTS = " | foreach '{' {0}  {1} '}'";
+    private static final String PROCESS_HOSTS_TMPL = " | foreach '{' $_; {0} '}'";
 
-    private static final String GET_STATS = "$_.getmemorystatistics(); $_.getcpustatistics(); ";
-    static final String PROCESS_HOSTS_LIST = MessageFormat.format(PROCESS_HOSTS, "$_; ", " ");
-    static final String PROCESS_HOSTS_LIST_STATS = MessageFormat.format(PROCESS_HOSTS, "$_; ", GET_STATS);
-    static final String PROCESS_HOSTS_ADD = MessageFormat.format(PROCESS_HOSTS, " ", " ");
-    static final String PROCESS_HOSTS_ADD_STATS = MessageFormat.format(PROCESS_HOSTS, " ", GET_STATS);
+    static final String PROCESS_HOSTS = MessageFormat.format(PROCESS_HOSTS_TMPL, " ");
+    static final String PROCESS_HOSTS_STATS = MessageFormat.format(PROCESS_HOSTS_TMPL,
+                                                                   "$_.getmemorystatistics(); $_.getcpustatistics(); ");
 
     public List<Host> runAndParse(String command) {
         return PowerShellHostResource.runAndParse(getPool(), getParser(), command);
@@ -62,7 +60,7 @@ public class PowerShellHostsResource
     @Override
     public Hosts list() {
         Hosts ret = new Hosts();
-        for (Host host : runAndParse(getSelectCommand("select-host", getUriInfo(), Host.class) + getProcess(false))) {
+        for (Host host : runAndParse(getSelectCommand("select-host", getUriInfo(), Host.class) + getProcess())) {
             ret.getHosts().add(PowerShellHostResource.addLinks(getUriInfo(), host));
         }
         return ret;
@@ -127,7 +125,7 @@ public class PowerShellHostsResource
             }
         }
 
-        buf.append(";$h").append(getProcess(true));
+        buf.append(";$h").append(getProcess());
 
         host = PowerShellHostResource.addLinks(getUriInfo(), runAndParseSingle(buf.toString()));
 
@@ -166,9 +164,7 @@ public class PowerShellHostsResource
         return buf.toString();
     }
 
-    private String getProcess(boolean add) {
-        return include(getHttpHeaders(), "statistics")
-               ? (add ? PROCESS_HOSTS_ADD_STATS : PROCESS_HOSTS_LIST_STATS)
-               : (add ? PROCESS_HOSTS_ADD : PROCESS_HOSTS_LIST);
+    private String getProcess() {
+        return include(getHttpHeaders(), "statistics") ? PROCESS_HOSTS_STATS : PROCESS_HOSTS;
     }
 }

@@ -48,8 +48,8 @@ import static org.powermock.api.easymock.PowerMock.createMock;
 import static org.powermock.api.easymock.PowerMock.mockStatic;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 
-import static com.redhat.rhevm.api.powershell.resource.PowerShellHostsResource.PROCESS_HOSTS_LIST;
-import static com.redhat.rhevm.api.powershell.resource.PowerShellHostsResource.PROCESS_HOSTS_LIST_STATS;
+import static com.redhat.rhevm.api.powershell.resource.PowerShellHostsResource.PROCESS_HOSTS;
+import static com.redhat.rhevm.api.powershell.resource.PowerShellHostsResource.PROCESS_HOSTS_STATS;
 
 public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<Host, PowerShellHostResource> {
 
@@ -92,7 +92,7 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
     @Test
     public void testGet() throws Exception {
         setUpHttpHeaderNullExpectations("Accept");
-        setUriInfo(setUpHostExpectations(GET_COMMAND + PROCESS_HOSTS_LIST,
+        setUriInfo(setUpHostExpectations(GET_COMMAND + PROCESS_HOSTS,
                                          formatHost(HOST_NAME),
                                          HOST_NAME));
         verifyHost(resource.get(), HOST_NAME);
@@ -101,7 +101,7 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
     @Test
     public void testGetIncludeStatistics() throws Exception {
         setUpHttpHeaderExpectations("Accept", "application/xml; detail=statistics");
-        setUriInfo(setUpHostExpectations(GET_COMMAND + PROCESS_HOSTS_LIST_STATS,
+        setUriInfo(setUpHostExpectations(GET_COMMAND + PROCESS_HOSTS_STATS,
                                          formatHost(HOST_NAME),
                                          HOST_NAME));
         Host host = resource.get();
@@ -112,7 +112,7 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
     @Test
     public void testGet22() throws Exception {
         setUpHttpHeaderNullExpectations("Accept");
-        setUriInfo(setUpHostExpectations(GET_COMMAND + PROCESS_HOSTS_LIST,
+        setUriInfo(setUpHostExpectations(GET_COMMAND + PROCESS_HOSTS,
                                          formatHost("host22", HOST_NAME),
                                          HOST_NAME));
         verifyHost(resource.get(), HOST_NAME);
@@ -121,7 +121,7 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
     @Test
     public void testGoodUpdate() throws Exception {
         setUpHttpHeaderNullExpectations("Accept");
-        setUriInfo(setUpHostExpectations(UPDATE_COMMAND + PROCESS_HOSTS_LIST,
+        setUriInfo(setUpHostExpectations(UPDATE_COMMAND + PROCESS_HOSTS,
                                          formatHost("eris"),
                                          "eris"));
         verifyHost(resource.update(getHost(HOST_ID, "eris")), "eris");
@@ -130,7 +130,7 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
     @Test
     public void testUpdateIncludeStatistics() throws Exception {
         setUpHttpHeaderExpectations("Accept", "application/xml; detail=statistics");
-        setUriInfo(setUpHostExpectations(UPDATE_COMMAND + PROCESS_HOSTS_LIST_STATS,
+        setUriInfo(setUpHostExpectations(UPDATE_COMMAND + PROCESS_HOSTS_STATS,
                                          formatHost("eris"),
                                          "eris"));
         Host host = resource.update(getHost(HOST_ID, "eris"));
@@ -155,7 +155,7 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
         host.getPowerManagement().getOptions().getOptions().add(buildOption("port", "12345"));
         host.getPowerManagement().getOptions().getOptions().add(buildOption("slot", "54321"));
 
-        setUriInfo(setUpHostExpectations(UPDATE_PM_COMMAND + PROCESS_HOSTS_LIST,
+        setUriInfo(setUpHostExpectations(UPDATE_PM_COMMAND + PROCESS_HOSTS,
                                          formatHost("eris"),
                                          "eris"));
 

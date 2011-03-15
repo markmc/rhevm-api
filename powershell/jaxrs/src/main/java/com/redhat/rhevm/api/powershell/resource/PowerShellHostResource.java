@@ -54,8 +54,8 @@ import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
 import static com.redhat.rhevm.api.common.util.DetailHelper.include;
 import static com.redhat.rhevm.api.powershell.resource.PowerShellHostsResource.joinPowerManagementOptions;
-import static com.redhat.rhevm.api.powershell.resource.PowerShellHostsResource.PROCESS_HOSTS_LIST;
-import static com.redhat.rhevm.api.powershell.resource.PowerShellHostsResource.PROCESS_HOSTS_LIST_STATS;
+import static com.redhat.rhevm.api.powershell.resource.PowerShellHostsResource.PROCESS_HOSTS;
+import static com.redhat.rhevm.api.powershell.resource.PowerShellHostsResource.PROCESS_HOSTS_STATS;
 
 public class PowerShellHostResource extends AbstractPowerShellActionableResource<Host> implements HostResource {
 
@@ -364,7 +364,7 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
     }
 
     private String getProcess() {
-        return include(getHttpHeaders(), "statistics") ? PROCESS_HOSTS_LIST_STATS : PROCESS_HOSTS_LIST;
+        return include(getHttpHeaders(), "statistics") ? PROCESS_HOSTS_STATS : PROCESS_HOSTS;
     }
 
     static String getClusterArg(StringBuilder buf, Host host) {
