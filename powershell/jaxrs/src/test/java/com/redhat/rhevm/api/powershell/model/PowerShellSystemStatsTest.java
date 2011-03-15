@@ -20,7 +20,6 @@ package com.redhat.rhevm.api.powershell.model;
 
 import org.junit.Test;
 
-import java.util.List;
 
 public class PowerShellSystemStatsTest extends PowerShellModelTest {
 

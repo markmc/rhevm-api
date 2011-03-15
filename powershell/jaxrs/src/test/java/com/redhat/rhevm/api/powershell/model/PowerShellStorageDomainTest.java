@@ -26,7 +26,6 @@ import com.redhat.rhevm.api.model.Storage;
 import com.redhat.rhevm.api.model.StorageDomainStatus;
 import com.redhat.rhevm.api.model.StorageDomainType;
 import com.redhat.rhevm.api.model.StorageType;
-import com.redhat.rhevm.api.powershell.model.PowerShellStorageDomain;
 
 
 public class PowerShellStorageDomainTest extends PowerShellModelTest {

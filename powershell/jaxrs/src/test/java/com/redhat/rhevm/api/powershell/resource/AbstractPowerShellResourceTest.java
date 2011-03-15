@@ -28,7 +28,6 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.Action;
-import com.redhat.rhevm.api.model.BaseResource;
 import com.redhat.rhevm.api.model.Status;
 import com.redhat.rhevm.api.powershell.util.ControllableExecutor;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
