@@ -20,7 +20,6 @@ package com.redhat.rhevm.api.mock.resource;
 
 import org.junit.Test;
 
-import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.StorageDomains;
