@@ -36,9 +36,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.redhat.rhevm.api.common.invocation.Current;
-import com.redhat.rhevm.api.common.security.auth.Principal;
-import com.redhat.rhevm.api.common.security.auth.Scheme;
-import com.redhat.rhevm.api.common.security.auth.Challenger;
 
 import junit.framework.Assert;
 

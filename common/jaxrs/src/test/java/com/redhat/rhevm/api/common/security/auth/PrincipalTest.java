@@ -21,7 +21,6 @@ package com.redhat.rhevm.api.common.security.auth;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.redhat.rhevm.api.common.security.auth.Principal;
 
 public class PrincipalTest extends Assert {
 

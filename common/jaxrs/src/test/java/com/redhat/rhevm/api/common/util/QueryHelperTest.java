@@ -34,7 +34,6 @@ import com.redhat.rhevm.api.model.VM;
 import org.junit.Assert;
 import org.junit.Test;
 
-import org.easymock.classextension.EasyMock;
 
 import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.expect;

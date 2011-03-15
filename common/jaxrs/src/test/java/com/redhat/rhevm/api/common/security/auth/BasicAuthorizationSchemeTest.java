@@ -28,9 +28,6 @@ import org.easymock.classextension.IMocksControl;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.redhat.rhevm.api.common.security.auth.BasicAuthorizationScheme;
-import com.redhat.rhevm.api.common.security.auth.Principal;
-import com.redhat.rhevm.api.common.security.auth.Scheme;
 
 import junit.framework.Assert;
 
