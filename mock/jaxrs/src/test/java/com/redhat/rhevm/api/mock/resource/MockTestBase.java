@@ -59,6 +59,8 @@ import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.StorageDomains;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.Templates;
+import com.redhat.rhevm.api.model.User;
+import com.redhat.rhevm.api.model.Users;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.resource.MediaType;
@@ -109,6 +111,18 @@ public class MockTestBase extends Assert {
 
     protected HostsResource createHostsResource(String uri) {
         return ProxyFactory.create(HostsResource.class, uri);
+    }
+
+    @Path("/")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
+    protected interface UsersResource {
+        @GET public Users list(@QueryParam("search") String query);
+        @GET @Path("{id}") public User get(@PathParam("id") String id);
+        @PUT @Path("{id}") @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML}) public User update(@PathParam("id") String id, User user);
+    }
+
+    protected UsersResource createUsersResource(String uri) {
+        return ProxyFactory.create(UsersResource.class, uri);
     }
 
     @Path("/")
@@ -205,6 +219,10 @@ public class MockTestBase extends Assert {
         hosts.setExecutor(executor);
         hosts.populate();
         server.getDeployment().getDispatcher().getRegistry().addSingletonResource(hosts);
+        MockUsersResource users = new MockUsersResource();
+        users.setExecutor(executor);
+        users.populate();
+        server.getDeployment().getDispatcher().getRegistry().addSingletonResource(users);
         MockNetworksResource networks = new MockNetworksResource();
         networks.setExecutor(executor);
         networks.populate();

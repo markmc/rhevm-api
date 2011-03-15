@@ -45,7 +45,7 @@ public class MockHostResourceTest extends MockTestBase {
                 break;
             }
         }
-        assertTrue("expected approe link", includesApproveLink);
+        assertTrue("expected approve link", includesApproveLink);
     }
 
     @Test
