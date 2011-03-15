@@ -462,6 +462,7 @@
           </dependencies>
           <configuration>
             <consoleOutput>true</consoleOutput>
+            <includeTestSourceDirectory>true</includeTestSourceDirectory>
             <configLocation>checkstyle.xml</configLocation>
           </configuration>
           <executions>
