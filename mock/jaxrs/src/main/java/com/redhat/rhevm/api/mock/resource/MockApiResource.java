@@ -24,9 +24,14 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.API;
+import com.redhat.rhevm.api.model.ApiSummary;
+import com.redhat.rhevm.api.model.Hosts;
 import com.redhat.rhevm.api.model.LinkHeader;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.ObjectFactory;
+import com.redhat.rhevm.api.model.StorageDomains;
+import com.redhat.rhevm.api.model.Users;
+import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.resource.ApiResource;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 
@@ -122,6 +127,28 @@ public class MockApiResource implements ApiResource {
         return responseBuilder;
     }
 
+    private ApiSummary addSummary(API api) {
+        ApiSummary summary = new ApiSummary();
+
+        summary.setHosts(new Hosts());
+        summary.getHosts().setActive(1L);
+        summary.getHosts().setTotal(2L);
+
+        summary.setStorageDomains(new StorageDomains());
+        summary.getStorageDomains().setActive(2L);
+        summary.getStorageDomains().setTotal(4L);
+
+        summary.setUsers(new Users());
+        summary.getUsers().setActive(4L);
+        summary.getUsers().setTotal(8L);
+
+        summary.setVMs(new VMs());
+        summary.getVMs().setActive(8L);
+        summary.getVMs().setTotal(16L);
+
+        return summary;
+    }
+
     @Override
     public Response head() {
         API api = addLinks(new API());
@@ -131,6 +158,7 @@ public class MockApiResource implements ApiResource {
     @Override
     public Response get() {
         API api = addLinks(new API());
+        api.setSummary(addSummary(api));
         return getResponseBuilder(api).entity(api).build();
     }
 

@@ -25,6 +25,8 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import org.jboss.resteasy.client.ClientResponse;
 import com.redhat.rhevm.api.model.API;
+import com.redhat.rhevm.api.model.ApiSummary;
+import com.redhat.rhevm.api.model.BaseResources;
 import com.redhat.rhevm.api.model.LinkHeader;
 import com.redhat.rhevm.api.model.Link;
 
@@ -92,5 +94,26 @@ public class MockApiResourceTest extends MockTestBase {
         for (int i = 0; i < relationships.length; i++) {
             assertEquals(relationships[i], api.getLinks().get(i).getRel());
         }
+    }
+
+    @Test
+    public void testGetSummary() throws Exception {
+        ClientResponse<API> response = api.get();
+        testResponse(response);
+
+        API api = response.getEntity();
+        ApiSummary summary = api.getSummary();
+
+        assertNotNull(summary);
+        checkSummary(summary.getHosts(), 1L, 2L);
+        checkSummary(summary.getStorageDomains(), 2L, 4L);
+        checkSummary(summary.getUsers(), 4L, 8L);
+        checkSummary(summary.getVMs(), 8L, 16L);
+    }
+
+    private void checkSummary(BaseResources summary, Long active, Long total) {
+        assertNotNull(summary);
+        assertEquals(active, summary.getActive());
+        assertEquals(total, summary.getTotal());
     }
 }
