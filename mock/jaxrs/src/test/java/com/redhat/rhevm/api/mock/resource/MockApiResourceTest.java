@@ -41,6 +41,7 @@ public class MockApiResourceTest extends MockTestBase {
         "hosts",
         "hosts/search",
         "networks",
+        "roles",
         "storagedomains",
         "storagedomains/search",
         "templates",

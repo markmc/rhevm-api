@@ -61,6 +61,7 @@ public class MockApiResource implements ApiResource {
         addLink(api, "datacenters");
         addLink(api, "hosts");
         addLink(api, "networks", false); // powershell has no select-network command
+        addLink(api, "roles", false);
         addLink(api, "storagedomains");
         addLink(api, "templates");
         addLink(api, "users");

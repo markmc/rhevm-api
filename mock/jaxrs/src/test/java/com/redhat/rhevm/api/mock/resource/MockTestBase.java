@@ -56,6 +56,8 @@ import com.redhat.rhevm.api.model.LinkHeader;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.Networks;
+import com.redhat.rhevm.api.model.Role;
+import com.redhat.rhevm.api.model.Roles;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.StorageDomains;
 import com.redhat.rhevm.api.model.Template;
@@ -125,6 +127,19 @@ public class MockTestBase extends Assert {
 
     protected UsersResource createUsersResource(String uri) {
         return ProxyFactory.create(UsersResource.class, uri);
+    }
+
+    @Path("/")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
+    protected interface RolesResource {
+        @GET public Roles list(@QueryParam("search") String query);
+        @GET @Path("{id}") public Role get(@PathParam("id") String id);
+        @POST @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML}) public Role add(Role role);
+        @DELETE @Path("{id}") public void remove(@PathParam("id") String id);
+    }
+
+    protected RolesResource createRolesResource(String uri) {
+        return ProxyFactory.create(RolesResource.class, uri);
     }
 
     @Path("/")
@@ -225,6 +240,10 @@ public class MockTestBase extends Assert {
         users.setExecutor(executor);
         users.populate();
         server.getDeployment().getDispatcher().getRegistry().addSingletonResource(users);
+        MockRolesResource roles = new MockRolesResource();
+        roles.setExecutor(executor);
+        roles.populate();
+        server.getDeployment().getDispatcher().getRegistry().addSingletonResource(roles);
         MockNetworksResource networks = new MockNetworksResource();
         networks.setExecutor(executor);
         networks.populate();
