@@ -129,7 +129,7 @@ public class PowerShellStorageDomainsResourceTest
     }
 
     protected PowerShellStorageDomainsResource getResource() {
-	return new PowerShellStorageDomainsResource();
+        return new PowerShellStorageDomainsResource();
     }
 
     protected void populateModel(StorageDomain storageDomain) {

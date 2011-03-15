@@ -166,7 +166,7 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
     }
 
     protected PowerShellClustersResource getResource() {
-	return new PowerShellClustersResource();
+        return new PowerShellClustersResource();
     }
 
     protected void populateModel(Cluster cluster) {
@@ -252,7 +252,7 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
         buf.append(" -datacenterid " + dataCenterArg);
         buf.append(" -compatibilityversion $version");
 
-	return buf.toString();
+        return buf.toString();
     }
 
     protected String getSupportedVersionCommand(String name) {

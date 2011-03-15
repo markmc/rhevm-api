@@ -30,7 +30,7 @@ import com.redhat.rhevm.api.model.StorageType;
 
 public class PowerShellStorageDomainTest extends PowerShellModelTest {
 
-	private static final long GB = 1024L * 1024L * 1024L;
+    private static final long GB = 1024L * 1024L * 1024L;
 
     private void testStorageDomain(PowerShellStorageDomain s, String id, String name, StorageDomainType type, boolean isMaster, StorageDomainStatus status, Object available, Object used, Object committed) {
         assertEquals(id, s.getId());

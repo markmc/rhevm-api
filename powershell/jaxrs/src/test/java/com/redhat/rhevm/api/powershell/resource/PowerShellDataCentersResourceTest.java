@@ -162,7 +162,7 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
         buf.append(" -datacentertype ISCSI");
         buf.append(" -compatibilityversion $version");
 
-	return buf.toString();
+        return buf.toString();
     }
 
     protected String getCommand(String cmd, String name) {
