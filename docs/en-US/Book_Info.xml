@@ -17,12 +17,9 @@
 	</abstract>
 	<corpauthor>
 		<inlinemediaobject>
-                        <imageobject condition="REST_API_Guide">
-                                <imagedata fileref="Common_Content/images/title_logo.svg" format="SVG" />
-                        </imageobject>
-			<textobject condition="Community_REST_API_Guide">
-				<phrase>Community Project</phrase>
-			</textobject>
+			<imageobject>
+				<imagedata fileref="Common_Content/images/title_logo.svg" format="SVG" />
+			</imageobject>
 		</inlinemediaobject>
 	</corpauthor>
 	<xi:include href="Common_Content/Legal_Notice.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
