@@ -66,6 +66,8 @@ import com.redhat.rhevm.api.model.User;
 import com.redhat.rhevm.api.model.Users;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
+import com.redhat.rhevm.api.model.VmPool;
+import com.redhat.rhevm.api.model.VmPools;
 import com.redhat.rhevm.api.resource.MediaType;
 import com.redhat.rhevm.api.common.resource.DefaultCapabilitiesResource;
 
@@ -102,6 +104,19 @@ public class MockTestBase extends Assert {
 
     protected VmsResource createVmsResource(String uri) {
         return ProxyFactory.create(VmsResource.class, uri);
+    }
+
+    @Path("/")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
+    protected interface VmPoolsResource {
+        @GET public VmPools list(@QueryParam("search") String query);
+        @GET @Path("{id}") public VmPool get(@PathParam("id") String id);
+        @POST @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML}) public VmPool add(VmPool pool);
+        @DELETE @Path("{id}") public void remove(@PathParam("id") String id);
+    }
+
+    protected VmPoolsResource createVmPoolsResource(String uri) {
+        return ProxyFactory.create(VmPoolsResource.class, uri);
     }
 
     @Path("/")
@@ -227,37 +242,52 @@ public class MockTestBase extends Assert {
             new ThreadPoolExecutor(5, 100, 3600, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
         server.setPort(port);
         server.start();
+
         server.getDeployment().getDispatcher().getRegistry().addSingletonResource(new MockApiResource());
+
         MockVmsResource vms = new MockVmsResource();
         vms.setExecutor(executor);
         vms.populate();
         server.getDeployment().getDispatcher().getRegistry().addSingletonResource(vms);
+
+        MockVmPoolsResource pools = new MockVmPoolsResource();
+        pools.setExecutor(executor);
+        pools.populate();
+        server.getDeployment().getDispatcher().getRegistry().addSingletonResource(pools);
+
         MockHostsResource hosts = new MockHostsResource();
         hosts.setExecutor(executor);
         hosts.populate();
         server.getDeployment().getDispatcher().getRegistry().addSingletonResource(hosts);
+
         MockUsersResource users = new MockUsersResource();
         users.setExecutor(executor);
         users.populate();
         server.getDeployment().getDispatcher().getRegistry().addSingletonResource(users);
+
         MockRolesResource roles = new MockRolesResource();
         roles.setExecutor(executor);
         roles.populate();
         server.getDeployment().getDispatcher().getRegistry().addSingletonResource(roles);
+
         MockNetworksResource networks = new MockNetworksResource();
         networks.setExecutor(executor);
         networks.populate();
         server.getDeployment().getDispatcher().getRegistry().addSingletonResource(networks);
+
         MockTemplatesResource templates = new MockTemplatesResource();
         templates.setExecutor(executor);
         templates.populate();
         server.getDeployment().getDispatcher().getRegistry().addSingletonResource(templates);
+
         MockClustersResource clusters = new MockClustersResource();
         clusters.setExecutor(executor);
         clusters.populate();
         server.getDeployment().getDispatcher().getRegistry().addSingletonResource(clusters);
+
         DefaultCapabilitiesResource caps = new DefaultCapabilitiesResource();
         server.getDeployment().getDispatcher().getRegistry().addSingletonResource(caps);
+
         MockStorageDomainsResource storageDomains = new MockStorageDomainsResource();
         storageDomains.setExecutor(executor);
         storageDomains.populate();

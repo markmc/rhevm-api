@@ -65,6 +65,7 @@ public class MockApiResource implements ApiResource {
         addLink(api, "storagedomains");
         addLink(api, "templates");
         addLink(api, "users");
+        addLink(api, "vmpools");
         addLink(api, "vms");
         return api;
     }

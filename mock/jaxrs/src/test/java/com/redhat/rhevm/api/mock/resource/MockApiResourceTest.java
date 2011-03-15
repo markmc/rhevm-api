@@ -48,6 +48,8 @@ public class MockApiResourceTest extends MockTestBase {
         "templates/search",
         "users",
         "users/search",
+        "vmpools",
+        "vmpools/search",
         "vms",
         "vms/search",
     };
