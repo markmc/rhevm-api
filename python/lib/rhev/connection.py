@@ -7,6 +7,7 @@
 # file "AUTHORS" for a complete overview.
 
 import re
+import time
 import fnmatch
 import logging
 import socket
@@ -24,6 +25,7 @@ class Connection(object):
 
     retries = 5
     verbosity = 1
+    timeout = 300
 
     def __init__(self, url=None, username=None, password=None):
         """Constructor."""
@@ -468,6 +470,36 @@ class Connection(object):
         if self._api is None:
             self._api = self.get(schema.API)
         return self._api
+
+    def wait(self, resource, timeout=None, exists=None, **conditions):
+        """Wait for a resource to enter into a certain state. Extra keyword
+        arguments that are provided specify the condition to wait for. The
+        argument name specifies an attribute and the value the value to wait
+        for."""
+        if not isinstance(resource, schema.BaseResource):
+            raise TypeError, 'Expecting a binding instance.'
+        if not resource.href:
+            raise ValueError, 'Expecting a created binding instance.'
+        if timeout is None:
+            timeout = self.timeout
+        delay = 1
+        match = False
+        start = time.time()
+        while time.time() < start + timeout:
+            resource = self.reload(resource)
+            if resource is None and exists is False or \
+                    resource is not None and exists is True:
+                match = True
+                break
+            for attr in conditions:
+                if getattr(resource, attr) != conditions[attr]:
+                    break
+            else:
+                match = True
+                break
+            time.sleep(delay)
+            delay = min(10, 2*delay)
+        return match
 
     def get_methods(self, obj, base=None):
         """Return the methods that are available for `resource'."""

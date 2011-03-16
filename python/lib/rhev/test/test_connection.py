@@ -8,6 +8,7 @@
 
 from rhev import schema
 from rhev.error import Error
+from rhev.test import util
 from rhev.test.base import BaseTest
 
 from nose.tools import assert_raises
@@ -31,6 +32,32 @@ class TestConnection(BaseTest):
         self.api.retries = 1
         assert_raises(Error, self.api.ping)
         self.api.retries = retries
+
+    def test_wait(self):
+        vm = schema.new(schema.VM)
+        vm.name = util.random_name('vm')
+        vm.type = 'SERVER'
+        vm.memory = 512*1024*1024
+        vm.cluster = schema.new(schema.Cluster)
+        vm.cluster.name = self.get_config('cluster')
+        vm.template = schema.new(schema.Template)
+        vm.template.name = self.get_config('template')
+        vm = self.api.create(vm)
+        assert isinstance(vm, schema.VM)
+        disk = schema.new(schema.Disk)
+        disk.format = 'COW'
+        disk.size = 2024**3
+        disk.sparse = True
+        disk = self.api.create(disk, base=vm)
+        assert isinstance(disk, schema.Disk)
+        assert self.api.wait(vm, exists=True)
+        assert self.api.wait(vm, status='DOWN')
+        self.api.action(vm, 'start')
+        assert self.api.wait(vm, status='UP')
+        self.api.action(vm, 'stop')
+        assert self.api.wait(vm, status='DOWN')
+        self.api.delete(vm)
+        #assert self.api.wait(vm, exists=False)  # BUG
 
     def test_methods(self):
         methods = self.api.get_methods(schema.DataCenters)
