@@ -205,7 +205,7 @@ class Connection(object):
         info = schema.type_info(typ)
         if info is None:
             raise TypeError, 'Unknown binding type: %s' % typ
-        rel = info[2]
+        rel = info[3]
         if rel is None:
             raise TypeError, 'Can\'t resolve URLs for type: %s' % typ
         elif rel.startswith('/'):

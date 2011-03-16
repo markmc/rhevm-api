@@ -21,31 +21,31 @@ from pyxb.exceptions_ import PyXBException
 
 _mapping_data = \
 [
-    # (resource, collection, relationship, toplevel)
-    (_schema.API, None, '/', True),
-    (_schema.DataCenter, _schema.DataCenters, 'datacenters', True),
-    (_schema.Cluster, _schema.Clusters, 'clusters', True),
-    (_schema.StorageDomain, _schema.StorageDomains, 'storagedomains', True),
-    (_schema.Network, _schema.Networks, 'networks', True),
-    (_schema.Host, _schema.Hosts, 'hosts', True),
-    (_schema.HostNIC, _schema.HostNics, 'nics', False),
-    (_schema.Storage, _schema.HostStorage, 'storage', False),
-    (_schema.VM, _schema.VMs, 'vms', True),
-    (_schema.NIC, _schema.Nics, 'nics', False),
-    (_schema.Disk, _schema.Disks, 'disks', False),
-    (_schema.CdRom, _schema.CdRoms, 'cdroms', False),
-    (_schema.Floppy, _schema.Floppies, 'floppies', False),
-    (_schema.Snapshot, _schema.Snapshots, 'snapshots', False),
-    (_schema.File, _schema.Files, 'files', False),
-    (_schema.Statistic, _schema.Statistics, 'statistics', False),
-    (_schema.Template, _schema.Templates, 'templates', True),
-    (_schema.VmPool, _schema.VmPools, 'vmpools', True),
-    (_schema.User, _schema.Users, 'users', True),
-    (_schema.Role, _schema.Roles, 'roles', True),
-    (_schema.Event, _schema.Events, 'events', True),
-    (_schema.Tag, _schema.Tags, 'tags', True),
-    (_schema.Action, _schema.Actions, None, False),
-    (_schema.Capabilities, None, 'capabilities', True)
+    # (resource, collection, singular, relationship)
+    (_schema.API, None, '/', None),
+    (_schema.DataCenter, _schema.DataCenters, 'datacenter', 'datacenters'),
+    (_schema.Cluster, _schema.Clusters, 'cluster', 'clusters'),
+    (_schema.StorageDomain, _schema.StorageDomains, 'storagedomain', 'storagedomains'),
+    (_schema.Network, _schema.Networks, 'network', 'networks'),
+    (_schema.Host, _schema.Hosts, 'host', 'hosts'),
+    (_schema.HostNIC, _schema.HostNics, 'nic', 'nics'),
+    (_schema.Storage, _schema.HostStorage, 'host_storage', 'storage'),
+    (_schema.VM, _schema.VMs, 'vm', 'vms'),
+    (_schema.NIC, _schema.Nics, 'nic', 'nics'),
+    (_schema.Disk, _schema.Disks, 'disk', 'disks'),
+    (_schema.CdRom, _schema.CdRoms, 'cdrom', 'cdroms'),
+    (_schema.Floppy, _schema.Floppies, 'floppy', 'floppies'),
+    (_schema.Snapshot, _schema.Snapshots, 'snapshot', 'snapshots'),
+    (_schema.File, _schema.Files, 'file', 'files'),
+    (_schema.Statistic, _schema.Statistics, 'statistic', 'statistics'),
+    (_schema.Template, _schema.Templates, 'template', 'templates'),
+    (_schema.VmPool, _schema.VmPools, 'vmpool', 'vmpools'),
+    (_schema.User, _schema.Users, 'user', 'users'),
+    (_schema.Role, _schema.Roles, 'role', 'roles'),
+    (_schema.Event, _schema.Events, 'event', 'events'),
+    (_schema.Tag, _schema.Tags, 'tag', 'tags'),
+    (_schema.Action, _schema.Actions, None, None),
+    (_schema.Capabilities, None, None, 'capabilities')
 ]
 
 # This is a mapping of binding class -> element constructor. Element
@@ -58,61 +58,40 @@ for key in _schema.Namespace.elementBindings():
     _element_constructors[cls] = getattr(_schema, key)
 
 
-def type_info(typ_or_rel):
-    """Return information for a mapping type or relationship."""
+def type_info(key):
+    """Return information for a mapping type or name."""
+    # (resourcetype, collectiontype, relationship, singular,
+    #  resoucetag, collectiontag, resourcefactory, collectionfactory)
     for info in _mapping_data:
-        if isinstance(typ_or_rel, basestring):
-            if info[2] == typ_or_rel:
-                break
-        elif isinstance(typ_or_rel, type):
-            if issubclass(typ_or_rel, info[0]) or \
-                    info[1] is not None and issubclass(typ_or_rel, info[1]):
-                break
+        if isinstance(key, basestring) and \
+                (info[2] == key or info[3] == key):
+            break
+        elif isinstance(key, type) and \
+                (issubclass(key, info[0]) or
+                 info[1] is not None and issubclass(key, info[1])):
+            break
     else:
         return
-    info += (_element_constructors[info[0]].name().localName(),)
+    result = []
+    result.append(info[0]._SupersedingClass())
+    result.append(info[1] and info[1]._SupersedingClass())
+    result.append(info[2])
+    result.append(info[3])
+    result.append(_element_constructors[info[0]].name().localName())
     if info[1] and info[1] in _element_constructors:
-        info += (_element_constructors[info[1]].name().localName(),)
+        result.append(_element_constructors[info[1]].name().localName())
     else:
-        info += (None,)
-    info += (_element_constructors[info[0]],)
+        result.append(None)
+    result.append(_element_constructors[info[0]])
     if info[1] and info[1] in _element_constructors:
-        info += (_element_constructors[info[1]],)
+        result.append(_element_constructors[info[1]])
     else:
-        info += (None,)
-    return info
+        result.append(None)
+    return tuple(result)
 
 def subtype(prop):
     """Return the binding type of a property."""
     return prop.fget.im_self.elementBinding().typeDefinition()
-
-def singular(rel):
-    """Return the singular noun for a relationship name (which are plural by
-    convention)."""
-    info = type_info(rel)
-    if info is None:
-        return None
-    if rel == 'storage':
-        s = 'host_storage'
-    elif rel == 'floppies':
-        s = 'floppy'
-    else:
-        s = rel[:-1]
-    return s
-
-def plural(s):
-    """Return the relationship name for a noun that was made singular by
-    plural()."""
-    if s == 'host_storage':
-        rel = 'storage'
-    elif s == 'floppy':
-        rel = 'floppies'
-    else:
-        rel = s + 's'
-    info = type_info(rel)
-    if info is None:
-        return None
-    return rel
 
 def new(cls, *args, **kwargs):
     """Create a new object."""
@@ -228,27 +207,19 @@ class SubResourceMixin(object):
             links = self.link
             if links is not None:
                 for link in links:
-                    if link.rel == name:
-                        info = type_info(link.rel)
-                        if info is None:
-                            raise AttributeError
+                    info = type_info(link.rel)
+                    if info is None:
+                        continue
+                    if info[2] == name:
                         func = self._connection.getall
                         cls = info[1]
                         break
+                    elif info[3] == name:
+                        func = self._connection.get
+                        cls = info[0]
+                        break
                 else:
-                    pl = plural(name)
-                    if pl is None:
-                        raise AttributeError
-                    for link in links:
-                        if link.rel == pl:
-                            info = type_info(pl)
-                            if info is None:
-                                raise AttributeError
-                            func = self._connection.get
-                            cls = info[0]
-                            break
-                    else:
-                        raise AttributeError
+                    raise AttributeError
                 return _bind(func, cls, base=self)
         raise AttributeError
 
