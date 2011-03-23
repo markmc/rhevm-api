@@ -24,16 +24,15 @@ import org.junit.Test;
 import com.redhat.rhevm.api.model.Capabilities;
 import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.VersionCaps;
-import com.redhat.rhevm.api.resource.CapabilitiesResource;
 import com.redhat.rhevm.api.common.resource.DefaultCapabilitiesResource;
 
 public class PowerShellCapabilitiesResourceTest extends BasePowerShellResourceTest {
 
-    protected CapabilitiesResource resource;
+    protected Capabilities caps;
 
     @Before
     public void setUp() throws Exception {
-        resource = new DefaultCapabilitiesResource();
+        caps = new DefaultCapabilitiesResource().get();
     }
 
     private void checkCpu(CPU cpu) {
@@ -56,14 +55,19 @@ public class PowerShellCapabilitiesResourceTest extends BasePowerShellResourceTe
     }
 
     @Test
-    public void testGet() {
-        Capabilities caps = resource.get();
-
+    public void testCaps() {
         assertNotNull(caps);
         assertNotNull(caps.getVersions());
         assertEquals(2, caps.getVersions().size());
+    }
 
+    @Test
+    public void test22Caps() {
         checkVersion(caps.getVersions().get(0), 2, 2, true);
+    }
+
+    @Test
+    public void test21Caps() {
         checkVersion(caps.getVersions().get(1), 2, 1, false);
     }
 }
