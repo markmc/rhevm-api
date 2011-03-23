@@ -22,12 +22,12 @@ public enum StorageDomainType {
     DATA, ISO, EXPORT;
 
     public String value() {
-        return name();
+        return name().toLowerCase();
     }
 
     public static StorageDomainType fromValue(String value) {
         try {
-            return valueOf(value);
+            return valueOf(value.toUpperCase());
         } catch (IllegalArgumentException e) {
             return null;
         }

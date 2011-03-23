@@ -210,7 +210,7 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
 
         StorageType storageType = validateAddParameters(storageDomain);
 
-        StorageDomainType storageDomainType = validateEnum(StorageDomainType.class, storageDomain.getType());
+        StorageDomainType storageDomainType = validateEnum(StorageDomainType.class, storageDomain.getType().toUpperCase());
 
         Storage storage = storageDomain.getStorage();
 
