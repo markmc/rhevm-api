@@ -93,7 +93,7 @@ public class PowerShellStorageDomainsResourceTest
         model.getHost().setId(HOST_ID);
         model.setType(StorageDomainType.DATA);
         model.setStorage(new Storage());
-        model.getStorage().setType(StorageType.NFS);
+        model.getStorage().setType(StorageType.NFS.value());
         model.getStorage().setAddress(NFS_ADDRESS);
         model.getStorage().setPath(NFS_PATH);
         resource.setUriInfo(setUpAddResourceExpectations(ADD_NFS_COMMAND, getAddReturn(), NEW_NAME));
@@ -107,7 +107,7 @@ public class PowerShellStorageDomainsResourceTest
         model.getHost().setName(HOST_NAME);
         model.setType(StorageDomainType.DATA);
         model.setStorage(new Storage());
-        model.getStorage().setType(StorageType.NFS);
+        model.getStorage().setType(StorageType.NFS.value());
         model.getStorage().setAddress(NFS_ADDRESS);
         model.getStorage().setPath(NFS_PATH);
         resource.setUriInfo(setUpAddResourceExpectations(ADD_NFS_WITH_HOST_NAME_COMMAND, getAddReturn(), NEW_NAME));
@@ -121,7 +121,7 @@ public class PowerShellStorageDomainsResourceTest
         model.getHost().setName(HOST_NAME);
         model.setType(StorageDomainType.EXPORT);
         model.setStorage(new Storage());
-        model.getStorage().setType(StorageType.NFS);
+        model.getStorage().setType(StorageType.NFS.value());
         model.getStorage().setAddress(NFS_ADDRESS);
         model.getStorage().setPath(NFS_PATH);
         resource.setUriInfo(setUpAddResourceExpectations(ADD_EXISTING_NFS_COMMAND, getAddReturn(), NEW_NAME));

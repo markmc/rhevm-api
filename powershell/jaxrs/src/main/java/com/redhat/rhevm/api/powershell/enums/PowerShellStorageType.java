@@ -23,7 +23,11 @@ import java.util.HashMap;
 import com.redhat.rhevm.api.model.StorageType;
 
 public enum PowerShellStorageType {
-    UNKNOWN(0), NFS(1), FCP(2), ISCSI(3), ALL(4);
+    UNKNOWN(0, null),
+    NFS(1, StorageType.NFS),
+    FCP(2, StorageType.FCP),
+    ISCSI(3, StorageType.ISCSI),
+    ALL(4, null);
 
     private static HashMap<Integer, PowerShellStorageType> mapping;
     static {
@@ -34,9 +38,11 @@ public enum PowerShellStorageType {
     }
 
     private int value;
+    private StorageType model;
 
-    private PowerShellStorageType(int value) {
+    private PowerShellStorageType(int value, StorageType model) {
         this.value = value;
+        this.model = model;
     }
 
     public int getValue() {
@@ -44,16 +50,7 @@ public enum PowerShellStorageType {
     }
 
     public StorageType map() {
-        switch (this) {
-        case ISCSI:
-            return StorageType.ISCSI;
-        case FCP:
-            return StorageType.FCP;
-        case NFS:
-            return StorageType.NFS;
-        default:
-            return null;
-        }
+        return model;
     }
 
     public static PowerShellStorageType forValue(int value) {

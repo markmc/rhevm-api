@@ -122,7 +122,7 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
         version.setMinor(MINOR);
         dataCenter.setVersion(version);
 
-        dataCenter.setStorageType(StorageType.ISCSI);
+        dataCenter.setStorageType(StorageType.ISCSI.value());
     }
 
     protected String getAddCommand() {

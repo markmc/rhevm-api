@@ -82,7 +82,9 @@ public class PowerShellHostStorageResource
     private Storage buildStorageFromDevice(PowerShellStorageDevice device) {
         Storage storage = new Storage();
         storage.setId(device.getId());
-        storage.setType(device.getType());
+        if (device.getType() != null) {
+            storage.setType(device.getType().value());
+        }
 
         LogicalUnit lu = new LogicalUnit();
         lu.setId(device.getId());

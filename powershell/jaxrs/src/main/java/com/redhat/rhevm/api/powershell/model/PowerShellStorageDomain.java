@@ -25,6 +25,7 @@ import java.util.List;
 import com.redhat.rhevm.api.model.Storage;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.StorageDomainType;
+import com.redhat.rhevm.api.model.StorageType;
 import com.redhat.rhevm.api.powershell.enums.PowerShellStorageDomainStatus;
 import com.redhat.rhevm.api.powershell.enums.PowerShellStorageType;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
@@ -65,9 +66,11 @@ public class PowerShellStorageDomain extends StorageDomain {
 
             Storage storage = new Storage();
 
-            storage.setType(entity.get("type", PowerShellStorageType.class).map());
+            StorageType storageType = entity.get("type", PowerShellStorageType.class).map();
 
-            switch (storage.getType()) {
+            storage.setType(storageType.value());
+
+            switch (storageType) {
             case NFS:
                 String[] parts = entity.get("nfspath").split(":");
                 storage.setAddress(parts[0]);

@@ -32,7 +32,7 @@ public class PowerShellDataCenterTest extends PowerShellModelTest {
         assertEquals(id, d.getId());
         assertEquals(name, d.getName());
         assertEquals(description, d.getDescription());
-        assertEquals(type, d.getStorageType());
+        assertEquals(type.value(), d.getStorageType());
         assertNotNull(d.getVersion());
         assertEquals(major, d.getVersion().getMajor());
         assertEquals(minor, d.getVersion().getMinor());

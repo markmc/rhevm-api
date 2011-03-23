@@ -49,7 +49,7 @@ public class MockDataCentersResource extends AbstractMockQueryableResource<DataC
             while (dataCenters.size() < 2) {
                 MockDataCenterResource resource = new MockDataCenterResource(allocateId(DataCenter.class), getExecutor(), this);
                 resource.getModel().setName("datacenter" + resource.getModel().getId());
-                resource.getModel().setStorageType((dataCenters.size() % 2) == 0 ? StorageType.ISCSI : StorageType.NFS);
+                resource.getModel().setStorageType((dataCenters.size() % 2) == 0 ? StorageType.ISCSI.value() : StorageType.NFS.value());
                 dataCenters.put(resource.getModel().getId(), resource);
             }
         }

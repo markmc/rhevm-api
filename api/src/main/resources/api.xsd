@@ -399,15 +399,6 @@
     </xs:restriction>
   </xs:simpleType>
 
-  <xs:simpleType name="StorageType">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="ISCSI"/>
-      <xs:enumeration value="FCP"/>
-      <xs:enumeration value="NFS"/>
-      <xs:enumeration value="LOCAL"/>
-    </xs:restriction>
-  </xs:simpleType>
-
   <xs:simpleType name="TemplateStatus">
     <xs:restriction base="xs:string">
       <xs:enumeration value="ILLEGAL"/>
@@ -579,7 +570,7 @@
 
   <xs:complexType name="StorageTypes">
     <xs:sequence>
-      <xs:element name="storage_type" type="StorageType" minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="storage_type" type="xs:string" minOccurs="0" maxOccurs="unbounded">
         <xs:annotation>
           <xs:appinfo>
             <jaxb:property name="StorageTypes"/>
@@ -642,7 +633,7 @@
     <xs:complexContent>
       <xs:extension base="BaseResource">
         <xs:sequence>
-          <xs:element name="storage_type" type="StorageType" minOccurs="0"/>
+          <xs:element name="storage_type" type="xs:string" minOccurs="0"/>
           <xs:element name="version" type="Version" minOccurs="0"/>
           <xs:element name="supported_versions" type="SupportedVersions" minOccurs="0"/>
           <xs:element name="status" type="DataCenterStatus" minOccurs="0"/>
@@ -1222,7 +1213,7 @@
     <xs:complexContent>
       <xs:extension base="BaseResource">
         <xs:sequence>
-          <xs:element name="type" type="StorageType" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="type" type="xs:string" minOccurs="1" maxOccurs="1"/>
           <xs:choice>
             <xs:group ref="NfsStorage"/>
             <xs:group ref="IscsiStorage"/>

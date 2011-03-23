@@ -53,7 +53,7 @@ public class MockStorageDomainsResource extends AbstractMockQueryableResource<St
         resource.getModel().setType(domainType);
 
         Storage storage = new Storage();
-        storage.setType(storageType);
+        storage.setType(storageType.value());
         storage.setAddress(address);
         storage.setPath(path);
         resource.getModel().setStorage(storage);

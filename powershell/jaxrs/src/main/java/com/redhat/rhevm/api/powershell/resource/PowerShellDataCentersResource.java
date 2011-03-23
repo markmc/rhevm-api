@@ -25,6 +25,7 @@ import javax.ws.rs.core.UriBuilder;
 
 import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.DataCenters;
+import com.redhat.rhevm.api.model.StorageType;
 import com.redhat.rhevm.api.model.Version;
 import com.redhat.rhevm.api.resource.DataCenterResource;
 import com.redhat.rhevm.api.resource.DataCentersResource;
@@ -32,7 +33,7 @@ import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
-
+import static com.redhat.rhevm.api.common.util.EnumValidator.validateEnum;
 
 public class PowerShellDataCentersResource
     extends AbstractPowerShellCollectionResource<DataCenter, PowerShellDataCenterResource>
@@ -62,6 +63,9 @@ public class PowerShellDataCentersResource
     @Override
     public Response add(DataCenter dataCenter) {
         validateParameters(dataCenter, "name", "storageType");
+
+        StorageType storageType = validateEnum(StorageType.class, dataCenter.getStorageType());
+
         StringBuilder buf = new StringBuilder();
 
         buf.append("foreach ($v in get-clustercompatibilityversions) { ");
@@ -87,7 +91,7 @@ public class PowerShellDataCentersResource
         if (dataCenter.getDescription() != null) {
             buf.append(" -description " + PowerShellUtils.escape(dataCenter.getDescription()));
         }
-        buf.append(" -datacentertype " + dataCenter.getStorageType().toString());
+        buf.append(" -datacentertype " + storageType.name());
         buf.append(" -compatibilityversion $version");
 
         dataCenter = addLinks(runAndParseSingle(buf.toString()));

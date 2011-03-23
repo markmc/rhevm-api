@@ -49,7 +49,7 @@ public class PowerShellStorageDomainTest extends PowerShellModelTest {
         Storage storage = s.getStorage();
         assertNotNull(storage);
 
-        assertEquals(StorageType.NFS, storage.getType());
+        assertEquals(StorageType.NFS.value(), storage.getType());
         assertEquals(address, storage.getAddress());
         assertEquals(path, storage.getPath());
     }
@@ -60,7 +60,7 @@ public class PowerShellStorageDomainTest extends PowerShellModelTest {
         Storage storage = s.getStorage();
         assertNotNull(storage);
 
-        assertEquals(StorageType.ISCSI, storage.getType());
+        assertEquals(StorageType.ISCSI.value(), storage.getType());
     }
 
     @Test
