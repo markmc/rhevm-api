@@ -26,6 +26,8 @@ import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.SchedulingPolicies;
 import com.redhat.rhevm.api.model.SchedulingPolicyType;
 import com.redhat.rhevm.api.model.VersionCaps;
+import com.redhat.rhevm.api.model.StorageType;
+import com.redhat.rhevm.api.model.StorageTypes;
 import com.redhat.rhevm.api.model.VmType;
 import com.redhat.rhevm.api.model.VmTypes;
 import com.redhat.rhevm.api.common.resource.DefaultCapabilitiesResource;
@@ -73,6 +75,14 @@ public class PowerShellCapabilitiesResourceTest extends BasePowerShellResourceTe
         }
     }
 
+    private void checkStorageTypes(StorageTypes storageTypes, StorageType... expected) {
+        assertNotNull(storageTypes);
+        assertEquals(expected.length, storageTypes.getStorageTypes().size());
+        for (int i = 0; i < expected.length; i++) {
+            assertEquals(expected[i].value(), storageTypes.getStorageTypes().get(i));
+        }
+    }
+
     @Test
     public void testCaps() {
         assertNotNull(caps);
@@ -100,5 +110,11 @@ public class PowerShellCapabilitiesResourceTest extends BasePowerShellResourceTe
     public void testVmTypes() {
         checkVmTypes(caps.getVersions().get(0).getVmTypes(), VmType.values());
         checkVmTypes(caps.getVersions().get(1).getVmTypes(), VmType.values());
+    }
+
+    @Test
+    public void testStorageTypes() {
+        checkStorageTypes(caps.getVersions().get(0).getStorageTypes(), StorageType.ISCSI, StorageType.FCP, StorageType.NFS);
+        checkStorageTypes(caps.getVersions().get(1).getStorageTypes(), StorageType.ISCSI, StorageType.FCP, StorageType.NFS);
     }
 }

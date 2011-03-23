@@ -27,6 +27,8 @@ import com.redhat.rhevm.api.model.PowerManagementOptions;
 import com.redhat.rhevm.api.model.PowerManagers;
 import com.redhat.rhevm.api.model.SchedulingPolicies;
 import com.redhat.rhevm.api.model.SchedulingPolicyType;
+import com.redhat.rhevm.api.model.StorageType;
+import com.redhat.rhevm.api.model.StorageTypes;
 import com.redhat.rhevm.api.model.VersionCaps;
 import com.redhat.rhevm.api.model.VmType;
 import com.redhat.rhevm.api.model.VmTypes;
@@ -127,6 +129,18 @@ public class DefaultCapabilitiesResource implements CapabilitiesResource {
     {
         addVmTypes(VERSION21, VmType.values());
         addVmTypes(VERSION22, VmType.values());
+    }
+
+    private void addStorageTypes(VersionCaps version, StorageType... types) {
+        version.setStorageTypes(new StorageTypes());
+        for (StorageType type : types) {
+            version.getStorageTypes().getStorageTypes().add(type.value());
+        }
+    }
+
+    {
+        addStorageTypes(VERSION21, StorageType.ISCSI, StorageType.FCP, StorageType.NFS);
+        addStorageTypes(VERSION22, StorageType.ISCSI, StorageType.FCP, StorageType.NFS);
     }
 
     private final SchedulingPolicies SCHEDULING_POLICIES = new SchedulingPolicies();
