@@ -28,7 +28,7 @@ public class PowerShellFileTest extends PowerShellModelTest {
     private void testFile(File i, String id) {
         assertEquals(id, i.getId());
         assertEquals(id, i.getName());
-        assertEquals(FileType.ISO, i.getType());
+        assertEquals(FileType.ISO.value(), i.getType());
     }
 
     @Test

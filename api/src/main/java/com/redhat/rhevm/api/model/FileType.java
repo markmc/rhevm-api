@@ -1,5 +1,5 @@
 /*
- * Copyright © 2010 Red Hat, Inc.
+ * Copyright © 2011 Red Hat, Inc.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,28 +16,20 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api.powershell.model;
+package com.redhat.rhevm.api.model;
 
-import java.util.ArrayList;
-import java.util.List;
+public enum FileType {
+    ISO, VFD;
 
-import com.redhat.rhevm.api.model.File;
-import com.redhat.rhevm.api.model.FileType;
-import com.redhat.rhevm.api.powershell.util.PowerShellParser;
+    public String value() {
+        return name();
+    }
 
-public class PowerShellFile {
-
-    public static List<File> parse(PowerShellParser parser, String output) {
-        List<File> ret = new ArrayList<File>();
-
-        for (PowerShellParser.Entity entity : parser.parse(output)) {
-            File file = new File();
-            file.setId(entity.getValue());
-            file.setName(entity.getValue());
-            file.setType(FileType.ISO.value());
-            ret.add(file);
+    public static FileType fromValue(String value) {
+        try {
+            return valueOf(value);
+        } catch (IllegalArgumentException e) {
+            return null;
         }
-
-        return ret;
     }
 }

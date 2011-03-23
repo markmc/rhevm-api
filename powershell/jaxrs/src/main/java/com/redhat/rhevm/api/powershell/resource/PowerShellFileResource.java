@@ -39,7 +39,7 @@ public class PowerShellFileResource implements FileResource {
         File file = new File();
         file.setId(id);
         file.setName(id);
-        file.setType(FileType.ISO);
+        file.setType(FileType.ISO.value());
         return parent.addLinks(file, dataCenterId);
     }
 }
