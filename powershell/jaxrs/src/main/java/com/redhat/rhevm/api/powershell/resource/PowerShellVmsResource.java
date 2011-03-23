@@ -171,7 +171,7 @@ public class PowerShellVmsResource
         if (vm.isSetType()) {
             VmType vmType = VmType.fromValue(vm.getType());
             if (vmType != null) {
-                buf.append(" -vmtype " + ReflectionHelper.capitalize(vmType.value().toLowerCase()));
+                buf.append(" -vmtype " + ReflectionHelper.capitalize(vmType.value()));
             }
         }
         if (vm.isSetMemory()) {

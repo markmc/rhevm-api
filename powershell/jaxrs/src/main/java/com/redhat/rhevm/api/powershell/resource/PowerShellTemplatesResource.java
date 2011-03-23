@@ -107,7 +107,7 @@ public class PowerShellTemplatesResource
         if (template.isSetType()) {
             VmType vmType = VmType.fromValue(template.getType());
             if (vmType != null) {
-                buf.append(" -vmtype " + ReflectionHelper.capitalize(vmType.value().toLowerCase()));
+                buf.append(" -vmtype " + ReflectionHelper.capitalize(vmType.value()));
             }
         }
         if (template.isSetMemory()) {

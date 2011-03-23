@@ -123,7 +123,7 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
         if (vm.isSetType()) {
             VmType vmType = VmType.fromValue(vm.getType());
             if (vmType != null) {
-                buf.append("$v.vmtype = " + ReflectionHelper.capitalize(vmType.value().toLowerCase()) + ";");
+                buf.append("$v.vmtype = " + ReflectionHelper.capitalize(vmType.value()) + ";");
             }
         }
         if (vm.isSetMemory()) {

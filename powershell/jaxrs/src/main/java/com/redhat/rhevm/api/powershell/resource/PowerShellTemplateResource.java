@@ -120,7 +120,7 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
         if (template.isSetType()) {
             VmType vmType = VmType.fromValue(template.getType());
             if (vmType != null) {
-                buf.append("$t.vmtype = " + ReflectionHelper.capitalize(vmType.value().toLowerCase()) + ";");
+                buf.append("$t.vmtype = " + ReflectionHelper.capitalize(vmType.value()) + ";");
             }
         }
         if (template.isSetMemory()) {
