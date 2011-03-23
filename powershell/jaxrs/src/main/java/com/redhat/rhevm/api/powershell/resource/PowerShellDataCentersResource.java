@@ -64,7 +64,7 @@ public class PowerShellDataCentersResource
     public Response add(DataCenter dataCenter) {
         validateParameters(dataCenter, "name", "storageType");
 
-        StorageType storageType = validateEnum(StorageType.class, dataCenter.getStorageType());
+        StorageType storageType = validateEnum(StorageType.class, dataCenter.getStorageType().toUpperCase());
 
         StringBuilder buf = new StringBuilder();
 

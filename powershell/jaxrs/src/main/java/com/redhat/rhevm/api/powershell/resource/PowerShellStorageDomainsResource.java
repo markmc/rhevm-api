@@ -68,7 +68,7 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
 
         Storage storage = storageDomain.getStorage();
 
-        StorageType storageType = validateEnum(StorageType.class, storage.getType());
+        StorageType storageType = validateEnum(StorageType.class, storage.getType().toUpperCase());
 
         switch (storageType) {
         case NFS:

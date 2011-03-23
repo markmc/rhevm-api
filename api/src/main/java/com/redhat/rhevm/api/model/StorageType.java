@@ -22,12 +22,12 @@ public enum StorageType {
     ISCSI, FCP, NFS, LOCAL;
 
     public String value() {
-        return name();
+        return name().toLowerCase();
     }
 
     public static StorageType fromValue(String value) {
         try {
-            return valueOf(value);
+            return valueOf(value.toUpperCase());
         } catch (IllegalArgumentException e) {
             return null;
         }
