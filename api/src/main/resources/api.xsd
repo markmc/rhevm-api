@@ -575,6 +575,15 @@
         </xs:annotation>
       </xs:element>
       <xs:element name="permits" type="Permits" minOccurs="0"/>
+      <xs:element name="scheduling_policies" type="SchedulingPolicies" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="scheduling_policies" type="SchedulingPolicies"/>
+
+  <xs:complexType name="SchedulingPolicies">
+    <xs:sequence>
+      <xs:element name="policy" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:complexType>
 

@@ -23,6 +23,8 @@ import org.junit.Test;
 
 import com.redhat.rhevm.api.model.Capabilities;
 import com.redhat.rhevm.api.model.CPU;
+import com.redhat.rhevm.api.model.SchedulingPolicies;
+import com.redhat.rhevm.api.model.SchedulingPolicyType;
 import com.redhat.rhevm.api.model.VersionCaps;
 import com.redhat.rhevm.api.common.resource.DefaultCapabilitiesResource;
 
@@ -54,6 +56,13 @@ public class PowerShellCapabilitiesResourceTest extends BasePowerShellResourceTe
         }
     }
 
+    private void checkSchedulingPolicies(SchedulingPolicies policies, SchedulingPolicyType... expected) {
+        assertEquals(expected.length, policies.getPolicy().size());
+        for (int i = 0; i < expected.length; i++) {
+            assertEquals(expected[i].value(), policies.getPolicy().get(i));
+        }
+    }
+
     @Test
     public void testCaps() {
         assertNotNull(caps);
@@ -69,5 +78,11 @@ public class PowerShellCapabilitiesResourceTest extends BasePowerShellResourceTe
     @Test
     public void test21Caps() {
         checkVersion(caps.getVersions().get(1), 2, 1, false);
+    }
+
+    @Test
+    public void testSchedulingPolicies() {
+        assertNotNull(caps.getSchedulingPolicies());
+        checkSchedulingPolicies(caps.getSchedulingPolicies(), SchedulingPolicyType.values());
     }
 }

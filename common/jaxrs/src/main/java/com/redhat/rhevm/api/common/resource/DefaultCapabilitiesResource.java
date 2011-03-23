@@ -26,6 +26,8 @@ import com.redhat.rhevm.api.model.PowerManagementOption;
 import com.redhat.rhevm.api.model.PowerManagementOptions;
 import com.redhat.rhevm.api.model.PowerManagementOptionType;
 import com.redhat.rhevm.api.model.PowerManagers;
+import com.redhat.rhevm.api.model.SchedulingPolicies;
+import com.redhat.rhevm.api.model.SchedulingPolicyType;
 import com.redhat.rhevm.api.model.VersionCaps;
 import com.redhat.rhevm.api.resource.CapabilitiesResource;
 
@@ -114,10 +116,19 @@ public class DefaultCapabilitiesResource implements CapabilitiesResource {
         version.getPowerManagers().getPowerManagers().add(powerManagement);
     }
 
+    private final SchedulingPolicies SCHEDULING_POLICIES = new SchedulingPolicies();
+
+    {
+        for (SchedulingPolicyType policy : SchedulingPolicyType.values()) {
+            SCHEDULING_POLICIES.getPolicy().add(policy.value());
+        }
+    }
+
     public Capabilities get() {
         Capabilities caps = new Capabilities();
         caps.getVersions().add(VERSION22);
         caps.getVersions().add(VERSION21);
+        caps.setSchedulingPolicies(SCHEDULING_POLICIES);
         return caps;
     }
 }
