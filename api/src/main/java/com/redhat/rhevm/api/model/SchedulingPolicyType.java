@@ -22,12 +22,12 @@ public enum SchedulingPolicyType {
     EVENLY_DISTRIBUTED, POWER_SAVING;
 
     public String value() {
-        return name();
+        return name().toLowerCase();
     }
 
     public static SchedulingPolicyType fromValue(String value) {
         try {
-            return valueOf(value);
+            return valueOf(value.toUpperCase());
         } catch (IllegalArgumentException e) {
             return null;
         }
