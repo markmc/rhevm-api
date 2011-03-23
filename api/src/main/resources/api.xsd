@@ -472,13 +472,6 @@
     </xs:restriction>
   </xs:simpleType>
 
-  <xs:simpleType name="PowerManagementOptionType">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="BOOL"/>
-      <xs:enumeration value="INT"/>
-    </xs:restriction>
-  </xs:simpleType>
-
   <!-- CPUs -->
 
   <xs:element name="cpu" type="CPU"/>
@@ -745,7 +738,7 @@
   <xs:complexType name="PowerManagementOption">
     <xs:attribute name="name" type="xs:string"/>
     <xs:attribute name="value" type="xs:string"/>
-    <xs:attribute name="type" type="PowerManagementOptionType"/>
+    <xs:attribute name="type" type="xs:string"/>
   </xs:complexType>
 
   <xs:complexType name="PowerManagementOptions">

@@ -24,7 +24,6 @@ import com.redhat.rhevm.api.model.CPUs;
 import com.redhat.rhevm.api.model.PowerManagement;
 import com.redhat.rhevm.api.model.PowerManagementOption;
 import com.redhat.rhevm.api.model.PowerManagementOptions;
-import com.redhat.rhevm.api.model.PowerManagementOptionType;
 import com.redhat.rhevm.api.model.PowerManagers;
 import com.redhat.rhevm.api.model.SchedulingPolicies;
 import com.redhat.rhevm.api.model.SchedulingPolicyType;
@@ -106,7 +105,7 @@ public class DefaultCapabilitiesResource implements CapabilitiesResource {
 
             PowerManagementOption option = new PowerManagementOption();
             option.setName(parts[0]);
-            option.setType(PowerManagementOptionType.valueOf(parts[1]));
+            option.setType(parts[1]);
             powerManagement.getOptions().getOptions().add(option);
         }
 
