@@ -22,12 +22,12 @@ public enum FileType {
     ISO, VFD;
 
     public String value() {
-        return name();
+        return name().toLowerCase();
     }
 
     public static FileType fromValue(String value) {
         try {
-            return valueOf(value);
+            return valueOf(value.toUpperCase());
         } catch (IllegalArgumentException e) {
             return null;
         }
