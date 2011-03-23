@@ -416,13 +416,6 @@
     </xs:restriction>
   </xs:simpleType>
 
-  <xs:simpleType name="VmType">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="DESKTOP"/>
-      <xs:enumeration value="SERVER"/>
-    </xs:restriction>
-  </xs:simpleType>
-
   <xs:simpleType name="VmStatus">
     <xs:restriction base="xs:string">
       <xs:enumeration value="UNASSIGNED"/>
@@ -1271,7 +1264,7 @@
       <xs:extension base="BaseResource">
         <xs:sequence>
           <xs:element ref="vm" minOccurs="0" maxOccurs="1"/>
-          <xs:element name="type" type="VmType" minOccurs="0"/>
+          <xs:element name="type" type="xs:string" minOccurs="0"/>
           <xs:element name="status" type="TemplateStatus" minOccurs="0"/>
           <xs:element name="memory" type="xs:long" minOccurs="0"/>
           <xs:element name="cpu" type="CPU" minOccurs="0"/>
@@ -1375,7 +1368,7 @@
     <xs:complexContent>
       <xs:extension base="BaseResource">
         <xs:sequence>
-          <xs:element name="type" type="VmType" minOccurs="0"/>
+          <xs:element name="type" type="xs:string" minOccurs="0"/>
           <xs:element name="status" type="VmStatus" minOccurs="0"/>
           <xs:element name="memory" type="xs:long" minOccurs="0"/>
           <xs:element name="cpu" type="CPU" minOccurs="0"/>

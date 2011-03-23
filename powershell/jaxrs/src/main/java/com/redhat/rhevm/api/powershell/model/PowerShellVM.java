@@ -203,7 +203,7 @@ public class PowerShellVM extends VM {
         vm.setId(entity.get("vmid"));
         vm.setName(entity.get("name"));
         vm.setDescription(entity.get("description"));
-        vm.setType(entity.get("vmtype", PowerShellVmType.class).map());
+        vm.setType(entity.get("vmtype", PowerShellVmType.class).map().value());
         vm.setMemory(entity.get("memorysize", Integer.class) * 1024L * 1024L);
         vm.setCdIsoPath(entity.get("cdisopath"));
 

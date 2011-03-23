@@ -31,6 +31,7 @@ import com.redhat.rhevm.api.model.CpuTopology;
 import com.redhat.rhevm.api.model.Display;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
+import com.redhat.rhevm.api.model.VmType;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.resource.VmsResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
@@ -167,8 +168,11 @@ public class PowerShellVmsResource
         }
         buf.append(" -templateobject $templ");
         buf.append(" -hostclusterid " + clusterArg);
-        if (vm.getType() != null) {
-            buf.append(" -vmtype " + ReflectionHelper.capitalize(vm.getType().toString().toLowerCase()));
+        if (vm.isSetType()) {
+            VmType vmType = VmType.fromValue(vm.getType());
+            if (vmType != null) {
+                buf.append(" -vmtype " + ReflectionHelper.capitalize(vmType.value().toLowerCase()));
+            }
         }
         if (vm.isSetMemory()) {
             buf.append(" -memorysize " + Math.round((double)vm.getMemory()/(1024*1024)));

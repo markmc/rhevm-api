@@ -99,7 +99,7 @@ public class MockVmResourceTest extends MockTestBase {
 
         VM update = new VM();
         update.setName("wonga");
-        update.setType(VmType.SERVER);
+        update.setType(VmType.SERVER.value());
         VM updated = service.update("1", update);
         assertNotNull(updated);
         assertEquals(updated.getName(), "wonga");
@@ -116,7 +116,7 @@ public class MockVmResourceTest extends MockTestBase {
     @Test
     public void testVmBadTypeUpdate() throws Exception {
         VM update = new VM();
-        update.setType(VmType.DESKTOP);
+        update.setType(VmType.DESKTOP.value());
         doTestVmBadUpdate(update, "type");
     }
 

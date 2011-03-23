@@ -235,7 +235,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     @Test
     public void testBadTypeUpdate() throws Exception {
         VM update = getVM(NEW_NAME);
-        update.setType(VmType.DESKTOP);
+        update.setType(VmType.DESKTOP.value());
         doTestBadUpdate(update, "type");
     }
 

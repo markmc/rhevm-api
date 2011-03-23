@@ -30,6 +30,7 @@ import com.redhat.rhevm.api.model.CpuTopology;
 import com.redhat.rhevm.api.model.Display;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.Template;
+import com.redhat.rhevm.api.model.VmType;
 import com.redhat.rhevm.api.resource.AssignedPermissionsResource;
 import com.redhat.rhevm.api.resource.CreationResource;
 import com.redhat.rhevm.api.resource.TemplateResource;
@@ -116,8 +117,11 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
         if (template.getDescription() != null) {
             buf.append("$t.description = " + PowerShellUtils.escape(template.getDescription()) + ";");
         }
-        if (template.getType() != null) {
-            buf.append("$t.vmtype = " + ReflectionHelper.capitalize(template.getType().toString().toLowerCase()) + ";");
+        if (template.isSetType()) {
+            VmType vmType = VmType.fromValue(template.getType());
+            if (vmType != null) {
+                buf.append("$t.vmtype = " + ReflectionHelper.capitalize(vmType.value().toLowerCase()) + ";");
+            }
         }
         if (template.isSetMemory()) {
             buf.append(" $t.memsizemb = " + Math.round((double)template.getMemory()/(1024*1024)) + ";");

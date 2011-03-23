@@ -23,7 +23,7 @@ import java.util.HashMap;
 import com.redhat.rhevm.api.model.VmType;
 
 public enum PowerShellVmType {
-    Desktop(0), Server(1);
+    Desktop(0, VmType.DESKTOP), Server(1, VmType.SERVER);
 
     private static HashMap<Integer, PowerShellVmType> mapping;
     static {
@@ -34,9 +34,11 @@ public enum PowerShellVmType {
     }
 
     private int value;
+    private VmType model;
 
-    private PowerShellVmType(int value) {
+    private PowerShellVmType(int value, VmType model) {
         this.value = value;
+        this.model = model;
     }
 
     public int getValue() {
@@ -44,15 +46,7 @@ public enum PowerShellVmType {
     }
 
     public VmType map() {
-        switch (this) {
-        case Desktop:
-            return VmType.DESKTOP;
-        case Server:
-            return VmType.SERVER;
-        default:
-            assert false : this;
-            return null;
-        }
+        return model;
     }
 
     public static PowerShellVmType forValue(int value) {

@@ -89,7 +89,7 @@ public class PowerShellTemplate extends Template {
             template.setId(entity.get("templateid"));
             template.setName(entity.get("name"));
             template.setDescription(entity.get("description"));
-            template.setType(entity.get("vmtype", PowerShellVmType.class).map());
+            template.setType(entity.get("vmtype", PowerShellVmType.class).map().value());
             template.setMemory(entity.get("memsizemb", Integer.class) * 1024L * 1024L);
             template.setCdIsoPath(entity.get("cdisopath"));
             template.setStatus(entity.get("status", PowerShellVmTemplateStatus.class).map());

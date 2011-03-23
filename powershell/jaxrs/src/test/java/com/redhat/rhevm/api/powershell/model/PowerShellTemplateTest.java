@@ -32,7 +32,7 @@ public class PowerShellTemplateTest extends PowerShellModelTest {
         assertEquals(id, t.getId());
         assertEquals(name, t.getName());
         assertEquals(description, t.getDescription());
-        assertEquals(type, t.getType());
+        assertEquals(type.value(), t.getType());
         assertEquals(status, t.getStatus());
         assertEquals(memory, t.getMemory());
         assertNotNull(t.getCpu());

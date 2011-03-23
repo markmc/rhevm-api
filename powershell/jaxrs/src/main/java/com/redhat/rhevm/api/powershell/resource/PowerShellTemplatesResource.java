@@ -27,6 +27,7 @@ import com.redhat.rhevm.api.model.CpuTopology;
 import com.redhat.rhevm.api.model.Display;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.Templates;
+import com.redhat.rhevm.api.model.VmType;
 import com.redhat.rhevm.api.resource.TemplateResource;
 import com.redhat.rhevm.api.resource.TemplatesResource;
 import com.redhat.rhevm.api.powershell.model.PowerShellTemplate;
@@ -103,8 +104,11 @@ public class PowerShellTemplatesResource
         if (clusterArg != null) {
             buf.append(" -hostclusterid " + clusterArg);
         }
-        if (template.getType() != null) {
-            buf.append(" -vmtype " + ReflectionHelper.capitalize(template.getType().toString().toLowerCase()));
+        if (template.isSetType()) {
+            VmType vmType = VmType.fromValue(template.getType());
+            if (vmType != null) {
+                buf.append(" -vmtype " + ReflectionHelper.capitalize(vmType.value().toLowerCase()));
+            }
         }
         if (template.isSetMemory()) {
             buf.append(" -memory " + Math.round((double)template.getMemory()/(1024*1024)));

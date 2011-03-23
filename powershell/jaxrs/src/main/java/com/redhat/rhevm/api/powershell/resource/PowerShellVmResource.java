@@ -36,6 +36,7 @@ import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.Statistic;
 import com.redhat.rhevm.api.model.Ticket;
 import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.model.VmType;
 import com.redhat.rhevm.api.resource.AssignedPermissionsResource;
 import com.redhat.rhevm.api.resource.AssignedTagsResource;
 import com.redhat.rhevm.api.resource.CreationResource;
@@ -119,8 +120,11 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
         if (vm.getDescription() != null) {
             buf.append("$v.description = " + PowerShellUtils.escape(vm.getDescription()) + ";");
         }
-        if (vm.getType() != null) {
-            buf.append("$v.vmtype = " + ReflectionHelper.capitalize(vm.getType().toString().toLowerCase()) + ";");
+        if (vm.isSetType()) {
+            VmType vmType = VmType.fromValue(vm.getType());
+            if (vmType != null) {
+                buf.append("$v.vmtype = " + ReflectionHelper.capitalize(vmType.value().toLowerCase()) + ";");
+            }
         }
         if (vm.isSetMemory()) {
             buf.append(" $v.memorysize = " + Math.round((double)vm.getMemory()/(1024*1024)) + ";");

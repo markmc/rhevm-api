@@ -50,7 +50,7 @@ public class MockVmsResource extends AbstractMockQueryableResource<VM> implement
             while (vms.size() < 10) {
                 MockVmResource vmResource = new MockVmResource(allocateId(VM.class), getExecutor(), this);
                 vmResource.getModel().setName("vm" + vmResource.getModel().getId());
-                vmResource.getModel().setType(VmType.SERVER);
+                vmResource.getModel().setType(VmType.SERVER.value());
                 vmResource.getModel().setTemplate(new Template());
                 vmResource.getModel().getTemplate().setId(allocateId(Template.class));
                 vms.put(vmResource.getModel().getId(), vmResource);
