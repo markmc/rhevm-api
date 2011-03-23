@@ -27,6 +27,8 @@ import com.redhat.rhevm.api.model.PowerManagementOptions;
 import com.redhat.rhevm.api.model.PowerManagers;
 import com.redhat.rhevm.api.model.SchedulingPolicies;
 import com.redhat.rhevm.api.model.SchedulingPolicyType;
+import com.redhat.rhevm.api.model.StorageDomainType;
+import com.redhat.rhevm.api.model.StorageDomainTypes;
 import com.redhat.rhevm.api.model.StorageType;
 import com.redhat.rhevm.api.model.StorageTypes;
 import com.redhat.rhevm.api.model.VersionCaps;
@@ -141,6 +143,18 @@ public class DefaultCapabilitiesResource implements CapabilitiesResource {
     {
         addStorageTypes(VERSION21, StorageType.ISCSI, StorageType.FCP, StorageType.NFS);
         addStorageTypes(VERSION22, StorageType.ISCSI, StorageType.FCP, StorageType.NFS);
+    }
+
+    private void addStorageDomainTypes(VersionCaps version, StorageDomainType... types) {
+        version.setStorageDomainTypes(new StorageDomainTypes());
+        for (StorageDomainType type : types) {
+            version.getStorageDomainTypes().getStorageDomainTypes().add(type.value());
+        }
+    }
+
+    {
+        addStorageDomainTypes(VERSION21, StorageDomainType.values());
+        addStorageDomainTypes(VERSION22, StorageDomainType.values());
     }
 
     private final SchedulingPolicies SCHEDULING_POLICIES = new SchedulingPolicies();

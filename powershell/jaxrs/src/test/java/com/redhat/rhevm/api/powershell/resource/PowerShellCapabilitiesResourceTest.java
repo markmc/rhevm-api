@@ -26,6 +26,8 @@ import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.SchedulingPolicies;
 import com.redhat.rhevm.api.model.SchedulingPolicyType;
 import com.redhat.rhevm.api.model.VersionCaps;
+import com.redhat.rhevm.api.model.StorageDomainType;
+import com.redhat.rhevm.api.model.StorageDomainTypes;
 import com.redhat.rhevm.api.model.StorageType;
 import com.redhat.rhevm.api.model.StorageTypes;
 import com.redhat.rhevm.api.model.VmType;
@@ -83,6 +85,14 @@ public class PowerShellCapabilitiesResourceTest extends BasePowerShellResourceTe
         }
     }
 
+    private void checkStorageDomainTypes(StorageDomainTypes storageDomainTypes, StorageDomainType... expected) {
+        assertNotNull(storageDomainTypes);
+        assertEquals(expected.length, storageDomainTypes.getStorageDomainTypes().size());
+        for (int i = 0; i < expected.length; i++) {
+            assertEquals(expected[i].value(), storageDomainTypes.getStorageDomainTypes().get(i));
+        }
+    }
+
     @Test
     public void testCaps() {
         assertNotNull(caps);
@@ -116,5 +126,11 @@ public class PowerShellCapabilitiesResourceTest extends BasePowerShellResourceTe
     public void testStorageTypes() {
         checkStorageTypes(caps.getVersions().get(0).getStorageTypes(), StorageType.ISCSI, StorageType.FCP, StorageType.NFS);
         checkStorageTypes(caps.getVersions().get(1).getStorageTypes(), StorageType.ISCSI, StorageType.FCP, StorageType.NFS);
+    }
+
+    @Test
+    public void testStorageDomainTypes() {
+        checkStorageDomainTypes(caps.getVersions().get(0).getStorageDomainTypes(), StorageDomainType.values());
+        checkStorageDomainTypes(caps.getVersions().get(1).getStorageDomainTypes(), StorageDomainType.values());
     }
 }
