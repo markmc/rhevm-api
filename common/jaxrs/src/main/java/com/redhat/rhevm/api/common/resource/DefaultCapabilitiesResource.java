@@ -28,6 +28,8 @@ import com.redhat.rhevm.api.model.PowerManagers;
 import com.redhat.rhevm.api.model.SchedulingPolicies;
 import com.redhat.rhevm.api.model.SchedulingPolicyType;
 import com.redhat.rhevm.api.model.VersionCaps;
+import com.redhat.rhevm.api.model.VmType;
+import com.redhat.rhevm.api.model.VmTypes;
 import com.redhat.rhevm.api.resource.CapabilitiesResource;
 
 public class DefaultCapabilitiesResource implements CapabilitiesResource {
@@ -113,6 +115,18 @@ public class DefaultCapabilitiesResource implements CapabilitiesResource {
             version.setPowerManagers(new PowerManagers());
         }
         version.getPowerManagers().getPowerManagers().add(powerManagement);
+    }
+
+    private void addVmTypes(VersionCaps version, VmType... types) {
+        version.setVmTypes(new VmTypes());
+        for (VmType type : types) {
+            version.getVmTypes().getVmTypes().add(type.value());
+        }
+    }
+
+    {
+        addVmTypes(VERSION21, VmType.values());
+        addVmTypes(VERSION22, VmType.values());
     }
 
     private final SchedulingPolicies SCHEDULING_POLICIES = new SchedulingPolicies();

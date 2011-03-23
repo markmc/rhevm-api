@@ -538,6 +538,7 @@
           </xs:element>
           <xs:element ref="power_managers" minOccurs="0"/>
           <xs:element ref="storage_types" minOccurs="0"/>
+          <xs:element ref="vm_types" minOccurs="0"/>
           <xs:element name="hooks_env" type="VmHooksEnvs" minOccurs="0"/>
         </xs:sequence>
       </xs:extension>
@@ -582,6 +583,20 @@
         <xs:annotation>
           <xs:appinfo>
             <jaxb:property name="StorageTypes"/>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="vm_types" type="VmTypes"/>
+
+  <xs:complexType name="VmTypes">
+    <xs:sequence>
+      <xs:element name="vm_type" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <jaxb:property name="VmTypes"/>
           </xs:appinfo>
         </xs:annotation>
       </xs:element>

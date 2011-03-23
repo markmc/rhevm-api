@@ -26,6 +26,8 @@ import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.SchedulingPolicies;
 import com.redhat.rhevm.api.model.SchedulingPolicyType;
 import com.redhat.rhevm.api.model.VersionCaps;
+import com.redhat.rhevm.api.model.VmType;
+import com.redhat.rhevm.api.model.VmTypes;
 import com.redhat.rhevm.api.common.resource.DefaultCapabilitiesResource;
 
 public class PowerShellCapabilitiesResourceTest extends BasePowerShellResourceTest {
@@ -63,6 +65,14 @@ public class PowerShellCapabilitiesResourceTest extends BasePowerShellResourceTe
         }
     }
 
+    private void checkVmTypes(VmTypes vmTypes, VmType... expected) {
+        assertNotNull(vmTypes);
+        assertEquals(expected.length, vmTypes.getVmTypes().size());
+        for (int i = 0; i < expected.length; i++) {
+            assertEquals(expected[i].value(), vmTypes.getVmTypes().get(i));
+        }
+    }
+
     @Test
     public void testCaps() {
         assertNotNull(caps);
@@ -84,5 +94,11 @@ public class PowerShellCapabilitiesResourceTest extends BasePowerShellResourceTe
     public void testSchedulingPolicies() {
         assertNotNull(caps.getSchedulingPolicies());
         checkSchedulingPolicies(caps.getSchedulingPolicies(), SchedulingPolicyType.values());
+    }
+
+    @Test
+    public void testVmTypes() {
+        checkVmTypes(caps.getVersions().get(0).getVmTypes(), VmType.values());
+        checkVmTypes(caps.getVersions().get(1).getVmTypes(), VmType.values());
     }
 }
