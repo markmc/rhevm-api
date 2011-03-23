@@ -108,12 +108,15 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
         return storage.getAddress() + ":" + storage.getPath();
     }
 
-    private String getImportPreConfiguredStorageDomain(StorageDomain storageDomain, StorageType storageType, String hostArg) {
+    private String getImportPreConfiguredStorageDomain(StorageDomain storageDomain,
+                                                       StorageDomainType storageDomainType,
+                                                       StorageType storageType,
+                                                       String hostArg) {
         StringBuilder buf = new StringBuilder();
 
         buf.append("$sd = get-preconfiguredstoragedomains");
         buf.append(" -hostid " + hostArg);
-        buf.append(getTypeArgs(storageDomain, storageType, "storage"));
+        buf.append(getTypeArgs(storageDomainType, storageType, "storage"));
         buf.append(" -nfsmountpoint ");
         buf.append(PowerShellUtils.escape(getNfsMountPoint(storageDomain.getStorage())));
         buf.append("; ");
@@ -173,15 +176,15 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
         return buf.toString();
     }
 
-    private String getTypeArgs(StorageDomain storageDomain, StorageType storageType) {
-        return getTypeArgs(storageDomain, storageType, "");
+    private String getTypeArgs(StorageDomainType storageDomainType, StorageType storageType) {
+        return getTypeArgs(storageDomainType, storageType, "");
     }
 
-    private String getTypeArgs(StorageDomain storageDomain, StorageType storageType, String domainTypePrefix) {
+    private String getTypeArgs(StorageDomainType storageDomainType, StorageType storageType, String domainTypePrefix) {
         StringBuilder buf = new StringBuilder();
 
         buf.append(" -" + domainTypePrefix + "domaintype ");
-        switch (storageDomain.getType()) {
+        switch (storageDomainType) {
         case DATA:
             buf.append("Data");
             break;
@@ -192,7 +195,7 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
             buf.append("Export");
             break;
         default:
-            assert false : storageDomain.getType();
+            assert false : storageDomainType;
             break;
         }
 
@@ -207,6 +210,8 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
 
         StorageType storageType = validateAddParameters(storageDomain);
 
+        StorageDomainType storageDomainType = validateEnum(StorageDomainType.class, storageDomain.getType());
+
         Storage storage = storageDomain.getStorage();
 
         String hostArg = setUpHostArg(storageDomain.getHost(), buf);
@@ -214,9 +219,9 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
         boolean closeBlock = false;
 
         if (storageType == StorageType.NFS &&
-            (storageDomain.getType() == StorageDomainType.EXPORT ||
-             storageDomain.getType() == StorageDomainType.ISO)) {
-            buf.append(getImportPreConfiguredStorageDomain(storageDomain, storageType, hostArg));
+            (storageDomainType == StorageDomainType.EXPORT ||
+             storageDomainType == StorageDomainType.ISO)) {
+            buf.append(getImportPreConfiguredStorageDomain(storageDomain, storageDomainType, storageType, hostArg));
             closeBlock = true;
         } else if (storageType == StorageType.ISCSI || storageType == StorageType.FCP) {
             validateParameters(storageDomain, "name");
@@ -240,7 +245,7 @@ public class PowerShellStorageDomainsResource extends AbstractPowerShellCollecti
 
             buf.append(" -hostid " + hostArg);
 
-            buf.append(getTypeArgs(storageDomain, storageType));
+            buf.append(getTypeArgs(storageDomainType, storageType));
 
             switch (storageType) {
             case NFS:

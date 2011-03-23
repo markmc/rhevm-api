@@ -381,14 +381,6 @@
     </xs:restriction>
   </xs:simpleType>
 
-  <xs:simpleType name="StorageDomainType">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="DATA"/>
-      <xs:enumeration value="ISO"/>
-      <xs:enumeration value="EXPORT"/>
-    </xs:restriction>
-  </xs:simpleType>
-
   <xs:simpleType name="StorageDomainStatus">
     <xs:restriction base="xs:string">
       <xs:enumeration value="ACTIVE"/>
@@ -1229,7 +1221,7 @@
       <xs:extension base="BaseResource">
         <xs:sequence>
           <xs:element ref="data_center" minOccurs="0"/>
-          <xs:element name="type" type="StorageDomainType" minOccurs="0"/>
+          <xs:element name="type" type="xs:string" minOccurs="0"/>
           <xs:element name="status" type="StorageDomainStatus" minOccurs="0"/>
           <xs:element name="master" type="xs:boolean" minOccurs="0"/>
           <xs:element ref="storage" minOccurs="0"/>

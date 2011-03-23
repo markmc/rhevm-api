@@ -56,7 +56,7 @@ public class PowerShellStorageDomain extends StorageDomain {
             if (storageDomain.isMaster()) {
                 domainType = domainType.split(" ")[0];
             }
-            storageDomain.setType(StorageDomainType.fromValue(domainType));
+            storageDomain.setType(StorageDomainType.valueOf(domainType).value());
 
             PowerShellStorageDomainStatus status =
                 entity.get("status", PowerShellStorageDomainStatus.class);

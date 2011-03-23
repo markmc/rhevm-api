@@ -91,7 +91,7 @@ public class PowerShellStorageDomainsResourceTest
         StorageDomain model = getModel(NEW_NAME, NEW_DESCRIPTION);
         model.setHost(new Host());
         model.getHost().setId(HOST_ID);
-        model.setType(StorageDomainType.DATA);
+        model.setType(StorageDomainType.DATA.value());
         model.setStorage(new Storage());
         model.getStorage().setType(StorageType.NFS.value());
         model.getStorage().setAddress(NFS_ADDRESS);
@@ -105,7 +105,7 @@ public class PowerShellStorageDomainsResourceTest
         StorageDomain model = getModel(NEW_NAME, NEW_DESCRIPTION);
         model.setHost(new Host());
         model.getHost().setName(HOST_NAME);
-        model.setType(StorageDomainType.DATA);
+        model.setType(StorageDomainType.DATA.value());
         model.setStorage(new Storage());
         model.getStorage().setType(StorageType.NFS.value());
         model.getStorage().setAddress(NFS_ADDRESS);
@@ -119,7 +119,7 @@ public class PowerShellStorageDomainsResourceTest
         StorageDomain model = getModel(null, null);
         model.setHost(new Host());
         model.getHost().setName(HOST_NAME);
-        model.setType(StorageDomainType.EXPORT);
+        model.setType(StorageDomainType.EXPORT.value());
         model.setStorage(new Storage());
         model.getStorage().setType(StorageType.NFS.value());
         model.getStorage().setAddress(NFS_ADDRESS);

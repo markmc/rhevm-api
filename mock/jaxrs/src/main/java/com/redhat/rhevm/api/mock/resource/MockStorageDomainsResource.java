@@ -50,7 +50,7 @@ public class MockStorageDomainsResource extends AbstractMockQueryableResource<St
         MockStorageDomainResource resource = new MockStorageDomainResource(allocateId(StorageDomain.class), getExecutor(), this);
 
         resource.getModel().setName(name);
-        resource.getModel().setType(domainType);
+        resource.getModel().setType(domainType.value());
 
         Storage storage = new Storage();
         storage.setType(storageType.value());

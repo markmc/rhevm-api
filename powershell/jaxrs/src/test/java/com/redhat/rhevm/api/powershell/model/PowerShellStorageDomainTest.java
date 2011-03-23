@@ -35,7 +35,7 @@ public class PowerShellStorageDomainTest extends PowerShellModelTest {
     private void testStorageDomain(PowerShellStorageDomain s, String id, String name, StorageDomainType type, boolean isMaster, StorageDomainStatus status, Object available, Object used, Object committed) {
         assertEquals(id, s.getId());
         assertEquals(name, s.getName());
-        assertEquals(type, s.getType());
+        assertEquals(type.value(), s.getType());
         assertEquals(isMaster, s.isMaster());
         assertEquals(status, s.getStatus());
         assertEquals(available, s.getAvailable());
