@@ -71,16 +71,16 @@ public class DefaultCapabilitiesResource implements CapabilitiesResource {
     }
 
     {
-        addPowerManager("alom", "secure=BOOL,port=INT");
-        addPowerManager("apc", "secure=BOOL,port=INT,slot=INT");
-        addPowerManager("bladecenter", "secure=BOOL,port=INT,slot=INT");
-        addPowerManager("drac5", "secure=BOOL,port=INT");
-        addPowerManager("eps", "slot=INT");
-        addPowerManager("ilo", "secure=BOOL,port=INT");
+        addPowerManager("alom", "secure=bool,port=int");
+        addPowerManager("apc", "secure=bool,port=int,slot=int");
+        addPowerManager("bladecenter", "secure=bool,port=int,slot=int");
+        addPowerManager("drac5", "secure=bool,port=int");
+        addPowerManager("eps", "slot=int");
+        addPowerManager("ilo", "secure=bool,port=int");
         addPowerManager("ipmilan", "");
-        addPowerManager("rsa", "secure=BOOL,port=INT");
+        addPowerManager("rsa", "secure=bool,port=int");
         addPowerManager("rsb", "");
-        addPowerManager("wti", "secure=BOOL,port=INT,slot=INT");
+        addPowerManager("wti", "secure=bool,port=int,slot=int");
     }
 
     private void addPowerManager(String type, String options) {
