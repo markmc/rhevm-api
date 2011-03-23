@@ -43,8 +43,6 @@ public class DefaultCapabilitiesResource implements CapabilitiesResource {
         return version;
     }
 
-    private CPUs cpus = new CPUs();
-
     {
         addCpu(VERSION21, "Intel Xeon w/o XD/NX",  2);
         addCpu(VERSION21, "Intel Xeon",            3);
@@ -70,8 +68,6 @@ public class DefaultCapabilitiesResource implements CapabilitiesResource {
             addCpu(VERSION22, id, level);
         }
     }
-
-    private PowerManagers powerManagers = new PowerManagers();
 
     {
         addPowerManager("alom", "secure=BOOL,port=INT");
