@@ -43,7 +43,7 @@ public class PowerShellClusterTest extends PowerShellModelTest {
         assertEquals(overcommit, c.getMemoryPolicy().getOverCommit().getPercent());
         if (schedPolicy != null) {
             assertNotNull(c.getSchedulingPolicy());
-            assertEquals(schedPolicy, c.getSchedulingPolicy().getPolicy());
+            assertEquals(schedPolicy.value(), c.getSchedulingPolicy().getPolicy());
             assertNotNull(c.getSchedulingPolicy().getThresholds());
             assertFalse(c.getSchedulingPolicy().getThresholds().isSetLow());
             assertEquals(high, c.getSchedulingPolicy().getThresholds().getHigh());

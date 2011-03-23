@@ -23,7 +23,9 @@ import java.util.HashMap;
 import com.redhat.rhevm.api.model.SchedulingPolicyType;
 
 public enum PowerShellHostSelectionAlgorithm {
-    None(0), EvenlyDistribute(1), PowerSave(2);
+    None(0, null),
+    EvenlyDistribute(1, SchedulingPolicyType.EVENLY_DISTRIBUTED),
+    PowerSave(2, SchedulingPolicyType.POWER_SAVING);
 
     private static HashMap<Integer, PowerShellHostSelectionAlgorithm> mapping;
     static {
@@ -34,9 +36,11 @@ public enum PowerShellHostSelectionAlgorithm {
     }
 
     private int value;
+    private SchedulingPolicyType model;
 
-    private PowerShellHostSelectionAlgorithm(int value) {
+    private PowerShellHostSelectionAlgorithm(int value, SchedulingPolicyType model) {
         this.value = value;
+        this.model = model;
     }
 
     public int getValue() {
@@ -44,17 +48,7 @@ public enum PowerShellHostSelectionAlgorithm {
     }
 
     public SchedulingPolicyType map() {
-        switch (this) {
-        case None:
-            return null;
-        case EvenlyDistribute:
-            return SchedulingPolicyType.EVENLY_DISTRIBUTED;
-        case PowerSave:
-            return SchedulingPolicyType.POWER_SAVING;
-        default:
-            assert false : this;
-            return null;
-        }
+        return model;
     }
 
     public static PowerShellHostSelectionAlgorithm forValue(int value) {

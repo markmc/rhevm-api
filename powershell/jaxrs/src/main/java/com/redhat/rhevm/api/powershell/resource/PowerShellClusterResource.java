@@ -156,9 +156,13 @@ public class PowerShellClusterResource extends AbstractPowerShellActionableResou
             buf.append("; ");
         }
 
+        SchedulingPolicyType policy = null;
         if (cluster.isSetSchedulingPolicy() &&
             cluster.getSchedulingPolicy().isSetPolicy()) {
-            SchedulingPolicyType policy = cluster.getSchedulingPolicy().getPolicy();
+            policy = SchedulingPolicyType.valueOf(cluster.getSchedulingPolicy().getPolicy());
+        }
+
+        if (policy != null) {
             buf.append("$c.selectionalgorithm = ");
             buf.append(policy == SchedulingPolicyType.POWER_SAVING ? "PowerSave" : "EvenlyDistribute");
             buf.append("; ");

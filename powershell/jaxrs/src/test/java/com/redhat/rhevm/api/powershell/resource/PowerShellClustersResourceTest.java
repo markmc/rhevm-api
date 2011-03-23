@@ -130,7 +130,7 @@ public class PowerShellClustersResourceTest extends AbstractPowerShellCollection
         Cluster model = getModel(NEW_NAME, NEW_DESCRIPTION);
         model.setVersion(null);
         model.setSchedulingPolicy(new SchedulingPolicy());
-        model.getSchedulingPolicy().setPolicy(SchedulingPolicyType.EVENLY_DISTRIBUTED);
+        model.getSchedulingPolicy().setPolicy(SchedulingPolicyType.EVENLY_DISTRIBUTED.value());
         model.getSchedulingPolicy().setThresholds(new SchedulingPolicyThresholds());
         model.getSchedulingPolicy().getThresholds().setHigh(60);
         model.getSchedulingPolicy().getThresholds().setDuration(300);

@@ -47,7 +47,7 @@ public class PowerShellCluster {
         int duration = entity.get("cpuovercommitdurationminutes", Integer.class) * 60;
 
         SchedulingPolicy policy = new SchedulingPolicy();
-        policy.setPolicy(type);
+        policy.setPolicy(type.value());
         policy.setThresholds(new SchedulingPolicyThresholds());
 
         switch (type) {

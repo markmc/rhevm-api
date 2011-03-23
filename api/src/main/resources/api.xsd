@@ -479,13 +479,6 @@
     </xs:restriction>
   </xs:simpleType>
 
-  <xs:simpleType name="SchedulingPolicyType">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="POWER_SAVING"/>
-      <xs:enumeration value="EVENLY_DISTRIBUTED"/>
-    </xs:restriction>
-  </xs:simpleType>
-
   <!-- CPUs -->
 
   <xs:element name="cpu" type="CPU"/>
@@ -702,7 +695,7 @@
 
   <xs:complexType name="SchedulingPolicy">
     <xs:sequence>
-      <xs:element name="policy" type="SchedulingPolicyType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="policy" type="xs:string" minOccurs="0" maxOccurs="1"/>
       <xs:element name="thresholds" type="SchedulingPolicyThresholds" minOccurs="0" maxOccurs="1"/>
     </xs:sequence>
   </xs:complexType>

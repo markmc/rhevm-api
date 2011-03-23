@@ -95,9 +95,13 @@ public class PowerShellClustersResource
             buf.append(" -maxmemoryovercommit " + Integer.toString(cluster.getMemoryPolicy().getOverCommit().getPercent()));
         }
 
+        SchedulingPolicyType policy = null;
         if (cluster.isSetSchedulingPolicy() &&
             cluster.getSchedulingPolicy().isSetPolicy()) {
-            SchedulingPolicyType policy = cluster.getSchedulingPolicy().getPolicy();
+            policy = SchedulingPolicyType.fromValue(cluster.getSchedulingPolicy().getPolicy());
+        }
+
+        if (policy != null) {
             SchedulingPolicyThresholds thresholds = cluster.getSchedulingPolicy().getThresholds();
 
             buf.append(" -selectionalgorithm ");
