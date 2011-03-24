@@ -28,6 +28,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Action;
+import com.redhat.rhevm.api.model.Fault;
+import com.redhat.rhevm.api.model.FenceType;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.IscsiDetails;
 import com.redhat.rhevm.api.model.Link;
@@ -42,8 +44,10 @@ import com.redhat.rhevm.api.resource.HostStorageResource;
 import com.redhat.rhevm.api.resource.StatisticsResource;
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.LinkHelper;
+import com.redhat.rhevm.api.model.Status;
 import com.redhat.rhevm.api.powershell.model.PowerShellHost;
 import com.redhat.rhevm.api.powershell.model.PowerShellHostStatisticsParser;
+import com.redhat.rhevm.api.powershell.model.PowerShellPowerManagementStatus;
 import com.redhat.rhevm.api.powershell.model.PowerShellStorageConnection;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellPool;
@@ -194,9 +198,39 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
         case STOP:
             buf.append(" -action Stop");
             break;
+        case STATUS:
+            buf = new StringBuilder();
+            buf.append("get-powermanagementstatus");
+            buf.append(" -hostid " + PowerShellUtils.escape(getId()));
+            break;
         }
 
-        return doAction(getUriInfo(), new CommandRunner(action, buf.toString(), getPool()));
+        return doAction(getUriInfo(), new CommandRunner(action, buf.toString(), getPool()) {
+            protected void handleOutput(String output) {
+                if (action.getFenceType().equals(FenceType.STATUS)) {
+                    List<PowerShellPowerManagementStatus> statuses = PowerShellPowerManagementStatus.parse(getParser(), output);
+                    if (statuses.isEmpty()) {
+                        handleFailure("Unknown status");
+                    } else {
+                        PowerShellPowerManagementStatus status = statuses.get(0); //there can be only one status
+                        if (status.isSuccess() && status.getStatus() != null) {
+                            action.setStatus(Status.COMPLETE);
+                            PowerManagement pm = new PowerManagement();
+                            pm.setStatus(status.getStatus());
+                            action.setPowerManagement(pm);
+                        } else {
+                            handleFailure(status.getMessage());
+                        }
+                    }
+                }
+             }
+
+            private void handleFailure(String message) {
+                action.setStatus(Status.FAILED);
+                action.setFault(new Fault());
+                action.getFault().setReason(MessageFormat.format(reason, message==null ? "" : message));
+            }
+         });
     }
 
     @Override

@@ -29,11 +29,14 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Fault;
+import com.redhat.rhevm.api.model.FenceType;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.IscsiDetails;
 import com.redhat.rhevm.api.model.PowerManagement;
 import com.redhat.rhevm.api.model.PowerManagementOption;
 import com.redhat.rhevm.api.model.PowerManagementOptions;
+import com.redhat.rhevm.api.model.PowerManagementStatus;
+import com.redhat.rhevm.api.model.Status;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
@@ -68,6 +71,7 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
     private static String ISCSI_TARGET = "iqn.2009-08.com.mycorp:mysan.foobar";
     private static String ISCSI_DISCOVER_COMMAND = "$cnx = new-storageserverconnection -storagetype ISCSI -connection \"" + ISCSI_PORTAL + "\" -portal \"" + ISCSI_PORTAL + "\"; get-storageserversendtargets -hostid \"" + HOST_ID + "\" -storageserverconnectionobject $cnx";
     private static String ISCSI_LOGIN_COMMAND = "$cnx = new-storageserverconnection -storagetype ISCSI -connection \"" + ISCSI_PORTAL + "\" -portal \"" + ISCSI_PORTAL + "\" -iqn \"" + ISCSI_TARGET + "\"; connect-storagetohost -hostid \"" + HOST_ID + "\" -storageserverconnectionobject $cnx";
+    private static String FENCE_STATUS_COMMAND = "get-powermanagementstatus -hostid \"" + HOST_ID + "\"";
 
     protected PowerShellHostResource getResource(Executor executor, PowerShellPoolMap poolMap, PowerShellParser parser, UriInfoProvider uriProvider) {
         return new PowerShellHostResource(HOST_ID, executor, uriProvider, poolMap, parser, httpHeaders);
@@ -239,6 +243,36 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
         Response response = resource.iscsiDiscover(action);
         verifyActionResponse(response, false);
         verifyIscsiTargets(response);
+    }
+
+    @Test
+    public void testFenceStatusSucceed() throws Exception {
+        Action action = getAction();
+        action.setFenceType(FenceType.STATUS);
+        setUriInfo(setUpActionExpectation("/hosts/" + HOST_ID + "/",
+                "fence",
+                FENCE_STATUS_COMMAND,
+                "<Objects><Object Type=\"System.String\">Test Succeeded, Host Status is: on</Object></Objects>"));
+        Response response = resource.fence(action);
+        Action actionResult = (Action)response.getEntity();
+        assertNotNull(actionResult.getPowerManagement());
+        assertEquals(actionResult.getPowerManagement().getStatus(), PowerManagementStatus.ON);
+        verifyActionResponse(response, false);
+    }
+
+    @Test
+    public void testFenceStatusFail() throws Exception {
+        Action action = getAction();
+        action.setFenceType(FenceType.STATUS);
+        setUriInfo(setUpActionExpectation("/hosts/" + HOST_ID + "/",
+                "fence",
+                FENCE_STATUS_COMMAND,
+                "<Objects><Object Type=\"System.String\">Test Failed, Host Status is: off. Host burned by a madman.</Object></Objects>"));
+        Response response = resource.fence(action);
+        Action actionResult = (Action)response.getEntity();
+        assertEquals(actionResult.getStatus(), Status.FAILED);
+        assertNotNull(actionResult.getFault());
+        assertEquals(actionResult.getFault().getReason(), "Powershell command \"get-powermanagementstatus -hostid \"109313413\"\" failed with Host burned by a madman.");
     }
 
     @Test

@@ -168,7 +168,9 @@ public abstract class AbstractActionableResource<R extends BaseResource> extends
         public void run() {
             try {
                 execute();
-                action.setStatus(com.redhat.rhevm.api.model.Status.COMPLETE);
+                if (action.getStatus()!=com.redhat.rhevm.api.model.Status.FAILED) {
+                    action.setStatus(com.redhat.rhevm.api.model.Status.COMPLETE);
+                }
             } catch (Throwable t) {
                 String message = t.getMessage() != null ? t.getMessage() : t.getClass().getName();
                 setFault(MessageFormat.format(reason, message), t);

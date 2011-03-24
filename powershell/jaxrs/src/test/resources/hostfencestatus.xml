@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<Objects>
+  <Object Type="System.String">Test Succeeded, Host Status is: on</Object>
+  <Object Type="System.String">Test Failed, Host Status is: off. Host was burned by a madman</Object>  
+</Objects>

@@ -124,6 +124,8 @@
         </xs:annotation>
       <!-- ... etc., explicitly enumerate all the response types -->
       </xs:element>
+      <xs:element ref="power_management" minOccurs="0" maxOccurs="1"/>
+      <!-- for Host fence status action  -->
     </xs:sequence>
   </xs:group>
 
@@ -164,6 +166,13 @@
       <xs:enumeration value="IN_PROGRESS"/>
       <xs:enumeration value="COMPLETE"/>
       <xs:enumeration value="FAILED"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="PowerManagementStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ON"/>
+      <xs:enumeration value="OFF"/>   
     </xs:restriction>
   </xs:simpleType>
 
@@ -333,6 +342,7 @@
       <xs:enumeration value="RESTART"/>
       <xs:enumeration value="START"/>
       <xs:enumeration value="STOP"/>
+      <xs:enumeration value="STATUS"/>
     </xs:restriction>
   </xs:simpleType>
 
@@ -757,6 +767,7 @@
       <xs:element name="username" type="xs:string" minOccurs="0" maxOccurs="1"/>
       <xs:element name="password" type="xs:string" minOccurs="0" maxOccurs="1"/>
       <xs:element name="options" type="PowerManagementOptions" minOccurs="0"/>
+      <xs:element name="status" type="PowerManagementStatus" minOccurs="0" maxOccurs="1"/>
     </xs:sequence>
     <xs:attribute name="type" type="xs:string"/>
   </xs:complexType>
@@ -1759,5 +1770,4 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-
 </xs:schema>
