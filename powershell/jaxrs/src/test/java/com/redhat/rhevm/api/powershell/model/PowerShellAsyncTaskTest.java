@@ -58,31 +58,6 @@ public class PowerShellAsyncTaskTest extends PowerShellModelTest {
     }
 
     @Test
-    public void testParseTasks22() throws Exception {
-        String data = readFileContents("tasks22.xml");
-        assertNotNull(data);
-
-        String taskIds = null;
-        Status status = null;
-
-        for (PowerShellParser.Entity entity : getParser().parse(data)) {
-            if (PowerShellAsyncTask.isTask(entity)) {
-                taskIds = PowerShellAsyncTask.parseTask(entity, taskIds);
-                continue;
-            } else if (PowerShellAsyncTask.isStatus(entity)) {
-                status = PowerShellAsyncTask.parseStatus(entity, status);
-                continue;
-            }
-
-        }
-
-        assertNotNull(taskIds);
-        assertEquals("3571cb0a-5b9c-4387-bd82-24b60485dacc", taskIds);
-        assertNotNull(status);
-        assertEquals(Status.IN_PROGRESS, status);
-    }
-
-    @Test
     public void testParseCreation() throws Exception {
         String data = readFileContents("tasks.xml");
         assertNotNull(data);

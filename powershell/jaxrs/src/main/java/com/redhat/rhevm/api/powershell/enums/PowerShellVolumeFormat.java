@@ -23,7 +23,7 @@ import java.util.HashMap;
 import com.redhat.rhevm.api.model.DiskFormat;
 
 public enum PowerShellVolumeFormat {
-    Unassigned(0), COW(1), RAW(2);
+    Unassigned(3), COW(4), RAW(5);
 
     private static HashMap<Integer, PowerShellVolumeFormat> mapping;
     static {

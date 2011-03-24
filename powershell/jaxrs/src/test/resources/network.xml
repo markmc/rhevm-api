@@ -8,7 +8,7 @@
     <Property Name="Gateway" Type="System.String" />
     <Property Name="Type" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
     <Property Name="VlanId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]">5</Property>
-    <Property Name="Status" Type="VdcCommon.BusinessEntities.NetworkStatus">
+    <Property Name="Status" Type="VdcDAL.NetworkStatus">
       <Property Name="value__" Type="System.Int32">1</Property>
     </Property>
     <Property Name="Stp" Type="System.Boolean">False</Property>
@@ -24,7 +24,7 @@
     <Property Name="Gateway" Type="System.String" />
     <Property Name="Type" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
     <Property Name="VlanId" Type="System.Nullable`1[[System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
-    <Property Name="Status" Type="VdcCommon.BusinessEntities.NetworkStatus">
+    <Property Name="Status" Type="VdcDAL.NetworkStatus">
       <Property Name="value__" Type="System.Int32">0</Property>
     </Property>
     <Property Name="Stp" Type="System.Boolean">False</Property>

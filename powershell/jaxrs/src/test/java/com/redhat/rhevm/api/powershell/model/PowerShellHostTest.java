@@ -168,7 +168,7 @@ public class PowerShellHostTest extends PowerShellModelTest {
 
         assertEquals(hosts.size(), 1);
 
-        testHost(hosts.get(0), "5f38363b-7457-4884-831e-78c27cebb31d", "zig", HostStatus.UP, "99408929-82cf-4dc7-a532-9d998063fa95", true, 54321);
+        testHost(hosts.get(0), "1", "zig", HostStatus.UP, "0", true, 54321);
 
         assertNotNull(hosts.get(0).getPowerManagement());
         testPowerManagement(hosts.get(0).getPowerManagement(), "ilo", true, "192.168.1.107", "foo", new String[] { "secure", "port" }, new String[] { "true", "12345" });

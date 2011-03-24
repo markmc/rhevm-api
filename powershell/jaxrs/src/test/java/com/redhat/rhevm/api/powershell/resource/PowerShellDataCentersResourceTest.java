@@ -60,20 +60,6 @@ public class PowerShellDataCentersResourceTest extends AbstractPowerShellCollect
     }
 
     @Test
-    public void testList22() throws Exception {
-        String [] commands = { getSelectCommand(),
-                               getSupportedVersionCommand(NAMES[0]),
-                               getSupportedVersionCommand(NAMES[1]),
-                               getSupportedVersionCommand(NAMES[2]) };
-        String [] returns =  { getSelectReturn(),
-                               formatVersion(MAJOR, MINOR),
-                               formatVersion(MAJOR, MINOR),
-                               formatVersion(MAJOR, MINOR) };
-        resource.setUriInfo(setUpResourceExpectations(4, commands, returns, false, null, NAMES));
-        verifyCollection(resource.list().getDataCenters(), NAMES, DESCRIPTIONS);
-    }
-
-    @Test
     public void testQuery() throws Exception {
         String [] commands = { getQueryCommand(DataCenter.class),
                                getSupportedVersionCommand(NAMES[1]),

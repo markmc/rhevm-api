@@ -17,16 +17,16 @@
     <Property Name="DefaultHostId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
     <Property Name="NiceLevel" Type="System.Int32">0</Property>
     <Property Name="FailBack" Type="System.Boolean">False</Property>
-    <Property Name="DefaultBootSequence" Type="VdcCommon.BusinessEntities.BootSequence">
+    <Property Name="DefaultBootSequence" Type="VdcDAL.BootSequence">
       <Property Name="value__" Type="System.Int32">{6}</Property>
     </Property>
-    <Property Name="VmType" Type="VdcCommon.BusinessEntities.VmType">
+    <Property Name="VmType" Type="VdcDAL.VmType">
       <Property Name="value__" Type="System.Int32">0</Property>
     </Property>
-    <Property Name="HypervisorType" Type="VdcCommon.BusinessEntities.HypervisorType">
+    <Property Name="HypervisorType" Type="VdcDAL.HypervisorType">
       <Property Name="value__" Type="System.Int32">0</Property>
     </Property>
-    <Property Name="OperationMode" Type="VdcCommon.BusinessEntities.OperationMode">
+    <Property Name="OperationMode" Type="VdcDAL.OperationMode">
       <Property Name="value__" Type="System.Int32">0</Property>
     </Property>
     <Property Name="AutoStartup" Type="System.Boolean">False</Property>
@@ -73,12 +73,12 @@
   <Object Type="RhevmCmd.CLITask">
     <Property Name="TaskId" Type="System.String">9ee9fceb-378e-453f-b7a6-d9dc6a44ef2e</Property>
   </Object>
-  <Object Type="VdcCommon.BusinessEntities.AsyncTaskStatus">
-    <Property Name="Status" Type="VdcCommon.BusinessEntities.AsyncTaskStatusEnum">
+  <Object Type="VdcCommon.AsyncTasks.AsyncTaskStatus">
+    <Property Name="Status" Type="VdcCommon.AsyncTasks.AsyncTaskStatusEnum">
       <Property Name="value__" Type="System.Int32">1</Property>
     </Property>
     <Property Name="StatusSpecified" Type="System.Boolean">True</Property>
-    <Property Name="Result" Type="VdcCommon.BusinessEntities.AsyncTaskResultEnum">
+    <Property Name="Result" Type="VdcCommon.AsyncTasks.AsyncTaskResultEnum">
       <Property Name="value__" Type="System.Int32">0</Property>
     </Property>
     <Property Name="ResultSpecified" Type="System.Boolean">True</Property>

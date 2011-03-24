@@ -24,16 +24,16 @@
         <Property Name="DefaultHostId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
         <Property Name="NiceLevel" Type="System.Int32">0</Property>
         <Property Name="FailBack" Type="System.Boolean">False</Property>
-        <Property Name="DefaultBootSequence" Type="VdcCommon.BusinessEntities.BootSequence">
+        <Property Name="DefaultBootSequence" Type="VdcDAL.BootSequence">
           <Property Name="value__" Type="System.Int32">0</Property>
         </Property>
-        <Property Name="VmType" Type="VdcCommon.BusinessEntities.VmType">
+        <Property Name="VmType" Type="VdcDAL.VmType">
           <Property Name="value__" Type="System.Int32">0</Property>
         </Property>
-        <Property Name="HypervisorType" Type="VdcCommon.BusinessEntities.HypervisorType">
+        <Property Name="HypervisorType" Type="VdcDAL.HypervisorType">
           <Property Name="value__" Type="System.Int32">0</Property>
         </Property>
-        <Property Name="OperationMode" Type="VdcCommon.BusinessEntities.OperationMode">
+        <Property Name="OperationMode" Type="VdcDAL.OperationMode">
           <Property Name="value__" Type="System.Int32">0</Property>
         </Property>
         <Property Name="AutoStartup" Type="System.Boolean">False</Property>
@@ -81,16 +81,16 @@
         <Property Name="DefaultHostId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
         <Property Name="NiceLevel" Type="System.Int32">0</Property>
         <Property Name="FailBack" Type="System.Boolean">False</Property>
-        <Property Name="DefaultBootSequence" Type="VdcCommon.BusinessEntities.BootSequence">
+        <Property Name="DefaultBootSequence" Type="VdcDAL.BootSequence">
           <Property Name="value__" Type="System.Int32">0</Property>
         </Property>
-        <Property Name="VmType" Type="VdcCommon.BusinessEntities.VmType">
+        <Property Name="VmType" Type="VdcDAL.VmType">
           <Property Name="value__" Type="System.Int32">0</Property>
         </Property>
-        <Property Name="HypervisorType" Type="VdcCommon.BusinessEntities.HypervisorType">
+        <Property Name="HypervisorType" Type="VdcDAL.HypervisorType">
           <Property Name="value__" Type="System.Int32">0</Property>
         </Property>
-        <Property Name="OperationMode" Type="VdcCommon.BusinessEntities.OperationMode">
+        <Property Name="OperationMode" Type="VdcDAL.OperationMode">
           <Property Name="value__" Type="System.Int32">0</Property>
         </Property>
         <Property Name="AutoStartup" Type="System.Boolean">False</Property>
@@ -129,7 +129,7 @@
     <Property Name="HasFreeVms" Type="System.Boolean">True</Property>
     <Property Name="Template" Type="System.String">tmpl1</Property>
     <Property Name="NumberOfMonitors" Type="System.Int32">1</Property>
-    <Property Name="UsbPolicy" Type="VdcCommon.BusinessEntities.UsbPolicy">
+    <Property Name="UsbPolicy" Type="VdcDAL.UsbPolicy">
       <Property Name="value__" Type="System.Int32">1</Property>
     </Property>
     <Property Name="OperatingSystem" Type="System.String">OtherLinux</Property>

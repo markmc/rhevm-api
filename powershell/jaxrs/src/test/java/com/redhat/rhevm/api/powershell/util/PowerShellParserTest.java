@@ -25,7 +25,6 @@ import org.junit.Test;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import com.redhat.rhevm.api.powershell.enums.EnumMapper;
-import com.redhat.rhevm.api.powershell.enums.PowerShellStorageDomainStatus;
 
 public class PowerShellParserTest extends Assert {
 
@@ -57,30 +56,6 @@ public class PowerShellParserTest extends Assert {
         for (int i = 0; i < FILES.length; i++) {
             parser.parse(PowerShellTestUtils.readClassPathFile(FILES[i]));
         }
-    }
-
-    @Test
-    public void testParse22() throws Exception {
-        PowerShellParser.Entity cluster =
-            parser.parse(PowerShellTestUtils.readClassPathFile("cluster22.xml")).get(0);
-        verifyId(cluster, "clusterid", "0");
-
-        PowerShellParser.Entity host =
-            parser.parse(PowerShellTestUtils.readClassPathFile("host22.xml")).get(0);
-        verifyId(host, "hostid", "1");
-        verifyId(host, "hostclusterid", "0");
-
-        PowerShellParser.Entity vmpool =
-            parser.parse(PowerShellTestUtils.readClassPathFile("vmpool22.xml")).get(0);
-        verifyId(vmpool, "vmpoolid", "2");
-
-        PowerShellParser.Entity vm =
-            parser.parse(PowerShellTestUtils.readClassPathFile("vm22.xml")).get(0);
-        verifyId(vm, "runningonhost", "-1");
-
-        PowerShellParser.Entity storageDomain =
-            parser.parse(PowerShellTestUtils.readClassPathFile("storagedomain22.xml")).get(0);
-        assertNull(storageDomain.get("status", PowerShellStorageDomainStatus.class));
     }
 
     @Test

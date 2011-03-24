@@ -6,7 +6,7 @@
     <Property Name="Iqn" Type="System.String">iqn.2009-08.com.mycorp:mysan.foobar</Property>
     <Property Name="UserName" Type="System.String" />
     <Property Name="Password" Type="System.String" />
-    <Property Name="Type" Type="VdcCommon.BusinessEntities.StorageType">
+    <Property Name="Type" Type="VdcDAL.StorageType">
       <Property Name="value__" Type="System.Int32">3</Property>
     </Property>
     <Property Name="Port" Type="System.String">3260</Property>

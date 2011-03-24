@@ -105,15 +105,11 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
     }
 
     protected String formatVm(String name) {
-        return formatVm("vm", name);
+        return formatVm(name, PowerShellVmsResourceTest.extraArgs);
     }
 
-    protected String formatVm(String type, String name) {
-        return formatVm(type, name, PowerShellVmsResourceTest.extraArgs);
-    }
-
-    protected String formatVm(String type, String name, String[] extraArgs) {
-        return formatXmlReturn(type,
+    protected String formatVm(String name, String[] extraArgs) {
+        return formatXmlReturn("vm",
                                new String[] { name },
                                new String[] { "" },
                                extraArgs);
@@ -193,22 +189,10 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
         verifyVM(vm, VM_NAME);
     }
 
-    @Test
-    public void testGet22() throws Exception {
+    public void testGetNoHost() throws Exception {
         setUpHttpHeaderNullExpectations("Accept");
         setUriInfo(setUpVmExpectations("get-vm \"" + VM_ID + "\"" + getProcess(Method.GET),
-                                       formatVm("vm22", VM_NAME),
-                                       VM_NAME));
-        verifyVM(resource.get(), VM_NAME);
-    }
-
-    @Test
-    public void testGet22NoHost() throws Exception {
-        setUpHttpHeaderNullExpectations("Accept");
-        setUriInfo(setUpVmExpectations("get-vm \"" + VM_ID + "\"" + getProcess(Method.GET),
-                                       formatVm("vm22",
-                                                VM_NAME,
-                                                PowerShellVmsResourceTest.noHostArgs),
+                                       formatVm(VM_NAME, PowerShellVmsResourceTest.noHostArgs),
                                        VM_NAME));
         verifyVM(resource.get(), VM_NAME, false);
     }

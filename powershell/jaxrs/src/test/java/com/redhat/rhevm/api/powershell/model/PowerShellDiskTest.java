@@ -58,19 +58,6 @@ public class PowerShellDiskTest extends PowerShellModelTest {
         List<PowerShellDisk> disks = PowerShellDisk.parse(getParser(), VM_ID, data);
 
         assertNotNull(disks);
-        assertEquals(disks.size(), 1);
-
-        testDisk(disks.get(0), "0b9318b4-e426-4380-9e6a-bb7f3a38a2ce", VM_ID, 1341231104L, DiskType.SYSTEM, DiskStatus.OK, DiskInterface.IDE, DiskFormat.RAW, true, true, false, false, "563055c6-b1ec-4f31-85a1-6354a916a0b5", "00000000-0000-0000-0000-000000000000", "1", "1969-12-10T17:29:35.000Z");
-    }
-
-    @Test
-    public void testParseDisks22() throws Exception {
-        String data = readFileContents("disks22.xml");
-        assertNotNull(data);
-
-        List<PowerShellDisk> disks = PowerShellDisk.parse(getParser(), VM_ID, data);
-
-        assertNotNull(disks);
         assertEquals(disks.size(), 2);
 
         testDisk(disks.get(0), "222ea10f-7c0a-4302-8e80-2834b8fa681a", VM_ID, 1073741824L, DiskType.DATA, DiskStatus.OK, DiskInterface.IDE, DiskFormat.COW, true, false, false, false, "22a659ab-29a3-4160-9647-bb07753c612e", "00000000-0000-0000-0000-000000000000", "2", "2010-07-22T10:40:27.000Z");

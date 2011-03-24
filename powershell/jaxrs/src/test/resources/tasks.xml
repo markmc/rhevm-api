@@ -3,12 +3,12 @@
   <Object Type="RhevmCmd.CLITask">
     <Property Name="TaskId" Type="System.String">9d29775d-b685-411f-b304-07acc2fb7528</Property>
   </Object>
-  <Object Type="VdcCommon.BusinessEntities.AsyncTaskStatus">
-    <Property Name="Status" Type="VdcCommon.BusinessEntities.AsyncTaskStatusEnum">
+  <Object Type="VdcCommon.AsyncTasks.AsyncTaskStatus">
+    <Property Name="Status" Type="VdcCommon.AsyncTasks.AsyncTaskStatusEnum">
       <Property Name="value__" Type="System.Int32">1</Property>
     </Property>
     <Property Name="StatusSpecified" Type="System.Boolean">True</Property>
-    <Property Name="Result" Type="VdcCommon.BusinessEntities.AsyncTaskResultEnum">
+    <Property Name="Result" Type="VdcCommon.AsyncTasks.AsyncTaskResultEnum">
       <Property Name="value__" Type="System.Int32">0</Property>
     </Property>
     <Property Name="ResultSpecified" Type="System.Boolean">True</Property>
@@ -19,12 +19,12 @@
   <Object Type="RhevmCmd.CLITask">
     <Property Name="TaskId" Type="System.String">0b9318b4-e426-4380-9e6a-bb7f3a38a2ce</Property>
   </Object>
-  <Object Type="VdcCommon.BusinessEntities.AsyncTaskStatus">
-    <Property Name="Status" Type="VdcCommon.BusinessEntities.AsyncTaskStatusEnum">
+  <Object Type="VdcCommon.AsyncTasks.AsyncTaskStatus">
+    <Property Name="Status" Type="VdcCommon.AsyncTasks.AsyncTaskStatusEnum">
       <Property Name="value__" Type="System.Int32">3</Property>
     </Property>
     <Property Name="StatusSpecified" Type="System.Boolean">True</Property>
-    <Property Name="Result" Type="VdcCommon.BusinessEntities.AsyncTaskResultEnum">
+    <Property Name="Result" Type="VdcCommon.AsyncTasks.AsyncTaskResultEnum">
       <Property Name="value__" Type="System.Int32">1</Property>
     </Property>
     <Property Name="ResultSpecified" Type="System.Boolean">True</Property>

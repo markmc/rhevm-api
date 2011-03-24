@@ -4,7 +4,7 @@
     <Property Name="DataCenterId" Type="System.String">bb0fd622-5b2a-4c69-bfc5-29493932844a</Property>
     <Property Name="Name" Type="System.String">Default</Property>
     <Property Name="Description" Type="System.String">The default Data Center</Property>
-    <Property Name="Type" Type="VdcCommon.BusinessEntities.StorageType">
+    <Property Name="Type" Type="VdcDAL.StorageType">
       <Property Name="value__" Type="System.Int32">1</Property>
     </Property>
     <Property Name="Status" Type="System.String">Up</Property>

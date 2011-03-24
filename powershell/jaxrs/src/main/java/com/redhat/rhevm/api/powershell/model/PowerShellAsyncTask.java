@@ -30,8 +30,7 @@ import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 public class PowerShellAsyncTask {
 
     private static final String TASK_TYPE = "RhevmCmd.CLITask";
-    private static final String STATUS_TYPE = "VdcCommon.BusinessEntities.AsyncTaskStatus";
-    private static final String STATUS_TYPE_22 = "VdcCommon.AsyncTasks.AsyncTaskStatus";
+    private static final String STATUS_TYPE = "VdcCommon.AsyncTasks.AsyncTaskStatus";
     private static final String ID_SEPARATOR = ",";
     private static final String FAILURE_REASON = "RHEVM asynchronous task failed";
 
@@ -40,7 +39,7 @@ public class PowerShellAsyncTask {
     }
 
     public static boolean isStatus(PowerShellParser.Entity entity) {
-        return STATUS_TYPE.equals(entity.getType()) || STATUS_TYPE_22.equals(entity.getType());
+        return STATUS_TYPE.equals(entity.getType());
     }
 
     public static String parseTask(PowerShellParser.Entity entity, String taskIds) {

@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <Objects>
   <Object Type="RhevmCmd.CLIHost">
-    <Property Name="HostId" Type="System.Guid">5f38363b-7457-4884-831e-78c27cebb31d</Property>
-    <Property Name="HostClusterId" Type="System.Guid">99408929-82cf-4dc7-a532-9d998063fa95</Property>
+    <Property Name="HostId" Type="System.Int32">1</Property>
+    <Property Name="HostClusterId" Type="System.Int32">0</Property>
     <Property Name="Name" Type="System.String">zig</Property>
     <Property Name="Address" Type="System.String">172.31.0.7</Property>
     <Property Name="HostType" Type="System.String">RHEL</Property>
@@ -10,7 +10,7 @@
     <Property Name="HostVersion" Type="System.String">2.2.0.62</Property>
     <Property Name="UseSecureConnection" Type="System.Boolean">False</Property>
     <Property Name="Status" Type="System.String">Up</Property>
-    <Property Name="SpmStatus" Type="VdcCommon.BusinessEntities.VdsSpmStatus">
+    <Property Name="SpmStatus" Type="VdcDAL.VdsSpmStatus">
       <Property Name="value__" Type="System.Int32">2</Property>
     </Property>
     <Property Name="HardwareAccelerationEnabled" Type="System.Boolean">True</Property>

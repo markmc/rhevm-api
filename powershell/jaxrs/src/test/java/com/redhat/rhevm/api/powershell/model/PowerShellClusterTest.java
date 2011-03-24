@@ -62,6 +62,6 @@ public class PowerShellClusterTest extends PowerShellModelTest {
 
         assertEquals(clusters.size(), 1);
 
-        testCluster(clusters.get(0), "99408929-82cf-4dc7-a532-9d998063fa95", "Default", "The default server cluster", "Intel Xeon 45nm Core2", "bb0fd622-5b2a-4c69-bfc5-29493932844a", 2, 2, 200, SchedulingPolicyType.EVENLY_DISTRIBUTED, 75, 120);
+        testCluster(clusters.get(0), "0", "Default", "The default server cluster", "Intel Xeon Core i7", "fbec66b1-a219-4e0f-8023-385ca86c5707", 2, 2, 200, SchedulingPolicyType.EVENLY_DISTRIBUTED, 75, 120);
     }
 }

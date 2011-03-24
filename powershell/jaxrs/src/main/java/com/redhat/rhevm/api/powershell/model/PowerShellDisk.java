@@ -31,7 +31,6 @@ import com.redhat.rhevm.api.powershell.enums.PowerShellDiskType;
 import com.redhat.rhevm.api.powershell.enums.PowerShellImageStatus;
 import com.redhat.rhevm.api.powershell.enums.PowerShellPropagateErrors;
 import com.redhat.rhevm.api.powershell.enums.PowerShellVolumeFormat;
-import com.redhat.rhevm.api.powershell.enums.PowerShellVolumeFormat22;
 import com.redhat.rhevm.api.powershell.enums.PowerShellVolumeType;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
@@ -129,11 +128,7 @@ public class PowerShellDisk extends Disk {
         disk.setType(entity.get("disktype", PowerShellDiskType.class).map());
         disk.setStatus(entity.get("status", PowerShellImageStatus.class).map());
         disk.setInterface(DiskInterface.fromValue(entity.get("diskinterface").toUpperCase()));
-        try {
-            disk.setFormat(entity.get("volumeformat", PowerShellVolumeFormat.class).map());
-        } catch (ClassCastException ex) {
-            disk.setFormat(entity.get("volumeformat", PowerShellVolumeFormat22.class).map());
-        }
+        disk.setFormat(entity.get("volumeformat", PowerShellVolumeFormat.class).map());
         disk.setSparse(entity.get("volumetype", PowerShellVolumeType.class).map());
         disk.setBootable(entity.get("boot", Boolean.class));
         disk.setWipeAfterDelete(entity.get("wipeafterdelete", Boolean.class));

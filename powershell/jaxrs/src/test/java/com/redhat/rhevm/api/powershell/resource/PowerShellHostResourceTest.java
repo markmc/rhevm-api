@@ -78,11 +78,7 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
     }
 
     protected String formatHost(String name) {
-        return formatHost("host", name);
-    }
-
-    protected String formatHost(String type, String name) {
-        String ret = formatXmlReturn(type,
+        String ret = formatXmlReturn("host",
                                new String[] { name },
                                new String[] { "" },
                                PowerShellHostsResourceTest.extraArgs);
@@ -111,15 +107,6 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
         Host host = resource.get();
         assertTrue(host.isSetStatistics());
         verifyHost(host, HOST_NAME);
-    }
-
-    @Test
-    public void testGet22() throws Exception {
-        setUpHttpHeaderNullExpectations("Accept");
-        setUriInfo(setUpHostExpectations(GET_COMMAND + PROCESS_HOSTS,
-                                         formatHost("host22", HOST_NAME),
-                                         HOST_NAME));
-        verifyHost(resource.get(), HOST_NAME);
     }
 
     @Test
