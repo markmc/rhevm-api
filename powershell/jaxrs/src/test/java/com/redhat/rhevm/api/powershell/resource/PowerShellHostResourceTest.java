@@ -250,9 +250,9 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
         Action action = getAction();
         action.setFenceType(FenceType.STATUS);
         setUriInfo(setUpActionExpectation("/hosts/" + HOST_ID + "/",
-                "fence",
-                FENCE_STATUS_COMMAND,
-                "<Objects><Object Type=\"System.String\">Test Succeeded, Host Status is: on</Object></Objects>"));
+                                          "fence",
+                                          FENCE_STATUS_COMMAND,
+                                          "<Objects><Object Type=\"System.String\">Test Succeeded, Host Status is: on</Object></Objects>"));
         Response response = resource.fence(action);
         Action actionResult = (Action)response.getEntity();
         assertNotNull(actionResult.getPowerManagement());
@@ -265,14 +265,15 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
         Action action = getAction();
         action.setFenceType(FenceType.STATUS);
         setUriInfo(setUpActionExpectation("/hosts/" + HOST_ID + "/",
-                "fence",
-                FENCE_STATUS_COMMAND,
-                "<Objects><Object Type=\"System.String\">Test Failed, Host Status is: off. Host burned by a madman.</Object></Objects>"));
+                                          "fence",
+                                          FENCE_STATUS_COMMAND,
+                                          "<Objects><Object Type=\"System.String\">Test Failed, Host Status is: off. Host burned by a madman.</Object></Objects>"));
         Response response = resource.fence(action);
         Action actionResult = (Action)response.getEntity();
         assertEquals(actionResult.getStatus(), Status.FAILED);
         assertNotNull(actionResult.getFault());
-        assertEquals(actionResult.getFault().getReason(), "Powershell command \"get-powermanagementstatus -hostid \"109313413\"\" failed with Host burned by a madman.");
+        assertEquals(actionResult.getFault().getReason(),
+                     "Powershell command \"get-powermanagementstatus -hostid \"109313413\"\" failed with Host burned by a madman.");
     }
 
     @Test

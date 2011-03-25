@@ -42,8 +42,6 @@ public class PowerShellPowerManagementStatus {
         this.message = message;
     }
 
-
-
     public static List<PowerShellPowerManagementStatus> parse(PowerShellParser parser, String output) {
         List<PowerShellPowerManagementStatus> ret = new ArrayList<PowerShellPowerManagementStatus>();
         for (PowerShellParser.Entity entity : parser.parse(output)) {
@@ -58,7 +56,7 @@ public class PowerShellPowerManagementStatus {
     }
 
     private static String parseMessage(String value) {
-        return value.indexOf('.')!=-1 ? value.substring(value.indexOf('.')+1).trim() : "";
+        return value.indexOf('.') != -1 ? value.substring(value.indexOf('.') + 1).trim() : "";
     }
 
     private static PowerManagementStatus parseStatus(String value) {

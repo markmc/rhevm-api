@@ -228,7 +228,7 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
             private void handleFailure(String message) {
                 action.setStatus(Status.FAILED);
                 action.setFault(new Fault());
-                action.getFault().setReason(MessageFormat.format(reason, message==null ? "" : message));
+                action.getFault().setReason(MessageFormat.format(reason, message == null ? "" : message));
             }
          });
     }

@@ -172,7 +172,7 @@
   <xs:simpleType name="PowerManagementStatus">
     <xs:restriction base="xs:string">
       <xs:enumeration value="ON"/>
-      <xs:enumeration value="OFF"/>   
+      <xs:enumeration value="OFF"/>
     </xs:restriction>
   </xs:simpleType>
 
@@ -1770,4 +1770,5 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
+
 </xs:schema>
