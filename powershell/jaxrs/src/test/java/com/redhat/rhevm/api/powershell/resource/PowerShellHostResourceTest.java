@@ -235,7 +235,7 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
     @Test
     public void testFenceStatusSucceed() throws Exception {
         Action action = getAction();
-        action.setFenceType(FenceType.STATUS);
+        action.setFenceType(FenceType.STATUS.value());
         setUriInfo(setUpActionExpectation("/hosts/" + HOST_ID + "/",
                                           "fence",
                                           FENCE_STATUS_COMMAND,
@@ -250,7 +250,7 @@ public class PowerShellHostResourceTest extends AbstractPowerShellResourceTest<H
     @Test
     public void testFenceStatusFail() throws Exception {
         Action action = getAction();
-        action.setFenceType(FenceType.STATUS);
+        action.setFenceType(FenceType.STATUS.value());
         setUriInfo(setUpActionExpectation("/hosts/" + HOST_ID + "/",
                                           "fence",
                                           FENCE_STATUS_COMMAND,

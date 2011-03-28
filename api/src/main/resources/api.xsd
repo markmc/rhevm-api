@@ -93,7 +93,7 @@
       <!-- when installing a host, a root password is required -->
       <xs:element name="root_password" type="xs:string" minOccurs="0" maxOccurs="1"/>
       <!-- for host fence action -->
-      <xs:element name="fence_type" type="FenceType" minOccurs="0"/>
+      <xs:element name="fence_type" type="xs:string" minOccurs="0"/>
       <!-- for VM ticket actions -->
       <xs:element name="ticket" type="Ticket" minOccurs="0"/>
       <!-- for Host ISCSI actions -->
@@ -333,16 +333,6 @@
       <xs:enumeration value="INVALID"/>
       <xs:enumeration value="LOCKED"/>
       <xs:enumeration value="OK"/>
-    </xs:restriction>
-  </xs:simpleType>
-
-  <xs:simpleType name="FenceType">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="MANUAL"/>
-      <xs:enumeration value="RESTART"/>
-      <xs:enumeration value="START"/>
-      <xs:enumeration value="STOP"/>
-      <xs:enumeration value="STATUS"/>
     </xs:restriction>
   </xs:simpleType>
 

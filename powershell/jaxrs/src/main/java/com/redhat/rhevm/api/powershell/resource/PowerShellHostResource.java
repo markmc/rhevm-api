@@ -56,6 +56,7 @@ import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
+import static com.redhat.rhevm.api.common.util.EnumValidator.validateEnum;
 import static com.redhat.rhevm.api.common.util.DetailHelper.include;
 import static com.redhat.rhevm.api.powershell.resource.PowerShellHostsResource.joinPowerManagementOptions;
 import static com.redhat.rhevm.api.powershell.resource.PowerShellHostsResource.PROCESS_HOSTS;
@@ -181,11 +182,13 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
     public Response fence(Action action) {
         validateParameters(action, "fenceType");
 
+        FenceType type = validateEnum(FenceType.class, action.getFenceType());
+
         StringBuilder buf = new StringBuilder();
         buf.append("fence-host");
         buf.append(" -hostid " + PowerShellUtils.escape(getId()));
 
-        switch (action.getFenceType()) {
+        switch (type) {
         case MANUAL:
             buf.append(" -manual");
             break;
@@ -207,7 +210,7 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
 
         return doAction(getUriInfo(), new CommandRunner(action, buf.toString(), getPool()) {
             protected void handleOutput(String output) {
-                if (action.getFenceType().equals(FenceType.STATUS)) {
+                if (FenceType.fromValue(action.getFenceType()) == FenceType.STATUS) {
                     List<PowerShellPowerManagementStatus> statuses = PowerShellPowerManagementStatus.parse(getParser(), output);
                     if (statuses.isEmpty()) {
                         handleFailure("Unknown status");
