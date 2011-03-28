@@ -152,7 +152,7 @@
          hence they are not pulled in transitively -->
     <dependency>
       <groupId>org.springframework</groupId>
-      <artifactId>spring</artifactId>
+      <artifactId>spring-core</artifactId>
     </dependency>
 
     <dependency>
