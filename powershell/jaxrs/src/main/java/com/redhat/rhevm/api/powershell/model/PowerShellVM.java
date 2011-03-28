@@ -27,6 +27,7 @@ import java.util.Set;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import com.redhat.rhevm.api.model.BootDevice;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.CpuTopology;
@@ -87,10 +88,11 @@ public class PowerShellVM extends VM {
         }
         String bootSequence = "";
         for (Boot boot : os.getBoot()) {
-            if (boot.getDev() == null) {
+            BootDevice dev = boot.getDev() != null ? BootDevice.fromValue(boot.getDev()) : null;
+            if (dev == null) {
                 continue;
             }
-            switch (boot.getDev()) {
+            switch (dev) {
             case HD:
                 bootSequence += "C";
                 break;

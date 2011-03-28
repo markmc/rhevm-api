@@ -266,7 +266,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
         vm.getDisplay().setType(DisplayType.VNC);
         vm.setOs(new OperatingSystem());
         vm.getOs().getBoot().add(new Boot());
-        vm.getOs().getBoot().get(0).setDev(BootDevice.CDROM);
+        vm.getOs().getBoot().get(0).setDev(BootDevice.CDROM.value());
         vm.setCdroms(new CdRoms());
         vm.getCdroms().getCdRoms().add(new CdRom());
         vm.getCdroms().getCdRoms().get(0).setFile(new File());

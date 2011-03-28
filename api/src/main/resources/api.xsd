@@ -294,14 +294,6 @@
 
   <!-- Enums -->
 
-  <xs:simpleType name="BootDevice">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="cdrom"/>
-      <xs:enumeration value="hd"/>
-      <xs:enumeration value="network"/>
-    </xs:restriction>
-  </xs:simpleType>
-
   <xs:simpleType name="DiskStatus">
     <xs:restriction base="xs:string">
       <xs:enumeration value="ILLEGAL"/>
@@ -1344,7 +1336,7 @@
   <!-- Virtual Machines -->
 
   <xs:complexType name="Boot">
-    <xs:attribute name="dev" type="BootDevice"/>
+    <xs:attribute name="dev" type="xs:string"/>
   </xs:complexType>
 
   <xs:complexType name="OperatingSystem">

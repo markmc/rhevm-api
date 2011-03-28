@@ -125,7 +125,7 @@ public enum PowerShellBootSequence {
 
     private Boot getBoot(BootDevice device) {
         Boot boot = new Boot();
-        boot.setDev(device);
+        boot.setDev(device.value());
         return boot;
     }
 

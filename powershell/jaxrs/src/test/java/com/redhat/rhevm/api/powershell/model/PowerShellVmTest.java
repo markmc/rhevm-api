@@ -75,9 +75,9 @@ public class PowerShellVmTest extends PowerShellModelTest {
             return;
         }
         assertNotNull(vm.getOs());
-        assertEquals(vm.getOs().getBoot().size(), bootDevices.length);
+        assertEquals(bootDevices.length, vm.getOs().getBoot().size());
         for (int i = 0; i < bootDevices.length; i++) {
-            assertEquals(vm.getOs().getBoot().get(i).getDev(), bootDevices[i]);
+            assertEquals(bootDevices[i].value(), vm.getOs().getBoot().get(i).getDev());
         }
     }
 
