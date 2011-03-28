@@ -22,12 +22,12 @@ public enum NicType {
     E1000, PV, RTL8139, RTL8139_PV;
 
     public String value() {
-        return name();
+        return name().toLowerCase();
     }
 
     public static NicType fromValue(String value) {
         try {
-            return valueOf(value);
+            return valueOf(value.toUpperCase());
         } catch (IllegalArgumentException e) {
             return null;
         }

@@ -65,7 +65,7 @@ public class PowerShellNicsResource
         if (nic.getType() != null) {
             NicType type = NicType.fromValue(nic.getType());
             if (type != null) {
-                buf.append(" -interfacetype " + type.value().toLowerCase());
+                buf.append(" -interfacetype " + type.value());
             }
         }
         if (nic.getMac() != null && nic.getMac().getAddress() != null) {
