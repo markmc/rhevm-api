@@ -125,7 +125,7 @@ public class PowerShellDisk extends Disk {
         disk.getVm().setId(vmId);
 
         disk.setSize(entity.get("actualsizeinbytes", Double.class).longValue());
-        disk.setType(entity.get("disktype", PowerShellDiskType.class).map());
+        disk.setType(entity.get("disktype", PowerShellDiskType.class).map().value());
         disk.setStatus(entity.get("status", PowerShellImageStatus.class).map());
         disk.setInterface(DiskInterface.fromValue(entity.get("diskinterface").toUpperCase()));
         disk.setFormat(entity.get("volumeformat", PowerShellVolumeFormat.class).map());

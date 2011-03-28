@@ -236,7 +236,7 @@ public class PowerShellDevicesResourceTest
         setUpHttpHeaderExpectations("Expect", null);
 
         Disk disk = new Disk();
-        disk.setType(DiskType.SYSTEM);
+        disk.setType(DiskType.SYSTEM.value());
         disk.setSize(DISK_SIZE_BYTES);
 
         String command = MessageFormat.format(ADD_DISK_COMMAND, DISK_SIZE, VM_ID) + ASYNC_ENDING + " " + ASYNC_TASKS;
@@ -258,7 +258,7 @@ public class PowerShellDevicesResourceTest
         setUpHttpHeaderExpectations("Expect", "201-created");
 
         Disk disk = new Disk();
-        disk.setType(DiskType.SYSTEM);
+        disk.setType(DiskType.SYSTEM.value());
         disk.setSize(DISK_SIZE_BYTES);
 
         String command = MessageFormat.format(ADD_DISK_COMMAND, DISK_SIZE, VM_ID);

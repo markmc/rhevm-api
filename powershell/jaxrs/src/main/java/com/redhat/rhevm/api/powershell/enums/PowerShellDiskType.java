@@ -23,7 +23,12 @@ import java.util.HashMap;
 import com.redhat.rhevm.api.model.DiskType;
 
 public enum PowerShellDiskType {
-    Unassigned(0), System(1), Data(2), Shared(3), Swap(4), Temp(5);
+    Unassigned(0, null),
+    System(1, DiskType.SYSTEM),
+    Data(2, DiskType.DATA),
+    Shared(3, DiskType.SHARED),
+    Swap(4, DiskType.SWAP),
+    Temp(5, DiskType.TEMP);
 
     private static HashMap<Integer, PowerShellDiskType> mapping;
     static {
@@ -34,9 +39,11 @@ public enum PowerShellDiskType {
     }
 
     private int value;
+    private DiskType model;
 
-    private PowerShellDiskType(int value) {
+    private PowerShellDiskType(int value, DiskType model) {
         this.value = value;
+        this.model = model;
     }
 
     public int getValue() {
@@ -44,21 +51,7 @@ public enum PowerShellDiskType {
     }
 
     public DiskType map() {
-        switch (this) {
-        case System:
-            return DiskType.SYSTEM;
-        case Data:
-            return DiskType.DATA;
-        case Shared:
-            return DiskType.SHARED;
-        case Swap:
-            return DiskType.SWAP;
-        case Temp:
-            return DiskType.TEMP;
-        default:
-            assert false : this;
-            return null;
-        }
+        return model;
     }
 
     public static PowerShellDiskType forValue(int value) {

@@ -25,6 +25,7 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.Disks;
+import com.redhat.rhevm.api.model.DiskType;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.LinkHelper;
@@ -37,7 +38,7 @@ import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 import com.redhat.rhevm.api.resource.DevicesResource;
 
 import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
-
+import static com.redhat.rhevm.api.common.util.EnumValidator.validateEnum;
 
 public class PowerShellDisksResource
     extends PowerShellReadOnlyDisksResource
@@ -66,7 +67,10 @@ public class PowerShellDisksResource
             buf.append(" -volumeformat " + disk.getFormat().toString());
         }
         if (disk.getType() != null) {
-            buf.append(" -disktype " + ReflectionHelper.capitalize(disk.getType().toString().toLowerCase()));
+            DiskType type = validateEnum(DiskType.class, disk.getType());
+            if (type != null) {
+                buf.append(" -disktype " + ReflectionHelper.capitalize(type.name().toLowerCase()));
+            }
         }
         if (disk.getInterface() != null) {
             buf.append(" -diskinterface ");
