@@ -27,6 +27,8 @@ import com.redhat.rhevm.api.model.DiskType;
 import com.redhat.rhevm.api.model.DiskTypes;
 import com.redhat.rhevm.api.model.DiskFormat;
 import com.redhat.rhevm.api.model.DiskFormats;
+import com.redhat.rhevm.api.model.DiskInterface;
+import com.redhat.rhevm.api.model.DiskInterfaces;
 import com.redhat.rhevm.api.model.FenceType;
 import com.redhat.rhevm.api.model.FenceTypes;
 import com.redhat.rhevm.api.model.NicType;

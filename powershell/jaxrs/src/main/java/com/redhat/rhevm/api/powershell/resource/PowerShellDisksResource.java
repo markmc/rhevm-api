@@ -79,7 +79,7 @@ public class PowerShellDisksResource
             }
         }
         if (disk.getInterface() != null) {
-            DiskInterface diskInterface = validateEnum(DiskInterface.class, disk.getInterface());
+            DiskInterface diskInterface = validateEnum(DiskInterface.class, disk.getInterface().toUpperCase());
             if (diskInterface != null) {
                 buf.append(" -diskinterface " + PowerShellDiskInterface.forModel(diskInterface).name());
             }
