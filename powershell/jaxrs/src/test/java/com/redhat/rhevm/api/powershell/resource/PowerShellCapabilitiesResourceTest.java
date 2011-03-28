@@ -133,6 +133,14 @@ public class PowerShellCapabilitiesResourceTest extends BasePowerShellResourceTe
         }
     }
 
+    private void checkDiskInterfaces(DiskInterfaces nicInterfaces, DiskInterface... expected) {
+        assertNotNull(nicInterfaces);
+        assertEquals(expected.length, nicInterfaces.getDiskInterfaces().size());
+        for (int i = 0; i < expected.length; i++) {
+            assertEquals(expected[i].value(), nicInterfaces.getDiskInterfaces().get(i));
+        }
+    }
+
     @Test
     public void testCaps() {
         assertNotNull(caps);
@@ -196,5 +204,11 @@ public class PowerShellCapabilitiesResourceTest extends BasePowerShellResourceTe
     public void testDiskFormats() {
         checkDiskFormats(caps.getVersions().get(0).getDiskFormats(), DiskFormat.values());
         checkDiskFormats(caps.getVersions().get(1).getDiskFormats(), DiskFormat.values());
+    }
+
+    @Test
+    public void testDiskInterfaces() {
+        checkDiskInterfaces(caps.getVersions().get(0).getDiskInterfaces(), DiskInterface.values());
+        checkDiskInterfaces(caps.getVersions().get(1).getDiskInterfaces(), DiskInterface.values());
     }
 }

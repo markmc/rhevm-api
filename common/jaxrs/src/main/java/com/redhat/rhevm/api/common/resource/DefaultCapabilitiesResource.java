@@ -23,6 +23,8 @@ import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.CPUs;
 import com.redhat.rhevm.api.model.DiskFormat;
 import com.redhat.rhevm.api.model.DiskFormats;
+import com.redhat.rhevm.api.model.DiskInterface;
+import com.redhat.rhevm.api.model.DiskInterfaces;
 import com.redhat.rhevm.api.model.DiskType;
 import com.redhat.rhevm.api.model.DiskTypes;
 import com.redhat.rhevm.api.model.FenceType;
@@ -211,6 +213,18 @@ public class DefaultCapabilitiesResource implements CapabilitiesResource {
     {
         addDiskFormats(VERSION21, DiskFormat.values());
         addDiskFormats(VERSION22, DiskFormat.values());
+    }
+
+    private void addDiskInterfaces(VersionCaps version, DiskInterface... interfaces) {
+        version.setDiskInterfaces(new DiskInterfaces());
+        for (DiskInterface iface : interfaces) {
+            version.getDiskInterfaces().getDiskInterfaces().add(iface.value());
+        }
+    }
+
+    {
+        addDiskInterfaces(VERSION21, DiskInterface.values());
+        addDiskInterfaces(VERSION22, DiskInterface.values());
     }
 
     private final SchedulingPolicies SCHEDULING_POLICIES = new SchedulingPolicies();
