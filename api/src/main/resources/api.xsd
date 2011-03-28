@@ -370,14 +370,6 @@
     </xs:restriction>
   </xs:simpleType>
 
-  <xs:simpleType name="VmOrigin">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="RHEV"/>
-      <xs:enumeration value="VMWARE"/>
-      <xs:enumeration value="XEN"/>
-    </xs:restriction>
-  </xs:simpleType>
-
   <xs:simpleType name="DataCenterStatus">
     <xs:restriction base="xs:string">
       <xs:enumeration value="UNINITIALIZED"/>
@@ -1323,7 +1315,7 @@
           <xs:element ref="cluster" minOccurs="0" maxOccurs="1"/>
           <xs:element ref="storage_domain" minOccurs="0" maxOccurs="1"/>
           <xs:element name="creation_time" type="xs:dateTime" minOccurs="0"/>
-          <xs:element name="origin" type="VmOrigin" minOccurs="0"/>
+          <xs:element name="origin" type="xs:string" minOccurs="0"/>
           <xs:element name="highly_available" type="HighlyAvailable" minOccurs="0"/>
           <xs:element name="display" type="Display" minOccurs="0" maxOccurs="1"/>
           <xs:element name="stateless" type="xs:boolean" minOccurs="0"/>
@@ -1432,7 +1424,7 @@
           <xs:element ref="storage_domain" minOccurs="0" maxOccurs="1"/>
           <xs:element name="start_time" type="xs:dateTime" minOccurs="0"/>
           <xs:element name="creation_time" type="xs:dateTime" minOccurs="0"/>
-          <xs:element name="origin" type="VmOrigin" minOccurs="0"/>
+          <xs:element name="origin" type="xs:string" minOccurs="0"/>
           <xs:element name="stateless" type="xs:boolean" minOccurs="0"/>
           <xs:element name="hooks_env" type="VmHooksEnvs" minOccurs="0"/>
           <xs:element name="statistics" type="Statistics" minOccurs="0" maxOccurs="1"/>

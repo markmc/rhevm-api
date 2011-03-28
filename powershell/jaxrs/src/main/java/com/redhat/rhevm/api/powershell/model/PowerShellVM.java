@@ -47,7 +47,6 @@ import com.redhat.rhevm.api.model.Statistic;
 import com.redhat.rhevm.api.model.Statistics;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VM;
-import com.redhat.rhevm.api.model.VmOrigin;
 import com.redhat.rhevm.api.model.VmPool;
 import com.redhat.rhevm.api.model.VmStatus;
 import com.redhat.rhevm.api.powershell.enums.PowerShellBootSequence;
@@ -143,12 +142,8 @@ public class PowerShellVM extends VM {
         else return null;
     }
 
-    private static VmOrigin parseOrigin(String s) {
-        if (s == null) return null;
-        else if (s.equals("RHEV"))   return VmOrigin.RHEV;
-        else if (s.equals("VmWare")) return VmOrigin.VMWARE;
-        else if (s.equals("Xen"))    return VmOrigin.XEN;
-        else return null;
+    private static String parseOrigin(String s) {
+        return s != null ? s.toLowerCase() : null;
     }
 
     public static List<PowerShellVM> parse(PowerShellParser parser, String output, Set<Detail> details) {

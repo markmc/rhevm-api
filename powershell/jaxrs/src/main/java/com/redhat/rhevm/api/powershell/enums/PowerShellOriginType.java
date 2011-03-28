@@ -20,10 +20,8 @@ package com.redhat.rhevm.api.powershell.enums;
 
 import java.util.HashMap;
 
-import com.redhat.rhevm.api.model.VmOrigin;
-
 public enum PowerShellOriginType {
-    RHEVM(0), VMWARE(1), XEN(2);
+    RHEV(0), VMWARE(1), XEN(2);
 
     private static HashMap<Integer, PowerShellOriginType> mapping;
     static {
@@ -43,18 +41,8 @@ public enum PowerShellOriginType {
         return value;
     }
 
-    public VmOrigin map() {
-        switch (this) {
-        case RHEVM:
-            return VmOrigin.RHEV;
-        case VMWARE:
-            return VmOrigin.VMWARE;
-        case XEN:
-            return VmOrigin.XEN;
-        default:
-            assert false : this;
-            return null;
-        }
+    public String map() {
+        return name().toLowerCase();
     }
 
     public static PowerShellOriginType forValue(int value) {
