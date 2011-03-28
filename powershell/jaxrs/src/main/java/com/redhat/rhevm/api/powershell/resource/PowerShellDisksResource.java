@@ -67,7 +67,7 @@ public class PowerShellDisksResource
             buf.append(" -volumeformat " + disk.getFormat().toString());
         }
         if (disk.getType() != null) {
-            DiskType type = validateEnum(DiskType.class, disk.getType());
+            DiskType type = validateEnum(DiskType.class, disk.getType().toUpperCase());
             if (type != null) {
                 buf.append(" -disktype " + ReflectionHelper.capitalize(type.name().toLowerCase()));
             }
