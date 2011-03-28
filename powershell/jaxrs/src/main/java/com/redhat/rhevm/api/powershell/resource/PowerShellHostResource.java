@@ -182,7 +182,7 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
     public Response fence(Action action) {
         validateParameters(action, "fenceType");
 
-        FenceType type = validateEnum(FenceType.class, action.getFenceType());
+        FenceType type = validateEnum(FenceType.class, action.getFenceType().toUpperCase());
 
         StringBuilder buf = new StringBuilder();
         buf.append("fence-host");
