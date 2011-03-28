@@ -21,6 +21,8 @@ package com.redhat.rhevm.api.common.resource;
 import com.redhat.rhevm.api.model.Capabilities;
 import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.CPUs;
+import com.redhat.rhevm.api.model.FenceType;
+import com.redhat.rhevm.api.model.FenceTypes;
 import com.redhat.rhevm.api.model.PowerManagement;
 import com.redhat.rhevm.api.model.PowerManagementOption;
 import com.redhat.rhevm.api.model.PowerManagementOptions;
@@ -155,6 +157,18 @@ public class DefaultCapabilitiesResource implements CapabilitiesResource {
     {
         addStorageDomainTypes(VERSION21, StorageDomainType.values());
         addStorageDomainTypes(VERSION22, StorageDomainType.values());
+    }
+
+    private void addFenceTypes(VersionCaps version, FenceType... types) {
+        version.setFenceTypes(new FenceTypes());
+        for (FenceType type : types) {
+            version.getFenceTypes().getFenceTypes().add(type.value());
+        }
+    }
+
+    {
+        addFenceTypes(VERSION21, FenceType.values());
+        addFenceTypes(VERSION22, FenceType.values());
     }
 
     private final SchedulingPolicies SCHEDULING_POLICIES = new SchedulingPolicies();
