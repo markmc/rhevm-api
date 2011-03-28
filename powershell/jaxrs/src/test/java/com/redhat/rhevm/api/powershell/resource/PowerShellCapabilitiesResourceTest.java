@@ -25,6 +25,8 @@ import com.redhat.rhevm.api.model.Capabilities;
 import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.FenceType;
 import com.redhat.rhevm.api.model.FenceTypes;
+import com.redhat.rhevm.api.model.NicType;
+import com.redhat.rhevm.api.model.NicTypes;
 import com.redhat.rhevm.api.model.SchedulingPolicies;
 import com.redhat.rhevm.api.model.SchedulingPolicyType;
 import com.redhat.rhevm.api.model.VersionCaps;
@@ -103,6 +105,14 @@ public class PowerShellCapabilitiesResourceTest extends BasePowerShellResourceTe
         }
     }
 
+    private void checkNicTypes(NicTypes nicTypes, NicType... expected) {
+        assertNotNull(nicTypes);
+        assertEquals(expected.length, nicTypes.getNicTypes().size());
+        for (int i = 0; i < expected.length; i++) {
+            assertEquals(expected[i].value(), nicTypes.getNicTypes().get(i));
+        }
+    }
+
     @Test
     public void testCaps() {
         assertNotNull(caps);
@@ -148,5 +158,11 @@ public class PowerShellCapabilitiesResourceTest extends BasePowerShellResourceTe
     public void testFenceTypes() {
         checkFenceTypes(caps.getVersions().get(0).getFenceTypes(), FenceType.values());
         checkFenceTypes(caps.getVersions().get(1).getFenceTypes(), FenceType.values());
+    }
+
+    @Test
+    public void testNicTypes() {
+        checkNicTypes(caps.getVersions().get(0).getNicTypes(), NicType.values());
+        checkNicTypes(caps.getVersions().get(1).getNicTypes(), NicType.values());
     }
 }

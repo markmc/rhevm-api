@@ -23,6 +23,8 @@ import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.CPUs;
 import com.redhat.rhevm.api.model.FenceType;
 import com.redhat.rhevm.api.model.FenceTypes;
+import com.redhat.rhevm.api.model.NicType;
+import com.redhat.rhevm.api.model.NicTypes;
 import com.redhat.rhevm.api.model.PowerManagement;
 import com.redhat.rhevm.api.model.PowerManagementOption;
 import com.redhat.rhevm.api.model.PowerManagementOptions;
@@ -169,6 +171,18 @@ public class DefaultCapabilitiesResource implements CapabilitiesResource {
     {
         addFenceTypes(VERSION21, FenceType.values());
         addFenceTypes(VERSION22, FenceType.values());
+    }
+
+    private void addNicTypes(VersionCaps version, NicType... types) {
+        version.setNicTypes(new NicTypes());
+        for (NicType type : types) {
+            version.getNicTypes().getNicTypes().add(type.value());
+        }
+    }
+
+    {
+        addNicTypes(VERSION21, NicType.values());
+        addNicTypes(VERSION22, NicType.values());
     }
 
     private final SchedulingPolicies SCHEDULING_POLICIES = new SchedulingPolicies();
