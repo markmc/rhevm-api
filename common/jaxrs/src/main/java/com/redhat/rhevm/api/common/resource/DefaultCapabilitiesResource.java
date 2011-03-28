@@ -18,6 +18,8 @@
  */
 package com.redhat.rhevm.api.common.resource;
 
+import com.redhat.rhevm.api.model.BootDevice;
+import com.redhat.rhevm.api.model.BootDevices;
 import com.redhat.rhevm.api.model.Capabilities;
 import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.CPUs;
@@ -177,6 +179,18 @@ public class DefaultCapabilitiesResource implements CapabilitiesResource {
     {
         addFenceTypes(VERSION21, FenceType.values());
         addFenceTypes(VERSION22, FenceType.values());
+    }
+
+    private void addBootDevices(VersionCaps version, BootDevice... devs) {
+        version.setBootDevices(new BootDevices());
+        for (BootDevice dev : devs) {
+            version.getBootDevices().getBootDevices().add(dev.value());
+        }
+    }
+
+    {
+        addBootDevices(VERSION21, BootDevice.values());
+        addBootDevices(VERSION22, BootDevice.values());
     }
 
     private void addNicTypes(VersionCaps version, NicType... types) {

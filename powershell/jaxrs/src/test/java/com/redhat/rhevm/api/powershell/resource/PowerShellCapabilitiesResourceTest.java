@@ -21,6 +21,8 @@ package com.redhat.rhevm.api.powershell.resource;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.redhat.rhevm.api.model.BootDevice;
+import com.redhat.rhevm.api.model.BootDevices;
 import com.redhat.rhevm.api.model.Capabilities;
 import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.DiskType;
@@ -111,6 +113,14 @@ public class PowerShellCapabilitiesResourceTest extends BasePowerShellResourceTe
         }
     }
 
+    private void checkBootDevices(BootDevices nicTypes, BootDevice... expected) {
+        assertNotNull(nicTypes);
+        assertEquals(expected.length, nicTypes.getBootDevices().size());
+        for (int i = 0; i < expected.length; i++) {
+            assertEquals(expected[i].value(), nicTypes.getBootDevices().get(i));
+        }
+    }
+
     private void checkNicTypes(NicTypes nicTypes, NicType... expected) {
         assertNotNull(nicTypes);
         assertEquals(expected.length, nicTypes.getNicTypes().size());
@@ -188,6 +198,12 @@ public class PowerShellCapabilitiesResourceTest extends BasePowerShellResourceTe
     public void testFenceTypes() {
         checkFenceTypes(caps.getVersions().get(0).getFenceTypes(), FenceType.values());
         checkFenceTypes(caps.getVersions().get(1).getFenceTypes(), FenceType.values());
+    }
+
+    @Test
+    public void testBootDevices() {
+        checkBootDevices(caps.getVersions().get(0).getBootDevices(), BootDevice.values());
+        checkBootDevices(caps.getVersions().get(1).getBootDevices(), BootDevice.values());
     }
 
     @Test

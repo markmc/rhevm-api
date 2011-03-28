@@ -472,6 +472,7 @@
           <xs:element ref="storage_types" minOccurs="0"/>
           <xs:element ref="storage_domain_types" minOccurs="0"/>
           <xs:element ref="vm_types" minOccurs="0"/>
+          <xs:element ref="boot_devices" minOccurs="0"/>
           <xs:element ref="nic_types" minOccurs="0"/>
           <xs:element ref="disk_types" minOccurs="0"/>
           <xs:element ref="disk_formats" minOccurs="0"/>
@@ -562,6 +563,20 @@
         <xs:annotation>
           <xs:appinfo>
             <jaxb:property name="VmTypes"/>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="boot_devices" type="BootDevices"/>
+
+  <xs:complexType name="BootDevices">
+    <xs:sequence>
+      <xs:element name="boot_device" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <jaxb:property name="BootDevices"/>
           </xs:appinfo>
         </xs:annotation>
       </xs:element>
