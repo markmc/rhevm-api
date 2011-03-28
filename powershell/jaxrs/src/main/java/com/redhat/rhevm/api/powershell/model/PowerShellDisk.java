@@ -25,8 +25,8 @@ import java.util.Map;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import com.redhat.rhevm.api.model.Disk;
-import com.redhat.rhevm.api.model.DiskInterface;
 import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.powershell.enums.PowerShellDiskInterface;
 import com.redhat.rhevm.api.powershell.enums.PowerShellDiskType;
 import com.redhat.rhevm.api.powershell.enums.PowerShellImageStatus;
 import com.redhat.rhevm.api.powershell.enums.PowerShellPropagateErrors;
@@ -127,7 +127,7 @@ public class PowerShellDisk extends Disk {
         disk.setSize(entity.get("actualsizeinbytes", Double.class).longValue());
         disk.setType(entity.get("disktype", PowerShellDiskType.class).map().value());
         disk.setStatus(entity.get("status", PowerShellImageStatus.class).map());
-        disk.setInterface(DiskInterface.fromValue(entity.get("diskinterface").toUpperCase()));
+        disk.setInterface(PowerShellDiskInterface.valueOf(entity.get("diskinterface")).map().value());
         disk.setFormat(entity.get("volumeformat", PowerShellVolumeFormat.class).map().value());
         disk.setSparse(entity.get("volumetype", PowerShellVolumeType.class).map());
         disk.setBootable(entity.get("boot", Boolean.class));

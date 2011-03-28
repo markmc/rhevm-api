@@ -38,7 +38,7 @@ public class PowerShellDiskTest extends PowerShellModelTest {
         assertEquals(size, d.getSize());
         assertEquals(type.value(), d.getType());
         assertEquals(status, d.getStatus());
-        assertEquals(iface, d.getInterface());
+        assertEquals(iface.value(), d.getInterface());
         assertEquals(format.value(), d.getFormat());
         assertEquals(sparse, d.isSparse());
         assertEquals(bootable, d.isBootable());

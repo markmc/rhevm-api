@@ -26,11 +26,13 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.Disks;
 import com.redhat.rhevm.api.model.DiskFormat;
+import com.redhat.rhevm.api.model.DiskInterface;
 import com.redhat.rhevm.api.model.DiskType;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.common.util.ReflectionHelper;
+import com.redhat.rhevm.api.powershell.enums.PowerShellDiskInterface;
 import com.redhat.rhevm.api.powershell.model.PowerShellDisk;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
@@ -77,18 +79,9 @@ public class PowerShellDisksResource
             }
         }
         if (disk.getInterface() != null) {
-            buf.append(" -diskinterface ");
-            switch (disk.getInterface()) {
-            case IDE:
-            case SCSI:
-                buf.append(disk.getInterface().toString());
-                break;
-            case VIRTIO:
-                buf.append("VirtIO");
-                break;
-            default:
-                assert false : disk.getInterface();
-                break;
+            DiskInterface diskInterface = validateEnum(DiskInterface.class, disk.getInterface());
+            if (diskInterface != null) {
+                buf.append(" -diskinterface " + PowerShellDiskInterface.forModel(diskInterface).name());
             }
         }
         if (disk.isSparse() != null) {
