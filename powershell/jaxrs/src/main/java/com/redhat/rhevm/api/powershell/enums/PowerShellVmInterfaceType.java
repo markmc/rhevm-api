@@ -16,20 +16,37 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.redhat.rhevm.api.model;
+package com.redhat.rhevm.api.powershell.enums;
 
-public enum NicType {
-    E1000, VIRTIO, RTL8139, RTL8139_VIRTIO;
+import java.util.HashMap;
 
-    public String value() {
-        return name().toLowerCase();
+import com.redhat.rhevm.api.model.NicType;
+
+public enum PowerShellVmInterfaceType {
+    rtl8139_pv(NicType.RTL8139_VIRTIO),
+    rtl8139(NicType.RTL8139),
+    e1000(NicType.E1000),
+    pv(NicType.VIRTIO);
+
+    private static HashMap<NicType, PowerShellVmInterfaceType> mapping;
+    static {
+        mapping = new HashMap<NicType, PowerShellVmInterfaceType>();
+        for (PowerShellVmInterfaceType value : values()) {
+            mapping.put(value.model, value);
+        }
     }
 
-    public static NicType fromValue(String value) {
-        try {
-            return valueOf(value.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            return null;
-        }
+    private NicType model;
+
+    private PowerShellVmInterfaceType(NicType model) {
+        this.model = model;
+    }
+
+    public NicType map() {
+        return model;
+    }
+
+    public static PowerShellVmInterfaceType forModel(NicType model) {
+        return mapping.get(model);
     }
 }

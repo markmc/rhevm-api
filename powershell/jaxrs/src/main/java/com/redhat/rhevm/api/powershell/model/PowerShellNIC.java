@@ -25,8 +25,8 @@ import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.IP;
 import com.redhat.rhevm.api.model.MAC;
 import com.redhat.rhevm.api.model.NIC;
-import com.redhat.rhevm.api.model.NicType;
 import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.powershell.enums.PowerShellVmInterfaceType;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 
 public class PowerShellNIC {
@@ -59,7 +59,7 @@ public class PowerShellNIC {
         network.setName(entity.get("network"));
         nic.setNetwork(network);
 
-        nic.setType(NicType.valueOf(entity.get("type").toUpperCase()).value());
+        nic.setType(PowerShellVmInterfaceType.valueOf(entity.get("type")).map().value());
 
         MAC mac = new MAC();
         mac.setAddress(entity.get("macaddress"));

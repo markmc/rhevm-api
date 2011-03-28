@@ -25,6 +25,7 @@ import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.NIC;
 import com.redhat.rhevm.api.model.Nics;
 import com.redhat.rhevm.api.model.NicType;
+import com.redhat.rhevm.api.powershell.enums.PowerShellVmInterfaceType;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
@@ -65,7 +66,7 @@ public class PowerShellNicsResource
         if (nic.getType() != null) {
             NicType type = NicType.fromValue(nic.getType());
             if (type != null) {
-                buf.append(" -interfacetype " + type.value());
+                buf.append(" -interfacetype " + PowerShellVmInterfaceType.forModel(type).name());
             }
         }
         if (nic.getMac() != null && nic.getMac().getAddress() != null) {
