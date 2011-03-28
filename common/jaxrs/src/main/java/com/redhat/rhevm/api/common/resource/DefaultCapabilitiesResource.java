@@ -21,6 +21,8 @@ package com.redhat.rhevm.api.common.resource;
 import com.redhat.rhevm.api.model.Capabilities;
 import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.CPUs;
+import com.redhat.rhevm.api.model.DiskType;
+import com.redhat.rhevm.api.model.DiskTypes;
 import com.redhat.rhevm.api.model.FenceType;
 import com.redhat.rhevm.api.model.FenceTypes;
 import com.redhat.rhevm.api.model.NicType;
@@ -183,6 +185,18 @@ public class DefaultCapabilitiesResource implements CapabilitiesResource {
     {
         addNicTypes(VERSION21, NicType.values());
         addNicTypes(VERSION22, NicType.values());
+    }
+
+    private void addDiskTypes(VersionCaps version, DiskType... types) {
+        version.setDiskTypes(new DiskTypes());
+        for (DiskType type : types) {
+            version.getDiskTypes().getDiskTypes().add(type.value());
+        }
+    }
+
+    {
+        addDiskTypes(VERSION21, DiskType.values());
+        addDiskTypes(VERSION22, DiskType.values());
     }
 
     private final SchedulingPolicies SCHEDULING_POLICIES = new SchedulingPolicies();

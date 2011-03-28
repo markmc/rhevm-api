@@ -23,6 +23,8 @@ import org.junit.Test;
 
 import com.redhat.rhevm.api.model.Capabilities;
 import com.redhat.rhevm.api.model.CPU;
+import com.redhat.rhevm.api.model.DiskType;
+import com.redhat.rhevm.api.model.DiskTypes;
 import com.redhat.rhevm.api.model.FenceType;
 import com.redhat.rhevm.api.model.FenceTypes;
 import com.redhat.rhevm.api.model.NicType;
@@ -113,6 +115,14 @@ public class PowerShellCapabilitiesResourceTest extends BasePowerShellResourceTe
         }
     }
 
+    private void checkDiskTypes(DiskTypes disktypes, DiskType... expected) {
+        assertNotNull(disktypes);
+        assertEquals(expected.length, disktypes.getDiskTypes().size());
+        for (int i = 0; i < expected.length; i++) {
+            assertEquals(expected[i].value(), disktypes.getDiskTypes().get(i));
+        }
+    }
+
     @Test
     public void testCaps() {
         assertNotNull(caps);
@@ -164,5 +174,11 @@ public class PowerShellCapabilitiesResourceTest extends BasePowerShellResourceTe
     public void testNicTypes() {
         checkNicTypes(caps.getVersions().get(0).getNicTypes(), NicType.values());
         checkNicTypes(caps.getVersions().get(1).getNicTypes(), NicType.values());
+    }
+
+    @Test
+    public void testDiskTypes() {
+        checkDiskTypes(caps.getVersions().get(0).getDiskTypes(), DiskType.values());
+        checkDiskTypes(caps.getVersions().get(1).getDiskTypes(), DiskType.values());
     }
 }
