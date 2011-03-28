@@ -31,6 +31,8 @@ import com.redhat.rhevm.api.model.DiskFormat;
 import com.redhat.rhevm.api.model.DiskFormats;
 import com.redhat.rhevm.api.model.DiskInterface;
 import com.redhat.rhevm.api.model.DiskInterfaces;
+import com.redhat.rhevm.api.model.DisplayType;
+import com.redhat.rhevm.api.model.DisplayTypes;
 import com.redhat.rhevm.api.model.FenceType;
 import com.redhat.rhevm.api.model.FenceTypes;
 import com.redhat.rhevm.api.model.NicType;
@@ -121,6 +123,14 @@ public class PowerShellCapabilitiesResourceTest extends BasePowerShellResourceTe
         }
     }
 
+    private void checkDisplayTypes(DisplayTypes displayTypes, DisplayType... expected) {
+        assertNotNull(displayTypes);
+        assertEquals(expected.length, displayTypes.getDisplayTypes().size());
+        for (int i = 0; i < expected.length; i++) {
+            assertEquals(expected[i].value(), displayTypes.getDisplayTypes().get(i));
+        }
+    }
+
     private void checkNicTypes(NicTypes nicTypes, NicType... expected) {
         assertNotNull(nicTypes);
         assertEquals(expected.length, nicTypes.getNicTypes().size());
@@ -204,6 +214,12 @@ public class PowerShellCapabilitiesResourceTest extends BasePowerShellResourceTe
     public void testBootDevices() {
         checkBootDevices(caps.getVersions().get(0).getBootDevices(), BootDevice.values());
         checkBootDevices(caps.getVersions().get(1).getBootDevices(), BootDevice.values());
+    }
+
+    @Test
+    public void testDisplayTypes() {
+        checkDisplayTypes(caps.getVersions().get(0).getDisplayTypes(), DisplayType.values());
+        checkDisplayTypes(caps.getVersions().get(1).getDisplayTypes(), DisplayType.values());
     }
 
     @Test

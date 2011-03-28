@@ -29,6 +29,8 @@ import com.redhat.rhevm.api.model.DiskInterface;
 import com.redhat.rhevm.api.model.DiskInterfaces;
 import com.redhat.rhevm.api.model.DiskType;
 import com.redhat.rhevm.api.model.DiskTypes;
+import com.redhat.rhevm.api.model.DisplayType;
+import com.redhat.rhevm.api.model.DisplayTypes;
 import com.redhat.rhevm.api.model.FenceType;
 import com.redhat.rhevm.api.model.FenceTypes;
 import com.redhat.rhevm.api.model.NicType;
@@ -191,6 +193,18 @@ public class DefaultCapabilitiesResource implements CapabilitiesResource {
     {
         addBootDevices(VERSION21, BootDevice.values());
         addBootDevices(VERSION22, BootDevice.values());
+    }
+
+    private void addDisplayTypes(VersionCaps version, DisplayType... types) {
+        version.setDisplayTypes(new DisplayTypes());
+        for (DisplayType type : types) {
+            version.getDisplayTypes().getDisplayTypes().add(type.value());
+        }
+    }
+
+    {
+        addDisplayTypes(VERSION21, DisplayType.values());
+        addDisplayTypes(VERSION22, DisplayType.values());
     }
 
     private void addNicTypes(VersionCaps version, NicType... types) {
