@@ -316,7 +316,7 @@ public class PowerShellDevicesResourceTest
 
         NIC nic = new NIC();
         nic.setName(NIC_NAME);
-        nic.setType(NicType.E_1000);
+        nic.setType(NicType.E1000.value());
         nic.setNetwork(new Network());
         nic.getNetwork().setId(NETWORK_ID);
 

@@ -36,7 +36,7 @@ public class PowerShellNicTest extends PowerShellModelTest {
         assertEquals(vmId, n.getVm().getId());
         assertNotNull(n.getNetwork());
         assertEquals(network, n.getNetwork().getName());
-        assertEquals(type, n.getType());
+        assertEquals(type.value(), n.getType());
         if (macAddress != null) {
             assertNotNull(n.getMac());
             assertEquals(macAddress, n.getMac().getAddress());
@@ -63,6 +63,6 @@ public class PowerShellNicTest extends PowerShellModelTest {
         assertNotNull(nics);
         assertEquals(1, nics.size());
 
-        testNic(nics.get(0), "a34b8c24-f1cf-4b67-9912-3b04e9ce0a7b", "nic1", VM_ID, "rhevm", NicType.RTL_8139_PV, "00:1a:4a:16:84:02", null, null, null);
+        testNic(nics.get(0), "a34b8c24-f1cf-4b67-9912-3b04e9ce0a7b", "nic1", VM_ID, "rhevm", NicType.RTL8139_PV, "00:1a:4a:16:84:02", null, null, null);
     }
 }

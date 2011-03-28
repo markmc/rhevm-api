@@ -355,15 +355,6 @@
     </xs:restriction>
   </xs:simpleType>
 
-  <xs:simpleType name="NicType">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="E1000"/>
-      <xs:enumeration value="PV"/>
-      <xs:enumeration value="RTL8139"/>
-      <xs:enumeration value="RTL8139_PV"/>
-    </xs:restriction>
-  </xs:simpleType>
-
   <xs:simpleType name="NetworkStatus">
     <xs:restriction base="xs:string">
       <xs:enumeration value="OPERATIONAL"/>
@@ -1604,7 +1595,7 @@
       <xs:extension base="BaseDevice">
         <xs:sequence>
           <xs:element ref="network" minOccurs="0" maxOccurs="1"/>
-          <xs:element name="type" type="NicType" minOccurs="0"/>
+          <xs:element name="type" type="xs:string" minOccurs="0"/>
           <xs:element ref="mac" minOccurs="0"/>
           <xs:element ref="ip" minOccurs="0"/>
           <xs:element name="statistics" type="Statistics" minOccurs="0" maxOccurs="1"/>

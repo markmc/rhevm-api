@@ -59,7 +59,7 @@ public class PowerShellNIC {
         network.setName(entity.get("network"));
         nic.setNetwork(network);
 
-        nic.setType(NicType.fromValue(entity.get("type").toUpperCase()));
+        nic.setType(NicType.valueOf(entity.get("type").toUpperCase()).value());
 
         MAC mac = new MAC();
         mac.setAddress(entity.get("macaddress"));
