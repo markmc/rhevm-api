@@ -55,10 +55,88 @@
             <entry>A list of the <literal>version</literal>s to which the cluster may be updated (see <xref linkend="chap-REST_API_Guide-Cluster_Level_Versions"/>)</entry>
             <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
+          <row>
+            <entry><literal>memory_policy</literal></entry>
+            <entry>complex</entry>
+            <entry>Defines the host's memory usage for a virtual machine in the cluster. See below.</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
+          </row>
+          <row>
+            <entry><literal>scheduling_policy</literal></entry>
+            <entry>complex</entry>
+            <entry>Defining the load-balancing or power sharing modes for hosts in the cluster. See below.</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
+          </row>
         </tbody>
       </tgroup>
     </informaltable>
-
+  </para>
+  <para>
+    The <literal>memory_policy</literal> element can contain the following specific elements:
+  </para>
+  <para>
+    <informaltable frame="none">
+      <tgroup cols="4">
+        <colspec colwidth="2*"/>
+        <colspec colwidth="4*"/>
+        <colspec colwidth="6*"/>
+        <colspec colwidth="3*" colname="prop"/>
+        <thead>
+          <row>
+            <entry>Element</entry>
+            <entry>Type</entry>
+            <entry>Description</entry>
+            <entry>Properties</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry><literal>overcommit</literal></entry>
+            <entry>complex</entry>
+            <entry>The percentage of the host's unused memory used in excess of the permitted memory for a virtual machine in the cluster. Recommended values include <literal>100</literal> (None), <literal>150</literal> (Server Load) and <literal>200</literal> (Desktop Load).</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+  </para>
+  <para>
+    The <literal>scheduling_policy</literal> element can contain the following specific elements:
+  </para>
+  <para>
+    <informaltable frame="none">
+      <tgroup cols="4">
+        <colspec colwidth="2*"/>
+        <colspec colwidth="4*"/>
+        <colspec colwidth="6*"/>
+        <colspec colwidth="3*" colname="prop"/>
+        <thead>
+          <row>
+            <entry>Element</entry>
+            <entry>Type</entry>
+            <entry>Description</entry>
+            <entry>Properties</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry><literal>policy</literal></entry>
+            <entry><literal>POWER_SAVING</literal> or <literal>EVENLY_DISTRIBUTED</literal></entry>
+            <entry>The power mode for hosts in the cluster.</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
+          </row>
+          <row>
+            <entry><literal>thresholds</literal></entry>
+            <entry>complex</entry>
+            <entry>Defines CPU limits for the host. The <literal>high</literal> attribute controls the highest CPU usage percentage the host can have before being
+considered overloaded. The <literal>low</literal> attribute controls the lowest CPU usage percentage the host can have before being considered underutilized. The <literal>duration</literal> attribute refers to the number of seconds the host needs to be overloaded before the scheduler kicks in and moves the load to another host.</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+  </para>
+  <para>
     For example:
   </para>
 
