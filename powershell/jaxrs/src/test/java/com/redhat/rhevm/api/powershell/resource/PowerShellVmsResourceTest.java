@@ -223,7 +223,7 @@ public class PowerShellVmsResourceTest extends AbstractPowerShellCollectionResou
 
     private VM updateDisplay(VM vm) {
         vm.setDisplay(new Display());
-        vm.getDisplay().setType(DisplayType.VNC);
+        vm.getDisplay().setType(DisplayType.VNC.value());
         vm.getDisplay().setMonitors(4);
         return vm;
     }

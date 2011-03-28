@@ -263,7 +263,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
         vm.getHost().setId(DEST_HOST_ID);
         vm.setStateless(true);
         vm.setDisplay(new Display());
-        vm.getDisplay().setType(DisplayType.VNC);
+        vm.getDisplay().setType(DisplayType.VNC.value());
         vm.setOs(new OperatingSystem());
         vm.getOs().getBoot().add(new Boot());
         vm.getOs().getBoot().get(0).setDev(BootDevice.CDROM.value());
@@ -504,7 +504,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
 
     private VM updateDisplay(VM vm) {
         vm.setDisplay(new Display());
-        vm.getDisplay().setType(DisplayType.VNC);
+        vm.getDisplay().setType(DisplayType.VNC.value());
         vm.getDisplay().setMonitors(4);
         return vm;
     }
@@ -518,7 +518,7 @@ public class PowerShellVmResourceTest extends AbstractPowerShellResourceTest<VM,
         assertEquals(Integer.toString(name.hashCode()), vm.getId());
         assertEquals(name, vm.getName());
         assertTrue(vm.isSetDisplay());
-        assertEquals(DisplayType.SPICE, vm.getDisplay().getType());
+        assertEquals(DisplayType.SPICE.value(), vm.getDisplay().getType());
         assertEquals(Integer.valueOf(1), vm.getDisplay().getMonitors());
         assertTrue(vm.getDisplay().getPort() == null || vm.getDisplay().getPort() != -1);
         if (hostExpected) {

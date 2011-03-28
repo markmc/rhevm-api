@@ -116,7 +116,7 @@ public class PowerShellTemplate extends Template {
             DisplayType displayType = PowerShellVM.parseDisplayType(entity.get("displaytype"));
             if (displayType != null) {
                 Display display = new Display();
-                display.setType(displayType);
+                display.setType(displayType.value());
                 display.setMonitors(entity.get("numofmonitors", Integer.class));
                 template.setDisplay(display);
             }

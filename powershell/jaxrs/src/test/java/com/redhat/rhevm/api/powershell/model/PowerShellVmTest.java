@@ -82,7 +82,7 @@ public class PowerShellVmTest extends PowerShellModelTest {
 
     private void testDisplay(VM vm, DisplayType type, Integer port, String address) {
         assertTrue(vm.isSetDisplay());
-        assertEquals(type, vm.getDisplay().getType());
+        assertEquals(type.value(), vm.getDisplay().getType());
         assertEquals(port, vm.getDisplay().getPort());
         assertEquals(address, vm.getDisplay().getAddress());
     }

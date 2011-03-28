@@ -50,6 +50,7 @@ import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VmPool;
 import com.redhat.rhevm.api.model.VmStatus;
 import com.redhat.rhevm.api.powershell.enums.PowerShellBootSequence;
+import com.redhat.rhevm.api.powershell.enums.PowerShellDisplayType;
 import com.redhat.rhevm.api.powershell.enums.PowerShellVmType;
 import com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource.Detail;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
@@ -109,14 +110,11 @@ public class PowerShellVM extends VM {
     }
 
     public static String asString(DisplayType type) {
-        return DisplayType.VNC.equals(type) ? "VNC" : "Spice";
+        return PowerShellDisplayType.forModel(type).name();
     }
 
     public static DisplayType parseDisplayType(String s) {
-        if (s == null) return null;
-        else if (s.equals("VNC"))   return DisplayType.VNC;
-        else if (s.equals("Spice")) return DisplayType.SPICE;
-        else return null;
+        return PowerShellDisplayType.valueOf(s).map();
     }
 
     private static VmStatus parseStatus(String s) {
@@ -254,7 +252,7 @@ public class PowerShellVM extends VM {
         DisplayType displayType = parseDisplayType(entity.get("displaytype"));
         if (displayType != null) {
             Display display = new Display();
-            display.setType(displayType);
+            display.setType(displayType.value());
             display.setMonitors(entity.get("numofmonitors", Integer.class));
             int port = entity.get("displayport", Integer.class);
             if (port != -1) {

@@ -215,7 +215,7 @@ public class PowerShellTemplateResourceTest extends AbstractPowerShellResourceTe
 
     private Template updateDisplay(Template template) {
         template.setDisplay(new Display());
-        template.getDisplay().setType(DisplayType.VNC);
+        template.getDisplay().setType(DisplayType.VNC.value());
         return template;
     }
 

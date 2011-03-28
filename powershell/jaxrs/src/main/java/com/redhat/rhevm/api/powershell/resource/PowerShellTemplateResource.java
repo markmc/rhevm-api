@@ -28,6 +28,7 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.CpuTopology;
 import com.redhat.rhevm.api.model.Display;
+import com.redhat.rhevm.api.model.DisplayType;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VmType;
@@ -151,7 +152,10 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
         if (template.isSetDisplay()) {
             Display display = template.getDisplay();
             if (display.isSetType()) {
-                buf.append(" $t.displaytype = '" + PowerShellVM.asString(display.getType()) + "';");
+                DisplayType displayType = DisplayType.fromValue(display.getType());
+                if (displayType != null) {
+                    buf.append(" $t.displaytype = '" + PowerShellVM.asString(displayType) + "';");
+                }
             }
         }
 

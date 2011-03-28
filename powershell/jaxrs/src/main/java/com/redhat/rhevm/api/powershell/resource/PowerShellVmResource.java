@@ -31,6 +31,7 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.CpuTopology;
 import com.redhat.rhevm.api.model.Display;
+import com.redhat.rhevm.api.model.DisplayType;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.Statistic;
@@ -160,7 +161,10 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
                 buf.append(" $v.numofmonitors = " + display.getMonitors() + ";");
             }
             if (display.isSetType()) {
-                buf.append(" $v.displaytype = '" + PowerShellVM.asString(display.getType()) + "';");
+                DisplayType displayType = DisplayType.fromValue(display.getType());
+                if (displayType != null) {
+                    buf.append(" $v.displaytype = '" + PowerShellVM.asString(displayType) + "';");
+                }
             }
             // REVISIT display port a read-only property => extend immutability
             // assertion to support "display.port" style syntax
@@ -205,7 +209,10 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
             }
 
             if (vm.isSetDisplay() && vm.getDisplay().isSetType()) {
-                buf.append(" -displaytype '" + PowerShellVM.asString(vm.getDisplay().getType()) + "'");
+                DisplayType displayType = DisplayType.fromValue(vm.getDisplay().getType());
+                if (displayType != null) {
+                    buf.append(" -displaytype '" + PowerShellVM.asString(displayType) + "'");
+                }
             }
 
             String bootSequence = PowerShellVM.buildBootSequence(vm.getOs());

@@ -29,6 +29,7 @@ import javax.ws.rs.core.UriBuilder;
 import com.redhat.rhevm.api.common.util.ReflectionHelper;
 import com.redhat.rhevm.api.model.CpuTopology;
 import com.redhat.rhevm.api.model.Display;
+import com.redhat.rhevm.api.model.DisplayType;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.model.VmType;
@@ -160,7 +161,10 @@ public class PowerShellVmsResource
                 buf.append(" -numofmonitors " + display.getMonitors());
             }
             if (display.isSetType()) {
-                buf.append(" -displaytype " + PowerShellVM.asString(display.getType()));
+                DisplayType displayType = DisplayType.fromValue(display.getType());
+                if (displayType != null) {
+                    buf.append(" -displaytype " + PowerShellVM.asString(displayType));
+                }
             }
             // display port cannot be specified on creation, but the value
             // provided may in fact be correct (we won't know until we create

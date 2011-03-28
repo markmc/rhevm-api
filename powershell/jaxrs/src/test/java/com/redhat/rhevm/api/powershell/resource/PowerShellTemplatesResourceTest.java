@@ -235,7 +235,7 @@ public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectio
                                                          NEW_NAME));
         Template template = getModel(NEW_NAME, NEW_DESCRIPTION);
         template.setDisplay(new Display());
-        template.getDisplay().setType(DisplayType.VNC);
+        template.getDisplay().setType(DisplayType.VNC.value());
         verifyCreated(resource.add(template),
                       Template.class,
                       NEW_NAME,
