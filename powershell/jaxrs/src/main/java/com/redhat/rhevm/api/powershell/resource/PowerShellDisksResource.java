@@ -25,6 +25,7 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.Disks;
+import com.redhat.rhevm.api.model.DiskFormat;
 import com.redhat.rhevm.api.model.DiskType;
 import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
@@ -64,7 +65,10 @@ public class PowerShellDisksResource
         buf.append("$d = new-disk");
         buf.append(" -disksize " + Math.round((double)disk.getSize()/(1024*1024*1024)));
         if (disk.getFormat() != null) {
-            buf.append(" -volumeformat " + disk.getFormat().toString());
+            DiskFormat format = validateEnum(DiskFormat.class, disk.getFormat());
+            if (format != null) {
+                buf.append(" -volumeformat " + format.name());
+            }
         }
         if (disk.getType() != null) {
             DiskType type = validateEnum(DiskType.class, disk.getType().toUpperCase());

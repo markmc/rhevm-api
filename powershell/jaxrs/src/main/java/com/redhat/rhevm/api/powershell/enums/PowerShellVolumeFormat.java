@@ -23,7 +23,9 @@ import java.util.HashMap;
 import com.redhat.rhevm.api.model.DiskFormat;
 
 public enum PowerShellVolumeFormat {
-    Unassigned(3), COW(4), RAW(5);
+    Unassigned(3, null),
+    COW(4, DiskFormat.COW),
+    RAW(5, DiskFormat.RAW);
 
     private static HashMap<Integer, PowerShellVolumeFormat> mapping;
     static {
@@ -34,9 +36,11 @@ public enum PowerShellVolumeFormat {
     }
 
     private int value;
+    private DiskFormat model;
 
-    private PowerShellVolumeFormat(int value) {
+    private PowerShellVolumeFormat(int value, DiskFormat model) {
         this.value = value;
+        this.model = model;
     }
 
     public int getValue() {
@@ -44,15 +48,7 @@ public enum PowerShellVolumeFormat {
     }
 
     public DiskFormat map() {
-        switch (this) {
-        case COW:
-            return DiskFormat.COW;
-        case RAW:
-            return DiskFormat.RAW;
-        default:
-            assert false : this;
-            return null;
-        }
+        return model;
     }
 
     public static PowerShellVolumeFormat forValue(int value) {

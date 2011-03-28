@@ -128,7 +128,7 @@ public class PowerShellDisk extends Disk {
         disk.setType(entity.get("disktype", PowerShellDiskType.class).map().value());
         disk.setStatus(entity.get("status", PowerShellImageStatus.class).map());
         disk.setInterface(DiskInterface.fromValue(entity.get("diskinterface").toUpperCase()));
-        disk.setFormat(entity.get("volumeformat", PowerShellVolumeFormat.class).map());
+        disk.setFormat(entity.get("volumeformat", PowerShellVolumeFormat.class).map().value());
         disk.setSparse(entity.get("volumetype", PowerShellVolumeType.class).map());
         disk.setBootable(entity.get("boot", Boolean.class));
         disk.setWipeAfterDelete(entity.get("wipeafterdelete", Boolean.class));
