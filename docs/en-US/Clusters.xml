@@ -64,7 +64,7 @@
           <row>
             <entry><literal>scheduling_policy</literal></entry>
             <entry>complex</entry>
-            <entry>Defining the load-balancing or power sharing modes for hosts in the cluster. See below.</entry>
+            <entry>Defines the load-balancing or power sharing modes for hosts in the cluster. See below.</entry>
             <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
         </tbody>
@@ -93,7 +93,7 @@
           <row>
             <entry><literal>overcommit</literal></entry>
             <entry>complex</entry>
-            <entry>The percentage of host memory that may be in use before no more virtual machines may be started on a host. Virtual machines may use more than the available host memory due to memory sharing under KSM. Recommended values include <literal>100</literal> (None), <literal>150</literal> (Server Load) and <literal>200</literal> (Desktop Load).</entry>
+            <entry>The percentage of host memory allowed in use before no more virtual machines can start on a host. Virtual machines can use more than the available host memory due to memory sharing under KSM. Recommended values include <literal>100</literal> (None), <literal>150</literal> (Server Load) and <literal>200</literal> (Desktop Load).</entry>
             <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
         </tbody>
