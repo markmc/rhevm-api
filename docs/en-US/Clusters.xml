@@ -58,7 +58,7 @@
           <row>
             <entry><literal>memory_policy</literal></entry>
             <entry>complex</entry>
-            <entry>Defines the host's memory usage for a virtual machine in the cluster. See below.</entry>
+            <entry>Defines the cluster's policy on host memory utilization. See below.</entry>
             <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
@@ -93,7 +93,7 @@
           <row>
             <entry><literal>overcommit</literal></entry>
             <entry>complex</entry>
-            <entry>The percentage of the host's unused memory used in excess of the permitted memory for a virtual machine in the cluster. Recommended values include <literal>100</literal> (None), <literal>150</literal> (Server Load) and <literal>200</literal> (Desktop Load).</entry>
+            <entry>The percentage of host memory that may be in use before no more virtual machines may be started on a host. Virtual machines may use more than the available host memory due to memory sharing under KSM. Recommended values include <literal>100</literal> (None), <literal>150</literal> (Server Load) and <literal>200</literal> (Desktop Load).</entry>
             <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
         </tbody>
@@ -122,7 +122,7 @@
           <row>
             <entry><literal>policy</literal></entry>
             <entry><literal>POWER_SAVING</literal> or <literal>EVENLY_DISTRIBUTED</literal></entry>
-            <entry>The power mode for hosts in the cluster.</entry>
+            <entry>The VM scheduling mode for hosts in the cluster.</entry>
             <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
           <row>
