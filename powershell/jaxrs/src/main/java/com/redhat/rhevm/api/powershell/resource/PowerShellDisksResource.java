@@ -41,7 +41,6 @@ import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 import com.redhat.rhevm.api.resource.DevicesResource;
 
 import static com.redhat.rhevm.api.common.util.CompletenessAssertor.validateParameters;
-import static com.redhat.rhevm.api.common.util.EnumValidator.validateEnum;
 
 public class PowerShellDisksResource
     extends PowerShellReadOnlyDisksResource
@@ -67,19 +66,19 @@ public class PowerShellDisksResource
         buf.append("$d = new-disk");
         buf.append(" -disksize " + Math.round((double)disk.getSize()/(1024*1024*1024)));
         if (disk.getFormat() != null) {
-            DiskFormat format = validateEnum(DiskFormat.class, disk.getFormat());
+            DiskFormat format = DiskFormat.fromValue(disk.getFormat());
             if (format != null) {
                 buf.append(" -volumeformat " + format.name());
             }
         }
         if (disk.getType() != null) {
-            DiskType type = validateEnum(DiskType.class, disk.getType().toUpperCase());
+            DiskType type = DiskType.fromValue(disk.getType());
             if (type != null) {
                 buf.append(" -disktype " + ReflectionHelper.capitalize(type.name().toLowerCase()));
             }
         }
         if (disk.getInterface() != null) {
-            DiskInterface diskInterface = validateEnum(DiskInterface.class, disk.getInterface().toUpperCase());
+            DiskInterface diskInterface = DiskInterface.fromValue(disk.getInterface());
             if (diskInterface != null) {
                 buf.append(" -diskinterface " + PowerShellDiskInterface.forModel(diskInterface).name());
             }
