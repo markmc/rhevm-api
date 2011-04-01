@@ -72,6 +72,12 @@
             <entry><literal>true</literal> if the host is the storage pool manager (SPM)</entry>
             <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
           </row>
+          <row>
+            <entry><literal>power_management</literal></entry>
+            <entry>complex</entry>
+            <entry>Fencing options for host power management. (see <xref linkend="sect-REST_API_Guide-Hosts-Power_Management"/>)</entry>
+            <entry><inlinemediaobject><imageobject><imagedata fileref="images/locked.png" format="PNG" /></imageobject></inlinemediaobject></entry>
+          </row>
         </tbody>
       </tgroup>
     </informaltable>
@@ -632,5 +638,124 @@ Accept: application/xml
     </screen>
 
   </section>
+  <section id="sect-REST_API_Guide-Hosts-Power_Management">
+    <title>Power Management Configuration</title>
+	<para>A recommended feature of the Red Hat Virtualization platform is the ability to fence a host with a <literal>power_management</literal> configuration. Certain sub-elements are required when configuring <literal>power_management</literal>.</para>
+    <informaltable frame="none">
+      <tgroup cols="3">
+        <colspec colwidth="2*"/>
+        <colspec colwidth="4*"/>
+        <colspec colwidth="6*"/>
+        <thead>
+          <row>
+            <entry>Element</entry>
+            <entry>Type</entry>
+            <entry>Description</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry><literal>type=</literal></entry>
+            <entry>A valid fencing device</entry>
+            <entry>A list of valid fencing devices are available in system capabilities. See <xref linkend="sect-REST_API_Guide-Capabilities-Power_Managers"/> for more information.</entry>
+          </row>
+          <row>
+            <entry><literal>enabled</literal></entry>
+            <entry>boolean: true or false</entry>
+            <entry>Indicates whether power management configuration is enabled or disabled</entry>
+          </row>
+          <row>
+            <entry><literal>address</literal></entry>
+            <entry>string</entry>
+            <entry>The host name or IP address of the host</entry>
+          </row>
+          <row>
+            <entry><literal>username</literal></entry>
+            <entry>string</entry>
+            <entry>A valid user name for power management</entry>
+          </row>
+          <row>
+            <entry><literal>password</literal></entry>
+            <entry>string</entry>
+            <entry>A valid, robust password for power management</entry>
+          </row>
+          <row>
+            <entry><literal>options</literal></entry>
+            <entry>complex</entry>
+            <entry>Fencing options for the selected <literal>type=</literal></entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+    <para>The <literal>options</literal> element requires a list of <literal>option</literal> sub-elements. Each <literal>option</literal> requires a <literal>name=</literal> and a <literal>type=</literal>. Certain options are only available for specific fencing types as defined in the system capabilities (see <xref linkend="sect-REST_API_Guide-Capabilities-Power_Managers"/>) but can include options such as:</para>
+    <informaltable frame="none">
+      <tgroup cols="4">
+        <colspec colwidth="2*"/>
+        <colspec colwidth="2*"/>
+        <colspec colwidth="4*"/>
+        <colspec colwidth="6*"/>
+        <thead>
+          <row>
+            <entry>name=</entry>
+            <entry>type=</entry>
+            <entry>Values</entry>
+            <entry>Description</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry><literal>secure</literal></entry>
+            <entry><literal>BOOL</literal></entry>
+            <entry>boolean: true or false</entry>
+            <entry>Defines if SSH is enabled for power management device connection</entry>
+          </row>
+          <row>
+            <entry><literal>port</literal></entry>
+            <entry><literal>INT</literal></entry>
+            <entry>integer</entry>
+            <entry>Defines the port for power management device connection</entry>
+          </row>
+          <row>
+            <entry><literal>slot</literal></entry>
+            <entry><literal>INT</literal></entry>
+            <entry>integer</entry>
+            <entry>Defines the slot to use, specifically when using a Blade server</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+    <para>A new host can include a <literal>power_management</literal> configuration when <literal>POST</literal>ing the host configuration. The <literal>power_management</literal> configuration can also update using <literal>PUT</literal>.</para>
+    <para>For example:</para>
+    <screen>
+&lt;host id="2ab5e1da-b726-4274-bbf7-0a42b16a0fc3" href="/rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3"&gt;
+    &lt;name&gt;zig&lt;/name&gt;
+    ...
+    &lt;power_management type="ilo"&gt;
+      &lt;enabled&gt;true&lt;/enabled&gt;
+      &lt;address&gt;192.168.1.107&lt;/address&gt;
+      &lt;username&gt;admin&lt;/username&gt;
+      &lt;password&gt;p@55w0Rd!&lt;/password&gt;
+      &lt;options&gt;
+        &lt;option name="secure" value="true"/&gt;
+        &lt;option name="port" value="54345"/&gt;
+        &lt;option name="slot" value="3"/&gt;
+      &lt;/options&gt;
+    &lt;/power_management&gt;
+    ...
+&lt;/host&gt;
+    </screen>
 
+  <section id="sect-REST_API_Guide-Hosts-Fencing_Action">
+    <title>Fencing Action</title>
+    <para>The <literal>fence</literal> action enables the system to fence a troublesome host and reduce power usage. See <xref linkend="sect-REST_API_Guide-Capabilities-Power_Managers"/> for details on configuring a fencing device for a host.</para>
+    <screen>
+POST /rhevm-api/hosts/2ab5e1da-b726-4274-bbf7-0a42b16a0fc3/fence
+Content-Type: application/xml
+
+&lt;action&gt;
+  &lt;fence_type&gt;(MANUAL|START|STATUS|STOP|RESTART)&lt;/fence_type&gt;
+&lt;/action&gt;
+    </screen>
+  </section>
+  </section>
 </chapter>

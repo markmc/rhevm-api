@@ -29,6 +29,10 @@
             <entry><literal>cpus</literal></entry>
             <entry>The list of supported CPU types. See <xref linkend="sect-REST_API_Guide-Capabilities-CPUs"/></entry>
           </row>
+          <row>
+            <entry><literal>power_managers</literal></entry>
+            <entry>The list of available fence agents and their configuration options. See <xref linkend="sect-REST_API_Guide-Capabilities-Power_Managers"/></entry>
+          </row>
         </tbody>
       </tgroup>
     </informaltable>
@@ -49,21 +53,25 @@ Content-Type: application/xml
     &lt;cpus&gt;
       ...
     &lt;/cpus&gt;
+    &lt;power_managers&gt;
+      ...
+    &lt;/power_managers&gt;
     ...
   &lt;/version&gt;
   &lt;version major="2" minor="3"&gt;
     &lt;cpus&gt;
       ...
     &lt;/cpus&gt;
+    &lt;power_managers&gt;
+      ...
+    &lt;/power_managers&gt;
     ...
   &lt;/version&gt;
 &lt;/capabilities&gt;
   </screen>
 
   <section id="sect-REST_API_Guide-Capabilities-CPUs">
-    <title>
-      CPUs
-    </title>
+    <title>CPUs</title>
 
     <para>
       Each cluster is configured with a minimal CPU type which all hosts in that cluster must support. Guests running on hosts within the cluster all run on this CPU type, ensuring that every guest can be live migrated to any host within the cluster.
@@ -108,5 +116,55 @@ Content-Type: application/xml
     </screen>
 
   </section>
-
+  <section id="sect-REST_API_Guide-Capabilities-Power_Managers">
+    <title>Power Managers</title>
+    <para>Red Hat Enterprise Virtualization platform provides a list of supported power managers for host fencing configuration. Each power manager contains the following properties:</para>
+    <informaltable frame="none">
+      <tgroup cols="2">
+        <colspec colwidth="2*"/>
+        <colspec colwidth="5*"/>
+        <tbody>
+          <row>
+            <entry><literal>type</literal></entry>
+            <entry>The supported fencing device type</entry>
+          </row>
+          <row>
+            <entry><literal>options</literal></entry>
+            <entry>A list of options available to the supported fencing device. Options include a <literal>name</literal> and a value <literal>type</literal>.</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+    <para>For example:</para>
+    <screen>
+&lt;capabilities&gt;
+    ...
+    &lt;power_managers&gt;
+        &lt;power_management type="alom"&gt;
+            &lt;options&gt;
+                &lt;option type="BOOL" name="secure"/&gt;
+                &lt;option type="INT" name="port"/&gt;
+            &lt;/options&gt;
+        &lt;/power_management&gt;
+        &lt;power_management type="apc"&gt;
+            &lt;options&gt;
+                &lt;option type="BOOL" name="secure"/&gt;
+                &lt;option type="INT" name="port"/&gt;
+                &lt;option type="INT" name="slot"/&gt;
+            &lt;/options&gt;
+        &lt;/power_management&gt;
+        &lt;power_management type="bladecenter"&gt;
+            &lt;options&gt;
+                &lt;option type="BOOL" name="secure"/&gt;
+                &lt;option type="INT" name="port"/&gt;
+                &lt;option type="INT" name="slot"/&gt;
+            &lt;/options&gt;
+        &lt;/power_management&gt;
+        ...
+    &lt;/power_managers&gt;
+    ...
+&lt;/capabilities&gt;
+    </screen>
+    <para>Each host can define a power management configuration using one of the listed fencing devices. See <xref linkend="sect-REST_API_Guide-Hosts-Power_Management"/>.</para>
+  </section>
 </chapter>
