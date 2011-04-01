@@ -303,25 +303,6 @@
     </xs:restriction>
   </xs:simpleType>
 
-  <xs:simpleType name="HostStatus">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="DOWN"/>
-      <xs:enumeration value="ERROR"/>
-      <xs:enumeration value="INITIALIZING"/>
-      <xs:enumeration value="INSTALLING"/>
-      <xs:enumeration value="INSTALL_FAILED"/>
-      <xs:enumeration value="MAINTENANCE"/>
-      <xs:enumeration value="NON_OPERATIONAL"/>
-      <xs:enumeration value="NON_RESPONSIVE"/>
-      <xs:enumeration value="PENDING_APPROVAL"/>
-      <xs:enumeration value="PREPARING_FOR_MAINTENANCE"/>
-      <xs:enumeration value="PROBLEMATIC"/>
-      <xs:enumeration value="REBOOT"/>
-      <xs:enumeration value="UNASSIGNED"/>
-      <xs:enumeration value="UP"/>
-    </xs:restriction>
-  </xs:simpleType>
-
   <xs:simpleType name="NetworkStatus">
     <xs:restriction base="xs:string">
       <xs:enumeration value="OPERATIONAL"/>
@@ -778,6 +759,23 @@
   </xs:complexType>
 
   <!-- Hosts -->
+
+  <xs:simpleType name="HostState">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="down"/>
+      <xs:enumeration value="active"/>
+      <xs:enumeration value="inactive"/>
+      <xs:enumeration value="pending_approval"/>
+      <xs:enumeration value="error"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="HostStatus">
+    <xs:sequence>
+      <xs:element name="state" type="HostState" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="detail" type="xs:string" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
 
   <xs:complexType name="PowerManagementOption">
     <xs:attribute name="name" type="xs:string"/>
