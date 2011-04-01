@@ -24,6 +24,7 @@ import javax.ws.rs.core.Response;
 
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Host;
+import com.redhat.rhevm.api.model.HostState;
 import com.redhat.rhevm.api.model.HostStatus;
 import com.redhat.rhevm.api.resource.AssignedPermissionsResource;
 import com.redhat.rhevm.api.resource.AssignedTagsResource;
@@ -96,12 +97,12 @@ public class MockHostResource extends AbstractMockResource<Host> implements Host
 
     @Override
     public Response activate(Action action) {
-        return doAction(getUriInfo(), new HostStatusSetter(action, HostStatus.UP));
+        return doAction(getUriInfo(), new HostStateSetter(action, HostState.UP));
     }
 
     @Override
     public Response deactivate(Action action) {
-        return doAction(getUriInfo(), new HostStatusSetter(action, HostStatus.MAINTENANCE));
+        return doAction(getUriInfo(), new HostStateSetter(action, HostState.MAINTENANCE));
     }
 
     @Override
@@ -119,17 +120,19 @@ public class MockHostResource extends AbstractMockResource<Host> implements Host
         return null;
     }
 
-    private class HostStatusSetter extends AbstractActionTask {
-        private HostStatus status;
-        HostStatusSetter(Action action, HostStatus status) {
-            super(action, "Host status failed with {0}");
-            this.status = status;
+    private class HostStateSetter extends AbstractActionTask {
+        private HostState state;
+        HostStateSetter(Action action, HostState state) {
+            super(action, "Host state failed with {0}");
+            this.state = state;
         }
         public void execute() {
-            if (status.equals(MockHostResource.this.getModel().getStatus())) {
-                throw new IllegalStateException("Host status already: " + status);
+            if (MockHostResource.this.getModel().isSetStatus() &&
+                state.equals(MockHostResource.this.getModel().getStatus().getState())) {
+                throw new IllegalStateException("Host state already: " + state);
             }
-            MockHostResource.this.getModel().setStatus(status);
+            MockHostResource.this.getModel().setStatus(new HostStatus());
+            MockHostResource.this.getModel().getStatus().setState(state);
         }
     }
 

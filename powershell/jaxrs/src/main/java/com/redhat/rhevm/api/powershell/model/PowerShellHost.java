@@ -23,12 +23,12 @@ import java.util.List;
 
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.Host;
-import com.redhat.rhevm.api.model.HostStatus;
 import com.redhat.rhevm.api.model.PowerManagement;
 import com.redhat.rhevm.api.model.PowerManagementOption;
 import com.redhat.rhevm.api.model.PowerManagementOptions;
 import com.redhat.rhevm.api.model.Statistic;
 import com.redhat.rhevm.api.model.Statistics;
+import com.redhat.rhevm.api.powershell.enums.PowerShellVdsStatus;
 import com.redhat.rhevm.api.powershell.enums.PowerShellVdsSpmStatus;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 
@@ -37,25 +37,6 @@ import static com.redhat.rhevm.api.powershell.util.PowerShellUtils.last;
 public class PowerShellHost {
 
     private static final String HOST_TYPE = "RhevmCmd.CLIHost";
-
-    private static HostStatus parseStatus(String s) {
-        if (s.equals("Down"))                      return HostStatus.DOWN;
-        if (s.equals("Error"))                     return HostStatus.ERROR;
-        if (s.equals("Initializing"))              return HostStatus.INITIALIZING;
-        if (s.equals("Installing"))                return HostStatus.INSTALLING;
-        if (s.equals("Install Failed"))            return HostStatus.INSTALL_FAILED;
-        if (s.equals("Maintenance"))               return HostStatus.MAINTENANCE;
-        if (s.equals("Non Operational"))           return HostStatus.NON_OPERATIONAL;
-        if (s.equals("Non Responsive"))            return HostStatus.NON_RESPONSIVE;
-        if (s.equals("Pending Approval"))          return HostStatus.PENDING_APPROVAL;
-        if (s.equals("Preparing For Maintenance")) return HostStatus.PREPARING_FOR_MAINTENANCE;
-        if (s.equals("Non-Responsive"))            return HostStatus.PROBLEMATIC;
-        if (s.equals("Reboot"))                    return HostStatus.REBOOT;
-        if (s.equals("Unassigned"))                return HostStatus.UNASSIGNED;
-        if (s.equals("Up"))                        return HostStatus.UP;
-        else assert false : s;
-        return null;
-    }
 
     private static PowerManagementOptions parsePowerManagementOptions(String options) {
         if (options == null) {
@@ -113,7 +94,7 @@ public class PowerShellHost {
         host.setAddress(entity.get("address"));
         host.setPort(entity.get("port", Integer.class));
         host.setName(entity.get("name"));
-        host.setStatus(parseStatus(entity.get("status")));
+        host.setStatus(PowerShellVdsStatus.forValue(entity.get("status")).map());
         host.setStorageManager(entity.get("spmstatus", PowerShellVdsSpmStatus.class).map());
         host.setPowerManagement(parsePowerManagement(entity.get("powermanagement",
                                                                 PowerShellParser.PowerManagement.class)));
