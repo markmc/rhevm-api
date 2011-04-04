@@ -113,9 +113,13 @@ public class BasePowerShellResourceTest extends Assert {
     }
 
     protected QueryParam getQueryParam() {
+        return getQueryParam(QUERY);
+    }
+
+    protected QueryParam getQueryParam(final String query) {
         return new QueryParam() {
             public String value() {
-                return QUERY;
+                return query;
             }
             @Override
             public Class<? extends Annotation> annotationType() {

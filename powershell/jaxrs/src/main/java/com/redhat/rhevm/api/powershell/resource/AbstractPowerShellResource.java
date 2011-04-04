@@ -26,6 +26,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.common.util.QueryHelper;
+import com.redhat.rhevm.api.common.util.QueryTransformer;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPool;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
@@ -109,6 +110,7 @@ public class AbstractPowerShellResource {
         String ret = root;
         String constraint = QueryHelper.getConstraint(uriInfo, collectionType, typePrefix);
         if (constraint != null) {
+            constraint = QueryTransformer.transform(collectionType, constraint);
             ret = new StringBuffer(root).append(SEARCH_TEXT)
                                         .append(PowerShellUtils.escape(constraint))
                                         .toString();

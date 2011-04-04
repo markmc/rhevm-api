@@ -264,7 +264,11 @@ public abstract class AbstractPowerShellCollectionResourceTest<R extends BaseRes
     }
 
     protected String getQueryCommand(Class<?> clz) {
-        return getSelectCommand() + SEARCH_OPTION + "\"" + QueryHelper.RETURN_TYPES.get(clz) + QUERY + "\"";
+        return getQueryCommand(clz, QUERY);
+    }
+
+    protected String getQueryCommand(Class<?> clz, String query) {
+        return getSelectCommand() + SEARCH_OPTION + "\"" + QueryHelper.RETURN_TYPES.get(clz) + query + "\"";
     }
 
     protected String getAddCommand(boolean async) {

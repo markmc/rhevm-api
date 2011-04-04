@@ -47,6 +47,9 @@ public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionRes
     private static final String[] NO_DESCRIPTIONS = new String[] { null, null, null };
     private static final String[] NO_DESCRIPTIONS_SUBSET = new String[] { null, null };
 
+    private static final String STATUS_QUERY = "status=inactive";
+    private static final String TRANSFORMED_STATUS_QUERY = "status=maintenance";
+
     private static final String CLUSTER_BY_NAME_ADD_COMMAND_PROLOG =
         "$c = select-cluster -searchtext \"name=" + CLUSTER_NAME + "\";";
 
@@ -89,6 +92,16 @@ public class PowerShellHostsResourceTest extends AbstractPowerShellCollectionRes
         resource.setUriInfo(setUpResourceExpectations(getQueryCommand(Host.class) + PROCESS_HOSTS,
                                                       getQueryReturn(),
                                                       getQueryParam(),
+                                                      NAMES_SUBSET));
+        verifyCollection(resource.list().getHosts(), NAMES_SUBSET, NO_DESCRIPTIONS_SUBSET);
+    }
+
+    @Test
+    public void testStatusQuery() throws Exception {
+        setUpHttpHeaderNullExpectations("Accept");
+        resource.setUriInfo(setUpResourceExpectations(getQueryCommand(Host.class, TRANSFORMED_STATUS_QUERY) + PROCESS_HOSTS,
+                                                      getQueryReturn(),
+                                                      getQueryParam(STATUS_QUERY),
                                                       NAMES_SUBSET));
         verifyCollection(resource.list().getHosts(), NAMES_SUBSET, NO_DESCRIPTIONS_SUBSET);
     }
