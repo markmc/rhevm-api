@@ -130,10 +130,10 @@ Content-Type: application/xml
   <section id="sect-REST_API_Guide-Tags-Parent_Tags">
   <title>Parent Tags</title>
   <para>
-	A tag can contain a <literal>parent</literal> element, which creates a hierarchical link to a parent tag. Tags are structured as a flat collection that decends from the <literal>root</literal> tag.</para>
+	A tag can contain a <literal>parent</literal> element, which creates a hierarchical link to a parent tag. The tags hierarchy is represented as a flat collection that decends from the <literal>root</literal> tag.</para>
   <note>
     <title>The <literal>root</literal> tag</title>
-    <para>The <literal>root</literal> tag is a special pseudo-tag assumed as the default tag if no parent tag is specified. The <literal>root</literal> tag's <literal>id=</literal> is permanently set to <literal>-1</literal> and it cannot be deleted nor assigned to a parent tag.</para>
+    <para>The <literal>root</literal> tag is a special pseudo-tag assumed as the default tag if no parent tag is specified. The <literal>root</literal> cannot be deleted nor assigned a parent tag.</para>
   </note>
   <para>This tag hierarchy is expressed in the following way:</para>
   <screen>
