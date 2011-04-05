@@ -31,6 +31,7 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.BaseResource;
 import com.redhat.rhevm.api.model.CdRom;
+import com.redhat.rhevm.api.model.Domain;
 import com.redhat.rhevm.api.model.Event;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.DataCenter;
@@ -64,6 +65,8 @@ import com.redhat.rhevm.api.resource.ClustersResource;
 import com.redhat.rhevm.api.resource.DataCenterResource;
 import com.redhat.rhevm.api.resource.DataCentersResource;
 import com.redhat.rhevm.api.resource.DeviceResource;
+import com.redhat.rhevm.api.resource.DomainsResource;
+import com.redhat.rhevm.api.resource.DomainResource;
 import com.redhat.rhevm.api.resource.DevicesResource;
 import com.redhat.rhevm.api.resource.DiskResource;
 import com.redhat.rhevm.api.resource.EventResource;
@@ -108,6 +111,10 @@ import com.redhat.rhevm.api.resource.VmPoolResource;
 import com.redhat.rhevm.api.resource.VmPoolsResource;
 import com.redhat.rhevm.api.resource.VmResource;
 import com.redhat.rhevm.api.resource.VmsResource;
+import com.redhat.rhevm.api.resource.DomainGroupResource;
+import com.redhat.rhevm.api.resource.DomainGroupsResource;
+import com.redhat.rhevm.api.resource.DomainUserResource;
+import com.redhat.rhevm.api.resource.DomainUsersResource;
 
 /**
  * Contains a static addLinks() method which constructs any href attributes
@@ -179,6 +186,7 @@ public class LinkHelper {
         TYPES.put(File.class, map);
 
         map = new ParentToCollectionMap(GroupResource.class, GroupsResource.class);
+        map.add(DomainGroupResource.class, DomainGroupsResource.class, Domain.class);
         TYPES.put(Group.class, map);
 
         map = new ParentToCollectionMap(PermissionResource.class, AssignedPermissionsResource.class, User.class);
@@ -229,6 +237,7 @@ public class LinkHelper {
         TYPES.put(Template.class, map);
 
         map = new ParentToCollectionMap(UserResource.class, UsersResource.class);
+        map.add(DomainUserResource.class, DomainUsersResource.class, Domain.class);
         TYPES.put(User.class, map);
 
         map = new ParentToCollectionMap(VmResource.class, VmsResource.class);
@@ -240,6 +249,9 @@ public class LinkHelper {
 
         map = new ParentToCollectionMap(EventResource.class, EventsResource.class);
         TYPES.put(Event.class, map);
+
+        map = new ParentToCollectionMap(DomainResource.class, DomainsResource.class);
+        TYPES.put(Domain.class, map);
 
         map = new ParentToCollectionMap(StatisticResource.class, StatisticsResource.class, Disk.class);
         map.add(StatisticResource.class, StatisticsResource.class, Host.class);
