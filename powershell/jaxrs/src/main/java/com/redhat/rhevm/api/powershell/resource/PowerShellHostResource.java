@@ -123,6 +123,10 @@ public class PowerShellHostResource extends AbstractPowerShellActionableResource
             buf.append("$h.name = " + PowerShellUtils.escape(host.getName()) + ";");
         }
 
+        if (host.isSetAddress()) {
+            buf.append("$h.address = " + PowerShellUtils.escape(host.getAddress()) + ";");
+        }
+
         buf.append(clusterArg);
 
         if (host.isSetPowerManagement()) {

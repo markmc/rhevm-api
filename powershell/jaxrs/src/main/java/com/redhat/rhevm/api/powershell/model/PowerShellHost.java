@@ -110,6 +110,7 @@ public class PowerShellHost {
         host.setId(entity.get("hostid", String.class, Integer.class).toString());
         host.setCluster(new Cluster());
         host.getCluster().setId(entity.get("hostclusterid", String.class, Integer.class).toString());
+        host.setAddress(entity.get("address"));
         host.setPort(entity.get("port", Integer.class));
         host.setName(entity.get("name"));
         host.setStatus(parseStatus(entity.get("status")));

@@ -46,13 +46,14 @@ public class PowerShellHostTest extends PowerShellModelTest {
         }
     }
 
-    private void testHost(Host h, String id, String name, HostStatus status, String clusterId, Boolean storageManager, int port) {
+    private void testHost(Host h, String id, String name, HostStatus status, String clusterId, Boolean storageManager, String address, int port) {
         assertEquals(h.getId(), id);
         assertEquals(h.getName(), name);
         assertEquals(h.getStatus(), status);
         assertTrue(h.isSetCluster());
         assertEquals(clusterId, h.getCluster().getId());
         assertEquals(storageManager, h.isStorageManager());
+        assertEquals(address, h.getAddress());
         assertEquals(Integer.valueOf(port), h.getPort());
         verifyStatistics(h);
     }
@@ -168,7 +169,7 @@ public class PowerShellHostTest extends PowerShellModelTest {
 
         assertEquals(hosts.size(), 1);
 
-        testHost(hosts.get(0), "1", "zig", HostStatus.UP, "0", true, 54321);
+        testHost(hosts.get(0), "1", "zig", HostStatus.UP, "0", true, "172.31.0.7", 54321);
 
         assertNotNull(hosts.get(0).getPowerManagement());
         testPowerManagement(hosts.get(0).getPowerManagement(), "ilo", true, "192.168.1.107", "foo", new String[] { "secure", "port" }, new String[] { "true", "12345" });
