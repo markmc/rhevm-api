@@ -25,17 +25,14 @@
   <xs:element name="api" type="API"/>
 
   <xs:complexType name="API">
-    <xs:sequence>
-      <xs:element ref="link" maxOccurs="unbounded">
-        <xs:annotation>
-          <xs:appinfo>
-            <jaxb:property name="Links"/>
-          </xs:appinfo>
-        </xs:annotation>
-      </xs:element>
-      <xs:element ref="system_version"/>
-      <xs:element ref="summary"/>
-    </xs:sequence>
+    <xs:complexContent>
+      <xs:extension base="BaseResource">
+        <xs:sequence>         
+          <xs:element ref="system_version"/>
+          <xs:element ref="summary"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <xs:element name="summary" type="ApiSummary"/>
