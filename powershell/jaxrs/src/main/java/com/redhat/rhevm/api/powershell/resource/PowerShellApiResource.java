@@ -24,6 +24,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
 import com.redhat.rhevm.api.common.util.JAXBHelper;
+import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.model.API;
 import com.redhat.rhevm.api.model.ApiSummary;
 import com.redhat.rhevm.api.model.Hosts;
@@ -45,9 +46,6 @@ public class PowerShellApiResource
     extends InjectableUriProviderBase
     implements ApiResource {
 
-    private static final String SEARCH_RELATION = "/search";
-    private static final String SEARCH_TEMPLATE = "?search={query}";
-
     protected final ObjectFactory OBJECT_FACTORY = new ObjectFactory();
 
     private API addLinks(API api) {
@@ -68,17 +66,7 @@ public class PowerShellApiResource
     }
 
     private void addLink(API api, String rel, boolean searchable) {
-        Link link = new Link();
-        link.setRel(rel);
-        link.setHref(combine(getUriInfo().getBaseUri().getPath(), rel));
-        api.getLinks().add(link);
-
-        if (searchable) {
-            link = new Link();
-            link.setRel(rel + SEARCH_RELATION);
-            link.setHref(combine(getUriInfo().getBaseUri().getPath(), rel) + SEARCH_TEMPLATE);
-            api.getLinks().add(link);
-        }
+        LinkHelper.addLink(getUriInfo().getBaseUri().getPath(),api, rel, searchable);
     }
 
     private void addLink(API api, String rel) {

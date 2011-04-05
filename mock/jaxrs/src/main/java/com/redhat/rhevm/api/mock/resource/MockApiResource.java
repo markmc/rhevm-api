@@ -34,13 +34,9 @@ import com.redhat.rhevm.api.model.Users;
 import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.resource.ApiResource;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
-
-import static com.redhat.rhevm.api.common.util.LinkHelper.combine;
+import com.redhat.rhevm.api.common.util.LinkHelper;
 
 public class MockApiResource implements ApiResource {
-
-    private static final String SEARCH_RELATION = "/search";
-    private static final String SEARCH_TEMPLATE = "?search={query}";
 
     protected final ObjectFactory OBJECT_FACTORY = new ObjectFactory();
 
@@ -71,17 +67,7 @@ public class MockApiResource implements ApiResource {
     }
 
     private void addLink(API api, String rel, boolean searchable) {
-        Link link = new Link();
-        link.setRel(rel);
-        link.setHref(combine(getUriInfo().getBaseUri().getPath(), rel));
-        api.getLinks().add(link);
-
-        if (searchable) {
-            link = new Link();
-            link.setRel(rel + SEARCH_RELATION);
-            link.setHref(combine(getUriInfo().getBaseUri().getPath(), rel) + SEARCH_TEMPLATE);
-            api.getLinks().add(link);
-        }
+        LinkHelper.addLink(getUriInfo().getBaseUri().getPath(),api, rel, searchable);
     }
 
     private void addLink(API api, String rel) {
