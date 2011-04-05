@@ -87,7 +87,7 @@ public class MockUsersResource extends AbstractMockQueryableResource<User> imple
     }
 
     @Override
-    public void remove(String id) {
+    public void remove(String id, User user) {
         users.remove(id);
     }
 

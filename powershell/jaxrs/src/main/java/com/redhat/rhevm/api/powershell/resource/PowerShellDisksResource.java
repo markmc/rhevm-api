@@ -126,7 +126,7 @@ public class PowerShellDisksResource
     }
 
     @Override
-    public void remove(String id) {
+    public void remove(String id, Disk disk) {
         StringBuilder buf = new StringBuilder();
 
         buf.append("remove-disk");

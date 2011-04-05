@@ -223,7 +223,7 @@ public class PowerShellVmsResource
     }
 
     @Override
-    public void remove(String id) {
+    public void remove(String id, VM vm) {
         PowerShellCmd.runCommand(getPool(), "remove-vm -vmid " + PowerShellUtils.escape(id));
         removeSubResource(id);
     }

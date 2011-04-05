@@ -85,7 +85,7 @@ public class MockDataCentersResource extends AbstractMockQueryableResource<DataC
     }
 
     @Override
-    public void remove(String id) {
+    public void remove(String id, DataCenter dataCenter) {
         dataCenters.remove(id);
     }
 

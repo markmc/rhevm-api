@@ -147,7 +147,7 @@ public class PowerShellAttachedStorageDomainsResource
     }
 
     @Override
-    public void remove(String id) {
+    public void remove(String id, AttachedStorageDomain storageDomain) {
         StringBuilder buf = new StringBuilder();
 
         buf.append("detach-storagedomain");

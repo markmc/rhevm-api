@@ -81,7 +81,7 @@ public class PowerShellNicsResource
     }
 
     @Override
-    public void remove(String id) {
+    public void remove(String id, Nic nic) {
         StringBuilder buf = new StringBuilder();
 
         buf.append("$v = get-vm " + PowerShellUtils.escape(parentId) + ";");

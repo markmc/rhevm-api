@@ -72,7 +72,7 @@ public class PowerShellCdRomsResource
     }
 
     @Override
-    public void remove(String id) {
+    public void remove(String id, CdRom cdrom) {
         if (id.equals(CDROM_ID)) {
             updateCdRom("");
         }

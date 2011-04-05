@@ -94,7 +94,7 @@ public class PowerShellTagsResourceTest
     @Test
     public void testRemove() throws Exception {
         setUpResourceExpectations(getRemoveCommand(), null);
-        resource.remove(Integer.toString(NAMES[1].hashCode()));
+        resource.remove(Integer.toString(NAMES[1].hashCode()), null);
     }
 
     @Test

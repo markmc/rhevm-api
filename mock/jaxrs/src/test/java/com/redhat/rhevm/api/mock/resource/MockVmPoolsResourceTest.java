@@ -114,7 +114,7 @@ public class MockVmPoolsResourceTest extends MockTestBase {
         assertTrue(vmpools.getVmPools().size() > 0);
 
         for (VmPool vmpool : vmpools.getVmPools()) {
-            service.remove(vmpool.getId());
+            service.remove(vmpool.getId(), new VmPool());
         }
 
         vmpools = service.list(null);

@@ -83,7 +83,7 @@ public class MockTemplatesResource extends AbstractMockQueryableResource<Templat
     }
 
     @Override
-    public void remove(String id) {
+    public void remove(String id, Template template) {
         templates.remove(id);
     }
 

@@ -44,8 +44,9 @@ public interface AssignedTagsResource {
     public Response add(Tag network);
 
     @DELETE
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
     @Path("{id}")
-    public void remove(@PathParam("id") String id);
+    public void remove(@PathParam("id") String id, Tag tag);
 
     @Path("{id}")
     public AssignedTagResource getAssignedTagSubResource(@PathParam("id") String id);

@@ -89,7 +89,7 @@ public class MockNetworksResource extends AbstractMockQueryableResource<Network>
     }
 
     @Override
-    public void remove(String id) {
+    public void remove(String id, Network network) {
         networks.remove(id);
     }
 

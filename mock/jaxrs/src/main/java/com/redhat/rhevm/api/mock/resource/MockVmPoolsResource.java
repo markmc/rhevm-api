@@ -92,7 +92,7 @@ public class MockVmPoolsResource extends AbstractMockQueryableResource<VmPool> i
     }
 
     @Override
-    public void remove(String id) {
+    public void remove(String id, VmPool pool) {
         pools.remove(id);
     }
 

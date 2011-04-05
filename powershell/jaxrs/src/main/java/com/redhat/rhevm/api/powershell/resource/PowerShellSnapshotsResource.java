@@ -191,7 +191,7 @@ public class PowerShellSnapshotsResource extends UriProviderWrapper implements S
     }
 
     @Override
-    public void remove(String id) {
+    public void remove(String id, Snapshot snapshot) {
         StringBuilder buf = new StringBuilder();
 
         buf.append("remove-snapshot");

@@ -141,7 +141,7 @@ public class PowerShellClusterNetworksResource
     }
 
     @Override
-    public void remove(String id) {
+    public void remove(String id, ClusterNetwork network) {
         StringBuilder buf = new StringBuilder();
 
         buf.append(getClusterLookup());

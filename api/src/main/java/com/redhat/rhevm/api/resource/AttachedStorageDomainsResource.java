@@ -44,8 +44,9 @@ public interface AttachedStorageDomainsResource {
     public Response add(StorageDomain storageDomain);
 
     @DELETE
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
     @Path("{id}")
-    public void remove(@PathParam("id") String id);
+    public void remove(@PathParam("id") String id, StorageDomain storageDomain);
 
     @Path("{id}")
     public AttachedStorageDomainResource getAttachedStorageDomainSubResource(@PathParam("id") String id);

@@ -103,7 +103,7 @@ public class MockUserResourceTest extends MockTestBase {
         assertTrue(users.getUsers().size() > 0);
 
         for (User user : users.getUsers()) {
-            service.remove(user.getId());
+            service.remove(user.getId(), new User());
         }
 
         users = service.list(null);

@@ -52,7 +52,7 @@ public class PowerShellRolesResource extends InjectableUriProviderBase implement
     }
 
     @Override
-    public void remove(String id) {
+    public void remove(String id, Role role) {
         // REVISIT
     }
 

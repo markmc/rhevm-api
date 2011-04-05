@@ -83,7 +83,7 @@ public class MockHostsResource extends AbstractMockQueryableResource<Host> imple
     }
 
     @Override
-    public void remove(String id) {
+    public void remove(String id, Host host) {
         hosts.remove(id);
     }
 

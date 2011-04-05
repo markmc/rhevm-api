@@ -46,8 +46,9 @@ public interface UsersResource {
     public Response add(User User);
 
     @DELETE
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
     @Path("{id}")
-    public void remove(@PathParam("id") String id);
+    public void remove(@PathParam("id") String id, User user);
 
     /**
      * Sub-resource locator method, returns individual UserResource on which the

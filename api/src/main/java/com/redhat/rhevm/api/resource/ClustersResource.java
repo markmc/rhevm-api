@@ -46,8 +46,9 @@ public interface ClustersResource {
     public Response add(Cluster cluster);
 
     @DELETE
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
     @Path("{id}")
-    public void remove(@PathParam("id") String id);
+    public void remove(@PathParam("id") String id, Cluster cluster);
 
     /**
      * Sub-resource locator method, returns individual ClusterResource on which the

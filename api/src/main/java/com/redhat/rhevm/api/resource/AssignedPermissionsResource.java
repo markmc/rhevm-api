@@ -47,8 +47,9 @@ public interface AssignedPermissionsResource {
     public Response add(Permission permission);
 
     @DELETE
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
     @Path("{id}")
-    public void remove(@PathParam("id") String id);
+    public void remove(@PathParam("id") String id, Permission permission);
 
     /**
      * Sub-resource locator method, returns individual PermissionResource on which the

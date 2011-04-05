@@ -166,7 +166,7 @@ public class PowerShellTemplatesResource
     }
 
     @Override
-    public void remove(String id) {
+    public void remove(String id, Template template) {
         PowerShellCmd.runCommand(getPool(), "remove-template -templateid " + PowerShellUtils.escape(id));
         removeSubResource(id);
     }

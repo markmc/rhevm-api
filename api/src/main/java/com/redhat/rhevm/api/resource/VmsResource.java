@@ -55,8 +55,9 @@ public interface VmsResource {
     public Response add(VM vm);
 
     @DELETE
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
     @Path("{id}")
-    public void remove(@PathParam("id") String id);
+    public void remove(@PathParam("id") String id, VM vm);
 
     /**
      * Sub-resource locator method, returns individual VmResource on which the

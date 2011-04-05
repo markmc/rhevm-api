@@ -103,7 +103,7 @@ public class PowerShellVmPoolsResource
     }
 
     @Override
-    public void remove(String id) {
+    public void remove(String id, VmPool pool) {
         StringBuilder buf = new StringBuilder();
 
         buf.append("$p = get-vmpool -vmpoolid " + PowerShellUtils.escape(id) + ";");

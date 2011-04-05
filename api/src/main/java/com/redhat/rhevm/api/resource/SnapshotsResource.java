@@ -45,8 +45,9 @@ public interface SnapshotsResource {
     public Response add(Snapshot snapshot);
 
     @DELETE
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
     @Path("{id}")
-    public void remove(@PathParam("id") String id);
+    public void remove(@PathParam("id") String id, Snapshot snapshot);
 
     /**
      * Sub-resource locator method, returns individual SnapshotResource on

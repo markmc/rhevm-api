@@ -46,8 +46,9 @@ public interface NetworksResource {
     public Response add(Network network);
 
     @DELETE
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
     @Path("{id}")
-    public void remove(@PathParam("id") String id);
+    public void remove(@PathParam("id") String id, Network network);
 
     @Path("{id}")
     public NetworkResource getNetworkSubResource(@PathParam("id") String id);

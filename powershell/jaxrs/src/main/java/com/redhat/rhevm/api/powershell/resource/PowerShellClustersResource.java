@@ -135,7 +135,7 @@ public class PowerShellClustersResource
     }
 
     @Override
-    public void remove(String id) {
+    public void remove(String id, Cluster cluster) {
         PowerShellCmd.runCommand(getPool(), "remove-cluster -clusterid " + PowerShellUtils.escape(id));
         removeSubResource(id);
     }

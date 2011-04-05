@@ -228,7 +228,7 @@ public class PowerShellHostNicsResource extends UriProviderWrapper implements Ho
     }
 
     @Override
-    public void remove(String id) {
+    public void remove(String id, HostNIC nic) {
         StringBuilder buf = new StringBuilder();
 
         buf.append("$h = get-host " + PowerShellUtils.escape(hostId) + "; ");

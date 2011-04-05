@@ -47,8 +47,9 @@ public interface AssignedRolesResource {
     public Response add(Role role);
 
     @DELETE
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
     @Path("{id}")
-    public void remove(@PathParam("id") String id);
+    public void remove(@PathParam("id") String id, Role role);
 
     /**
      * Sub-resource locator method, returns individual RoleResource on which the

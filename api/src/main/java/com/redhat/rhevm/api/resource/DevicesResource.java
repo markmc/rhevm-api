@@ -41,8 +41,9 @@ public interface DevicesResource<D extends BaseDevice, C extends BaseDevices>
     public Response add(D device);
 
     @DELETE
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
     @Path("{id}")
-    public void remove(@PathParam("id") String id);
+    public void remove(@PathParam("id") String id, D device);
 
     // Note the departure from the usual convention of naming the path
     // parameter as "id". This is to work-around a RESTEasy bug in handling

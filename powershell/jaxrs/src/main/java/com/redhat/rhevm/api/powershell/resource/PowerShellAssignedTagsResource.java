@@ -125,7 +125,7 @@ public class PowerShellAssignedTagsResource
     }
 
     @Override
-    public void remove(String id) {
+    public void remove(String id, AssignedTag tag) {
         StringBuilder buf = new StringBuilder();
 
         buf.append("$tag = get-tag " + PowerShellUtils.escape(id) + "; ");

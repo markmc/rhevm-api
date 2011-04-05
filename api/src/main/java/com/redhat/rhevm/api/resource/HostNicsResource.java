@@ -45,8 +45,9 @@ public interface HostNicsResource {
     public Response add(HostNIC nic);
 
     @DELETE
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
     @Path("{id}")
-    public void remove(@PathParam("id") String id);
+    public void remove(@PathParam("id") String id, HostNIC nic);
 
     /**
      * Sub-resource locator method, returns individual HostNicResource on which the

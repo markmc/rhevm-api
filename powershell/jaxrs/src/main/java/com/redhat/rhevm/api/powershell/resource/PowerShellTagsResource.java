@@ -101,7 +101,7 @@ public class PowerShellTagsResource
     }
 
     @Override
-    public void remove(String id) {
+    public void remove(String id, Tag tag) {
         PowerShellCmd.runCommand(getPool(), "remove-tag -tagid " + PowerShellUtils.escape(id));
         removeSubResource(id);
     }

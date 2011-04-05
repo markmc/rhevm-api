@@ -102,7 +102,7 @@ public class PowerShellNetworksResource
     }
 
     @Override
-    public void remove(String id) {
+    public void remove(String id, Network network) {
         StringBuilder buf = new StringBuilder();
 
         buf.append("$n = get-networks;");

@@ -46,8 +46,9 @@ public interface GroupsResource {
     public Response add(Group Group);
 
     @DELETE
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
     @Path("{id}")
-    public void remove(@PathParam("id") String id);
+    public void remove(@PathParam("id") String id, Group group);
 
     /**
      * Sub-resource locator method, returns individual GroupResource on which

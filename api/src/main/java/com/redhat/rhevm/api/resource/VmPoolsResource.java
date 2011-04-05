@@ -46,8 +46,9 @@ public interface VmPoolsResource {
     public Response add(VmPool pool);
 
     @DELETE
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
     @Path("{id}")
-    public void remove(@PathParam("id") String id);
+    public void remove(@PathParam("id") String id, VmPool pool);
 
     /**
      * Sub-resource locator method, returns individual VmPoolResource on

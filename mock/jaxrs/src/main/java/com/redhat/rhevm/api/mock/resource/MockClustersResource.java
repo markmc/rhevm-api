@@ -91,7 +91,7 @@ public class MockClustersResource extends AbstractMockQueryableResource<Cluster>
     }
 
     @Override
-    public void remove(String id) {
+    public void remove(String id, Cluster cluster) {
         clusters.remove(id);
     }
 

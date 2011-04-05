@@ -135,7 +135,7 @@ public class PowerShellHostsResource
     }
 
     @Override
-    public void remove(String id) {
+    public void remove(String id, Host host) {
         PowerShellCmd.runCommand(getPool(), "remove-host -hostid " + PowerShellUtils.escape(id));
         removeSubResource(id);
     }

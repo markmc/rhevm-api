@@ -85,7 +85,7 @@ public class PowerShellUsersResource extends InjectableUriProviderBase implement
     }
 
     @Override
-    public void remove(String id) {
+    public void remove(String id, User user) {
         PowerShellCmd.runCommand(getPool(), "remove-user -userid " + PowerShellUtils.escape(id));
     }
 

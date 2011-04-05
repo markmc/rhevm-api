@@ -57,8 +57,9 @@ public interface HostsResource {
     public Response add(Host host);
 
     @DELETE
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
     @Path("{id}")
-    public void remove(@PathParam("id") String id);
+    public void remove(@PathParam("id") String id, Host host);
 
     /**
      * Sub-resource locator method, returns individual HostResource on which the

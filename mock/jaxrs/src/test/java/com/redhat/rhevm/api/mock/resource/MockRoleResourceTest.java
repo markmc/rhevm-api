@@ -87,7 +87,7 @@ public class MockRoleResourceTest extends MockTestBase {
         assertTrue(roles.getRoles().size() > 0);
 
         for (Role role : roles.getRoles()) {
-            service.remove(role.getId());
+            service.remove(role.getId(), new Role());
         }
 
         roles = service.list(null);

@@ -112,7 +112,7 @@ public class MockTestBase extends Assert {
         @GET public VmPools list(@QueryParam("search") String query);
         @GET @Path("{id}") public VmPool get(@PathParam("id") String id);
         @POST @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML}) public VmPool add(VmPool pool);
-        @DELETE @Path("{id}") public void remove(@PathParam("id") String id);
+        @DELETE @Path("{id}") @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML}) public void remove(@PathParam("id") String id, VmPool pool);
     }
 
     protected VmPoolsResource createVmPoolsResource(String uri) {
@@ -137,7 +137,7 @@ public class MockTestBase extends Assert {
         @GET public Users list(@QueryParam("search") String query);
         @GET @Path("{id}") public User get(@PathParam("id") String id);
         @POST @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML}) public User add(User user);
-        @DELETE @Path("{id}") public void remove(@PathParam("id") String id);
+        @DELETE @Path("{id}") @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML}) public void remove(@PathParam("id") String id, User user);
     }
 
     protected UsersResource createUsersResource(String uri) {
@@ -150,7 +150,7 @@ public class MockTestBase extends Assert {
         @GET public Roles list(@QueryParam("search") String query);
         @GET @Path("{id}") public Role get(@PathParam("id") String id);
         @POST @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML}) public Role add(Role role);
-        @DELETE @Path("{id}") public void remove(@PathParam("id") String id);
+        @DELETE @Path("{id}") @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML}) public void remove(@PathParam("id") String id, Role role);
     }
 
     protected RolesResource createRolesResource(String uri) {

@@ -46,8 +46,9 @@ public interface DataCentersResource {
     public Response add(DataCenter dataCenter);
 
     @DELETE
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
     @Path("{id}")
-    public void remove(@PathParam("id") String id);
+    public void remove(@PathParam("id") String id, DataCenter dataCenter);
 
     /**
      * Sub-resource locator method, returns individual DataCenterResource on which the

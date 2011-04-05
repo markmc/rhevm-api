@@ -87,7 +87,7 @@ public class MockRolesResource extends AbstractMockQueryableResource<Role> imple
     }
 
     @Override
-    public void remove(String id) {
+    public void remove(String id, Role role) {
         roles.remove(id);
     }
 
