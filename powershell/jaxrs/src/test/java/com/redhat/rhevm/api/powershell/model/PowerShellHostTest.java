@@ -25,6 +25,7 @@ import java.util.List;
 
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.HostStatus;
+import com.redhat.rhevm.api.model.HostType;
 import com.redhat.rhevm.api.model.PowerManagement;
 import com.redhat.rhevm.api.model.Statistic;
 import com.redhat.rhevm.api.model.StatisticType;
@@ -47,12 +48,13 @@ public class PowerShellHostTest extends PowerShellModelTest {
         }
     }
 
-    private void testHost(Host h, String id, String name, HostStatus status, String clusterId, Boolean storageManager, String address, int port) {
+    private void testHost(Host h, String id, String name, HostStatus status, String clusterId, Boolean storageManager, String address, int port, HostType type) {
         assertEquals(h.getId(), id);
         assertEquals(h.getName(), name);
         assertEquals(h.getStatus(), status);
         assertTrue(h.isSetCluster());
         assertEquals(clusterId, h.getCluster().getId());
+        assertEquals(type.value(), h.getType());
         assertEquals(storageManager, h.isStorageManager());
         assertEquals(address, h.getAddress());
         assertEquals(Integer.valueOf(port), h.getPort());
@@ -180,7 +182,7 @@ public class PowerShellHostTest extends PowerShellModelTest {
 
         assertEquals(hosts.size(), 1);
 
-        testHost(hosts.get(0), "1", "zig", HostStatus.UP, "0", true, "172.31.0.7", 54321);
+        testHost(hosts.get(0), "1", "zig", HostStatus.UP, "0", true, "172.31.0.7", 54321, HostType.RHEL);
 
         assertNotNull(hosts.get(0).getPowerManagement());
         testPowerManagement(hosts.get(0).getPowerManagement(), "ilo", true, "192.168.1.107", "foo", new String[] { "secure", "port" }, new String[] { "true", "12345" });
