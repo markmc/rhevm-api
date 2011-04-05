@@ -66,9 +66,9 @@ import com.redhat.rhevm.api.resource.ClustersResource;
 import com.redhat.rhevm.api.resource.DataCenterResource;
 import com.redhat.rhevm.api.resource.DataCentersResource;
 import com.redhat.rhevm.api.resource.DeviceResource;
+import com.redhat.rhevm.api.resource.DevicesResource;
 import com.redhat.rhevm.api.resource.DomainsResource;
 import com.redhat.rhevm.api.resource.DomainResource;
-import com.redhat.rhevm.api.resource.DevicesResource;
 import com.redhat.rhevm.api.resource.DiskResource;
 import com.redhat.rhevm.api.resource.EventResource;
 import com.redhat.rhevm.api.resource.EventsResource;
@@ -547,11 +547,12 @@ public class LinkHelper {
      *
      * @param uriInfo the URI info
      * @param model   the object
+     * @param suggestedParentType  the suggested parent type
      * @return        the object, including its set of action links
      */
-    private static <R extends BaseResource> void setActions(UriInfo uriInfo, R model) {
+    private static <R extends BaseResource> void setActions(UriInfo uriInfo, R model, Class<? extends BaseResource> suggestedParentType) {
         Collection collection = getCollection(model);
-        UriBuilder uriBuilder = getUriBuilder(uriInfo, model);
+        UriBuilder uriBuilder = getUriBuilder(uriInfo, model, suggestedParentType);
         if (uriBuilder != null) {
             ActionsBuilder actionsBuilder = new ActionsBuilder(uriBuilder, collection.getResourceType());
             model.setActions(actionsBuilder.build());
@@ -564,15 +565,16 @@ public class LinkHelper {
      *
      * @param uriInfo  the URI info
      * @param model    the object
+     * @param suggestedParentType  the suggested parent type
      * @return         the object, with href attributes and action links
      */
     public static <R extends BaseResource> R addLinks(UriInfo uriInfo, R model) {
         return addLinks(uriInfo, model, null);
     }
 
-    public static <R extends BaseResource> R addLinks(UriInfo uriInfo, R model, Class<? extends BaseResource> parentType) {
-        setHref(uriInfo, model, parentType);
-        setActions(uriInfo, model);
+    public static <R extends BaseResource> R addLinks(UriInfo uriInfo, R model, Class<? extends BaseResource> suggestedParentType) {
+        setHref(uriInfo, model, suggestedParentType);
+        setActions(uriInfo, model, suggestedParentType);
 
         for (BaseResource inline : getInlineResources(model)) {
             if (inline.getId() != null) {
