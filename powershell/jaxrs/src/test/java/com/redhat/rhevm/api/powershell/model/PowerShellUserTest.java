@@ -29,7 +29,6 @@ public class PowerShellUserTest extends PowerShellModelTest {
 
     private static final String UID = "cca00b9f-4492-4a82-b71e-082dcdf0fc66";
     private static final String USER_NAME = "jimbeam@some_domain.local";
-    private static final String DOMAIN = "some_domain.local";
     private static final String EMAIL = "jim@beam.net";
     private static final String[] GROUPS = {
         "Group Policy Creator Owners@some_domain.local/Users",
@@ -55,7 +54,6 @@ public class PowerShellUserTest extends PowerShellModelTest {
     private void verifyUser(User u) {
         assertEquals(UID, u.getId());
         assertEquals(USER_NAME, u.getUserName());
-        assertEquals(DOMAIN, u.getDomain());
         assertEquals(EMAIL, u.getEmail());
         assertEquals(LAST_NAME, u.getLastName());
         assertNotNull(u.getGroups());

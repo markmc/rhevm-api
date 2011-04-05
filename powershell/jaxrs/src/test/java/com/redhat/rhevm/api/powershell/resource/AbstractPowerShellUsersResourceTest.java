@@ -118,7 +118,6 @@ public abstract class AbstractPowerShellUsersResourceTest<A extends AbstractPowe
         assertEquals(USER_NAME + "@" + DOMAIN_NAME, user.getUserName());
         assertEquals(LAST_NAME, user.getLastName());
         assertEquals(EMAIL, user.getEmail());
-        assertEquals(DOMAIN_NAME, user.getDomain());
         verifyRoles(user.getLinks());
         verifyLinks(user);
     }

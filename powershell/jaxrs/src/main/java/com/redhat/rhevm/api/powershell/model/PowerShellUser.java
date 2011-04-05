@@ -38,7 +38,6 @@ public class PowerShellUser {
                 User user = new User();
                 user.setId(entity.get("userid"));
                 user.setName(entity.get("name"));
-                user.setDomain(entity.get("domain"));
                 user.setDepartment(entity.get("department"));
                 user.setEmail(entity.get("email"));
                 user.setLastName(entity.get("lastname"));
