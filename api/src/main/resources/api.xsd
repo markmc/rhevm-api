@@ -959,7 +959,7 @@
     <xs:complexContent>
       <xs:extension base="BaseResource">
         <xs:sequence>
-          <xs:element name="domain" type="xs:string" minOccurs="0" maxOccurs="1"/>
+          <xs:element ref="domain" minOccurs="0"/>
           <xs:element name="department" type="xs:string" minOccurs="0" maxOccurs="1"/>
           <xs:element name="logged_in" type="xs:boolean" minOccurs="0" maxOccurs="1"/>
           <xs:element name="last_name" type="xs:string" minOccurs="0" maxOccurs="1"/>
@@ -999,7 +999,7 @@
     <xs:complexContent>
       <xs:extension base="BaseResource">
         <xs:sequence>
-          <xs:element name="domain" type="xs:string" minOccurs="0" maxOccurs="1"/>
+          <xs:element ref="domain" minOccurs="0"/>
           <!-- used only to represent the initial role assignments for a
                new group, therafter modification of role assignments are
                only supported via the rel="roles" sub-collection -->
@@ -1064,6 +1064,32 @@
     </xs:complexContent>
   </xs:complexType>
 
+  <!-- Domains -->
+  <xs:element name="domain" type="Domain" />
+  <xs:element name="domains" type="Domains" />
+    
+  <xs:complexType name="Domain">
+    <xs:complexContent>
+      <xs:extension base="BaseResource">
+      </xs:extension>
+    </xs:complexContent>        
+  </xs:complexType>
+  
+  <xs:complexType name="Domains">
+    <xs:complexContent>
+      <xs:extension base="BaseResources">
+        <xs:sequence>
+          <xs:annotation>
+            <xs:appinfo>
+              <jaxb:property name="Domains" />
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:element ref="domain" maxOccurs="unbounded" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
   <!-- Events -->
   <xs:element name="event" type="Event" />
   <xs:element name="events" type="Events" />
