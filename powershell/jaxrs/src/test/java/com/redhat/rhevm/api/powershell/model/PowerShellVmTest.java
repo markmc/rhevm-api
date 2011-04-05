@@ -36,7 +36,7 @@ import com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource.Detail;
 
 public class PowerShellVmTest extends PowerShellModelTest {
 
-    private void testVM(PowerShellVM v, String id, String name, String description, VmType type, VmStatus status, Long memory, int sockets, int cores, String os, boolean stateless, boolean highlyAvailable, int highAvailabilityPriority, String cdIsoPath, String hostId, String clusterId, String templateId, String creationTime, String origin) {
+    private void testVM(PowerShellVM v, String id, String name, String description, VmType type, VmStatus status, Long memory, int sockets, int cores, String os, boolean stateless, Boolean highlyAvailable, Integer highAvailabilityPriority, String cdIsoPath, String hostId, String clusterId, String templateId, String creationTime, String origin) {
         assertEquals(id, v.getId());
         assertEquals(name, v.getName());
         assertEquals(description, v.getDescription());
@@ -50,9 +50,9 @@ public class PowerShellVmTest extends PowerShellModelTest {
         assertNotNull(v.getOs());
         assertEquals(os, v.getOs().getType());
         assertEquals(stateless, v.isStateless());
-        assertNotNull(v.getHighlyAvailable());
-        assertEquals(highlyAvailable, v.getHighlyAvailable().isValue());
-        assertEquals(highAvailabilityPriority, v.getHighlyAvailable().getPriority());
+        assertNotNull(v.getHighAvailability());
+        assertEquals(highlyAvailable, v.getHighAvailability().isEnabled());
+        assertEquals(highAvailabilityPriority, v.getHighAvailability().getPriority());
         assertEquals(cdIsoPath, v.getCdIsoPath());
         assertNotNull(v.getCluster());
         assertEquals(clusterId, v.getCluster().getId());

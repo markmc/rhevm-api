@@ -32,7 +32,7 @@ import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Display;
 import com.redhat.rhevm.api.model.DisplayType;
 import com.redhat.rhevm.api.model.Fault;
-import com.redhat.rhevm.api.model.HighlyAvailable;
+import com.redhat.rhevm.api.model.HighAvailability;
 import com.redhat.rhevm.api.model.OperatingSystem;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.Template;
@@ -203,8 +203,8 @@ public class PowerShellTemplateResourceTest extends AbstractPowerShellResourceTe
     }
 
     private Template updateHighlyAvailable(Template template) {
-        template.setHighlyAvailable(new HighlyAvailable());
-        template.getHighlyAvailable().setValue(false);
+        template.setHighAvailability(new HighAvailability());
+        template.getHighAvailability().setEnabled(false);
         return template;
     }
 

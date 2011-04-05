@@ -146,8 +146,8 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
         if (template.isSetStateless()) {
             buf.append(" $t.isstateless = " + PowerShellUtils.encode(template.isStateless()) + ";");
         }
-        if (template.isSetHighlyAvailable()) {
-            buf.append(" $t.autostartup = " + PowerShellUtils.encode(template.getHighlyAvailable().isValue()) + ";");
+        if (template.isSetHighAvailability() && template.getHighAvailability().isSetEnabled()) {
+            buf.append(" $t.autostartup = " + PowerShellUtils.encode(template.getHighAvailability().isEnabled()) + ";");
         }
         if (template.isSetDisplay()) {
             Display display = template.getDisplay();

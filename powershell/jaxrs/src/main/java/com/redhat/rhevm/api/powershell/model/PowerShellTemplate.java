@@ -29,7 +29,7 @@ import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.CpuTopology;
 import com.redhat.rhevm.api.model.Display;
 import com.redhat.rhevm.api.model.DisplayType;
-import com.redhat.rhevm.api.model.HighlyAvailable;
+import com.redhat.rhevm.api.model.HighAvailability;
 import com.redhat.rhevm.api.model.OperatingSystem;
 import com.redhat.rhevm.api.model.Boot;
 import com.redhat.rhevm.api.model.Template;
@@ -108,8 +108,8 @@ public class PowerShellTemplate extends Template {
             }
             template.setOs(os);
 
-            template.setHighlyAvailable(new HighlyAvailable());
-            template.getHighlyAvailable().setValue(entity.get("autostartup", Boolean.class));
+            template.setHighAvailability(new HighAvailability());
+            template.getHighAvailability().setEnabled(entity.get("autostartup", Boolean.class));
 
             template.setStateless(entity.get("isstateless", Boolean.class));
 

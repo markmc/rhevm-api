@@ -129,7 +129,9 @@ public class PowerShellTemplatesResource
         if (template.isSetStateless()) {
             buf.append(" -stateless ");
         }
-        if (template.isSetHighlyAvailable() && template.getHighlyAvailable().isValue()) {
+        if (template.isSetHighAvailability() &&
+            template.getHighAvailability().isSetEnabled() &&
+            template.getHighAvailability().isEnabled()) {
             buf.append(" -highlyavailable ");
         }
         if (template.isSetDisplay()) {

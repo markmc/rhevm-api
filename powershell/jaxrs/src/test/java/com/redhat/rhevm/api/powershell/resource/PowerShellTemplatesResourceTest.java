@@ -26,7 +26,7 @@ import org.junit.Test;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.Display;
 import com.redhat.rhevm.api.model.DisplayType;
-import com.redhat.rhevm.api.model.HighlyAvailable;
+import com.redhat.rhevm.api.model.HighAvailability;
 import com.redhat.rhevm.api.model.OperatingSystem;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VM;
@@ -181,7 +181,7 @@ public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectio
     }
 
     @Test
-    public void testAddHighlyAvailble() throws Exception {
+    public void testAddHighlyAvailable() throws Exception {
         setUpHttpHeaderExpectations("Expect", null);
 
         resource.setUriInfo(setUpAddResourceExpectations(ADD_COMMAND_PROLOG
@@ -193,8 +193,8 @@ public class PowerShellTemplatesResourceTest extends AbstractPowerShellCollectio
                                                          false,
                                                          NEW_NAME));
         Template template = getModel(NEW_NAME, NEW_DESCRIPTION);
-        template.setHighlyAvailable(new HighlyAvailable());
-        template.getHighlyAvailable().setValue(true);
+        template.setHighAvailability(new HighAvailability());
+        template.getHighAvailability().setEnabled(true);
         verifyCreated(resource.add(template),
                       Template.class,
                       NEW_NAME,

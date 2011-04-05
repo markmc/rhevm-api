@@ -149,10 +149,12 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
         if (vm.isSetStateless()) {
             buf.append(" $v.stateless = " + PowerShellUtils.encode(vm.isStateless()) + ";");
         }
-        if (vm.isSetHighlyAvailable()) {
-            buf.append(" $v.highlyavailable = " + PowerShellUtils.encode(vm.getHighlyAvailable().isValue()) + ";");
-            if (vm.getHighlyAvailable().isSetPriority()) {
-                buf.append(" $v.priority = " + Integer.toString(vm.getHighlyAvailable().getPriority()) + ";");
+        if (vm.isSetHighAvailability()) {
+            if (vm.getHighAvailability().isSetEnabled()) {
+                buf.append(" $v.highlyavailable = " + PowerShellUtils.encode(vm.getHighAvailability().isEnabled()) + ";");
+            }
+            if (vm.getHighAvailability().isSetPriority()) {
+                buf.append(" $v.priority = " + Integer.toString(vm.getHighAvailability().getPriority()) + ";");
             }
         }
         if (vm.isSetDisplay()) {
