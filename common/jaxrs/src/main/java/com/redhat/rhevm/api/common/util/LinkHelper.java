@@ -594,10 +594,10 @@ public class LinkHelper {
      * @param url to append to
      * @param resource to add links to
      * @param rel link ro add
-     * @param searchable
+     * @param LinkFlags used to specify different link options
      */
-    public static void addLink(BaseResource resource, String rel, boolean searchable) {
-        addLink(resource.getHref(), resource, rel, searchable);
+    public static void addLink(BaseResource resource, String rel, LinkFlags flags) {
+        addLink(resource.getHref(), resource, rel, flags);
     }
 
     /**
@@ -605,16 +605,16 @@ public class LinkHelper {
      *
      * @param url to append to
      * @param resource to add links to
-     * @param is searchable
      * @param rel link ro add
+     * @param LinkFlags used to specify different link options
      */
-    public static void addLink(String url, BaseResource resource, String rel, boolean searchable) {
+    public static void addLink(String url, BaseResource resource, String rel, LinkFlags flags) {
         Link link = new Link();
         link.setRel(rel);
         link.setHref(combine(url, rel));
         resource.getLinks().add(link);
 
-        if (searchable) {
+        if (flags == LinkFlags.SEARCHABLE) {
             addLink(url, resource, rel);
         }
     }
@@ -717,5 +717,35 @@ public class LinkHelper {
         public Class<?> getResourceType()      { return resourceType; }
         public Class<?> getCollectionType()    { return collectionType; }
         public Class<?> getParentType()        { return parentType; }
+    }
+
+    /**
+     * Used to specify link options
+     */
+    public enum LinkFlags {
+        NONE(0),
+        SEARCHABLE(1);
+
+        private int intValue;
+        private static HashMap<Integer, LinkFlags> mappings = new HashMap<Integer, LinkFlags>();
+
+        static {
+            for (LinkFlags linkFlags : values()) {
+                mappings.put(linkFlags.getValue(), linkFlags);
+            }
+        }
+
+        private LinkFlags(int value) {
+            intValue = value;
+        }
+
+        public int getValue() {
+            return intValue;
+        }
+
+        public static LinkFlags forValue(int value) {
+            return mappings.get(value);
+        }
+
     }
 }

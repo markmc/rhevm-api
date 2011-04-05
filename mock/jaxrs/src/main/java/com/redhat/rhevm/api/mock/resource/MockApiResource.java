@@ -35,6 +35,7 @@ import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.resource.ApiResource;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
+import com.redhat.rhevm.api.common.util.LinkHelper.LinkFlags;
 
 public class MockApiResource implements ApiResource {
 
@@ -52,26 +53,26 @@ public class MockApiResource implements ApiResource {
     }
 
     private API addLinks(API api) {
-        addLink(api, "capabilities", false);
-        addLink(api, "clusters");
-        addLink(api, "datacenters");
-        addLink(api, "hosts");
-        addLink(api, "networks", false); // powershell has no select-network command
-        addLink(api, "roles", false);
-        addLink(api, "storagedomains");
-        addLink(api, "templates");
-        addLink(api, "users");
-        addLink(api, "vmpools");
-        addLink(api, "vms");
+        addLink(api, "capabilities");
+        addLink(api, "clusters", LinkFlags.SEARCHABLE);
+        addLink(api, "datacenters", LinkFlags.SEARCHABLE);
+        addLink(api, "hosts", LinkFlags.SEARCHABLE);
+        addLink(api, "networks"); // powershell has no select-network command
+        addLink(api, "roles");
+        addLink(api, "storagedomains", LinkFlags.SEARCHABLE);
+        addLink(api, "templates", LinkFlags.SEARCHABLE);
+        addLink(api, "users", LinkFlags.SEARCHABLE);
+        addLink(api, "vmpools", LinkFlags.SEARCHABLE);
+        addLink(api, "vms", LinkFlags.SEARCHABLE);
         return api;
     }
 
-    private void addLink(API api, String rel, boolean searchable) {
-        LinkHelper.addLink(getUriInfo().getBaseUri().getPath(),api, rel, searchable);
+    private void addLink(API api, String rel, LinkFlags flags) {
+        LinkHelper.addLink(getUriInfo().getBaseUri().getPath(),api, rel, flags);
     }
 
     private void addLink(API api, String rel) {
-        addLink(api, rel, true);
+        addLink(api, rel, LinkFlags.NONE);
     }
 
     private String addPath(UriBuilder uriBuilder, Link link) {
