@@ -40,6 +40,7 @@ import com.redhat.rhevm.api.model.HostNIC;
 import com.redhat.rhevm.api.model.Host;
 import com.redhat.rhevm.api.model.File;
 import com.redhat.rhevm.api.model.Group;
+import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.Network;
 import com.redhat.rhevm.api.model.NIC;
 import com.redhat.rhevm.api.model.Permission;
@@ -141,6 +142,9 @@ import com.redhat.rhevm.api.resource.DomainUsersResource;
  * with this information for every resource type.
  */
 public class LinkHelper {
+
+    private static final String SEARCH_RELATION = "/search";
+    private static final String SEARCH_TEMPLATE = "?search={query}";
 
     /**
      * A constant representing the pseudo-parent of a top-level collection
@@ -580,6 +584,62 @@ public class LinkHelper {
         }
 
         return model;
+    }
+
+    /**
+     * Appends searchable links to resource's Href
+     *
+     * @param url to append to
+     * @param resource to add links to
+     * @param rel link ro add
+     * @param searchable
+     */
+    public static void addLink(BaseResource resource, String rel, boolean searchable) {
+        addLink(resource.getHref(), resource, rel, searchable);
+    }
+
+    /**
+     * Adds searchable links to resource
+     *
+     * @param url to append to
+     * @param resource to add links to
+     * @param is searchable
+     * @param rel link ro add
+     */
+    public static void addLink(String url, BaseResource resource, String rel, boolean searchable) {
+        Link link = new Link();
+        link.setRel(rel);
+        link.setHref(combine(url, rel));
+        resource.getLinks().add(link);
+
+        if (searchable) {
+            addLink(url, resource, rel);
+        }
+    }
+
+    /**
+     * Appends searchable links to resource's Href
+     *
+     * @param url to append to and combine search dialect
+     * @param resource to add links to
+     * @param rel link ro add
+     */
+    public static void addLink(BaseResource resource, String rel) {
+        addLink(resource.getHref(), resource, rel);
+    }
+
+    /**
+     * Adds searchable links to resource
+     *
+     * @param url to append to and combine search dialect
+     * @param resource to add links to
+     * @param rel link ro add
+     */
+    public static void addLink(String url, BaseResource resource, String rel) {
+        Link link = new Link();
+        link.setRel(rel + SEARCH_RELATION);
+        link.setHref(combine(url, rel) + SEARCH_TEMPLATE);
+        resource.getLinks().add(link);
     }
 
     /**
