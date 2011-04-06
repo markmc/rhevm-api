@@ -722,30 +722,5 @@ public class LinkHelper {
     /**
      * Used to specify link options
      */
-    public enum LinkFlags {
-        NONE(0),
-        SEARCHABLE(1);
-
-        private int intValue;
-        private static HashMap<Integer, LinkFlags> mappings = new HashMap<Integer, LinkFlags>();
-
-        static {
-            for (LinkFlags linkFlags : values()) {
-                mappings.put(linkFlags.getValue(), linkFlags);
-            }
-        }
-
-        private LinkFlags(int value) {
-            intValue = value;
-        }
-
-        public int getValue() {
-            return intValue;
-        }
-
-        public static LinkFlags forValue(int value) {
-            return mappings.get(value);
-        }
-
-    }
+    public enum LinkFlags { NONE, SEARCHABLE; }
 }
