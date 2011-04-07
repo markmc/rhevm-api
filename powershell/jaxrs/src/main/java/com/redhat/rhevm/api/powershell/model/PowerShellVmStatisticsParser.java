@@ -57,7 +57,7 @@ public class PowerShellVmStatisticsParser extends AbstractStatisticsParser {
                            StatisticType.GAUGE,
                            StatisticUnit.BYTES,
                            ValueType.INTEGER);
-        setDatum(statistic, mem*entity.get("usagemempercent", Integer.class)/100D);
+        setDatum(statistic, new BigDecimal(mem*entity.get("usagemempercent", Integer.class)).divide(CENT));
         statistics.add(statistic);
 
         return statistics;
@@ -72,7 +72,7 @@ public class PowerShellVmStatisticsParser extends AbstractStatisticsParser {
                            StatisticType.GAUGE,
                            StatisticUnit.PERCENT,
                            ValueType.DECIMAL);
-        setDatum(statistic, entity.get("user", BigDecimal.class).doubleValue());
+        setDatum(statistic, entity.get("user", BigDecimal.class));
         statistics.add(statistic);
 
         statistic = create("cpu.current.hypervisor",
@@ -80,7 +80,7 @@ public class PowerShellVmStatisticsParser extends AbstractStatisticsParser {
                            StatisticType.GAUGE,
                            StatisticUnit.PERCENT,
                            ValueType.DECIMAL);
-        setDatum(statistic, entity.get("system", BigDecimal.class).doubleValue());
+        setDatum(statistic, entity.get("system", BigDecimal.class));
         statistics.add(statistic);
 
         return statistics;

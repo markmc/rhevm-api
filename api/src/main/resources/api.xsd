@@ -245,7 +245,7 @@
 
   <xs:complexType name="Value">
     <xs:sequence>
-      <xs:element name="datum" type="xs:double" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="datum" type="xs:decimal" minOccurs="1" maxOccurs="1"/>
       <!-- will in the future also include a timestamp element,
            when historical data is supported -->
     </xs:sequence>

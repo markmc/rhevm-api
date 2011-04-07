@@ -18,6 +18,7 @@
  */
 package com.redhat.rhevm.api.powershell.model;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.junit.Test;
@@ -43,77 +44,77 @@ public class PowerShellHostStatisticsParserTest extends PowerShellModelTest {
                         StatisticType.GAUGE,
                         StatisticUnit.BYTES,
                         ValueType.INTEGER,
-                        4096*1024*1024D);
+                        4096*1024*1024L);
         verifyStatistic(statistics.get(1),
                         "memory.total",
                         "Total guest memory",
                         StatisticType.GAUGE,
                         StatisticUnit.BYTES,
                         ValueType.INTEGER,
-                        1154*1024*1024D);
+                        1154*1024*1024L);
         verifyStatistic(statistics.get(2),
                         "memory.used",
                         "Memory used",
                         StatisticType.GAUGE,
                         StatisticUnit.BYTES,
                         ValueType.INTEGER,
-                        4096*1024*1024L/2D);
+                        4096*1024*1024L/2);
         verifyStatistic(statistics.get(3),
                         "memory.free",
                         "Memory free",
                         StatisticType.GAUGE,
                         StatisticUnit.BYTES,
                         ValueType.INTEGER,
-                        4096*1024*1024L/2D);
+                        4096*1024*1024L/2);
         verifyStatistic(statistics.get(4),
                         "swap.total",
                         "Total swap",
                         StatisticType.GAUGE,
                         StatisticUnit.BYTES,
                         ValueType.INTEGER,
-                        3955*1024*1024D);
+                        3955*1024*1024L);
         verifyStatistic(statistics.get(5),
                         "swap.free",
                         "Free swap",
                         StatisticType.GAUGE,
                         StatisticUnit.BYTES,
                         ValueType.INTEGER,
-                        2060*1024*1024D);
+                        2060*1024*1024L);
         verifyStatistic(statistics.get(6),
                         "cpu.current.user",
                         "User+nic CPU usage",
                         StatisticType.GAUGE,
                         StatisticUnit.PERCENT,
                         ValueType.DECIMAL,
-                        10D);
+                        10L);
         verifyStatistic(statistics.get(7),
                         "cpu.current.system",
                         "System CPU usage",
                         StatisticType.GAUGE,
                         StatisticUnit.PERCENT,
                         ValueType.DECIMAL,
-                        20D);
+                        20L);
         verifyStatistic(statistics.get(8),
                         "cpu.current.idle",
                         "Idle CPU usage",
                         StatisticType.GAUGE,
                         StatisticUnit.PERCENT,
                         ValueType.DECIMAL,
-                        30D);
+                        30L);
         verifyStatistic(statistics.get(9),
                         "cpu.load.avg.5m",
                         "5min CPU load average",
                         StatisticType.GAUGE,
                         StatisticUnit.NONE,
                         ValueType.DECIMAL,
-                        2.1D);
+                        new BigDecimal("2.1"));
         verifyStatistic(statistics.get(10),
                         "ksm.cpu.current",
                         "KSM CPU usage",
                         StatisticType.GAUGE,
                         StatisticUnit.PERCENT,
                         ValueType.DECIMAL,
-                        5D);
+                        5L);
     }
 
     private void verifyStatistic(Statistic statistic,
@@ -122,7 +123,17 @@ public class PowerShellHostStatisticsParserTest extends PowerShellModelTest {
                                  StatisticType type,
                                  StatisticUnit unit,
                                  ValueType valueType,
-                                 double datum) {
+                                 long datum) {
+        verifyStatistic(statistic, name, description, type, unit, valueType, new BigDecimal(datum));
+    }
+
+    private void verifyStatistic(Statistic statistic,
+                                 String name,
+                                 String description,
+                                 StatisticType type,
+                                 StatisticUnit unit,
+                                 ValueType valueType,
+                                 BigDecimal datum) {
         assertEquals(name, statistic.getName());
         assertEquals(description, statistic.getDescription());
         assertEquals(type, statistic.getType());
@@ -131,6 +142,6 @@ public class PowerShellHostStatisticsParserTest extends PowerShellModelTest {
         assertEquals(valueType, statistic.getValues().getType());
         assertTrue(statistic.getValues().isSetValues());
         assertEquals(1, statistic.getValues().getValues().size());
-        assertEquals(datum, statistic.getValues().getValues().get(0).getDatum(), 0.1D);
+        assertEquals(datum, statistic.getValues().getValues().get(0).getDatum());
     }
 }

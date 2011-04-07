@@ -73,8 +73,8 @@ public class PowerShellHostStatisticsParser extends AbstractStatisticsParser {
                            StatisticType.GAUGE,
                            StatisticUnit.BYTES,
                            ValueType.INTEGER);
-        double memUsed = mem*entity.get("usagepercents", Integer.class)/100D;
-        setDatum(statistic, memUsed);
+        long memUsedByCent = mem*entity.get("usagepercents", Integer.class);
+        setDatum(statistic, new BigDecimal(memUsedByCent).divide(CENT));
         statistics.add(statistic);
 
         statistic = create("memory.free",
@@ -82,7 +82,7 @@ public class PowerShellHostStatisticsParser extends AbstractStatisticsParser {
                            StatisticType.GAUGE,
                            StatisticUnit.BYTES,
                            ValueType.INTEGER);
-        setDatum(statistic, mem-memUsed);
+        setDatum(statistic, new BigDecimal((mem*100) - memUsedByCent).divide(CENT));
         statistics.add(statistic);
 
         statistic = create("swap.total",
@@ -113,7 +113,7 @@ public class PowerShellHostStatisticsParser extends AbstractStatisticsParser {
                            StatisticType.GAUGE,
                            StatisticUnit.PERCENT,
                            ValueType.DECIMAL);
-        setDatum(statistic, entity.get("user", BigDecimal.class).doubleValue());
+        setDatum(statistic, entity.get("user", BigDecimal.class));
         statistics.add(statistic);
 
         statistic = create("cpu.current.system",
@@ -121,7 +121,7 @@ public class PowerShellHostStatisticsParser extends AbstractStatisticsParser {
                            StatisticType.GAUGE,
                            StatisticUnit.PERCENT,
                            ValueType.DECIMAL);
-        setDatum(statistic, entity.get("system", BigDecimal.class).doubleValue());
+        setDatum(statistic, entity.get("system", BigDecimal.class));
         statistics.add(statistic);
 
         statistic = create("cpu.current.idle",
@@ -129,7 +129,7 @@ public class PowerShellHostStatisticsParser extends AbstractStatisticsParser {
                            StatisticType.GAUGE,
                            StatisticUnit.PERCENT,
                            ValueType.DECIMAL);
-        setDatum(statistic, entity.get("idle", BigDecimal.class).doubleValue());
+        setDatum(statistic, entity.get("idle", BigDecimal.class));
         statistics.add(statistic);
 
         statistic = create("cpu.load.avg.5m",
@@ -137,7 +137,7 @@ public class PowerShellHostStatisticsParser extends AbstractStatisticsParser {
                            StatisticType.GAUGE,
                            StatisticUnit.NONE,
                            ValueType.DECIMAL);
-        setDatum(statistic, entity.get("load", BigDecimal.class).doubleValue());
+        setDatum(statistic, entity.get("load", BigDecimal.class));
         statistics.add(statistic);
 
         return statistics;

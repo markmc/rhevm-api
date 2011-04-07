@@ -18,6 +18,7 @@
  */
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.math.BigDecimal;
 import java.util.concurrent.Executor;
 
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
@@ -68,7 +69,7 @@ public class PowerShellStatisticsResourceTest
         setUriInfo(setUpBasicUriExpectations());
         replayAll();
 
-        verifyStatistics(collection.list(), new double[] { 512*1024*1024D, 512*1024*1024/2D, 33.5D, 21.7D });
+        verifyStatistics(collection.list(), new BigDecimal[] { asDec(512*1024*1024), asDec(512*1024*1024/2), asDec("33.5"), asDec("21.7") });
     }
 
     @Test
@@ -80,7 +81,7 @@ public class PowerShellStatisticsResourceTest
         setUriInfo(setUpBasicUriExpectations());
         replayAll();
 
-        verifyStatistic(statsResource.get(), 512*1024*1024/2D);
+        verifyStatistic(statsResource.get(), 512*1024*1024/2);
     }
 
     private void setUpCmdExpectations(String command, String ret) {
@@ -88,14 +89,26 @@ public class PowerShellStatisticsResourceTest
         expect(PowerShellCmd.runCommand(setUpPoolExpectations(), command)).andReturn(ret);
     }
 
-    private void verifyStatistics(Statistics statistics, double[] args) {
+    private void verifyStatistics(Statistics statistics, BigDecimal[] args) {
         int i = 0;
         for (Statistic statistic : statistics.getStatistics()) {
             verifyStatistic(statistic, args[i++]);
         }
     }
 
-    private void verifyStatistic(Statistic statistic, double datum) {
+    private BigDecimal asDec(String s) {
+        return new BigDecimal(s);
+    }
+
+    private BigDecimal asDec(long l) {
+        return new BigDecimal(l);
+    }
+
+    private void verifyStatistic(Statistic statistic, long datum) {
+        verifyStatistic(statistic, new BigDecimal(datum));
+    }
+
+    private void verifyStatistic(Statistic statistic, BigDecimal datum) {
         assertTrue(statistic.isSetVm());
         assertEquals(VM_ID, statistic.getVm().getId());
         assertTrue(statistic.isSetValues());
@@ -103,8 +116,7 @@ public class PowerShellStatisticsResourceTest
         assertEquals(1, statistic.getValues().getValues().size());
         assertEquals("unexpected value for: " + statistic.getName(),
                      datum,
-                     statistic.getValues().getValues().get(0).getDatum(),
-                     0.1D);
+                     statistic.getValues().getValues().get(0).getDatum());
     }
 
 }
