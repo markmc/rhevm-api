@@ -27,7 +27,7 @@
   <xs:complexType name="API">
     <xs:complexContent>
       <xs:extension base="BaseResource">
-        <xs:sequence>         
+        <xs:sequence>
           <xs:element ref="system_version"/>
           <xs:element ref="summary"/>
         </xs:sequence>
@@ -140,7 +140,7 @@
             <!-- action-specific parameter(s) for the operation
                  (if required) -->
             <xs:group ref="ActionParameterGroup"/>
-    
+
           <!-- The following, and the BaseResource href/id attributes
                are used by the server when responding after an
                asynchronous operation or status query -->
@@ -1064,14 +1064,14 @@
   <!-- Domains -->
   <xs:element name="domain" type="Domain" />
   <xs:element name="domains" type="Domains" />
-    
+
   <xs:complexType name="Domain">
     <xs:complexContent>
       <xs:extension base="BaseResource">
       </xs:extension>
-    </xs:complexContent>        
+    </xs:complexContent>
   </xs:complexType>
-  
+
   <xs:complexType name="Domains">
     <xs:complexContent>
       <xs:extension base="BaseResources">
@@ -1086,7 +1086,7 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <!-- Events -->
   <xs:element name="event" type="Event" />
   <xs:element name="events" type="Events" />
@@ -1131,7 +1131,7 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <!-- Files (ISO or VFD files) -->
 
   <xs:element name="file" type="File"/>
