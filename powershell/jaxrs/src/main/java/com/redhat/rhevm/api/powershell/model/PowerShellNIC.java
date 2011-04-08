@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.redhat.rhevm.api.model.Network;
-import com.redhat.rhevm.api.model.IP;
 import com.redhat.rhevm.api.model.MAC;
 import com.redhat.rhevm.api.model.NIC;
 import com.redhat.rhevm.api.model.VM;
@@ -64,16 +63,6 @@ public class PowerShellNIC {
         MAC mac = new MAC();
         mac.setAddress(entity.get("macaddress"));
         nic.setMac(mac);
-
-        if (entity.get("address") != null ||
-            entity.get("subnet") != null ||
-            entity.get("gateway") != null) {
-            IP ip = new IP();
-            ip.setAddress(entity.get("address"));
-            ip.setNetmask(entity.get("subnet"));
-            ip.setGateway(entity.get("gateway"));
-            nic.setIp(ip);
-        }
 
         return nic;
     }

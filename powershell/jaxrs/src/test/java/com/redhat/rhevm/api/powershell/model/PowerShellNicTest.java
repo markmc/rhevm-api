@@ -29,7 +29,7 @@ public class PowerShellNicTest extends PowerShellModelTest {
 
     private static final String VM_ID = "439c0c13-3e0a-489e-a514-1b07232ace41";
 
-    private void testNic(NIC n, String id, String name, String vmId, String network, NicType type, String macAddress, String ipAddress, String ipNetmask, String ipGateway) {
+    private void testNic(NIC n, String id, String name, String vmId, String network, NicType type, String macAddress) {
         assertEquals(id, n.getId());
         assertEquals(name, n.getName());
         assertNotNull(n.getVm());
@@ -43,14 +43,6 @@ public class PowerShellNicTest extends PowerShellModelTest {
         } else {
             assertNull(n.getMac());
         }
-        if (ipAddress != null || ipNetmask != null || ipGateway != null) {
-            assertNotNull(n.getIp());
-            assertEquals(ipAddress, n.getIp().getAddress());
-            assertEquals(ipNetmask, n.getIp().getNetmask());
-            assertEquals(ipGateway, n.getIp().getGateway());
-        } else {
-            assertNull(n.getIp());
-        }
     }
 
     @Test
@@ -63,6 +55,6 @@ public class PowerShellNicTest extends PowerShellModelTest {
         assertNotNull(nics);
         assertEquals(1, nics.size());
 
-        testNic(nics.get(0), "a34b8c24-f1cf-4b67-9912-3b04e9ce0a7b", "nic1", VM_ID, "rhevm", NicType.RTL8139_VIRTIO, "00:1a:4a:16:84:02", null, null, null);
+        testNic(nics.get(0), "a34b8c24-f1cf-4b67-9912-3b04e9ce0a7b", "nic1", VM_ID, "rhevm", NicType.RTL8139_VIRTIO, "00:1a:4a:16:84:02");
     }
 }
