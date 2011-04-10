@@ -466,7 +466,8 @@
           <xs:element ref="nic_types" minOccurs="0"/>
           <xs:element ref="disk_types" minOccurs="0"/>
           <xs:element ref="disk_formats" minOccurs="0"/>
-          <xs:element ref="disk_interfaces" minOccurs="0"/>
+          <xs:element ref="disk_interfaces" minOccurs="0"/>          
+          <xs:element ref="vm_affinities" minOccurs="0"/>
           <xs:element name="hooks_env" type="VmHooksEnvs" minOccurs="0"/>
         </xs:sequence>
       </xs:extension>
@@ -637,6 +638,20 @@
         <xs:annotation>
           <xs:appinfo>
             <jaxb:property name="DiskInterfaces"/>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:element name="vm_affinities" type="VmAffinities"/>
+
+  <xs:complexType name="VmAffinities">
+    <xs:sequence>
+      <xs:element name="affinity" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <jaxb:property name="VmAffinities"/>
           </xs:appinfo>
         </xs:annotation>
       </xs:element>
