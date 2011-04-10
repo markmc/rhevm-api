@@ -51,6 +51,7 @@ public class PowerShellApiResource
         addLink(api, "capabilities");
         addLink(api, "clusters", LinkFlags.SEARCHABLE);
         addLink(api, "datacenters", LinkFlags.SEARCHABLE);
+        addLink(api, "domains");
         addLink(api, "events", LinkFlags.SEARCHABLE);
         addLink(api, "hosts", LinkFlags.SEARCHABLE);
         addLink(api, "networks"); // powershell has no select-network command

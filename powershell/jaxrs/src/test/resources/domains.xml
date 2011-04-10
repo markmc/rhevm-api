@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<Objects>
+  <Object Type="System.String">foo.bar.com</Object>
+  <Object Type="System.String">foo.bar.com</Object>
+  <Object Type="System.String">bar.foo.com</Object>
+</Objects>

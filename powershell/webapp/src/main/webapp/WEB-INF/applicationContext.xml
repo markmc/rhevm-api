@@ -60,6 +60,10 @@
         lazy-init="true"
         class="com.redhat.rhevm.api.powershell.resource.PowerShellEventsResource"/>
 
+  <bean id="powerShellDomainsResource"
+        lazy-init="true"
+        class="com.redhat.rhevm.api.powershell.resource.PowerShellDomainsResource"/>
+
   <bean id="powerShellCapabilitiesResource"
         class="com.redhat.rhevm.api.common.resource.DefaultCapabilitiesResource"/>
 
