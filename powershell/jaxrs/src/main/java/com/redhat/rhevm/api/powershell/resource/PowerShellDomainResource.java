@@ -52,6 +52,9 @@ public class PowerShellDomainResource implements DomainResource {
     }
 
     public DomainGroupsResource getDomainGroupsResource() {
-        return null;
+        PowerShellDomainGroupsResource resource =
+            new PowerShellDomainGroupsResource(this, parent.getExecutor(), parent.getPowerShellPoolMap(), parent.getParser());
+        resource.setUriInfo(parent.getUriInfo());
+        return resource;
     }
 }

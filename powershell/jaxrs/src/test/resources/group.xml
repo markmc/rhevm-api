@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<Objects>
+  <Object Type="RhevmCmd.CLIUser">
+    <Property Name="UserId" Type="System.String">031c515e-7d9d-4004-8279-8dd82d83b226</Property>
+    <Property Name="Department" Type="System.String" />
+    <Property Name="Domain" Type="System.String">some_domain.local</Property>
+    <Property Name="Email" Type="System.String" />
+    <Property Name="Groups" Type="System.String[]" />
+    <Property Name="Name" Type="System.String">Administrators@some_domain.local/Builtin</Property>
+    <Property Name="Status" Type="System.String">Inactive</Property>
+    <Property Name="LastName" Type="System.String" />
+    <Property Name="UserName" Type="System.String" />
+    <Property Name="IsLoggedIn" Type="System.Boolean">False</Property>
+  </Object>
+</Objects>
