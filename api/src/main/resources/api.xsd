@@ -1428,6 +1428,13 @@
       <xs:element name="env" type="VmHooksEnv" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:complexType>
+  
+  <xs:complexType name="VmPlacementPolicy">
+    <xs:sequence>
+      <xs:element name="host" type="Host" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="affinity" type="xs:string" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
 
   <xs:element name="vms" type="VMs"/>
   <xs:element name="vm" type="VM"/>
@@ -1461,6 +1468,7 @@
           <xs:element name="disks" type="Disks" minOccurs="0" maxOccurs="1"/>
           <xs:element name="nics" type="Nics" minOccurs="0" maxOccurs="1"/>
           <xs:element name="tags" type="Tags" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="placement_policy" type="VmPlacementPolicy" minOccurs="0" maxOccurs="1"/>
 
           <xs:element ref="vmpool" minOccurs="0" maxOccurs="1">
             <xs:annotation>
