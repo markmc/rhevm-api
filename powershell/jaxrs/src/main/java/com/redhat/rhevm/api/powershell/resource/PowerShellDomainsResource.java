@@ -30,7 +30,7 @@ import com.redhat.rhevm.api.resource.DomainsResource;
 
 public class PowerShellDomainsResource extends InjectableUriProviderBase implements DomainsResource {
 
-    private String[] SUB_COLLECTIONS = { };
+    private String[] SUB_COLLECTIONS = { "users" };
 
     @Override
     public Domains list() {

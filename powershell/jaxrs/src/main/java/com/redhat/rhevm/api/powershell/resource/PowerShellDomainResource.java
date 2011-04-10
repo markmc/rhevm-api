@@ -33,6 +33,10 @@ public class PowerShellDomainResource implements DomainResource {
         this.id = id;
     }
 
+    public String getId() {
+        return id;
+    }
+
     public Domain get() {
         Domain domain = new Domain();
         domain.setId(id);
@@ -41,7 +45,10 @@ public class PowerShellDomainResource implements DomainResource {
     }
 
     public DomainUsersResource getDomainUsersResource() {
-        return null;
+        PowerShellDomainUsersResource resource =
+            new PowerShellDomainUsersResource(this, parent.getExecutor(), parent.getPowerShellPoolMap(), parent.getParser());
+        resource.setUriInfo(parent.getUriInfo());
+        return resource;
     }
 
     public DomainGroupsResource getDomainGroupsResource() {

@@ -19,14 +19,29 @@
 
 package com.redhat.rhevm.api.powershell.resource;
 
+import java.util.concurrent.Executor;
+
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
+import com.redhat.rhevm.api.powershell.util.PowerShellParser;
+import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 
 public class InjectableUriProviderBase extends AbstractPowerShellResource implements UriInfoProvider {
 
     protected UriInfo ui;
+
+    public InjectableUriProviderBase() {
+    }
+
+    protected InjectableUriProviderBase(Executor executor,
+                                        PowerShellPoolMap shellPools,
+                                        PowerShellParser parser) {
+        this.executor = executor;
+        this.shellPools = shellPools;
+        this.parser = parser;
+    }
 
     public UriInfo getUriInfo() {
         return ui;
