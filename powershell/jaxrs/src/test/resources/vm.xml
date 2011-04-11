@@ -17,7 +17,7 @@
     <Property Name="NumOfMonitors" Type="System.Int32">1</Property>
     <Property Name="NumOfSockets" Type="System.Int32">1</Property>
     <Property Name="NumOfCpusPerSocket" Type="System.Int32">1</Property>
-    <Property Name="DefaultHostId" Type="System.Nullable`1[[System.Guid, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
+    <Property Name="DefaultHostId" Type="System.Int32">5</Property>
     <Property Name="NiceLevel" Type="System.Int32">0</Property>
     <Property Name="FailBack" Type="System.Boolean">False</Property>
     <Property Name="DefaultBootSequence" Type="VdcDAL.BootSequence">

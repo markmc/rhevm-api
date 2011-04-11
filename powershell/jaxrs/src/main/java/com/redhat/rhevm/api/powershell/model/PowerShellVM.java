@@ -48,6 +48,7 @@ import com.redhat.rhevm.api.model.Statistic;
 import com.redhat.rhevm.api.model.Statistics;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.model.VmPlacementPolicy;
 import com.redhat.rhevm.api.model.VmPool;
 import com.redhat.rhevm.api.model.VmStatus;
 import com.redhat.rhevm.api.powershell.enums.PowerShellBootSequence;
@@ -206,6 +207,13 @@ public class PowerShellVM extends VM {
         VmStatus status = parseStatus(entity.get("status"));
         if (status != null) {
             vm.setStatus(status);
+        }
+
+        Integer defaultHostId = entity.get("defaulthostid", Integer.class);
+        if (defaultHostId != null) {
+            vm.setPlacementPolicy(new VmPlacementPolicy());
+            vm.getPlacementPolicy().setHost(new Host());
+            vm.getPlacementPolicy().getHost().setId(defaultHostId.toString());
         }
 
         CpuTopology topo = new CpuTopology();

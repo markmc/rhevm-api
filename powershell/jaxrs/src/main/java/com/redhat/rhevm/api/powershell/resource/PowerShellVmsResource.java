@@ -156,6 +156,11 @@ public class PowerShellVmsResource
                 buf.append(" -timezone " + PowerShellUtils.escape(windowsTz));
             }
         }
+        if (vm.isSetPlacementPolicy() &&
+            vm.getPlacementPolicy().isSetHost() &&
+            vm.getPlacementPolicy().getHost().isSetId()) {
+            buf.append(" -defaulthostid " + PowerShellUtils.escape(vm.getPlacementPolicy().getHost().getId()));
+        }
         if (vm.isSetHighAvailability() &&
             vm.getHighAvailability().isSetEnabled() &&
             vm.getHighAvailability().isEnabled()) {
