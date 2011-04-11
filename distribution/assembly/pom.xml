@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.redhat.rhevm.api</groupId>
     <artifactId>distribution-parent</artifactId>
-    <version>0.9-milestone8.4</version>
+    <version>0.9-SNAPSHOT</version>
   </parent>
 
   <artifactId>rhevm-api-distro</artifactId>
