@@ -86,9 +86,6 @@ public class PowerShellDisksResource
         if (disk.isSparse() != null) {
             buf.append(" -volumetype " + (disk.isSparse() ? "Sparse" : "Preallocated"));
         }
-        if (disk.isWipeAfterDelete() != null && disk.isWipeAfterDelete()) {
-            buf.append(" -wipeafterdelete");
-        }
         if (disk.isPropagateErrors() != null) {
             buf.append(" -propagateerrors ");
             if (disk.isPropagateErrors()) {
@@ -98,6 +95,12 @@ public class PowerShellDisksResource
             }
         }
         buf.append(";");
+
+        if (disk.isSetWipeAfterDelete()) {
+            buf.append("$d.wipeafterdelete = ");
+            buf.append(disk.isWipeAfterDelete() ? "$true" : "$false");
+            buf.append("; ");
+        }
 
         buf.append("$v = get-vm " + PowerShellUtils.escape(parentId) + ";");
 
