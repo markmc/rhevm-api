@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import com.redhat.rhevm.api.common.util.TimeZoneMapping;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.CpuTopology;
@@ -112,6 +113,7 @@ public class PowerShellTemplate extends Template {
             template.getHighAvailability().setEnabled(entity.get("autostartup", Boolean.class));
 
             template.setStateless(entity.get("isstateless", Boolean.class));
+            template.setTimezone(TimeZoneMapping.getJava(entity.get("timezone")));
 
             DisplayType displayType = PowerShellVM.parseDisplayType(entity.get("displaytype"));
             if (displayType != null) {

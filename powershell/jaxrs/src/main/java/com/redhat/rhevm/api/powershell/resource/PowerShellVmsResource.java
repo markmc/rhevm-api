@@ -27,6 +27,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
 import com.redhat.rhevm.api.common.util.ReflectionHelper;
+import com.redhat.rhevm.api.common.util.TimeZoneMapping;
 import com.redhat.rhevm.api.model.CpuTopology;
 import com.redhat.rhevm.api.model.Display;
 import com.redhat.rhevm.api.model.DisplayType;
@@ -148,6 +149,12 @@ public class PowerShellVmsResource
         }
         if (vm.isSetStateless() && vm.isStateless()) {
             buf.append(" -stateless");
+        }
+        if (vm.isSetTimezone()) {
+            String windowsTz = TimeZoneMapping.getWindows(vm.getTimezone());
+            if (windowsTz != null) {
+                buf.append(" -timezone " + PowerShellUtils.escape(windowsTz));
+            }
         }
         if (vm.isSetHighAvailability() &&
             vm.getHighAvailability().isSetEnabled() &&
