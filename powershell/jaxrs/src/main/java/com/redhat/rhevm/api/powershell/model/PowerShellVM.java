@@ -27,6 +27,7 @@ import java.util.Set;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import com.redhat.rhevm.api.common.util.TimeZoneMapping;
 import com.redhat.rhevm.api.model.BootDevice;
 import com.redhat.rhevm.api.model.Cluster;
 import com.redhat.rhevm.api.model.CPU;
@@ -222,6 +223,7 @@ public class PowerShellVM extends VM {
         vm.setOs(os);
 
         vm.setStateless(entity.get("stateless", Boolean.class));
+        vm.setTimezone(TimeZoneMapping.getJava(entity.get("timezone")));
 
         vm.setHighAvailability(new HighAvailability());
         vm.getHighAvailability().setEnabled(entity.get("highlyavailable", Boolean.class));

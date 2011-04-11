@@ -47,6 +47,7 @@ import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.common.util.ReflectionHelper;
+import com.redhat.rhevm.api.common.util.TimeZoneMapping;
 import com.redhat.rhevm.api.powershell.model.PowerShellTicket;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.model.PowerShellVmStatisticsParser;
@@ -148,6 +149,12 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
         }
         if (vm.isSetStateless()) {
             buf.append(" $v.stateless = " + PowerShellUtils.encode(vm.isStateless()) + ";");
+        }
+        if (vm.isSetTimezone()) {
+            String windowsTz = TimeZoneMapping.getWindows(vm.getTimezone());
+            if (windowsTz != null) {
+                buf.append(" $v.timezone = " + PowerShellUtils.escape(windowsTz) + ";");
+            }
         }
         if (vm.isSetHighAvailability()) {
             if (vm.getHighAvailability().isSetEnabled()) {

@@ -39,6 +39,7 @@ import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.common.util.ReflectionHelper;
+import com.redhat.rhevm.api.common.util.TimeZoneMapping;
 import com.redhat.rhevm.api.powershell.model.PowerShellTemplate;
 import com.redhat.rhevm.api.powershell.model.PowerShellVM;
 import com.redhat.rhevm.api.powershell.util.PowerShellCmd;
@@ -145,6 +146,12 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
         }
         if (template.isSetStateless()) {
             buf.append(" $t.isstateless = " + PowerShellUtils.encode(template.isStateless()) + ";");
+        }
+        if (template.isSetTimezone()) {
+            String windowsTz = TimeZoneMapping.getWindows(template.getTimezone());
+            if (windowsTz != null) {
+                buf.append(" $t.timezone = " + PowerShellUtils.escape(windowsTz) + ";");
+            }
         }
         if (template.isSetHighAvailability() && template.getHighAvailability().isSetEnabled()) {
             buf.append(" $t.autostartup = " + PowerShellUtils.encode(template.getHighAvailability().isEnabled()) + ";");
