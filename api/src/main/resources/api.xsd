@@ -1453,6 +1453,12 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="VmMemoryPolicy">
+   <xs:sequence>
+     <xs:element name="guaranteed" type="xs:long" minOccurs="0" maxOccurs="1"/>
+   </xs:sequence>
+  </xs:complexType>
+
   <xs:element name="vms" type="VMs"/>
   <xs:element name="vm" type="VM"/>
 
@@ -1487,6 +1493,7 @@
           <xs:element name="nics" type="Nics" minOccurs="0" maxOccurs="1"/>
           <xs:element name="tags" type="Tags" minOccurs="0" maxOccurs="1"/>
           <xs:element name="placement_policy" type="VmPlacementPolicy" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="memory_policy" type="VmMemoryPolicy" minOccurs="0" maxOccurs="1"/>
 
           <xs:element ref="vmpool" minOccurs="0" maxOccurs="1">
             <xs:annotation>
