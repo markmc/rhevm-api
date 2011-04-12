@@ -11,7 +11,7 @@
     <Property Name="Session" Type="System.String">Unknown</Property>
     <Property Name="MemorySize" Type="System.Int32">512</Property>
     <Property Name="Priority" Type="System.Int32">100</Property>
-    <Property Name="Domain" Type="System.String" />
+    <Property Name="Domain" Type="System.String">foo.bar.com</Property>
     <Property Name="OperatingSystem" Type="System.String">OtherLinux</Property>
     <Property Name="CreationDate" Type="System.DateTime">20/07/2010 17:28:18</Property>
     <Property Name="NumOfMonitors" Type="System.Int32">1</Property>

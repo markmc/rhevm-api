@@ -34,6 +34,7 @@ import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.CpuTopology;
 import com.redhat.rhevm.api.model.Disk;
 import com.redhat.rhevm.api.model.Disks;
+import com.redhat.rhevm.api.model.Domain;
 import com.redhat.rhevm.api.model.NIC;
 import com.redhat.rhevm.api.model.Nics;
 import com.redhat.rhevm.api.model.Tag;
@@ -234,6 +235,12 @@ public class PowerShellVM extends VM {
 
         vm.setStateless(entity.get("stateless", Boolean.class));
         vm.setTimezone(TimeZoneMapping.getJava(entity.get("timezone")));
+
+        String domain = entity.get("domain");
+        if (domain != null) {
+            vm.setDomain(new Domain());
+            vm.getDomain().setName(domain);
+        }
 
         vm.setHighAvailability(new HighAvailability());
         vm.getHighAvailability().setEnabled(entity.get("highlyavailable", Boolean.class));

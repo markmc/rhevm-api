@@ -37,7 +37,7 @@ import com.redhat.rhevm.api.powershell.resource.PowerShellVmsResource.Detail;
 
 public class PowerShellVmTest extends PowerShellModelTest {
 
-    private void testVM(PowerShellVM v, String id, String name, String description, VmType type, VmStatus status, Long memory, int sockets, int cores, String os, boolean stateless, String timezone, String defaultHostId, Boolean highlyAvailable, Integer highAvailabilityPriority, String cdIsoPath, String hostId, String clusterId, String templateId, String creationTime, String origin, String ip) {
+    private void testVM(PowerShellVM v, String id, String name, String description, VmType type, VmStatus status, Long memory, int sockets, int cores, String os, boolean stateless, String timezone, String defaultHostId, Boolean highlyAvailable, Integer highAvailabilityPriority, String cdIsoPath, String hostId, String clusterId, String templateId, String creationTime, String origin, String ip, String domain) {
         assertEquals(id, v.getId());
         assertEquals(name, v.getName());
         assertEquals(description, v.getDescription());
@@ -81,6 +81,12 @@ public class PowerShellVmTest extends PowerShellModelTest {
             assertEquals(ip, v.getGuestInfo().getIp().getAddress());
         } else {
             assertNull(v.getGuestInfo());
+        }
+        if (domain != null) {
+            assertNotNull(v.getDomain());
+            assertEquals(domain, v.getDomain().getName());
+        } else {
+            assertNull(v.getDomain());
         }
         verifyStatistics(v);
     }
@@ -175,19 +181,19 @@ public class PowerShellVmTest extends PowerShellModelTest {
 
         assertEquals(vms.size(), 4);
 
-        testVM(vms.get(0), "142bf5b1-04fb-4221-9360-0f9b7dab3013", "foo-1", null, VmType.DESKTOP, VmStatus.UP, 536870912L, 1, 1, "OtherLinux", false, null, "5", true, 100, "foo.iso", "5f38363b-7457-4884-831e-78c27cebb31d", "99408929-82cf-4dc7-a532-9d998063fa95", "3ee77811-f1eb-4d3f-991e-e539dbb2f1f9", "2010-07-20T17:28:18.000Z", "rhev", "1.1.1.1");
+        testVM(vms.get(0), "142bf5b1-04fb-4221-9360-0f9b7dab3013", "foo-1", null, VmType.DESKTOP, VmStatus.UP, 536870912L, 1, 1, "OtherLinux", false, null, "5", true, 100, "foo.iso", "5f38363b-7457-4884-831e-78c27cebb31d", "99408929-82cf-4dc7-a532-9d998063fa95", "3ee77811-f1eb-4d3f-991e-e539dbb2f1f9", "2010-07-20T17:28:18.000Z", "rhev", "1.1.1.1", "foo.bar.com");
         testBootDevices(vms.get(0), BootDevice.HD);
         testDisplay(vms.get(0), DisplayType.SPICE, 5910, "192.168.1.109");
 
-        testVM(vms.get(1), "f9e37917-8382-486f-875d-4045be045d85", "foo-2", null, VmType.DESKTOP, VmStatus.DOWN, 536870912L, 1, 1, "OtherLinux", true, null, null, false, 0, null, null, "99408929-82cf-4dc7-a532-9d998063fa95", "3ee77811-f1eb-4d3f-991e-e539dbb2f1f9", "2010-07-20T17:33:03.000Z", "vmware", null);
+        testVM(vms.get(1), "f9e37917-8382-486f-875d-4045be045d85", "foo-2", null, VmType.DESKTOP, VmStatus.DOWN, 536870912L, 1, 1, "OtherLinux", true, null, null, false, 0, null, null, "99408929-82cf-4dc7-a532-9d998063fa95", "3ee77811-f1eb-4d3f-991e-e539dbb2f1f9", "2010-07-20T17:33:03.000Z", "vmware", null, null);
         testBootDevices(vms.get(1), BootDevice.HD);
         testDisplay(vms.get(1), DisplayType.SPICE, null, null);
 
-        testVM(vms.get(2), "aa0e6522-5baf-4f92-86d3-716883de4359", "test", null, VmType.SERVER, VmStatus.DOWN, 536870912L, 1, 1, "WindowsXP", false, "Europe/London", null, false, 1, null, null, "99408929-82cf-4dc7-a532-9d998063fa95", "00000000-0000-0000-0000-000000000000", "2010-07-20T10:27:02.000Z", "xen", null);
+        testVM(vms.get(2), "aa0e6522-5baf-4f92-86d3-716883de4359", "test", null, VmType.SERVER, VmStatus.DOWN, 536870912L, 1, 1, "WindowsXP", false, "Europe/London", null, false, 1, null, null, "99408929-82cf-4dc7-a532-9d998063fa95", "00000000-0000-0000-0000-000000000000", "2010-07-20T10:27:02.000Z", "xen", null, null);
         testBootDevices(vms.get(2), BootDevice.HD);
         testDisplay(vms.get(2), DisplayType.VNC, 5910, null);
 
-        testVM(vms.get(3), "5114bb3e-a4e6-44b2-b783-b3eea7d84720", "testf13", null, VmType.DESKTOP, VmStatus.POWERING_DOWN, 536870912L, 1, 1, "OtherLinux", false, null, null, false, 1, null, null, "99408929-82cf-4dc7-a532-9d998063fa95", "00000000-0000-0000-0000-000000000000", "2010-07-20T10:58:41.000Z", "rhev", null);
+        testVM(vms.get(3), "5114bb3e-a4e6-44b2-b783-b3eea7d84720", "testf13", null, VmType.DESKTOP, VmStatus.POWERING_DOWN, 536870912L, 1, 1, "OtherLinux", false, null, null, false, 1, null, null, "99408929-82cf-4dc7-a532-9d998063fa95", "00000000-0000-0000-0000-000000000000", "2010-07-20T10:58:41.000Z", "rhev", null, null);
         testBootDevices(vms.get(3), BootDevice.HD);
         testDisplay(vms.get(3), DisplayType.VNC, 5910, "192.168.1.108");
     }

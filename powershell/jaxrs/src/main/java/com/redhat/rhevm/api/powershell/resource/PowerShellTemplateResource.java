@@ -153,6 +153,9 @@ public class PowerShellTemplateResource extends AbstractPowerShellActionableReso
                 buf.append(" $t.timezone = " + PowerShellUtils.escape(windowsTz) + ";");
             }
         }
+        if (template.isSetDomain() && template.getDomain().isSetName()) {
+            buf.append(" $t.domain = " + PowerShellUtils.escape(template.getDomain().getName()) + ";");
+        }
         if (template.isSetHighAvailability() && template.getHighAvailability().isSetEnabled()) {
             buf.append(" $t.autostartup = " + PowerShellUtils.encode(template.getHighAvailability().isEnabled()) + ";");
         }

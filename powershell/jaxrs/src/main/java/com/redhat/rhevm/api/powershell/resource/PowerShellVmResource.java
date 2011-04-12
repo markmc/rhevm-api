@@ -156,6 +156,9 @@ public class PowerShellVmResource extends AbstractPowerShellActionableResource<V
                 buf.append(" $v.timezone = " + PowerShellUtils.escape(windowsTz) + ";");
             }
         }
+        if (vm.isSetDomain() && vm.getDomain().isSetName()) {
+            buf.append(" $v.domain = " + PowerShellUtils.escape(vm.getDomain().getName()) + ";");
+        }
         if (vm.isSetPlacementPolicy() &&
             vm.getPlacementPolicy().isSetHost() &&
             vm.getPlacementPolicy().getHost().isSetId()) {

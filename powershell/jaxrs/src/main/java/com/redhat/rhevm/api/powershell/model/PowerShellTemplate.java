@@ -30,6 +30,7 @@ import com.redhat.rhevm.api.model.CPU;
 import com.redhat.rhevm.api.model.CpuTopology;
 import com.redhat.rhevm.api.model.Display;
 import com.redhat.rhevm.api.model.DisplayType;
+import com.redhat.rhevm.api.model.Domain;
 import com.redhat.rhevm.api.model.HighAvailability;
 import com.redhat.rhevm.api.model.OperatingSystem;
 import com.redhat.rhevm.api.model.Boot;
@@ -114,6 +115,12 @@ public class PowerShellTemplate extends Template {
 
             template.setStateless(entity.get("isstateless", Boolean.class));
             template.setTimezone(TimeZoneMapping.getJava(entity.get("timezone")));
+
+            String domain = entity.get("domain");
+            if (domain != null) {
+                template.setDomain(new Domain());
+                template.getDomain().setName(domain);
+            }
 
             DisplayType displayType = PowerShellVM.parseDisplayType(entity.get("displaytype"));
             if (displayType != null) {

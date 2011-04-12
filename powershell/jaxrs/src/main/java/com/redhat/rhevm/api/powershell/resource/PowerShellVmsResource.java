@@ -156,6 +156,9 @@ public class PowerShellVmsResource
                 buf.append(" -timezone " + PowerShellUtils.escape(windowsTz));
             }
         }
+        if (vm.isSetDomain() && vm.getDomain().isSetName()) {
+            buf.append(" -domain " + PowerShellUtils.escape(vm.getDomain().getName()));
+        }
         if (vm.isSetPlacementPolicy() &&
             vm.getPlacementPolicy().isSetHost() &&
             vm.getPlacementPolicy().getHost().isSetId()) {
