@@ -15,7 +15,7 @@ from setuptools import setup, Command
 
 version_info = {
     'name': 'rhevsh',
-    'version': '0.9-milestone9.1',
+    'version': '0.9-SNAPSHOT',
     'description': 'A command-line interface to Red Hat Enterprise'
                    ' Virtualization',
     'author': 'Geert Jansen',
