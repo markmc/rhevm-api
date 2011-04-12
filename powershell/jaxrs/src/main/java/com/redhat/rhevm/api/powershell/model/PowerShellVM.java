@@ -40,8 +40,10 @@ import com.redhat.rhevm.api.model.Tag;
 import com.redhat.rhevm.api.model.Tags;
 import com.redhat.rhevm.api.model.Display;
 import com.redhat.rhevm.api.model.DisplayType;
+import com.redhat.rhevm.api.model.GuestInfo;
 import com.redhat.rhevm.api.model.HighAvailability;
 import com.redhat.rhevm.api.model.Host;
+import com.redhat.rhevm.api.model.IP;
 import com.redhat.rhevm.api.model.OperatingSystem;
 import com.redhat.rhevm.api.model.Boot;
 import com.redhat.rhevm.api.model.Statistic;
@@ -236,6 +238,13 @@ public class PowerShellVM extends VM {
         vm.setHighAvailability(new HighAvailability());
         vm.getHighAvailability().setEnabled(entity.get("highlyavailable", Boolean.class));
         vm.getHighAvailability().setPriority(entity.get("priority", Integer.class));
+
+        String ip = entity.get("ip");
+        if (ip != null) {
+            vm.setGuestInfo(new GuestInfo());
+            vm.getGuestInfo().setIp(new IP());
+            vm.getGuestInfo().getIp().setAddress(ip);
+        }
 
         Object hostId = entity.get("runningonhost", String.class, Integer.class);
         if (!isEmptyId(hostId)) {

@@ -42,7 +42,7 @@
     <Property Name="RunAndPause" Type="System.Boolean">False</Property>
     <Property Name="AcpiEnabled" Type="System.Boolean">True</Property>
     <Property Name="Status" Type="System.String">Up</Property>
-    <Property Name="Ip" Type="System.String" />
+    <Property Name="Ip" Type="System.String">1.1.1.1</Property>
     <Property Name="HostName" Type="System.String" />
     <Property Name="UpTime" Type="System.TimeSpan">00:06:24</Property>
     <Property Name="LoginTime" Type="System.Nullable`1[[System.DateTime, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]" />
