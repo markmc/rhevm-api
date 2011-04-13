@@ -34,7 +34,7 @@ class Connection(object):
         self.password = password
         self.scheme = None
         self.entrypoint = None
-        self._logger = logging.getLogger('rhev.RhevConnection')
+        self._logger = logging.getLogger('rhev.Connection')
         self._connection = None
         self._cache = {}
         self._api = None
