@@ -10,6 +10,22 @@ from rhevsh.field import *
 
 
 _mapping_data = {
+    '*': [
+        StringField('id', 'A unique ID for this object', 'S'),
+        StringField('name', 'A unique name for this object', 'SL'),
+        StringField('description', 'A textual description', 'S'),
+        StringField('type', 'The object type', 'SL'),
+        StringField('status', 'The object status', 'SL')
+    ],
+    'datacenter': [
+        StringField('id', 'A unique ID for this datacenter', 'S'),
+        StringField('name', 'The name of this datacenter', 'SLUC'),
+        StringField('description', 'A description for this datacenter', 'SUC'),
+        StringField('status', 'The status of this datacenter', 'SL'),
+        StringField('storage_type', 'The type of storage for this datacenter', 'SLC'),
+        VersionField('version', 'The current compatibility version', 'SLC'),
+        VersionListField('supported_versions', 'Available compatiblity version', 'S')
+    ],
     'vm': [
         StringField('id', 'The unique ID for this VM', 'S'),
         StringField('name', 'A unique name for this VM', 'CULS'),
@@ -46,6 +62,15 @@ _mapping_data = {
                      attribute='wipe_after_delete'),
         BooleanField('errors', 'Propagate errors', 'CS',
                      attribute='propagate_errors')
+    ],
+    'statistic': [
+        StringField('id', 'A unique ID for this statistic', 'S'),
+        StringField('name', 'The statistic name', 'SL'),
+        StringField('description', 'A description for this statistic', 'S'),
+        StringField('type', 'The statistic type', 'SL'),
+        StatisticValueField('value', 'The current value', 'SL',
+                            attribute='values'),
+        StringField('unit', 'The unit for this statistic', 'SL')
     ]
 }
 
@@ -58,7 +83,9 @@ def get_fields(typ, flags, action=None):
         key = info[2]
     else:
         key = '%s/%s' % (info[2], action)
-    fields = _mapping_data.get(key, [])
+    fields = _mapping_data.get(key)
+    if fields is None:
+        fields = _mapping_data.get('*')
     for flag in flags:
         fields = filter(lambda f: flag in f.flags, fields)
     return fields

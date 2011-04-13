@@ -6,6 +6,7 @@
 # rhevsh is copyright (c) 2011 by the rhevsh authors. See the file
 # "AUTHORS" for a complete overview.
 
+import re
 from rhev import schema
 
 
@@ -68,7 +69,7 @@ class IntegerField(Field):
 
     def __init__(self, name, description, flags, attribute=None,
                  min=None, max=None, scale=None):
-        super(IntegerField, self).__init__(name, description, flags)
+        super(IntegerField, self).__init__(name, description, flags, attribute)
         self.min = None
         self.max = None
         self.scale = scale
@@ -133,3 +134,57 @@ class ReferenceField(Field):
         if not refobj:
             context.command.error('%s not found: %s' % (self.name, value))
         setattr(obj, attr, schema.ref(refobj))
+
+
+class StatisticValueField(Field):
+    """A statistic value."""
+
+    def get(self, obj, context):
+        obj, attr = self._resolve_parent(obj, self.attribute)
+        value = getattr(obj, attr, None)
+        if value is None:
+            return ''
+        if value.type == 'DECIMAL':
+            value = '%.2f' % value.value_[0].datum
+        elif value.type == 'INTEGER':
+            value = '%d' % value.value_[0].datum
+        return value
+
+
+class VersionField(Field):
+    """A RHEV version."""
+
+    _re_version = re.compile('(\d)\.(\d)')
+
+    def get(self, obj, context):
+        obj, attr = self._resolve_parent(obj, self.attribute)
+        version = getattr(obj, attr, None)
+        if version is None:
+            return ''
+        value = '%s.%s' % (version.major, version.minor)
+        return value
+
+    def set(self, obj, value, context):
+        obj, attr = self._resolve_parent(obj, self.attribute)
+        match = self._re_version.match(value)
+        if match is None:
+            raise ValueError, 'Illegal version: %s' % value
+        version = schema.new(schema.Version)
+        version.major = match.group(1)
+        version.minor = match.group(2)
+        setattr(obj, attr, version)
+
+
+class VersionListField(Field):
+    """A list of versions."""
+
+    def get(self, obj, context):
+        obj, attr = self._resolve_parent(obj, self.attribute)
+        versions = getattr(obj, attr, None)
+        if versions is None or len(versions.version) == 0:
+            return ''
+        value = []
+        for version in versions.version:
+            value.append('%s.%s' % (version.major, version.minor))
+        value = ', '.join(value)
+        return value
