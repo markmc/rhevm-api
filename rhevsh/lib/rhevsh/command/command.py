@@ -92,12 +92,23 @@ class RhevCommand(Command):
         """Return an object by id or name."""
         self.check_connection()
         connection = self.context.connection
+        # Try by id
         try:
             obj = connection.get(typ, id=id, base=base)
         except rhev.Error:
             obj = None  # work around RHEV issue #120
-        if obj is None:
+        if obj is not None:
+            return obj
+        # Try by name: either search, or filter
+        info = schema.type_info(typ)
+        if base is None:
+            base = connection.get(schema.API)
+        links = connection.get_links(base)
+        rel = '%s/search' % info[3]
+        if rel in links:
             obj = connection.get(typ, name=id, base=base)
+        else:
+            obj = connection.get(typ, base=base, filter={'name': id})
         return obj
 
     def _get_types(self, plural):
