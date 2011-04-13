@@ -56,7 +56,7 @@ class StringField(Field):
 
     def get(self, obj, context):
         obj, attr = self._resolve_parent(obj, self.attribute)
-        return getattr(obj, attr, None)
+        return getattr(obj, attr, None) or ''
 
     def set(self, obj, value, context):
         obj, attr = self._resolve_parent(obj, self.attribute)
@@ -80,6 +80,8 @@ class IntegerField(Field):
             if self.scale is not None:
                 value //= self.scale
             value = str(value)
+        else:
+            value = ''
         return value
 
     def set(self, obj, value, context):
@@ -101,6 +103,8 @@ class BooleanField(Field):
                 value = 'True'
             else:
                 value = 'False'
+        else:
+            value = ''
         return value
 
     def set(self, obj, value, context):
