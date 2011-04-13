@@ -186,9 +186,13 @@ class CollectionMixin(object):
             yield self[i]
 
 
-class SubResourceMixin(object):
-    """This class is used to extend "sub" resource types. "sub" resources are
-    not real resources, but they do follow <link>s and <actions>s.
+class ResourceMixin(object):
+    """This class is used to extend resource types. Resources have the
+    following behavior:
+
+    * <link> dereferencing
+    * <action> dereferencing
+    * various shorthand methods: reload(), add(), update(), ...
     """
 
     def __getattr__(self, name):
@@ -223,22 +227,12 @@ class SubResourceMixin(object):
                 return _bind(func, cls, base=self)
         raise AttributeError
 
-
-class ResourceMixin(SubResourceMixin):
-    """This class is used to extend resource types. Resources have the
-    following behavior:
-
-    * <link> dereferencing
-    * <action> dereferencing
-    * various shorthand methods: reload(), add(), update(), ...
-    """
-
     def reload(self):
         new = self._connection.reload(self)
         update(self, new)
 
     def add(self, resource):
-        new = self._connection.add(resource, self)
+        new = self._connection.add(resource, base=self)
         update(resource, new)
         return resource
 
@@ -286,8 +280,6 @@ for sym in dir(_schema):
         mixin = CollectionMixin
     elif issubclass(cls, BaseResource):
         bases += (ResourceMixin,)
-    elif cls is _schema.API:
-        bases += (SubResourceMixin,)
     derived = type(name, bases, members)
     cls._SetSupersedingClass(derived)
     module[name] = derived

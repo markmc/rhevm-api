@@ -191,6 +191,8 @@ class Connection(object):
         except Exception, e:
             reason = 'Could not parse XML response: %s' % str(e)
             raise ResponseError(reason, detail=body)
+        if isinstance(parsed, schema.API):
+            parsed.href = self.entrypoint
         parsed._connection = self
         return parsed
 
@@ -534,9 +536,8 @@ class Connection(object):
 
     def get_links(self, obj):
         """Return the subcollections of a resource."""
-        if not isinstance(obj, schema.BaseResource) and \
-                not isinstance(obj, schema.API):
-            raise TypeError, 'Expecting a BaseResource or API instance.'
+        if not isinstance(obj, schema.BaseResource):
+            raise TypeError, 'Expecting a BaseResource instance.'
         links = []
         for link in obj.link:
             links.append(link.rel)
