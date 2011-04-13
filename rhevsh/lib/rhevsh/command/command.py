@@ -28,7 +28,7 @@ class RhevCommand(Command):
     def resolve_base(self, options):
         """resolve a base object from a set of '--typeid value' options."""
         connection = self.check_connection()
-        path = []
+        path = {}
         for opt in options:
             if not opt.endswith('id'):
                 continue
@@ -36,13 +36,20 @@ class RhevCommand(Command):
             info = schema.type_info(typename)
             if info is None:
                 self.error('unknown type: %s' % typename)
-            path.append((info[0], typename, options[opt]))
-        base = None
-        for (typ,typename,id) in path:
-            base = self.get_object(typ, id, base)
+            path[info[3]] = (options[opt], info)
+        base = connection.get(schema.API)
+        info = schema.type_info(type(base))
+        while path:
+            links = connection.get_links(base)
+            for link in links:
+                if link in path:
+                    break
+            else:
+                self.error('unable to resolve at: %s' % info[2])
+            id, info = path.pop(link)
+            base = self.get_object(info[0], id, base)
             if base is None:
-                self.error('could not locate %s: %s' %  (typename, id))
-                return
+                self.error('object does not exist at: %s' % info[2])
         return base
 
     def create_object(self, typ, options):
