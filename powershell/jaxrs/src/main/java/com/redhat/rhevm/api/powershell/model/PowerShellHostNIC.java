@@ -85,6 +85,10 @@ public class PowerShellHostNIC extends HostNIC {
             }
 
             nic.setBondName(entity.get("bondname"));
+            Integer speed = entity.get("speed", Integer.class);
+            if (speed != null && speed > 0) {
+                nic.setSpeed(speed * 1000L * 1000);
+            }
 
             List<String> ifaces = entity.get("bondinterfaces", List.class);
             for (String iface : ifaces) {
