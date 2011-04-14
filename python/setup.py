@@ -24,10 +24,10 @@ version_info = {
     'description': 'A Python API for Red Hat Enterprise Virtualization',
     'author': 'Geert Jansen',
     'author_email': 'gjansen@redhat.com',
-    'url': 'http://bitbucket.org/geertj/python-rhev',
+    'url': 'http://fedorahosted.org/rhevm-api',
     'license': 'MIT',
     'classifiers': [
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Environment :: Console',
         'Intended Audience :: System Administrators',
         'License :: OSI Approved :: MIT License',
