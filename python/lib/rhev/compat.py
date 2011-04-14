@@ -62,3 +62,11 @@ def super(type, self):
             return bind(getattr(type, name), obj)
     base = type.__bases__[0]
     return proxy(base, self)
+
+
+# Python 2.4 does not have ElementTree
+
+try:
+    from xml.etree import ElementTree as etree
+except ImportError:
+    from elementtree import ElementTree as etree

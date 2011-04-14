@@ -36,8 +36,8 @@ class Connection(object):
         self.entrypoint = None
         self._logger = logging.getLogger('rhev.Connection')
         self._connection = None
-        self._cache = {}
         self._api = None
+        self._capabilities = None
 
     def _parse_url(self):
         """INTERNAL: Parse an URL into its components."""
@@ -110,7 +110,8 @@ class Connection(object):
         if self._connection is None:
             return
         self._close()
-        self._cache.clear()
+        self._api = None
+        self._capabilities = None
 
     def _do_request_retry(self, method, url, headers, body):
         """INTERNAL: make a HTTP request, and retry if necessary."""
@@ -179,6 +180,21 @@ class Connection(object):
             url = compat.urlparse(url).path
         return response
 
+    def _fixup_object(self, obj):
+        """INTERNAL: fixup a mapping object."""
+        # Here we put stuff that we'd like to become part of the API itself.
+        if isinstance(obj, schema.API):
+            obj.href = self.entrypoint
+        if hasattr(obj, 'link'):
+            for link in obj.link:
+                info = schema.type_info(link.rel, base=obj)
+                if info:
+                    link.type = info[0].__name__
+        if hasattr(obj, 'actions') and hasattr(obj.actions, 'link'):
+            for link in obj.actions.link:
+                link.type = 'Action'
+        return obj
+
     def _parse_xml(self, response):
         """INTERNAL: parse an XML response"""
         ctype = response.getheader('Content-Type')
@@ -187,14 +203,13 @@ class Connection(object):
             reason = 'Expecting an XML response (got: %s)' % ctype
             raise ResponseError(reason, detail=body)
         try:
-            parsed = schema.create_from_xml(body)
+            obj = schema.create_from_xml(body)
         except Exception, e:
             reason = 'Could not parse XML response: %s' % str(e)
             raise ResponseError(reason, detail=body)
-        if isinstance(parsed, schema.API):
-            parsed.href = self.entrypoint
-        parsed._connection = self
-        return parsed
+        self._fixup_object(obj)
+        obj._connection = self
+        return obj
 
     def _join_path(self, *segments):
         path = []
@@ -214,13 +229,8 @@ class Connection(object):
             raise TypeError, 'Can\'t resolve URLs for type: %s' % typ
         elif rel.startswith('/'):
             return self._join_path(self.entrypoint, rel)
-        if base is not None:
-            if hasattr(base, 'href'):
-                base = base.href
-            else:
-                base = self._resolve_url(type(base))
-        else:
-            base = self.entrypoint
+        if base is None:
+            base = self.api()
         if search:
             special = 'search'
         elif query:
@@ -228,20 +238,12 @@ class Connection(object):
             search = ' AND '.join([ '%s=%s' % (k, query[k]) for k in query ])
         if special:
             rel = '%s/%s' % (rel, special)
-        if base not in self._cache:
-            response = self._make_request('GET', base)
-            if response.status != http.OK:
-                raise self._create_exception(response)
-            parsed = self._parse_xml(response)
-            self._cache[base] = parsed
-        else:
-            parsed = self._cache[base]
-        for link in parsed.link:
+        for link in base.link:
             if link.rel == rel:
                 url = link.href
                 break
         else:
-            reason = 'relationship %s not found under %s' % (rel, base)
+            reason = 'relationship %s not found under %s' % (rel, base.href)
             raise Error(reason)
         if id is not None:
             url = self._join_path(url, str(id))
@@ -468,10 +470,16 @@ class Connection(object):
         return result
 
     def api(self):
-        """Return the entry point to the mapping API."""
+        """Return the API entry point."""
         if self._api is None:
             self._api = self.get(schema.API)
         return self._api
+
+    def capabilities(self):
+        """Return the capabilties."""
+        if self._capabilties is None:
+            self._capabilties = self.get(schema.Capabilities)
+        return self._capabilities
 
     def wait(self, resource, timeout=None, exists=None, **conditions):
         """Wait for a resource to enter into a certain state. Extra keyword

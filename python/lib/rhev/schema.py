@@ -6,7 +6,11 @@
 # python-rhev is copyright (c) 2010 by the python-rhev authors. See the
 # file "AUTHORS" for a complete overview.
 
+import os
+import os.path
 import time
+import inspect
+from compat import etree
 
 from rhev import _schema
 from rhev.error import ParseError
@@ -21,17 +25,17 @@ from pyxb.exceptions_ import PyXBException
 
 _mapping_data = \
 [
-    # (resource, collection, singular, relationship)
+    # (resource, collection, singular, relationship[, parent])
     (_schema.API, None, 'api', '/'),
     (_schema.DataCenter, _schema.DataCenters, 'datacenter', 'datacenters'),
     (_schema.Cluster, _schema.Clusters, 'cluster', 'clusters'),
     (_schema.StorageDomain, _schema.StorageDomains, 'storagedomain', 'storagedomains'),
     (_schema.Network, _schema.Networks, 'network', 'networks'),
     (_schema.Host, _schema.Hosts, 'host', 'hosts'),
-    (_schema.HostNIC, _schema.HostNics, 'nic', 'nics'),
+    (_schema.HostNIC, _schema.HostNics, 'nic', 'nics', _schema.Host),
     (_schema.Storage, _schema.HostStorage, 'host_storage', 'storage'),
     (_schema.VM, _schema.VMs, 'vm', 'vms'),
-    (_schema.NIC, _schema.Nics, 'nic', 'nics'),
+    (_schema.NIC, _schema.Nics, 'nic', 'nics', _schema.VM),
     (_schema.Disk, _schema.Disks, 'disk', 'disks'),
     (_schema.CdRom, _schema.CdRoms, 'cdrom', 'cdroms'),
     (_schema.Floppy, _schema.Floppies, 'floppy', 'floppies'),
@@ -48,23 +52,17 @@ _mapping_data = \
     (_schema.Capabilities, None, None, 'capabilities')
 ]
 
-# This is a mapping of binding class -> element constructor. Element
-# constructors are generated for all top-level elements.
-
-_element_constructors = {}
-
-for key in _schema.Namespace.elementBindings():
-    cls = _schema.Namespace.elementBindings()[key].typeDefinition()
-    _element_constructors[cls] = getattr(_schema, key)
+_xml_schema = None
+_ns_xml_schema = 'http://www.w3.org/2001/XMLSchema'
 
 
-def type_info(key):
+def type_info(key, base=None):
     """Return information for a mapping type or name."""
-    # (resourcetype, collectiontype, relationship, singular,
-    #  resoucetag, collectiontag, resourcefactory, collectionfactory)
+    # (resourcetype, collectiontype, singluar, relationship)
     for info in _mapping_data:
-        if isinstance(key, basestring) and \
-                (info[2] == key or info[3] == key):
+        if isinstance(key, str) and \
+                (info[2] == key or info[3] == key) and \
+                (base is None or len(info) == 4 or issubclass(base, info[4])):
             break
         elif isinstance(key, type) and \
                 (issubclass(key, info[0]) or
@@ -72,39 +70,35 @@ def type_info(key):
             break
     else:
         return
-    result = []
-    result.append(info[0]._SupersedingClass())
-    result.append(info[1] and info[1]._SupersedingClass())
-    result.append(info[2])
-    result.append(info[3])
-    result.append(_element_constructors[info[0]].name().localName())
-    if info[1] and info[1] in _element_constructors:
-        result.append(_element_constructors[info[1]].name().localName())
-    else:
-        result.append(None)
-    result.append(_element_constructors[info[0]])
-    if info[1] and info[1] in _element_constructors:
-        result.append(_element_constructors[info[1]])
-    else:
-        result.append(None)
-    return tuple(result)
+    result = (info[0]._SupersedingClass(),
+              info[1] and info[1]._SupersedingClass(),
+              info[2], info[3])
+    return result
 
-def subtype(prop):
-    """Return the binding type of a property."""
-    return prop.fget.im_self.elementBinding().typeDefinition()
+def get_xml_schema():
+    """Return the XML schema defintion as a parsed elementtree."""
+    global _xml_schema
+    if _xml_schema is not None:
+        return _xml_schema
+    pkgdir = os.path.split(inspect.getfile(_schema))[0]
+    fname = os.path.join(pkgdir, 'data', 'api.xsd')
+    fin = file(fname)
+    parsed = etree.parse(fin)
+    fin.close()
+    _xml_schema = parsed
+    return _xml_schema
 
 def new(cls, *args, **kwargs):
     """Create a new object."""
-    info = type_info(cls)
-    if info is not None:
-        if issubclass(cls, info[0]):
-            factory = info[6]
-        elif issubclass(cls, info[1]):
-            factory = info[7]
-    elif issubclass(cls, ComplexType):
-        factory = cls
-    else:
+    if not issubclass(cls, ComplexType):
         raise TypeError, 'Do not know how to construct %s' % cls
+    schema = get_xml_schema()
+    element = schema.find('{%s}element[@type="%s"]' %
+                          (_ns_xml_schema, cls.__name__))
+    if element is not None:
+        factory = getattr(_schema, element.attrib['name'])
+    else:
+        factory = cls
     obj = factory(*args, **kwargs)
     return obj
 
@@ -124,6 +118,7 @@ def href(obj):
     return newobj
 
 def update(obj, upd):
+    """Update elements from `ojb' with those of `upd'."""
     for el in obj._ElementMap:
         name = el.localName()
         value = getattr(upd, name)
@@ -149,7 +144,13 @@ def create_from_xml(s):
     except PyXBException, e:
         raise ParseError, str(e)
 
+def subtype(prop):
+    """Return the binding type of a property."""
+    return prop.fget.im_self.elementBinding().typeDefinition()
+
+
 def _bind(func, *bargs, **bkwargs):
+    """INTERNAL"""
     def _bound(*args, **kwargs):
         fargs = bargs + args
         fkwargs = bkwargs.copy()
@@ -260,6 +261,7 @@ class ResourceMixin(object):
         return True
 
 
+get_xml_schema()
 module = globals()
 
 for sym in dir(_schema):
@@ -273,10 +275,11 @@ for sym in dir(_schema):
         continue
     elif issubclass(cls, BaseResources):
         bases += (CollectionMixin,)
-        info = type_info(cls)
-        if info is None:
+        element = _xml_schema.find('{%s}complexType[@name="%s"]//{%s}element'
+                                   % (_ns_xml_schema, name, _ns_xml_schema))
+        if element is None:
             continue
-        members['_resource'] = info[4]
+        members['_resource'] = element.attrib['ref']
         mixin = CollectionMixin
     elif issubclass(cls, BaseResource):
         bases += (ResourceMixin,)
