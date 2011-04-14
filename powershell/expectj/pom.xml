@@ -3,11 +3,11 @@
   <parent>
     <groupId>com.redhat.rhevm.api</groupId>
     <artifactId>powershell-parent</artifactId>
-    <version>0.9-milestone9.2</version>
+    <version>0.9-SNAPSHOT</version>
   </parent>
   <artifactId>rhevm-api-powershell-expectj</artifactId>
   <packaging>jar</packaging>
-  <version>0.9-milestone9.2</version>
+  <version>0.9-SNAPSHOT</version>
   <name>ExpectJ</name>
   <description>ExpectJ is a Java re-implementation of the venerable
   TCL Expect utility. It can be used to script interaction with either
