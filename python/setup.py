@@ -53,8 +53,7 @@ class genschema(Command):
 
     def run(self):
         xsd = os.path.normpath(os.path.join(topdir,
-                    '../api/src/main/resources/api.xsd'))
-        xsdcopy = os.path.join(topdir, 'api.xsd')
+                    '..', 'api', 'src', 'main', 'resources', 'api.xsd'))
         libdir = os.path.join(topdir, 'lib', 'rhev')
         schema = os.path.join(libdir, '_schema.py')
         try:
