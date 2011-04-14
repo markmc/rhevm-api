@@ -29,13 +29,13 @@ class TestCluster(BaseTest):
         datacenter = schema.new(schema.DataCenter)
         datacenter.name = util.random_name('dc')
         datacenter.version = self.get_version()
-        datacenter.storage_type = 'NFS'
+        datacenter.storage_type = 'nfs'
         datacenter = self.api.create(datacenter)
         assert datacenter is not None
         datacenter2 = schema.new(schema.DataCenter)
         datacenter2.name = util.random_name('dc')
         datacenter2.version = self.get_version()
-        datacenter2.storage_type = 'NFS'
+        datacenter2.storage_type = 'nfs'
         datacenter2 = self.api.create(datacenter2)
         assert datacenter2 is not None
         cluster = schema.new(schema.Cluster)
@@ -122,7 +122,7 @@ class TestCluster(BaseTest):
         assert util.is_int(cluster.memory_policy.overcommit.percent)
         if cluster.scheduling_policy:
             assert cluster.scheduling_policy.policy in \
-                        ('EVEN_DISTRIBUTION', 'POWER_SAVING')
+                        ('even_distribution', 'power_saving')
             assert util.is_int(cluster.scheduling_policy.thresholds.low)
             assert util.is_int(cluster.scheduling_policy.thresholds.high)
             assert util.is_int(cluster.scheduling_policy.thresholds.duration)
@@ -258,7 +258,6 @@ class TestCluster(BaseTest):
         networks = self.api.getall(schema.Network)
         assert not util.contains_id(networks, network.id)
 
- 
     @depends(_test_create)
     def _test_change_datacenter(self):
         cluster = self.store.cluster

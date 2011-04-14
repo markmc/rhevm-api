@@ -40,11 +40,11 @@ class TestVM(BaseTest):
         if network is None:
             raise SkipTest, 'Network not found: rhevm'
         storagedomain = self.api.get(schema.StorageDomain, base=datacenter,
-                                     filter={'type': 'DATA'})
+                                     filter={'type': 'data'})
         if storagedomain is None:
             raise SkipTest, 'No data domain found in datacenter'
         exportdomain = self.api.get(schema.StorageDomain, base=datacenter,
-                                    filter={'type': 'EXPORT'})
+                                    filter={'type': 'export'})
         self.store.datacenter = datacenter
         self.store.cluster = cluster
         self.store.template = template
@@ -56,20 +56,20 @@ class TestVM(BaseTest):
     def test_create(self):
         vm = schema.new(schema.VM)
         vm.name = util.random_name('vm')
-        vm.type = 'SERVER'
+        vm.type = 'server'
         vm.memory = 512*1024**2
         vm.cpu = schema.new(schema.CPU)
         vm.cpu.topology = schema.new(schema.CpuTopology)
         vm.cpu.topology.cores = 1
         vm.cpu.topology.sockets = 1
         vm.display = schema.new(schema.Display)
-        vm.display.type = 'VNC'
+        vm.display.type = 'vnc'
         vm.os = schema.new(schema.OperatingSystem)
         vm.os.type = 'RHEL5'
         vm.os.boot = [schema.new(schema.Boot, dev='hd')]
-        # XXX: this is a bit of a kludge: #229
-        vm.highly_available = schema.new(schema.HighlyAvailable, True)
-        vm.highly_available.priority = 10
+        vm.high_availability = schema.new(schema.HighAvailability)
+        vm.high_availability.enabled = True
+        vm.high_availability.priority = 50
         vm.cluster = schema.ref(self.store.cluster)
         vm.template = schema.ref(self.store.template)
         vm2 = self.api.create(vm)
@@ -85,7 +85,7 @@ class TestVM(BaseTest):
         vm = self.store.vm
         vm2 = schema.new(schema.VM)
         vm2.name = vm.name
-        vm2.type = 'SERVER'
+        vm2.type = 'server'
         vm2.memory = 512*1024**2
         vm2.cluster = schema.ref(self.store.cluster)
         vm2.template = schema.ref(self.store.template)
@@ -146,13 +146,13 @@ class TestVM(BaseTest):
         assert util.is_str_href(vm.href)
         assert util.is_str(vm.name)
         assert vm.description is None or util.is_str(vm.description)
-        assert vm.type in ('SERVER', 'DESKTOP')
+        assert vm.type in ('server', 'desktop')
         assert vm.status in ('UNASSIGNED', 'DOWN', 'UP', 'POWERING_UP',
                 'POWERED_DOWN', 'PAUSED', 'MIGRATING_FROM', 'MIGRATING_TO',
                 'UNKNOWN', 'NOT_RESPONDING', 'WAIT_FOR_LAUNCH',
                 'REBOOT_IN_PROGRESS', 'SAVING_STATE', 'RESTORING_STATE',
                 'SUSPENDED', 'IMAGE_ILLEGAL', 'IMAGE_LOCKED', 'POWERING_DOWN')
-        assert vm.origin in ('RHEV', 'VMWARE', 'XEN')
+        assert vm.origin in ('rhev', 'vmware', 'xen')
         assert util.is_date(vm.creation_time)
         assert util.is_int(vm.memory) and vm.memory > 0
         assert vm.cpu is not None
@@ -162,7 +162,7 @@ class TestVM(BaseTest):
         assert util.is_int(vm.cpu.topology.sockets)
         assert vm.cpu.topology.sockets > 0
         assert vm.display is not None
-        assert vm.display.type in ('VNC', 'SPICE')
+        assert vm.display.type in ('vnc', 'spice')
         if vm.status == 'UP':
             assert util.is_int(vm.display.port)
             assert vm.display.port > 0
@@ -242,9 +242,9 @@ class TestVM(BaseTest):
         vm = self.store.vm
         disk = schema.new(schema.Disk)
         disk.size = 1 * 1024**3
-        disk.type = 'SYSTEM'
-        disk.interface = 'VIRTIO'
-        disk.format = 'COW'
+        disk.type = 'system'
+        disk.interface = 'virtio'
+        disk.format = 'cow'
         disk.sparse = True
         disk.wipe_after_delete = True
         disk.propagate_errors = True
@@ -260,10 +260,10 @@ class TestVM(BaseTest):
     def test_disk_attributes(self):
         disk = self.store.disk
         assert util.is_int(disk.size)
-        assert disk.type in ('DATA', 'SHARED', 'SYSTEM', 'SWAP', 'TEMP')
+        assert disk.type in ('data', 'shared', 'system', 'swap', 'TEMP')
         assert disk.status in ('ILLEGAL', 'INVALID', 'LOCKED', 'OK')
-        assert disk.interface in ('IDE', 'SCSI', 'VIRTIO')
-        assert disk.format in ('COW', 'RAW')
+        assert disk.interface in ('ide', 'scsi', 'virtio')
+        assert disk.format in ('cow', 'raw')
         assert util.is_bool(disk.sparse)
         assert util.is_bool(disk.bootable)
         assert util.is_bool(disk.wipe_after_delete)
@@ -280,7 +280,7 @@ class TestVM(BaseTest):
         network = self.store.network
         nic = schema.new(schema.NIC)
         nic.name = 'eth0'
-        nic.type = 'PV'
+        nic.type = 'virtio'
         nic.network = schema.ref(network)
         nic2 = self.api.create(nic, base=vm)
         assert isinstance(nic2, schema.NIC)
@@ -293,7 +293,7 @@ class TestVM(BaseTest):
         assert util.is_str(nic.name)
         assert nic.network is not None
         assert util.is_str_uuid(nic.network.id)
-        assert nic.type in ('E1000', 'PV', 'RTL8139', 'RTL8139_PV')
+        assert nic.type in ('e1000', 'virtio', 'rtl8139')
         assert nic.mac is not None
         # BUG: ticket #177
         assert util.is_str_mac(nic.mac.address)
@@ -307,7 +307,7 @@ class TestVM(BaseTest):
 
     @depends(test_has_cdroms)
     def test_cdrom_attributes(self):
-        cdroms = self.store.cdrom
+        cdroms = self.store.cdroms
         for cdrom in cdroms:
             assert isinstance(cdrom, schema.CdRom)
             assert cdrom.id is not None

@@ -100,7 +100,7 @@ class TestSchema(object):
         assert hasattr(schema, 'CPU')
         assert hasattr(schema, 'CpuTopology')
         assert hasattr(schema, 'Display')
-        assert hasattr(schema, 'HighlyAvailable')
+        assert hasattr(schema, 'HighAvailability')
         assert hasattr(schema, 'OperatingSystem')
         assert hasattr(schema, 'Boot')
         assert hasattr(schema, 'Fault')

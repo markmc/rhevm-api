@@ -38,9 +38,9 @@ class TestHost(BaseTest):
             raise SkipTest, 'Host not in status UP/MAINTENANCE: %s' % name
         # BUG: missing attribute "type"
         type = self.get_config('type', name)
-        if type not in ('RHEL', 'RHEV_H'):
+        if type not in ('rhel', 'rhev-h'):
             raise SkipTest, 'Unknown host type in [%s]: %s' % (name, type)
-        if type == 'RHEL':
+        if type == 'rhel':
             address = self.get_config('address', name)
             if address is None:
                 raise SkipTest, 'Missing "address" parameter in [%s]' % name
@@ -49,7 +49,7 @@ class TestHost(BaseTest):
                 raise SkipTest, 'Missing "password" parameter in [%s]' % name
             self.store.address = address
             self.store.password = password
-        elif type == 'RHEV_H':
+        elif type == 'rhev-h':
             isofile = self.get_config('isofile', name)
             if isofile is None:
                 raise SkipTest, 'Missing "isofile" parameter in [%s]' % name
@@ -105,7 +105,7 @@ class TestHost(BaseTest):
                 'NON_RESPONSIVE', 'PENDING_APPROVAL',
                 'PREPARING_FOR_MAINTENANCE', 'PROBLEMATIC', 'REBOOT',
                 'UNASSIGNED', 'UP')
-        assert host.type in ('RHEV_H', 'RHEL')  # BUG: missing
+        assert host.type in ('rhev-h', 'rhel')  # BUG: missing
         assert util.is_str_ip(host.address)  # BUG: missing
         assert util.is_str_int(host.cluster.id) or util.is_str_uuid(host.cluster.id)
         assert util.is_int(host.port) and host.port > 0
@@ -224,10 +224,10 @@ class TestHost(BaseTest):
         assert host.status == 'MAINTENANCE'
         action = schema.new(schema.Action)
         type = self.store.type
-        if type == 'RHEL':
+        if type == 'rhel':
             action.root_password = self.store.password
         # BUG: Ticket: #170
-        elif type == 'RHEV_H':
+        elif type == 'rhev-h':
             action.isofile = self.store.isofile
         self.api.action(host, 'install', action)
         host = self.api.reload(host)
@@ -291,7 +291,6 @@ class TestHost(BaseTest):
         named = self.get_config('hosts', default='').split()
         # Non-invasive tests on all hosts
         for host in hosts:
-            continue
             yield self._test_prepare, host
             yield self._test_get
             yield self._test_reload
@@ -306,7 +305,7 @@ class TestHost(BaseTest):
         for host in named[1:]:
             yield self._test_prepare, host
             type = self.get_config('type', host)
-            if type == 'RHEL':
+            if type == 'rhel':
                 yield self._test_delete
                 yield self._test_create
             yield self._test_update

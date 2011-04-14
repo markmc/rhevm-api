@@ -23,12 +23,12 @@ class TestDataCenter(BaseTest):
     def _test_create(self):
         dc = schema.new(schema.DataCenter)
         dc.name = util.random_name('dc')
-        dc.storage_type = 'NFS'
+        dc.storage_type = 'nfs'
         dc.version = self.get_version()
         dc2 = self.api.create(dc)
         assert dc2.id is not None
         assert dc2.href is not None
-        assert dc2.storage_type == 'NFS'
+        assert dc2.storage_type == 'nfs'
         self.store.dc = dc2
 
     @depends(_test_use_existing, _test_create)
@@ -74,7 +74,7 @@ class TestDataCenter(BaseTest):
         assert util.is_str(dc.href) and dc.href.endswith(dc.id)
         assert util.is_str(dc.name) and len(dc.name) > 0
         assert dc.description is None or util.is_str(dc.description)
-        assert dc.storage_type in ('NFS', 'ISCSI', 'FCP')
+        assert dc.storage_type in ('nfs', 'iscsi', 'fcp')
         # A few statuses are probably missing
         assert dc.status in ('UP', 'DOWN', 'ERROR', 'UNINITIALIZED',
                 'MAINTENANCE', 'NON_OPERATIONAL', 'NON_RESPONSIVE',
@@ -129,7 +129,7 @@ class TestDataCenter(BaseTest):
             assert util.is_str(file.id) and len(file.id) > 0
             assert util.is_str_href(file.href) and file.href.endswith(file.id)
             assert util.is_str(file.name)
-            assert file.type in ('ISO', 'VFD')
+            assert file.type in ('iso', 'vfd')
             assert isinstance(file.data_center, schema.DataCenter)
             assert file.data_center.id == dc.id
 

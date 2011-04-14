@@ -38,4 +38,4 @@ class TestUsers(BaseTest):
         assert util.is_str_uuid(user.id)
         assert util.is_str_href(user.href)
         assert util.is_str(user.name) and len(user.name) > 0
-        assert util.is_str(user.description)
+        assert user.description is None or util.is_str(user.description)
