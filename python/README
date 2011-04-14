@@ -1,13 +1,54 @@
-python-rhev is a Python interface for RHEV
+== Introduction ==
+
+Python-rhev is a Python language binding for the Red Hat Enteprise
+Virtualization (RHEV) REST API.
+
+More information on RHEV can be found here:
+
+  http://www.redhat.com/rhev
+
+More information on the RHEV REST API can be found here:
+
+  https://fedorahosted.org/rhevm-api/
 
 == Installation ==
+
+Installing python-rhev from source is easy due to setuptools integration:
 
  $ python setup.py build
  # python setup.py install
 
-== Running the tests ==
+== Running the test suite ==
 
- $ export RHEV_URL="https://server/path"
- $ export RHEV_USERNAME="user@domain"
- $ export RHEV_PASSWORD="s3cret"
- $ nosetests
+Python-rhev includes a large amount of tests. These tests are both unit
+tests, but also system tests. This means that you need to have a RHEV
+installation available to run the tests on.
+
+WARNING: Any data in the RHEV installation that you use for testing
+         may be lost!!!
+
+To run the tests, the first thing you need to do is to a test configuration
+file. This file contains all the instructions needed by python-rhev test
+suite, such as how to connect to the RHEV test instance, information about
+its hosts, storage, networks, and other settings.
+
+To create a test configuration file, start with the test configuration file
+template called "test.conf.in". This file comes with python-rhev. If you're
+building from source, you'll find the test template file the root of the
+source directory (next to setup.py). If you've installed python-rhev from a
+package, you may find this file in /usr/share/doc. Open the file in a text
+editor, and follow the embedded instructions. Then save it as "test.conf".
+
+When running tests from a checked out source directory, you need to place
+test.conf in the root of that directory. Then, start the tests using:
+
+ $ nosetests -v
+
+When you installed python-rhev using an OS package, then you can run the
+tests like this:
+
+ $ export TEST_CONFIG="/path/to/test.conf"
+ $ nosetests -v rhev.test
+
+Running the tests can take a long time, anywhere from 5 minutes, to much
+longer, depending on how many tests you enabled.
