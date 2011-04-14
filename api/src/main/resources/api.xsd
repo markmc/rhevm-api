@@ -916,7 +916,7 @@
       <xs:extension base="BaseResource">
         <xs:sequence>
           <xs:element name="administrative" type="xs:boolean" maxOccurs="1"/>
-          <xs:element name="role" type="Role" maxOccurs="1"/>
+          <xs:element name="role" type="Role" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
