@@ -13,6 +13,7 @@ import shutil
 
 from setuptools import setup, Command
 from distutils.command.build import build
+from setuptools.command.sdist import sdist
 from setuptools.command.bdist_egg import bdist_egg
 from distutils.errors import DistutilsError
 from subprocess import Popen, PIPE
@@ -96,6 +97,13 @@ class mybuild(build):
         build.run(self)
 
 
+class mysdist(sdist):
+
+    def run(self):
+        self.run_command('genschema')
+        sdist.run(self)
+
+
 class mybdist_egg(bdist_egg):
 
     def run(self):
@@ -106,8 +114,8 @@ class mybdist_egg(bdist_egg):
 setup(
     package_dir = { '': os.path.join(topdir, 'lib') },
     packages = [ 'rhev', 'rhev.test' ],
-    cmdclass = { 'build': mybuild, 'bdist_egg': mybdist_egg,
-                 'genschema': genschema },
+    cmdclass = { 'build': mybuild, 'sdist': mysdist,
+                 'bdist_egg': mybdist_egg, 'genschema': genschema },
     setup_requires = [ 'pyxbbase >= 1.1.2' ],
     install_requires = [ 'pyxbbase >= 1.1.2' ],
     test_suite = 'nose.collector',
