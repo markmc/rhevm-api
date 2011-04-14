@@ -366,6 +366,13 @@
       <xs:enumeration value="POWERING_DOWN"/>
     </xs:restriction>
   </xs:simpleType>
+  
+  <xs:simpleType name="NicStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="DOWN"/>
+      <xs:enumeration value="UP"/>
+    </xs:restriction>
+  </xs:simpleType>
 
   <xs:simpleType name="DataCenterStatus">
     <xs:restriction base="xs:string">
@@ -1775,6 +1782,8 @@
           <xs:element ref="vlan" minOccurs="0"/>
           <xs:element ref="slaves" minOccurs="0"/>
           <xs:element name="statistics" type="Statistics" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="speed" type="xs:long" minOccurs="0" maxOccurs="1"/>
+          <xs:element name="status" type="NicStatus" minOccurs="0" maxOccurs="1"/>
           <!-- Also a rel="master" link for bonded nics -->
         </xs:sequence>
       </xs:extension>
