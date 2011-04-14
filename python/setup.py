@@ -55,6 +55,7 @@ class genschema(Command):
         xsd = os.path.normpath(os.path.join(topdir,
                     '..', 'api', 'src', 'main', 'resources', 'api.xsd'))
         libdir = os.path.join(topdir, 'lib', 'rhev')
+        xsdcopy = os.path.join(libdir, 'data', 'api.xsd')
         schema = os.path.join(libdir, '_schema.py')
         try:
             st1 = os.stat(xsd)
@@ -111,15 +112,16 @@ class mybdist_egg(bdist_egg):
 
 
 setup(
-    package_dir = { '': os.path.join(topdir, 'lib') },
     packages = [ 'rhev', 'rhev.test' ],
-    cmdclass = { 'build': mybuild, 'sdist': mysdist,
-                 'bdist_egg': mybdist_egg, 'genschema': genschema },
+    package_dir = { '': os.path.join(topdir, 'lib') },
+    package_data = { 'rhev': [ os.path.join('data', 'api.xsd') ] },
     setup_requires = [ 'pyxbbase >= 1.1.2' ],
     install_requires = [ 'pyxbbase >= 1.1.2' ],
     test_suite = 'nose.collector',
     entry_points = {
         'nose.plugins.0.10': [ 'deploader = rhev.test.loader:DepLoader' ]
     },
+    cmdclass = { 'build': mybuild, 'sdist': mysdist,
+                 'bdist_egg': mybdist_egg, 'genschema': genschema },
     **version_info
 )
