@@ -45,11 +45,11 @@ class RhevCommand(Command):
                 if link in path:
                     break
             else:
-                self.error('unable to resolve at: %s' % info[2])
+                self.error('cannot find object in %s' % info[2])
             id, info = path.pop(link)
             base = self.get_object(info[0], id, base)
             if base is None:
-                self.error('object does not exist at: %s' % info[2])
+                self.error('%s does not exist: %s' % (info[2], id))
         return base
 
     def create_object(self, typ, options, scope=None):
