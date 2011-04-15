@@ -20,7 +20,7 @@ version_info = {
                    ' Virtualization',
     'author': 'Geert Jansen',
     'author_email': 'gjansen@redhat.com',
-    'url': 'http://bitbucket.org/geertj/rhevsh',
+    'url': 'http://fedorahosted.org/rhevm-api',
     'license': 'MIT',
     'classifiers': [
         'Development Status :: 4 - Beta',
@@ -37,16 +37,7 @@ setup(
     packages = [ 'rhevsh', 'rhevsh.command', 'rhevsh.format',
                  'rhevsh.platform', 'rhevsh.platform.posix',
                  'rhevsh.platform.windows' ],
-    # XXX: this is a horrible hack. Add pyxbbase as a dependency here, even
-    # though it's only a transitive dependency. This ensures it is installed
-    # before python-rhev. The python-rhev setup script requires pyxb to be
-    # installed, and normally setuptools has a install_requires argument for
-    # that. However, there's a bug with that.. For now, this workaround allows
-    # a 1-line install of rhevsh via "easy_install rhevsh". Note also that
-    # dependencies seem to be processed starting at the end of
-    # install_requires. The real fix is to investigate why install_requires
-    # doesn't work for python-rhev.
-    install_requires = [ 'python-cli >= 1.1', 'python-rhev >= 0.9', 'pyxbbase' ],
+    install_requires = [ 'python-cli >= 1.1', 'python-rhev >= 0.9', ],
     entry_points = { 'console_scripts': [ 'rhevsh = rhevsh.main:main' ] },
     **version_info
 )

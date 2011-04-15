@@ -13,10 +13,26 @@ More information on the RHEV REST API can be found here:
 
 == Installation ==
 
-Installing python-rhev from source is easy due to setuptools integration:
+NOTE: python-rhev depensd on a package called "PyXB". There is a bug in
+PyXB, which prevents installation via PyPI.  Before you can install rhevsh,
+you therefore need to install PyXB manually.  If there's an OS package
+available, use your OS package manager to install it. If not, download and
+install it from here:
+
+  http://sourceforge.net/projects/pyxb/files/
+
+The version that is known to work well is PyXB-base-1.1.2.
+
+After you have installed PyXB, you can install python-rhev.
+
+Installation from the source directory:
 
  $ python setup.py build
  # python setup.py install
+
+Installation via easy_install:
+
+ # easy_install python-rhev
 
 == Running the test suite ==
 

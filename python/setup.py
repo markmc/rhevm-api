@@ -115,8 +115,6 @@ setup(
     packages = [ 'rhev', 'rhev.test' ],
     package_dir = { '': os.path.join(topdir, 'lib') },
     package_data = { 'rhev': [ os.path.join('data', 'api.xsd') ] },
-    setup_requires = [ 'pyxbbase >= 1.1.2' ],
-    install_requires = [ 'pyxbbase >= 1.1.2' ],
     test_suite = 'nose.collector',
     entry_points = {
         'nose.plugins.0.10': [ 'deploader = rhev.test.loader:DepLoader' ]

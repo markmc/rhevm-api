@@ -1,12 +1,33 @@
+== Introduction ==
+
 This is a command-line interface for Red Hat Enterprise Virtualization.
 
-Installation:
+== Installation ==
+
+NOTE: rhevsh depends on python-rhev, which in return requires a package
+called "PyXB". There is a bug in PyXB, which prevents installation via PyPI.
+Before you can install rhevsh, you therefore need to install PyXB manually.
+If there's an OS package available, use your OS package manager to install
+it. If not, download and install it from here:
+
+  http://sourceforge.net/projects/pyxb/files/
+
+The version that is known to work well is PyXB-base-1.1.2.
+
+Once PyXB is installed, you can install rhevsh.
+
+Installation from the source directory:
+
+ $ python setup.py build
+ # python setup.py install
+
+Installation via easy_install:
 
  # easy_install rhevsh
 
-This has been tested on RHEL 5.5 and Fedora 14.
+== Usage ==
 
-For help:
+rhevsh comes with an extensive only help system. To start out, use:
 
  $ rhevsh --help
  $ rhevsh
