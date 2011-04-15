@@ -73,10 +73,15 @@ class ShowCommand(RhevCommand):
         args = self.arguments
         opts = self.options
         self.check_connection()
-        info = schema.type_info(args[0])
-        if info is None:
-            self.error('unknown type: %s' % typename)
         base = self.resolve_base(opts)
+        info = schema.type_info(args[0], base=base)
+        if info is None:
+            self.error('no such type: %s' % args[0])
+        for link in base.link:
+            if link.rel == info[3]:
+                break
+        else:
+            self.error('type does not exist here: %s' % args[0])
         obj = self.get_object(info[0], args[1], base)
         self.context.formatter.format(self.context, obj)
 

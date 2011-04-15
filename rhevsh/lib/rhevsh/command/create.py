@@ -109,13 +109,18 @@ class CreateCommand(RhevCommand):
         opts = self.options
         connection = self.check_connection()
         stdout = self.context.terminal.stdout
-        info = schema.type_info(args[0])
+        base = self.resolve_base(opts)
+        info = schema.type_info(args[0], base=base)
         if info is None:
             self.error('no such type: %s' % args[0])
+        for link in base.link:
+            if link.rel == info[3]:
+                break
+        else:
+            self.error('type cannot be created here: %s' % args[0])
         obj = self.read_object()
         if obj is None:
             obj = self.create_object(info[0], opts)
-        base = self.resolve_base(opts)
         connection.create(obj, base=base)
 
     def show_help(self):

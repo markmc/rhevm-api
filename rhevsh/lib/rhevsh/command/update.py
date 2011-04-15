@@ -95,11 +95,18 @@ class UpdateCommand(RhevCommand):
         args = self.arguments
         opts = self.options
         connection = self.check_connection()
-        info = schema.type_info(args[0])
+        base = self.resolve_base(opts)
+        info = schema.type_info(args[0], base=base)
         if info is None:
             self.error('no such type: %s' % args[0])
-        base = self.resolve_base(opts)
+        for link in base.link:
+            if link.rel == info[3]:
+                break
+        else:
+            self.error('type does not exist here: %s' % args[0])
         obj = self.get_object(info[0], args[1], base)
+        if obj is None:
+            self.error('object does not exist')
         # Trac issue #179: don't set fields that already exist
         obj = schema.href(obj)
         self.update_object(obj, self.options)

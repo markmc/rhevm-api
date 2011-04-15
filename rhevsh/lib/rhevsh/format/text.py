@@ -18,25 +18,25 @@ class TextFormatter(Formatter):
 
     name = 'text'
 
-    def _get_fields(self, typ, flag):
+    def _get_fields(self, typ, flag, scope=None):
         info = schema.type_info(typ)
         assert info is not None
         override = self.context.settings.get('fields.%s' % info[2])
         if override is None:
             override = self.context.settings.get('fields')
         if override is None:
-            fields = metadata.get_fields(typ, flag)
+            fields = metadata.get_fields(typ, flag, scope)
         else:
             override = override.split(',')
             fields = metadata.get_fields(typ, '')
             fields = filter(lambda f: f.name in override, fields)
         return fields
 
-    def _format_resource(self, resource):
+    def _format_resource(self, resource, scope=None):
         context = self.context
         settings = context.settings
         stdout = context.terminal.stdout
-        fields = self._get_fields(type(resource), 'S')
+        fields = self._get_fields(type(resource), 'S', scope)
         width0 = 0
         for field in fields:
             width0 = max(width0, len(field.name))
@@ -64,12 +64,12 @@ class TextFormatter(Formatter):
                 value = value[width1:]
         stdout.write('\n')
 
-    def _format_collection(self, collection):
+    def _format_collection(self, collection, scope=None):
         context = self.context
         settings = context.settings
         stdout = context.terminal.stdout
         info = schema.type_info(type(collection))
-        fields = self._get_fields(info[0], 'L')
+        fields = self._get_fields(info[0], 'L', scope)
         # Calculate the width of each column
         if stdout.isatty() and not settings['wide']:
             widths = [ len(f.name) for f in fields ]
@@ -88,8 +88,7 @@ class TextFormatter(Formatter):
                     widths[i] = int(fwidths[i])
                 # Pass 2: allocate fractional leftovers to columns
                 available = context.terminal.width - 2*len(fields) - sum(widths)
-                remainders = [ (fwidths[i] - widths[i], i)
-                               for i in range(len(fields)) ]
+                remainders = [ (fwidths[i] - widths[i], i) for i in range(len(fields)) ]
                 remainders.sort(reverse=True)
                 for i in range(min(len(fields), available)):
                     widths[remainders[i][1]] += 1
@@ -122,9 +121,9 @@ class TextFormatter(Formatter):
                 stdout.write('\n')
         stdout.write('\n')
 
-    def format(self, context, result):
+    def format(self, context, result, scope=None):
         self.context = context
         if isinstance(result, schema.BaseResource):
-            self._format_resource(result)
+            self._format_resource(result, scope)
         elif isinstance(result, schema.BaseResources):
-            self._format_collection(result)
+            self._format_collection(result, scope)

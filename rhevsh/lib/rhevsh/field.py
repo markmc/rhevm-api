@@ -13,10 +13,11 @@ from rhev import schema
 class Field(object):
     """Base class for display fields."""
 
-    def __init__(self, name, description, flags, attribute=None):
+    def __init__(self, name, description, flags, scope=None, attribute=None):
         self.name = name
         self.description = description
         self.flags = flags
+        self.scope = scope
         self.attribute = attribute or name
 
     def get(self, obj, context):
@@ -44,7 +45,7 @@ class Field(object):
                 raise ValueError, m
             if subobj is None:
                 prop = getattr(type(baseobj), pa)
-                subtype = schema.subtype(subtype)
+                subtype = schema.subtype(prop)
                 if issubclass(subtype, schema.ComplexType):
                     setattr(baseobj, pa, schema.new(subtype))
                     subobj = getattr(baseobj, pa)
@@ -67,9 +68,10 @@ class StringField(Field):
 class IntegerField(Field):
     """An integer field."""
 
-    def __init__(self, name, description, flags, attribute=None,
+    def __init__(self, name, description, flags, scope=None, attribute=None,
                  min=None, max=None, scale=None):
-        super(IntegerField, self).__init__(name, description, flags, attribute)
+        super(IntegerField, self).__init__(name, description, flags, scope,
+                                           attribute)
         self.min = None
         self.max = None
         self.scale = scale

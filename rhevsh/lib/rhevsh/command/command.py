@@ -52,21 +52,21 @@ class RhevCommand(Command):
                 self.error('object does not exist at: %s' % info[2])
         return base
 
-    def create_object(self, typ, options):
+    def create_object(self, typ, options, scope=None):
         """Create a new object of type `typ' based on the command-line
         options in `options'."""
         obj = schema.new(typ)
-        fields = metadata.get_fields(typ, 'C')
+        fields = metadata.get_fields(typ, 'C', scope)
         for field in fields:
             key = '--%s' % field.name
             if key in options:
                 field.set(obj, options[key], self.context)
         return obj
 
-    def update_object(self, obj, options):
+    def update_object(self, obj, options, scope=None):
         """Create a new binding type of type `typ', and set its attributes
         with values from `options'."""
-        fields = metadata.get_fields(type(obj), 'U')
+        fields = metadata.get_fields(type(obj), 'U', scope)
         for field in fields:
             key = '--%s' % field.name
             if key in options:
@@ -88,7 +88,7 @@ class RhevCommand(Command):
             self.error('could not parse input')
         return obj
 
-    def get_object(self, typ, id, base):
+    def get_object(self, typ, id, base=None):
         """Return an object by id or name."""
         self.check_connection()
         connection = self.context.connection

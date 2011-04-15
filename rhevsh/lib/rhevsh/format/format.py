@@ -12,5 +12,5 @@ class Formatter(object):
 
     name = None
 
-    def format(self, context, result):
+    def format(self, context, result, scope=None):
         raise NotImplementedError

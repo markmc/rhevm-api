@@ -6,18 +6,19 @@
 # rhevsh is copyright (c) 2011 by the rhevsh authors. See the file
 # "AUTHORS" for a complete overview.
 
+from rhev import schema
 from rhevsh.field import *
 
 
 _mapping_data = {
-    '*': [
+    schema.BaseResource: [
         StringField('id', 'A unique ID for this object', 'S'),
         StringField('name', 'A unique name for this object', 'SL'),
         StringField('description', 'A textual description', 'S'),
         StringField('type', 'The object type', 'SL'),
         StringField('status', 'The object status', 'SL')
     ],
-    'datacenter': [
+    schema.DataCenter: [
         StringField('id', 'A unique ID for this datacenter', 'S'),
         StringField('name', 'The name of this datacenter', 'SLUC'),
         StringField('description', 'A description for this datacenter', 'SUC'),
@@ -26,7 +27,7 @@ _mapping_data = {
         VersionField('version', 'The current compatibility version', 'SLC'),
         VersionListField('supported_versions', 'Available compatiblity version', 'S')
     ],
-    'vm': [
+    schema.VM: [
         StringField('id', 'The unique ID for this VM', 'S'),
         StringField('name', 'A unique name for this VM', 'CULS'),
         StringField('description', 'A textual description', 'CUS'),
@@ -43,14 +44,20 @@ _mapping_data = {
         ReferenceField('template', 'The template this VM is based on', 'CS'),
         ReferenceField('cluster', 'The cluster this VM resides in', 'CUS')
     ],
-    'vm/start':  [
-        BooleanField('pause', 'Start the VM in paused mode', 'A'),
-        ReferenceField('host', 'Start the VM on this host', 'A',
-                       attribute='vm.host'),
-        BooleanField('stateless', 'Start the VM in stateless mode', 'A',
-                     attribute='vm.stateless')
+    schema.Action:  [
+        StringField('status', 'The action status', 'S'),
+        BooleanField('pause', 'Start the VM in paused mode', 'C',
+                     scope='VM:start'),
+        ReferenceField('host', 'Start the VM on this host', 'C',
+                       scope='VM:start', attribute='vm.host'),
+        BooleanField('stateless', 'Start the VM in stateless mode', 'C',
+                     scope='VM:start', attribute='vm.stateless'),
+        StringField('ticket', 'The ticket value', 'S',
+                     scope='VM:ticket', attribute='ticket.value_'),
+        IntegerField('expiry', 'The ticket expiration time', 'SC',
+                     scope='VM:ticket', attribute='ticket.expiry')
     ],
-    'disk': [
+    schema.Disk: [
         StringField('interface', 'The disk interface ("IDE" or "VIRTIO")', 'CLS'),
         IntegerField('size', 'The disk size in MiB', 'CLS', scale=1024**2),
         StringField('format', 'The disk format ("COW" or "RAW")', 'CLS'),
@@ -63,7 +70,7 @@ _mapping_data = {
         BooleanField('errors', 'Propagate errors', 'CS',
                      attribute='propagate_errors')
     ],
-    'statistic': [
+    schema.Statistic: [
         StringField('id', 'A unique ID for this statistic', 'S'),
         StringField('name', 'The statistic name', 'SL'),
         StringField('description', 'A description for this statistic', 'S'),
@@ -74,18 +81,12 @@ _mapping_data = {
     ]
 }
 
-def get_fields(typ, flags, action=None):
+def get_fields(typ, flags, scope=None):
     """Return the list of fields for a type/action."""
-    info = schema.type_info(typ)
-    if info is None:
-        return []
-    if action is None:
-        key = info[2]
-    else:
-        key = '%s/%s' % (info[2], action)
-    fields = _mapping_data.get(key)
-    if fields is None:
-        fields = _mapping_data.get('*')
+    if typ not in _mapping_data:
+        return _mapping_data[schema.BaseResource]
+    fields = _mapping_data[typ]
     for flag in flags:
         fields = filter(lambda f: flag in f.flags, fields)
+    fields = filter(lambda f: f.scope in (None, scope) , fields)
     return fields

@@ -23,7 +23,7 @@ class XmlFormatter(Formatter):
     _re_spacing1 = re.compile('(>)\n\s+([^<\s])')
     _re_spacing2 = re.compile('([^>])\n\s+(<)')
 
-    def format(self, context, result):
+    def format(self, context, result, scope=None):
         if not hasattr(result, 'toxml'):
             raise TypeError, 'Expecting a binding instance.'
         self.context = context
