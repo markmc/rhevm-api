@@ -21,7 +21,7 @@ class ShowCommand(RhevCommand):
     helptext = """\
         == Usage ==
     
-        get <type> <id> [object identifiers]
+        show <type> <id> [object identifiers]
 
         == Description ==
 
