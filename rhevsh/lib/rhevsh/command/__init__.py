@@ -9,6 +9,7 @@
 from rhevsh.command.action import ActionCommand
 from rhevsh.command.create import CreateCommand
 from rhevsh.command.connect import ConnectCommand
+from rhevsh.command.console import ConsoleCommand
 from rhevsh.command.delete import DeleteCommand
 from rhevsh.command.disconnect import DisconnectCommand
 from rhevsh.command.help import HelpCommand

@@ -34,7 +34,9 @@ version_info = {
 
 setup(
     package_dir = { '': 'lib' },
-    packages = [ 'rhevsh', 'rhevsh.command', 'rhevsh.format' ],
+    packages = [ 'rhevsh', 'rhevsh.command', 'rhevsh.format',
+                 'rhevsh.platform', 'rhevsh.platform.posix',
+                 'rhevsh.platform.windows' ],
     # XXX: this is a horrible hack. Add pyxbbase as a dependency here, even
     # though it's only a transitive dependency. This ensures it is installed
     # before python-rhev. The python-rhev setup script requires pyxb to be

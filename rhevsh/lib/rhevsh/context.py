@@ -87,6 +87,7 @@ class RhevshExecutionContext(ExecutionContext):
         self.add_command(ActionCommand)
         self.add_command(CreateCommand)
         self.add_command(ConnectCommand)
+        self.add_command(ConsoleCommand)
         self.add_command(CreateCommand)
         self.add_command(DeleteCommand)
         self.add_command(DisconnectCommand)

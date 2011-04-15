@@ -52,6 +52,8 @@ _mapping_data = {
                        scope='VM:start', attribute='vm.host'),
         BooleanField('stateless', 'Start the VM in stateless mode', 'C',
                      scope='VM:start', attribute='vm.stateless'),
+        StringField('display', 'Display protocol', 'C',
+                     scope='VM:start', attribute='vm.display.type'),
         StringField('ticket', 'The ticket value', 'S',
                      scope='VM:ticket', attribute='ticket.value_'),
         IntegerField('expiry', 'The ticket expiration time', 'SC',
