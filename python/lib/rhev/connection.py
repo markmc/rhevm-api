@@ -52,6 +52,7 @@ class Connection(object):
             raise Error, 'Invalid URL with no path: %s' % self.url
         if parsed.netloc.count(':') == 1:
             host, port = parsed.netloc.split(':')
+            port = int(port)
         elif parsed.scheme == 'http':
             host = parsed.netloc
             port = http.HTTP_PORT
