@@ -70,3 +70,30 @@ try:
     from xml.etree import ElementTree as etree
 except ImportError:
     from elementtree import ElementTree as etree
+
+
+# Compatibility for ElementTree <= 1.2 (Python <= 2.6)
+
+import re
+_re_predicate = re.compile(r'\[@([a-z]+)="([a-z_]+)"\]', re.I)
+
+def find(node, expr):
+    version = map(int, etree.VERSION.split('.'))
+    if version[:2] >= (1,3):
+        return node.find(expr)
+    # Very course emulation of XPath predicates for ElementTree 1.2
+    # This only supports what we actually use.
+    while True:
+        match = _re_predicate.search(expr)
+        if not match:
+            break
+        subexpr = expr[:match.start(0)]
+        for elem in node.findall(subexpr):
+            if elem.attrib.get(match.group(1)) == match.group(2):
+                break
+        else:
+            return None
+        expr = '.' + expr[match.end(0):]
+        node = elem
+    element = node.find(expr)
+    return element

@@ -10,9 +10,8 @@ import os
 import os.path
 import time
 import inspect
-from compat import etree
 
-from rhev import _schema
+from rhev import _schema, compat
 from rhev.error import ParseError
 from rhev._schema import BaseResource, BaseResources
 
@@ -83,7 +82,7 @@ def get_xml_schema():
     pkgdir = os.path.split(inspect.getfile(_schema))[0]
     fname = os.path.join(pkgdir, 'data', 'api.xsd')
     fin = file(fname)
-    parsed = etree.parse(fin)
+    parsed = compat.etree.parse(fin)
     fin.close()
     _xml_schema = parsed
     return _xml_schema
@@ -93,7 +92,7 @@ def new(cls, *args, **kwargs):
     if not issubclass(cls, ComplexType):
         raise TypeError, 'Do not know how to construct %s' % cls
     schema = get_xml_schema()
-    element = schema.find('{%s}element[@type="%s"]' %
+    element = compat.find(schema, '{%s}element[@type="%s"]' %
                           (_ns_xml_schema, cls.__name__))
     if element is not None:
         factory = getattr(_schema, element.attrib['name'])
@@ -275,8 +274,9 @@ for sym in dir(_schema):
         continue
     elif issubclass(cls, BaseResources):
         bases += (CollectionMixin,)
-        element = _xml_schema.find('{%s}complexType[@name="%s"]//{%s}element'
-                                   % (_ns_xml_schema, name, _ns_xml_schema))
+        element = compat.find(_xml_schema,
+                              '{%s}complexType[@name="%s"]//{%s}element'
+                              % (_ns_xml_schema, name, _ns_xml_schema))
         if element is None:
             continue
         members['_resource'] = element.attrib['ref']
