@@ -128,10 +128,9 @@ class RhevCommand(Command):
         """Return a list of plural types."""
         return self._get_types(True)
 
-    def get_options(self, typ, action=None):
+    def get_options(self, typ, flag, scope=None):
         """Return a list of options for typ/action."""
-        flag = self.name[0].upper()
-        fields = metadata.get_fields(typ, flag, action=action)
+        fields = metadata.get_fields(typ, flag, scope=scope)
         options = [ '--%-20s %s' % (field.name, field.description)
                     for field in fields ]
         return options

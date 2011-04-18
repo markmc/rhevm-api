@@ -173,8 +173,8 @@ class ActionCommand(RhevCommand):
             actions = connection.get_actions(obj)
             if args[2] not in actions:
                 self.error('no such action: %s' % args[2])
-            key = '%s/%s' % (args[0], args[2])
-            options = self.get_options(args[0], action=args[2])
+            scope = '%s:%s' % (info[0].__name__, args[2])
+            options = self.get_options(schema.Action, 'C', scope=scope)
             subst['options'] = self.format_list(options, bullet='')
         statuses = self.get_statuses()
         subst['statuses'] = self.format_list(statuses)

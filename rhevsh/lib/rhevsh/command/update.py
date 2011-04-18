@@ -135,7 +135,7 @@ class UpdateCommand(RhevCommand):
                 self.error('type cannot be updated: %s' % args[0])
             helptext = self.helptext1
             subst['type'] = args[0]
-            options = self.get_options(args[0])
+            options = self.get_options(info[0], 'U')
             subst['options'] = self.format_list(options)
         statuses = self.get_statuses()
         subst['statuses'] = self.format_list(statuses)
