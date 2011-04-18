@@ -14,7 +14,7 @@ from rhevsh.platform import util
 
 
 def launch_spice_client(host, port, ticket, certurl, title, debug=False):
-    """Launch a VNC viewer on host::port with `password'."""
+    """Launch the SPICE client."""
     display = os.environ.get('DISPLAY')
     if display is None:
         raise Error, 'not running in a GUI, cannot start a SPICE client'
@@ -35,7 +35,7 @@ def launch_spice_client(host, port, ticket, certurl, title, debug=False):
         certtmp = '%s.%d-tmp' % (certfile, os.getpid())
         urllib.urlretrieve(certurl, certtmp)
         os.rename(certtmp, certfile)
-    secport = 11800 - port
+    secport = 11800 - port   # Ticket #212
     if cmd.startswith('/usr/libexec'):
         args = [ 'spicec', host, str(port), str(secport), '--ssl-channels',
                  'smain,sinputs', '--ca-file', certfile, '-p', ticket ]
