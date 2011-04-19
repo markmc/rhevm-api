@@ -17,8 +17,8 @@ stderr_fileno = sys.stderr.fileno()
 
 def which(cmd):
     """Find a command `cmd' in the path."""
-    if cmd.startswith('/'):
-        return os.access(cmd, os.X_OK)
+    if cmd.startswith('/') and os.access(cmd, os.X_OK):
+        return cmd
     path = os.environ.get('PATH')
     path = path.split(os.pathsep)
     for dir in path:
