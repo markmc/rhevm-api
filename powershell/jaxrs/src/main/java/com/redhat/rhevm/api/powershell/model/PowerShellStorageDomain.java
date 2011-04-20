@@ -59,7 +59,7 @@ public class PowerShellStorageDomain extends StorageDomain {
         return ret;
     }
 
-    public static List<PowerShellStorageDomain> parseEntity(PowerShellParser.Entity entity) {
+    public static PowerShellStorageDomain parseEntity(PowerShellParser.Entity entity) {
         PowerShellStorageDomain storageDomain = new PowerShellStorageDomain();
 
         storageDomain.setId(entity.get("storagedomainid"));

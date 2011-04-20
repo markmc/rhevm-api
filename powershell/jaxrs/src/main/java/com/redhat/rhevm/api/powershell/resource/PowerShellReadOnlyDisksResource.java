@@ -65,6 +65,8 @@ public class PowerShellReadOnlyDisksResource extends AbstractPowerShellDevicesRe
     public List<Disk> getDevices() {
         StringBuilder buf = new StringBuilder();
 
+        buf.append(PowerShellVmsResource.getStorageDomainLookupHack(parentId));
+
         buf.append("$v = " + getCommand + " " + PowerShellUtils.escape(parentId) + ";");
         buf.append("$v.GetDiskImages()");
 
