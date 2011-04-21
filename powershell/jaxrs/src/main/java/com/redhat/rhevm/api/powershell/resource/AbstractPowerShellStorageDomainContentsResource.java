@@ -25,6 +25,7 @@ import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.BaseResource;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
+import com.redhat.rhevm.api.powershell.util.PowerShellUtils;
 
 public abstract class AbstractPowerShellStorageDomainContentsResource<R extends BaseResource>
     extends AbstractPowerShellResource
@@ -51,6 +52,26 @@ public abstract class AbstractPowerShellStorageDomainContentsResource<R extends 
 
     public String getStorageDomainId() {
         return parent.getId();
+    }
+
+    protected String getDataCenterArg(StringBuilder buf) {
+        buf.append("$datacenter = $null; ");
+        buf.append("foreach ($dc in select-datacenter) { ");
+        buf.append(  "$sds = @(); ");
+        buf.append(  "try { ");
+        buf.append(    "$sds = get-storagedomain -datacenterid $dc.datacenterid ");
+        buf.append(  "} catch { } ");
+        buf.append(  "foreach ($sd in $sds) { ");
+        buf.append(    "if ($sd.storagedomainid -eq " + PowerShellUtils.escape(getStorageDomainId()) + ") { ");
+        buf.append(      "$datacenter = $dc; ");
+        buf.append(      "break ");
+        buf.append(    "} ");
+        buf.append(  "} ");
+        buf.append(  "if ($datacenter -ne $null) { ");
+        buf.append(    "break ");
+        buf.append(  "} ");
+        buf.append("} ");
+        return "$datacenter.datacenterid";
     }
 
     public abstract R runAndParseSingle(String command);

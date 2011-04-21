@@ -48,9 +48,11 @@ public class PowerShellStorageDomainTemplateResource
     public Template get() {
         StringBuilder buf = new StringBuilder();
 
+        String dataCenterArg = getDataCenterArg(buf);
+
         buf.append("get-templateimportcandidates");
         buf.append(" -showall");
-        // buf.append(" -datacenterid " + PowerShellUtils.escape(getDataCenterId()));
+        buf.append(" -datacenterid " + dataCenterArg);
         buf.append(" -storagedomainid " + PowerShellUtils.escape(getStorageDomainId()));
         buf.append(" | ? { $_.templateid -eq " + PowerShellUtils.escape(getId()) + " }");
 

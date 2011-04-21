@@ -52,6 +52,10 @@ public abstract class AbstractPowerShellStorageDomainContentResource<R extends B
         return parent.getStorageDomainId();
     }
 
+    protected String getDataCenterArg(StringBuilder buf) {
+        return parent.getDataCenterArg(buf);
+    }
+
     protected Response doImport(Action action, String type) {
         validateParameters(action, "cluster.id|name", "storageDomain.id|name");
 
