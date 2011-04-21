@@ -30,10 +30,6 @@ import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 import com.redhat.rhevm.api.model.Action;
 import com.redhat.rhevm.api.model.Actionable;
 import com.redhat.rhevm.api.model.StorageDomain;
-import com.redhat.rhevm.api.model.Template;
-import com.redhat.rhevm.api.model.Templates;
-import com.redhat.rhevm.api.model.VM;
-import com.redhat.rhevm.api.model.VMs;
 
 @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
 public interface AttachedStorageDomainResource {
@@ -58,10 +54,4 @@ public interface AttachedStorageDomainResource {
     @Actionable
     @Path("deactivate")
     public Response deactivate(Action action);
-
-    @Path("vms")
-    public StorageDomainContentsResource<VMs, VM> getStorageDomainVmsResource();
-
-    @Path("templates")
-    public StorageDomainContentsResource<Templates, Template> getStorageDomainTemplatesResource();
 }

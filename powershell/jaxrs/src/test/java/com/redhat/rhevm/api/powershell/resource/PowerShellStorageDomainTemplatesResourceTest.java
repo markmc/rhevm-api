@@ -30,10 +30,12 @@ import com.redhat.rhevm.api.model.Templates;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.powermock.api.easymock.PowerMock.replayAll;
 
+@Ignore
 public class PowerShellStorageDomainTemplatesResourceTest
     extends AbstractPowerShellStorageDomainContentsResourceTest<Templates, Template, PowerShellStorageDomainTemplatesResource> {
 

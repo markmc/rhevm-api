@@ -26,7 +26,6 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.model.DataCenter;
-import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.StorageDomains;
 import com.redhat.rhevm.api.resource.AttachedStorageDomainResource;
@@ -75,22 +74,7 @@ public class PowerShellAttachedStorageDomainsResource
         storageDomain.setDataCenter(new DataCenter());
         storageDomain.getDataCenter().setId(dataCenterId);
 
-        String [] subCollections = { "templates", "vms" };
-
-        storageDomain.getLinks().clear();
-
-        for (String collection : subCollections) {
-            addSubCollection(uriInfo, storageDomain, collection);
-        }
-
         return LinkHelper.addLinks(uriInfo, storageDomain);
-    }
-
-    private void addSubCollection(UriInfo uriInfo, StorageDomain storageDomain, String collection) {
-        Link link = new Link();
-        link.setRel(collection);
-        link.setHref(LinkHelper.getUriBuilder(uriInfo, storageDomain).path(collection).build().toString());
-        storageDomain.getLinks().add(link);
     }
 
     @Override
