@@ -57,30 +57,37 @@ public abstract class AbstractPowerShellStorageDomainContentResource<R extends B
 
         StringBuilder buf = new StringBuilder();
 
-        String clusterArg = getClusterArg(buf, action.getCluster());
+        String clusterVariable = getClusterVariable(buf, action.getCluster());
+        String dataCenterArg = getDataCenterArg(buf, clusterVariable);
         String destDomainArg = getDestDomainArg(buf, action.getStorageDomain());
 
         buf.append("import-" + type);
-        // buf.append(" -datacenterid " + PowerShellUtils.escape(getDataCenterId()));
+        buf.append(" -datacenterid " + dataCenterArg);
         buf.append(" -sourcedomainid " + PowerShellUtils.escape(getStorageDomainId()));
         buf.append(" -destdomainid " + destDomainArg);
-        buf.append(" -clusterid " + clusterArg);
+        buf.append(" -clusterid " + clusterVariable + ".clusterid");
         buf.append(" -" + type + "id " + PowerShellUtils.escape(getId()));
 
         return doAction(getUriInfo(), new CommandRunner(action, buf.toString(), getPool()));
     }
 
-    protected String getClusterArg(StringBuilder buf, Cluster cluster) {
-        String ret;
+    protected String getClusterVariable(StringBuilder buf, Cluster cluster) {
         if (cluster.isSetId()) {
-            ret = PowerShellUtils.escape(cluster.getId());
+            buf.append("$cluster = select-cluster | ? { $_.clusterid -eq " + PowerShellUtils.escape(cluster.getId()) + " }; ");
         } else {
-            buf.append("$c = select-cluster -searchtext ");
+            buf.append("$cluster = select-cluster -searchtext ");
             buf.append(PowerShellUtils.escape("name=" + cluster.getName()));
             buf.append("; ");
-            ret = "$c.clusterid";
         }
-        return ret;
+        return "$cluster";
+    }
+
+    protected String getDataCenterArg(StringBuilder buf, String clusterVariable) {
+        buf.append("$datacenter = select-datacenter");
+        buf.append(" -searchtext ");
+        buf.append("$(\"clusters.name = \" + " + clusterVariable + ".name)");
+        buf.append("; ");
+        return "$datacenter.datacenterid";
     }
 
     protected String getDestDomainArg(StringBuilder buf, StorageDomain destDomain) {
