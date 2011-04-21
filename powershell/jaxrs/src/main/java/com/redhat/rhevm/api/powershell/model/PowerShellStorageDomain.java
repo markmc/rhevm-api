@@ -32,7 +32,13 @@ import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 
 public class PowerShellStorageDomain extends StorageDomain {
 
+    private static final String STORAGE_DOMAIN_TYPE = "RhevmCmd.CLIStorageDomain";
+
     private String vgId;
+
+    static boolean isStorageDomain(PowerShellParser.Entity entity) {
+        return STORAGE_DOMAIN_TYPE.equals(entity.getType());
+    }
 
     public String getVgId() {
         return vgId;
@@ -45,55 +51,61 @@ public class PowerShellStorageDomain extends StorageDomain {
         List<PowerShellStorageDomain> ret = new ArrayList<PowerShellStorageDomain>();
 
         for (PowerShellParser.Entity entity : parser.parse(output)) {
-            PowerShellStorageDomain storageDomain = new PowerShellStorageDomain();
-
-            storageDomain.setId(entity.get("storagedomainid"));
-            storageDomain.setName(entity.get("name"));
-            storageDomain.setVgId(entity.get("vgid"));
-
-            String domainType = entity.get("domaintype").toUpperCase();
-            storageDomain.setMaster(domainType.endsWith(" (MASTER)"));
-            if (storageDomain.isMaster()) {
-                domainType = domainType.split(" ")[0];
+            if (isStorageDomain(entity)) {
+                ret.add(parseEntity(entity));
             }
-            storageDomain.setType(StorageDomainType.valueOf(domainType).value());
-
-            PowerShellStorageDomainStatus status =
-                entity.get("status", PowerShellStorageDomainStatus.class);
-            if (status != null) {
-                storageDomain.setStatus(status.map());
-            }
-
-            Storage storage = new Storage();
-
-            StorageType storageType = entity.get("type", PowerShellStorageType.class).map();
-
-            storage.setType(storageType.value());
-
-            switch (storageType) {
-            case NFS:
-                String[] parts = entity.get("nfspath").split(":");
-                storage.setAddress(parts[0]);
-                storage.setPath(parts[1]);
-                break;
-            case ISCSI:
-                break;
-            case FCP:
-            default:
-                assert false : storage.getType();
-                break;
-            }
-
-            storageDomain.setStorage(storage);
-
-            parseUnsignedInt(entity, storageDomain, "availabledisksize", "Available");
-            parseUnsignedInt(entity, storageDomain, "useddisksize", "Used");
-            parseUnsignedInt(entity, storageDomain, "committeddisksize", "Committed");
-
-            ret.add(storageDomain);
         }
 
         return ret;
+    }
+
+    public static List<PowerShellStorageDomain> parseEntity(PowerShellParser.Entity entity) {
+        PowerShellStorageDomain storageDomain = new PowerShellStorageDomain();
+
+        storageDomain.setId(entity.get("storagedomainid"));
+        storageDomain.setName(entity.get("name"));
+        storageDomain.setVgId(entity.get("vgid"));
+
+        String domainType = entity.get("domaintype").toUpperCase();
+        storageDomain.setMaster(domainType.endsWith(" (MASTER)"));
+        if (storageDomain.isMaster()) {
+            domainType = domainType.split(" ")[0];
+        }
+        storageDomain.setType(StorageDomainType.valueOf(domainType).value());
+
+        PowerShellStorageDomainStatus status =
+            entity.get("status", PowerShellStorageDomainStatus.class);
+        if (status != null) {
+            storageDomain.setStatus(status.map());
+        }
+
+        Storage storage = new Storage();
+
+        StorageType storageType = entity.get("type", PowerShellStorageType.class).map();
+
+        storage.setType(storageType.value());
+
+        switch (storageType) {
+        case NFS:
+            String[] parts = entity.get("nfspath").split(":");
+            storage.setAddress(parts[0]);
+            storage.setPath(parts[1]);
+            break;
+        case ISCSI:
+            break;
+        case FCP:
+        default:
+            assert false : storage.getType();
+            break;
+        }
+
+        storageDomain.setStorage(storage);
+
+        parseUnsignedInt(entity, storageDomain, "availabledisksize", "Available");
+        parseUnsignedInt(entity, storageDomain, "useddisksize", "Used");
+        parseUnsignedInt(entity, storageDomain, "committeddisksize", "Committed");
+
+        return storageDomain;
     }
 
     private static void parseUnsignedInt(PowerShellParser.Entity entity, PowerShellStorageDomain storageDomain, String property, String field) {
