@@ -30,22 +30,20 @@ import com.redhat.rhevm.api.model.Templates;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.powermock.api.easymock.PowerMock.replayAll;
 
-@Ignore
 public class PowerShellStorageDomainTemplatesResourceTest
     extends AbstractPowerShellStorageDomainContentsResourceTest<Templates, Template, PowerShellStorageDomainTemplatesResource> {
 
     protected static final String COLLECTION_URI = STORAGE_DOMAIN_URI + SLASH + "templates";
 
-    private static final String GET_TEMPLATES_COMMAND = "$sd = get-storagedomain \"" + STORAGE_DOMAIN_ID + "\"; if ($sd.domaintype.StartsWith(\"Data\")) { get-template -storagedomainid \"" + STORAGE_DOMAIN_ID + "\" } elseif ($sd.domaintype -eq \"Export\") { get-templateimportcandidates -showall -datacenterid \"" + DATA_CENTER_ID + "\" -storagedomainid \"" + STORAGE_DOMAIN_ID + "\" }";
+    private static final String GET_TEMPLATES_COMMAND = "get-templateimportcandidates -showall -datacenterid $datacenter.datacenterid -storagedomainid \"" + STORAGE_DOMAIN_ID + "\"";
 
-    private static final String GET_TEMPLATE_COMMAND = "$sd = get-storagedomain \"" + STORAGE_DOMAIN_ID + "\"; if ($sd.domaintype.StartsWith(\"Data\")) { get-template -templateid \"" + asId(NAMES[0]) + "\" } elseif ($sd.domaintype -eq \"Export\") { get-templateimportcandidates -showall -datacenterid \"" + DATA_CENTER_ID + "\" -storagedomainid \"" + STORAGE_DOMAIN_ID + "\" | ? { $_.templateid -eq \"" + asId(NAMES[0]) + "\" } }";
+    private static final String GET_TEMPLATE_COMMAND = GET_TEMPLATES_COMMAND + " | ? { $_.templateid -eq \"" + asId(NAMES[0]) + "\" }";
 
-    protected static final String IMPORT_TEMPLATE_COMMAND = "import-template -datacenterid \"" + DATA_CENTER_ID + "\" -sourcedomainid \"" + STORAGE_DOMAIN_ID + "\" -destdomainid \"" + IMPORT_DEST_DOMAIN_ID + "\" -clusterid \"" + IMPORT_CLUSTER_ID + "\" -templateid \"" + asId(NAMES[0]) + "\"";
+    protected static final String IMPORT_TEMPLATE_COMMAND = LOOKUP_CLUSTER_CMD + LOOKUP_DATA_CENTER_FROM_CLUSTER_CMD + "import-template -datacenterid $datacenter.datacenterid -sourcedomainid \"" + STORAGE_DOMAIN_ID + "\" -destdomainid \"" + IMPORT_DEST_DOMAIN_ID + "\" -clusterid $cluster.clusterid -templateid \"" + asId(NAMES[0]) + "\"";
 
     protected PowerShellStorageDomainTemplatesResource getResource(PowerShellStorageDomainResource parent,
                                                                    PowerShellPoolMap poolMap,
@@ -64,7 +62,7 @@ public class PowerShellStorageDomainTemplatesResourceTest
 
     @Test
     public void testGetList() {
-        setUpCmdExpectations(GET_TEMPLATES_COMMAND, formatTemplates(NAMES));
+        setUpCmdExpectations(LOOKUP_DATA_CENTER_CMD + GET_TEMPLATES_COMMAND, formatTemplates(NAMES));
         setUriInfo(setUpBasicUriExpectations());
         replayAll();
         verifyTemplates(resource.list());
@@ -73,7 +71,7 @@ public class PowerShellStorageDomainTemplatesResourceTest
     @Test
     public void testGet() {
         PowerShellStorageDomainTemplateResource childResource = getSubResource(0);
-        setUpCmdExpectations(GET_TEMPLATE_COMMAND, formatTemplate(NAMES[0]));
+        setUpCmdExpectations(LOOKUP_DATA_CENTER_CMD + GET_TEMPLATE_COMMAND, formatTemplate(NAMES[0]));
         setUriInfo(setUpBasicUriExpectations());
         replayAll();
         verifyTemplate(childResource.get(), 0);

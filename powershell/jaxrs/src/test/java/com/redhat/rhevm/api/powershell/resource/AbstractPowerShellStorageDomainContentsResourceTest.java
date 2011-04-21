@@ -47,15 +47,17 @@ public abstract class AbstractPowerShellStorageDomainContentsResourceTest<C exte
 
     protected static final String[] NAMES = {"clontarf", "killester", "harmonstown", "raheny", "kilbarrack"};
 
-    protected static final String DATA_CENTER_NAME = "sutton";
-    protected static final String DATA_CENTER_ID = asId(DATA_CENTER_NAME);
     protected static final String STORAGE_DOMAIN_NAME = "howth";
     protected static final String STORAGE_DOMAIN_ID = asId(STORAGE_DOMAIN_NAME);
 
-    protected static final String STORAGE_DOMAIN_URI = BASE_PATH + SLASH + "datacenters" + SLASH + DATA_CENTER_ID + SLASH + "storagedomains" + SLASH + STORAGE_DOMAIN_ID;
+    protected static final String STORAGE_DOMAIN_URI = BASE_PATH + SLASH + "storagedomains" + SLASH + STORAGE_DOMAIN_ID;
 
     protected static final String IMPORT_CLUSTER_ID = asId("seapoint");
     protected static final String IMPORT_DEST_DOMAIN_ID = asId("blackrock");
+
+    protected static final String LOOKUP_CLUSTER_CMD = "$cluster = select-cluster | ? { $_.clusterid -eq \"" + IMPORT_CLUSTER_ID + "\" }; ";
+    protected static final String LOOKUP_DATA_CENTER_FROM_CLUSTER_CMD = "$datacenter = select-datacenter -searchtext $(\"clusters.name = \" + $cluster.name); ";
+    protected static final String LOOKUP_DATA_CENTER_CMD = "$datacenter = $null; foreach ($dc in select-datacenter) { $sds = @(); try { $sds = get-storagedomain -datacenterid $dc.datacenterid } catch { } foreach ($sd in $sds) { if ($sd.storagedomainid -eq \"" + STORAGE_DOMAIN_ID + "\") { $datacenter = $dc; break } } if ($datacenter -ne $null) { break } } ";
 
     protected A getResource(Executor executor,
                             PowerShellPoolMap poolMap,

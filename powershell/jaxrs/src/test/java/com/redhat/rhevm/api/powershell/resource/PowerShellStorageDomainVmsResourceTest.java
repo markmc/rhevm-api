@@ -30,22 +30,20 @@ import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
 import com.redhat.rhevm.api.powershell.util.PowerShellPoolMap;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.powermock.api.easymock.PowerMock.replayAll;
 
-@Ignore
 public class PowerShellStorageDomainVmsResourceTest
     extends AbstractPowerShellStorageDomainContentsResourceTest<VMs, VM, PowerShellStorageDomainVmsResource> {
 
     protected static final String COLLECTION_URI = STORAGE_DOMAIN_URI + SLASH + "vms";
 
-    private static final String GET_VMS_COMMAND = "$sd = get-storagedomain \"" + STORAGE_DOMAIN_ID + "\"; if ($sd.domaintype.StartsWith(\"Data\")) { get-vm -storagedomainid \"" + STORAGE_DOMAIN_ID + "\" } elseif ($sd.domaintype -eq \"Export\") { get-vmimportcandidates -showall -datacenterid \"" + DATA_CENTER_ID + "\" -storagedomainid \"" + STORAGE_DOMAIN_ID + "\" }";
+    private static final String GET_VMS_COMMAND = "get-vmimportcandidates -showall -datacenterid $datacenter.datacenterid -storagedomainid \"" + STORAGE_DOMAIN_ID + "\"";
 
-    private static final String GET_VM_COMMAND = "$sd = get-storagedomain \"" + STORAGE_DOMAIN_ID + "\"; if ($sd.domaintype.StartsWith(\"Data\")) { get-vm -vmid \"" + asId(NAMES[0]) + "\" } elseif ($sd.domaintype -eq \"Export\") { get-vmimportcandidates -showall -datacenterid \"" + DATA_CENTER_ID + "\" -storagedomainid \"" + STORAGE_DOMAIN_ID + "\" | ? { $_.vmid -eq \"" + asId(NAMES[0]) + "\" } }";
+    private static final String GET_VM_COMMAND = GET_VMS_COMMAND + " | ? { $_.vmid -eq \"" + asId(NAMES[0]) + "\" }";
 
-    protected static final String IMPORT_VM_COMMAND = "import-vm -datacenterid \"" + DATA_CENTER_ID + "\" -sourcedomainid \"" + STORAGE_DOMAIN_ID + "\" -destdomainid \"" + IMPORT_DEST_DOMAIN_ID + "\" -clusterid \"" + IMPORT_CLUSTER_ID + "\" -vmid \"" + asId(NAMES[0]) + "\"";
+    protected static final String IMPORT_VM_COMMAND = LOOKUP_CLUSTER_CMD + LOOKUP_DATA_CENTER_FROM_CLUSTER_CMD + "import-vm -datacenterid $datacenter.datacenterid -sourcedomainid \"" + STORAGE_DOMAIN_ID + "\" -destdomainid \"" + IMPORT_DEST_DOMAIN_ID + "\" -clusterid $cluster.clusterid -vmid \"" + asId(NAMES[0]) + "\"";
 
     protected PowerShellStorageDomainVmsResource getResource(PowerShellStorageDomainResource parent,
                                                              PowerShellPoolMap poolMap,
@@ -64,7 +62,7 @@ public class PowerShellStorageDomainVmsResourceTest
 
     @Test
     public void testGetList() {
-        setUpCmdExpectations(GET_VMS_COMMAND, formatVms(NAMES));
+        setUpCmdExpectations(LOOKUP_DATA_CENTER_CMD + GET_VMS_COMMAND, formatVms(NAMES));
         setUriInfo(setUpBasicUriExpectations());
         replayAll();
         verifyVms(resource.list());
@@ -73,7 +71,7 @@ public class PowerShellStorageDomainVmsResourceTest
     @Test
     public void testGet() {
         PowerShellStorageDomainVmResource subResource = getSubResource(0);
-        setUpCmdExpectations(GET_VM_COMMAND, formatVm(NAMES[0]));
+        setUpCmdExpectations(LOOKUP_DATA_CENTER_CMD + GET_VM_COMMAND, formatVm(NAMES[0]));
         setUriInfo(setUpBasicUriExpectations());
         replayAll();
         verifyVm(subResource.get(), 0);
