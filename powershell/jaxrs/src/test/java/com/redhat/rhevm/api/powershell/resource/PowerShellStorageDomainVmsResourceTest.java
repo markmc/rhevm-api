@@ -47,7 +47,7 @@ public class PowerShellStorageDomainVmsResourceTest
 
     protected static final String IMPORT_VM_COMMAND = "import-vm -datacenterid \"" + DATA_CENTER_ID + "\" -sourcedomainid \"" + STORAGE_DOMAIN_ID + "\" -destdomainid \"" + IMPORT_DEST_DOMAIN_ID + "\" -clusterid \"" + IMPORT_CLUSTER_ID + "\" -vmid \"" + asId(NAMES[0]) + "\"";
 
-    protected PowerShellStorageDomainVmsResource getResource(PowerShellAttachedStorageDomainResource parent,
+    protected PowerShellStorageDomainVmsResource getResource(PowerShellStorageDomainResource parent,
                                                              PowerShellPoolMap poolMap,
                                                              PowerShellParser parser) {
         return new PowerShellStorageDomainVmsResource(parent, poolMap, parser);

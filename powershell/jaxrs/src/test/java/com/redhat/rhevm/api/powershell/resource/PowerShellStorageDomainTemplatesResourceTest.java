@@ -47,7 +47,7 @@ public class PowerShellStorageDomainTemplatesResourceTest
 
     protected static final String IMPORT_TEMPLATE_COMMAND = "import-template -datacenterid \"" + DATA_CENTER_ID + "\" -sourcedomainid \"" + STORAGE_DOMAIN_ID + "\" -destdomainid \"" + IMPORT_DEST_DOMAIN_ID + "\" -clusterid \"" + IMPORT_CLUSTER_ID + "\" -templateid \"" + asId(NAMES[0]) + "\"";
 
-    protected PowerShellStorageDomainTemplatesResource getResource(PowerShellAttachedStorageDomainResource parent,
+    protected PowerShellStorageDomainTemplatesResource getResource(PowerShellStorageDomainResource parent,
                                                                    PowerShellPoolMap poolMap,
                                                                    PowerShellParser parser) {
         return new PowerShellStorageDomainTemplatesResource(parent, poolMap, parser);

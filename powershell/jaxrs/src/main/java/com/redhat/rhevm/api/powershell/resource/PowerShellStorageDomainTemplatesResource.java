@@ -24,7 +24,6 @@ import javax.ws.rs.core.UriInfo;
 
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
-import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.Templates;
@@ -40,7 +39,7 @@ public class PowerShellStorageDomainTemplatesResource
     extends AbstractPowerShellStorageDomainContentsResource<Template>
     implements StorageDomainContentsResource<Templates, Template> {
 
-    public PowerShellStorageDomainTemplatesResource(PowerShellAttachedStorageDomainResource parent,
+    public PowerShellStorageDomainTemplatesResource(PowerShellStorageDomainResource parent,
                                               PowerShellPoolMap shellPools,
                                               PowerShellParser parser) {
         super(parent, shellPools, parser);
@@ -63,8 +62,6 @@ public class PowerShellStorageDomainTemplatesResource
 
         template.setStorageDomain(new StorageDomain());
         template.getStorageDomain().setId(getStorageDomainId());
-        template.getStorageDomain().setDataCenter(new DataCenter());
-        template.getStorageDomain().getDataCenter().setId(getDataCenterId());
 
         return LinkHelper.addLinks(uriInfo, template);
     }
@@ -81,7 +78,7 @@ public class PowerShellStorageDomainTemplatesResource
         buf.append(" } elseif ($sd.domaintype -eq \"Export\") { ");
         buf.append("get-templateimportcandidates");
         buf.append(" -showall");
-        buf.append(" -datacenterid " + PowerShellUtils.escape(getDataCenterId()));
+        // buf.append(" -datacenterid " + PowerShellUtils.escape(getDataCenterId()));
         buf.append(" -storagedomainid " + PowerShellUtils.escape(getStorageDomainId()));
         buf.append(" }");
 

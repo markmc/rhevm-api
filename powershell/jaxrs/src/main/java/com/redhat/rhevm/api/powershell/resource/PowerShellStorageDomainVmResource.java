@@ -24,7 +24,6 @@ import javax.ws.rs.core.Response;
 
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.Action;
-import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
@@ -57,7 +56,7 @@ public class PowerShellStorageDomainVmResource
         buf.append(" } elseif ($sd.domaintype -eq \"Export\") { ");
         buf.append("get-vmimportcandidates");
         buf.append(" -showall");
-        buf.append(" -datacenterid " + PowerShellUtils.escape(getDataCenterId()));
+        // buf.append(" -datacenterid " + PowerShellUtils.escape(getDataCenterId()));
         buf.append(" -storagedomainid " + PowerShellUtils.escape(getStorageDomainId()));
         buf.append(" | ? { $_.vmid -eq " + PowerShellUtils.escape(getId()) + " }");
         buf.append(" }");
@@ -70,8 +69,6 @@ public class PowerShellStorageDomainVmResource
         VM vm = super.getModel();
         vm.setStorageDomain(new StorageDomain());
         vm.getStorageDomain().setId(getStorageDomainId());
-        vm.getStorageDomain().setDataCenter(new DataCenter());
-        vm.getStorageDomain().getDataCenter().setId(getDataCenterId());
         return vm;
     }
 

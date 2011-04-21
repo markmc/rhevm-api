@@ -24,7 +24,6 @@ import javax.ws.rs.core.Response;
 
 import com.redhat.rhevm.api.common.resource.UriInfoProvider;
 import com.redhat.rhevm.api.model.Action;
-import com.redhat.rhevm.api.model.DataCenter;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.powershell.util.PowerShellParser;
@@ -57,7 +56,7 @@ public class PowerShellStorageDomainTemplateResource
         buf.append(" } elseif ($sd.domaintype -eq \"Export\") { ");
         buf.append("get-templateimportcandidates");
         buf.append(" -showall");
-        buf.append(" -datacenterid " + PowerShellUtils.escape(getDataCenterId()));
+        // buf.append(" -datacenterid " + PowerShellUtils.escape(getDataCenterId()));
         buf.append(" -storagedomainid " + PowerShellUtils.escape(getStorageDomainId()));
         buf.append(" | ? { $_.templateid -eq " + PowerShellUtils.escape(getId()) + " }");
         buf.append(" }");
@@ -70,8 +69,6 @@ public class PowerShellStorageDomainTemplateResource
         Template template = super.getModel();
         template.setStorageDomain(new StorageDomain());
         template.getStorageDomain().setId(getStorageDomainId());
-        template.getStorageDomain().setDataCenter(new DataCenter());
-        template.getStorageDomain().getDataCenter().setId(getDataCenterId());
         return template;
     }
 

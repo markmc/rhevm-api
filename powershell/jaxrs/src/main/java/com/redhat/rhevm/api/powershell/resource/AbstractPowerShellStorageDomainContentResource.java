@@ -52,10 +52,6 @@ public abstract class AbstractPowerShellStorageDomainContentResource<R extends B
         return parent.getStorageDomainId();
     }
 
-    public String getDataCenterId() {
-        return parent.getDataCenterId();
-    }
-
     protected Response doImport(Action action, String type) {
         validateParameters(action, "cluster.id|name", "storageDomain.id|name");
 
@@ -65,7 +61,7 @@ public abstract class AbstractPowerShellStorageDomainContentResource<R extends B
         String destDomainArg = getDestDomainArg(buf, action.getStorageDomain());
 
         buf.append("import-" + type);
-        buf.append(" -datacenterid " + PowerShellUtils.escape(getDataCenterId()));
+        // buf.append(" -datacenterid " + PowerShellUtils.escape(getDataCenterId()));
         buf.append(" -sourcedomainid " + PowerShellUtils.escape(getStorageDomainId()));
         buf.append(" -destdomainid " + destDomainArg);
         buf.append(" -clusterid " + clusterArg);

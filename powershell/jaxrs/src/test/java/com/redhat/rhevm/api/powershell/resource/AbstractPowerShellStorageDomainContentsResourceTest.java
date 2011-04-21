@@ -61,21 +61,10 @@ public abstract class AbstractPowerShellStorageDomainContentsResourceTest<C exte
                             PowerShellPoolMap poolMap,
                             PowerShellParser parser,
                             UriInfoProvider uriProvider) {
-        PowerShellAttachedStorageDomainsResource grandParent =
-            new PowerShellAttachedStorageDomainsResource(DATA_CENTER_ID, poolMap, parser);
-
-        PowerShellAttachedStorageDomainResource parent =
-            new PowerShellAttachedStorageDomainResource(grandParent,
-                                                        STORAGE_DOMAIN_ID,
-                                                        executor,
-                                                        uriProvider,
-                                                        poolMap,
-                                                        parser);
-
-        return getResource(parent, poolMap, parser);
+        return getResource(new PowerShellStorageDomainResource(STORAGE_DOMAIN_ID, new PowerShellStorageDomainsResource(), poolMap, parser), poolMap, parser);
     }
 
-    protected abstract A getResource(PowerShellAttachedStorageDomainResource parent,
+    protected abstract A getResource(PowerShellStorageDomainResource parent,
                                      PowerShellPoolMap poolMap,
                                      PowerShellParser parser);
 

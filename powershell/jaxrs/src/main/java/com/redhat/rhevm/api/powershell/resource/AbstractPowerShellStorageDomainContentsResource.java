@@ -30,10 +30,10 @@ public abstract class AbstractPowerShellStorageDomainContentsResource<R extends 
     extends AbstractPowerShellResource
     implements UriInfoProvider {
 
-    private PowerShellAttachedStorageDomainResource parent;
+    private PowerShellStorageDomainResource parent;
     private UriInfo ui;
 
-    public AbstractPowerShellStorageDomainContentsResource(PowerShellAttachedStorageDomainResource parent,
+    public AbstractPowerShellStorageDomainContentsResource(PowerShellStorageDomainResource parent,
                                                            PowerShellPoolMap shellPools,
                                                            PowerShellParser parser) {
         super(shellPools, parser);
@@ -51,10 +51,6 @@ public abstract class AbstractPowerShellStorageDomainContentsResource<R extends 
 
     public String getStorageDomainId() {
         return parent.getId();
-    }
-
-    public String getDataCenterId() {
-        return parent.getDataCenterId();
     }
 
     public abstract R runAndParseSingle(String command);
