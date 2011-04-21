@@ -28,7 +28,12 @@ import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.model.ActionsBuilder;
 import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.StorageDomainStatus;
+import com.redhat.rhevm.api.model.Template;
+import com.redhat.rhevm.api.model.Templates;
+import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.model.VMs;
 import com.redhat.rhevm.api.resource.AssignedPermissionsResource;
+import com.redhat.rhevm.api.resource.StorageDomainContentsResource;
 import com.redhat.rhevm.api.resource.StorageDomainResource;
 
 public class MockStorageDomainResource extends AbstractMockResource<StorageDomain> implements StorageDomainResource {
@@ -82,6 +87,14 @@ public class MockStorageDomainResource extends AbstractMockResource<StorageDomai
 
     @Override
     public AssignedPermissionsResource getPermissionsResource() {
+        return null;
+    }
+
+    public StorageDomainContentsResource<VMs, VM> getStorageDomainVmsResource() {
+        return null;
+    }
+
+    public StorageDomainContentsResource<Templates, Template> getStorageDomainTemplatesResource() {
         return null;
     }
 }

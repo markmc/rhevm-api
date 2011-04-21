@@ -23,7 +23,6 @@ import java.net.URI;
 import javax.ws.rs.core.UriInfo;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.redhat.rhevm.api.model.CdRom;
@@ -79,8 +78,8 @@ public class LinkHelperTest extends Assert {
     private static final String VM_POOL_HREF = BASE_PATH + "/vmpools/" + VM_POOL_ID;
     private static final String STORAGE_DOMAIN_HREF = BASE_PATH + "/storagedomains/" + STORAGE_DOMAIN_ID;
     private static final String ATTACHED_STORAGE_DOMAIN_HREF = BASE_PATH + "/datacenters/" + DATA_CENTER_ID + "/storagedomains/" + STORAGE_DOMAIN_ID;
-    private static final String STORAGE_DOMAIN_VM_HREF = ATTACHED_STORAGE_DOMAIN_HREF + "/vms/" + VM_ID;
-    private static final String STORAGE_DOMAIN_TEMPLATE_HREF = ATTACHED_STORAGE_DOMAIN_HREF + "/templates/" + TEMPLATE_ID;
+    private static final String STORAGE_DOMAIN_VM_HREF = STORAGE_DOMAIN_HREF + "/vms/" + VM_ID;
+    private static final String STORAGE_DOMAIN_TEMPLATE_HREF = STORAGE_DOMAIN_HREF + "/templates/" + TEMPLATE_ID;
     private static final String HOST_HREF = BASE_PATH + "/hosts/" + HOST_ID;
     private static final String DATA_CENTER_HREF = BASE_PATH + "/datacenters/" + DATA_CENTER_ID;
     private static final String NETWORK_HREF = BASE_PATH + "/networks/" + NETWORK_ID;
@@ -191,7 +190,6 @@ public class LinkHelperTest extends Assert {
     }
 
     @Test
-    @Ignore
     public void testStorageDomainVmLinks() throws Exception {
         VM vm = new VM();
         vm.setId(VM_ID);
@@ -199,18 +197,13 @@ public class LinkHelperTest extends Assert {
         vm.setStorageDomain(new StorageDomain());
         vm.getStorageDomain().setId(STORAGE_DOMAIN_ID);
 
-        vm.getStorageDomain().setDataCenter(new DataCenter());
-        vm.getStorageDomain().getDataCenter().setId(DATA_CENTER_ID);
-
         vm = LinkHelper.addLinks(setUpUriExpectations(), vm);
 
         assertEquals(STORAGE_DOMAIN_VM_HREF, vm.getHref());
-        assertEquals(ATTACHED_STORAGE_DOMAIN_HREF, vm.getStorageDomain().getHref());
-        assertFalse(vm.getStorageDomain().isSetDataCenter());
+        assertEquals(STORAGE_DOMAIN_HREF, vm.getStorageDomain().getHref());
     }
 
     @Test
-    @Ignore
     public void testStorageDomainTemplateLinks() throws Exception {
         Template template = new Template();
         template.setId(TEMPLATE_ID);
@@ -218,14 +211,10 @@ public class LinkHelperTest extends Assert {
         template.setStorageDomain(new StorageDomain());
         template.getStorageDomain().setId(STORAGE_DOMAIN_ID);
 
-        template.getStorageDomain().setDataCenter(new DataCenter());
-        template.getStorageDomain().getDataCenter().setId(DATA_CENTER_ID);
-
         template = LinkHelper.addLinks(setUpUriExpectations(), template);
 
         assertEquals(STORAGE_DOMAIN_TEMPLATE_HREF, template.getHref());
-        assertEquals(ATTACHED_STORAGE_DOMAIN_HREF, template.getStorageDomain().getHref());
-        assertFalse(template.getStorageDomain().isSetDataCenter());
+        assertEquals(STORAGE_DOMAIN_HREF, template.getStorageDomain().getHref());
     }
 
     @Test

@@ -22,7 +22,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
 import com.redhat.rhevm.api.model.StorageDomain;
-
+import com.redhat.rhevm.api.model.Template;
+import com.redhat.rhevm.api.model.Templates;
+import com.redhat.rhevm.api.model.VM;
+import com.redhat.rhevm.api.model.VMs;
 
 @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_X_YAML})
 public interface StorageDomainResource extends UpdatableResource<StorageDomain> {
@@ -30,4 +33,9 @@ public interface StorageDomainResource extends UpdatableResource<StorageDomain> 
     @Path("permissions")
     public AssignedPermissionsResource getPermissionsResource();
 
+    @Path("vms")
+    public StorageDomainContentsResource<VMs, VM> getStorageDomainVmsResource();
+
+    @Path("templates")
+    public StorageDomainContentsResource<Templates, Template> getStorageDomainTemplatesResource();
 }
