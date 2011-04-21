@@ -70,17 +70,10 @@ public class PowerShellStorageDomainTemplatesResource
     public Templates list() {
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$sd = get-storagedomain " + PowerShellUtils.escape(getStorageDomainId()));
-        buf.append("; ");
-        buf.append("if ($sd.domaintype.StartsWith(\"Data\")) { ");
-        buf.append("get-template");
-        buf.append(" -storagedomainid " + PowerShellUtils.escape(getStorageDomainId()));
-        buf.append(" } elseif ($sd.domaintype -eq \"Export\") { ");
         buf.append("get-templateimportcandidates");
         buf.append(" -showall");
         // buf.append(" -datacenterid " + PowerShellUtils.escape(getDataCenterId()));
         buf.append(" -storagedomainid " + PowerShellUtils.escape(getStorageDomainId()));
-        buf.append(" }");
 
         Templates ret = new Templates();
         for (PowerShellTemplate template : runAndParse(buf.toString())) {

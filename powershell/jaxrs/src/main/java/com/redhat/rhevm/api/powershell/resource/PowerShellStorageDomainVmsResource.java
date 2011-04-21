@@ -70,17 +70,10 @@ public class PowerShellStorageDomainVmsResource
     public VMs list() {
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$sd = get-storagedomain " + PowerShellUtils.escape(getStorageDomainId()));
-        buf.append("; ");
-        buf.append("if ($sd.domaintype.StartsWith(\"Data\")) { ");
-        buf.append("get-vm");
-        buf.append(" -storagedomainid " + PowerShellUtils.escape(getStorageDomainId()));
-        buf.append(" } elseif ($sd.domaintype -eq \"Export\") { ");
         buf.append("get-vmimportcandidates");
         buf.append(" -showall");
         // buf.append(" -datacenterid " + PowerShellUtils.escape(getDataCenterId()));
         buf.append(" -storagedomainid " + PowerShellUtils.escape(getStorageDomainId()));
-        buf.append(" }");
 
         VMs ret = new VMs();
         for (PowerShellVM vm : runAndParse(buf.toString())) {

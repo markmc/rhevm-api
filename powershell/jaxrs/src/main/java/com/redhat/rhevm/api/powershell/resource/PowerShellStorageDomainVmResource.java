@@ -48,18 +48,11 @@ public class PowerShellStorageDomainVmResource
     public VM get() {
         StringBuilder buf = new StringBuilder();
 
-        buf.append("$sd = get-storagedomain " + PowerShellUtils.escape(getStorageDomainId()));
-        buf.append("; ");
-        buf.append("if ($sd.domaintype.StartsWith(\"Data\")) { ");
-        buf.append("get-vm");
-        buf.append(" -vmid " + PowerShellUtils.escape(getId()));
-        buf.append(" } elseif ($sd.domaintype -eq \"Export\") { ");
         buf.append("get-vmimportcandidates");
         buf.append(" -showall");
         // buf.append(" -datacenterid " + PowerShellUtils.escape(getDataCenterId()));
         buf.append(" -storagedomainid " + PowerShellUtils.escape(getStorageDomainId()));
         buf.append(" | ? { $_.vmid -eq " + PowerShellUtils.escape(getId()) + " }");
-        buf.append(" }");
 
         return parent.addLinks(getUriInfo(), parent.runAndParseSingle(buf.toString()));
     }
