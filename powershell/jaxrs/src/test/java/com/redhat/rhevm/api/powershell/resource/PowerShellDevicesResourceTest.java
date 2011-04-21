@@ -216,7 +216,7 @@ public class PowerShellDevicesResourceTest
             new PowerShellDeviceResource<Disk, Disks>(parent, DISK_ID);
 
         setUriInfo(setUpBasicUriExpectations());
-        setUpCmdExpectations(GET_DISKS_CMD, formatDisk(DISK_NAME));
+        setUpCmdExpectations(PowerShellVmsResource.getStorageDomainLookupHack(VM_ID) + GET_DISKS_CMD, formatDisk(DISK_NAME));
         verifyDisk(diskResource.get());
     }
 
@@ -225,7 +225,7 @@ public class PowerShellDevicesResourceTest
         PowerShellDisksResource diskResource = new PowerShellDisksResource(VM_ID, poolMap, parser, "get-vm", uriProvider, httpHeaders);
 
         setUriInfo(setUpBasicUriExpectations());
-        setUpCmdExpectations(GET_DISKS_CMD, formatDisk(DISK_NAME));
+        setUpCmdExpectations(PowerShellVmsResource.getStorageDomainLookupHack(VM_ID) + GET_DISKS_CMD, formatDisk(DISK_NAME));
 
         verifyDisks(diskResource.list());
     }

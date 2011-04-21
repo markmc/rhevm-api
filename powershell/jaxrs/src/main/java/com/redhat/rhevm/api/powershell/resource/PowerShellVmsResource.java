@@ -272,4 +272,22 @@ public class PowerShellVmsResource
         }
         return details;
     }
+
+    static String getStorageDomainLookupHack(String vmId) {
+        StringBuilder buf = new StringBuilder();
+
+        buf.append("foreach ($sd in select-storagedomain) { ");
+        buf.append(  "$vms = @(); ");
+        buf.append(  "try { ");
+        buf.append(    "$vms = get-vm -storagedomainid $sd.storagedomainid; ");
+        buf.append(  "} catch { }; ");
+        buf.append(  "foreach ($vm in $vms) { ");
+        buf.append(    "if ($vm.vmid -eq " + PowerShellUtils.escape(vmId) + ") { ");
+        buf.append(      "$sd; ");
+        buf.append(    "} ");
+        buf.append(  "} ");
+        buf.append("} ");
+
+        return buf.toString();
+    }
 }

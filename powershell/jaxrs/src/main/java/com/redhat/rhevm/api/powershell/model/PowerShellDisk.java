@@ -25,6 +25,7 @@ import java.util.Map;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import com.redhat.rhevm.api.model.Disk;
+import com.redhat.rhevm.api.model.StorageDomain;
 import com.redhat.rhevm.api.model.VM;
 import com.redhat.rhevm.api.powershell.enums.PowerShellDiskInterface;
 import com.redhat.rhevm.api.powershell.enums.PowerShellDiskType;
@@ -93,29 +94,36 @@ public class PowerShellDisk extends Disk {
         Map<String, XMLGregorianCalendar> dates = new HashMap<String, XMLGregorianCalendar>();
         String date = null;
 
+        String storageDomainId = null;
+
         for (PowerShellParser.Entity entity : parser.parse(output)) {
             if (PowerShellParser.DATE_TYPE.equals(entity.getType())) {
                 date = entity.getValue();
             } else if (PowerShellParser.STRING_TYPE.equals(entity.getType())) {
                 dates.put(date, PowerShellUtils.parseDate(entity.getValue()));
                 date = null;
+            } else if (PowerShellStorageDomain.isStorageDomain(entity)) {
+                storageDomainId = PowerShellStorageDomain.parseEntity(entity).getId();
             } else if (PowerShellAsyncTask.isTask(entity)) {
                 last(ret).setTaskIds(PowerShellAsyncTask.parseTask(entity, last(ret).getTaskIds()));
             } else if (PowerShellAsyncTask.isStatus(entity)) {
                 last(ret).setCreationStatus(PowerShellAsyncTask.parseStatus(entity, last(ret).getCreationStatus()));
             } else if (isDisk(entity)) {
-                ret.add(parseEntity(vmId, entity, dates));
+                ret.add(parseEntity(vmId, entity, storageDomainId, dates));
             }
         }
 
         return ret;
     }
 
-    public static PowerShellDisk parseEntity(String vmId, PowerShellParser.Entity entity){
-        return parseEntity(vmId, entity, null);
+    public static PowerShellDisk parseEntity(String vmId, PowerShellParser.Entity entity, String storageDomainId){
+        return parseEntity(vmId, entity, storageDomainId, null);
     }
 
-    private static PowerShellDisk parseEntity(String vmId, PowerShellParser.Entity entity, Map<String, XMLGregorianCalendar> dates) {
+    private static PowerShellDisk parseEntity(String vmId,
+                                              PowerShellParser.Entity entity,
+                                              String storageDomainId,
+                                              Map<String, XMLGregorianCalendar> dates) {
         PowerShellDisk disk = new PowerShellDisk();
 
         disk.setId(entity.get("snapshotid"));
@@ -123,6 +131,11 @@ public class PowerShellDisk extends Disk {
 
         disk.setVm(new VM());
         disk.getVm().setId(vmId);
+
+        if (storageDomainId != null) {
+            disk.setStorageDomain(new StorageDomain());
+            disk.getStorageDomain().setId(storageDomainId);
+        }
 
         disk.setSize(entity.get("actualsizeinbytes", Double.class).longValue());
         disk.setType(entity.get("disktype", PowerShellDiskType.class).map().value());

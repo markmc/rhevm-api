@@ -155,12 +155,16 @@ public class PowerShellVM extends VM {
         Map<String, XMLGregorianCalendar> dates = new HashMap<String, XMLGregorianCalendar>();
         String date = null;
 
+        String storageDomainId = null;
+
         for (PowerShellParser.Entity entity : parser.parse(output)) {
             if (PowerShellParser.DATE_TYPE.equals(entity.getType())) {
                 date = entity.getValue();
             } else if (PowerShellParser.STRING_TYPE.equals(entity.getType())) {
                 dates.put(date, PowerShellUtils.parseDate(entity.getValue()));
                 date = null;
+            } else if (PowerShellStorageDomain.isStorageDomain(entity)) {
+                storageDomainId = PowerShellStorageDomain.parseEntity(entity).getId();
             } else if (PowerShellAsyncTask.isTask(entity)) {
                 last(ret).setTaskIds(PowerShellAsyncTask.parseTask(entity, last(ret).getTaskIds()));
             } else if (PowerShellAsyncTask.isStatus(entity)) {
@@ -170,7 +174,7 @@ public class PowerShellVM extends VM {
             } else if (hasDetail(details, Detail.STATISTICS) && PowerShellVmStatisticsParser.isCpu(entity)) {
                 getStatistics(ret).addAll(PowerShellVmStatisticsParser.parseCpuStats(entity));
             } else if (hasDetail(details, Detail.DISKS) && PowerShellDisk.isDisk(entity)) {
-                getDisks(ret).add(PowerShellDisk.parseEntity(last(ret).getId(), entity));
+                getDisks(ret).add(PowerShellDisk.parseEntity(last(ret).getId(), entity, storageDomainId));
             } else if (hasDetail(details, Detail.NICS) && PowerShellNIC.isNIC(entity)) {
                 getNics(ret).add(PowerShellNIC.parseEntity(last(ret).getId(), entity));
             } else if (hasDetail(details, Detail.TAGS) && PowerShellTag.isTag(entity)) {
