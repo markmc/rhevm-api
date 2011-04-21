@@ -26,7 +26,9 @@ import javax.ws.rs.core.UriInfo;
 import com.redhat.rhevm.api.common.util.JAXBHelper;
 import com.redhat.rhevm.api.common.util.LinkHelper;
 import com.redhat.rhevm.api.model.ActionsBuilder;
+import com.redhat.rhevm.api.model.Link;
 import com.redhat.rhevm.api.model.StorageDomain;
+import com.redhat.rhevm.api.model.StorageDomainType;
 import com.redhat.rhevm.api.model.Template;
 import com.redhat.rhevm.api.model.Templates;
 import com.redhat.rhevm.api.model.VM;
@@ -84,6 +86,16 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
     public static StorageDomain addLinks(UriInfo uriInfo, StorageDomain storageDomain) {
         storageDomain = JAXBHelper.clone("storage_domain", StorageDomain.class, storageDomain);
 
+        if (isExport(storageDomain)) {
+            String [] subCollections = { "templates", "vms" };
+
+            storageDomain.getLinks().clear();
+
+            for (String collection : subCollections) {
+                addSubCollection(uriInfo, storageDomain, collection);
+            }
+        }
+
         storageDomain = LinkHelper.addLinks(uriInfo, storageDomain);
 
         ActionsBuilder actionsBuilder = new ActionsBuilder(LinkHelper.getUriBuilder(uriInfo, storageDomain),
@@ -91,6 +103,17 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
         storageDomain.setActions(actionsBuilder.build());
 
         return storageDomain;
+    }
+
+    private static boolean isExport(StorageDomain storageDomain) {
+        return StorageDomainType.fromValue(storageDomain.getType()) == StorageDomainType.EXPORT;
+    }
+
+    private static void addSubCollection(UriInfo uriInfo, StorageDomain storageDomain, String collection) {
+        Link link = new Link();
+        link.setRel(collection);
+        link.setHref(LinkHelper.getUriBuilder(uriInfo, storageDomain).path(collection).build().toString());
+        storageDomain.getLinks().add(link);
     }
 
     @Override
@@ -121,10 +144,16 @@ public class PowerShellStorageDomainResource extends AbstractPowerShellActionabl
     }
 
     public StorageDomainContentsResource<VMs, VM> getStorageDomainVmsResource() {
-        return null;
+        PowerShellStorageDomainVmsResource resource =
+            new PowerShellStorageDomainVmsResource(this, shellPools, getParser());
+        resource.setUriInfo(getUriInfo());
+        return resource;
     }
 
     public StorageDomainContentsResource<Templates, Template> getStorageDomainTemplatesResource() {
-        return null;
+        PowerShellStorageDomainTemplatesResource resource =
+            new PowerShellStorageDomainTemplatesResource(this, shellPools, getParser());
+        resource.setUriInfo(getUriInfo());
+        return resource;
     }
 }
